@@ -5,8 +5,10 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import LandingPageLayout from '@/Layout/LandingPageLayout';
 import { consent, getConsentInfo } from '@/apis/consent';
+import { abortInteraction } from '@/apis/experience';
 import TermsLinks from '@/components/TermsLinks';
 import TextLink from '@/components/TextLink';
+import { isDevFeaturesEnabled } from '@/constants/env';
 import useApi from '@/hooks/use-api';
 import useErrorHandler, { type ErrorHandlers } from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
@@ -41,6 +43,7 @@ const getClientDisplayData = ({ application: { id, displayName, name } }: Consen
 const Consent = () => {
   const handleError = useErrorHandler();
   const asyncConsent = useApi(consent);
+  const asyncAbort = useApi(abortInteraction);
   const { t } = useTranslation();
   const redirectTo = useGlobalRedirectTo();
 
@@ -96,6 +99,33 @@ const Consent = () => {
       await redirectTo(result.redirectTo);
     }
   }, [asyncConsent, handleConsentError, redirectTo, selectedOrganization?.id]);
+
+  /**
+   * Cancel finishes the interaction with an `access_denied` OAuth error, so the client receives
+   * the error together with the original `state` and `iss`. A bare redirect to the redirect URI
+   * would drop both.
+   */
+  const cancelHandler = useCallback(
+    async (redirectUri: string) => {
+      // DEV: Experience interaction abort.
+      if (!isDevFeaturesEnabled) {
+        window.location.replace(redirectUri);
+        return;
+      }
+
+      const [error, result] = await asyncAbort();
+
+      // Fall back to the previous behavior when aborting fails, e.g. the interaction has already
+      // expired, so the user is not stranded on the consent page.
+      if (error || !result?.redirectTo) {
+        window.location.replace(redirectUri);
+        return;
+      }
+
+      await redirectTo(result.redirectTo);
+    },
+    [asyncAbort, redirectTo]
+  );
 
   useEffect(() => {
     const getConsentInfoHandler = async () => {
@@ -189,7 +219,7 @@ const Consent = () => {
             title="action.cancel"
             type="secondary"
             onClick={() => {
-              window.location.replace(redirectUri);
+              void cancelHandler(redirectUri);
             }}
           />
         )}

@@ -25,6 +25,7 @@ export {
   identifyUser,
   identifyAndSubmitInteraction,
   setTrustedDeviceOptInDecision,
+  abortInteraction,
 } from './interaction';
 
 export * from './avatar';
