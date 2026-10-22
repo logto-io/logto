@@ -22,7 +22,9 @@ const seedRows = async (connection: DatabasePoolConnection) => {
         'key', 'Unknown',
         'result', ${LogResult.Success}::text,
         'userId', 'query-plan-seed-user-' || (n % 5),
-        'applicationId', 'query-plan-seed-app-' || (n % 5)
+        'applicationId', 'query-plan-seed-app-' || (n % 5),
+        -- Short: hook ids fit payload_hook_id varchar(21), longer values fail the trigger.
+        'hookId', 'qp-hook-' || (n % 5)
       ),
       now() - n * interval '1 minute'
     from generate_series(1, 20) as n
@@ -57,6 +59,7 @@ describe('logs query plans under the tenant role', () => {
   it.each([
     ['user', 'payload_user_id', 'query-plan-seed-user-1'],
     ['application', 'payload_application_id', 'query-plan-seed-app-1'],
+    ['hook', 'payload_hook_id', 'qp-hook-1'],
   ])('seeks the %s filter and returns rows in order', async (_, column, value) => {
     const plan = await explain(sql`
       select id from logs
@@ -84,5 +87,20 @@ describe('logs query plans under the tenant role', () => {
 
     expectIndexCondition(plan, 'payload_user_id');
     expect(hasSortNode(plan)).toBe(false);
+  });
+
+  it('seeks the webhook execution stats by hook id and time', async () => {
+    // The shape `getHookExecutionStatsByHookId` runs once it filters on the column.
+    const startTimeExclusive = Date.now() - 24 * 60 * 60 * 1000;
+    const plan = await explain(sql`
+      select count(*) as request_count,
+      count(case when payload->>'result' = 'Success' then 1 end) as success_count
+      from logs
+      where created_at > to_timestamp(${startTimeExclusive}::double precision / 1000)
+        and payload_hook_id = ${'qp-hook-1'}
+    `);
+
+    expectIndexCondition(plan, 'payload_hook_id');
+    expectIndexCondition(plan, 'created_at');
   });
 });
