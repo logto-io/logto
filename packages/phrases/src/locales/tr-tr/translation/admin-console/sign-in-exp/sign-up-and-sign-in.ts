@@ -102,6 +102,10 @@ const sign_up_and_sign_in = {
       link: '"Kurumsal Tek Oturum Açma"',
       suffix: 'bölümüne daha fazla kurumsal bağlantı noktası kurmak için.',
     },
+    show_sso_branding_before_email_match:
+      'E-posta alan adı eşleşmeden önce SSO bağlayıcı adlarını ve logolarını göster',
+    show_sso_branding_before_email_match_description:
+      'Açık olduğunda, SSO bağlayıcı adları ve logoları bir e-posta alan adı eşleşmeden önce ortak oturum açma yapılandırmasına dahil edilir. Kapalı olduğunda, yalnızca eşleşmeden sonra gösterilir.',
     enable_user_registration: 'Kullanıcı Kaydını Etkinleştir',
     enable_user_registration_description:
       'Kullanıcı kaydını etkinleştir veya devre dışı bırak. Devre dışı bırakıldığında, kullanıcılar yönetici konsolunda hala eklenilebilir, ancak kullanıcılar artık oturum açma arayüzü üzerinden hesap oluşturamaz.',

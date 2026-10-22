@@ -101,6 +101,9 @@ const sign_up_and_sign_in = {
       link: '"Enterprise SSO"',
       suffix: 'section to set up more enterprise connectors.',
     },
+    show_sso_branding_before_email_match: 'Show SSO connector names and logos before email match',
+    show_sso_branding_before_email_match_description:
+      'When on, SSO connector names and logos are included in the public sign-in configuration before an email domain matches. When off, they are only revealed after a match.',
     enable_user_registration: 'Enable user registration',
     enable_user_registration_description:
       'Enable or disallow user registration. Once disabled, users can still be added in the admin console but users can no longer establish accounts through the sign-in UI.',

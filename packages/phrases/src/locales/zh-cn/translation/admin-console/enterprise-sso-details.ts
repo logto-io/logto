@@ -12,10 +12,9 @@ const enterprise_sso_details = {
   custom_branding_description:
     '自定义在最终用户单点登录流程中显示的名称和标识。如果为空，则使用默认值。',
   custom_branding_visibility_notice:
-    '任何使用与已配置企业域名匹配的邮箱地址进行查询的人都可以看到显示名称和标识。请勿包含敏感信息。',
-  show_before_email_match_field_name: '在邮箱域名匹配前显示',
-  show_before_email_match_description:
-    '开启后，显示名称和标识会在邮箱域名匹配前包含在公开登录配置中。关闭后，仅在匹配后显示。',
+    '除非在登录体验中关闭“在邮箱域名匹配前显示 SSO 连接器名称和标识”，否则任何打开登录页的人都可以看到显示名称和标识。请勿包含敏感信息。',
+  custom_branding_console_sso_visibility_notice:
+    '在邮箱域名匹配前，显示名称和标识可能会在 Console 登录页上公开可见。请勿包含敏感信息。',
   email_domain_field_name: '企业电子邮件域',
   email_domain_field_description:
     '拥有此电子邮件域的用户可以使用SSO进行身份验证。请验证该域名属于企业。',

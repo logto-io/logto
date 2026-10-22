@@ -103,6 +103,10 @@ const sign_up_and_sign_in = {
       link: '"SSO Empresarial"',
       suffix: 'seção para configurar mais conectores empresariais.',
     },
+    show_sso_branding_before_email_match:
+      'Mostrar nomes e logótipos dos conectores SSO antes da correspondência do domínio de email',
+    show_sso_branding_before_email_match_description:
+      'Quando ativado, os nomes e logótipos dos conectores SSO são incluídos na configuração pública de início de sessão antes de um domínio de email corresponder. Quando desativado, só são revelados após uma correspondência.',
     enable_user_registration: 'Ativar registo de utilizadores',
     enable_user_registration_description:
       'Ativar ou desativar o registo de utilizadores. Uma vez desativado, os utilizadores ainda podem ser adicionados na consola de administração, mas os utilizadores não podem mais estabelecer contas através da interface de início de sessão.',

@@ -98,6 +98,9 @@ const sign_up_and_sign_in = {
       link: '"기업 SSO"',
       suffix: '영역에서 사업체 커넥터를 추가 설정하세요.',
     },
+    show_sso_branding_before_email_match: '이메일 도메인 일치 전에 SSO 커넥터 이름 및 로고 표시',
+    show_sso_branding_before_email_match_description:
+      '켜면 이메일 도메인이 일치하기 전에 SSO 커넥터 이름과 로고가 공개 로그인 구성에 포함됩니다. 끄면 일치한 후에만 표시됩니다.',
     enable_user_registration: '사용자 등록 활성화',
     enable_user_registration_description:
       '사용자 등록을 활성화하거나 비활성화합니다. 비활성화된 경우 사용자는 관리 콘솔에서는 추가할 수 있지만 사용자는 더 이상 로그인 UI를 통해 계정을 설정할 수 없습니다.',

@@ -93,6 +93,9 @@ const sign_up_and_sign_in = {
       link: '"Enterprise SSO"',
       suffix: '區段以設定更多企業連結器。',
     },
+    show_sso_branding_before_email_match: '在電子郵件網域相符前顯示 SSO 連接器名稱和標誌',
+    show_sso_branding_before_email_match_description:
+      '開啟後，SSO 連接器名稱和標誌會在電子郵件網域相符前包含在公開登入設定中。關閉後，僅在相符後顯示。',
     enable_user_registration: '啟用使用者註冊',
     enable_user_registration_description:
       '啟用或禁止使用者註冊。禁用後，管理員仍然可以新增使用者，但無法透過登入界面建立帳戶。',

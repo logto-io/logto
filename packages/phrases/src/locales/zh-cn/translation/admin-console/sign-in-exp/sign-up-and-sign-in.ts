@@ -93,6 +93,9 @@ const sign_up_and_sign_in = {
       link: '"企业 SSO"',
       suffix: '部分以设置更多企业连接器。',
     },
+    show_sso_branding_before_email_match: '在邮箱域名匹配前显示 SSO 连接器名称和标识',
+    show_sso_branding_before_email_match_description:
+      '开启后，SSO 连接器名称和标识会在邮箱域名匹配前包含在公开登录配置中。关闭后，仅在匹配后显示。',
     enable_user_registration: '启用用户注册',
     enable_user_registration_description:
       '启用或禁用用户注册。禁用后，管理员仍然可以添加用户，但用户无法通过登录界面建立账户。',

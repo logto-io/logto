@@ -104,6 +104,10 @@ const sign_up_and_sign_in = {
       link: '"Enterprise SSO"',
       suffix: 'sekcji, aby skonfigurować więcej łączników przedsiębiorstwa.',
     },
+    show_sso_branding_before_email_match:
+      'Pokazuj nazwy i logo connectorów SSO przed dopasowaniem domeny e-mail',
+    show_sso_branding_before_email_match_description:
+      'Po włączeniu nazwy i logo connectorów SSO są uwzględniane w publicznej konfiguracji logowania przed dopasowaniem domeny e-mail. Po wyłączeniu są ujawniane dopiero po dopasowaniu.',
     enable_user_registration: 'Włącz rejestrację użytkowników',
     enable_user_registration_description:
       'Włącz lub wyłącz rejestrację użytkowników. Po wyłączeniu użytkownicy nadal mogą być dodawani w konsoli administratora, ale nie mogą już zakładać kont za pomocą interfejsu logowania.',

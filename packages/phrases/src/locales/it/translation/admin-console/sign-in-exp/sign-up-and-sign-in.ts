@@ -104,6 +104,10 @@ const sign_up_and_sign_in = {
       link: '"Enterprise SSO"',
       suffix: 'sezione per impostare ulteriori connettori aziendali.',
     },
+    show_sso_branding_before_email_match:
+      'Mostra nomi e loghi dei connettori SSO prima della corrispondenza del dominio email',
+    show_sso_branding_before_email_match_description:
+      'Se attivo, i nomi e i loghi dei connettori SSO vengono inclusi nella configurazione di accesso pubblica prima che un dominio email corrisponda. Se disattivato, vengono rivelati solo dopo una corrispondenza.',
     enable_user_registration: 'Abilita registrazione utente',
     enable_user_registration_description:
       "Abilita o disabilita la registrazione degli utenti. Una volta disabilitata, gli utenti possono comunque essere aggiunti nella console di amministrazione, ma gli utenti non possono più creare account tramite l'interfaccia di accesso.",

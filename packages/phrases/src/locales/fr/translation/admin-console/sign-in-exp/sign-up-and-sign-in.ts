@@ -109,6 +109,10 @@ const sign_up_and_sign_in = {
       link: '"Entreprise SSO"',
       suffix: "section pour configurer d'autres connecteurs d'entreprise.",
     },
+    show_sso_branding_before_email_match:
+      'Afficher les noms et logos des connecteurs SSO avant la correspondance du domaine e-mail',
+    show_sso_branding_before_email_match_description:
+      "Lorsque cette option est activée, les noms et logos des connecteurs SSO sont inclus dans la configuration de connexion publique avant qu'un domaine e-mail ne corresponde. Lorsqu'elle est désactivée, ils ne sont révélés qu'après une correspondance.",
     enable_user_registration: "Activer l'inscription des utilisateurs",
     enable_user_registration_description:
       "Activer ou interdire l'inscription des utilisateurs. Une fois désactivée, les utilisateurs peuvent toujours être ajoutés à la console d'administration mais ne peuvent plus créer de compte via l'interface de connexion.",
