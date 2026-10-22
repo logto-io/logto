@@ -99,6 +99,11 @@ const user_details = {
     'Sind Sie sicher, dass Sie diesen Benutzer wieder aktivieren möchten? Dadurch werden alle Anmeldeversuche für diesen Benutzer ermöglicht.',
   reactivate_action: 'Aktivieren',
   user_reactivated: 'Benutzer wurde aktiviert.',
+  unlock_user: 'Benutzer entsperren',
+  unlock_user_reminder:
+    'Möchten Sie diesen Benutzer wirklich entsperren? Dadurch werden alle Sperren entfernt, die durch fehlgeschlagene Anmelde- und Sicherheitsüberprüfungsversuche entstanden sind. Entsperren Sie nur manuell, wenn Sie die Identität des Benutzers bestätigt und sichergestellt haben, dass keine unbefugten Zugriffsversuche vorliegen.',
+  unlock_action: 'Entsperren',
+  user_unlocked: 'Der Benutzer wurde entsperrt.',
   roles: {
     name_column: 'Benutzerrolle',
     description_column: 'Beschreibung',

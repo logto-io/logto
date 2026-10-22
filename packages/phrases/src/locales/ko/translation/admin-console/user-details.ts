@@ -92,6 +92,11 @@ const user_details = {
     '이 사용자를 다시 활성화하시겠습니까? 이렇게 하면이 사용자에 대한 로그인 시도가 허용됩니다.',
   reactivate_action: '재활성화',
   user_reactivated: '사용자가 재활성화되었습니다.',
+  unlock_user: '사용자 잠금 해제',
+  unlock_user_reminder:
+    '이 사용자의 잠금을 해제하시겠습니까? 로그인 및 보안 인증 실패로 인한 모든 잠금이 해제됩니다. 사용자의 신원을 확인하고 비인가 접근 시도가 없음을 확인한 경우에만 수동으로 잠금을 해제하세요.',
+  unlock_action: '잠금 해제',
+  user_unlocked: '사용자의 잠금이 해제되었습니다.',
   roles: {
     name_column: '사용자 역할',
     description_column: '설명',

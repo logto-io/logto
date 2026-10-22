@@ -99,6 +99,11 @@ const user_details = {
     'Êtes-vous sûr de vouloir réactiver cet utilisateur ? Cela permettra toute tentative de connexion pour cet utilisateur.',
   reactivate_action: 'Réactiver',
   user_reactivated: "L'utilisateur a été réactivé.",
+  unlock_user: "Déverrouiller l'utilisateur",
+  unlock_user_reminder:
+    "Voulez-vous vraiment déverrouiller cet utilisateur ? Cela effacera tous les verrouillages causés par des tentatives de connexion et de vérification de sécurité échouées. Ne déverrouillez manuellement que si vous avez confirmé l'identité de l'utilisateur et vérifié qu'aucune tentative d'accès non autorisée n'a eu lieu.",
+  unlock_action: 'Déverrouiller',
+  user_unlocked: "L'utilisateur a été déverrouillé.",
   roles: {
     name_column: 'Rôle utilisateur',
     description_column: 'Description',

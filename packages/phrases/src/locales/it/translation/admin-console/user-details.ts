@@ -99,6 +99,11 @@ const user_details = {
     'Sei sicuro di voler riattivare questo utente? Ciò consentirà eventuali tentativi di accesso per questo utente.',
   reactivate_action: 'Riattiva',
   user_reactivated: "L'utente è stato riattivato.",
+  unlock_user: "Sblocca l'utente",
+  unlock_user_reminder:
+    "Sei sicuro di voler sbloccare questo utente? Questa operazione cancellerà tutti i blocchi causati da tentativi falliti di accesso e verifica di sicurezza. Sblocca manualmente solo se hai confermato l'identità dell'utente e verificato che non ci siano stati tentativi di accesso non autorizzati.",
+  unlock_action: 'Sblocca',
+  user_unlocked: "L'utente è stato sbloccato.",
   roles: {
     name_column: 'Ruolo utente',
     description_column: 'Descrizione',

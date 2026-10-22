@@ -94,6 +94,11 @@ const user_details = {
     'このユーザーをリアクティブ化することを確認しますか？それにより、このユーザーのサインイン試行が許可されます。',
   reactivate_action: '活性化',
   user_reactivated: 'ユーザーが再活性化されました。',
+  unlock_user: 'ユーザーのロックを解除',
+  unlock_user_reminder:
+    'このユーザーのロックを解除してもよろしいですか？サインインおよびセキュリティ検証の失敗によって発生したすべてのロックが解除されます。ユーザーの本人確認が完了し、不正なアクセス試行がないことを確認した場合にのみ、手動でロックを解除してください。',
+  unlock_action: 'ロックを解除',
+  user_unlocked: 'ユーザーのロックが解除されました。',
   roles: {
     name_column: 'ユーザー役割',
     description_column: '説明',
