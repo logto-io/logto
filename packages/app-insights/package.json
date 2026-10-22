@@ -32,23 +32,23 @@
   "devDependencies": {
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/ts-config": "6.0.0",
-    "@types/node": "^22.14.0",
+    "@types/node": "^26.0.0",
     "@vitest/coverage-v8": "^4.1.11",
     "eslint": "^8.56.0",
     "lint-staged": "^15.0.0",
     "prettier": "^3.5.3",
-    "typescript": "^5.5.3",
+    "typescript": "^5.9.3",
     "vitest": "^4.1.11"
   },
   "engines": {
-    "node": "^22.14.0"
+    "node": "^22.14.0 || ^24.0.0 || ^26.0.0"
   },
   "eslintConfig": {
     "extends": "@silverhand"
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
-    "@silverhand/essentials": "^2.9.1",
+    "@silverhand/essentials": "^2.9.3",
     "applicationinsights": "^2.9.5"
   },
   "peerDependencies": {

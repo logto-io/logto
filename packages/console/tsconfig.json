@@ -2,6 +2,7 @@
   "extends": "@silverhand/ts-config-react/tsconfig.base",
   "compilerOptions": {
     "baseUrl": "./",
+    "declaration": false,
     "paths": {
       "@/*": ["./src/*"]
     }

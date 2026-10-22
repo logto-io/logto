@@ -32,7 +32,7 @@
     "prepublishOnly": "pnpm build"
   },
   "engines": {
-    "node": "^22.14.0"
+    "node": "^22.14.0 || ^24.0.0 || ^26.0.0"
   },
   "eslintConfig": {
     "extends": "@silverhand",
@@ -53,7 +53,7 @@
   "devDependencies": {
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/ts-config": "6.0.0",
-    "@types/node": "^22.14.0",
+    "@types/node": "^26.0.0",
     "@types/supertest": "^6.0.2",
     "@vitest/coverage-v8": "^4.1.11",
     "eslint": "^8.56.0",
@@ -62,7 +62,7 @@
     "prettier": "^3.5.3",
     "supertest": "^7.0.0",
     "tsup": "^8.5.1",
-    "typescript": "^5.5.3",
+    "typescript": "^5.9.3",
     "vitest": "^4.1.11"
   }
 }

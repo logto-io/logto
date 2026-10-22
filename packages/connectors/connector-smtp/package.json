@@ -5,7 +5,7 @@
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {
     "@logto/connector-kit": "workspace:^",
-    "@silverhand/essentials": "^2.9.1",
+    "@silverhand/essentials": "^2.9.3",
     "got": "^14.0.0",
     "nodemailer": "^10.0.9",
     "snakecase-keys": "^8.0.1",
@@ -14,7 +14,7 @@
   "devDependencies": {
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/ts-config": "6.0.0",
-    "@types/node": "^22.14.0",
+    "@types/node": "^26.0.0",
     "@types/nodemailer": "^6.4.7",
     "@types/supertest": "^6.0.2",
     "@vitest/coverage-v8": "^4.1.11",
@@ -24,7 +24,7 @@
     "prettier": "^3.5.3",
     "supertest": "^7.0.0",
     "tsup": "^8.5.1",
-    "typescript": "^5.5.3",
+    "typescript": "^5.9.3",
     "vitest": "^4.1.11"
   },
   "main": "./lib/index.js",
@@ -51,7 +51,7 @@
     "prepublishOnly": "pnpm build"
   },
   "engines": {
-    "node": "^22.14.0"
+    "node": "^22.14.0 || ^24.0.0 || ^26.0.0"
   },
   "eslintConfig": {
     "extends": "@silverhand",

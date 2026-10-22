@@ -33,9 +33,6 @@ import {
   authResponseGuard,
 } from './types.js';
 
-// eslint-disable-next-line @silverhand/fp/no-let
-let authCodeRequest: AuthorizationCodeRequest;
-
 const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
   async ({ state, redirectUri, scope }) => {
@@ -72,7 +69,6 @@ const getAuthorizationUri =
 
 const getAccessToken = async (config: AzureADConfig, code: string, redirectUri: string) => {
   const codeRequest: AuthorizationCodeRequest = {
-    ...authCodeRequest,
     redirectUri,
     scopes: ['User.Read'],
     code,

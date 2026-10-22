@@ -20,7 +20,7 @@ const buildAssetsFormData = () => {
   const formData = new FormData();
   formData.append(
     'file',
-    new Blob([zip.toBuffer()], { type: 'application/zip' }),
+    new Blob([new Uint8Array(zip.toBuffer())], { type: 'application/zip' }),
     'custom-ui-assets.zip'
   );
 

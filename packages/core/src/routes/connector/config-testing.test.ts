@@ -86,7 +86,7 @@ describe('connector services route', () => {
           payload: {
             code: '000000',
           },
-          ip: '::ffff:127.0.0.1',
+          ip: '127.0.0.1',
         },
         { test: 123 }
       );
@@ -114,7 +114,7 @@ describe('connector services route', () => {
           payload: {
             code: '000000',
           },
-          ip: '::ffff:127.0.0.1',
+          ip: '127.0.0.1',
         },
         { test: 123 }
       );

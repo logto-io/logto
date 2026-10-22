@@ -35,12 +35,12 @@
     "@logto/schemas": "workspace:^",
     "@logto/shared": "workspace:^",
     "@silverhand/eslint-config": "6.0.1",
-    "@silverhand/essentials": "^2.9.1",
+    "@silverhand/essentials": "^2.9.3",
     "@silverhand/slonik": "31.0.0-beta.2",
     "@silverhand/ts-config": "6.0.0",
     "@types/adm-zip": "^0.5.5",
     "@types/jest": "^29.4.0",
-    "@types/node": "^22.14.0",
+    "@types/node": "^26.0.0",
     "adm-zip": "^0.6.1",
     "dotenv": "^16.4.5",
     "eslint": "^8.56.0",
@@ -56,11 +56,11 @@
     "prettier": "^3.5.3",
     "puppeteer": "^23.10.3",
     "tsup": "^8.5.1",
-    "typescript": "^5.5.3",
+    "typescript": "^5.9.3",
     "zod": "3.24.3"
   },
   "engines": {
-    "node": "^22.14.0"
+    "node": "^26.0.0"
   },
   "eslintConfig": {
     "extends": "@silverhand"

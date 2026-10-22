@@ -37,15 +37,15 @@
     "test:ci": "pnpm run test --silent --coverage"
   },
   "engines": {
-    "node": "^22.14.0"
+    "node": "^22.14.0 || ^24.0.0 || ^26.0.0"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "6.0.1",
-    "@silverhand/essentials": "^2.9.1",
+    "@silverhand/essentials": "^2.9.3",
     "@silverhand/slonik": "31.0.0-beta.2",
     "@silverhand/ts-config": "6.0.0",
     "@types/inquirer": "^9.0.0",
-    "@types/node": "^22.14.0",
+    "@types/node": "^26.0.0",
     "@types/pluralize": "^0.0.33",
     "@vitest/coverage-v8": "^4.1.11",
     "camelcase": "^8.0.0",
@@ -55,7 +55,7 @@
     "pluralize": "^8.0.0",
     "prettier": "^3.5.3",
     "roarr": "^7.11.0",
-    "typescript": "^5.5.3",
+    "typescript": "^5.9.3",
     "vitest": "^4.1.11"
   },
   "eslintConfig": {

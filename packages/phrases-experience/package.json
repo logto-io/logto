@@ -35,7 +35,7 @@
   "dependencies": {
     "@logto/core-kit": "workspace:^",
     "@logto/language-kit": "workspace:^",
-    "@silverhand/essentials": "^2.9.1"
+    "@silverhand/essentials": "^2.9.3"
   },
   "peerDependencies": {
     "zod": "3.24.3"
@@ -46,10 +46,10 @@
     "eslint": "^8.56.0",
     "lint-staged": "^15.0.0",
     "prettier": "^3.5.3",
-    "typescript": "^5.5.3"
+    "typescript": "^5.9.3"
   },
   "engines": {
-    "node": "^22.14.0"
+    "node": "^22.14.0 || ^24.0.0 || ^26.0.0"
   },
   "eslintConfig": {
     "extends": "@silverhand"

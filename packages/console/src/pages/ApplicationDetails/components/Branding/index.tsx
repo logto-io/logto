@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 
 import DetailsForm from '@/components/DetailsForm';
 import FormCard, { FormCardSkeleton } from '@/components/FormCard';
-import ImageInputs, { themeToLogoName } from '@/components/ImageInputs';
+import ImageInputs, { type ImageField, themeToLogoName } from '@/components/ImageInputs';
 import RequestDataError from '@/components/RequestDataError';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { appSpecificBrandingLink, logtoThirdPartyAppBrandingLink } from '@/consts';
@@ -156,12 +156,14 @@ function Branding({ application, isActive }: Props) {
                   uploadTitle="application_details.branding.app_logo"
                   control={control}
                   register={register}
-                  fields={Object.values(Theme).map((theme) => ({
-                    name: `branding.${themeToLogoName[theme]}`,
-                    error: errors.branding?.[themeToLogoName[theme]],
-                    type: 'app_logo',
-                    theme,
-                  }))}
+                  fields={Object.values(Theme).map(
+                    (theme): ImageField<ApplicationSignInExperienceForm> => ({
+                      name: `branding.${themeToLogoName[theme]}`,
+                      error: errors.branding?.[themeToLogoName[theme]],
+                      type: 'app_logo',
+                      theme,
+                    })
+                  )}
                 />
               </>
             )}

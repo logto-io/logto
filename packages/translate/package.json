@@ -33,7 +33,7 @@
     "prepack": "pnpm build"
   },
   "engines": {
-    "node": "^22.14.0"
+    "node": "^22.14.0 || ^24.0.0 || ^26.0.0"
   },
   "bugs": {
     "url": "https://github.com/logto-io/logto/issues"
@@ -44,7 +44,7 @@
     "@logto/phrases": "workspace:^",
     "@logto/phrases-experience": "workspace:^",
     "@logto/shared": "workspace:^",
-    "@silverhand/essentials": "^2.9.1",
+    "@silverhand/essentials": "^2.9.3",
     "chalk": "^5.3.0",
     "dotenv": "^16.4.5",
     "got": "^14.0.0",
@@ -52,7 +52,7 @@
     "inquirer": "^9.0.0",
     "ora": "^8.0.1",
     "p-queue": "^8.0.0",
-    "typescript": "^5.5.3",
+    "typescript": "^5.9.3",
     "yargs": "^17.6.0",
     "zod": "3.24.3"
   },
@@ -60,7 +60,7 @@
     "@silverhand/eslint-config": "6.0.1",
     "@silverhand/ts-config": "6.0.0",
     "@types/inquirer": "^9.0.0",
-    "@types/node": "^22.14.0",
+    "@types/node": "^26.0.0",
     "@types/yargs": "^17.0.13",
     "@vitest/coverage-v8": "^4.1.11",
     "eslint": "^8.56.0",
