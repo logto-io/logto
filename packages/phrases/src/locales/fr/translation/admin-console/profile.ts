@@ -20,24 +20,12 @@ const profile = {
         'La suppression de votre compte supprimera définitivement toutes les données vous concernant dans Logto Cloud. Assurez-vous donc de sauvegarder toutes les données importantes avant de continuer.',
       confirm_information:
         'Veuillez confirmer que les informations ci-dessus correspondent à vos attentes. Une fois que vous aurez supprimé votre compte, nous ne pourrons pas le récupérer.',
-      has_admin_role:
-        'Étant donné que vous avez un rôle d’administrateur dans le locataire suivant, il sera supprimé en même temps que votre compte :',
-      has_admin_role_other:
-        'Étant donné que vous avez un rôle d’administrateur dans les locataires suivants, ils seront supprimés en même temps que votre compte :',
-      quit_tenant: 'Vous êtes sur le point de quitter le locataire suivant :',
-      quit_tenant_other: 'Vous êtes sur le point de quitter les locataires suivants :',
     },
     issues: {
+      tenants:
+        'Avant de supprimer votre compte, supprimez ou quittez chaque tenant ci-dessous depuis sa page de paramètres :',
       console_sso:
         'Supprimez tous les connecteurs Console SSO appartenant à votre compte avant de supprimer celui-ci.',
-      paid_plan: 'Le locataire suivant a un plan payant, veuillez d’abord annuler l’abonnement :',
-      paid_plan_other:
-        'Les locataires suivants ont des plans payants, veuillez d’abord annuler l’abonnement :',
-      subscription_status: 'Le locataire suivant a un problème de statut d’abonnement :',
-      subscription_status_other:
-        'Les locataires suivants ont des problèmes de statut d’abonnement :',
-      open_invoice: 'Le locataire suivant a une facture ouverte :',
-      open_invoice_other: 'Les locataires suivants ont des factures ouvertes :',
     },
     error_occurred: 'Une erreur est survenue',
     error_occurred_description:

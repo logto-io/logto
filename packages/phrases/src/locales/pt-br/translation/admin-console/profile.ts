@@ -20,22 +20,11 @@ const profile = {
         'Excluir sua conta removerá permanentemente todos os dados sobre você na Logto Cloud. Portanto, certifique-se de fazer backup de quaisquer dados importantes antes de prosseguir.',
       confirm_information:
         'Por favor, confirme que as informações acima são o que você esperava. Depois de excluir sua conta, não poderemos recuperá-la.',
-      has_admin_role:
-        'Como você tem o papel de administrador no seguinte tenant, ele será excluído juntamente com sua conta:',
-      has_admin_role_other:
-        'Como você tem o papel de administrador nos seguintes tenants, eles serão excluídos juntamente com sua conta:',
-      quit_tenant: 'Você está prestes a sair do seguinte tenant:',
-      quit_tenant_other: 'Você está prestes a sair dos seguintes tenants:',
     },
     issues: {
+      tenants:
+        'Antes de excluir sua conta, exclua ou saia de cada tenant abaixo na página de configurações dele:',
       console_sso: 'Remova todos os conectores do Console SSO da sua conta antes de excluí-la.',
-      paid_plan: 'O seguinte tenant tem um plano pago, por favor cancele a assinatura primeiro:',
-      paid_plan_other:
-        'Os seguintes tenants têm planos pagos, por favor cancele as assinaturas primeiro:',
-      subscription_status: 'O seguinte tenant tem um problema de status de assinatura:',
-      subscription_status_other: 'Os seguintes tenants têm problemas de status de assinatura:',
-      open_invoice: 'O seguinte tenant tem uma fatura em aberto:',
-      open_invoice_other: 'Os seguintes tenants têm faturas em aberto:',
     },
     error_occurred: 'Ocorreu um erro',
     error_occurred_description: 'Desculpe, algo deu errado ao excluir sua conta:',

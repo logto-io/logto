@@ -20,22 +20,11 @@ const profile = {
         'Apagar a sua conta irá remover permanentemente todos os dados sobre você na Logto Cloud. Por isso, assegure-se de fazer backup de quaisquer dados importantes antes de continuar.',
       confirm_information:
         'Por favor confirme que a informação acima é o que esperava. Após apagar a sua conta, não poderemos recuperá-la.',
-      has_admin_role:
-        'Visto que você tem o papel de administrador no seguinte inquilino, ele será apagado junto com a sua conta:',
-      has_admin_role_other:
-        'Visto que você tem o papel de administrador nos seguintes inquilinos, eles serão apagados junto com a sua conta:',
-      quit_tenant: 'Você está prestes a sair do seguinte inquilino:',
-      quit_tenant_other: 'Você está prestes a sair dos seguintes inquilinos:',
     },
     issues: {
+      tenants:
+        'Antes de eliminares a tua conta, elimina ou sai de cada inquilino abaixo na respetiva página de definições:',
       console_sso: 'Remove todos os conectores Console SSO da tua conta antes de a eliminares.',
-      paid_plan: 'O seguinte inquilino tem um plano pago, por favor cancele a subscrição primeiro:',
-      paid_plan_other:
-        'Os seguintes inquilinos têm planos pagos, por favor cancele a subscrição primeiro:',
-      subscription_status: 'O seguinte inquilino tem um problema de estado de subscrição:',
-      subscription_status_other: 'Os seguintes inquilinos têm problemas de estado de subscrição:',
-      open_invoice: 'O seguinte inquilino tem uma fatura em aberto:',
-      open_invoice_other: 'Os seguintes inquilinos têm faturas em aberto:',
     },
     error_occurred: 'Ocorreu um erro',
     error_occurred_description: 'Desculpe, algo correu mal ao apagar a sua conta:',

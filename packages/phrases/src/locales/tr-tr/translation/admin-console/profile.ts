@@ -20,23 +20,12 @@ const profile = {
         "Hesabını silmek, Logto Cloud'daki tüm verilerini kalıcı olarak silecektir. Bu yüzden devam etmeden önce önemli verilerini yedeklediğinden emin ol.",
       confirm_information:
         'Yukarıdaki bilgilerin beklediğin gibi olduğunu onayla. Hesabını sildiğinde, onu geri getiremeyeceğiz.',
-      has_admin_role:
-        'Aşağıdaki kiracıda yönetici rolün olduğundan, bu kiracı hesapla birlikte silinecektir:',
-      has_admin_role_other:
-        'Aşağıdaki kiracılarda yönetici rolün olduğundan, bu kiracılar hesapla birlikte silinecektir:',
-      quit_tenant: 'Aşağıdaki kiracıdan çıkmak üzeresin:',
-      quit_tenant_other: 'Aşağıdaki kiracılardan çıkmak üzeresin:',
     },
     issues: {
+      tenants:
+        'Hesabınızı silmeden önce aşağıdaki her kiracıyı ayarlar sayfasından silin veya kiracıdan ayrılın:',
       console_sso:
         'Hesabınızı silmeden önce hesabınıza ait tüm Console SSO bağlayıcılarını kaldırın.',
-      paid_plan: 'Aşağıdaki kiracıda ücretli bir plan var, lütfen önce aboneliği iptal et:',
-      paid_plan_other:
-        'Aşağıdaki kiracılarda ücretli planlar var, lütfen önce abonelikleri iptal et:',
-      subscription_status: 'Aşağıdaki kiracının abonelik durumu sorunlu:',
-      subscription_status_other: 'Aşağıdaki kiracıların abonelik durumu sorunlu:',
-      open_invoice: 'Aşağıdaki kiracının açık faturası var:',
-      open_invoice_other: 'Aşağıdaki kiracıların açık faturaları var:',
     },
     error_occurred: 'Bir hata oluştu',
     error_occurred_description: 'Üzgünüz, hesabınızı silerken bir şeyler ters gitti:',

@@ -20,20 +20,11 @@ const profile = {
         '계정을 삭제하면 Logto Cloud 에서 당신에 대한 모든 데이터가 영구적으로 삭제돼요. 중요한 데이터를 백업해주세요.',
       confirm_information:
         '위의 정보가 예상한 것인지 확인해주세요. 계정을 삭제하면 복구할 수 없어요.',
-      has_admin_role: '다음 테넌트에서 관리자로 지정되어 있기 때문에, 계정과 함께 삭제될 거예요:',
-      has_admin_role_other:
-        '다음 테넌트에서 관리자로 지정되어 있기 때문에, 계정과 함께 삭제될 거예요:',
-      quit_tenant: '다음 테넌트를 나가려고 합니다:',
-      quit_tenant_other: '다음 테넌트를 나가려고 합니다:',
     },
     issues: {
+      tenants:
+        '계정을 삭제하기 전에 아래 각 테넌트의 설정 페이지에서 테넌트를 삭제하거나 탈퇴하세요:',
       console_sso: '계정을 삭제하기 전에 이 계정이 소유한 모든 Console SSO 커넥터를 삭제하세요.',
-      paid_plan: '다음 테넌트는 유료 플랜을 가지고 있으므로, 구독을 먼저 취소해야 해요:',
-      paid_plan_other: '다음 테넌트들은 유료 플랜을 가지고 있으므로, 구독을 먼저 취소해야 해요:',
-      subscription_status: '다음 테넌트는 구독 상태에 문제가 있어요:',
-      subscription_status_other: '다음 테넌트들은 구독 상태에 문제가 있어요:',
-      open_invoice: '다음 테넌트는 미결제 청구서가 있어요:',
-      open_invoice_other: '다음 테넌트들은 미결제 청구서가 있어요:',
     },
     error_occurred: '오류가 발생했어요',
     error_occurred_description: '계정을 삭제하는 동안 문제가 발생했어요:',

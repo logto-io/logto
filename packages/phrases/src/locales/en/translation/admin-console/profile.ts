@@ -20,23 +20,12 @@ const profile = {
         'Deleting your account will permanently remove all data about you in Logto Cloud. So please make sure to backup any important data before proceeding.',
       confirm_information:
         'Please confirm that the information above is what you expected. Once you delete your account, we will not be able to recover it.',
-      has_admin_role:
-        'Since you have the admin role in the following tenant, it will be deleted along with your account:',
-      has_admin_role_other:
-        'Since you have the admin role in the following tenants, they will be deleted along with your account:',
-      quit_tenant: 'You are about to quit the following tenant:',
-      quit_tenant_other: 'You are about to quit the following tenants:',
     },
     issues: {
+      tenants:
+        'Before deleting your account, delete or leave each tenant below from its settings page:',
       console_sso:
         'Remove all Console SSO connectors owned by your account before deleting your account.',
-      paid_plan: 'The following tenant has a paid plan, please cancel the subscription first:',
-      paid_plan_other:
-        'The following tenants have paid plans, please cancel the subscription first:',
-      subscription_status: 'The following tenant has a subscription status issue:',
-      subscription_status_other: 'The following tenants have subscription status issues:',
-      open_invoice: 'The following tenant has an open invoice:',
-      open_invoice_other: 'The following tenants have open invoices:',
     },
     error_occurred: 'An error occurred',
     error_occurred_description: 'Sorry, something went wrong while deleting your account:',
