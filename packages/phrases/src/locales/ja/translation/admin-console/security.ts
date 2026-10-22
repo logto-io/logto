@@ -41,6 +41,11 @@ const security = {
       description:
         '視覚的パズルやサードパーティサービスを使わない、オープンソースでセルフホスト型のプルーフ・オブ・ワーク CAPTCHA。他の CAPTCHA サービスにアクセスできない地域に最適です。',
     },
+    geetest: {
+      name: 'GeeTest',
+      description:
+        '中国本土で安定して利用できる、ローカライズされたチャレンジを備えた GeeTest の適応型 CAPTCHA です。',
+    },
   },
   captcha_details: {
     back_to_security: 'セキュリティへ戻る',
@@ -60,6 +65,8 @@ const security = {
     cap_endpoint_placeholder: 'https://cap.example.com',
     cap_endpoint_http_notice:
       'このエンドポイントは HTTP を使用しており、ローカル開発にのみ適しています。ブラウザーは HTTPS のサインインページからの HTTP リクエストをブロックし、シークレットキーは暗号化されずに送信されます。本番環境では HTTPS を使用してください。',
+    geetest_captcha_id: 'CAPTCHA ID',
+    geetest_captcha_key: 'CAPTCHA キー',
     deletion_description: 'この CAPTCHA プロバイダーを削除してもよろしいですか？',
     captcha_deleted: 'CAPTCHA プロバイダーが正常に削除されました',
     setup_captcha: 'CAPTCHA をセットアップ',

@@ -39,6 +39,10 @@ const security = {
       description:
         '开源、可自托管的工作量证明验证码，无需视觉谜题或第三方服务，适合无法访问其他验证码服务的地区。',
     },
+    geetest: {
+      name: 'GeeTest',
+      description: '极验自适应验证码，提供本地化验证体验，在中国大陆访问稳定。',
+    },
   },
   captcha_details: {
     back_to_security: '返回安全',
@@ -58,6 +62,8 @@ const security = {
     cap_endpoint_placeholder: 'https://cap.example.com',
     cap_endpoint_http_notice:
       '此端点使用 HTTP，仅适用于本地开发。浏览器会拦截 HTTPS 登录页发出的 HTTP 请求，且密钥将以明文传输。生产环境请使用 HTTPS。',
+    geetest_captcha_id: '验证 ID',
+    geetest_captcha_key: '验证密钥',
     deletion_description: '你确定要删除此验证码提供商吗？',
     captcha_deleted: '验证码提供商删除成功',
     setup_captcha: '设置验证码',

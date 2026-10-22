@@ -41,6 +41,11 @@ const security = {
       description:
         'Görsel bulmaca veya üçüncü taraf hizmet gerektirmeyen, iş kanıtı tabanlı, açık kaynaklı ve kendi sunucunuzda barındırılan CAPTCHA; diğer CAPTCHA hizmetlerine erişilemeyen bölgeler için idealdir.',
     },
+    geetest: {
+      name: 'GeeTest',
+      description:
+        'Yerelleştirilmiş sorgulamalar ve anakara Çin’de güçlü performans sunan GeeTest uyarlanabilir CAPTCHA.',
+    },
   },
   captcha_details: {
     back_to_security: 'Güvenliğe dön',
@@ -60,6 +65,8 @@ const security = {
     cap_endpoint_placeholder: 'https://cap.example.com',
     cap_endpoint_http_notice:
       'Bu uç nokta HTTP kullanıyor ve yalnızca yerel geliştirme için uygundur. Tarayıcılar HTTPS oturum açma sayfasından yapılan HTTP isteklerini engeller ve gizli anahtar şifrelenmeden gönderilir. Üretimde HTTPS kullanın.',
+    geetest_captcha_id: 'CAPTCHA Kimliği',
+    geetest_captcha_key: 'CAPTCHA Anahtarı',
     deletion_description: 'Bu CAPTCHA sağlayıcısını silmek istediğinizden emin misiniz?',
     captcha_deleted: 'CAPTCHA sağlayıcısı başarıyla silindi',
     setup_captcha: "CAPTCHA'yı ayarla",

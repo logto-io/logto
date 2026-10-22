@@ -30,6 +30,19 @@ export class CaptchaProviderQueries extends SchemaQueries<
     ['captcha-cap-endpoint']
   );
 
+  /**
+   * The type of the current captcha provider, or `null` if none is configured. It is public data
+   * and is used to build the experience CSP on every page request.
+   */
+  public readonly findCaptchaProviderType = this.wellKnownCache.memoize(
+    // eslint-disable-next-line unicorn/consistent-function-scoping -- False positive, `this` is used
+    async () => {
+      const provider = await this.findCaptchaProvider();
+      return provider?.config.type ?? null;
+    },
+    ['captcha-provider-type']
+  );
+
   public readonly upsertCaptchaProvider = this.wellKnownCache.mutate(
     // eslint-disable-next-line unicorn/consistent-function-scoping -- False positive, `this` is used
     async (captchaProvider: Pick<CaptchaProvider, 'config'>): Promise<CaptchaProvider> => {
@@ -44,7 +57,8 @@ export class CaptchaProviderQueries extends SchemaQueries<
         id: generateStandardId(),
       });
     },
-    ['captcha-cap-endpoint']
+    ['captcha-cap-endpoint'],
+    ['captcha-provider-type']
   );
 
   public readonly deleteCaptchaProvider = this.wellKnownCache.mutate(
@@ -56,7 +70,8 @@ export class CaptchaProviderQueries extends SchemaQueries<
         await this.deleteById(existing.id);
       }
     },
-    ['captcha-cap-endpoint']
+    ['captcha-cap-endpoint'],
+    ['captcha-provider-type']
   );
 
   constructor(

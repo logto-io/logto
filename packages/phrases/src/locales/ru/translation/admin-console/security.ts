@@ -41,6 +41,11 @@ const security = {
       description:
         'CAPTCHA с открытым исходным кодом и собственным хостингом на основе доказательства работы, без визуальных головоломок и сторонних сервисов — идеально для регионов, где другие CAPTCHA-сервисы недоступны.',
     },
+    geetest: {
+      name: 'GeeTest',
+      description:
+        'Адаптивная CAPTCHA GeeTest с локализованными заданиями и стабильной работой в материковом Китае.',
+    },
   },
   captcha_details: {
     back_to_security: 'Назад к безопасности',
@@ -60,6 +65,8 @@ const security = {
     cap_endpoint_placeholder: 'https://cap.example.com',
     cap_endpoint_http_notice:
       'Эта конечная точка использует HTTP, что подходит только для локальной разработки. Браузеры блокируют HTTP-запросы со страницы входа по HTTPS, а секретный ключ будет передаваться без шифрования. В продакшене используйте HTTPS.',
+    geetest_captcha_id: 'ID CAPTCHA',
+    geetest_captcha_key: 'Ключ CAPTCHA',
     deletion_description: 'Вы уверены, что хотите удалить этого поставщика CAPTCHA?',
     captcha_deleted: 'Поставщик CAPTCHA успешно удалён',
     setup_captcha: 'Настройка CAPTCHA',

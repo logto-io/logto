@@ -40,6 +40,10 @@ const security = {
       description:
         'CAPTCHA مفتوح المصدر ومستضاف ذاتيًا يعتمد على إثبات العمل دون ألغاز بصرية أو خدمات خارجية، مثالي للمناطق التي يتعذر فيها الوصول إلى خدمات CAPTCHA الأخرى.',
     },
+    geetest: {
+      name: 'GeeTest',
+      description: 'CAPTCHA تكيفية من GeeTest مع تحديات محلية وأداء مستقر في البر الرئيسي للصين.',
+    },
   },
   captcha_details: {
     back_to_security: 'العودة إلى الأمان',
@@ -59,6 +63,8 @@ const security = {
     cap_endpoint_placeholder: 'https://cap.example.com',
     cap_endpoint_http_notice:
       'تستخدم نقطة النهاية هذه HTTP، وهو مناسب للتطوير المحلي فقط. تحظر المتصفحات طلبات HTTP من صفحة تسجيل دخول تعمل عبر HTTPS، وسيتم إرسال المفتاح السري دون تشفير. استخدم HTTPS في بيئة الإنتاج.',
+    geetest_captcha_id: 'معرف CAPTCHA',
+    geetest_captcha_key: 'مفتاح CAPTCHA',
     deletion_description: 'هل أنت متأكد أنك تريد حذف مزود CAPTCHA هذا؟',
     captcha_deleted: 'تم حذف موفر CAPTCHA بنجاح',
     setup_captcha: 'إعداد CAPTCHA',

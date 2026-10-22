@@ -39,6 +39,10 @@ const security = {
       description:
         '開源、可自行託管的工作量證明 CAPTCHA，不需要視覺拼圖或第三方服務，適合無法存取其他 CAPTCHA 服務的地區。',
     },
+    geetest: {
+      name: 'GeeTest',
+      description: '極驗自適應 CAPTCHA，提供在地化驗證體驗，在中國大陸存取穩定。',
+    },
   },
   captcha_details: {
     back_to_security: '返回安全',
@@ -58,6 +62,8 @@ const security = {
     cap_endpoint_placeholder: 'https://cap.example.com',
     cap_endpoint_http_notice:
       '此端點使用 HTTP，僅適用於本機開發。瀏覽器會封鎖 HTTPS 登入頁發出的 HTTP 請求，且密鑰將以明文傳輸。正式環境請使用 HTTPS。',
+    geetest_captcha_id: '驗證 ID',
+    geetest_captcha_key: '驗證金鑰',
     deletion_description: '你確定要刪除此 CAPTCHA 提供商嗎？',
     captcha_deleted: 'CAPTCHA 提供商刪除成功',
     setup_captcha: '設定 CAPTCHA',
