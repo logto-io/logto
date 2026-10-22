@@ -39,6 +39,10 @@ const security = {
       description:
         '開源、可自行託管的工作量證明 CAPTCHA，無需視覺謎題或第三方服務，適合無法存取其他 CAPTCHA 服務的地區。',
     },
+    geetest: {
+      name: 'GeeTest',
+      description: '極驗自適應 CAPTCHA，提供本地化驗證體驗，在中國大陸存取穩定。',
+    },
   },
   captcha_details: {
     back_to_security: '返回安全性',
@@ -58,6 +62,8 @@ const security = {
     cap_endpoint_placeholder: 'https://cap.example.com',
     cap_endpoint_http_notice:
       '此端點使用 HTTP，僅適用於本地開發。瀏覽器會攔截 HTTPS 登入頁發出的 HTTP 請求，且密鑰將以明文傳輸。生產環境請使用 HTTPS。',
+    geetest_captcha_id: '驗證 ID',
+    geetest_captcha_key: '驗證密鑰',
     deletion_description: '你確定要刪除此 CAPTCHA 供應商嗎？',
     captcha_deleted: 'CAPTCHA 供應商已成功刪除',
     setup_captcha: '設定 CAPTCHA',
@@ -146,16 +152,16 @@ const security = {
     },
     manual_unlock: {
       title: '手動解鎖',
-      description: '通過確認用戶身份並輸入識別符立即解鎖用戶。',
-      unblock_by_identifiers: '按照識別符解鎖',
+      description: '透過確認用戶身份並輸入其識別符或用戶 ID 立即解鎖用戶。',
+      unblock_by_identifiers: '按照識別符或用戶 ID 解鎖',
       modal_description_1:
-        '由於多次登入/註冊嘗試失敗而暫時鎖定了一個識別符。為了保護安全，訪問將在封鎖時長後自動恢復。',
+        '由於多次登入/註冊或安全驗證嘗試失敗而暫時鎖定了一個識別符或用戶 ID。為了保護安全，訪問將在封鎖時長後自動恢復。',
       modal_description_2: ' 只有在確認用戶身份並確保沒有未授權的訪問嘗試後才進行手動解鎖。',
-      placeholder: '輸入識別符（郵件地址/電話號碼/用戶名）',
+      placeholder: '輸入識別符或用戶 ID（郵件地址/電話號碼/用戶名/用戶 ID）',
       confirm_button_text: '立即解鎖',
       success_toast: '解鎖成功',
-      duplicate_identifier_error: '識別符已添加',
-      empty_identifier_error: '請輸入至少一個識別符',
+      duplicate_identifier_error: '識別符或用戶 ID 已添加',
+      empty_identifier_error: '請輸入至少一個識別符或用戶 ID',
     },
   },
   blocklist: {

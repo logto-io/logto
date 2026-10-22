@@ -41,6 +41,11 @@ const security = {
       description:
         'Open-Source-CAPTCHA mit Proof-of-Work zum Selbsthosten, ohne visuelle Rätsel oder Drittanbieterdienste – ideal für Regionen, in denen andere CAPTCHA-Dienste nicht erreichbar sind.',
     },
+    geetest: {
+      name: 'GeeTest',
+      description:
+        'Adaptives GeeTest-CAPTCHA mit lokalisierten Herausforderungen und stabiler Leistung in Festlandchina.',
+    },
   },
   captcha_details: {
     back_to_security: 'Zurück zur Sicherheit',
@@ -60,6 +65,8 @@ const security = {
     cap_endpoint_placeholder: 'https://cap.example.com',
     cap_endpoint_http_notice:
       'Dieser Endpunkt verwendet HTTP und eignet sich nur für die lokale Entwicklung. Browser blockieren HTTP-Anfragen von einer HTTPS-Anmeldeseite, und der geheime Schlüssel würde unverschlüsselt übertragen. Verwende in der Produktion HTTPS.',
+    geetest_captcha_id: 'CAPTCHA-ID',
+    geetest_captcha_key: 'CAPTCHA-Schlüssel',
     deletion_description: 'Sind Sie sicher, dass Sie diesen CAPTCHA-Anbieter löschen möchten?',
     captcha_deleted: 'CAPTCHA-Anbieter erfolgreich gelöscht',
     setup_captcha: 'CAPTCHA einrichten',
@@ -164,17 +171,19 @@ const security = {
     manual_unlock: {
       title: 'Manuelle Entsperrung',
       description:
-        'Entsperren Sie Benutzer sofort, indem Sie ihre Identität bestätigen und ihren Bezeichner eingeben.',
-      unblock_by_identifiers: 'Über Bezeichner entsperren',
+        'Entsperren Sie Benutzer sofort, indem Sie ihre Identität bestätigen und ihren Bezeichner oder ihre Benutzer-ID eingeben.',
+      unblock_by_identifiers: 'Über Bezeichner oder Benutzer-ID entsperren',
       modal_description_1:
-        'Ein Bezeichner wurde vorübergehend aufgrund mehrerer fehlgeschlagener Anmelde-/Registrierungsversuche gesperrt. Um die Sicherheit zu schützen, wird der Zugriff nach der Sperrdauer automatisch wiederhergestellt.',
+        'Ein Bezeichner oder eine Benutzer-ID wurde aufgrund mehrerer fehlgeschlagener Anmelde-/Registrierungs- oder Sicherheitsüberprüfungsversuche vorübergehend gesperrt. Um die Sicherheit zu schützen, wird der Zugriff nach der Sperrdauer automatisch wiederhergestellt.',
       modal_description_2:
         ' Entsperren Sie manuell nur, wenn Sie die Identität des Benutzers bestätigt haben und sicherstellen, dass keine unbefugten Zugriffsversuche vorliegen.',
-      placeholder: 'Bezeichner eingeben (E-Mail-Adresse / Telefonnummer / Benutzername)',
+      placeholder:
+        'Bezeichner oder Benutzer-IDs eingeben (E-Mail-Adresse / Telefonnummer / Benutzername / Benutzer-ID)',
       confirm_button_text: 'Jetzt entsperren',
       success_toast: 'Erfolgreich entsperrt',
-      duplicate_identifier_error: 'Bezeichner bereits hinzugefügt',
-      empty_identifier_error: 'Bitte geben Sie mindestens einen Bezeichner ein',
+      duplicate_identifier_error: 'Bezeichner oder Benutzer-ID bereits hinzugefügt',
+      empty_identifier_error:
+        'Bitte geben Sie mindestens einen Bezeichner oder eine Benutzer-ID ein',
     },
   },
   blocklist: {

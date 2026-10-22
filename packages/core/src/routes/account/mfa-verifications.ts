@@ -30,6 +30,7 @@ import { transpileUserMfaVerifications } from '#src/utils/user.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
 import { accountApiPrefix } from './constants.js';
+import { assertIdentityVerified } from './utils/identity-verification.js';
 
 export default function mfaVerificationsRoutes<T extends UserRouter>(
   ...[router, { queries, libraries }]: RouterInitArgs<T>
@@ -89,11 +90,8 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
       status: [204, 400, 401, 403, 422],
     }),
     async (ctx, next) => {
-      const { id: userId, scopes, identityVerified, clientId } = ctx.auth;
-      assertThat(
-        identityVerified,
-        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
-      );
+      const { id: userId, scopes, clientId } = ctx.auth;
+      assertIdentityVerified(ctx);
       const { fields } = ctx.accountCenter;
       const isWebAuthn = ctx.guard.body.type === MfaFactor.WebAuthn;
       const passkeyControl = isWebAuthn ? (fields.passkey ?? fields.mfa) : fields.mfa;
@@ -262,11 +260,8 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
       status: [204, 400, 401, 403],
     }),
     async (ctx, next) => {
-      const { id: userId, scopes, identityVerified, clientId } = ctx.auth;
-      assertThat(
-        identityVerified,
-        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
-      );
+      const { id: userId, scopes, clientId } = ctx.auth;
+      assertIdentityVerified(ctx);
       const { fields } = ctx.accountCenter;
       assertThat(
         fields.mfa === AccountCenterControlValue.Edit,
@@ -358,15 +353,13 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
   router.get(
     `${accountApiPrefix}/mfa-verifications/backup-codes`,
     koaGuard({
-      status: [200, 401, 404],
+      status: [200, 401, 403, 404],
     }),
     async (ctx, next) => {
-      const { id: userId, scopes, identityVerified } = ctx.auth;
+      const { id: userId, scopes, clientId } = ctx.auth;
 
-      assertThat(
-        identityVerified,
-        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
-      );
+      assertIdentityVerified(ctx);
+      await assertFirstPartyClient(queries, clientId);
 
       assertThat(
         scopes.has(UserScope.Identities),
@@ -404,11 +397,8 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
       status: [200, 400, 401, 403],
     }),
     async (ctx, next) => {
-      const { id: userId, scopes, identityVerified, clientId } = ctx.auth;
-      assertThat(
-        identityVerified,
-        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
-      );
+      const { id: userId, scopes, clientId } = ctx.auth;
+      assertIdentityVerified(ctx);
       const { name } = ctx.guard.body;
       const { fields } = ctx.accountCenter;
       const passkeyControl = fields.passkey ?? fields.mfa;
@@ -456,11 +446,8 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
       status: [204, 400, 401, 403],
     }),
     async (ctx, next) => {
-      const { id: userId, scopes, identityVerified, clientId } = ctx.auth;
-      assertThat(
-        identityVerified,
-        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
-      );
+      const { id: userId, scopes, clientId } = ctx.auth;
+      assertIdentityVerified(ctx);
       assertThat(
         scopes.has(UserScope.Identities),
         new RequestError({ code: 'auth.unauthorized', status: 401 })

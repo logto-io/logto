@@ -27,6 +27,7 @@ import { useSieMethods } from '@/hooks/use-sie';
 import useSocialRegister from '@/hooks/use-social-register';
 import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
 import useToast from '@/hooks/use-toast';
+import { SearchParameters } from '@/types';
 import { socialAccountNotExistErrorDataGuard } from '@/types/guard';
 import { parseQueryParameters } from '@/utils';
 import { validateGoogleOneTapCredential } from '@/utils/social-connectors';
@@ -178,14 +179,8 @@ const useSocialSignInListener = (connectorId: string) => {
     ]
   );
 
-  const signInWithSocialHandler = useCallback(
-    async (connectorId: string, data: Record<string, unknown>) => {
-      const verificationId = await verifySocialCallbackData(connectorId, data);
-
-      // Exception occurred during verification drop the process
-      if (!verificationId) {
-        return;
-      }
+  const completeSignIn = useCallback(
+    async (verificationId: string) => {
       const [error, result] = await asyncSignInWithSocial({ verificationId });
 
       if (error) {
@@ -199,13 +194,21 @@ const useSocialSignInListener = (connectorId: string) => {
         await redirectTo(result.redirectTo);
       }
     },
-    [
-      asyncSignInWithSocial,
-      handleError,
-      redirectTo,
-      signInWithSocialErrorHandlers,
-      verifySocialCallbackData,
-    ]
+    [asyncSignInWithSocial, handleError, redirectTo, signInWithSocialErrorHandlers]
+  );
+
+  const signInWithSocialHandler = useCallback(
+    async (connectorId: string, data: Record<string, unknown>) => {
+      const verificationId = await verifySocialCallbackData(connectorId, data);
+
+      // Exception occurred during verification drop the process
+      if (!verificationId) {
+        return;
+      }
+
+      await completeSignIn(verificationId);
+    },
+    [completeSignIn, verifySocialCallbackData]
   );
 
   // Social Sign-in Callback Handler
@@ -218,11 +221,28 @@ const useSocialSignInListener = (connectorId: string) => {
 
     const { state, ...rest } = parseQueryParameters(searchParameters);
     const data = normalizeExternalWebsiteGoogleOneTapConnectorData(rest);
+    const isSiweCallback = searchParameters.get(SearchParameters.SiweCallback) === '1';
 
     const isGoogleOneTap = isGoogleOneTapChecker(data);
 
     // Cleanup the search parameters once it's consumed
     setSearchParameters({}, { replace: true });
+
+    // Wallet sign-in has already verified the signature before navigating here. The connector
+    // session is consumed, so re-verifying would fail. Continue directly with the verified
+    // social identity.
+    if (isSiweCallback) {
+      const verificationId = verificationIdRef.current;
+
+      if (!verificationId) {
+        setToast(t('error.invalid_session'));
+        navigateToSignIn();
+        return;
+      }
+
+      void completeSignIn(verificationId);
+      return;
+    }
 
     if (isGoogleOneTap) {
       // === Google One Tap flow ===
@@ -253,6 +273,7 @@ const useSocialSignInListener = (connectorId: string) => {
     // Common path — both Google One Tap and normal flow proceed here
     void signInWithSocialHandler(connectorId, data);
   }, [
+    completeSignIn,
     connectorId,
     isConsumed,
     navigateToSignIn,
@@ -262,6 +283,7 @@ const useSocialSignInListener = (connectorId: string) => {
     signInWithSocialHandler,
     t,
     validateAndRestore,
+    verificationIdRef,
   ]);
 
   return { loading };

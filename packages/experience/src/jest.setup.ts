@@ -1,3 +1,6 @@
+// eslint-disable-next-line n/prefer-global/text-encoder -- jsdom does not provide TextEncoder
+import { TextEncoder as NodeTextEncoder } from 'node:util';
+
 import { type LocalePhrase } from '@logto/phrases-experience';
 import { ssrPlaceholder } from '@logto/schemas';
 import { type DeepPartial } from '@silverhand/essentials';
@@ -5,6 +8,10 @@ import i18next from 'i18next';
 import { createElement, forwardRef, type ReactNode } from 'react';
 import { initReactI18next } from 'react-i18next';
 import ReactModal from 'react-modal';
+
+// Jsdom does not implement TextEncoder, which the wallet adapter uses to hex-encode SIWE messages.
+// eslint-disable-next-line @silverhand/fp/no-mutation -- jsdom does not install the Node.js global
+globalThis.TextEncoder = NodeTextEncoder;
 
 // Ensure react-modal has an appElement in test env to prevent accessibility warning.
 if (typeof document !== 'undefined') {

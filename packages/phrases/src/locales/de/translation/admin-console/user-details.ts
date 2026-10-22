@@ -75,6 +75,9 @@ const user_details = {
   },
   mfa: {
     field_name: 'Zwei-Faktor-Authentifizierung',
+    require_mfa: 'MFA-Einrichtung erforderlich',
+    require_mfa_description:
+      'Dieser Benutzer muss mindestens einen MFA-Faktor einrichten, bevor er die Anmeldung abschließen kann. Die Einrichtung kann nicht übersprungen werden.',
     field_description: 'Dieser Benutzer hat 2-Stufen-Authentifizierungsfaktoren aktiviert.',
     name_column: 'Zwei-Faktor',
     field_description_empty:
@@ -99,6 +102,11 @@ const user_details = {
     'Sind Sie sicher, dass Sie diesen Benutzer wieder aktivieren möchten? Dadurch werden alle Anmeldeversuche für diesen Benutzer ermöglicht.',
   reactivate_action: 'Aktivieren',
   user_reactivated: 'Benutzer wurde aktiviert.',
+  unlock_user: 'Benutzer entsperren',
+  unlock_user_reminder:
+    'Möchten Sie diesen Benutzer wirklich entsperren? Dadurch werden alle Sperren entfernt, die durch fehlgeschlagene Anmelde- und Sicherheitsüberprüfungsversuche entstanden sind. Entsperren Sie nur manuell, wenn Sie die Identität des Benutzers bestätigt und sichergestellt haben, dass keine unbefugten Zugriffsversuche vorliegen.',
+  unlock_action: 'Entsperren',
+  user_unlocked: 'Der Benutzer wurde entsperrt.',
   roles: {
     name_column: 'Benutzerrolle',
     description_column: 'Beschreibung',

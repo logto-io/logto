@@ -603,6 +603,9 @@
           "401": {
             "description": "Unauthorized or identity verification required."
           },
+          "403": {
+            "description": "Permission denied, the application is a third-party application. Account API operations that require recent authentication only accept first-party applications."
+          },
           "404": {
             "description": "No backup codes found for the user."
           }
@@ -706,6 +709,9 @@
           },
           "401": {
             "description": "Permission denied, the verification record is invalid or the session does not have the required scope to access session details."
+          },
+          "403": {
+            "description": "Permission denied, the application is a third-party application. Account API operations that require recent authentication only accept first-party applications."
           }
         }
       }
@@ -728,6 +734,9 @@
           },
           "401": {
             "description": "Permission denied, the verification record is invalid or the session does not have the required scope to access grant details."
+          },
+          "403": {
+            "description": "Permission denied, the application is a third-party application. Account API operations that require recent authentication only accept first-party applications."
           }
         }
       }
@@ -792,6 +801,9 @@
           },
           "401": {
             "description": "Permission denied, the verification record is invalid or the access token does not include the trusted-devices scope."
+          },
+          "403": {
+            "description": "Permission denied, the application is a third-party application. Account API operations that require recent authentication only accept first-party applications."
           }
         }
       }
@@ -822,7 +834,6 @@
     },
     "/api/my-account/personal-access-tokens": {
       "get": {
-        "tags": ["Dev feature"],
         "operationId": "ListMyAccountPersonalAccessTokens",
         "summary": "List personal access tokens",
         "description": "List all personal access tokens of the signed-in user, including expired ones, sorted by creation time in descending order. The token secret values are never returned. The personal-access-tokens scope is required.",
@@ -839,7 +850,6 @@
         }
       },
       "post": {
-        "tags": ["Dev feature"],
         "operationId": "CreateMyAccountPersonalAccessToken",
         "summary": "Create a personal access token",
         "description": "Create a personal access token for the signed-in user. A logto-verification-id in header and the personal-access-tokens scope are required. The token secret value is returned only in this response. The expiration time is required, must be in the future, and must be at most 365 days from now. A user can have at most 20 unexpired personal access tokens.",
@@ -878,7 +888,6 @@
         }
       },
       "patch": {
-        "tags": ["Dev feature"],
         "operationId": "UpdateMyAccountPersonalAccessTokenName",
         "summary": "Rename a personal access token",
         "description": "Rename a personal access token of the signed-in user. A logto-verification-id in header and the personal-access-tokens scope are required.",
@@ -922,7 +931,6 @@
     },
     "/api/my-account/personal-access-tokens/delete": {
       "post": {
-        "tags": ["Dev feature"],
         "operationId": "DeleteMyAccountPersonalAccessToken",
         "summary": "Delete a personal access token",
         "description": "Delete a personal access token of the signed-in user by name. A logto-verification-id in header and the personal-access-tokens scope are required.",

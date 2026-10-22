@@ -75,6 +75,9 @@ const user_details = {
   },
   mfa: {
     field_name: 'Autenticação de dois fatores',
+    require_mfa: 'Exigir configuração de MFA',
+    require_mfa_description:
+      'Este utilizador tem de configurar pelo menos um fator de MFA antes de concluir a sessão. Não pode ignorar a configuração.',
     field_description: 'Este utilizador ativou fatores de autenticação de 2 etapas.',
     name_column: 'Autenticação de dois fatores',
     field_description_empty: 'Este utilizador não ativou fatores de autenticação de 2 passos.',
@@ -98,6 +101,11 @@ const user_details = {
     'Tem a certeza de que deseja reativar este utilizador? Isso permitirá tentativas de login para este utilizador.',
   reactivate_action: 'Reativar',
   user_reactivated: 'O utilizador foi reativado.',
+  unlock_user: 'Desbloquear utilizador',
+  unlock_user_reminder:
+    'Tem a certeza de que pretende desbloquear este utilizador? Isto irá limpar todos os bloqueios causados por tentativas de início de sessão e verificação de segurança falhadas. Desbloqueie manualmente apenas se tiver confirmado a identidade do utilizador e garantido que não houve tentativas de acesso não autorizadas.',
+  unlock_action: 'Desbloquear',
+  user_unlocked: 'O utilizador foi desbloqueado.',
   roles: {
     name_column: 'Função de usuário',
     description_column: 'Descrição',

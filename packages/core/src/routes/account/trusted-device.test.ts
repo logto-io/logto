@@ -171,6 +171,20 @@ describe('account trusted device routes', () => {
     expect(findActiveByUserId).not.toHaveBeenCalled();
   });
 
+  it('rejects GET from a third-party application', async () => {
+    assertFirstPartyClient.mockRejectedValueOnce(
+      new RequestError({ code: 'auth.third_party_application_forbidden', status: 403 })
+    );
+
+    const response = await buildRequester({ clientId: 'third-party-application' }).get(
+      '/my-account/trusted-devices'
+    );
+
+    expect(response.status).toBe(403);
+    expect(response.body).toHaveProperty('code', 'auth.third_party_application_forbidden');
+    expect(findActiveByUserId).not.toHaveBeenCalled();
+  });
+
   it('deletes an owned remote device without clearing the current credential', async () => {
     deleteByIdAndUserId.mockResolvedValueOnce(otherTrustedDevice);
 
