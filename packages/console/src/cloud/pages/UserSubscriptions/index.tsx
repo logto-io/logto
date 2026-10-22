@@ -1,26 +1,33 @@
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+
 import { useSubscriptionEntry } from '@/cloud/hooks/use-user-subscriptions';
-import FormCard from '@/components/FormCard';
 import PageMeta from '@/components/PageMeta';
 import Topbar from '@/components/Topbar';
+import { EnterpriseSubscriptionTabs } from '@/consts';
 import { contactEmailLink } from '@/consts/external-links';
 import AppBoundary from '@/containers/AppBoundary';
+import { GlobalRoute } from '@/contexts/TenantsProvider';
 import CardTitle from '@/ds-components/CardTitle';
 import DynamicT from '@/ds-components/DynamicT';
 import InlineNotification from '@/ds-components/InlineNotification';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
+import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import TextLink from '@/ds-components/TextLink';
 
 import layout from '../EnterpriseSubscription/index.module.scss';
 
-import BillingHistory from './BillingHistory';
-import EnterpriseCoverage from './EnterpriseCoverage';
-import PersonalSubscriptions from './PersonalSubscriptions';
 import styles from './index.module.scss';
+import { type UserSubscriptionsOutletContext } from './types';
+
+const tabs = [
+  [EnterpriseSubscriptionTabs.Subscription, 'enterprise_subscription.tab.subscription'],
+  [EnterpriseSubscriptionTabs.BillingHistory, 'enterprise_subscription.tab.billing_history'],
+] as const;
 
 function UserSubscriptions() {
   const { enterprises } = useSubscriptionEntry();
-  // Console SSO creation uses only the first Enterprise; never list other contracts as coverage.
-  const enterprise = enterprises.data?.[0];
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
   return (
     <AppBoundary>
       <div className={layout.pageContainer}>
@@ -29,9 +36,26 @@ function UserSubscriptions() {
         <OverlayScrollbar className={layout.scrollable}>
           <div className={layout.wrapper}>
             <CardTitle
+              className={layout.cardTitle}
               title="enterprise_subscription.title"
               subtitle="enterprise_subscription.user_subscriptions.description"
             />
+            <TabNav className={layout.tabs}>
+              {tabs.map(([tab, phrase]) => {
+                const tabPathname = `${GlobalRoute.EnterpriseSubscription}/${tab}`;
+                return (
+                  <TabNavItem
+                    key={tab}
+                    isActive={pathname === tabPathname}
+                    onClick={() => {
+                      navigate(tabPathname);
+                    }}
+                  >
+                    <DynamicT forKey={phrase} />
+                  </TabNavItem>
+                );
+              })}
+            </TabNav>
             <div className={styles.content}>
               {enterprises.error && (
                 <InlineNotification
@@ -44,16 +68,13 @@ function UserSubscriptions() {
                   {enterprises.error.message}
                 </InlineNotification>
               )}
-              {enterprise && (
-                <FormCard
-                  title="enterprise_subscription.subscription.enterprise_plan_title"
-                  description="enterprise_subscription.user_subscriptions.enterprise_description"
-                >
-                  <EnterpriseCoverage enterprise={enterprise} />
-                </FormCard>
-              )}
-              <PersonalSubscriptions />
-              <BillingHistory enterprise={enterprise} />
+              <Outlet
+                context={
+                  {
+                    enterprise: enterprises.data?.[0],
+                  } satisfies UserSubscriptionsOutletContext
+                }
+              />
               <TextLink href={contactEmailLink}>
                 <DynamicT forKey="general.contact_us_action" />
               </TextLink>

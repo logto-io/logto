@@ -2,7 +2,7 @@ import phrases from '@logto/phrases';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import i18next from 'i18next';
 import { createElement, type ReactNode } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Outlet, Route, Routes } from 'react-router-dom';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import {
@@ -40,6 +40,7 @@ jest.mock('@/hooks/use-current-tenant-scopes', () => ({
   __esModule: true,
   default: () => ({ access: { isReadOnly: false } }),
 }));
+jest.mock('@/components/PageMeta', () => ({ __esModule: true, default: () => null }));
 jest.mock('@/hooks/use-theme', () => ({ __esModule: true, default: () => 'light' }));
 jest.mock('@/cloud/hooks/use-cloud-api', () => ({ useCloudApi: jest.fn() }));
 jest.mock('@/cloud/hooks/use-user-subscriptions', () => ({
@@ -93,12 +94,21 @@ const mockEnterprise = (invoices: unknown[] | undefined, error?: Error) => {
     mutate: mutateEnterprise,
   } as unknown as ReturnType<typeof useEnterpriseInvoices>);
 };
+// The page layout shares its first Enterprise with the tab through the outlet context.
 const renderHistory = (enterprise?: { id: string }) =>
   render(
     createElement(
       MemoryRouter,
       { future: { v7_startTransition: true, v7_relativeSplatPath: true } },
-      createElement(BillingHistory, { enterprise })
+      createElement(
+        Routes,
+        null,
+        createElement(
+          Route,
+          { element: createElement(Outlet, { context: { enterprise } }) },
+          createElement(Route, { index: true, element: createElement(BillingHistory) })
+        )
+      )
     )
   );
 const getRow = (text: string) => screen.getByText(text).closest('tr')!;

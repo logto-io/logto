@@ -55,9 +55,10 @@ const enterprise_subscription = {
       'Art arda üç ödenmemiş fatura dönemi ve yeniden denemelerin tükenmesinden sonra tahsilat duraklatılır ve ücretli Console SSO bağlayıcıları kaldırılır. Ödeme bilgilerini güncellemek yapılandırmalarını geri yüklemez. Yardım için bize ulaşın.',
     cancel_on: '{{date}} tarihinde iptal edilecek',
     other_product: 'Diğer abonelik',
-    billing_history_title: 'Fatura geçmişi',
-    billing_history_description:
-      'Kişisel aboneliklerinizin ve Enterprise sözleşmenizin faturaları. Görüntülemek ve fatura ya da makbuzu indirmek için bir fatura seçin.',
+    enterprise_invoices_description:
+      'Enterprise sözleşmenizin faturaları. Görüntülemek ve fatura ya da makbuzu indirmek için bir fatura seçin.',
+    personal_invoices_description:
+      'Geçmiş abonelikler dahil, hesabınıza faturalanan aboneliklerin faturaları. Görüntülemek ve fatura ya da makbuzu indirmek için bir fatura seçin.',
     credit_note:
       'Kaldırma veya kıst hesaplamadan doğan krediler sonraki faturalardan düşülür ve ödeme yönteminize hemen iade edilmeyebilir.',
     invoice_link_unavailable:

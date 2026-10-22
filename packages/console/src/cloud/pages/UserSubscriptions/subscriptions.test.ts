@@ -2,7 +2,7 @@ import phrases from '@logto/phrases';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import i18next from 'i18next';
 import { createElement, type ReactNode } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
@@ -13,8 +13,10 @@ import EnterpriseSubscriptions from '@/components/Topbar/EnterpriseSubscriptions
 import { useConsoleSsoConnectors } from '../ConsoleSso/use-console-sso';
 
 import UserSubscriptions from '.';
+import BillingHistory from './BillingHistory';
 import EnterpriseCoverage from './EnterpriseCoverage';
 import PersonalSubscriptions from './PersonalSubscriptions';
+import Subscription from './Subscription';
 
 jest.mock('@withtyped/client', () => ({ ResponseError: class extends Error {} }), {
   virtual: true,
@@ -100,6 +102,36 @@ const renderView = (children: ReactNode) =>
           value: { provider: () => new Map(), shouldRetryOnError: false, dedupingInterval: 0 },
         },
         children
+      )
+    )
+  );
+
+const renderPage = (tab: string) =>
+  render(
+    createElement(
+      MemoryRouter,
+      {
+        initialEntries: [`/subscriptions/${tab}`],
+        future: { v7_startTransition: true, v7_relativeSplatPath: true },
+      },
+      createElement(
+        SWRConfig,
+        {
+          value: { provider: () => new Map(), shouldRetryOnError: false, dedupingInterval: 0 },
+        },
+        createElement(
+          Routes,
+          null,
+          createElement(
+            Route,
+            { path: '/subscriptions', element: createElement(UserSubscriptions) },
+            createElement(Route, { path: 'subscription', element: createElement(Subscription) }),
+            createElement(Route, {
+              path: 'billing-history',
+              element: createElement(BillingHistory),
+            })
+          )
+        )
       )
     )
   );
@@ -257,7 +289,7 @@ it('shows only the first Enterprise, matching Console SSO creation', async () =>
     enterprises: { data: [enterprise, { id: 'other', name: 'Other Enterprise' }] },
     hasSubscriptions: false,
   } as unknown as ReturnType<typeof useSubscriptionEntry>);
-  renderView(createElement(UserSubscriptions));
+  renderPage('subscription');
   await waitFor(() => {
     expect(get).toHaveBeenCalledTimes(1);
   });
@@ -300,3 +332,23 @@ it.each([
     expect(link.getAttribute('target')).toBe('_blank');
   }
 );
+
+it.each([
+  ['subscription', 'Personal subscriptions', /Quantity × unit price/],
+  ['billing-history', 'Personal subscriptions', /Select an invoice to view it/],
+])('shows only the %s tab content on the global Subscription page', (tab, title, content) => {
+  jest.mocked(useSubscriptionEntry).mockReturnValue({
+    enterprises: { data: [] },
+    hasSubscriptions: true,
+  } as unknown as ReturnType<typeof useSubscriptionEntry>);
+  renderPage(tab);
+  expect(screen.getByText('Subscription')).toBeTruthy();
+  expect(screen.getByText('Billing history')).toBeTruthy();
+  expect(screen.getByText(title)).toBeTruthy();
+  expect(screen.getByText(content)).toBeTruthy();
+  if (tab === 'subscription') {
+    expect(screen.queryByText(/Select an invoice to view it/)).toBeNull();
+  } else {
+    expect(screen.queryByText(/Quantity × unit price/)).toBeNull();
+  }
+});

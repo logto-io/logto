@@ -52,9 +52,10 @@ const enterprise_subscription = {
       '连续三个账期未付款且重试耗尽后，将暂停收款并移除付费 Console SSO 连接器。更新付款信息不会恢复其配置。如需帮助，请联系我们。',
     cancel_on: '计划于 {{date}} 取消',
     other_product: '其他订阅',
-    billing_history_title: '账单历史',
-    billing_history_description:
-      '你的个人订阅和 Enterprise 合同的发票。选择一张发票即可查看，并下载发票或收据。',
+    enterprise_invoices_description:
+      '你的 Enterprise 合同的发票。选择一张发票即可查看，并下载发票或收据。',
+    personal_invoices_description:
+      '向你的账户计费的订阅发票，包括以往的订阅。选择一张发票即可查看，并下载发票或收据。',
     credit_note: '移除或按比例计费产生的抵扣额会冲抵后续发票，不一定会立即退回到你的付款方式。',
     invoice_link_unavailable: '此发票页面不可用。如需副本，请联系我们。',
     status: {

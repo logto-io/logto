@@ -3,24 +3,26 @@ import { ResponseError } from '@withtyped/client';
 import dayjs from 'dayjs';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useOutletContext } from 'react-router-dom';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import {
   useEnterpriseInvoices,
   useUserSubscriptionInvoices,
 } from '@/cloud/hooks/use-user-subscriptions';
-import { type LogtoEnterpriseResponse, type UserSubscriptionInvoice } from '@/cloud/types/router';
+import { type UserSubscriptionInvoice } from '@/cloud/types/router';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import FormCard from '@/components/FormCard';
 import ItemPreview from '@/components/ItemPreview';
+import PageMeta from '@/components/PageMeta';
 import DynamicT from '@/ds-components/DynamicT';
-import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Table from '@/ds-components/Table';
 import InvoiceStatusTag from '@/pages/TenantSettings/BillingHistory/InvoiceStatusTag';
 import { formatInvoicePeriod } from '@/utils/subscription';
 
 import styles from './index.module.scss';
+import { type UserSubscriptionsOutletContext } from './types';
 import { formatCurrencyAmount, getProductTitleKey } from './utils';
 
 const invoicePageSize = 10;
@@ -109,13 +111,10 @@ function InvoiceTable({
   );
 }
 
-type Props = {
-  readonly enterprise?: Pick<LogtoEnterpriseResponse, 'id'>;
-};
-
 /** Personal and Enterprise invoices stay in separate lists, each read from its authorized API. */
-function BillingHistory({ enterprise }: Props) {
+function BillingHistory() {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { enterprise } = useOutletContext<UserSubscriptionsOutletContext>();
   const api = useCloudApi({ hideErrorToast: true });
   const subscriptionsApi = useCloudApi<typeof userSubscriptionsRouter>({ hideErrorToast: true });
   const [page, setPage] = useState(1);
@@ -152,10 +151,13 @@ function BillingHistory({ enterprise }: Props) {
     linkError?.error instanceof ResponseError && linkError.error.response.status === 404;
 
   return (
-    <FormCard
-      title="enterprise_subscription.user_subscriptions.billing_history_title"
-      description="enterprise_subscription.user_subscriptions.billing_history_description"
-    >
+    <>
+      <PageMeta
+        titleKey={[
+          'enterprise_subscription.tab.billing_history',
+          'enterprise_subscription.page_title',
+        ]}
+      />
       {linkError &&
         (isLinkUnavailable ? (
           <InlineNotification severity="alert">
@@ -167,7 +169,10 @@ function BillingHistory({ enterprise }: Props) {
           </InlineNotification>
         ))}
       {enterprise && (
-        <FormField title="enterprise_subscription.subscription.enterprise_plan_title">
+        <FormCard
+          title="enterprise_subscription.subscription.enterprise_plan_title"
+          description="enterprise_subscription.user_subscriptions.enterprise_invoices_description"
+        >
           <InvoiceTable
             invoices={enterpriseInvoices.data}
             isLoading={enterpriseInvoices.isLoading}
@@ -184,9 +189,12 @@ function BillingHistory({ enterprise }: Props) {
               );
             }}
           />
-        </FormField>
+        </FormCard>
       )}
-      <FormField title="enterprise_subscription.user_subscriptions.personal_title">
+      <FormCard
+        title="enterprise_subscription.user_subscriptions.personal_title"
+        description="enterprise_subscription.user_subscriptions.personal_invoices_description"
+      >
         <InvoiceTable
           hasProduct
           invoices={personal.data?.invoices}
@@ -205,8 +213,8 @@ function BillingHistory({ enterprise }: Props) {
           }}
         />
         <p className={styles.note}>{t('enterprise_subscription.user_subscriptions.credit_note')}</p>
-      </FormField>
-    </FormCard>
+      </FormCard>
+    </>
   );
 }
 
