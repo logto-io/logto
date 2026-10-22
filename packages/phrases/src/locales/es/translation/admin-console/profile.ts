@@ -28,6 +28,7 @@ const profile = {
       quit_tenant_other: 'Estás a punto de salir de los siguientes inquilinos:',
     },
     issues: {
+      console_sso: 'Elimina todos los conectores de Console SSO de tu cuenta antes de eliminarla.',
       paid_plan:
         'El siguiente inquilino tiene un plan pagado, por favor cancela la suscripción primero:',
       paid_plan_other:

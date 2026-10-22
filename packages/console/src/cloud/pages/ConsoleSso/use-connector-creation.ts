@@ -225,7 +225,7 @@ export const useConnectorCreation = (userId: string, onClose: (id?: string) => v
       const current = selectCreationFunding(
         userId,
         getOrCreatePendingConnectorCreation(userId, providerName),
-        { funding: billing.funding }
+        { funding: billing.funding, enterpriseId: billing.enterpriseId }
       );
       setOperation(current);
       await run(current, true);

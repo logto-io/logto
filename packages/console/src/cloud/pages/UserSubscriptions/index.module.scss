@@ -1,0 +1,29 @@
+@use '@/scss/underscore' as _;
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(4);
+  margin-bottom: _.unit(6);
+}
+
+.coverage {
+  display: flex;
+  flex-direction: column;
+  gap: _.unit(3);
+}
+
+.coverageValues {
+  display: flex;
+  flex-wrap: wrap;
+  gap: _.unit(4);
+}
+
+.item + .item {
+  margin-top: _.unit(2);
+}
+
+.note {
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+}

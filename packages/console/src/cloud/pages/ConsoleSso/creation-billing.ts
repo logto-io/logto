@@ -10,17 +10,18 @@ import {
   savePendingConnectorCreation,
 } from './connector-creation-idempotency';
 
+/** Only an active or trialing shared Enterprise plan grants Console SSO coverage. */
+export const isEnterpriseCoverageEligible = (enterprise?: LogtoEnterpriseSubscriptionResponse) =>
+  enterprise?.quotaScope === 'shared' &&
+  (enterprise.subscription?.status === 'active' || enterprise.subscription?.status === 'trialing');
+
 /** Match the contract's basic allowance; tenant plans and add-on totals do not grant coverage. */
 export const getIncludedCapacity = (enterprise?: LogtoEnterpriseSubscriptionResponse) => {
   const limit = enterprise?.quota?.basicQuota.consoleSsoConnectorLimit;
   const used = enterprise?.usages?.consoleSsoConnectorLimit;
-  const isEligible =
-    enterprise?.quotaScope === 'shared' &&
-    (enterprise.subscription?.status === 'active' ||
-      enterprise.subscription?.status === 'trialing');
   return {
     isAvailable: Boolean(
-      isEligible &&
+      isEnterpriseCoverageEligible(enterprise) &&
         typeof used === 'number' &&
         (limit === null || (limit !== undefined && used < limit))
     ),
@@ -30,6 +31,8 @@ export const getIncludedCapacity = (enterprise?: LogtoEnterpriseSubscriptionResp
 type CreationFunding = {
   funding: 'included' | 'personal';
   subscriptionId?: string;
+  /** The Enterprise whose allowance funds an included connector. */
+  enterpriseId?: string;
 };
 
 /** Keep billing selection fixed once a creation request may have reached the server. */
@@ -37,15 +40,43 @@ export const selectCreationFunding = (
   userId: string,
   operation: PendingConnectorCreation,
   funding: CreationFunding
-) =>
-  operation.funding
-    ? operation
-    : savePendingConnectorCreation(userId, { ...operation, ...funding });
+) => {
+  if (operation.funding) {
+    return operation;
+  }
+  if (funding.funding === 'included' && !funding.enterpriseId) {
+    throw new Error('Select an Enterprise before creating a connector.');
+  }
+  return savePendingConnectorCreation(userId, { ...operation, ...funding });
+};
 
 const assertCurrentOperation = (userId: string, operation: PendingConnectorCreation) => {
   if (!isPendingConnectorCreationCurrent(userId, operation)) {
     throw new DOMException('Connector creation was replaced or cleared.', 'AbortError');
   }
+};
+
+const requestConnectorCreation = async (
+  operation: PendingConnectorCreation,
+  api: Client<typeof consoleSsoRouter>
+) => {
+  const { providerName, enterpriseId, subscriptionId } = operation;
+  if (operation.funding === 'included') {
+    // Older pending operations lack an Enterprise selector; keep them for explicit cleanup.
+    if (!enterpriseId) {
+      throw new Error('Start over to select an Enterprise for this connector.');
+    }
+    return api.post('/api/me/logto-enterprises/:id/console-sso/connectors', {
+      params: { id: enterpriseId },
+      body: { providerName },
+    });
+  }
+  if (!subscriptionId) {
+    throw new Error('A personal subscription is required to create a connector.');
+  }
+  return api.post('/api/me/console-sso/connectors', {
+    body: { providerName, stripeUserSubscriptionId: subscriptionId },
+  });
 };
 
 /** Resume payment or fulfillment using the persisted intention, never a redirect's payment claim. */
@@ -96,12 +127,7 @@ export const continueConnectorCreation = async (
   };
   const createConnector = async (current: PendingConnectorCreation) => {
     assertCurrent(current);
-    const connector = await getApi(current.key).post('/api/me/console-sso/connectors', {
-      body: {
-        providerName: current.providerName,
-        ...(current.subscriptionId && { stripeUserSubscriptionId: current.subscriptionId }),
-      },
-    });
+    const connector = await requestConnectorCreation(current, getApi(current.key));
     assertCurrent(current);
     return { status: 'created' as const, id: connector.id, operation: current };
   };

@@ -32,6 +32,46 @@ const enterprise_subscription = {
     private_region_title: 'Private cloud instance ({{regionName}})',
     shared_cross_tenants: 'Across tenants',
   },
+  user_subscriptions: {
+    description:
+      'View your personal subscriptions and contracted Enterprise coverage, independently of your selected tenant.',
+    personal_title: 'Personal subscriptions',
+    personal_description: 'Subscriptions billed to your account, including past subscriptions.',
+    enterprise_description:
+      'Console SSO allowance is defined by your contract and shared across authorized managers. Personal subscriptions are billed separately.',
+    allowance: 'Contract allowance',
+    not_covered:
+      "This Enterprise plan doesn't include a Console SSO allowance. New connectors are billed to a personal subscription.",
+    quantity_price: 'Quantity × unit price',
+    billing_period: 'Billing period',
+    connectors: 'Console SSO connectors',
+    no_connectors: 'No connectors',
+    list_price_note:
+      'The displayed quantity, unit price and status come from the subscription record. Pausing collection may leave the quantity and status unchanged. Unit prices exclude taxes, discounts and prorations and do not represent current charges or an amount due.',
+    proration_note:
+      'Console SSO additions and removals are prorated on the regular invoice. Deleting the last paid connector cancels and settles the subscription.',
+    overdue_note:
+      'After three consecutive unpaid billing cycles and exhausted retries, collection is paused and paid Console SSO connectors are removed. Updating payment does not restore their configuration. Contact us for help.',
+    cancel_on: 'Cancellation scheduled for {{date}}',
+    other_product: 'Other subscription',
+    enterprise_invoices_description:
+      'Invoices for your Enterprise contract. Select an invoice to view it and download the invoice or receipt.',
+    personal_invoices_description:
+      'Invoices for subscriptions billed to your account, including past subscriptions. Select an invoice to view it and download the invoice or receipt.',
+    credit_note:
+      'Credits from removals or prorations reduce later invoices and are not necessarily refunded to your payment method right away.',
+    invoice_link_unavailable: 'This invoice page is unavailable. Contact us if you need a copy.',
+    status: {
+      active: 'Active',
+      trialing: 'Trialing',
+      past_due: 'Past due',
+      unpaid: 'Unpaid',
+      canceled: 'Canceled',
+      incomplete: 'Incomplete',
+      incomplete_expired: 'Expired',
+      paused: 'Paused',
+    },
+  },
 };
 
 export default Object.freeze(enterprise_subscription);
