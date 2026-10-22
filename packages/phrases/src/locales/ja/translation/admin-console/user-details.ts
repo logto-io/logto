@@ -72,6 +72,9 @@ const user_details = {
   },
   mfa: {
     field_name: '多要素認証',
+    require_mfa: 'MFA の設定を必須にする',
+    require_mfa_description:
+      'このユーザーはサインインを完了する前に、少なくとも1つの MFA 要素を設定する必要があります。設定をスキップすることはできません。',
     field_description: 'このユーザーは2段階認証要素を有効にしました。',
     name_column: '多要素認証',
     field_description_empty: 'このユーザーは2段階認証の要因を有効にしていません。',
@@ -94,6 +97,11 @@ const user_details = {
     'このユーザーをリアクティブ化することを確認しますか？それにより、このユーザーのサインイン試行が許可されます。',
   reactivate_action: '活性化',
   user_reactivated: 'ユーザーが再活性化されました。',
+  unlock_user: 'ユーザーのロックを解除',
+  unlock_user_reminder:
+    'このユーザーのロックを解除してもよろしいですか？サインインおよびセキュリティ検証の失敗によって発生したすべてのロックが解除されます。ユーザーの本人確認が完了し、不正なアクセス試行がないことを確認した場合にのみ、手動でロックを解除してください。',
+  unlock_action: 'ロックを解除',
+  user_unlocked: 'ユーザーのロックが解除されました。',
   roles: {
     name_column: 'ユーザー役割',
     description_column: '説明',

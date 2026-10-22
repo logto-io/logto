@@ -140,6 +140,7 @@ const description = {
     phone_verification_code: 'Telefon doğrulama kodu',
     verification_code_description: '{{target}} adresine gönder',
   },
+  select_wallet: 'Bir cüzdan seçin',
 };
 
 export default Object.freeze(description);

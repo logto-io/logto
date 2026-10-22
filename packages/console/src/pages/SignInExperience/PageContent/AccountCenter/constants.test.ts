@@ -1,30 +1,11 @@
-const mockIsDevFeaturesEnabled = jest.fn(() => true);
+import { accountCenterSections } from './constants';
 
-jest.mock('@/consts/env', () => ({
-  get isDevFeaturesEnabled() {
-    return mockIsDevFeaturesEnabled();
-  },
-}));
-
-const getAccountSecurityGroups = async () => {
-  const { accountCenterSections } = await import('./constants');
-  const accountSecuritySection = accountCenterSections.find(({ key }) => key === 'accountSecurity');
-
-  return accountSecuritySection?.groups ?? [];
-};
+const getAccountSecurityGroups = () =>
+  accountCenterSections.find(({ key }) => key === 'accountSecurity')?.groups ?? [];
 
 describe('Account Center field sections', () => {
-  beforeEach(() => {
-    mockIsDevFeaturesEnabled.mockReturnValue(true);
-  });
-
-  afterEach(() => {
-    jest.resetModules();
-    jest.clearAllMocks();
-  });
-
-  it('shows an independent trusted-device permission under session management', async () => {
-    const groups = await getAccountSecurityGroups();
+  it('shows an independent trusted-device permission under session management', () => {
+    const groups = getAccountSecurityGroups();
     const sessionManagementGroup = groups.find(({ key }) => key === 'sessionManagement');
 
     expect(sessionManagementGroup?.items.map(({ key }) => key)).toEqual([
@@ -33,8 +14,8 @@ describe('Account Center field sections', () => {
     ]);
   });
 
-  it('shows the personal access token permission under developer settings', async () => {
-    const groups = await getAccountSecurityGroups();
+  it('shows the personal access token permission under developer settings', () => {
+    const groups = getAccountSecurityGroups();
     const developerSettingsGroup = groups.find(({ key }) => key === 'developerSettings');
 
     expect(developerSettingsGroup?.items).toEqual([
@@ -44,13 +25,5 @@ describe('Account Center field sections', () => {
         description: 'sign_in_exp.account_center.fields.personal_access_tokens_description',
       },
     ]);
-  });
-
-  it('hides the personal access token permission when dev features are disabled', async () => {
-    mockIsDevFeaturesEnabled.mockReturnValue(false);
-
-    const groups = await getAccountSecurityGroups();
-
-    expect(groups.map(({ key }) => key)).not.toContain('developerSettings');
   });
 });

@@ -90,7 +90,12 @@ export const sanitizedMfaDataGuard = z.object({
 
 const parseUserMfaData = (
   logtoConfig: JsonObject
-): { enabled?: boolean; skipped?: boolean; additionalBindingSuggestionSkipped?: boolean } => {
+): {
+  enabled?: boolean;
+  skipped?: boolean;
+  required?: boolean;
+  additionalBindingSuggestionSkipped?: boolean;
+} => {
   const parsed = z.object({ [userMfaDataKey]: userMfaDataGuard }).safeParse(logtoConfig);
   return parsed.success ? parsed.data[userMfaDataKey] : {};
 };
@@ -232,8 +237,7 @@ export class Mfa {
     const user = await this.interactionContext.getIdentifiedUser();
 
     assertThat(
-      !isNoSkipMfaPolicy(policy) &&
-        !(await this.isMfaRequiredByUserOrganizations(mfaSettings, user.id)),
+      !isNoSkipMfaPolicy(policy) && !(await this.isMfaRequiredByUser(mfaSettings, user)),
       new RequestError({
         code: 'session.mfa.mfa_policy_not_user_controlled',
         status: 422,
@@ -450,7 +454,7 @@ export class Mfa {
       return;
     }
 
-    const { logtoConfig, id: userId } = identifiedUser;
+    const { logtoConfig } = identifiedUser;
 
     const userMfaData = parseUserMfaData(logtoConfig);
     const hasEnabledMfa = this.#mfaEnabled ?? userMfaData.enabled;
@@ -461,8 +465,8 @@ export class Mfa {
       return;
     }
 
-    // If MFA is required by organizations, bypass.
-    if (await this.isMfaRequiredByUserOrganizations(mfaSettings, userId, organizations)) {
+    // If MFA is required for the user, bypass the optional suggestion.
+    if (await this.isMfaRequiredByUser(mfaSettings, identifiedUser, organizations)) {
       return;
     }
 
@@ -497,30 +501,26 @@ export class Mfa {
     }
 
     const { user: identifiedUser } = submitMfaValidationContext;
-    const { logtoConfig, id: userId } = identifiedUser;
+    const { logtoConfig } = identifiedUser;
 
-    const isMfaRequiredByUserOrganizations = await this.isMfaRequiredByUserOrganizations(
+    const isMfaRequired = await this.isMfaRequiredByUser(
       mfaSettings,
-      userId,
+      identifiedUser,
       organizations
     );
 
-    // If the policy is no prompt, and mfa is not required by the user organizations, then there is nothing to check
-    if (
-      !asNoSkipMandatoryPolicy &&
-      policy === MfaPolicy.NoPrompt &&
-      !isMfaRequiredByUserOrganizations
-    ) {
+    // If the policy is no prompt, and MFA is not required for the user, then there is nothing to check
+    if (!asNoSkipMandatoryPolicy && policy === MfaPolicy.NoPrompt && !isMfaRequired) {
       return;
     }
 
     // If the policy is not mandatory and the user has skipped MFA,
-    // and MFA is not required by the user organizations, then there is nothing to check
+    // and MFA is not required for the user, then there is nothing to check
     if (
       !asNoSkipMandatoryPolicy &&
       !isNoSkipMfaPolicy(policy) &&
       (this.#mfaSkipped ?? isMfaSkipped(logtoConfig)) &&
-      !isMfaRequiredByUserOrganizations
+      !isMfaRequired
     ) {
       return;
     }
@@ -557,7 +557,9 @@ export class Mfa {
           ...conditional(
             !asNoSkipMandatoryPolicy &&
               !isNoSkipMfaPolicy(policy) &&
-              !isMfaRequiredByUserOrganizations && { skippable: true }
+              !isMfaRequired && {
+                skippable: true,
+              }
           ),
         }
       );
@@ -682,18 +684,33 @@ export class Mfa {
     assertThat(isFactorsEnabled, new RequestError({ code: 'session.mfa.mfa_factor_not_enabled' }));
   }
 
-  private async isMfaRequiredByUserOrganizations(
+  /**
+   * Whether MFA setup is required for the user, either by an explicit per-user requirement or by
+   * an organization that requires MFA.
+   *
+   * The per-user requirement is independent of `organizationRequiredMfaPolicy`. When no MFA factor
+   * is enabled in the sign-in experience, there is nothing to enforce.
+   */
+  private async isMfaRequiredByUser(
     mfaSettings: MfaSettings,
-    userId: string,
+    user: Pick<User, 'id' | 'logtoConfig'>,
     organizations?: Readonly<OrganizationWithRoles[]>
   ) {
+    if (mfaSettings.factors.length === 0) {
+      return false;
+    }
+
+    if (parseUserMfaData(user.logtoConfig).required === true) {
+      return true;
+    }
+
     if (mfaSettings.organizationRequiredMfaPolicy !== OrganizationRequiredMfaPolicy.Mandatory) {
       return false;
     }
 
     const resolvedOrganizations =
       organizations ??
-      (await this.queries.organizations.relations.users.getOrganizationsByUserId(userId));
+      (await this.queries.organizations.relations.users.getOrganizationsByUserId(user.id));
 
     return resolvedOrganizations.some(({ isMfaRequired }) => isMfaRequired);
   }

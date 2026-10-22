@@ -146,6 +146,7 @@ const description = {
     phone_verification_code: 'Codice di verifica telefonico',
     verification_code_description: 'Invia a {{target}}',
   },
+  select_wallet: 'Seleziona un portafoglio',
 };
 
 export default Object.freeze(description);

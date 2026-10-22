@@ -50,6 +50,15 @@ const error = {
     'Sie haben keine Berechtigung, auf diese Anwendung zuzugreifen.\nBitte kontaktieren Sie Ihren Administrator um Hilfe.',
   feature_not_enabled:
     'Sie haben keine Berechtigung, auf diese Funktion zuzugreifen. Bitte kontaktieren Sie Ihren Administrator um Hilfe.',
+  wallet_not_found:
+    'Keine Ethereum-Wallet gefunden. Installieren Sie eine Browser-Wallet-Erweiterung und versuchen Sie es erneut.',
+  wallet_not_supported:
+    'Die Anmeldung mit einer Wallet wird nur in einem Browser mit installierter Wallet-Erweiterung unterstützt.',
+  wallet_request_rejected: 'Die Wallet-Anfrage wurde abgelehnt. Bitte versuchen Sie es erneut.',
+  wallet_unsupported_chain:
+    'Ihre Wallet ist mit einem nicht unterstützten Netzwerk verbunden. Wechseln Sie das Netzwerk und versuchen Sie es erneut.',
+  wallet_signature_invalid:
+    'Die Wallet-Signatur ist ungültig oder abgelaufen. Bitte versuchen Sie es erneut.',
 };
 
 export default Object.freeze(error);

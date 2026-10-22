@@ -43,6 +43,11 @@ const security = {
       description:
         'Open-source, self-hosted proof-of-work CAPTCHA without visual puzzles or third-party services, ideal for regions where other CAPTCHA services are unreachable.',
     },
+    geetest: {
+      name: 'GeeTest',
+      description:
+        'GeeTest adaptive CAPTCHA with localized challenges and strong performance in mainland China.',
+    },
   },
   captcha_details: {
     back_to_security: 'Back to security',
@@ -62,6 +67,8 @@ const security = {
     cap_endpoint_placeholder: 'https://cap.example.com',
     cap_endpoint_http_notice:
       'This endpoint uses HTTP, which is only suitable for local development. Browsers block HTTP requests from an HTTPS sign-in page, and the secret key would be sent unencrypted. Use HTTPS in production.',
+    geetest_captcha_id: 'CAPTCHA ID',
+    geetest_captcha_key: 'CAPTCHA key',
     deletion_description: 'Are you sure you want to delete this CAPTCHA provider?',
     captcha_deleted: 'CAPTCHA provider deleted successfully',
     setup_captcha: 'Setup CAPTCHA',
@@ -161,17 +168,18 @@ const security = {
     manual_unlock: {
       title: 'Manual unlock',
       description:
-        'Unlock users immediately by confirming their identity and entering their identifier.',
-      unblock_by_identifiers: 'Unblock by identifier',
+        'Unlock users immediately by confirming their identity and entering their identifier or user ID.',
+      unblock_by_identifiers: 'Unblock by identifier or user ID',
       modal_description_1:
-        'An identifier was temporarily locked due to multiple failed sign-in/sign-up attempts. To protect security, access will automatically restore after the lockout duration.',
+        'An identifier or user ID was temporarily locked due to multiple failed sign-in/sign-up or security verification attempts. To protect security, access will automatically restore after the lockout duration.',
       modal_description_2:
         ' Only unlock manually if you’ve confirmed the user’s identity and ensured no unauthorized access attempts.',
-      placeholder: 'Enter identifiers (email address / phone number / username)',
+      placeholder:
+        'Enter identifiers or user IDs (email address / phone number / username / user ID)',
       confirm_button_text: 'Unlock now',
       success_toast: 'Unlocked successfully',
-      duplicate_identifier_error: 'Identifier already added',
-      empty_identifier_error: 'Please enter at least one identifier',
+      duplicate_identifier_error: 'Identifier or user ID already added',
+      empty_identifier_error: 'Please enter at least one identifier or user ID',
     },
   },
   blocklist: {

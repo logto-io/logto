@@ -41,6 +41,11 @@ const security = {
       description:
         'Otwartoźródłowa, samodzielnie hostowana CAPTCHA oparta na proof-of-work, bez wizualnych łamigłówek i usług zewnętrznych – idealna dla regionów, w których inne usługi CAPTCHA są niedostępne.',
     },
+    geetest: {
+      name: 'GeeTest',
+      description:
+        'Adaptacyjna CAPTCHA GeeTest z lokalnymi wyzwaniami i stabilnym działaniem w Chinach kontynentalnych.',
+    },
   },
   captcha_details: {
     back_to_security: 'Powrót do bezpieczeństwa',
@@ -60,6 +65,8 @@ const security = {
     cap_endpoint_placeholder: 'https://cap.example.com',
     cap_endpoint_http_notice:
       'Ten punkt końcowy używa HTTP, co nadaje się tylko do lokalnego programowania. Przeglądarki blokują żądania HTTP ze strony logowania HTTPS, a klucz tajny zostałby wysłany bez szyfrowania. W środowisku produkcyjnym użyj HTTPS.',
+    geetest_captcha_id: 'Identyfikator CAPTCHA',
+    geetest_captcha_key: 'Klucz CAPTCHA',
     deletion_description: 'Czy na pewno chcesz usunąć tego dostawcę CAPTCHA?',
     captcha_deleted: 'Pomyślnie usunięto dostawcę CAPTCHA',
     setup_captcha: 'Skonfiguruj CAPTCHA',
@@ -161,17 +168,19 @@ const security = {
     manual_unlock: {
       title: 'Ręczne odblokowanie',
       description:
-        'Odblokuj użytkowników natychmiastowo, potwierdzając ich tożsamość i wprowadzając ich identyfikator.',
-      unblock_by_identifiers: 'Odblokuj według identyfikatora',
+        'Odblokuj użytkowników natychmiastowo, potwierdzając ich tożsamość i wprowadzając ich identyfikator lub ID użytkownika.',
+      unblock_by_identifiers: 'Odblokuj według identyfikatora lub ID użytkownika',
       modal_description_1:
-        'Identyfikator został tymczasowo zablokowany z powodu wielu nieudanych prób logowania/rejestracji. Aby chronić bezpieczeństwo, dostęp zostanie automatycznie przywrócony po upływie czasu blokady.',
+        'Identyfikator lub ID użytkownika został tymczasowo zablokowany z powodu wielu nieudanych prób logowania/rejestracji lub weryfikacji bezpieczeństwa. Aby chronić bezpieczeństwo, dostęp zostanie automatycznie przywrócony po upływie czasu blokady.',
       modal_description_2:
         ' Ręcznie odblokuj tylko wtedy, gdy potwierdziłeś tożsamość użytkownika i upewniłeś się, że nie doszło do nieautoryzowanych prób dostępu.',
-      placeholder: 'Wprowadź identyfikatory (adres e-mail / numer telefonu / nazwa użytkownika)',
+      placeholder:
+        'Wprowadź identyfikatory lub ID użytkowników (adres e-mail / numer telefonu / nazwa użytkownika / ID użytkownika)',
       confirm_button_text: 'Odblokuj teraz',
       success_toast: 'Pomyślnie odblokowano',
-      duplicate_identifier_error: 'Identyfikator już dodany',
-      empty_identifier_error: 'Proszę wprowadzić co najmniej jeden identyfikator',
+      duplicate_identifier_error: 'Identyfikator lub ID użytkownika już dodano',
+      empty_identifier_error:
+        'Proszę wprowadzić co najmniej jeden identyfikator lub ID użytkownika',
     },
   },
   blocklist: {

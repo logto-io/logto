@@ -515,6 +515,33 @@ describe('koaStepUpRouteGuard', () => {
     expect(next).toHaveBeenCalledTimes(1);
   });
 
+  it('allows re-creating an interaction whose stored record cannot be read', async () => {
+    const ctx = createMockContext({
+      method: 'PUT',
+      path: experienceRoutes.prefix,
+      storedStepUp: 'invalid-result',
+    });
+    const next = jest.fn();
+
+    await expect(koaStepUpRouteGuard()(ctx, next)).resolves.toBeUndefined();
+    expect(next).toHaveBeenCalledTimes(1);
+  });
+
+  it.each(['prompt', 'result', 'invalid-result'] as const)(
+    'allows aborting without an interaction instance when the stored step-up source is %s',
+    async (storedStepUp) => {
+      const ctx = createMockContext({
+        method: 'POST',
+        path: experienceRoutes.abort,
+        storedStepUp,
+      });
+      const next = jest.fn();
+
+      await expect(koaStepUpRouteGuard()(ctx, next)).resolves.toBeUndefined();
+      expect(next).toHaveBeenCalledTimes(1);
+    }
+  );
+
   it('denies a whitelisted route whose stored record cannot be read', async () => {
     const ctx = createMockContext({
       method: 'GET',

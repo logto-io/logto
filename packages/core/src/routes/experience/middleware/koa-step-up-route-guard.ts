@@ -74,9 +74,11 @@ const subjectProofRoutePattern = new RegExp(
 
 /**
  * Deny-by-default route guard for pure step-up interactions. The mode comes from the
- * `ctx.experienceInteraction` instance wherever one exists; the three routes
- * `koaExperienceInteraction` whitelists carry none, so they are classified from the interaction
- * record `koaInteractionDetails` provides.
+ * `ctx.experienceInteraction` instance wherever one exists; the four routes
+ * `koaExperienceInteraction` whitelists carry none. Allow-listed routes resolve before the mode is
+ * read, since they never depend on it: `POST /experience/abort` must stay reachable even when the
+ * stored record cannot be classified. The remaining whitelisted routes are classified from the
+ * interaction record `koaInteractionDetails` provides.
  *
  * The conditional rows are gated by the predicates and lists the step-up eligibility computes from
  * the proofs of this interaction alone, so a session cookie can neither enroll nor establish
@@ -88,6 +90,18 @@ export default function koaStepUpRouteGuard<
   ResponseT,
 >(): MiddlewareType<StateT, ContextT, ResponseT> {
   return async (ctx, next) => {
+    // Mirror the router's default normalization so an allow-listed route is not denied by its
+    // spelling: koa-router matches case-insensitively and tolerates a trailing slash.
+    const originalPath = ctx.path.replace(/\/$/, '');
+    const route = `${ctx.method.toUpperCase()} ${originalPath.toLowerCase()}`;
+
+    // Allow-listed routes never depend on the interaction mode, so resolve them before reading it.
+    // A whitelisted route such as `POST /experience/abort` may carry an interaction record whose
+    // stored result is unreadable, and it must still be reachable.
+    if (allowedStepUpRoutes.has(route)) {
+      return next();
+    }
+
     const { experienceInteraction } = ctx;
     // The instance is the single source of the mode, so the guard does not re-parse the storage on
     // the routes that have one.
@@ -97,15 +111,6 @@ export default function koaStepUpRouteGuard<
       : isStepUpInteractionDetails(ctx.interactionDetails);
 
     if (!isStepUp) {
-      return next();
-    }
-
-    // Mirror the router's default normalization so an allow-listed route is not denied by its
-    // spelling: koa-router matches case-insensitively and tolerates a trailing slash.
-    const originalPath = ctx.path.replace(/\/$/, '');
-    const route = `${ctx.method.toUpperCase()} ${originalPath.toLowerCase()}`;
-
-    if (allowedStepUpRoutes.has(route)) {
       return next();
     }
 

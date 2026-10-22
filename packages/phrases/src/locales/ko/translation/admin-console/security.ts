@@ -41,6 +41,11 @@ const security = {
       description:
         '시각적 퍼즐이나 타사 서비스 없이 작업 증명을 사용하는 오픈 소스 자체 호스팅 CAPTCHA로, 다른 CAPTCHA 서비스에 접근할 수 없는 지역에 적합합니다.',
     },
+    geetest: {
+      name: 'GeeTest',
+      description:
+        '중국 본토에서 안정적으로 동작하며 현지화된 챌린지를 제공하는 GeeTest 적응형 CAPTCHA입니다.',
+    },
   },
   captcha_details: {
     back_to_security: '보안으로 돌아가기',
@@ -60,6 +65,8 @@ const security = {
     cap_endpoint_placeholder: 'https://cap.example.com',
     cap_endpoint_http_notice:
       '이 엔드포인트는 HTTP를 사용하므로 로컬 개발에만 적합합니다. 브라우저는 HTTPS 로그인 페이지의 HTTP 요청을 차단하며, 시크릿 키가 암호화되지 않은 채 전송됩니다. 프로덕션에서는 HTTPS를 사용하세요.',
+    geetest_captcha_id: 'CAPTCHA ID',
+    geetest_captcha_key: 'CAPTCHA 키',
     deletion_description: '이 CAPTCHA 제공자를 삭제하시겠습니까?',
     captcha_deleted: 'CAPTCHA 제공자가 성공적으로 삭제되었습니다',
     setup_captcha: 'CAPTCHA 설정',
@@ -153,17 +160,18 @@ const security = {
     },
     manual_unlock: {
       title: '수동 잠금 해제',
-      description: '사용자의 신원을 확인하고 식별자를 입력하여 즉시 사용자를 잠금 해제합니다.',
-      unblock_by_identifiers: '식별자로 차단 해제',
+      description:
+        '사용자의 신원을 확인하고 식별자 또는 사용자 ID를 입력하여 즉시 사용자를 잠금 해제합니다.',
+      unblock_by_identifiers: '식별자 또는 사용자 ID로 차단 해제',
       modal_description_1:
-        '여러 번의 로그인/가입 시도 실패로 인해 식별자가 일시적으로 잠겼습니다. 보안을 위해 잠금 기간 후 접근이 자동으로 복원됩니다.',
+        '여러 번의 로그인/가입 또는 보안 인증 시도 실패로 인해 식별자 또는 사용자 ID가 일시적으로 잠겼습니다. 보안을 위해 잠금 기간 후 접근이 자동으로 복원됩니다.',
       modal_description_2:
         ' 사용자의 신원을 확인하고 비인가 접근 시도가 없는 경우에만 수동으로 잠금을 해제하십시오.',
-      placeholder: '식별자 입력 (이메일 주소 / 전화 번호 / 사용자 이름)',
+      placeholder: '식별자 또는 사용자 ID 입력 (이메일 주소 / 전화 번호 / 사용자 이름 / 사용자 ID)',
       confirm_button_text: '지금 잠금 해제',
       success_toast: '성공적으로 잠금 해제되었습니다',
-      duplicate_identifier_error: '식별자가 이미 추가되었습니다',
-      empty_identifier_error: '최소 하나의 식별자를 입력하세요',
+      duplicate_identifier_error: '식별자 또는 사용자 ID가 이미 추가되었습니다',
+      empty_identifier_error: '최소 하나의 식별자 또는 사용자 ID를 입력하세요',
     },
   },
   blocklist: {
