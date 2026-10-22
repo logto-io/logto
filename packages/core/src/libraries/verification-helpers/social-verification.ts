@@ -101,7 +101,8 @@ export const verifySocialIdentity = async (
     getConnectorSessionResult(ctx, provider)
   );
 
-  log.append(userInfo);
+  // Nested so a connector field such as Feishu's `userId` cannot replace the log's Logto `userId`.
+  log.append({ userInfo });
 
   return userInfo;
 };
