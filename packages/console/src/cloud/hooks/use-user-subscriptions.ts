@@ -1,8 +1,13 @@
 import { type userSubscriptionsRouter } from '@logto/cloud/routes';
-import { type ResponseError } from '@withtyped/client';
+import { ResponseError } from '@withtyped/client';
 import useSWR from 'swr';
 
-import { type LogtoEnterpriseResponse, type UserSubscription } from '@/cloud/types/router';
+import {
+  type LogtoEnterpriseResponse,
+  type LogtoEnterpriseSubscriptionInvoiceResponse,
+  type UserSubscription,
+  type UserSubscriptionInvoicesResponse,
+} from '@/cloud/types/router';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import useCurrentUser from '@/hooks/use-current-user';
 
@@ -52,5 +57,62 @@ export const useUserSubscriptions = () => {
     isLoading: isUserLoading || result.isLoading,
     data: (userError ?? result.error) ? undefined : result.data?.subscriptions,
     error: userError ?? result.error,
+  };
+};
+
+/** Page the user's own subscription invoices; an error must never become empty billing history. */
+export const useUserSubscriptionInvoices = (page: number, pageSize: number) => {
+  const { user, error: userError, isLoading: isUserLoading } = useCurrentUser();
+  const api = useCloudApi<typeof userSubscriptionsRouter>({ hideErrorToast: true });
+  const result = useSWR<UserSubscriptionInvoicesResponse, ResponseError>(
+    user && !userError && ['/api/me/subscriptions/invoices', user.id, page, pageSize],
+    async () =>
+      api.get('/api/me/subscriptions/invoices', {
+        search: { page: String(page), page_size: String(pageSize) },
+      }),
+    { keepPreviousData: false }
+  );
+  return {
+    ...result,
+    isLoading: isUserLoading || result.isLoading,
+    data: (userError ?? result.error) ? undefined : result.data,
+    error: userError ?? result.error,
+  };
+};
+
+/**
+ * Read an authorized Enterprise's invoices for the global billing history, newest first and
+ * without drafts.
+ */
+export const useEnterpriseInvoices = (enterpriseId?: string) => {
+  const { user, error: userError, isLoading: isUserLoading } = useCurrentUser();
+  const api = useCloudApi({ hideErrorToast: true });
+  const result = useSWR<{ invoices: LogtoEnterpriseSubscriptionInvoiceResponse[] }, ResponseError>(
+    enterpriseId &&
+      user &&
+      !userError && ['/api/me/logto-enterprises/:id/invoices', user.id, enterpriseId],
+    async () =>
+      api.get('/api/me/logto-enterprises/:id/invoices', { params: { id: enterpriseId ?? '' } }),
+    { keepPreviousData: false }
+  );
+  // An Enterprise without a subscription answers 404. It has no invoices yet, matching the
+  // Subscription tab's not-covered state, so this must not show as a failed read.
+  const hasNoSubscription =
+    result.error instanceof ResponseError && result.error.response.status === 404;
+  const error = userError ?? (hasNoSubscription ? undefined : result.error);
+  const invoices = hasNoSubscription ? [] : result.data?.invoices;
+  return {
+    ...result,
+    isLoading: isUserLoading || result.isLoading,
+    data: error
+      ? undefined
+      : invoices
+          ?.filter(({ status }) => status !== 'draft')
+          .slice()
+          .sort(
+            (invoiceA, invoiceB) =>
+              new Date(invoiceB.createdAt).getTime() - new Date(invoiceA.createdAt).getTime()
+          ),
+    error,
   };
 };

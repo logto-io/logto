@@ -302,6 +302,9 @@ it('waits for fresh allowance instead of choosing personal billing from cached c
     await result.current.create(SsoProviderName.OIDC);
   });
   expect(mockApi.post.mock.calls).toEqual([
-    ['/api/me/console-sso/connectors', { body: { providerName: SsoProviderName.OIDC } }],
+    [
+      '/api/me/logto-enterprises/:id/console-sso/connectors',
+      { params: { id: 'enterprise-one' }, body: { providerName: SsoProviderName.OIDC } },
+    ],
   ]);
 });

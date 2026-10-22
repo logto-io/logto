@@ -53,6 +53,14 @@ const enterprise_subscription = {
       '연속 3개 청구 기간 동안 미납되고 재시도가 소진되면 결제 수금이 일시 중지되고 유료 Console SSO 커넥터가 삭제됩니다. 결제 정보를 업데이트해도 설정은 복원되지 않습니다. 도움이 필요하면 문의하세요.',
     cancel_on: '{{date}}에 취소 예정',
     other_product: '기타 구독',
+    enterprise_invoices_description:
+      'Enterprise 계약의 청구서입니다. 청구서를 선택하면 내용을 확인하고 청구서 또는 영수증을 다운로드할 수 있습니다.',
+    personal_invoices_description:
+      '이전 구독을 포함해 계정으로 청구되는 구독의 청구서입니다. 청구서를 선택하면 내용을 확인하고 청구서 또는 영수증을 다운로드할 수 있습니다.',
+    credit_note:
+      '삭제나 일할 계산으로 발생한 크레딧은 이후 청구서에서 차감되며, 결제 수단으로 즉시 환불되지 않을 수 있습니다.',
+    invoice_link_unavailable:
+      '이 청구서 페이지를 사용할 수 없습니다. 사본이 필요하면 문의해 주세요.',
     status: {
       active: '활성',
       trialing: '체험 중',

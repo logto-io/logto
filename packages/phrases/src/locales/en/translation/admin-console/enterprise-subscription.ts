@@ -54,6 +54,13 @@ const enterprise_subscription = {
       'After three consecutive unpaid billing cycles and exhausted retries, collection is paused and paid Console SSO connectors are removed. Updating payment does not restore their configuration. Contact us for help.',
     cancel_on: 'Cancellation scheduled for {{date}}',
     other_product: 'Other subscription',
+    enterprise_invoices_description:
+      'Invoices for your Enterprise contract. Select an invoice to view it and download the invoice or receipt.',
+    personal_invoices_description:
+      'Invoices for subscriptions billed to your account, including past subscriptions. Select an invoice to view it and download the invoice or receipt.',
+    credit_note:
+      'Credits from removals or prorations reduce later invoices and are not necessarily refunded to your payment method right away.',
+    invoice_link_unavailable: 'This invoice page is unavailable. Contact us if you need a copy.',
     status: {
       active: 'Active',
       trialing: 'Trialing',

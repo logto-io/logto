@@ -51,7 +51,10 @@ it('automatically uses Enterprise allowance before an existing personal subscrip
     await result.current.create(SsoProviderName.OIDC);
   });
   expect(mockApi.post.mock.calls).toEqual([
-    ['/api/me/console-sso/connectors', { body: { providerName: SsoProviderName.OIDC } }],
+    [
+      '/api/me/logto-enterprises/:id/console-sso/connectors',
+      { params: { id: 'enterprise-one' }, body: { providerName: SsoProviderName.OIDC } },
+    ],
   ]);
   expect(mockApi.get).not.toHaveBeenCalledWith('/api/me/console-sso/checkout-preview');
 });
