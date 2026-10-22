@@ -14,6 +14,7 @@ import assertThat from '#src/utils/assert-that.js';
 import { type UserRouter, type RouterInitArgs } from '../types.js';
 
 import { accountApiPrefix } from './constants.js';
+import { assertIdentityVerified } from './utils/identity-verification.js';
 
 export default function accountSessionRoutes<T extends UserRouter>(
   ...[router, { provider, libraries, queries }]: RouterInitArgs<T>
@@ -27,13 +28,10 @@ export default function accountSessionRoutes<T extends UserRouter>(
       response: getAccountUserSessionsResponseGuard,
     }),
     async (ctx, next) => {
-      const { id: userId, scopes, identityVerified, sessionUid, clientId } = ctx.auth;
+      const { id: userId, scopes, sessionUid, clientId } = ctx.auth;
       const { fields } = ctx.accountCenter;
 
-      assertThat(
-        identityVerified,
-        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
-      );
+      assertIdentityVerified(ctx);
       await assertFirstPartyClient(queries, clientId);
 
       assertThat(
@@ -73,13 +71,10 @@ export default function accountSessionRoutes<T extends UserRouter>(
     }),
     async (ctx, next) => {
       const { sessionId } = ctx.guard.params;
-      const { id: userId, scopes, identityVerified, clientId } = ctx.auth;
+      const { id: userId, scopes, clientId } = ctx.auth;
       const { fields } = ctx.accountCenter;
 
-      assertThat(
-        identityVerified,
-        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
-      );
+      assertIdentityVerified(ctx);
 
       assertThat(
         fields.session === AccountCenterControlValue.Edit,
