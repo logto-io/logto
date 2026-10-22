@@ -16,8 +16,10 @@ const useConsoleSsoCoverage = (isEnabled: boolean) => {
   >(
     user && isEnabled && ['console-sso-coverage', user.id],
     async () => {
-      // Use the same first Enterprise as connector creation; never combine different contracts.
       const { logtoEnterprises } = await api.get('/api/me/logto-enterprises');
+      // Customers currently have at most one Enterprise plan, so only the first is considered.
+      // This does not search later entries for available allowance; with multiple plans it may
+      // select personal billing even when another Enterprise has allowance.
       const enterprise = logtoEnterprises[0];
       if (!enterprise) {
         return getIncludedCapacity();

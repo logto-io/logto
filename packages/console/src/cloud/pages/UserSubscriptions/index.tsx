@@ -71,6 +71,8 @@ function UserSubscriptions() {
               <Outlet
                 context={
                   {
+                    // Customers currently have at most one Enterprise plan. Only the first is shown;
+                    // multiple-plan support would also need to expose the other plans and their allowance.
                     enterprise: enterprises.data?.[0],
                   } satisfies UserSubscriptionsOutletContext
                 }
