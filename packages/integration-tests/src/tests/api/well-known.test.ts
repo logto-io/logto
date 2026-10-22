@@ -150,63 +150,51 @@ describe('.well-known api', () => {
       });
     });
 
-    it('should include branding by default and hide it when showBeforeEmailMatch is false', async () => {
+    it('should include branding by default and hide it when disabled in the sign-in experience', async () => {
       const { branding } = newOidcSsoConnectorPayload;
-      const { id: publicConnectorId } = await createSsoConnector({
+      const { ssoBrandingBeforeEmailMatch } = await getSignInExperience();
+      const { id } = await createSsoConnector({
         ...newOidcSsoConnectorPayload,
         connectorName: generateSsoConnectorName(),
       });
-      const { id: hiddenConnectorId } = await createSsoConnector({
-        ...newOidcSsoConnectorPayload,
-        connectorName: generateSsoConnectorName(),
-        branding: {
-          ...branding,
-          showBeforeEmailMatch: false,
-        },
-      });
 
-      const signInExperience = await api
-        .get('.well-known/sign-in-exp')
-        .json<SignInExperience & { ssoConnectors: SsoConnectorMetadata[] }>();
+      try {
+        const signInExperience = await api
+          .get('.well-known/sign-in-exp')
+          .json<SignInExperience & { ssoConnectors: SsoConnectorMetadata[] }>();
 
-      expect(signInExperience.ssoConnectors.length).toBeGreaterThan(0);
+        const connector = signInExperience.ssoConnectors.find((connector) => connector.id === id);
 
-      const publicConnector = signInExperience.ssoConnectors.find(
-        (connector) => connector.id === publicConnectorId
-      );
-      const hiddenConnector = signInExperience.ssoConnectors.find(
-        (connector) => connector.id === hiddenConnectorId
-      );
+        expect(connector).toMatchObject({
+          id,
+          connectorName: branding.displayName,
+          logo: branding.logo,
+          darkLogo: branding.darkLogo,
+        });
 
-      expect(publicConnector).toMatchObject({
-        id: publicConnectorId,
-        connectorName: branding.displayName,
-        logo: branding.logo,
-        darkLogo: branding.darkLogo,
-      });
-      expect(hiddenConnector).toMatchObject({
-        id: hiddenConnectorId,
-        connectorName: 'OIDC',
-      });
-      expect(hiddenConnector?.logo).not.toBe(branding.logo);
-      expect(hiddenConnector?.darkLogo).not.toBe(branding.darkLogo);
+        const experienceSignInExperience = await api
+          .get('.well-known/experience')
+          .json<SignInExperience & { ssoConnectors: SsoConnectorMetadata[] }>();
+        expect(
+          experienceSignInExperience.ssoConnectors.find((connector) => connector.id === id)
+        ).toEqual(connector);
 
-      const experienceSignInExperience = await api
-        .get('.well-known/experience')
-        .json<SignInExperience & { ssoConnectors: SsoConnectorMetadata[] }>();
-      expect(
-        experienceSignInExperience.ssoConnectors.find(
-          (connector) => connector.id === publicConnectorId
-        )
-      ).toEqual(publicConnector);
-      expect(
-        experienceSignInExperience.ssoConnectors.find(
-          (connector) => connector.id === hiddenConnectorId
-        )
-      ).toEqual(hiddenConnector);
+        await updateSignInExperience({ ssoBrandingBeforeEmailMatch: false });
 
-      await deleteSsoConnectorById(publicConnectorId);
-      await deleteSsoConnectorById(hiddenConnectorId);
+        const hiddenSignInExperience = await api
+          .get('.well-known/sign-in-exp')
+          .json<SignInExperience & { ssoConnectors: SsoConnectorMetadata[] }>();
+        const hiddenConnector = hiddenSignInExperience.ssoConnectors.find(
+          (connector) => connector.id === id
+        );
+
+        expect(hiddenConnector).toMatchObject({ id, connectorName: 'OIDC' });
+        expect(hiddenConnector?.logo).not.toBe(branding.logo);
+        expect(hiddenConnector?.darkLogo).not.toBe(branding.darkLogo);
+      } finally {
+        await deleteSsoConnectorById(id);
+        await updateSignInExperience({ ssoBrandingBeforeEmailMatch });
+      }
     });
 
     it('should filter out the sso connectors with invalid config', async () => {

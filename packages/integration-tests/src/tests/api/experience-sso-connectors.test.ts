@@ -17,39 +17,28 @@ const getEnabledSsoConnectors = async (email: string, cookie: string) =>
 describe('GET /api/experience/sso-connectors', () => {
   it('returns branded connectors only for a matching email domain', async () => {
     const client = await initClient();
-    const { singleSignOnEnabled } = await getSignInExperience();
+    const { singleSignOnEnabled, ssoBrandingBeforeEmailMatch } = await getSignInExperience();
     const { id } = await createSsoConnector({
       ...newOidcSsoConnectorPayload,
       connectorName: generateSsoConnectorName(),
     });
-    const { id: hiddenConnectorId } = await createSsoConnector({
-      ...newOidcSsoConnectorPayload,
-      connectorName: generateSsoConnectorName(),
-      branding: {
-        ...branding,
-        showBeforeEmailMatch: false,
-      },
-    });
 
     try {
-      await updateSignInExperience({ singleSignOnEnabled: true });
+      // The email-domain lookup always returns branding for matched connectors, even when the
+      // public sign-in experience hides it.
+      await updateSignInExperience({
+        singleSignOnEnabled: true,
+        ssoBrandingBeforeEmailMatch: false,
+      });
 
       const matchingResponse = await getEnabledSsoConnectors(
         `user@${domains[0]}`,
         client.interactionCookie
       );
 
-      expect(matchingResponse.connectorIds).toEqual(
-        expect.arrayContaining([id, hiddenConnectorId])
-      );
+      expect(matchingResponse.connectorIds).toContain(id);
       expect(matchingResponse.connectors).toContainEqual({
         id,
-        connectorName: branding.displayName,
-        logo: branding.logo,
-        darkLogo: branding.darkLogo,
-      });
-      expect(matchingResponse.connectors).toContainEqual({
-        id: hiddenConnectorId,
         connectorName: branding.displayName,
         logo: branding.logo,
         darkLogo: branding.darkLogo,
@@ -63,8 +52,7 @@ describe('GET /api/experience/sso-connectors', () => {
       expect(nonMatchingResponse).toEqual({ connectorIds: [], connectors: [] });
     } finally {
       await deleteSsoConnectorById(id);
-      await deleteSsoConnectorById(hiddenConnectorId);
-      await updateSignInExperience({ singleSignOnEnabled });
+      await updateSignInExperience({ singleSignOnEnabled, ssoBrandingBeforeEmailMatch });
     }
   });
 

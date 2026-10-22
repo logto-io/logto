@@ -64,18 +64,10 @@ describe('server-side rendering', () => {
 
   it('should include SSO connector branding by default and hide it when disabled', async () => {
     const { branding } = newOidcSsoConnectorPayload;
-    const { singleSignOnEnabled } = await getSignInExperience();
-    const { id: publicConnectorId } = await createSsoConnector({
+    const { singleSignOnEnabled, ssoBrandingBeforeEmailMatch } = await getSignInExperience();
+    const { id } = await createSsoConnector({
       ...newOidcSsoConnectorPayload,
       connectorName: generateSsoConnectorName(),
-    });
-    const { id: hiddenConnectorId } = await createSsoConnector({
-      ...newOidcSsoConnectorPayload,
-      connectorName: generateSsoConnectorName(),
-      branding: {
-        ...branding,
-        showBeforeEmailMatch: false,
-      },
     });
     const experience = new ExpectExperience(await browser.newPage());
 
@@ -87,27 +79,35 @@ describe('server-side rendering', () => {
         return window.logtoSsr;
       });
       const parsed = ssrDataGuard.parse(data);
-      const publicConnector = parsed.signInExperience.data.ssoConnectors.find(
-        (connector) => connector.id === publicConnectorId
-      );
-      const hiddenConnector = parsed.signInExperience.data.ssoConnectors.find(
-        (connector) => connector.id === hiddenConnectorId
+      const connector = parsed.signInExperience.data.ssoConnectors.find(
+        (connector) => connector.id === id
       );
 
-      expect(publicConnector).toMatchObject({
-        id: publicConnectorId,
+      expect(connector).toMatchObject({
+        id,
         connectorName: branding.displayName,
         logo: branding.logo,
         darkLogo: branding.darkLogo,
       });
-      expect(hiddenConnector).toMatchObject({ id: hiddenConnectorId, connectorName: 'OIDC' });
+
+      await updateSignInExperience({ ssoBrandingBeforeEmailMatch: false });
+      await experience.navigateTo(demoAppUrl.href);
+
+      const hiddenData = await experience.page.evaluate(() => {
+        return window.logtoSsr;
+      });
+      const hiddenParsed = ssrDataGuard.parse(hiddenData);
+      const hiddenConnector = hiddenParsed.signInExperience.data.ssoConnectors.find(
+        (connector) => connector.id === id
+      );
+
+      expect(hiddenConnector).toMatchObject({ id, connectorName: 'OIDC' });
       expect(hiddenConnector?.logo).not.toBe(branding.logo);
       expect(hiddenConnector?.darkLogo).not.toBe(branding.darkLogo);
     } finally {
       await experience.page.close();
-      await deleteSsoConnectorById(publicConnectorId);
-      await deleteSsoConnectorById(hiddenConnectorId);
-      await updateSignInExperience({ singleSignOnEnabled });
+      await deleteSsoConnectorById(id);
+      await updateSignInExperience({ singleSignOnEnabled, ssoBrandingBeforeEmailMatch });
     }
   });
 
