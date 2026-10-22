@@ -74,9 +74,11 @@ const subjectProofRoutePattern = new RegExp(
 
 /**
  * Deny-by-default route guard for pure step-up interactions. The mode comes from the
- * `ctx.experienceInteraction` instance wherever one exists; the three routes
- * `koaExperienceInteraction` whitelists carry none, so they are classified from the interaction
- * record `koaInteractionDetails` provides.
+ * `ctx.experienceInteraction` instance wherever one exists; the four routes
+ * `koaExperienceInteraction` whitelists carry none. Allow-listed routes resolve before the mode is
+ * read, since they never depend on it: `POST /experience/abort` must stay reachable even when the
+ * stored record cannot be classified. The remaining whitelisted routes are classified from the
+ * interaction record `koaInteractionDetails` provides.
  *
  * The conditional rows are gated by the predicates and lists the step-up eligibility computes from
  * the proofs of this interaction alone, so a session cookie can neither enroll nor establish
