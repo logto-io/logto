@@ -1,8 +1,8 @@
+import { getTenantOrganizationId, TenantRole } from '@logto/schemas';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ResponseError } from '@withtyped/client';
 import type * as React from 'react';
 import { useContext, useMemo } from 'react';
-import { MemoryRouter } from 'react-router-dom';
 
 import { toastResponseError } from '@/cloud/hooks/use-cloud-api';
 import { type TenantResponse } from '@/cloud/types/router';
@@ -23,13 +23,17 @@ jest.mock(
   { virtual: true }
 );
 const mockDelete = jest.fn();
+const mockTenantDelete = jest.fn();
 const mockGet = jest.fn();
 const mockSignOut = jest.fn();
 const mockMutate = jest.fn(async (data: Promise<unknown>) => data);
+const mockGetClaims = jest.fn().mockResolvedValue({ sub: 'owner', organization_roles: [] });
 const mockConnectors = jest.fn();
+jest.mock('@logto/react', () => ({ useLogto: () => ({ getIdTokenClaims: mockGetClaims }) }));
 jest.mock('@/consts/env', () => ({ isDevFeaturesEnabled: true }));
 jest.mock('@/cloud/hooks/use-cloud-api', () => ({
   useCloudApi: () => ({ delete: mockDelete, get: mockGet }),
+  createTenantApi: () => ({ delete: mockTenantDelete }),
   toastResponseError: jest.fn(),
 }));
 jest.mock('@/cloud/pages/ConsoleSso/use-console-sso', () => ({
@@ -45,8 +49,9 @@ jest.mock('@/hooks/use-redirect-uri', () => ({
 }));
 jest.mock('@/contexts/TenantsProvider', () => {
   const { createContext } = jest.requireActual<typeof React>('react');
-  return { TenantsContext: createContext({ tenants: [] }) };
+  return { TenantsContext: createContext({ tenants: [], removeTenant: jest.fn() }) };
 });
+jest.mock('@/utils/subscription', () => ({ isPaidPlan: () => false }));
 jest.mock('@/components/Region', () => ({ defaultRegionName: 'westus' }));
 jest.mock('@/components/AppLoading', () => ({
   __esModule: true,
@@ -55,6 +60,7 @@ jest.mock('@/components/AppLoading', () => ({
 jest.mock('@/components/PageMeta', () => ({ __esModule: true, default: () => null }));
 jest.mock('@/components/Topbar', () => ({ __esModule: true, default: () => null }));
 jest.mock('@/ds-components/CardTitle', () => ({ __esModule: true, default: () => null }));
+jest.mock('./TenantsList', () => ({ __esModule: true, default: () => null }));
 jest.mock('@/ds-components/OverlayScrollbar', () => ({
   __esModule: true,
   default: ({ children }: { readonly children: React.ReactNode }) => <div>{children}</div>,
@@ -78,15 +84,13 @@ jest.mock('@/ds-components/Button', () => ({
 
 const connector = { id: 'connector' };
 
-function TestPage({ tenants = [] }: { readonly tenants?: readonly TenantResponse[] }) {
+function TestPage({ tenants }: { readonly tenants: readonly TenantResponse[] }) {
   const context = useContext(TenantsContext);
   const value = useMemo(() => ({ ...context, tenants }), [context, tenants]);
   return (
-    <MemoryRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-      <TenantsContext.Provider value={value}>
-        <DeleteAccount />
-      </TenantsContext.Provider>
-    </MemoryRouter>
+    <TenantsContext.Provider value={value}>
+      <DeleteAccount />
+    </TenantsContext.Provider>
   );
 }
 
@@ -109,52 +113,60 @@ beforeEach(() => {
   mockConnectors.mockReturnValue({ data: [] });
   mockGet.mockResolvedValue([]);
   mockDelete.mockResolvedValue(undefined);
+  mockTenantDelete.mockResolvedValue(undefined);
+  mockGetClaims.mockResolvedValue({ sub: 'owner', organization_roles: [] });
 });
 
-it('requires tenants to be deleted or left separately through their settings', async () => {
+it('automatically deletes admin tenants and leaves other tenants before deleting the account', async () => {
+  mockGetClaims.mockResolvedValue({
+    sub: 'owner',
+    organization_roles: [
+      `${getTenantOrganizationId('owned')}:${TenantRole.Collaborator}`,
+      `${getTenantOrganizationId('owned')}:${TenantRole.Admin}`,
+      `${getTenantOrganizationId('joined')}:${TenantRole.Collaborator}`,
+    ],
+  });
   render(
     <TestPage
       tenants={[
-        { ...defaultTenantResponse, id: 'owned', name: 'Owned tenant' },
-        { ...defaultTenantResponse, id: 'joined', name: 'Joined tenant' },
+        { ...defaultTenantResponse, id: 'owned' },
+        { ...defaultTenantResponse, id: 'joined' },
       ]}
     />
   );
-  expect(
-    await screen.findByText('admin_console.profile.delete_account.issues.tenants')
-  ).not.toBeNull();
-  expect(screen.getByRole('link', { name: 'Owned tenant (owned)' }).getAttribute('href')).toBe(
-    '/owned/tenant-settings/settings'
-  );
-  expect(screen.getByRole('link', { name: 'Joined tenant (joined)' }).getAttribute('href')).toBe(
-    '/joined/tenant-settings/settings'
-  );
-  expect(screen.queryByText('general.delete')).toBeNull();
-  expect(mockDelete).not.toHaveBeenCalled();
-});
-
-it('returns to the blockers if a tenant appears during final confirmation', async () => {
-  const { rerender } = render(<TestPage />);
-  fireEvent.click(await screen.findByText('general.delete'));
-  expect(screen.getByText('profile.delete_account.permanently_delete')).not.toBeNull();
-  rerender(<TestPage tenants={[defaultTenantResponse]} />);
-  expect(
-    await screen.findByText('admin_console.profile.delete_account.issues.tenants')
-  ).not.toBeNull();
-  expect(screen.queryByText('profile.delete_account.permanently_delete')).toBeNull();
-  expect(mockDelete).not.toHaveBeenCalled();
-});
-
-it('allows account deletion after the last tenant has been removed separately', async () => {
-  const { rerender } = render(<TestPage tenants={[defaultTenantResponse]} />);
-  expect(screen.queryByText('general.delete')).toBeNull();
-  rerender(<TestPage />);
   await confirmDeletion();
   await waitFor(() => {
     expect(mockSignOut).toHaveBeenCalledWith('/');
   });
-  expect(mockDelete).toHaveBeenCalledTimes(1);
-  expect(mockDelete).toHaveBeenCalledWith('/api/me');
+  expect(mockDelete.mock.calls).toEqual([
+    ['/api/tenants/:tenantId', { params: { tenantId: 'owned' } }],
+    ['/api/me'],
+  ]);
+  expect(mockTenantDelete).toHaveBeenCalledTimes(1);
+  expect(mockTenantDelete).toHaveBeenCalledWith('/api/tenants/:tenantId/members/:userId', {
+    params: { tenantId: 'joined', userId: 'owner' },
+  });
+  expect(mockDelete.mock.invocationCallOrder[0]).toBeLessThan(
+    mockTenantDelete.mock.invocationCallOrder[0]!
+  );
+  expect(mockTenantDelete.mock.invocationCallOrder[0]).toBeLessThan(
+    mockDelete.mock.invocationCallOrder[1]!
+  );
+});
+
+it('stops account deletion if leaving a tenant fails', async () => {
+  const failure = new Error('Cannot leave tenant');
+  mockTenantDelete.mockRejectedValue(failure);
+  const logError = jest.spyOn(console, 'error').mockImplementation(jest.fn());
+  render(<TestPage tenants={[{ ...defaultTenantResponse, id: 'joined' }]} />);
+  await confirmDeletion();
+  expect(await screen.findByText(failure.message)).not.toBeNull();
+  expect(mockDelete).not.toHaveBeenCalled();
+  expect(mockTenantDelete).toHaveBeenCalledWith('/api/tenants/:tenantId/members/:userId', {
+    params: { tenantId: 'joined', userId: 'owner' },
+  });
+  expect(mockSignOut).not.toHaveBeenCalled();
+  logError.mockRestore();
 });
 
 it('explains the Console SSO account-deletion blocker even with no tenants', async () => {
@@ -184,13 +196,24 @@ it('preserves account deletion and sign-out once no blockers remain', async () =
   await waitFor(() => {
     expect(mockSignOut).toHaveBeenCalledWith('/');
   });
-  expect(mockGet).not.toHaveBeenCalled();
+  expect(mockGet).toHaveBeenCalledTimes(1);
+  expect(mockGet).toHaveBeenCalledWith('/api/me/console-sso/connectors');
   expect(mockDelete).toHaveBeenCalledTimes(1);
   expect(mockDelete).toHaveBeenCalledWith('/api/me');
 });
 
-it('shows the same reason if the server refuses deletion for new connectors', async () => {
+it('rechecks connectors before performing deletion', async () => {
   mockGet.mockImplementation(async () => createConnectorElsewhere());
+  render(<DeleteAccount />);
+  await confirmDeletion();
+  expect(
+    await screen.findByText('admin_console.profile.delete_account.issues.console_sso')
+  ).not.toBeNull();
+  expect(mockDelete).not.toHaveBeenCalled();
+});
+
+it('shows the same reason if the server refuses deletion for new connectors', async () => {
+  mockGet.mockResolvedValueOnce([]).mockImplementationOnce(async () => createConnectorElsewhere());
   mockDelete.mockRejectedValue(unprocessableError());
   render(<DeleteAccount />);
   await confirmDeletion();
@@ -199,9 +222,6 @@ it('shows the same reason if the server refuses deletion for new connectors', as
   ).not.toBeNull();
   expect(toastResponseError).not.toHaveBeenCalled();
   expect(mockSignOut).not.toHaveBeenCalled();
-  expect(mockDelete).toHaveBeenCalledTimes(1);
-  expect(mockDelete).toHaveBeenCalledWith('/api/me');
-  expect(mockGet).toHaveBeenCalledWith('/api/me/console-sso/connectors');
 });
 
 it('keeps the generic error for a refusal unrelated to connectors', async () => {
@@ -213,25 +233,18 @@ it('keeps the generic error for a refusal unrelated to connectors', async () => 
   await waitFor(() => {
     expect(toastResponseError).toHaveBeenCalledWith(failure);
   });
-  expect(mockGet).toHaveBeenCalledTimes(1);
-  expect(mockDelete).toHaveBeenCalledTimes(1);
-  expect(mockDelete).toHaveBeenCalledWith('/api/me');
+  expect(mockGet).toHaveBeenCalledTimes(2);
   expect(mockSignOut).not.toHaveBeenCalled();
   logError.mockRestore();
 });
 
-it('preserves the deletion error if refreshing connectors after a refusal fails', async () => {
-  const failure = unprocessableError();
-  mockDelete.mockRejectedValue(failure);
+it('stops deletion if the final connector check fails', async () => {
   mockGet.mockRejectedValue(new Error('Connector check failed'));
   const logError = jest.spyOn(console, 'error').mockImplementation(jest.fn());
   render(<DeleteAccount />);
   await confirmDeletion();
-  expect(await screen.findByText(failure.message)).not.toBeNull();
-  expect(toastResponseError).toHaveBeenCalledWith(failure);
-  expect(mockDelete).toHaveBeenCalledTimes(1);
-  expect(mockDelete).toHaveBeenCalledWith('/api/me');
-  expect(mockSignOut).not.toHaveBeenCalled();
+  expect(await screen.findByText('Connector check failed')).not.toBeNull();
+  expect(mockDelete).not.toHaveBeenCalled();
   logError.mockRestore();
 });
 
@@ -243,7 +256,7 @@ it('retains the generic error flow for unrelated deletion failures', async () =>
   await confirmDeletion();
   expect(await screen.findByText('Deletion failed')).not.toBeNull();
   expect(toastResponseError).toHaveBeenCalledWith(failure);
-  expect(mockGet).not.toHaveBeenCalled();
+  expect(mockGet).toHaveBeenCalledTimes(1);
   expect(mockSignOut).not.toHaveBeenCalled();
   logError.mockRestore();
 });

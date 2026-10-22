@@ -20,12 +20,24 @@ const profile = {
         'Das Löschen deines Kontos wird alle Daten über dich in der Logto Cloud dauerhaft entfernen. Bitte stelle sicher, dass du alle wichtigen Daten sicherst, bevor du fortfährst.',
       confirm_information:
         'Bitte bestätige, dass die oben stehenden Informationen deinen Erwartungen entsprechen. Sobald du dein Konto löschst, können wir es nicht wiederherstellen.',
+      has_admin_role:
+        'Da du die Admin-Rolle im folgenden Mandanten hast, wird dieser zusammen mit deinem Konto gelöscht:',
+      has_admin_role_other:
+        'Da du die Admin-Rolle in den folgenden Mandanten hast, werden diese zusammen mit deinem Konto gelöscht:',
+      quit_tenant: 'Du bist dabei, den folgenden Mandanten zu verlassen:',
+      quit_tenant_other: 'Du bist dabei, die folgenden Mandanten zu verlassen:',
     },
     issues: {
-      tenants:
-        'Lösche vor dem Löschen deines Kontos jeden der folgenden Mandanten oder verlasse ihn über seine Einstellungen:',
       console_sso:
         'Entferne alle Console SSO-Konnektoren deines Kontos, bevor du dein Konto löschst.',
+      paid_plan:
+        'Der folgende Mandant hat einen kostenpflichtigen Plan, bitte kündige das Abonnement zuerst:',
+      paid_plan_other:
+        'Die folgenden Mandanten haben kostenpflichtige Pläne, bitte kündige das Abonnement zuerst:',
+      subscription_status: 'Der folgende Mandant hat ein Abonnementstatus-Problem:',
+      subscription_status_other: 'Die folgenden Mandanten haben Abonnementstatus-Probleme:',
+      open_invoice: 'Der folgende Mandant hat eine offene Rechnung:',
+      open_invoice_other: 'Die folgenden Mandanten haben offene Rechnungen:',
     },
     error_occurred: 'Ein Fehler ist aufgetreten',
     error_occurred_description:

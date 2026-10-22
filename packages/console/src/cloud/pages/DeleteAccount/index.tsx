@@ -1,11 +1,15 @@
 import { type consoleSsoRouter } from '@logto/cloud/routes';
+import { type IdTokenClaims, useLogto } from '@logto/react';
+import { TenantRole } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 import { ResponseError } from '@withtyped/client';
 import { useContext, useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
-import { useCloudApi, toastResponseError } from '@/cloud/hooks/use-cloud-api';
+import { useCloudApi, createTenantApi, toastResponseError } from '@/cloud/hooks/use-cloud-api';
 import { useConsoleSsoConnectors } from '@/cloud/pages/ConsoleSso/use-console-sso';
+import { type TenantResponse } from '@/cloud/types/router';
 import AppLoading from '@/components/AppLoading';
 import PageMeta from '@/components/PageMeta';
 import Topbar from '@/components/Topbar';
@@ -16,9 +20,12 @@ import CardTitle from '@/ds-components/CardTitle';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import useRedirectUri from '@/hooks/use-redirect-uri';
 import useSignOut from '@/hooks/use-sign-out';
+import { isPaidPlan } from '@/utils/subscription';
 
 import IssuesContent from './IssuesContent';
+import TenantsList from './TenantsList';
 import styles from './index.module.scss';
+import { getRoleMap } from './utils';
 
 enum Step {
   Issues = 'issues',
@@ -31,10 +38,11 @@ const handleCancel = () => {
 };
 
 export default function DeleteAccount() {
-  const { t } = useTranslation(undefined, {
+  const { t, i18n } = useTranslation(undefined, {
     keyPrefix: 'admin_console.profile.delete_account',
   });
-  const { tenants } = useContext(TenantsContext);
+  const { tenants, removeTenant } = useContext(TenantsContext);
+  const { getIdTokenClaims, isAuthenticated, getOrganizationToken } = useLogto();
   const { signOut } = useSignOut();
   const postSignOutRedirectUri = useRedirectUri('signOut');
   const cloudApi = useCloudApi({ hideErrorToast: true });
@@ -47,12 +55,30 @@ export default function DeleteAccount() {
   } = useConsoleSsoConnectors(isDevFeaturesEnabled);
   const hasConsoleSsoConnectors = isDevFeaturesEnabled && Boolean(consoleSsoConnectors?.length);
 
+  const [claims, setClaims] = useState<IdTokenClaims>();
   const [isDeleting, setIsDeleting] = useState(false);
   const [requestError, setRequestError] = useState<Error>();
 
   const deletionError = requestError ?? consoleSsoError;
 
-  const hasIssues = hasConsoleSsoConnectors || tenants.length > 0;
+  const paidPlans = tenants.filter(({ subscription: { planId, isEnterprisePlan } }) =>
+    isPaidPlan(planId, isEnterprisePlan)
+  );
+  const subscriptionStatusIssues = tenants.filter(
+    ({ subscription }) => subscription.status !== 'active'
+  );
+  const openInvoices = tenants.filter(({ openInvoices }) => openInvoices.length > 0);
+  const hasIssues =
+    hasConsoleSsoConnectors ||
+    paidPlans.length > 0 ||
+    subscriptionStatusIssues.length > 0 ||
+    openInvoices.length > 0;
+
+  const issues = [
+    { description: 'paid_plan' as const, tenants: paidPlans },
+    { description: 'subscription_status' as const, tenants: subscriptionStatusIssues },
+    { description: 'open_invoice' as const, tenants: openInvoices },
+  ];
 
   const [step, setStep] = useState(hasIssues ? Step.Issues : Step.Confirmation);
 
@@ -65,9 +91,29 @@ export default function DeleteAccount() {
     });
   }, [hasIssues]);
 
-  if (isDevFeaturesEnabled && !consoleSsoConnectors && !consoleSsoError) {
+  useEffect(() => {
+    const fetchClaims = async () => {
+      setClaims(undefined);
+      const claims = await getIdTokenClaims();
+      if (!claims) {
+        toast.error(t('error_occurred'));
+        handleCancel();
+        return;
+      }
+      setClaims(claims);
+    };
+    void fetchClaims();
+  }, [getIdTokenClaims, t]);
+
+  if (!claims || (isDevFeaturesEnabled && !consoleSsoConnectors && !consoleSsoError)) {
     return <AppLoading />;
   }
+
+  const roleMap = getRoleMap(claims.organization_roles ?? []);
+  const tenantsToDelete = tenants.filter(({ id }) => roleMap[id]?.includes(TenantRole.Admin));
+  const tenantsToQuit = tenants.filter(({ id }) =>
+    tenantsToDelete.every(({ id: tenantId }) => tenantId !== id)
+  );
 
   const errorRequestId =
     deletionError instanceof ResponseError
@@ -84,17 +130,44 @@ export default function DeleteAccount() {
   };
 
   const deleteAccount = async () => {
-    if (isDeleting || hasIssues) {
+    if (isDeleting) {
       return;
     }
 
     setIsDeleting(true);
 
     try {
+      // Recheck right before the irreversible tenant operations below.
+      if (isDevFeaturesEnabled && (await hasFreshConsoleSsoConnectors())) {
+        return;
+      }
+      for (const tenant of tenantsToDelete) {
+        // eslint-disable-next-line no-await-in-loop -- finish each tenant operation before deleting the account
+        await cloudApi.delete(`/api/tenants/:tenantId`, {
+          params: { tenantId: tenant.id },
+        });
+        removeTenant(tenant.id);
+      }
+
+      for (const tenant of tenantsToQuit) {
+        const tenantApi = createTenantApi({
+          isAuthenticated,
+          getOrganizationToken,
+          tenantId: tenant.id,
+          language: i18n.language,
+          hideErrorToast: true,
+        });
+        // eslint-disable-next-line no-await-in-loop -- finish each tenant operation before deleting the account
+        await tenantApi.delete('/api/tenants/:tenantId/members/:userId', {
+          params: { tenantId: tenant.id, userId: claims.sub },
+        });
+        removeTenant(tenant.id);
+      }
+
       await cloudApi.delete('/api/me');
       await signOut(postSignOutRedirectUri.href);
     } catch (error) {
-      // Refresh the explanation if connectors were created after the page loaded.
+      // The server refuses with 422 if connectors were created after the recheck.
       if (
         isDevFeaturesEnabled &&
         error instanceof ResponseError &&
@@ -138,12 +211,14 @@ export default function DeleteAccount() {
               </div>
             ) : step === Step.Issues ? (
               <IssuesContent
-                tenants={tenants}
+                issues={issues}
                 hasConsoleSsoConnectors={hasConsoleSsoConnectors}
                 onClose={handleCancel}
               />
             ) : step === Step.Confirmation ? (
               <ConfirmationContent
+                tenantsToDelete={tenantsToDelete}
+                tenantsToQuit={tenantsToQuit}
                 onCancel={handleCancel}
                 onConfirm={() => {
                   setStep(Step.FinalConfirmation);
@@ -166,9 +241,13 @@ export default function DeleteAccount() {
 }
 
 function ConfirmationContent({
+  tenantsToDelete,
+  tenantsToQuit,
   onCancel,
   onConfirm,
 }: {
+  readonly tenantsToDelete: readonly TenantResponse[];
+  readonly tenantsToQuit: readonly TenantResponse[];
   readonly onCancel: () => void;
   readonly onConfirm: () => void;
 }) {
@@ -177,6 +256,18 @@ function ConfirmationContent({
   return (
     <div className={styles.container}>
       <p>{t('p.check_information')}</p>
+      {tenantsToDelete.length > 0 && (
+        <TenantsList
+          description={t('p.has_admin_role', { count: tenantsToDelete.length })}
+          tenants={tenantsToDelete}
+        />
+      )}
+      {tenantsToQuit.length > 0 && (
+        <TenantsList
+          description={t('p.quit_tenant', { count: tenantsToQuit.length })}
+          tenants={tenantsToQuit}
+        />
+      )}
       <p>{t('p.remove_all_data')}</p>
       <p>{t('p.confirm_information')}</p>
       <div className={styles.actions}>

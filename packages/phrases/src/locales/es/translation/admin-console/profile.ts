@@ -20,11 +20,24 @@ const profile = {
         'Eliminar tu cuenta eliminará permanentemente todos tus datos en Logto Cloud. Así que asegura respaldar cualquier dato importante antes de proceder.',
       confirm_information:
         'Por favor, confirma que la información anterior es lo que esperabas. Una vez que elimines tu cuenta, no podremos recuperarla.',
+      has_admin_role:
+        'Dado que tienes el rol de administrador en el siguiente inquilino, será eliminado junto con tu cuenta:',
+      has_admin_role_other:
+        'Dado que tienes el rol de administrador en los siguientes inquilinos, serán eliminados junto con tu cuenta:',
+      quit_tenant: 'Estás a punto de salir del siguiente inquilino:',
+      quit_tenant_other: 'Estás a punto de salir de los siguientes inquilinos:',
     },
     issues: {
-      tenants:
-        'Antes de eliminar tu cuenta, elimina o abandona cada uno de los siguientes inquilinos desde su página de configuración:',
       console_sso: 'Elimina todos los conectores de Console SSO de tu cuenta antes de eliminarla.',
+      paid_plan:
+        'El siguiente inquilino tiene un plan pagado, por favor cancela la suscripción primero:',
+      paid_plan_other:
+        'Los siguientes inquilinos tienen planes pagados, por favor cancela la suscripción primero:',
+      subscription_status: 'El siguiente inquilino tiene un problema de estado de suscripción:',
+      subscription_status_other:
+        'Los siguientes inquilinos tienen problemas de estado de suscripción:',
+      open_invoice: 'El siguiente inquilino tiene una factura abierta:',
+      open_invoice_other: 'Los siguientes inquilinos tienen facturas abiertas:',
     },
     error_occurred: 'Ocurrió un error',
     error_occurred_description: 'Lo siento, algo salió mal al eliminar tu cuenta:',

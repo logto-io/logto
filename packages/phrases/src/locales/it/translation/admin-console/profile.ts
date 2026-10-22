@@ -20,11 +20,23 @@ const profile = {
         'Eliminando il tuo account, verranno permanentemente rimossi tutti i dati su di te in Logto Cloud. Per favore assicurati di fare un backup dei dati importanti prima di procedere.',
       confirm_information:
         'Per favore conferma che le informazioni sopra sono quelle che ti aspettavi. Una volta eliminato il tuo account, non saremo in grado di recuperarlo.',
+      has_admin_role:
+        'Poiché hai il ruolo di amministratore nel seguente tenant, verrà eliminato insieme al tuo account:',
+      has_admin_role_other:
+        'Poiché hai il ruolo di amministratore nei seguenti tenant, verranno eliminati insieme al tuo account:',
+      quit_tenant: 'Stai per lasciare il seguente tenant:',
+      quit_tenant_other: 'Stai per lasciare i seguenti tenant:',
     },
     issues: {
-      tenants:
-        'Prima di eliminare il tuo account, elimina o abbandona ogni tenant qui sotto dalla relativa pagina delle impostazioni:',
       console_sso: 'Rimuovi tutti i connettori Console SSO del tuo account prima di eliminarlo.',
+      paid_plan:
+        "Il seguente tenant ha un piano a pagamento, per favore annulla prima l'abbonamento:",
+      paid_plan_other:
+        "I seguenti tenant hanno piani a pagamento, per favore annulla prima l'abbonamento:",
+      subscription_status: 'Il seguente tenant ha un problema di stato di abbonamento:',
+      subscription_status_other: 'I seguenti tenant hanno problemi di stato di abbonamento:',
+      open_invoice: 'Il seguente tenant ha una fattura aperta:',
+      open_invoice_other: 'I seguenti tenant hanno fatture aperte:',
     },
     error_occurred: 'Si è verificato un errore',
     error_occurred_description:

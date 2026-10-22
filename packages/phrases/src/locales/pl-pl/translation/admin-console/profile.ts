@@ -20,11 +20,21 @@ const profile = {
         'Usunięcie konta spowoduje trwałe usunięcie wszystkich danych o Tobie w Logto Cloud. Upewnij się, że masz kopię zapasową ważnych danych przed kontynuowaniem.',
       confirm_information:
         'Proszę potwierdzić, że powyższe informacje są zgodne z Twoimi oczekiwaniami. Po usunięciu konta nie będziemy mogli go odzyskać.',
+      has_admin_role:
+        'Ponieważ masz rolę administratora w poniższym najemcy, zostanie on usunięty wraz z Twoim kontem:',
+      has_admin_role_other:
+        'Ponieważ masz rolę administratora w poniższych najemcach, zostaną one usunięte wraz z Twoim kontem:',
+      quit_tenant: 'Zamierzasz opuścić poniższego najemcę:',
+      quit_tenant_other: 'Zamierzasz opuścić poniższych najemców:',
     },
     issues: {
-      tenants:
-        'Przed usunięciem konta usuń lub opuść każdego z poniższych najemców na jego stronie ustawień:',
       console_sso: 'Przed usunięciem konta usuń wszystkie należące do niego konektory Console SSO.',
+      paid_plan: 'Poniższy najemca ma płatny plan, proszę najpierw anulować subskrypcję:',
+      paid_plan_other: 'Poniżsi najemcy mają płatne plany, proszę najpierw anulować subskrypcję:',
+      subscription_status: 'Poniższy najemca ma problem ze statusem subskrypcji:',
+      subscription_status_other: 'Poniżsi najemcy mają problemy ze statusem subskrypcji:',
+      open_invoice: 'Poniższy najemca ma otwartą fakturę:',
+      open_invoice_other: 'Poniżsi najemcy mają otwarte faktury:',
     },
     error_occurred: 'Wystąpił błąd',
     error_occurred_description: 'Przepraszamy, wystąpił problem podczas usuwania Twojego konta:',

@@ -1,6 +1,4 @@
 import { type TenantResponse } from '@/cloud/types/router';
-import { TenantSettingsTabs } from '@/consts';
-import TextLink from '@/ds-components/TextLink';
 
 import styles from './index.module.scss';
 
@@ -17,9 +15,7 @@ export default function TenantsList({ description, tenants }: Props) {
       <ul>
         {tenants.map(({ id, name }) => (
           <li key={id}>
-            <TextLink href={`/${id}/tenant-settings/${TenantSettingsTabs.Settings}`}>
-              {name} ({id})
-            </TextLink>
+            {name} ({id})
           </li>
         ))}
       </ul>
