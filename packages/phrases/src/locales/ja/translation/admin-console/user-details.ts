@@ -72,6 +72,9 @@ const user_details = {
   },
   mfa: {
     field_name: '多要素認証',
+    require_mfa: 'MFA の設定を必須にする',
+    require_mfa_description:
+      'このユーザーはサインインを完了する前に、少なくとも1つの MFA 要素を設定する必要があります。設定をスキップすることはできません。',
     field_description: 'このユーザーは2段階認証要素を有効にしました。',
     name_column: '多要素認証',
     field_description_empty: 'このユーザーは2段階認証の要因を有効にしていません。',

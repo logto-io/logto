@@ -73,6 +73,9 @@ const user_details = {
   },
   mfa: {
     field_name: 'Çok faktörlü kimlik doğrulama',
+    require_mfa: 'MFA kurulumunu zorunlu kıl',
+    require_mfa_description:
+      'Bu kullanıcı oturum açmayı tamamlamadan önce en az bir MFA faktörü kurmalıdır. Kurulum atlanamaz.',
     field_description: 'Bu kullanıcı 2 adımlı kimlik doğrulama faktörlerini etkinleştirdi.',
     name_column: 'Çok Faktörlü Kimlik Doğrulama',
     field_description_empty:

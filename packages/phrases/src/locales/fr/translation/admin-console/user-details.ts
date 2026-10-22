@@ -75,6 +75,9 @@ const user_details = {
   },
   mfa: {
     field_name: 'Authentification à deux facteurs',
+    require_mfa: 'Exiger la configuration de la MFA',
+    require_mfa_description:
+      'Cet utilisateur doit configurer au moins un facteur MFA avant de pouvoir terminer la connexion. Il ne peut pas ignorer la configuration.',
     field_description: "Cet utilisateur a activé des facteurs d'authentification à 2 étapes.",
     name_column: 'Authentification à deux facteurs',
     field_description_empty:

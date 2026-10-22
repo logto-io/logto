@@ -73,6 +73,9 @@ const user_details = {
   },
   mfa: {
     field_name: 'Multi-factor authentication',
+    require_mfa: 'Require MFA setup',
+    require_mfa_description:
+      'This user must set up at least one MFA factor before they can complete sign-in. They cannot skip the setup.',
     field_description: 'This user has enabled 2-step verification factors.',
     name_column: 'Multi-Factor',
     field_description_empty: 'This user has not enabled 2-step verification factors.',

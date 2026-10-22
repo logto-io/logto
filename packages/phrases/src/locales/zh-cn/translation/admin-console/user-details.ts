@@ -68,6 +68,8 @@ const user_details = {
   },
   mfa: {
     field_name: '多因素认证',
+    require_mfa: '要求设置 MFA',
+    require_mfa_description: '该用户必须至少设置一个 MFA 因素才能完成登录，且无法跳过设置。',
     field_description: '该用户已启用 2 步认证因素。',
     name_column: '多因素认证',
     field_description_empty: '此用户尚未启用两步身份验证因素。',

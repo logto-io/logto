@@ -75,6 +75,9 @@ const user_details = {
   },
   mfa: {
     field_name: 'Zwei-Faktor-Authentifizierung',
+    require_mfa: 'MFA-Einrichtung erforderlich',
+    require_mfa_description:
+      'Dieser Benutzer muss mindestens einen MFA-Faktor einrichten, bevor er die Anmeldung abschließen kann. Die Einrichtung kann nicht übersprungen werden.',
     field_description: 'Dieser Benutzer hat 2-Stufen-Authentifizierungsfaktoren aktiviert.',
     name_column: 'Zwei-Faktor',
     field_description_empty:

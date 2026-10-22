@@ -75,6 +75,9 @@ const user_details = {
   },
   mfa: {
     field_name: 'Autenticação de dois fatores',
+    require_mfa: 'Exigir configuração de MFA',
+    require_mfa_description:
+      'Este utilizador tem de configurar pelo menos um fator de MFA antes de concluir a sessão. Não pode ignorar a configuração.',
     field_description: 'Este utilizador ativou fatores de autenticação de 2 etapas.',
     name_column: 'Autenticação de dois fatores',
     field_description_empty: 'Este utilizador não ativou fatores de autenticação de 2 passos.',
