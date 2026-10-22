@@ -197,6 +197,17 @@ export default class GlobalValues {
   public readonly isCloud = yes(getEnv('IS_CLOUD'));
 
   /**
+   * Whether a self-hosted deployment stops sending its usage counts with the license refresh. The
+   * refresh itself still runs, and usage is still evaluated locally.
+   *
+   * Reporting is on unless this is set, and there is no other way to change it. Set it on every
+   * instance of the deployment, since whichever instance claims a refresh sends it.
+   */
+  public readonly isLicenseUsageReportingDisabled = yes(
+    getEnv('SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED')
+  );
+
+  /**
    * Whether outbound requests to operator-supplied URLs are protected against SSRF. This covers
    * oidc-provider's own requests (backchannel logout, client `jwks_uri`, ...) as well as webhook
    * delivery and enterprise SSO connector discovery.

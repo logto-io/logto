@@ -1,17 +1,12 @@
 import { type consoleSsoRouter } from '@logto/cloud/routes';
 import { SsoProviderName } from '@logto/schemas';
-import Client, {
-  type ClientConfig,
-  type GuardedResponse,
-  type ResponseError,
-  type RouterRoutes,
-} from '@withtyped/client';
+import { type GuardedResponse, type ResponseError, type RouterRoutes } from '@withtyped/client';
 import { useState } from 'react';
 import Modal from 'react-modal';
 import useSWR from 'swr';
 import { z } from 'zod';
 
-import { useCloudApi, toastResponseError } from '@/cloud/hooks/use-cloud-api';
+import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import Skeleton from '@/components/CreateConnectorForm/Skeleton';
 import { getConnectorRadioGroupSize } from '@/components/CreateConnectorForm/utils';
 import Button from '@/ds-components/Button';
@@ -24,13 +19,8 @@ import creationStyles from '@/pages/EnterpriseSso/SsoCreationModal/index.module.
 import { categorizeSsoConnectorProviders } from '@/pages/EnterpriseSso/SsoCreationModal/utils';
 import modalStyles from '@/scss/modal.module.scss';
 
-import {
-  clearPendingConnectorCreation,
-  readPendingConnectorCreation,
-  getOrCreatePendingConnectorCreation,
-} from './connector-creation-idempotency';
 import styles from './index.module.scss';
-import { useConsoleSsoConnectors } from './use-console-sso';
+import { useConnectorCreation } from './use-connector-creation';
 
 type Props = {
   readonly onClose: (id?: string) => void;
@@ -40,7 +30,11 @@ type Props = {
 function CreationModal({ onClose, userId }: Props) {
   const { show } = useConfirmModal();
   const api = useCloudApi<typeof consoleSsoRouter>({ hideErrorToast: true });
-  const { mutate } = useConsoleSsoConnectors();
+  const { operation, status, isSubmitting, create, startOver, billing } = useConnectorCreation(
+    userId,
+    onClose
+  );
+  const { billingError, isBillingReady } = billing;
   const {
     data: providers,
     error,
@@ -51,46 +45,16 @@ function CreationModal({ onClose, userId }: Props) {
   >(['/api/me/console-sso/providers', userId], async () =>
     api.get('/api/me/console-sso/providers')
   );
-  const [operation, setOperation] = useState(() => readPendingConnectorCreation(userId));
   const [selected, setSelected] = useState<string | undefined>(operation?.providerName);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const { enterpriseProviders, standardProviders } = categorizeSsoConnectorProviders(providers);
   const radioGroupSize = getConnectorRadioGroupSize(
     enterpriseProviders.length + standardProviders.length
   );
-  const getCreationApiConfig = (key: string): ClientConfig => ({
-    ...api.config,
-    headers: async (url, method) => ({
-      ...(typeof api.config.headers === 'function'
-        ? await api.config.headers(url, method)
-        : api.config.headers),
-      'Idempotency-Key': key,
-    }),
-  });
-  const create = async () => {
-    if (isSubmitting || !selected) {
+  const submit = async () => {
+    if (!selected) {
       return;
     }
-    setIsSubmitting(true);
-    try {
-      const current = getOrCreatePendingConnectorCreation(
-        userId,
-        z.nativeEnum(SsoProviderName).parse(selected)
-      );
-      setOperation(current);
-      const createApi = new Client<typeof consoleSsoRouter>(getCreationApiConfig(current.key));
-      const connector = await createApi.post('/api/me/console-sso/connectors', {
-        body: { providerName: current.providerName },
-      });
-      clearPendingConnectorCreation(userId);
-      await Promise.allSettled([mutate()]);
-      onClose(connector.id);
-    } catch (error) {
-      await Promise.allSettled([mutate()]);
-      await toastResponseError(error);
-    } finally {
-      setIsSubmitting(false);
-    }
+    await create(z.nativeEnum(SsoProviderName).parse(selected));
   };
   const select = (provider: string) => {
     if (!operation && !isSubmitting) {
@@ -99,31 +63,15 @@ function CreationModal({ onClose, userId }: Props) {
   };
   const isProviderDisabled = (providerName: string) =>
     isSubmitting || Boolean(operation && operation.providerName !== providerName);
-  const startOver = async () => {
-    if (!operation || isSubmitting) {
-      return;
-    }
+  const confirmStartOver = async () => {
     const [confirmed] = await show({
       title: 'cloud.console_sso.start_over',
       confirmButtonText: 'cloud.console_sso.start_over',
       confirmButtonType: 'primary',
       ModalContent: () => <DynamicT forKey="cloud.console_sso.start_over_confirmation" />,
     });
-    if (!confirmed) {
-      return;
-    }
-    setIsSubmitting(true);
-    try {
-      const cleanupApi = new Client<typeof consoleSsoRouter>(getCreationApiConfig(operation.key));
-      await cleanupApi.delete('/api/me/console-sso/connector-creation');
-      clearPendingConnectorCreation(userId);
-      setOperation(undefined);
-      setSelected(undefined);
-    } catch (error) {
-      await toastResponseError(error);
-    } finally {
-      await Promise.allSettled([mutate()]);
-      setIsSubmitting(false);
+    if (confirmed) {
+      await startOver();
     }
   };
   return (
@@ -146,10 +94,16 @@ function CreationModal({ onClose, userId }: Props) {
             title="enterprise_sso.create_modal.create_button_text"
             type="primary"
             disabled={
-              !providers?.some(({ providerName }) => providerName === selected) || Boolean(error)
+              !providers?.some(({ providerName }) => providerName === selected) ||
+              Boolean(error) ||
+              Boolean(billingError) ||
+              !isBillingReady ||
+              status === 'payment_pending'
             }
-            isLoading={isSubmitting}
-            onClick={create}
+            isLoading={
+              isSubmitting || (!isBillingReady && !billingError) || status === 'payment_pending'
+            }
+            onClick={submit}
           />
         }
         onClose={() => {
@@ -164,7 +118,7 @@ function CreationModal({ onClose, userId }: Props) {
             severity="info"
             action="cloud.console_sso.start_over"
             onClick={() => {
-              void startOver();
+              void confirmStartOver();
             }}
           >
             <DynamicT forKey="cloud.console_sso.resume_creation" />

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useParams } from 'react-router-dom';
+import { useSWRConfig } from 'swr';
 
 import Delete from '@/assets/icons/delete.svg?react';
 import File from '@/assets/icons/file.svg?react';
@@ -38,6 +39,7 @@ function Details() {
   const api = useCloudApi<typeof consoleSsoRouter>({ hideErrorToast: true });
   const { data, error, isLoading, mutate } = useConsoleSsoConnector(connectorId);
   const { mutate: mutateList } = useConsoleSsoConnectors();
+  const { mutate: mutateCache } = useSWRConfig();
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
@@ -63,6 +65,9 @@ function Details() {
       });
       toast.success(t('enterprise_sso_details.enterprise_sso_deleted'));
       await refresh();
+      if (user) {
+        await Promise.allSettled([mutateCache(['console-sso-coverage', user.id], undefined, true)]);
+      }
       setIsDeleted(true);
     } catch (error) {
       await refresh();

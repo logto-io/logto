@@ -1,8 +1,10 @@
 import {
   LicenseKey,
   licenseRefreshStateGuard,
+  licenseUsageWarningGuard,
   type LicensePayload,
   type LicenseQuota,
+  type LicenseUsageWarning,
   type InstalledLicense,
   installedLicenseGuard,
   resolveLicenseQuota,
@@ -19,6 +21,7 @@ import { createSystemsQuery } from '#src/queries/system.js';
 import packageJson from '../../package.json' with { type: 'json' };
 
 import { licenseConsoleLog } from './console.js';
+import { collectLicenseUsage } from './usage.js';
 import { LicenseVerificationError, verifyLicenseKey } from './verify.js';
 
 /** The license installed on this deployment, once its signature has been verified. */
@@ -38,6 +41,8 @@ export type VerifiedLicense = {
   graceEndsAt: string;
   /** The last refusal reason returned by the license service, if any. */
   refusalReason?: string;
+  /** The usage notices the license service returned with the last refresh, if any. */
+  cloudNotices?: LicenseUsageWarning[];
 };
 
 /**
@@ -68,6 +73,35 @@ export const selfHostedLicenseServiceUrl = new URL('https://cloud.logto.io');
 
 const refreshResponseGuard = z.object({ license: z.string().min(1) });
 const refreshRefusalGuard = z.object({ reason: z.string().min(1) });
+const refreshNoticesGuard = z.object({ notices: z.array(z.unknown()) });
+
+/**
+ * Read the usage notices of a refresh response, or `undefined` when it carries none, as a refusal
+ * or an older license service does.
+ *
+ * A notice that does not parse is dropped rather than failing the refresh: notices are advisory,
+ * and a failed refresh eventually costs the deployment its license.
+ */
+const parseRefreshNotices = (body: unknown): Optional<LicenseUsageWarning[]> => {
+  const result = refreshNoticesGuard.safeParse(body);
+
+  if (!result.success) {
+    return;
+  }
+
+  return result.data.notices.flatMap((notice) => {
+    const parsed = licenseUsageWarningGuard.safeParse(notice);
+    return parsed.success ? [parsed.data] : [];
+  });
+};
+
+/**
+ * Whether the license refresh carries the usage of this deployment. Operators opt out with
+ * `SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED`; the refresh itself runs either way.
+ */
+export const isLicenseUsageReportingEnabled = () =>
+  // Self-hosted license usage reporting is still in development.
+  EnvSet.values.isDevFeaturesEnabled && !EnvSet.values.isLicenseUsageReportingDisabled;
 
 /**
  * Integration tests run a production build that trusts a fixture public key (see
@@ -210,6 +244,7 @@ export default class LicenseReader {
         lastRefreshedAt,
         graceEndsAt: getGraceEndsAt(lastRefreshedAt),
         ...(refreshState.refusalReason && { refusalReason: refreshState.refusalReason }),
+        ...(refreshState.cloudNotices && { cloudNotices: refreshState.cloudNotices }),
       };
 
       // A newly installed key has no attempt timestamp, so the first read registers it immediately.
@@ -311,6 +346,10 @@ export default class LicenseReader {
         return;
       }
 
+      // Collected only by the instance that claimed the attempt. A failed collection is logged
+      // and the refresh goes on without usage.
+      const usage = isLicenseUsageReportingEnabled() ? await collectLicenseUsage(pool) : undefined;
+
       const response = await got.post(
         new URL(
           `/api/self-hosted-licenses/${encodeURIComponent(license.payload.licenseId)}/refresh`,
@@ -321,6 +360,7 @@ export default class LicenseReader {
             license: installedJwt,
             deploymentId,
             logtoVersion: packageJson.version,
+            ...(usage && { usage }),
           },
           responseType: 'json',
           throwHttpErrors: false,
@@ -331,12 +371,15 @@ export default class LicenseReader {
       if (response.statusCode === 403) {
         const refusal = refreshRefusalGuard.safeParse(response.body);
         const refusalReason = refusal.success ? refusal.data.reason : 'unknown';
+        // A refusal that carries no notices keeps the ones of the last refresh.
+        const cloudNotices = parseRefreshNotices(response.body);
 
         await this.#writeIfInstalled(pool, installedJwt, async ({ upsertSystem }) =>
           upsertSystem(LicenseKey.LicenseRefreshState, {
             ...refreshState,
             lastAttemptAt,
             refusalReason,
+            ...(cloudNotices && { cloudNotices }),
           })
         );
         this.invalidate();
@@ -348,6 +391,7 @@ export default class LicenseReader {
       }
 
       const refreshed = refreshResponseGuard.parse(response.body);
+      const cloudNotices = parseRefreshNotices(response.body);
       const refreshedPayload = await verifyLicenseKey(refreshed.license);
       const lastRefreshedAt = new Date(refreshedPayload.iat * 1000).toISOString();
 
@@ -360,6 +404,7 @@ export default class LicenseReader {
         await upsertSystem(LicenseKey.LicenseRefreshState, {
           lastRefreshedAt,
           lastAttemptAt,
+          ...(cloudNotices && { cloudNotices }),
         });
       });
       this.invalidate();

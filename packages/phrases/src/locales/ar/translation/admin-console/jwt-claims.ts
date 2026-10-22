@@ -37,6 +37,8 @@ const jwt_claims = {
   error_handling_tab: 'معالجة الأخطاء',
   test_tab: 'سياق الاختبار',
   jwt_claims_description: 'المطالبات الافتراضية مضمنة تلقائيًا في JWT ولا يمكن استبدالها.',
+  reserved_claims_description:
+    '`acr` و `amr` و `auth_time` محجوزة في رموز الوصول للمستخدم: يستنتجها Logto دائمًا ويتجاهل المطالبات المخصصة التي تستخدم هذه المفاتيح.',
   user_data: {
     title: 'بيانات المستخدم',
     subtitle: 'استخدم معلمة الإدخال `context.user` لتوفير معلومات المستخدم الحيوية.',

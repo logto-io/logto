@@ -30,6 +30,7 @@ import { isAccessDeniedError, parseCustomJwtResponseError } from '#src/utils/cus
 import { i18next } from '#src/utils/i18n.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
+import { dropReservedAuthenticationContextClaims } from './authentication-context-claims.js';
 import { getClientIdentifierPayload, shouldTreatAsCimdClient } from './cimd/index.js';
 import { tokenExchangeActGuard } from './grants/token-exchange/types.js';
 
@@ -345,7 +346,16 @@ export const getExtraTokenClaimsForJwtCustomization = async (
 
     ctx.prependAllLogEntries({ customTokenClaims: result });
 
-    return result;
+    /**
+     * The authentication context is reserved on user access tokens: `acr`, `amr`, and `auth_time`
+     * always come from Logto, and the customizer is merged last, so a script's values for them are
+     * dropped before merging (the log entry above keeps the raw script result). Client credentials
+     * tokens carry no authentication context, so their custom claims stay untouched.
+     */
+    // OIDC step-up authentication context is only available with dev features enabled.
+    return !isClientCredentialsToken && EnvSet.values.isDevFeaturesEnabled
+      ? dropReservedAuthenticationContextClaims(result)
+      : result;
   } catch (error: unknown) {
     void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));
 

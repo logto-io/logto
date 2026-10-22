@@ -95,7 +95,8 @@ function MultiOptionInput<T>({
           className
         )}
         role="button"
-        tabIndex={0}
+        aria-disabled={isDisabled ? true : undefined}
+        tabIndex={isDisabled ? -1 : 0}
         onKeyDown={onKeyDownHandler(() => {
           if (isDisabled) {
             return;
@@ -127,7 +128,7 @@ function MultiOptionInput<T>({
               }}
             >
               {renderValue(option)}
-              {!isReadOnlyField && (
+              {!isDisabled && (
                 <IconButton
                   className={styles.delete}
                   size="small"

@@ -24,10 +24,11 @@ describe('SubmitFormChangesActionBar', () => {
     expect(screen.getByRole('button', { name: /save_changes/ })).toBeTruthy();
   });
 
-  it('renders nothing for a read-only member', () => {
+  it('renders an empty bar for a read-only member', () => {
     mockIsReadOnly.mockReturnValue(true);
     const { container } = renderActionBar();
 
-    expect(container.childElementCount).toBe(0);
+    expect(container.childElementCount).toBe(1);
+    expect(container.firstElementChild?.childElementCount).toBe(0);
   });
 });
