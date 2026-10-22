@@ -10,6 +10,7 @@ export * from './error.js';
 export * from './metadata.js';
 export * from './foundation.js';
 export * from './passwordless.js';
+export * from './siwe.js';
 export * from './social.js';
 export * from './email-template.js';
 

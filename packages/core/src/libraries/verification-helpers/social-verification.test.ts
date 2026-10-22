@@ -1,4 +1,4 @@
-import { ConnectorType, GoogleConnector } from '@logto/connector-kit';
+import { ConnectorType, GoogleConnector, SiweConnector } from '@logto/connector-kit';
 import { createMockUtils } from '@logto/shared/esm';
 
 import { mockConnector } from '#src/__mocks__/connector.js';
@@ -33,7 +33,32 @@ mockEsm('#src/libraries/connector.js', () => ({
   }),
 }));
 
-const { verifySocialIdentity } = await import('./social-verification.js');
+const { createSocialAuthorizationUrl, verifySocialIdentity } = await import(
+  './social-verification.js'
+);
+
+const createSiweTenant = () => {
+  const getAuthorizationUri = jest.fn(async () => 'siwe://authorize?nonce=nonce');
+  const siweTenant = new MockTenant(undefined, undefined, {
+    getLogtoConnectorById: jest.fn().mockResolvedValue({
+      metadata: { id: 'siwe', target: SiweConnector.target },
+      type: ConnectorType.Social,
+      getAuthorizationUri,
+    }),
+  });
+
+  return { siweTenant, getAuthorizationUri };
+};
+
+const createContext = () => {
+  // @ts-expect-error test mock context
+  const ctx: WithLogContext = {
+    ...createMockContext(),
+    ...createMockLogContext(),
+  };
+
+  return ctx;
+};
 
 describe('verifySocialIdentity', () => {
   it('should verify social identity', async () => {
@@ -163,5 +188,35 @@ describe('verifySocialIdentity', () => {
     ).rejects.toThrow('CSRF token mismatch.');
 
     expect(isExternalGoogleOneTap).toHaveBeenCalledWith(connectorData);
+  });
+});
+
+describe('createSocialAuthorizationUrl', () => {
+  it('should reject a SIWE redirect URI from an untrusted origin', async () => {
+    const { siweTenant, getAuthorizationUri } = createSiweTenant();
+
+    await expect(
+      createSocialAuthorizationUrl(createContext(), siweTenant, {
+        connectorId: 'siwe',
+        state: 'state',
+        redirectUri: 'https://evil.example.com/callback/siwe',
+      })
+    ).rejects.toMatchObject({ code: 'connector.invalid_request_parameters' });
+
+    expect(getAuthorizationUri).not.toHaveBeenCalled();
+  });
+
+  it('should forward a SIWE redirect URI on the tenant endpoint', async () => {
+    const { siweTenant, getAuthorizationUri } = createSiweTenant();
+
+    await expect(
+      createSocialAuthorizationUrl(createContext(), siweTenant, {
+        connectorId: 'siwe',
+        state: 'state',
+        redirectUri: `${siweTenant.envSet.endpoint.origin}/callback/siwe`,
+      })
+    ).resolves.toBe('siwe://authorize?nonce=nonce');
+
+    expect(getAuthorizationUri).toHaveBeenCalled();
   });
 });
