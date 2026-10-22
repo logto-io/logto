@@ -56,6 +56,14 @@ const enterprise_subscription = {
       'Après trois périodes de facturation consécutives impayées et épuisement des tentatives, le recouvrement est suspendu et les connecteurs Console SSO payants sont supprimés. La mise à jour du paiement ne restaure pas leur configuration. Contactez-nous pour obtenir de l’aide.',
     cancel_on: 'Annulation prévue le {{date}}',
     other_product: 'Autre abonnement',
+    enterprise_invoices_description:
+      "Factures de votre contrat Enterprise. Sélectionnez une facture pour l'afficher et télécharger la facture ou le reçu.",
+    personal_invoices_description:
+      "Factures des abonnements facturés à votre compte, y compris les abonnements passés. Sélectionnez une facture pour l'afficher et télécharger la facture ou le reçu.",
+    credit_note:
+      'Les crédits issus de suppressions ou de proratisations réduisent les factures suivantes et ne sont pas nécessairement remboursés immédiatement sur votre moyen de paiement.',
+    invoice_link_unavailable:
+      "La page de cette facture n'est pas disponible. Contactez-nous si vous avez besoin d'une copie.",
     status: {
       active: 'Actif',
       trialing: 'En essai',

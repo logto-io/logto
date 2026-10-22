@@ -1,24 +1,44 @@
+import { type Nullable } from '@silverhand/essentials';
 import { type ComponentProps } from 'react';
 
 import { type UserSubscription } from '@/cloud/types/router';
 import type Tag from '@/ds-components/Tag';
 
+/**
+ * Format an amount in currency minor units. Invoices stored before Cloud persisted their currency
+ * have none; show the number alone rather than assume a currency.
+ */
+export const formatCurrencyAmount = (
+  amount: number,
+  currency: Nullable<string>,
+  locale: string
+) => {
+  if (!currency) {
+    return new Intl.NumberFormat(locale, { minimumFractionDigits: 2 }).format(amount / 100);
+  }
+  const formatter = new Intl.NumberFormat(locale, { style: 'currency', currency });
+  // Stripe retains two-decimal API amounts for ISK/UGX despite their zero-decimal display.
+  // https://docs.stripe.com/currencies#special-cases
+  const digits = ['isk', 'ugx'].includes(currency.toLowerCase())
+    ? 2
+    : (formatter.resolvedOptions().maximumFractionDigits ?? 2);
+  return formatter.format(amount / 10 ** digits);
+};
+
 /** Format a recurring list price in currency minor units, without estimating an invoice. */
 export const formatUnitPrice = (
   price: UserSubscription['items'][number]['price'],
   locale: string
-) => {
-  if (price.unitAmount === null) {
-    return '—';
-  }
-  const formatter = new Intl.NumberFormat(locale, { style: 'currency', currency: price.currency });
-  // Stripe retains two-decimal API amounts for ISK/UGX despite their zero-decimal display.
-  // https://docs.stripe.com/currencies#special-cases
-  const digits = ['isk', 'ugx'].includes(price.currency.toLowerCase())
-    ? 2
-    : (formatter.resolvedOptions().maximumFractionDigits ?? 2);
-  return formatter.format(price.unitAmount / 10 ** digits);
-};
+) =>
+  price.unitAmount === null ? '—' : formatCurrencyAmount(price.unitAmount, price.currency, locale);
+
+/** Name only known products; an unknown or missing product hint is never shown as Console SSO. */
+export const getProductTitleKey = (product: Nullable<UserSubscription['product']>) =>
+  product === 'console-sso'
+    ? 'cloud.console_sso.title'
+    : product === 'self-hosted-license'
+      ? 'cloud.self_hosted_licenses.title'
+      : 'enterprise_subscription.user_subscriptions.other_product';
 
 /** Localize Stripe's recurring interval: "month" for a single interval, "3 months" otherwise. */
 export const formatPriceInterval = (

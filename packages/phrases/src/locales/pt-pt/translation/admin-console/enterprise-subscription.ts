@@ -55,6 +55,14 @@ const enterprise_subscription = {
       'Após três períodos de faturação consecutivos não pagos e o esgotamento das tentativas, a cobrança é suspensa e os conectores pagos de Console SSO são removidos. Atualizar o pagamento não restaura a configuração. Contacte-nos para obter ajuda.',
     cancel_on: 'Cancelamento agendado para {{date}}',
     other_product: 'Outra subscrição',
+    enterprise_invoices_description:
+      'Faturas do seu contrato Enterprise. Selecione uma fatura para a ver e transferir a fatura ou o recibo.',
+    personal_invoices_description:
+      'Faturas das subscrições cobradas na sua conta, incluindo subscrições anteriores. Selecione uma fatura para a ver e transferir a fatura ou o recibo.',
+    credit_note:
+      'Os créditos de remoções ou rateios reduzem faturas posteriores e não são necessariamente reembolsados de imediato no seu método de pagamento.',
+    invoice_link_unavailable:
+      'A página desta fatura não está disponível. Contacte-nos se precisar de uma cópia.',
     status: {
       active: 'Ativa',
       trialing: 'Em avaliação',

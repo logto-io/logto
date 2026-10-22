@@ -95,17 +95,25 @@ it('preserves funding, provider and subscription when retrying the same intentio
   expect(getOrCreatePendingConnectorCreation('alice', SsoProviderName.SAML)).toEqual(saved);
 });
 
-it('creates an included connector without Checkout or a personal subscription selector', async () => {
-  await continueConnectorCreation(
-    'alice',
-    savePendingConnectorCreation('alice', { ...operation, funding: 'included' }),
-    getApi,
-    { restartExpired: true }
-  );
-  expect(api.post).toHaveBeenCalledWith('/api/me/console-sso/connectors', {
-    body: { providerName: SsoProviderName.OIDC },
-  });
-  expect(api.post).toHaveBeenCalledTimes(1);
+it('creates an included connector on its Enterprise without Checkout', async () => {
+  const included = { ...operation, funding: 'included' as const, enterpriseId: 'enterprise-one' };
+  savePendingConnectorCreation('alice', included);
+  await continueConnectorCreation('alice', included, getApi, { restartExpired: true });
+  expect(api.post.mock.calls).toEqual([
+    [
+      '/api/me/logto-enterprises/:id/console-sso/connectors',
+      { params: { id: 'enterprise-one' }, body: { providerName: SsoProviderName.OIDC } },
+    ],
+  ]);
+  expect(getApi).toHaveBeenCalledWith(included.key);
+});
+
+it('refuses an included connector saved without its funding Enterprise', async () => {
+  const included = savePendingConnectorCreation('alice', { ...operation, funding: 'included' });
+  await expect(
+    continueConnectorCreation('alice', included, getApi, { restartExpired: true })
+  ).rejects.toThrow();
+  expect(api.post).not.toHaveBeenCalled();
 });
 
 it('adds directly to a confirmed subscription, including a zero-quantity subscription', async () => {

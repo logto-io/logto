@@ -20,6 +20,13 @@ export type UserSubscription = GuardedResponse<
   RouterRoutes<typeof userSubscriptionsRouter>['get']['/api/me/subscriptions']
 >['subscriptions'][number];
 
+/** A page of authorized invoices for the user's own subscriptions, newest first, without drafts. */
+export type UserSubscriptionInvoicesResponse = GuardedResponse<
+  RouterRoutes<typeof userSubscriptionsRouter>['get']['/api/me/subscriptions/invoices']
+>;
+
+export type UserSubscriptionInvoice = UserSubscriptionInvoicesResponse['invoices'][number];
+
 /** The paginated hosted-email log page returned by the cloud email-logs endpoint. */
 export type TenantEmailLogsResponse = GuardedResponse<
   GetEmailLogsRoutes['/api/tenants/:tenantId/email-logs']

@@ -1,15 +1,19 @@
+import { type consoleSsoRouter } from '@logto/cloud/routes';
 import { type IdTokenClaims, useLogto } from '@logto/react';
 import { TenantRole } from '@logto/schemas';
+import { trySafe } from '@silverhand/essentials';
 import { ResponseError } from '@withtyped/client';
 import { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
-import { useCloudApi, createTenantApi } from '@/cloud/hooks/use-cloud-api';
+import { useCloudApi, createTenantApi, toastResponseError } from '@/cloud/hooks/use-cloud-api';
+import { useConsoleSsoConnectors } from '@/cloud/pages/ConsoleSso/use-console-sso';
 import { type TenantResponse } from '@/cloud/types/router';
 import AppLoading from '@/components/AppLoading';
 import PageMeta from '@/components/PageMeta';
 import Topbar from '@/components/Topbar';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
@@ -18,6 +22,7 @@ import useRedirectUri from '@/hooks/use-redirect-uri';
 import useSignOut from '@/hooks/use-sign-out';
 import { isPaidPlan } from '@/utils/subscription';
 
+import IssuesContent from './IssuesContent';
 import TenantsList from './TenantsList';
 import styles from './index.module.scss';
 import { getRoleMap } from './utils';
@@ -40,11 +45,21 @@ export default function DeleteAccount() {
   const { getIdTokenClaims, isAuthenticated, getOrganizationToken } = useLogto();
   const { signOut } = useSignOut();
   const postSignOutRedirectUri = useRedirectUri('signOut');
-  const cloudApi = useCloudApi();
+  const cloudApi = useCloudApi({ hideErrorToast: true });
+  const consoleSsoApi = useCloudApi<typeof consoleSsoRouter>({ hideErrorToast: true });
+  // Console SSO billing: connectors are user-owned and must be removed before deleting the account.
+  const {
+    data: consoleSsoConnectors,
+    error: consoleSsoError,
+    mutate: mutateConsoleSsoConnectors,
+  } = useConsoleSsoConnectors(isDevFeaturesEnabled);
+  const hasConsoleSsoConnectors = isDevFeaturesEnabled && Boolean(consoleSsoConnectors?.length);
 
   const [claims, setClaims] = useState<IdTokenClaims>();
   const [isDeleting, setIsDeleting] = useState(false);
-  const [deletionError, setDeletionError] = useState<Error>();
+  const [requestError, setRequestError] = useState<Error>();
+
+  const deletionError = requestError ?? consoleSsoError;
 
   const paidPlans = tenants.filter(({ subscription: { planId, isEnterprisePlan } }) =>
     isPaidPlan(planId, isEnterprisePlan)
@@ -54,7 +69,10 @@ export default function DeleteAccount() {
   );
   const openInvoices = tenants.filter(({ openInvoices }) => openInvoices.length > 0);
   const hasIssues =
-    paidPlans.length > 0 || subscriptionStatusIssues.length > 0 || openInvoices.length > 0;
+    hasConsoleSsoConnectors ||
+    paidPlans.length > 0 ||
+    subscriptionStatusIssues.length > 0 ||
+    openInvoices.length > 0;
 
   const issues = [
     { description: 'paid_plan' as const, tenants: paidPlans },
@@ -66,7 +84,7 @@ export default function DeleteAccount() {
 
   useEffect(() => {
     setStep((previous) => {
-      if (previous === Step.FinalConfirmation) {
+      if (!hasIssues && previous === Step.FinalConfirmation) {
         return previous;
       }
       return hasIssues ? Step.Issues : Step.Confirmation;
@@ -87,7 +105,7 @@ export default function DeleteAccount() {
     void fetchClaims();
   }, [getIdTokenClaims, t]);
 
-  if (!claims) {
+  if (!claims || (isDevFeaturesEnabled && !consoleSsoConnectors && !consoleSsoError)) {
     return <AppLoading />;
   }
 
@@ -102,6 +120,15 @@ export default function DeleteAccount() {
       ? deletionError.response.headers.get('logto-cloud-request-id')
       : null;
 
+  /** Re-read connectors and fail loudly; a plain SWR revalidation would keep stale data on error. */
+  const hasFreshConsoleSsoConnectors = async () => {
+    const connectors = await mutateConsoleSsoConnectors(
+      consoleSsoApi.get('/api/me/console-sso/connectors'),
+      { revalidate: false }
+    );
+    return Boolean(connectors?.length);
+  };
+
   const deleteAccount = async () => {
     if (isDeleting) {
       return;
@@ -110,8 +137,12 @@ export default function DeleteAccount() {
     setIsDeleting(true);
 
     try {
+      // Recheck right before the irreversible tenant operations below.
+      if (isDevFeaturesEnabled && (await hasFreshConsoleSsoConnectors())) {
+        return;
+      }
       for (const tenant of tenantsToDelete) {
-        // eslint-disable-next-line no-await-in-loop
+        // eslint-disable-next-line no-await-in-loop -- finish each tenant operation before deleting the account
         await cloudApi.delete(`/api/tenants/:tenantId`, {
           params: { tenantId: tenant.id },
         });
@@ -124,8 +155,9 @@ export default function DeleteAccount() {
           getOrganizationToken,
           tenantId: tenant.id,
           language: i18n.language,
+          hideErrorToast: true,
         });
-        // eslint-disable-next-line no-await-in-loop
+        // eslint-disable-next-line no-await-in-loop -- finish each tenant operation before deleting the account
         await tenantApi.delete('/api/tenants/:tenantId/members/:userId', {
           params: { tenantId: tenant.id, userId: claims.sub },
         });
@@ -135,7 +167,17 @@ export default function DeleteAccount() {
       await cloudApi.delete('/api/me');
       await signOut(postSignOutRedirectUri.href);
     } catch (error) {
-      setDeletionError(error instanceof Error ? error : new Error(String(error)));
+      // The server refuses with 422 if connectors were created after the recheck.
+      if (
+        isDevFeaturesEnabled &&
+        error instanceof ResponseError &&
+        error.response.status === 422 &&
+        (await trySafe(hasFreshConsoleSsoConnectors()))
+      ) {
+        return;
+      }
+      void toastResponseError(error);
+      setRequestError(error instanceof Error ? error : new Error(String(error)));
       console.error(error);
     } finally {
       setIsDeleting(false);
@@ -168,7 +210,11 @@ export default function DeleteAccount() {
                 </div>
               </div>
             ) : step === Step.Issues ? (
-              <IssuesContent issues={issues} onClose={handleCancel} />
+              <IssuesContent
+                issues={issues}
+                hasConsoleSsoConnectors={hasConsoleSsoConnectors}
+                onClose={handleCancel}
+              />
             ) : step === Step.Confirmation ? (
               <ConfirmationContent
                 tenantsToDelete={tenantsToDelete}
@@ -190,39 +236,6 @@ export default function DeleteAccount() {
           </div>
         </div>
       </OverlayScrollbar>
-    </div>
-  );
-}
-
-function IssuesContent({
-  issues,
-  onClose,
-}: {
-  readonly issues: ReadonlyArray<{
-    readonly description: 'paid_plan' | 'subscription_status' | 'open_invoice';
-    readonly tenants: readonly TenantResponse[];
-  }>;
-  readonly onClose: () => void;
-}) {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.profile.delete_account' });
-
-  return (
-    <div className={styles.container}>
-      <p>{t('p.has_issue')}</p>
-      {issues.map(
-        ({ description, tenants }) =>
-          tenants.length > 0 && (
-            <TenantsList
-              key={description}
-              description={t(`issues.${description}`, { count: tenants.length })}
-              tenants={tenants}
-            />
-          )
-      )}
-      <p>{t('p.after_resolved')}</p>
-      <div className={styles.actions}>
-        <Button size="large" title="general.got_it" onClick={onClose} />
-      </div>
     </div>
   );
 }

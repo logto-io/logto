@@ -55,6 +55,14 @@ const enterprise_subscription = {
       'Tras tres periodos de facturación consecutivos sin pagar y agotar los reintentos, se pausa el cobro y se eliminan los conectores de Console SSO de pago. Actualizar el pago no restaura su configuración. Contáctanos si necesitas ayuda.',
     cancel_on: 'Cancelación prevista para {{date}}',
     other_product: 'Otra suscripción',
+    enterprise_invoices_description:
+      'Facturas de tu contrato Enterprise. Selecciona una factura para verla y descargar la factura o el recibo.',
+    personal_invoices_description:
+      'Facturas de las suscripciones cobradas a tu cuenta, incluidas las suscripciones anteriores. Selecciona una factura para verla y descargar la factura o el recibo.',
+    credit_note:
+      'Los créditos por eliminaciones o prorrateos reducen facturas posteriores y no se reembolsan necesariamente de inmediato a tu método de pago.',
+    invoice_link_unavailable:
+      'La página de esta factura no está disponible. Contáctanos si necesitas una copia.',
     status: {
       active: 'Activa',
       trialing: 'En prueba',
