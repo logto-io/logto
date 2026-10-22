@@ -105,6 +105,7 @@ it('creates an included connector on its Enterprise without Checkout', async () 
       { params: { id: 'enterprise-one' }, body: { providerName: SsoProviderName.OIDC } },
     ],
   ]);
+  expect(getApi).toHaveBeenCalledWith(included.key);
 });
 
 it('refuses an included connector saved without its funding Enterprise', async () => {
