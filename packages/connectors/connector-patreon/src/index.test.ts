@@ -2,8 +2,11 @@ import nock from 'nock';
 
 import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 
-import { authorizationEndpoint, tokenEndpoint, userInfoEndpoint } from './constant.js';
+import { authorizationEndpoint, tokenEndpoint } from './constant.js';
 import createConnector from './index.js';
+
+const userInfoEndpoint = 'https://www.patreon.com/api/oauth2/v2/identity';
+const expectedUserInfoFields = 'email,full_name,image_url,is_email_verified,url,vanity';
 
 const getConfig = vi.fn().mockResolvedValue({
   clientId: '<client-id>',
@@ -81,6 +84,7 @@ describe('Patreon connector', () => {
   it('should get valid SocialUserInfo', async () => {
     nock(userInfoEndpoint)
       .get('')
+      .query({ 'fields[user]': expectedUserInfoFields })
       .reply(200, {
         data: {
           id: '12345',
@@ -150,7 +154,7 @@ describe('Patreon connector', () => {
   });
 
   it('throws InvalidResponse error if userinfo response is invalid', async () => {
-    nock(userInfoEndpoint).get('').reply(200, {
+    nock(userInfoEndpoint).get('').query({ 'fields[user]': expectedUserInfoFields }).reply(200, {
       id: 'id',
     });
 
@@ -162,7 +166,7 @@ describe('Patreon connector', () => {
   });
 
   it('throws SocialAccessTokenInvalid error if user info responded with 401', async () => {
-    nock(userInfoEndpoint).get('').reply(401);
+    nock(userInfoEndpoint).get('').query({ 'fields[user]': expectedUserInfoFields }).reply(401);
 
     const connector = await createConnector({ getConfig });
     await expect(connector.getUserInfo({ code: 'code' }, getSessionMock)).rejects.toStrictEqual(
@@ -171,7 +175,7 @@ describe('Patreon connector', () => {
   });
 
   it('throws General error if user info responded with a non-401 error', async () => {
-    nock(userInfoEndpoint).get('').reply(422);
+    nock(userInfoEndpoint).get('').query({ 'fields[user]': expectedUserInfoFields }).reply(422);
 
     const connector = await createConnector({ getConfig });
     await expect(connector.getUserInfo({ code: 'code' }, getSessionMock)).rejects.toStrictEqual(
