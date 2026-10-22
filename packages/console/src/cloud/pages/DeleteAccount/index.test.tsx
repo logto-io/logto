@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ResponseError } from '@withtyped/client';
 import type * as React from 'react';
 
-import { tryReadResponseErrorBody, toastResponseError } from '@/cloud/hooks/use-cloud-api';
+import { toastResponseError } from '@/cloud/hooks/use-cloud-api';
 
 import DeleteAccount from '.';
 
@@ -18,21 +18,20 @@ jest.mock(
   { virtual: true }
 );
 const mockDelete = jest.fn();
+const mockGet = jest.fn();
 const mockSignOut = jest.fn();
-const mockRefresh = jest.fn();
+const mockMutate = jest.fn(async (data: Promise<unknown>) => data);
 const mockGetClaims = jest.fn().mockResolvedValue({ sub: 'owner', organization_roles: [] });
-const mockStatus = jest.fn();
+const mockConnectors = jest.fn();
 jest.mock('@logto/react', () => ({ useLogto: () => ({ getIdTokenClaims: mockGetClaims }) }));
 jest.mock('@/consts/env', () => ({ isDevFeaturesEnabled: true }));
 jest.mock('@/cloud/hooks/use-cloud-api', () => ({
-  useCloudApi: () => ({ delete: mockDelete }),
+  useCloudApi: () => ({ delete: mockDelete, get: mockGet }),
   createTenantApi: () => ({ delete: mockDelete }),
-  tryReadResponseErrorBody: jest.fn(),
   toastResponseError: jest.fn(),
 }));
-jest.mock('./use-account-deletion-status', () => ({
-  __esModule: true,
-  default: () => ({ ...mockStatus(), mutate: mockRefresh }),
+jest.mock('@/cloud/pages/ConsoleSso/use-console-sso', () => ({
+  useConsoleSsoConnectors: () => ({ ...mockConnectors(), mutate: mockMutate }),
 }));
 jest.mock('@/hooks/use-sign-out', () => ({
   __esModule: true,
@@ -76,6 +75,17 @@ jest.mock('@/ds-components/Button', () => ({
   ),
 }));
 
+const connector = { id: 'connector' };
+
+/** Simulate a connector created elsewhere after the page loaded. */
+const createConnectorElsewhere = () => {
+  mockConnectors.mockReturnValue({ data: [connector] });
+  return [connector];
+};
+
+const unprocessableError = () =>
+  new ResponseError({ status: 422, headers: { get: () => null } } as unknown as Response);
+
 const confirmDeletion = async () => {
   fireEvent.click(await screen.findByText('general.delete'));
   fireEvent.click(screen.getByText('profile.delete_account.permanently_delete'));
@@ -83,13 +93,13 @@ const confirmDeletion = async () => {
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockStatus.mockReturnValue({ data: { hasConsoleSsoConnectors: false } });
-  mockRefresh.mockResolvedValue({ hasConsoleSsoConnectors: false });
+  mockConnectors.mockReturnValue({ data: [] });
+  mockGet.mockResolvedValue([]);
   mockDelete.mockResolvedValue(undefined);
 });
 
 it('explains the Console SSO account-deletion blocker even with no tenants', async () => {
-  mockStatus.mockReturnValue({ data: { hasConsoleSsoConnectors: true } });
+  mockConnectors.mockReturnValue({ data: [connector] });
   render(<DeleteAccount />);
   expect(
     await screen.findByText('admin_console.profile.delete_account.issues.console_sso')
@@ -98,13 +108,13 @@ it('explains the Console SSO account-deletion blocker even with no tenants', asy
   expect(mockDelete).not.toHaveBeenCalled();
 });
 
-it('does not allow deletion while the status is loading or failed', async () => {
-  mockStatus.mockReturnValue({});
+it('does not allow deletion while connectors are loading or failed to load', async () => {
+  mockConnectors.mockReturnValue({});
   const { rerender } = render(<DeleteAccount />);
   expect(screen.getByText('Loading')).not.toBeNull();
-  mockStatus.mockReturnValue({ error: new Error('Status unavailable') });
+  mockConnectors.mockReturnValue({ error: new Error('Connectors unavailable') });
   rerender(<DeleteAccount />);
-  expect(await screen.findByText('Status unavailable')).not.toBeNull();
+  expect(await screen.findByText('Connectors unavailable')).not.toBeNull();
   expect(screen.queryByText('general.delete')).toBeNull();
   expect(mockDelete).not.toHaveBeenCalled();
 });
@@ -115,16 +125,14 @@ it('preserves account deletion and sign-out once no blockers remain', async () =
   await waitFor(() => {
     expect(mockSignOut).toHaveBeenCalledWith('/');
   });
-  expect(mockRefresh).toHaveBeenCalledTimes(1);
+  expect(mockGet).toHaveBeenCalledTimes(1);
+  expect(mockGet).toHaveBeenCalledWith('/api/me/console-sso/connectors');
   expect(mockDelete).toHaveBeenCalledTimes(1);
   expect(mockDelete).toHaveBeenCalledWith('/api/me');
 });
 
-it('rechecks the status before performing deletion', async () => {
-  mockRefresh.mockImplementation(async () => {
-    mockStatus.mockReturnValue({ data: { hasConsoleSsoConnectors: true } });
-    return { hasConsoleSsoConnectors: true };
-  });
+it('rechecks connectors before performing deletion', async () => {
+  mockGet.mockImplementation(async () => createConnectorElsewhere());
   render(<DeleteAccount />);
   await confirmDeletion();
   expect(
@@ -133,29 +141,38 @@ it('rechecks the status before performing deletion', async () => {
   expect(mockDelete).not.toHaveBeenCalled();
 });
 
-it('shows the same reason if the final deletion guard detects new connectors', async () => {
-  mockDelete.mockRejectedValue(
-    new ResponseError({ headers: { get: () => null } } as unknown as Response)
-  );
-  jest.mocked(tryReadResponseErrorBody).mockResolvedValue({
-    message: 'Remove SSO',
-    error: { code: 'console_sso.configuration_exists' },
-  });
+it('shows the same reason if the server refuses deletion for new connectors', async () => {
+  mockGet.mockResolvedValueOnce([]).mockImplementationOnce(async () => createConnectorElsewhere());
+  mockDelete.mockRejectedValue(unprocessableError());
   render(<DeleteAccount />);
   await confirmDeletion();
   expect(
     await screen.findByText('admin_console.profile.delete_account.issues.console_sso')
   ).not.toBeNull();
+  expect(toastResponseError).not.toHaveBeenCalled();
   expect(mockSignOut).not.toHaveBeenCalled();
 });
 
-it('stops deletion if the final status refresh fails', async () => {
-  const failure = new Error('Status refresh failed');
-  mockRefresh.mockRejectedValue(failure);
+it('keeps the generic error for a refusal unrelated to connectors', async () => {
+  const failure = unprocessableError();
+  mockDelete.mockRejectedValue(failure);
   const logError = jest.spyOn(console, 'error').mockImplementation(jest.fn());
   render(<DeleteAccount />);
   await confirmDeletion();
-  expect(await screen.findByText('Status refresh failed')).not.toBeNull();
+  await waitFor(() => {
+    expect(toastResponseError).toHaveBeenCalledWith(failure);
+  });
+  expect(mockGet).toHaveBeenCalledTimes(2);
+  expect(mockSignOut).not.toHaveBeenCalled();
+  logError.mockRestore();
+});
+
+it('stops deletion if the final connector check fails', async () => {
+  mockGet.mockRejectedValue(new Error('Connector check failed'));
+  const logError = jest.spyOn(console, 'error').mockImplementation(jest.fn());
+  render(<DeleteAccount />);
+  await confirmDeletion();
+  expect(await screen.findByText('Connector check failed')).not.toBeNull();
   expect(mockDelete).not.toHaveBeenCalled();
   logError.mockRestore();
 });
@@ -168,6 +185,7 @@ it('retains the generic error flow for unrelated deletion failures', async () =>
   await confirmDeletion();
   expect(await screen.findByText('Deletion failed')).not.toBeNull();
   expect(toastResponseError).toHaveBeenCalledWith(failure);
+  expect(mockGet).toHaveBeenCalledTimes(1);
   expect(mockSignOut).not.toHaveBeenCalled();
   logError.mockRestore();
 });

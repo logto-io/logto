@@ -1,17 +1,14 @@
+import { type consoleSsoRouter } from '@logto/cloud/routes';
 import { type IdTokenClaims, useLogto } from '@logto/react';
 import { TenantRole } from '@logto/schemas';
+import { trySafe } from '@silverhand/essentials';
 import { ResponseError } from '@withtyped/client';
 import { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { z } from 'zod';
 
-import {
-  useCloudApi,
-  createTenantApi,
-  tryReadResponseErrorBody,
-  toastResponseError,
-} from '@/cloud/hooks/use-cloud-api';
+import { useCloudApi, createTenantApi, toastResponseError } from '@/cloud/hooks/use-cloud-api';
+import { useConsoleSsoConnectors } from '@/cloud/pages/ConsoleSso/use-console-sso';
 import { type TenantResponse } from '@/cloud/types/router';
 import AppLoading from '@/components/AppLoading';
 import PageMeta from '@/components/PageMeta';
@@ -28,7 +25,6 @@ import { isPaidPlan } from '@/utils/subscription';
 import IssuesContent from './IssuesContent';
 import TenantsList from './TenantsList';
 import styles from './index.module.scss';
-import useAccountDeletionStatus from './use-account-deletion-status';
 import { getRoleMap } from './utils';
 
 enum Step {
@@ -50,21 +46,20 @@ export default function DeleteAccount() {
   const { signOut } = useSignOut();
   const postSignOutRedirectUri = useRedirectUri('signOut');
   const cloudApi = useCloudApi({ hideErrorToast: true });
+  const consoleSsoApi = useCloudApi<typeof consoleSsoRouter>({ hideErrorToast: true });
+  // Console SSO billing: connectors are user-owned and must be removed before deleting the account.
   const {
-    data: deletionStatus,
-    error: statusError,
-    mutate: refreshDeletionStatus,
-  } = useAccountDeletionStatus();
-  const [hasSsoDeletionRefusal, setHasSsoDeletionRefusal] = useState(false);
-  const hasConsoleSsoConnectors =
-    isDevFeaturesEnabled &&
-    (hasSsoDeletionRefusal || deletionStatus?.hasConsoleSsoConnectors === true);
+    data: consoleSsoConnectors,
+    error: consoleSsoError,
+    mutate: mutateConsoleSsoConnectors,
+  } = useConsoleSsoConnectors(isDevFeaturesEnabled);
+  const hasConsoleSsoConnectors = isDevFeaturesEnabled && Boolean(consoleSsoConnectors?.length);
 
   const [claims, setClaims] = useState<IdTokenClaims>();
   const [isDeleting, setIsDeleting] = useState(false);
   const [requestError, setRequestError] = useState<Error>();
 
-  const deletionError = requestError ?? statusError;
+  const deletionError = requestError ?? consoleSsoError;
 
   const paidPlans = tenants.filter(({ subscription: { planId, isEnterprisePlan } }) =>
     isPaidPlan(planId, isEnterprisePlan)
@@ -110,7 +105,7 @@ export default function DeleteAccount() {
     void fetchClaims();
   }, [getIdTokenClaims, t]);
 
-  if (!claims || (isDevFeaturesEnabled && !deletionStatus && !statusError)) {
+  if (!claims || (isDevFeaturesEnabled && !consoleSsoConnectors && !consoleSsoError)) {
     return <AppLoading />;
   }
 
@@ -125,6 +120,15 @@ export default function DeleteAccount() {
       ? deletionError.response.headers.get('logto-cloud-request-id')
       : null;
 
+  /** Re-read connectors and fail loudly; a plain SWR revalidation would keep stale data on error. */
+  const hasFreshConsoleSsoConnectors = async () => {
+    const connectors = await mutateConsoleSsoConnectors(
+      consoleSsoApi.get('/api/me/console-sso/connectors'),
+      { revalidate: false }
+    );
+    return Boolean(connectors?.length);
+  };
+
   const deleteAccount = async () => {
     if (isDeleting) {
       return;
@@ -133,11 +137,9 @@ export default function DeleteAccount() {
     setIsDeleting(true);
 
     try {
-      if (isDevFeaturesEnabled) {
-        const status = await refreshDeletionStatus();
-        if (status?.hasConsoleSsoConnectors) {
-          return;
-        }
+      // Recheck right before the irreversible tenant operations below.
+      if (isDevFeaturesEnabled && (await hasFreshConsoleSsoConnectors())) {
+        return;
       }
       for (const tenant of tenantsToDelete) {
         // eslint-disable-next-line no-await-in-loop -- finish each tenant operation before deleting the account
@@ -165,14 +167,13 @@ export default function DeleteAccount() {
       await cloudApi.delete('/api/me');
       await signOut(postSignOutRedirectUri.href);
     } catch (error) {
-      const response =
-        error instanceof ResponseError ? await tryReadResponseErrorBody(error) : undefined;
+      // The server refuses with 422 if connectors were created after the recheck.
       if (
         isDevFeaturesEnabled &&
-        z.object({ code: z.literal('console_sso.configuration_exists') }).safeParse(response?.error)
-          .success
+        error instanceof ResponseError &&
+        error.response.status === 422 &&
+        (await trySafe(hasFreshConsoleSsoConnectors()))
       ) {
-        setHasSsoDeletionRefusal(true);
         return;
       }
       void toastResponseError(error);
