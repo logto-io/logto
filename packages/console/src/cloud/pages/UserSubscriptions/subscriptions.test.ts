@@ -41,6 +41,9 @@ jest.mock('@/cloud/hooks/use-cloud-api', () => ({ useCloudApi: jest.fn() }));
 jest.mock('@/cloud/hooks/use-user-subscriptions', () => ({
   useUserSubscriptions: jest.fn(),
   useSubscriptionEntry: jest.fn(),
+  // Billing history has its own coverage; keep it empty for the subscription views.
+  useUserSubscriptionInvoices: () => ({ data: { invoices: [], totalCount: 0 } }),
+  useEnterpriseInvoices: () => ({ data: [] }),
 }));
 jest.mock('../ConsoleSso/use-console-sso', () => ({ useConsoleSsoConnectors: jest.fn() }));
 jest.mock('@/hooks/use-current-user', () => ({

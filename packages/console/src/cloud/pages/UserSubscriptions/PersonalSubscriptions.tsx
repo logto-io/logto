@@ -19,6 +19,7 @@ import styles from './index.module.scss';
 import {
   formatPriceInterval,
   formatUnitPrice,
+  getProductTitleKey,
   getScheduledCancellation,
   statusTagMap,
 } from './utils';
@@ -47,16 +48,7 @@ function PersonalSubscriptions() {
             title: t('enterprise_subscription.subscription.basic_plan_column_title.product'),
             dataIndex: 'id',
             render: ({ product, id }) => (
-              <ItemPreview
-                title={t(
-                  product === 'console-sso'
-                    ? 'cloud.console_sso.title'
-                    : product === 'self-hosted-license'
-                      ? 'cloud.self_hosted_licenses.title'
-                      : 'enterprise_subscription.user_subscriptions.other_product'
-                )}
-                subtitle={id}
-              />
+              <ItemPreview title={t(getProductTitleKey(product))} subtitle={id} />
             ),
           },
           {

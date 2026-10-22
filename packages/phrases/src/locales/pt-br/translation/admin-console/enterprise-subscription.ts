@@ -55,6 +55,13 @@ const enterprise_subscription = {
       'Após três períodos de cobrança consecutivos não pagos e o esgotamento das tentativas, a cobrança é pausada e os conectores pagos de Console SSO são removidos. Atualizar o pagamento não restaura a configuração. Entre em contato para obter ajuda.',
     cancel_on: 'Cancelamento agendado para {{date}}',
     other_product: 'Outra assinatura',
+    billing_history_title: 'Histórico de cobrança',
+    billing_history_description:
+      'Faturas das suas assinaturas pessoais e do seu contrato Enterprise. Selecione uma fatura para visualizá-la e baixar a fatura ou o recibo.',
+    credit_note:
+      'Créditos de remoções ou rateios reduzem faturas posteriores e não são necessariamente reembolsados de imediato ao seu método de pagamento.',
+    invoice_link_unavailable:
+      'A página desta fatura não está disponível. Entre em contato conosco se precisar de uma cópia.',
     status: {
       active: 'Ativa',
       trialing: 'Em teste',

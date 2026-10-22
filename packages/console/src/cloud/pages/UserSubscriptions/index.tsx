@@ -12,6 +12,7 @@ import TextLink from '@/ds-components/TextLink';
 
 import layout from '../EnterpriseSubscription/index.module.scss';
 
+import BillingHistory from './BillingHistory';
 import EnterpriseCoverage from './EnterpriseCoverage';
 import PersonalSubscriptions from './PersonalSubscriptions';
 import styles from './index.module.scss';
@@ -52,6 +53,7 @@ function UserSubscriptions() {
                 </FormCard>
               )}
               <PersonalSubscriptions />
+              <BillingHistory enterprise={enterprise} />
               <TextLink href={contactEmailLink}>
                 <DynamicT forKey="general.contact_us_action" />
               </TextLink>

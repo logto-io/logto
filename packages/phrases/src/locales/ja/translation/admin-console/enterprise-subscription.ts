@@ -54,6 +54,13 @@ const enterprise_subscription = {
       '3 回連続の請求期間で未払いが続き、再試行が終了すると、料金徴収が一時停止され、有料 Console SSO コネクターが削除されます。支払い情報を更新しても設定は復元されません。サポートにお問い合わせください。',
     cancel_on: '{{date}} に解約予定',
     other_product: 'その他のサブスクリプション',
+    billing_history_title: '請求履歴',
+    billing_history_description:
+      '個人サブスクリプションと Enterprise 契約の請求書です。請求書を選択すると、内容を確認し、請求書または領収書をダウンロードできます。',
+    credit_note:
+      '削除や日割り計算によるクレジットは以降の請求書から差し引かれ、すぐにお支払い方法へ返金されるとは限りません。',
+    invoice_link_unavailable:
+      'この請求書のページは利用できません。コピーが必要な場合はお問い合わせください。',
     status: {
       active: '有効',
       trialing: '試用中',

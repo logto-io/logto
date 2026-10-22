@@ -10,7 +10,10 @@ import { getIncludedCapacity } from './creation-billing';
 const useConsoleSsoCoverage = (isEnabled: boolean) => {
   const { user } = useCurrentUser();
   const api = useCloudApi();
-  const result = useSWR<ReturnType<typeof getIncludedCapacity>, ResponseError>(
+  const result = useSWR<
+    ReturnType<typeof getIncludedCapacity> & { enterpriseId?: string },
+    ResponseError
+  >(
     user && isEnabled && ['console-sso-coverage', user.id],
     async () => {
       // Use the same first Enterprise as connector creation; never combine different contracts.
@@ -19,12 +22,13 @@ const useConsoleSsoCoverage = (isEnabled: boolean) => {
       if (!enterprise) {
         return getIncludedCapacity();
       }
-      return getIncludedCapacity(
+      const capacity = getIncludedCapacity(
         await api.get('/api/me/logto-enterprises/:id', {
           params: { id: enterprise.id },
           search: { includeSharedQuota: 'true', includeUsages: 'true' },
         })
       );
+      return { ...capacity, enterpriseId: enterprise.id };
     },
     // Reopening the modal must check current allowance before selecting funding.
     { dedupingInterval: 0 }
@@ -41,6 +45,7 @@ export const useCreationBilling = (operation?: PendingConnectorCreation) => {
   const isBillingReady = isRecovering || (Boolean(coverage.data) && !coverage.isValidating);
   return {
     funding,
+    enterpriseId: funding === 'included' ? coverage.data?.enterpriseId : undefined,
     billingError,
     isBillingReady,
   };

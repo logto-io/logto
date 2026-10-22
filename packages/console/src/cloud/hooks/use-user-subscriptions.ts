@@ -2,7 +2,12 @@ import { type userSubscriptionsRouter } from '@logto/cloud/routes';
 import { type ResponseError } from '@withtyped/client';
 import useSWR from 'swr';
 
-import { type LogtoEnterpriseResponse, type UserSubscription } from '@/cloud/types/router';
+import {
+  type LogtoEnterpriseResponse,
+  type LogtoEnterpriseSubscriptionInvoiceResponse,
+  type UserSubscription,
+  type UserSubscriptionInvoicesResponse,
+} from '@/cloud/types/router';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import useCurrentUser from '@/hooks/use-current-user';
 
@@ -51,6 +56,49 @@ export const useUserSubscriptions = () => {
     ...result,
     isLoading: isUserLoading || result.isLoading,
     data: (userError ?? result.error) ? undefined : result.data?.subscriptions,
+    error: userError ?? result.error,
+  };
+};
+
+/** Page the user's own subscription invoices; an error must never become empty billing history. */
+export const useUserSubscriptionInvoices = (page: number, pageSize: number) => {
+  const { user, error: userError, isLoading: isUserLoading } = useCurrentUser();
+  const api = useCloudApi<typeof userSubscriptionsRouter>({ hideErrorToast: true });
+  const result = useSWR<UserSubscriptionInvoicesResponse, ResponseError>(
+    user && !userError && ['/api/me/subscriptions/invoices', user.id, page, pageSize],
+    async () =>
+      api.get('/api/me/subscriptions/invoices', {
+        search: { page: String(page), page_size: String(pageSize) },
+      }),
+    { keepPreviousData: false }
+  );
+  return {
+    ...result,
+    isLoading: isUserLoading || result.isLoading,
+    data: (userError ?? result.error) ? undefined : result.data,
+    error: userError ?? result.error,
+  };
+};
+
+/** Read an authorized Enterprise's invoices for the global billing history, without drafts. */
+export const useEnterpriseInvoices = (enterpriseId?: string) => {
+  const { user, error: userError, isLoading: isUserLoading } = useCurrentUser();
+  const api = useCloudApi({ hideErrorToast: true });
+  const result = useSWR<{ invoices: LogtoEnterpriseSubscriptionInvoiceResponse[] }, ResponseError>(
+    enterpriseId &&
+      user &&
+      !userError && ['/api/me/logto-enterprises/:id/invoices', user.id, enterpriseId],
+    async () =>
+      api.get('/api/me/logto-enterprises/:id/invoices', { params: { id: enterpriseId ?? '' } }),
+    { keepPreviousData: false }
+  );
+  return {
+    ...result,
+    isLoading: isUserLoading || result.isLoading,
+    data:
+      (userError ?? result.error)
+        ? undefined
+        : result.data?.invoices.filter(({ status }) => status !== 'draft'),
     error: userError ?? result.error,
   };
 };

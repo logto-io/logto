@@ -56,6 +56,13 @@ const enterprise_subscription = {
       'Nach drei aufeinanderfolgenden unbezahlten Abrechnungszeiträumen und ausgeschöpften Wiederholungsversuchen wird der Zahlungseinzug pausiert und kostenpflichtige Console-SSO-Konnektoren werden entfernt. Aktualisierte Zahlungsdaten stellen deren Konfiguration nicht wieder her. Kontaktieren Sie uns für Hilfe.',
     cancel_on: 'Kündigung geplant für {{date}}',
     other_product: 'Anderes Abonnement',
+    billing_history_title: 'Abrechnungsverlauf',
+    billing_history_description:
+      'Rechnungen für deine persönlichen Abonnements und deinen Enterprise-Vertrag. Wähle eine Rechnung aus, um sie anzusehen und die Rechnung oder Quittung herunterzuladen.',
+    credit_note:
+      'Gutschriften aus Entfernungen oder anteiligen Abrechnungen verringern spätere Rechnungen und werden nicht unbedingt sofort auf deine Zahlungsmethode erstattet.',
+    invoice_link_unavailable:
+      'Diese Rechnungsseite ist nicht verfügbar. Kontaktiere uns, wenn du eine Kopie benötigst.',
     status: {
       active: 'Aktiv',
       trialing: 'Testphase',

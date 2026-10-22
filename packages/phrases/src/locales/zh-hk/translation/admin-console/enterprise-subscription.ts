@@ -52,6 +52,11 @@ const enterprise_subscription = {
       '連續三個帳期未付款且重試次數用盡後，將暫停收款並移除付費 Console SSO 連接器。更新付款資料不會恢復其設定。如需協助，請聯絡我們。',
     cancel_on: '預定於 {{date}} 取消',
     other_product: '其他訂閱',
+    billing_history_title: '帳單紀錄',
+    billing_history_description:
+      '你的個人訂閱和 Enterprise 合約的發票。選擇一張發票即可查看，並下載發票或收據。',
+    credit_note: '移除或按比例計費產生的抵扣額會沖抵後續發票，不一定會立即退回到你的付款方式。',
+    invoice_link_unavailable: '此發票頁面無法使用。如需副本，請聯絡我們。',
     status: {
       active: '有效',
       trialing: '試用中',

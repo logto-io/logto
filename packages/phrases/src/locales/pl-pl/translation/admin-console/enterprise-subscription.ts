@@ -55,6 +55,13 @@ const enterprise_subscription = {
       'Po trzech kolejnych nieopłaconych okresach rozliczeniowych i wyczerpaniu prób płatności pobieranie opłat zostaje wstrzymane, a płatne konektory Console SSO usunięte. Aktualizacja płatności nie przywraca ich konfiguracji. Skontaktuj się z nami, aby uzyskać pomoc.',
     cancel_on: 'Anulowanie zaplanowane na {{date}}',
     other_product: 'Inna subskrypcja',
+    billing_history_title: 'Historia rozliczeń',
+    billing_history_description:
+      'Faktury za Twoje subskrypcje osobiste i umowę Enterprise. Wybierz fakturę, aby ją wyświetlić i pobrać fakturę lub potwierdzenie płatności.',
+    credit_note:
+      'Środki z usunięć lub rozliczeń proporcjonalnych pomniejszają kolejne faktury i niekoniecznie są od razu zwracane na Twoją metodę płatności.',
+    invoice_link_unavailable:
+      'Strona tej faktury jest niedostępna. Skontaktuj się z nami, jeśli potrzebujesz kopii.',
     status: {
       active: 'Aktywna',
       trialing: 'Okres próbny',

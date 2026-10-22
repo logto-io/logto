@@ -6,7 +6,12 @@ import * as env from '@/consts/env';
 import useCurrentUser from '@/hooks/use-current-user';
 
 import { useCloudApi } from './use-cloud-api';
-import { useSubscriptionEntry, useUserSubscriptions } from './use-user-subscriptions';
+import {
+  useEnterpriseInvoices,
+  useSubscriptionEntry,
+  useUserSubscriptionInvoices,
+  useUserSubscriptions,
+} from './use-user-subscriptions';
 
 jest.mock('./use-cloud-api', () => ({ useCloudApi: jest.fn() }));
 jest.mock('@/consts/env', () => ({
@@ -183,4 +188,62 @@ it('hides cached data and skips requests when the current user is unauthorized',
   expect(result.current.history.data).toBeUndefined();
   expect(result.current.history.error?.message).toBe('Unauthorized');
   expect(get).toHaveBeenCalledTimes(calls);
+});
+
+it('reads the requested invoice page with a user-scoped key', async () => {
+  const page = { invoices: [{ id: 'in_sso', product: 'console-sso' }], totalCount: 21 };
+  get.mockResolvedValue(page);
+  const { result, rerender } = renderBilling(() => useUserSubscriptionInvoices(3, 10));
+  await waitFor(() => {
+    expect(result.current.data).toEqual(page);
+  });
+  expect(get).toHaveBeenCalledWith('/api/me/subscriptions/invoices', {
+    search: { page: '3', page_size: '10' },
+  });
+  setUser('bob');
+  get.mockImplementation(async () => new Promise(jest.fn()));
+  rerender();
+  expect(result.current.data).toBeUndefined();
+});
+
+it.each([401, 403, 503])(
+  'preserves an invoice API %s failure instead of fabricating empty history',
+  async (status) => {
+    const error = new BillingError(status);
+    get.mockRejectedValue(error);
+    const { result } = renderBilling(() => useUserSubscriptionInvoices(1, 10));
+    await waitFor(() => {
+      expect(result.current.error).toBe(error);
+    });
+    expect(result.current.data).toBeUndefined();
+  }
+);
+
+it('reads only the given Enterprise invoices and hides drafts', async () => {
+  get.mockResolvedValue({
+    invoices: [
+      { id: 'in_paid', status: 'paid' },
+      { id: 'in_draft', status: 'draft' },
+      { id: 'in_void', status: 'void' },
+    ],
+  });
+  const { result } = renderBilling(() => useEnterpriseInvoices('contract'));
+  await waitFor(() => {
+    expect(result.current.data).toEqual([
+      { id: 'in_paid', status: 'paid' },
+      { id: 'in_void', status: 'void' },
+    ]);
+  });
+  expect(get).toHaveBeenCalledWith('/api/me/logto-enterprises/:id/invoices', {
+    params: { id: 'contract' },
+  });
+});
+
+it('skips Enterprise invoices without an Enterprise or an authorized user', async () => {
+  const { result, rerender } = renderBilling(() => useEnterpriseInvoices());
+  expect(result.current.data).toBeUndefined();
+  setUser('alice', new Error('Unauthorized'));
+  rerender();
+  expect(result.current.error?.message).toBe('Unauthorized');
+  expect(get).not.toHaveBeenCalledWith('/api/me/logto-enterprises/:id/invoices', expect.anything());
 });

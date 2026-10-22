@@ -56,6 +56,13 @@ const enterprise_subscription = {
       'Dopo tre periodi di fatturazione consecutivi non pagati e l’esaurimento dei tentativi, la riscossione viene sospesa e i connettori Console SSO a pagamento vengono rimossi. Aggiornare il pagamento non ripristina la configurazione. Contattaci per assistenza.',
     cancel_on: 'Annullamento previsto per {{date}}',
     other_product: 'Altro abbonamento',
+    billing_history_title: 'Cronologia fatturazione',
+    billing_history_description:
+      'Fatture dei tuoi abbonamenti personali e del tuo contratto Enterprise. Seleziona una fattura per visualizzarla e scaricare la fattura o la ricevuta.',
+    credit_note:
+      'I crediti derivanti da rimozioni o ripartizioni proporzionali riducono le fatture successive e non vengono necessariamente rimborsati subito sul tuo metodo di pagamento.',
+    invoice_link_unavailable:
+      'La pagina di questa fattura non è disponibile. Contattaci se ti serve una copia.',
     status: {
       active: 'Attivo',
       trialing: 'In prova',

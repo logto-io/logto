@@ -31,6 +31,8 @@ export const getIncludedCapacity = (enterprise?: LogtoEnterpriseSubscriptionResp
 type CreationFunding = {
   funding: 'included' | 'personal';
   subscriptionId?: string;
+  /** The Enterprise whose allowance funds an included connector. */
+  enterpriseId?: string;
 };
 
 /** Keep billing selection fixed once a creation request may have reached the server. */
@@ -95,14 +97,30 @@ export const continueConnectorCreation = async (
     });
     return { enrollment: await enroll(current), current };
   };
-  const createConnector = async (current: PendingConnectorCreation) => {
-    assertCurrent(current);
-    const connector = await getApi(current.key).post('/api/me/console-sso/connectors', {
+  const postConnector = async (current: PendingConnectorCreation) => {
+    const api = getApi(current.key);
+    if (current.funding === 'included') {
+      if (!current.enterpriseId) {
+        throw new Error('Select a funding source before creating a connector.');
+      }
+      return api.post('/api/me/logto-enterprises/:id/console-sso/connectors', {
+        params: { id: current.enterpriseId },
+        body: { providerName: current.providerName },
+      });
+    }
+    if (!current.subscriptionId) {
+      throw new Error('Select a funding source before creating a connector.');
+    }
+    return api.post('/api/me/console-sso/connectors', {
       body: {
         providerName: current.providerName,
-        ...(current.subscriptionId && { stripeUserSubscriptionId: current.subscriptionId }),
+        stripeUserSubscriptionId: current.subscriptionId,
       },
     });
+  };
+  const createConnector = async (current: PendingConnectorCreation) => {
+    assertCurrent(current);
+    const connector = await postConnector(current);
     assertCurrent(current);
     return { status: 'created' as const, id: connector.id, operation: current };
   };
