@@ -56,6 +56,14 @@ create index users__tenant_lower_username
   on users (tenant_id, lower(username))
   where username is not null;
 
+create index users__primary_email_lower
+  on users (tenant_id, primary_email_lower)
+  where primary_email_lower is not null;
+
+create index users__username_lower
+  on users (tenant_id, username_lower)
+  where username_lower is not null;
+
 /** Copies the lower-cased email and username into their `*_lower` columns, overwriting any direct write to them. */
 create function users__set_lower_columns() returns trigger as
 $$ begin
