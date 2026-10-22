@@ -21,20 +21,6 @@ create table oidc_model_instances (
     unique (tenant_id, model_name, id)
 );
 
-create index oidc_model_instances__model_name_payload_user_code
-  on oidc_model_instances (
-    tenant_id,
-    model_name,
-    (payload->>'userCode')
-  );
-
-create index oidc_model_instances__model_name_payload_uid
-  on oidc_model_instances (
-    tenant_id,
-    model_name,
-    (payload->>'uid')
-  );
-
 create index oidc_model_instances__model_name_payload_grant_id_partial
   on oidc_model_instances (tenant_id, model_name, (payload->>'grantId'))
   where payload ? 'grantId';
@@ -54,6 +40,10 @@ create index oidc_model_instances__grant_payload_account_id_expires_at
 create index oidc_model_instances__model_name_payload_account_id_partial
   on oidc_model_instances (tenant_id, model_name, (payload->>'accountId'))
   where payload ? 'accountId';
+
+create index oidc_model_instances__model_name_payload_grant_id
+  on oidc_model_instances (tenant_id, model_name, payload_grant_id)
+  where payload_grant_id is not null;
 
 create index oidc_model_instances__model_name_payload_account_id_expires_at
   on oidc_model_instances (tenant_id, model_name, payload_account_id, expires_at)
