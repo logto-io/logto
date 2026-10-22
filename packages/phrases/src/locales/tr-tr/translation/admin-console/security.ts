@@ -160,17 +160,18 @@ const security = {
     manual_unlock: {
       title: 'Manuel kilit açma',
       description:
-        'Kullanıcının kimliğini doğrulayıp kimliklerini girdikten sonra anında kilidi açın.',
-      unblock_by_identifiers: 'Kimlik ile engeli kaldır',
+        "Kullanıcının kimliğini doğrulayıp tanımlayıcısını veya kullanıcı ID'sini girdikten sonra anında kilidi açın.",
+      unblock_by_identifiers: "Tanımlayıcı veya kullanıcı ID'si ile engeli kaldır",
       modal_description_1:
-        'Bir kimlik, birden fazla başarısız oturum açma/kayıt olma denemesi nedeniyle geçici olarak kilitlendi. Güvenliği korumak için, erişim kilitleme süresi bittikten sonra otomatik olarak geri yüklenecektir.',
+        "Bir tanımlayıcı veya kullanıcı ID'si, birden fazla başarısız oturum açma/kayıt olma veya güvenlik doğrulama denemesi nedeniyle geçici olarak kilitlendi. Güvenliği korumak için, erişim kilitleme süresi bittikten sonra otomatik olarak geri yüklenecektir.",
       modal_description_2:
         'Kullanıcının kimliğini doğrulayıp yetkisiz erişim denemesi olmadığından emin olduysanız yalnızca manuel olarak kilidi açın.',
-      placeholder: 'Kimlikleri girin (e-posta adresi / telefon numarası / kullanıcı adı)',
+      placeholder:
+        "Tanımlayıcıları veya kullanıcı ID'lerini girin (e-posta adresi / telefon numarası / kullanıcı adı / kullanıcı ID'si)",
       confirm_button_text: 'Şimdi kilidini aç',
       success_toast: 'Başarıyla kilidi açıldı',
-      duplicate_identifier_error: 'Kimlik zaten eklendi',
-      empty_identifier_error: 'Lütfen en az bir kimlik girin',
+      duplicate_identifier_error: "Tanımlayıcı veya kullanıcı ID'si zaten eklendi",
+      empty_identifier_error: "Lütfen en az bir tanımlayıcı veya kullanıcı ID'si girin",
     },
   },
   blocklist: {

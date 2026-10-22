@@ -164,17 +164,19 @@ const security = {
     manual_unlock: {
       title: 'Manuelle Entsperrung',
       description:
-        'Entsperren Sie Benutzer sofort, indem Sie ihre Identität bestätigen und ihren Bezeichner eingeben.',
-      unblock_by_identifiers: 'Über Bezeichner entsperren',
+        'Entsperren Sie Benutzer sofort, indem Sie ihre Identität bestätigen und ihren Bezeichner oder ihre Benutzer-ID eingeben.',
+      unblock_by_identifiers: 'Über Bezeichner oder Benutzer-ID entsperren',
       modal_description_1:
-        'Ein Bezeichner wurde vorübergehend aufgrund mehrerer fehlgeschlagener Anmelde-/Registrierungsversuche gesperrt. Um die Sicherheit zu schützen, wird der Zugriff nach der Sperrdauer automatisch wiederhergestellt.',
+        'Ein Bezeichner oder eine Benutzer-ID wurde aufgrund mehrerer fehlgeschlagener Anmelde-/Registrierungs- oder Sicherheitsüberprüfungsversuche vorübergehend gesperrt. Um die Sicherheit zu schützen, wird der Zugriff nach der Sperrdauer automatisch wiederhergestellt.',
       modal_description_2:
         ' Entsperren Sie manuell nur, wenn Sie die Identität des Benutzers bestätigt haben und sicherstellen, dass keine unbefugten Zugriffsversuche vorliegen.',
-      placeholder: 'Bezeichner eingeben (E-Mail-Adresse / Telefonnummer / Benutzername)',
+      placeholder:
+        'Bezeichner oder Benutzer-IDs eingeben (E-Mail-Adresse / Telefonnummer / Benutzername / Benutzer-ID)',
       confirm_button_text: 'Jetzt entsperren',
       success_toast: 'Erfolgreich entsperrt',
-      duplicate_identifier_error: 'Bezeichner bereits hinzugefügt',
-      empty_identifier_error: 'Bitte geben Sie mindestens einen Bezeichner ein',
+      duplicate_identifier_error: 'Bezeichner oder Benutzer-ID bereits hinzugefügt',
+      empty_identifier_error:
+        'Bitte geben Sie mindestens einen Bezeichner oder eine Benutzer-ID ein',
     },
   },
   blocklist: {

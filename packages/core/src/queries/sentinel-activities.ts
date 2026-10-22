@@ -1,5 +1,6 @@
 import {
   SentinelActivities,
+  SentinelDecision,
   type SentinelActivity,
   type SentinelActivityAction,
   type SentinelActivityTargetType,
@@ -50,7 +51,8 @@ export const createSentinelActivitiesQueries = (pool: CommonQueryMethods) => {
 
   /**
    * Delete all records in the `sentinel_activities` table that match the given target within
-   * 1 hour. This should unblock the user if they are locked.
+   * 1 hour, as well as any still-active block decisions outside that window. This should unblock
+   * the user if they are locked.
    */
   const deleteActivities = async (
     targetType: SentinelActivityTargetType,
@@ -60,7 +62,13 @@ export const createSentinelActivitiesQueries = (pool: CommonQueryMethods) => {
       delete from ${table}
       where ${fields.targetType} = ${targetType}
         and ${fields.targetHash} = any(${sql.array(targetHashes, 'varchar')})
-        and ${fields.createdAt} > now() - interval '1 hour'
+        and (
+          ${fields.createdAt} > now() - interval '1 hour'
+          or (
+            ${fields.decision} = ${SentinelDecision.Blocked}
+            and ${fields.decisionExpiresAt} > now()
+          )
+        )
     `);
   };
 

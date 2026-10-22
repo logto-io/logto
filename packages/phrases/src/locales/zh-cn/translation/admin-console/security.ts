@@ -146,16 +146,16 @@ const security = {
     },
     manual_unlock: {
       title: '手动解锁',
-      description: '通过确认用户身份并输入其标识符立即解锁用户。',
-      unblock_by_identifiers: '通过标识符解锁',
+      description: '通过确认用户身份并输入其标识符或用户 ID 立即解锁用户。',
+      unblock_by_identifiers: '通过标识符或用户 ID 解锁',
       modal_description_1:
-        '由于多次登录/注册失败，标识符已被暂时锁定。为保证安全，访问将在锁定时长后自动恢复。',
+        '由于多次登录/注册或安全验证失败，标识符或用户 ID 已被暂时锁定。为保证安全，访问将在锁定时长后自动恢复。',
       modal_description_2: ' 仅在确认用户身份并确保无未经授权的访问尝试后手动解锁。',
-      placeholder: '输入标识符（电子邮件地址 / 电话号码 / 用户名）',
+      placeholder: '输入标识符或用户 ID（电子邮件地址 / 电话号码 / 用户名 / 用户 ID）',
       confirm_button_text: '立即解锁',
       success_toast: '解锁成功',
-      duplicate_identifier_error: '标识符已添加',
-      empty_identifier_error: '请输入至少一个标识符',
+      duplicate_identifier_error: '标识符或用户 ID 已添加',
+      empty_identifier_error: '请输入至少一个标识符或用户 ID',
     },
   },
   blocklist: {

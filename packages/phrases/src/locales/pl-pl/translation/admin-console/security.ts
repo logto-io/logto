@@ -161,17 +161,19 @@ const security = {
     manual_unlock: {
       title: 'Ręczne odblokowanie',
       description:
-        'Odblokuj użytkowników natychmiastowo, potwierdzając ich tożsamość i wprowadzając ich identyfikator.',
-      unblock_by_identifiers: 'Odblokuj według identyfikatora',
+        'Odblokuj użytkowników natychmiastowo, potwierdzając ich tożsamość i wprowadzając ich identyfikator lub ID użytkownika.',
+      unblock_by_identifiers: 'Odblokuj według identyfikatora lub ID użytkownika',
       modal_description_1:
-        'Identyfikator został tymczasowo zablokowany z powodu wielu nieudanych prób logowania/rejestracji. Aby chronić bezpieczeństwo, dostęp zostanie automatycznie przywrócony po upływie czasu blokady.',
+        'Identyfikator lub ID użytkownika został tymczasowo zablokowany z powodu wielu nieudanych prób logowania/rejestracji lub weryfikacji bezpieczeństwa. Aby chronić bezpieczeństwo, dostęp zostanie automatycznie przywrócony po upływie czasu blokady.',
       modal_description_2:
         ' Ręcznie odblokuj tylko wtedy, gdy potwierdziłeś tożsamość użytkownika i upewniłeś się, że nie doszło do nieautoryzowanych prób dostępu.',
-      placeholder: 'Wprowadź identyfikatory (adres e-mail / numer telefonu / nazwa użytkownika)',
+      placeholder:
+        'Wprowadź identyfikatory lub ID użytkowników (adres e-mail / numer telefonu / nazwa użytkownika / ID użytkownika)',
       confirm_button_text: 'Odblokuj teraz',
       success_toast: 'Pomyślnie odblokowano',
-      duplicate_identifier_error: 'Identyfikator już dodany',
-      empty_identifier_error: 'Proszę wprowadzić co najmniej jeden identyfikator',
+      duplicate_identifier_error: 'Identyfikator lub ID użytkownika już dodano',
+      empty_identifier_error:
+        'Proszę wprowadzić co najmniej jeden identyfikator lub ID użytkownika',
     },
   },
   blocklist: {
