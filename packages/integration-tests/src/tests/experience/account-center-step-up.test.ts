@@ -314,10 +314,7 @@ devFeatureTest.describe('Account Center OIDC step-up', () => {
         () => requests.authorizationUrls.some((url) => url.includes('acr_values')),
         'the step-up authorization started from the challenge'
       );
-      await waitForCondition(
-        () => usernameRemovals().length >= 2,
-        'the resumed username removal'
-      );
+      await waitForCondition(() => usernameRemovals().length >= 2, 'the resumed username removal');
 
       await experience.waitForUrl(accountUrl('security'));
       await expect(waitForUsernameRemoval(user.id)).resolves.toHaveProperty('username', null);
