@@ -39,21 +39,12 @@ const enterprise_subscription = {
       'Consultez vos abonnements personnels et votre couverture Enterprise contractuelle, quel que soit le tenant sélectionné.',
     personal_title: 'Abonnements personnels',
     personal_description: 'Abonnements facturés à votre compte, y compris les abonnements passés.',
-    enterprise_description:
-      'Le quota Console SSO est défini par votre contrat et partagé entre les administrateurs autorisés. Les abonnements personnels sont facturés séparément.',
-    allowance: 'Quota contractuel',
-    not_covered:
-      "Ce forfait Enterprise n'inclut pas de quota Console SSO. Les nouveaux connecteurs sont facturés via un abonnement personnel.",
-    quantity_price: 'Quantité × prix unitaire',
+    price: 'Prix',
     billing_period: 'Période de facturation',
-    connectors: 'Connecteurs Console SSO',
-    no_connectors: 'Aucun connecteur',
     list_price_note:
-      'La quantité, le prix unitaire et le statut affichés proviennent de l’enregistrement de l’abonnement. La suspension du recouvrement peut laisser la quantité et le statut inchangés. Les prix unitaires excluent les taxes, remises et ajustements au prorata et ne représentent ni les frais actuels ni un montant dû.',
-    proration_note:
-      'Les ajouts et suppressions Console SSO sont calculés au prorata sur la facture habituelle. La suppression du dernier connecteur payant annule et solde l’abonnement.',
+      'Les prix excluent les taxes et les remises. Les modifications sont calculées au prorata sur votre prochaine facture.',
     overdue_note:
-      'Après trois périodes de facturation consécutives impayées et épuisement des tentatives, le recouvrement est suspendu et les connecteurs Console SSO payants sont supprimés. La mise à jour du paiement ne restaure pas leur configuration. Contactez-nous pour obtenir de l’aide.',
+      'Le paiement est en retard. S’il reste impayé, l’abonnement peut être suspendu et ses fonctionnalités payantes supprimées.',
     cancel_on: 'Annulation prévue le {{date}}',
     other_product: 'Autre abonnement',
     enterprise_invoices_description:

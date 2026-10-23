@@ -9,11 +9,7 @@ import DynamicT from '@/ds-components/DynamicT';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Table from '@/ds-components/Table';
 import Tag from '@/ds-components/Tag';
-import TextLink from '@/ds-components/TextLink';
 import { formatPeriod } from '@/utils/subscription';
-
-import { getConsoleSsoDetailsPath } from '../ConsoleSso/Details/paths';
-import { useConsoleSsoConnectors } from '../ConsoleSso/use-console-sso';
 
 import styles from './index.module.scss';
 import {
@@ -27,8 +23,7 @@ import {
 function PersonalSubscriptions() {
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error, isLoading, mutate } = useUserSubscriptions();
-  const hasConsoleSso = data?.some(({ product }) => product === 'console-sso');
-  const connectors = useConsoleSsoConnectors(Boolean(hasConsoleSso));
+  const isOverdue = data?.some(({ status }) => status === 'past_due' || status === 'unpaid');
 
   return (
     <FormCard
@@ -47,12 +42,10 @@ function PersonalSubscriptions() {
           {
             title: t('enterprise_subscription.subscription.basic_plan_column_title.product'),
             dataIndex: 'id',
-            render: ({ product, id }) => (
-              <ItemPreview title={t(getProductTitleKey(product))} subtitle={id} />
-            ),
+            render: ({ product }) => <ItemPreview title={t(getProductTitleKey(product))} />,
           },
           {
-            title: t('enterprise_subscription.user_subscriptions.quantity_price'),
+            title: t('enterprise_subscription.user_subscriptions.price'),
             dataIndex: 'items',
             render: ({ items }) =>
               items.length === 0
@@ -61,7 +54,9 @@ function PersonalSubscriptions() {
                     const interval = formatPriceInterval(price, i18n.language);
                     return (
                       <div key={id} className={styles.item}>
-                        {quantity ?? '—'} × {formatUnitPrice(price, i18n.language)}
+                        {/* Show the quantity only when it adds information beyond a single unit. */}
+                        {(quantity ?? 1) > 1 && `${quantity} × `}
+                        {formatUnitPrice(price, i18n.language)}
                         {interval && <span> / {interval}</span>}
                       </div>
                     );
@@ -98,30 +93,6 @@ function PersonalSubscriptions() {
                 displayYear: true,
               }),
           },
-          {
-            title: t('enterprise_subscription.user_subscriptions.connectors'),
-            dataIndex: 'product',
-            render: ({ product, id }) => {
-              if (product !== 'console-sso') {
-                return '—';
-              }
-              if (Boolean(connectors.error) || connectors.isLoading || !connectors.data) {
-                return '—';
-              }
-              const associated = connectors.data.filter(
-                ({ stripeUserSubscriptionId }) => stripeUserSubscriptionId === id
-              );
-              return associated.length === 0
-                ? t('enterprise_subscription.user_subscriptions.no_connectors')
-                : associated.map((connector) => (
-                    <div key={connector.id}>
-                      <TextLink href={getConsoleSsoDetailsPath(connector.id)}>
-                        {connector.branding.displayName ?? connector.name}
-                      </TextLink>
-                    </div>
-                  ));
-            },
-          },
         ]}
         onRetry={() => {
           void mutate();
@@ -130,26 +101,10 @@ function PersonalSubscriptions() {
       <p className={styles.note}>
         <DynamicT forKey="enterprise_subscription.user_subscriptions.list_price_note" />
       </p>
-      {hasConsoleSso && (
-        <>
-          {connectors.error && (
-            <InlineNotification
-              severity="error"
-              action="general.retry"
-              onClick={() => {
-                void connectors.mutate();
-              }}
-            >
-              {connectors.error.message}
-            </InlineNotification>
-          )}
-          <p className={styles.note}>
-            <DynamicT forKey="enterprise_subscription.user_subscriptions.proration_note" />
-          </p>
-          <p className={styles.note}>
-            <DynamicT forKey="enterprise_subscription.user_subscriptions.overdue_note" />
-          </p>
-        </>
+      {isOverdue && (
+        <InlineNotification className={styles.alert} severity="alert">
+          <DynamicT forKey="enterprise_subscription.user_subscriptions.overdue_note" />
+        </InlineNotification>
       )}
     </FormCard>
   );

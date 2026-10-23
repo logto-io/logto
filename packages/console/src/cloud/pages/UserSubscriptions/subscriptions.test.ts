@@ -1,5 +1,5 @@
 import phrases from '@logto/phrases';
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import i18next from 'i18next';
 import { createElement, type ReactNode } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
@@ -10,11 +10,8 @@ import { useSubscriptionEntry, useUserSubscriptions } from '@/cloud/hooks/use-us
 import { type LogtoEnterpriseResponse } from '@/cloud/types/router';
 import EnterpriseSubscriptions from '@/components/Topbar/EnterpriseSubscriptions';
 
-import { useConsoleSsoConnectors } from '../ConsoleSso/use-console-sso';
-
 import UserSubscriptions from '.';
 import BillingHistory from './BillingHistory';
-import EnterpriseCoverage from './EnterpriseCoverage';
 import PersonalSubscriptions from './PersonalSubscriptions';
 import Subscription from './Subscription';
 
@@ -47,7 +44,6 @@ jest.mock('@/cloud/hooks/use-user-subscriptions', () => ({
   useUserSubscriptionInvoices: () => ({ data: { invoices: [], totalCount: 0 } }),
   useEnterpriseInvoices: () => ({ data: [] }),
 }));
-jest.mock('../ConsoleSso/use-console-sso', () => ({ useConsoleSsoConnectors: jest.fn() }));
 jest.mock('@/hooks/use-current-user', () => ({
   __esModule: true,
   default: () => ({ user: { id: 'alice' } }),
@@ -90,7 +86,6 @@ const enterprise: Pick<LogtoEnterpriseResponse, 'id' | 'name'> = {
   id: 'contract',
   name: 'Contracted Enterprise',
 };
-const eligibleEnterprise = { quotaScope: 'shared', subscription: { status: 'active' } };
 const renderView = (children: ReactNode) =>
   render(
     createElement(
@@ -151,29 +146,44 @@ beforeEach(() => {
     .mockReturnValue({ data: [subscription], isLoading: false, mutate } as unknown as ReturnType<
       typeof useUserSubscriptions
     >);
-  jest
-    .mocked(useConsoleSsoConnectors)
-    .mockReturnValue({ data: [], isLoading: false, mutate } as unknown as ReturnType<
-      typeof useConsoleSsoConnectors
-    >);
 });
 
-it('shows the recurring unit list price without an invoice estimate', () => {
+it('shows the recurring unit list price with a short pricing note', () => {
   renderView(createElement(PersonalSubscriptions));
-  expect(screen.getByText('sub-sso')).toBeTruthy();
+  expect(screen.getByText('Console SSO')).toBeTruthy();
+  expect(screen.queryByText('sub-sso')).toBeNull();
   expect(screen.getByText('2 × $128.00')).toBeTruthy();
   expect(screen.getByText('/ month')).toBeTruthy();
   expect(screen.queryByText(/\$256/)).toBeNull();
   expect(screen.getByText('Active')).toBeTruthy();
-  expect(screen.getByText('No connectors')).toBeTruthy();
-  expect(screen.queryByText('Your upcoming bill')).toBeNull();
+  expect(screen.queryByText('Console SSO connectors')).toBeNull();
   expect(
-    screen.getByText(/Pausing collection may leave the quantity and status unchanged/)
+    screen.getByText(
+      'Prices exclude taxes and discounts. Changes are prorated on your next invoice.'
+    )
   ).toBeTruthy();
-  expect(screen.getByText(/do not represent current charges or an amount due/)).toBeTruthy();
+  expect(screen.queryByText(/Payment is overdue/)).toBeNull();
 });
 
-it('keeps canceled and unknown-product history and associates connectors only with their subscription', () => {
+it('shows only the unit price for a single-unit subscription', () => {
+  jest.mocked(useUserSubscriptions).mockReturnValue({
+    data: [
+      {
+        ...subscription,
+        product: 'self-hosted-license',
+        items: [{ id: 'item', quantity: 1, price: { ...price, interval: 'year' } }],
+      },
+    ],
+    isLoading: false,
+    mutate,
+  } as unknown as ReturnType<typeof useUserSubscriptions>);
+  renderView(createElement(PersonalSubscriptions));
+  expect(screen.getByText('$128.00')).toBeTruthy();
+  expect(screen.getByText('/ year')).toBeTruthy();
+  expect(screen.queryByText(/×/)).toBeNull();
+});
+
+it('keeps canceled and unknown-product history', () => {
   jest.mocked(useUserSubscriptions).mockReturnValue({
     data: [
       subscription,
@@ -183,131 +193,46 @@ it('keeps canceled and unknown-product history and associates connectors only wi
     isLoading: false,
     mutate,
   } as unknown as ReturnType<typeof useUserSubscriptions>);
-  jest.mocked(useConsoleSsoConnectors).mockReturnValue({
-    data: [
-      {
-        id: 'associated',
-        stripeUserSubscriptionId: 'sub-sso',
-        name: 'OIDC',
-        branding: { displayName: 'Paid connector' },
-      },
-      {
-        id: 'unrelated',
-        stripeUserSubscriptionId: 'different-subscription',
-        name: 'OIDC',
-        branding: { displayName: 'Unrelated connector' },
-      },
-      {
-        id: 'enterprise',
-        stripeUserSubscriptionId: null,
-        name: 'OIDC',
-        branding: { displayName: 'Included connector' },
-      },
-    ],
-    isLoading: false,
-    mutate,
-  } as unknown as ReturnType<typeof useConsoleSsoConnectors>);
   renderView(createElement(PersonalSubscriptions));
   expect(screen.getByText('Canceled')).toBeTruthy();
   expect(screen.getByText('Other subscription')).toBeTruthy();
-  expect(screen.getByRole('link', { name: 'Paid connector' }).getAttribute('href')).toBe(
-    '/console-sso/associated/connection'
-  );
-  expect(screen.queryByText('Unrelated connector')).toBeNull();
-  expect(screen.queryByText('Included connector')).toBeNull();
-  expect(
-    within(screen.getByText('sub-history').closest('tr')!).getByText('No connectors')
-  ).toBeTruthy();
 });
 
-it('does not fabricate an empty connector list when the resource API fails', () => {
-  jest.mocked(useConsoleSsoConnectors).mockReturnValue({
-    error: new Error('Connectors unavailable'),
-    isLoading: false,
-    mutate,
-  } as unknown as ReturnType<typeof useConsoleSsoConnectors>);
-  renderView(createElement(PersonalSubscriptions));
-  expect(screen.getByText('sub-sso')).toBeTruthy();
-  expect(screen.getByText('Connectors unavailable')).toBeTruthy();
-  expect(screen.queryByText('No connectors')).toBeNull();
-});
-
-it('does not load SSO resources for subscriptions to other products', () => {
+it.each([
+  ['console-sso', 'past_due', true],
+  ['self-hosted-license', 'unpaid', true],
+  ['console-sso', 'canceled', false],
+  ['self-hosted-license', 'active', false],
+])('warns about overdue payment for a %s subscription in %s: %s', (product, status, isShown) => {
   jest.mocked(useUserSubscriptions).mockReturnValue({
-    data: [{ ...subscription, product: 'self-hosted-license' }],
+    data: [{ ...subscription, product, status }],
     isLoading: false,
     mutate,
   } as unknown as ReturnType<typeof useUserSubscriptions>);
   renderView(createElement(PersonalSubscriptions));
-  expect(jest.mocked(useConsoleSsoConnectors)).toHaveBeenCalledWith(false);
+  expect(Boolean(screen.queryByText(/Payment is overdue/))).toBe(isShown);
 });
 
-it.each([0, null, undefined])(
-  'shows the exact contracted allowance %s without assuming a free connector',
-  async (limit) => {
-    get.mockResolvedValue({
-      ...eligibleEnterprise,
-      quota: { basicQuota: { consoleSsoConnectorLimit: limit } },
-      usages: { consoleSsoConnectorLimit: 2 },
-    });
-    renderView(createElement(EnterpriseCoverage, { enterprise }));
-    await waitFor(() => {
-      expect(screen.getByText('Usage: 2')).toBeTruthy();
-    });
-    expect(
-      screen.getByText(
-        `Contract allowance: ${limit === null ? 'Unlimited' : limit === undefined ? '—' : '0'}`
-      )
-    ).toBeTruthy();
-    expect(screen.getByRole('link', { name: 'Contracted Enterprise' }).getAttribute('href')).toBe(
-      '/subscriptions/contract'
-    );
-  }
-);
-
-it.each([
-  { quotaScope: 'dedicated', subscription: { status: 'active' } },
-  { quotaScope: 'shared', subscription: { status: 'canceled' } },
-  { quotaScope: 'shared', subscription: undefined },
-])('shows no Console SSO coverage for an ineligible Enterprise plan %j', async (eligibility) => {
-  get.mockResolvedValue({
-    ...eligibility,
-    quota: { basicQuota: { consoleSsoConnectorLimit: 5 } },
-    usages: { consoleSsoConnectorLimit: 1 },
-  });
-  renderView(createElement(EnterpriseCoverage, { enterprise }));
-  await waitFor(() => {
-    expect(screen.getByText(/doesn't include a Console SSO allowance/)).toBeTruthy();
-  });
-  expect(screen.queryByText(/Contract allowance:/)).toBeNull();
-  expect(screen.queryByText(/Usage:/)).toBeNull();
-  expect(screen.getByRole('link', { name: 'Contracted Enterprise' })).toBeTruthy();
-});
-
-it('shows only the first Enterprise, matching Console SSO creation', async () => {
+it('shows the original Enterprise plan card for the first Enterprise above personal subscriptions', async () => {
   jest.mocked(useSubscriptionEntry).mockReturnValue({
     enterprises: { data: [enterprise, { id: 'other', name: 'Other Enterprise' }] },
-    hasSubscriptions: false,
+    hasSubscriptions: true,
   } as unknown as ReturnType<typeof useSubscriptionEntry>);
+  get.mockResolvedValue({ quotaScope: 'dedicated', regionNames: [] });
   renderPage('subscription');
   await waitFor(() => {
     expect(get).toHaveBeenCalledTimes(1);
   });
   expect(get).toHaveBeenCalledWith('/api/me/logto-enterprises/:id', {
     params: { id: 'contract' },
-    search: { includeSharedQuota: 'true', includeUsages: 'true' },
+    search: { includeSharedQuota: 'true', includeSkuItems: 'true', includeUsages: 'true' },
   });
-  expect(screen.getByRole('link', { name: 'Contracted Enterprise' })).toBeTruthy();
+  const enterprisePlan = screen.getByText('Enterprise Plan');
+  const personalSubscriptions = screen.getByText('Personal subscriptions');
+  expect(enterprisePlan.compareDocumentPosition(personalSubscriptions)).toBe(
+    Node.DOCUMENT_POSITION_FOLLOWING
+  );
   expect(screen.queryByText('Other Enterprise')).toBeNull();
-});
-
-it('shows Enterprise ownership errors without inventing quota values', async () => {
-  get.mockRejectedValue(new Error('Enterprise not found'));
-  renderView(createElement(EnterpriseCoverage, { enterprise }));
-  await waitFor(() => {
-    expect(screen.getByText('Enterprise not found')).toBeTruthy();
-  });
-  expect(screen.queryByText(/Contract allowance:/)).toBeNull();
 });
 
 it.each([
@@ -334,7 +259,7 @@ it.each([
 );
 
 it.each([
-  ['subscription', 'Personal subscriptions', /Quantity × unit price/],
+  ['subscription', 'Personal subscriptions', /^Price$/],
   ['billing-history', 'Personal subscriptions', /Select an invoice to view it/],
 ])('shows only the %s tab content on the global Subscription page', (tab, title, content) => {
   jest.mocked(useSubscriptionEntry).mockReturnValue({
@@ -349,6 +274,6 @@ it.each([
   if (tab === 'subscription') {
     expect(screen.queryByText(/Select an invoice to view it/)).toBeNull();
   } else {
-    expect(screen.queryByText(/Quantity × unit price/)).toBeNull();
+    expect(screen.queryByText(/^Price$/)).toBeNull();
   }
 });
