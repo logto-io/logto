@@ -26,6 +26,7 @@ import {
   createDefaultTenantUserWithPassword,
   deleteDefaultTenantUser,
   initClientAndSignInForDefaultTenant,
+  signInWithSocialAndGetUserApi,
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 
@@ -240,7 +241,12 @@ describe('account trusted device management', () => {
   });
 
   it('requires identity verification and the trusted-devices scope', async () => {
-    await expectRejects(getTrustedDevices(owner.api, ''), {
+    // A social sign-in carries no `acr`, so its token alone does not verify the identity.
+    const noAuthenticationContextApi = await signInWithSocialAndGetUserApi(owner.user.id, {
+      scopes: [UserScope.TrustedDevices, UserScope.Sessions],
+    });
+
+    await expectRejects(getTrustedDevices(noAuthenticationContextApi, ''), {
       code: 'verification_record.permission_denied',
       status: 401,
     });

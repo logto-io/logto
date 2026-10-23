@@ -16,8 +16,14 @@ import BillInfo from './BillInfo';
 import SubscriptionPlanTable from './SubscriptionPlanTable';
 import styles from './index.module.scss';
 
-function Subscription() {
-  const { logtoEnterpriseId = '' } = useParams();
+type Props = {
+  /** Overrides the route parameter when the plan is shown outside the Enterprise route. */
+  readonly logtoEnterpriseId?: string;
+};
+
+function Subscription(props: Props) {
+  const params = useParams();
+  const logtoEnterpriseId = props.logtoEnterpriseId ?? params.logtoEnterpriseId ?? '';
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const cloudApi = useCloudApi();

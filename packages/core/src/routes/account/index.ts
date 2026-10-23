@@ -34,7 +34,10 @@ import thirdPartyTokensRoutes from './third-party-tokens.js';
 import accountTrustedDeviceRoutes from './trusted-device.js';
 import accountUserAssetsRoutes from './user-assets.js';
 import { getAccountCenterFilteredProfile, getScopedProfile } from './utils/get-scoped-profile.js';
-import { hasSecurityVerificationMethod } from './utils/has-security-verification-method.js';
+import {
+  assertIdentityVerified,
+  assertIdentityVerifiedIfRequired,
+} from './utils/identity-verification.js';
 
 export default function accountRoutes<T extends UserRouter>(...args: RouterInitArgs<T>) {
   const [router, { queries, libraries }] = args;
@@ -77,7 +80,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
       status: [200, 400, 401, 403, 422],
     }),
     async (ctx, next) => {
-      const { id: userId, scopes, identityVerified, clientId } = ctx.auth;
+      const { id: userId, scopes, clientId } = ctx.auth;
       const { body } = ctx.guard;
       const { name, avatar, username, customData } = body;
       const { fields } = ctx.accountCenter;
@@ -105,10 +108,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
       await assertFirstPartyClient(queries, clientId);
 
       if (username !== undefined) {
-        assertThat(
-          identityVerified,
-          new RequestError({ code: 'verification_record.permission_denied', status: 401 })
-        );
+        assertIdentityVerified(ctx);
 
         if (username === null) {
           const [user, ssoIdentities] = await Promise.all([
@@ -187,18 +187,13 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
       status: [204, 400, 401, 403, 422],
     }),
     async (ctx, next) => {
-      const { id: userId, identityVerified, clientId } = ctx.auth;
+      const { id: userId, clientId } = ctx.auth;
       const { password } = ctx.guard.body;
 
       await assertFirstPartyClient(queries, clientId);
 
       const user = await findUserById(userId);
-      if (hasSecurityVerificationMethod(user)) {
-        assertThat(
-          identityVerified,
-          new RequestError({ code: 'verification_record.permission_denied', status: 401 })
-        );
-      }
+      assertIdentityVerifiedIfRequired(ctx, user);
 
       const { fields } = ctx.accountCenter;
       assertThat(
@@ -263,12 +258,9 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
       status: [200, 400, 401, 403],
     }),
     async (ctx, next) => {
-      const { id: userId, identityVerified, scopes, clientId } = ctx.auth;
+      const { id: userId, scopes, clientId } = ctx.auth;
 
-      assertThat(
-        identityVerified,
-        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
-      );
+      assertIdentityVerified(ctx);
       assertThat(
         scopes.has(UserScope.Identities),
         new RequestError({ code: 'auth.unauthorized', status: 401 })

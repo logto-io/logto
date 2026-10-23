@@ -41,6 +41,11 @@ const security = {
       description:
         'CAPTCHA de código abierto y autoalojado basado en prueba de trabajo, sin acertijos visuales ni servicios de terceros, ideal para regiones donde otros servicios de CAPTCHA no son accesibles.',
     },
+    geetest: {
+      name: 'GeeTest',
+      description:
+        'CAPTCHA adaptativo de GeeTest con desafíos localizados y buen rendimiento en China continental.',
+    },
   },
   captcha_details: {
     back_to_security: 'Volver a seguridad',
@@ -60,6 +65,8 @@ const security = {
     cap_endpoint_placeholder: 'https://cap.example.com',
     cap_endpoint_http_notice:
       'Este endpoint usa HTTP, lo que solo es adecuado para el desarrollo local. Los navegadores bloquean las solicitudes HTTP desde una página de inicio de sesión HTTPS y la clave secreta se enviaría sin cifrar. Usa HTTPS en producción.',
+    geetest_captcha_id: 'ID de CAPTCHA',
+    geetest_captcha_key: 'Clave de CAPTCHA',
     deletion_description: '¿Estás seguro de que quieres eliminar este proveedor de CAPTCHA?',
     captcha_deleted: 'Proveedor de CAPTCHA eliminado con éxito',
     setup_captcha: 'Configurar CAPTCHA',
@@ -164,18 +171,18 @@ const security = {
     manual_unlock: {
       title: 'Desbloqueo manual',
       description:
-        'Desbloquear usuarios inmediatamente confirmando su identidad e ingresando su identificador.',
-      unblock_by_identifiers: 'Desbloquear por identificador',
+        'Desbloquear usuarios inmediatamente confirmando su identidad e ingresando su identificador o ID de usuario.',
+      unblock_by_identifiers: 'Desbloquear por identificador o ID de usuario',
       modal_description_1:
-        'Un identificador se bloqueó temporalmente debido a múltiples intentos de inicio/registro fallidos. Para proteger la seguridad, el acceso se restaurará automáticamente después de la duración del bloqueo.',
+        'Un identificador o ID de usuario se bloqueó temporalmente debido a múltiples intentos fallidos de inicio/registro o de verificación de seguridad. Para proteger la seguridad, el acceso se restaurará automáticamente después de la duración del bloqueo.',
       modal_description_2:
         ' Solo desbloquear manualmente si has confirmado la identidad del usuario y asegurado que no hubo intentos de acceso no autorizados.',
       placeholder:
-        'Ingresa identificadores (correo electrónico / número de teléfono / nombre de usuario)',
+        'Ingresa identificadores o IDs de usuario (correo electrónico / número de teléfono / nombre de usuario / ID de usuario)',
       confirm_button_text: 'Desbloquear ahora',
       success_toast: 'Desbloqueado con éxito',
-      duplicate_identifier_error: 'Identificador ya agregado',
-      empty_identifier_error: 'Por favor, ingresa al menos un identificador',
+      duplicate_identifier_error: 'Identificador o ID de usuario ya agregado',
+      empty_identifier_error: 'Por favor, ingresa al menos un identificador o ID de usuario',
     },
   },
   blocklist: {

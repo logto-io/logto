@@ -15,6 +15,7 @@ import assertThat from '#src/utils/assert-that.js';
 import { type UserRouter, type RouterInitArgs } from '../types.js';
 
 import { accountApiPrefix } from './constants.js';
+import { assertIdentityVerified } from './utils/identity-verification.js';
 
 export default function accountTrustedDeviceRoutes<T extends UserRouter>(
   ...[router, { libraries, queries }]: RouterInitArgs<T>
@@ -26,16 +27,15 @@ export default function accountTrustedDeviceRoutes<T extends UserRouter>(
     `${accountApiPrefix}/trusted-devices`,
     koaGuard({
       response: accountTrustedDeviceResponseGuard.array(),
-      status: [200, 400, 401, 500],
+      status: [200, 400, 401, 403, 500],
     }),
     async (ctx, next) => {
-      const { id: userId, scopes, identityVerified } = ctx.auth;
+      const { id: userId, scopes, clientId } = ctx.auth;
       const { fields } = ctx.accountCenter;
 
-      assertThat(
-        identityVerified,
-        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
-      );
+      assertIdentityVerified(ctx);
+      await assertFirstPartyClient(queries, clientId);
+
       assertThat(
         fields.trustedDevice === AccountCenterControlValue.Edit ||
           fields.trustedDevice === AccountCenterControlValue.ReadOnly,
@@ -79,13 +79,10 @@ export default function accountTrustedDeviceRoutes<T extends UserRouter>(
     }),
     async (ctx, next) => {
       const { trustedDeviceId } = ctx.guard.params;
-      const { id: userId, scopes, identityVerified, clientId } = ctx.auth;
+      const { id: userId, scopes, clientId } = ctx.auth;
       const { fields } = ctx.accountCenter;
 
-      assertThat(
-        identityVerified,
-        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
-      );
+      assertIdentityVerified(ctx);
       assertThat(
         fields.trustedDevice === AccountCenterControlValue.Edit,
         'account_center.field_not_editable'

@@ -27,6 +27,8 @@ const account_center = {
     error_invalid_code: 'Der Bestätigungscode ist ungültig oder abgelaufen.',
     error_verify_failed: 'Verifizierung fehlgeschlagen. Bitte gib den Code erneut ein.',
     verification_required: 'Verifizierung abgelaufen. Bitte bestätige deine Identität erneut.',
+    step_up_not_completed:
+      'Die Identitätsverifizierung wurde nicht abgeschlossen. An deinem Konto wurden keine Änderungen vorgenommen.',
     try_another_method: 'Versuche eine andere Verifizierungsmethode',
     no_available_methods_title: 'Keine Verifizierungsmethoden verfügbar',
     no_available_methods_description:

@@ -33,6 +33,7 @@ const {
   updateUserTotpMfaVerificationLastUsed,
   deleteUserById,
   deleteUserIdentity,
+  countUsers,
 } = createUserQueries(pool);
 
 describe('user query', () => {
@@ -465,5 +466,23 @@ describe('user query', () => {
     });
 
     await expect(deleteUserIdentity(userId, target)).resolves.toEqual(finalDbvalue);
+  });
+
+  it('countUsers with custom data conditions', async () => {
+    const customData = ['{"qq":114514}', '{"qq":9007199254740993}'];
+    const expectSql = sql`
+      select count(*)
+      from ${table}
+      where (${fields.customData} @> $1::jsonb or ${fields.customData} @> $2::jsonb)
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual(customData);
+
+      return createMockQueryResult([{ count: 1 }]);
+    });
+
+    await expect(countUsers({ customData })).resolves.toEqual({ count: 1 });
   });
 });

@@ -118,4 +118,26 @@ describe('getUserInfo', () => {
     );
     expect(userInfo).toStrictEqual({ id: userId, rawData: { sub: userId } });
   });
+
+  it('should accept a token response with a string `expires_in`', async () => {
+    const userId = 'userId';
+    const tokenEndpointUrl = new URL(mockConfig.tokenEndpoint);
+    nock(tokenEndpointUrl.origin).post(tokenEndpointUrl.pathname).query(true).reply(200, {
+      access_token: 'access_token',
+      token_type: 'bearer',
+      expires_in: '3600',
+    });
+    const userInfoEndpointUrl = new URL(mockConfig.userInfoEndpoint);
+    nock(userInfoEndpointUrl.origin).get(userInfoEndpointUrl.pathname).query(true).reply(200, {
+      sub: userId,
+    });
+    const connector = await createConnector({ getConfig });
+    const userInfo = await connector.getUserInfo(
+      { code: 'code' },
+      vi.fn().mockImplementationOnce(() => {
+        return { redirectUri: 'http://localhost:3001/callback' };
+      })
+    );
+    expect(userInfo).toStrictEqual({ id: userId, rawData: { sub: userId } });
+  });
 });

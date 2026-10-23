@@ -6,11 +6,11 @@ import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { type ConsoleSsoConnector } from '@/cloud/types/router';
 import useCurrentUser from '@/hooks/use-current-user';
 
-export const useConsoleSsoConnectors = () => {
+export const useConsoleSsoConnectors = (isEnabled = true) => {
   const { user, error: userError } = useCurrentUser();
   const api = useCloudApi<typeof consoleSsoRouter>({ hideErrorToast: true });
   const result = useSWR<ConsoleSsoConnector[], ResponseError>(
-    user && !userError && ['/api/me/console-sso/connectors', user.id],
+    isEnabled && user && !userError && ['/api/me/console-sso/connectors', user.id],
     async () => api.get('/api/me/console-sso/connectors'),
     { keepPreviousData: false }
   );

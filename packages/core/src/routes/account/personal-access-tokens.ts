@@ -9,7 +9,6 @@ import { generateStandardSecret } from '@logto/shared';
 import { pick } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { assertFirstPartyClient } from '#src/utils/assert-first-party-client.js';
@@ -18,6 +17,7 @@ import assertThat from '#src/utils/assert-that.js';
 import { type UserRouter, type RouterInitArgs } from '../types.js';
 
 import { accountApiPrefix } from './constants.js';
+import { assertIdentityVerified } from './utils/identity-verification.js';
 
 /** The maximum number of unexpired personal access tokens a user can own via self-service. */
 const maxActivePersonalAccessTokens = 20;
@@ -50,21 +50,9 @@ const assertFieldAndScope = (
   );
 };
 
-const assertIdentityVerified = (identityVerified?: boolean) => {
-  assertThat(
-    identityVerified,
-    new RequestError({ code: 'verification_record.permission_denied', status: 401 })
-  );
-};
-
 export default function accountPersonalAccessTokenRoutes<T extends UserRouter>(
   ...[router, { queries }]: RouterInitArgs<T>
 ) {
-  // DEV: Self-service personal access tokens
-  if (!EnvSet.values.isDevFeaturesEnabled) {
-    return;
-  }
-
   const { personalAccessTokens } = queries;
   const pathname = `${accountApiPrefix}/personal-access-tokens`;
 
@@ -96,7 +84,7 @@ export default function accountPersonalAccessTokenRoutes<T extends UserRouter>(
       status: [201, 400, 401, 403, 422],
     }),
     async (ctx, next) => {
-      const { id: userId, identityVerified, clientId } = ctx.auth;
+      const { id: userId, clientId } = ctx.auth;
       const { name, expiresAt } = ctx.guard.body;
 
       assertFieldAndScope(
@@ -105,7 +93,7 @@ export default function accountPersonalAccessTokenRoutes<T extends UserRouter>(
         AccountCenterControlValue.Edit
       );
       await assertFirstPartyClient(queries, clientId);
-      assertIdentityVerified(identityVerified);
+      assertIdentityVerified(ctx);
 
       const now = Date.now();
       assertThat(
@@ -148,7 +136,7 @@ export default function accountPersonalAccessTokenRoutes<T extends UserRouter>(
       status: [200, 400, 401, 403, 404, 422],
     }),
     async (ctx, next) => {
-      const { id: userId, identityVerified, clientId } = ctx.auth;
+      const { id: userId, clientId } = ctx.auth;
       const { currentName, name } = ctx.guard.body;
 
       assertFieldAndScope(
@@ -157,7 +145,7 @@ export default function accountPersonalAccessTokenRoutes<T extends UserRouter>(
         AccountCenterControlValue.Edit
       );
       await assertFirstPartyClient(queries, clientId);
-      assertIdentityVerified(identityVerified);
+      assertIdentityVerified(ctx);
 
       const token = await personalAccessTokens.updateName(userId, currentName, name);
       ctx.body = pick(token, 'name', 'createdAt', 'expiresAt');
@@ -174,7 +162,7 @@ export default function accountPersonalAccessTokenRoutes<T extends UserRouter>(
       status: [204, 400, 401, 403, 404],
     }),
     async (ctx, next) => {
-      const { id: userId, identityVerified, clientId } = ctx.auth;
+      const { id: userId, clientId } = ctx.auth;
       const { name } = ctx.guard.body;
 
       assertFieldAndScope(
@@ -183,7 +171,7 @@ export default function accountPersonalAccessTokenRoutes<T extends UserRouter>(
         AccountCenterControlValue.Edit
       );
       await assertFirstPartyClient(queries, clientId);
-      assertIdentityVerified(identityVerified);
+      assertIdentityVerified(ctx);
 
       await personalAccessTokens.deleteByName(userId, name);
       ctx.status = 204;

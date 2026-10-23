@@ -74,7 +74,7 @@
             "description": "The request body is invalid."
           },
           "401": {
-            "description": "Permission denied, the verification record is invalid."
+            "description": "Permission denied, recent user authentication is required to change the username."
           },
           "422": {
             "description": "The username is already in use."
@@ -163,7 +163,7 @@
             "description": "The password was updated successfully."
           },
           "401": {
-            "description": "Permission denied, verification is required or the verification record is invalid."
+            "description": "Permission denied, recent user authentication is required, unless the user has no security verification method and is setting a first password."
           }
         }
       }
@@ -194,7 +194,7 @@
             "description": "The request body is invalid."
           },
           "401": {
-            "description": "Permission denied, identity verification is required or insufficient scope."
+            "description": "Permission denied, recent user authentication is required or the access token does not include the `identities` scope."
           }
         }
       }
@@ -258,7 +258,7 @@
             "description": "The request body is invalid."
           },
           "401": {
-            "description": "Permission denied due to insufficient scope."
+            "description": "Permission denied, recent user authentication is required or the access token does not include the `identities` scope."
           }
         }
       }
@@ -293,6 +293,9 @@
           },
           "403": {
             "description": "Permission denied, the application is a third-party application. The Account API only accepts mutations from first-party applications."
+          },
+          "401": {
+            "description": "Permission denied, recent user authentication is required."
           }
         }
       },
@@ -308,7 +311,7 @@
             "description": "The request would remove the user's last identifier."
           },
           "401": {
-            "description": "Permission denied, the verification record is invalid."
+            "description": "Permission denied, recent user authentication is required."
           }
         }
       }
@@ -343,6 +346,9 @@
           },
           "403": {
             "description": "Permission denied, the application is a third-party application. The Account API only accepts mutations from first-party applications."
+          },
+          "401": {
+            "description": "Permission denied, recent user authentication is required."
           }
         }
       },
@@ -358,7 +364,7 @@
             "description": "The request would remove the user's last identifier."
           },
           "401": {
-            "description": "Permission denied, the verification record is invalid."
+            "description": "Permission denied, recent user authentication is required."
           }
         }
       }
@@ -389,7 +395,7 @@
             "description": "The request body is invalid or the social identity field is not editable."
           },
           "401": {
-            "description": "Permission denied, identity verification is required or insufficient scope."
+            "description": "Permission denied, recent user authentication is required or the access token does not include the `identities` scope."
           },
           "422": {
             "description": "The new verification record is invalid or the identity is already in use."
@@ -421,7 +427,7 @@
             "description": "The request body is invalid or the social identity field is not editable."
           },
           "401": {
-            "description": "Permission denied, identity verification is required or insufficient scope."
+            "description": "Permission denied, recent user authentication is required or the access token does not include the `identities` scope."
           },
           "422": {
             "description": "The new verification record is invalid or the identity is already in use."
@@ -442,7 +448,7 @@
             "description": "The request would remove the user's last identifier."
           },
           "401": {
-            "description": "Permission denied, the verification record is invalid."
+            "description": "Permission denied, recent user authentication is required or the access token does not include the `identities` scope."
           },
           "404": {
             "description": "The identity does not exist."
@@ -530,6 +536,11 @@
               }
             }
           }
+        },
+        "responses": {
+          "401": {
+            "description": "Permission denied, recent user authentication is required or the access token does not include the `identities` scope."
+          }
         }
       }
     },
@@ -562,7 +573,7 @@
             "description": "The provided secret or TOTP code is invalid."
           },
           "401": {
-            "description": "Permission denied, identity verification is required or insufficient scope."
+            "description": "Permission denied, recent user authentication is required or the access token does not include the `identities` scope."
           }
         }
       }
@@ -601,7 +612,10 @@
             "description": "The backup codes were retrieved successfully."
           },
           "401": {
-            "description": "Unauthorized or identity verification required."
+            "description": "Permission denied, recent user authentication is required or the access token does not include the `identities` scope."
+          },
+          "403": {
+            "description": "Permission denied, the application is a third-party application. Account API operations that require recent authentication only accept first-party applications."
           },
           "404": {
             "description": "No backup codes found for the user."
@@ -630,6 +644,9 @@
         "responses": {
           "200": {
             "description": "The MFA verification name was updated successfully."
+          },
+          "401": {
+            "description": "Permission denied, recent user authentication is required or the access token does not include the `identities` scope."
           }
         }
       }
@@ -642,6 +659,9 @@
         "responses": {
           "204": {
             "description": "The MFA verification was deleted successfully."
+          },
+          "401": {
+            "description": "Permission denied, recent user authentication is required or the access token does not include the `identities` scope."
           }
         }
       }
@@ -705,7 +725,10 @@
             "description": "Return a list of non-expired sessions of the user. At most one entry has `isCurrent: true` per request."
           },
           "401": {
-            "description": "Permission denied, the verification record is invalid or the session does not have the required scope to access session details."
+            "description": "Permission denied, recent user authentication is required or the access token does not include the `sessions` scope to access session details."
+          },
+          "403": {
+            "description": "Permission denied, the application is a third-party application. Account API operations that require recent authentication only accept first-party applications."
           }
         }
       }
@@ -727,7 +750,10 @@
             "description": "Return a list of active application grants of the user."
           },
           "401": {
-            "description": "Permission denied, the verification record is invalid or the session does not have the required scope to access grant details."
+            "description": "Permission denied, recent user authentication is required or the access token does not include the `sessions` scope to access grant details."
+          },
+          "403": {
+            "description": "Permission denied, the application is a third-party application. Account API operations that require recent authentication only accept first-party applications."
           }
         }
       }
@@ -748,7 +774,7 @@
             "description": "The grant does not exist."
           },
           "401": {
-            "description": "Permission denied, the verification record is invalid or the session does not have the required scope to revoke grants."
+            "description": "Permission denied, recent user authentication is required or the access token does not include the `sessions` scope to revoke grants."
           }
         }
       }
@@ -776,7 +802,7 @@
             "description": "The session does not exist."
           },
           "401": {
-            "description": "Permission denied, the verification record is invalid or the session does not have the required scope to revoke sessions."
+            "description": "Permission denied, recent user authentication is required or the access token does not include the `sessions` scope to revoke sessions."
           }
         }
       }
@@ -791,7 +817,10 @@
             "description": "A list of the signed-in user's active trusted devices."
           },
           "401": {
-            "description": "Permission denied, the verification record is invalid or the access token does not include the trusted-devices scope."
+            "description": "Permission denied, recent user authentication is required or the access token does not include the `trusted-devices` scope."
+          },
+          "403": {
+            "description": "Permission denied, the application is a third-party application. Account API operations that require recent authentication only accept first-party applications."
           }
         }
       }
@@ -809,7 +838,7 @@
             "description": "The field is not editable."
           },
           "401": {
-            "description": "Permission denied, the verification record is invalid or the access token does not include the trusted-devices scope."
+            "description": "Permission denied, recent user authentication is required or the access token does not include the `trusted-devices` scope."
           },
           "403": {
             "description": "The request was made by a third-party application."
@@ -822,7 +851,6 @@
     },
     "/api/my-account/personal-access-tokens": {
       "get": {
-        "tags": ["Dev feature"],
         "operationId": "ListMyAccountPersonalAccessTokens",
         "summary": "List personal access tokens",
         "description": "List all personal access tokens of the signed-in user, including expired ones, sorted by creation time in descending order. The token secret values are never returned. The personal-access-tokens scope is required.",
@@ -839,7 +867,6 @@
         }
       },
       "post": {
-        "tags": ["Dev feature"],
         "operationId": "CreateMyAccountPersonalAccessToken",
         "summary": "Create a personal access token",
         "description": "Create a personal access token for the signed-in user. A logto-verification-id in header and the personal-access-tokens scope are required. The token secret value is returned only in this response. The expiration time is required, must be in the future, and must be at most 365 days from now. A user can have at most 20 unexpired personal access tokens.",
@@ -867,7 +894,7 @@
             "description": "The request body is invalid, the personal access token field is not editable in the account center, or the expiration time is not in the future or more than 365 days from now."
           },
           "401": {
-            "description": "Permission denied, the verification record is invalid or the access token does not include the personal-access-tokens scope."
+            "description": "Permission denied, recent user authentication is required or the access token does not include the `personal-access-tokens` scope to create a personal access token."
           },
           "403": {
             "description": "The request was made by a third-party application."
@@ -878,7 +905,6 @@
         }
       },
       "patch": {
-        "tags": ["Dev feature"],
         "operationId": "UpdateMyAccountPersonalAccessTokenName",
         "summary": "Rename a personal access token",
         "description": "Rename a personal access token of the signed-in user. A logto-verification-id in header and the personal-access-tokens scope are required.",
@@ -906,7 +932,7 @@
             "description": "The request body is invalid, or the personal access token field is not editable in the account center."
           },
           "401": {
-            "description": "Permission denied, the verification record is invalid or the access token does not include the personal-access-tokens scope."
+            "description": "Permission denied, recent user authentication is required or the access token does not include the `personal-access-tokens` scope to rename a personal access token."
           },
           "403": {
             "description": "The request was made by a third-party application."
@@ -922,7 +948,6 @@
     },
     "/api/my-account/personal-access-tokens/delete": {
       "post": {
-        "tags": ["Dev feature"],
         "operationId": "DeleteMyAccountPersonalAccessToken",
         "summary": "Delete a personal access token",
         "description": "Delete a personal access token of the signed-in user by name. A logto-verification-id in header and the personal-access-tokens scope are required.",
@@ -947,7 +972,7 @@
             "description": "The request body is invalid, or the personal access token field is not editable in the account center."
           },
           "401": {
-            "description": "Permission denied, the verification record is invalid or the access token does not include the personal-access-tokens scope."
+            "description": "Permission denied, recent user authentication is required or the access token does not include the `personal-access-tokens` scope to delete a personal access token."
           },
           "403": {
             "description": "The request was made by a third-party application."

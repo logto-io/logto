@@ -36,7 +36,8 @@ const useSingleSignOnRegister = ({ onEmailBlocked }: SingleSignOnRegisterOptions
        * Therefore, skip the check for `Manual` policy.
        */
       if (agreeToTermsPolicy !== AgreeToTermsPolicy.Manual && !(await termsValidation())) {
-        navigateToSignIn();
+        // Push the sign-in page to keep the current page in the history.
+        navigateToSignIn(undefined, { replace: false });
         return;
       }
 

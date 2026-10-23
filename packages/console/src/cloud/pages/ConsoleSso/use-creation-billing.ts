@@ -10,21 +10,27 @@ import { getIncludedCapacity } from './creation-billing';
 const useConsoleSsoCoverage = (isEnabled: boolean) => {
   const { user } = useCurrentUser();
   const api = useCloudApi();
-  const result = useSWR<ReturnType<typeof getIncludedCapacity>, ResponseError>(
+  const result = useSWR<
+    ReturnType<typeof getIncludedCapacity> & { enterpriseId?: string },
+    ResponseError
+  >(
     user && isEnabled && ['console-sso-coverage', user.id],
     async () => {
-      // Use the same first Enterprise as connector creation; never combine different contracts.
       const { logtoEnterprises } = await api.get('/api/me/logto-enterprises');
+      // Customers currently have at most one Enterprise plan, so only the first is considered.
+      // This does not search later entries for available allowance; with multiple plans it may
+      // select personal billing even when another Enterprise has allowance.
       const enterprise = logtoEnterprises[0];
       if (!enterprise) {
         return getIncludedCapacity();
       }
-      return getIncludedCapacity(
+      const capacity = getIncludedCapacity(
         await api.get('/api/me/logto-enterprises/:id', {
           params: { id: enterprise.id },
           search: { includeSharedQuota: 'true', includeUsages: 'true' },
         })
       );
+      return { ...capacity, enterpriseId: enterprise.id };
     },
     // Reopening the modal must check current allowance before selecting funding.
     { dedupingInterval: 0 }
@@ -39,8 +45,10 @@ export const useCreationBilling = (operation?: PendingConnectorCreation) => {
   const funding = operation?.funding ?? (coverage.data?.isAvailable ? 'included' : 'personal');
   const billingError = isRecovering ? undefined : coverage.error;
   const isBillingReady = isRecovering || (Boolean(coverage.data) && !coverage.isValidating);
+  const enterpriseId = isRecovering ? operation?.enterpriseId : coverage.data?.enterpriseId;
   return {
     funding,
+    enterpriseId: funding === 'included' ? enterpriseId : undefined,
     billingError,
     isBillingReady,
   };

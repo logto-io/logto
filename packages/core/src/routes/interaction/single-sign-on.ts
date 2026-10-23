@@ -196,7 +196,10 @@ export default function singleSignOnRoutes<T extends IRouterParamContext>(
 
       assertThat(domain, new RequestError({ code: 'guard.invalid_input', status: 400, email }));
 
-      const availableConnectors = connectors.filter(({ domains }) => domains.includes(domain));
+      const normalizedDomain = domain.toLowerCase();
+      const availableConnectors = connectors.filter(({ domains }) =>
+        domains.some((configuredDomain) => configuredDomain.toLowerCase() === normalizedDomain)
+      );
 
       ctx.body = availableConnectors.map(({ id }) => id);
 

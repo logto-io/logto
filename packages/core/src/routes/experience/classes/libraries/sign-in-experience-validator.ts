@@ -343,15 +343,10 @@ export class SignInExperienceValidator {
 
     assertThat(
       enabledSsoConnectors.length === 0,
-      new RequestError(
-        {
-          code: 'session.sso_enabled',
-          status: 422,
-        },
-        {
-          ssoConnectors: enabledSsoConnectors,
-        }
-      )
+      new RequestError({
+        code: 'session.sso_enabled',
+        status: 422,
+      })
     );
   }
 

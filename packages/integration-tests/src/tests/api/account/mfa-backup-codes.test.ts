@@ -16,6 +16,7 @@ import {
   createDefaultTenantUserWithPassword,
   deleteDefaultTenantUser,
   signInAndGetUserApi,
+  signInWithSocialAndGetUserApi,
 } from '#src/helpers/profile.js';
 import {
   enableAllPasswordSignInMethods,
@@ -190,6 +191,12 @@ describe('my-account (mfa - Backup Codes)', () => {
       const api = await signInAndGetUserApi(username, password, {
         scopes: [UserScope.Profile, UserScope.Identities],
       });
+      // Sign in before any MFA factor is bound: a bound factor makes the next sign-in require MFA
+      // verification, which this helper does not answer. A social sign-in carries no `acr`, so the
+      // token alone does not verify the identity either.
+      const noAuthenticationContextApi = await signInWithSocialAndGetUserApi(user.id, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
       const { secret } = await generateTotpSecret(api);
       const verificationRecordId = await createVerificationRecordByPassword(api, password);
 
@@ -207,8 +214,8 @@ describe('my-account (mfa - Backup Codes)', () => {
         codes,
       });
 
-      // Try to get backup codes without identity verification (no verification record ID)
-      await expectRejects(getBackupCodes(api, ''), {
+      // Try to get backup codes without identity verification (no verification record ID).
+      await expectRejects(getBackupCodes(noAuthenticationContextApi, ''), {
         code: 'verification_record.permission_denied',
         status: 401,
       });
@@ -281,6 +288,12 @@ describe('my-account (mfa - Backup Codes)', () => {
       const api = await signInAndGetUserApi(username, password, {
         scopes: [UserScope.Profile, UserScope.Identities],
       });
+      // Sign in before any MFA factor is bound: a bound factor makes the next sign-in require MFA
+      // verification, which this helper does not answer. A social sign-in carries no `acr`, so the
+      // token alone does not verify the identity either.
+      const noAuthenticationContextApi = await signInWithSocialAndGetUserApi(user.id, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
       const { secret } = await generateTotpSecret(api);
       const verificationRecordId = await createVerificationRecordByPassword(api, password);
 
@@ -303,10 +316,13 @@ describe('my-account (mfa - Backup Codes)', () => {
       const backupCodeVerification = mfaVerifications.find(
         (verification) => verification.type === MfaFactor.BackupCode
       )!;
-      await expectRejects(deleteMfaVerification(api, backupCodeVerification.id, ''), {
-        code: 'verification_record.permission_denied',
-        status: 401,
-      });
+      await expectRejects(
+        deleteMfaVerification(noAuthenticationContextApi, backupCodeVerification.id, ''),
+        {
+          code: 'verification_record.permission_denied',
+          status: 401,
+        }
+      );
 
       await deleteDefaultTenantUser(user.id);
     });

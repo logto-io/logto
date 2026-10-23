@@ -52,6 +52,15 @@ const error = {
     'No tiene permiso para acceder a esta aplicación.\nPor favor, contacte a su administrador para obtener ayuda.',
   feature_not_enabled:
     'No tiene permiso para acceder a esta función. Por favor, contacte a su administrador para obtener ayuda.',
+  wallet_not_found:
+    'No se detectó ninguna cartera de Ethereum. Instala una extensión de cartera en el navegador e inténtalo de nuevo.',
+  wallet_not_supported:
+    'El inicio de sesión con cartera solo es compatible con un navegador que tenga instalada una extensión de cartera.',
+  wallet_request_rejected: 'Se rechazó la solicitud de la cartera. Inténtalo de nuevo.',
+  wallet_unsupported_chain:
+    'Tu cartera está conectada a una red no compatible. Cambia de red e inténtalo de nuevo.',
+  wallet_signature_invalid:
+    'La firma de la cartera no es válida o ha caducado. Inténtalo de nuevo.',
 };
 
 export default Object.freeze(error);

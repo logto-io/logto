@@ -4,6 +4,7 @@ export enum CaptchaType {
   RecaptchaEnterprise = 'RecaptchaEnterprise',
   Turnstile = 'Turnstile',
   Cap = 'Cap',
+  Geetest = 'Geetest',
 }
 
 export enum RecaptchaEnterpriseMode {
@@ -51,10 +52,26 @@ export const capConfigGuard = z.object({
 
 export type CapConfig = z.infer<typeof capConfigGuard>;
 
+/**
+ * Config of GeeTest CAPTCHA v4.
+ *
+ * @see https://docs.geetest.com/BehaviorVerification/overview/start
+ */
+export const geetestConfigGuard = z.object({
+  type: z.literal(CaptchaType.Geetest),
+  /** The CAPTCHA ID (`captcha_id`) from the GeeTest dashboard. */
+  siteKey: z.string(),
+  /** The CAPTCHA key (`captcha_key`) from the GeeTest dashboard. */
+  secretKey: z.string(),
+});
+
+export type GeetestConfig = z.infer<typeof geetestConfigGuard>;
+
 export const captchaConfigGuard = z.discriminatedUnion('type', [
   turnstileConfigGuard,
   recaptchaEnterpriseConfigGuard,
   capConfigGuard,
+  geetestConfigGuard,
 ]);
 
 export type CaptchaConfig = z.infer<typeof captchaConfigGuard>;

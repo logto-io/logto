@@ -19,6 +19,7 @@ import assertThat from '../../utils/assert-that.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
 import { accountApiPrefix } from './constants.js';
+import { assertIdentityVerified } from './utils/identity-verification.js';
 
 export default function logtoConfigRoutes<T extends UserRouter>(...args: RouterInitArgs<T>) {
   const [router, { queries }] = args;
@@ -59,19 +60,17 @@ export default function logtoConfigRoutes<T extends UserRouter>(...args: RouterI
     `${accountApiPrefix}/logto-configs`,
     koaGuard({
       body: z.object({
-        mfa: userMfaDataGuard.optional(),
+        // `required` is admin-managed and must not be editable through the Account API.
+        mfa: userMfaDataGuard.omit({ required: true }).optional(),
         passkeySignIn: userPasskeySignInDataGuard.optional(),
       }),
       response: userLogtoConfigResponseGuard,
       status: [200, 400, 401, 403],
     }),
     async (ctx, next) => {
-      const { id: userId, identityVerified, scopes, clientId } = ctx.auth;
+      const { id: userId, scopes, clientId } = ctx.auth;
 
-      assertThat(
-        identityVerified,
-        new RequestError({ code: 'verification_record.permission_denied', status: 401 })
-      );
+      assertIdentityVerified(ctx);
       assertThat(
         scopes.has(UserScope.Identities),
         new RequestError({ code: 'auth.unauthorized', status: 401 })

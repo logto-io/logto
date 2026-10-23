@@ -31,10 +31,10 @@ import {
   mockUserTotpMfaVerification,
   mockUserWebAuthnMfaVerification,
 } from '#src/__mocks__/user.js';
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
+import { resetDevFeaturesEnabled, setDevFeaturesEnabled } from '#src/test-utils/dev-features.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -660,14 +660,8 @@ describe('POST /experience/profile', () => {
 });
 
 describe('POST /experience/submit', () => {
-  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-  const setDevFeaturesEnabled = (enabled: boolean) => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Exercise route behavior in the selected feature environment.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = enabled;
-  };
-
   afterEach(() => {
-    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
+    resetDevFeaturesEnabled();
     jest.useRealTimers();
     jest.restoreAllMocks();
   });
@@ -1819,7 +1813,10 @@ describe('POST /experience/abort', () => {
     const { requester, provider } = createRequesterWithMocks({
       interactionDetailsOverrides: {
         prompt: { name: 'consent', reasons: ['consent_required'], details: {} },
-        result: {
+        // A consent interaction stores the login submission in `lastSubmission`; its own result
+        // stays empty until the user decides.
+        result: undefined,
+        lastSubmission: {
           interactionEvent: InteractionEvent.SignIn,
           userId: mockUser.id,
           login: { accountId: mockUser.id },
@@ -1839,18 +1836,26 @@ describe('POST /experience/abort', () => {
     );
   });
 
-  it('should abort even when the interaction storage cannot be restored', async () => {
-    const { requester, provider } = createRequesterWithMocks({
-      // E.g. an interaction whose experience data was never saved, or was already consumed.
-      interactionDetailsOverrides: { result: {} },
-    });
+  it.each([
+    { name: 'empty', result: {} },
+    {
+      name: 'unreadable step-up context',
+      result: { authenticationContext: { requestedAcrValues: ['urn:logto:acr:unknown'] } },
+    },
+  ])(
+    'should abort even when the interaction storage cannot be restored ($name)',
+    async ({ result }) => {
+      const { requester, provider } = createRequesterWithMocks({
+        interactionDetailsOverrides: { result },
+      });
 
-    const response = await requester.post('/experience/abort').send({});
+      const response = await requester.post('/experience/abort').send({});
 
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual({ redirectTo: 'redirectTo' });
-    expect(provider.interactionResult).toHaveBeenCalled();
-  });
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({ redirectTo: 'redirectTo' });
+      expect(provider.interactionResult).toHaveBeenCalled();
+    }
+  );
 });
 
 describe('GET /experience/interaction/direct-sign-in', () => {

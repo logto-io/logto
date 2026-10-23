@@ -125,7 +125,7 @@ export const accessTokenResponseGuard = z.object({
   id_token: z.string(),
   access_token: z.string().optional(),
   token_type: z.string().optional(),
-  expires_in: z.number().optional(),
+  expires_in: z.number().or(z.string()).optional(),
   refresh_token: z.string().optional(),
   scope: tokenResponseScopeGuard.optional(),
   code: z.string().optional(),

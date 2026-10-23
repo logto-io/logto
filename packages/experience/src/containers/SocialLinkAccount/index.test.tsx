@@ -9,6 +9,7 @@ import { bindSocialRelatedUser, registerWithVerifiedIdentifier } from '@/apis/ex
 import SocialLinkAccount from '.';
 
 const mockNavigate = jest.fn();
+const mockTermsValidation = jest.fn(async () => true);
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -18,6 +19,16 @@ jest.mock('react-router-dom', () => ({
 jest.mock('@/apis/experience', () => ({
   registerWithVerifiedIdentifier: jest.fn(async () => ({ redirectTo: '/' })),
   bindSocialRelatedUser: jest.fn(async () => ({ redirectTo: '/' })),
+  getDirectSignIn: jest.fn(async () => ({})),
+}));
+
+jest.mock('@/hooks/use-terms', () => ({
+  __esModule: true,
+  default: () => ({
+    termsValidation: mockTermsValidation,
+    // The policy only needs to skip the `Manual` check to reach the decline path.
+    agreeToTermsPolicy: 'ManualRegistrationOnly',
+  }),
 }));
 
 describe('SocialLinkAccount', () => {
@@ -136,5 +147,26 @@ describe('SocialLinkAccount', () => {
     });
 
     expect(registerWithVerifiedIdentifier).toBeCalledWith(verificationId);
+  });
+
+  it('should push the sign-in page when the terms are declined', async () => {
+    mockTermsValidation.mockResolvedValueOnce(false);
+
+    const { getByText } = renderWithPageContext(
+      <SettingsProvider>
+        <SocialLinkAccount
+          connectorId="github"
+          relatedUser={relatedUser}
+          verificationId={verificationId}
+        />
+      </SettingsProvider>
+    );
+
+    fireEvent.click(getByText('action.create_account_without_linking'));
+
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith({ pathname: '/sign-in' }, { replace: false });
+    });
+    expect(registerWithVerifiedIdentifier).not.toHaveBeenCalled();
   });
 });

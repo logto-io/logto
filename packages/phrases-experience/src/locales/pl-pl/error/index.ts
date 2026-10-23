@@ -49,6 +49,14 @@ const error = {
     'Nie masz uprawnień do dostępu do tej aplikacji.\nSkontaktuj się z administratorem, aby uzyskać pomoc.',
   feature_not_enabled:
     'Nie masz uprawnień do dostępu do tej funkcji. Skontaktuj się z administratorem, aby uzyskać pomoc.',
+  wallet_not_found:
+    'Nie wykryto portfela Ethereum. Zainstaluj rozszerzenie portfela w przeglądarce i spróbuj ponownie.',
+  wallet_not_supported:
+    'Logowanie portfelem jest obsługiwane tylko w przeglądarce z zainstalowanym rozszerzeniem portfela.',
+  wallet_request_rejected: 'Żądanie portfela zostało odrzucone. Spróbuj ponownie.',
+  wallet_unsupported_chain:
+    'Twój portfel jest połączony z nieobsługiwaną siecią. Przełącz sieć i spróbuj ponownie.',
+  wallet_signature_invalid: 'Podpis portfela jest nieprawidłowy lub wygasł. Spróbuj ponownie.',
 };
 
 export default Object.freeze(error);

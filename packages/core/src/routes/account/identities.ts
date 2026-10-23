@@ -16,7 +16,7 @@ import { assertCanDeleteSocialIdentity } from '#src/utils/user.js';
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
 import { accountApiPrefix } from './constants.js';
-import { assertIdentityVerifiedIfRequired } from './utils/has-security-verification-method.js';
+import { assertIdentityVerifiedIfRequired } from './utils/identity-verification.js';
 
 export default function identitiesRoutes<T extends UserRouter>(
   ...[router, { queries, libraries }]: RouterInitArgs<T>
@@ -114,7 +114,7 @@ export default function identitiesRoutes<T extends UserRouter>(
       status: [204, 400, 401, 403, 422],
     }),
     async (ctx, next) => {
-      const { id: userId, scopes, identityVerified, clientId } = ctx.auth;
+      const { id: userId, scopes, clientId } = ctx.auth;
       assertThat(
         ctx.accountCenter.fields.social === AccountCenterControlValue.Edit,
         'account_center.field_not_editable'
@@ -126,7 +126,7 @@ export default function identitiesRoutes<T extends UserRouter>(
       await assertFirstPartyClient(queries, clientId);
 
       const user = await findUserById(userId);
-      assertIdentityVerifiedIfRequired(user, identityVerified);
+      assertIdentityVerifiedIfRequired(ctx, user);
 
       await linkSocialIdentityCore({
         user,
@@ -149,7 +149,7 @@ export default function identitiesRoutes<T extends UserRouter>(
       status: [204, 400, 401, 403, 422],
     }),
     async (ctx, next) => {
-      const { id: userId, scopes, identityVerified, clientId } = ctx.auth;
+      const { id: userId, scopes, clientId } = ctx.auth;
       assertThat(
         ctx.accountCenter.fields.social === AccountCenterControlValue.Edit,
         'account_center.field_not_editable'
@@ -161,7 +161,7 @@ export default function identitiesRoutes<T extends UserRouter>(
       await assertFirstPartyClient(queries, clientId);
 
       const user = await findUserById(userId);
-      assertIdentityVerifiedIfRequired(user, identityVerified);
+      assertIdentityVerifiedIfRequired(ctx, user);
 
       await linkSocialIdentityCore({
         user,
@@ -182,7 +182,7 @@ export default function identitiesRoutes<T extends UserRouter>(
       status: [204, 400, 401, 403, 404, 422],
     }),
     async (ctx, next) => {
-      const { id: userId, scopes, identityVerified, clientId } = ctx.auth;
+      const { id: userId, scopes, clientId } = ctx.auth;
       const { target } = ctx.guard.params;
       const { fields } = ctx.accountCenter;
       assertThat(
@@ -197,7 +197,7 @@ export default function identitiesRoutes<T extends UserRouter>(
         findUserById(userId),
         userSsoIdentities.findUserSsoIdentitiesByUserId(userId),
       ]);
-      assertIdentityVerifiedIfRequired(user, identityVerified);
+      assertIdentityVerifiedIfRequired(ctx, user);
 
       assertCanDeleteSocialIdentity(user, target, ssoIdentities.length);
 
