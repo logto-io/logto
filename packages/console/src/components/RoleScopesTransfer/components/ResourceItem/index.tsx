@@ -32,6 +32,7 @@ function ResourceItem({ resource, selectedScopes, onSelectResource, onSelectScop
     <div className={styles.resourceItem}>
       <div className={styles.title}>
         <Checkbox
+          className={styles.checkbox}
           checked={selectedScopesCount === totalScopesCount}
           indeterminate={selectedScopesCount > 0 && selectedScopesCount < totalScopesCount}
           onChange={() => {

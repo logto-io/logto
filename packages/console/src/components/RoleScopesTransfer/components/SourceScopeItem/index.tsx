@@ -24,6 +24,7 @@ function SourceScopeItem({ scope, scope: { name }, isSelected, onSelect }: Props
         className={styles.name}
         role="button"
         tabIndex={0}
+        title={name}
         onKeyDown={onKeyDownHandler(() => {
           onSelect(scope);
         })}

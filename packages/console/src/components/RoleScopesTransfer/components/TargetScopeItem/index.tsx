@@ -19,8 +19,12 @@ function TargetScopeItem({ scope, onDelete }: Props) {
   return (
     <div className={styles.targetScopeItem}>
       <div className={styles.title}>
-        <div className={styles.name}>{name}</div>
-        <div className={styles.resourceName}>{`(${resourceName})`}</div>
+        <div className={styles.name} title={name}>
+          {name}
+        </div>
+        <div className={styles.resourceName} title={resourceName}>
+          {`(${resourceName})`}
+        </div>
       </div>
       <IconButton
         size="small"
