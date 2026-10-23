@@ -85,7 +85,7 @@ You can initialize `LogtoClient` in a proper place of your app that can be acces
     {`import Logto
 import LogtoClient
 
-let config = try? LogtoConfig(
+let config = try! LogtoConfig(
   endpoint: "${props.endpoint}",
   appId: "${props.app.id}"
 )
@@ -101,7 +101,7 @@ By default, we store credentials like ID Token and Refresh Token in Keychain. Th
 To turn off this behavior, set `usingPersistStorage` to `false`:
 
 ```swift
-let config = try? LogtoConfig(
+let config = try! LogtoConfig(
   // ...
   usingPersistStorage: false
 )
@@ -110,7 +110,7 @@ let config = try? LogtoConfig(
 In v2, the system browser session is shared by default. To request an isolated browser session, set `prefersEphemeralWebBrowserSession` to `true`:
 
 ```swift
-let config = try? LogtoConfig(
+let config = try! LogtoConfig(
   // ...
   prefersEphemeralWebBrowserSession: true
 )
@@ -318,7 +318,7 @@ To display the user's information, you can use the `logtoClient.getIdTokenClaims
   var body: some View {
     VStack {
       if isAuthenticated {
-        Text("Welcome, \(name)")
+        Text("Welcome, \\(name ?? "")")
       } else {
         Text("Please sign in")
       }
