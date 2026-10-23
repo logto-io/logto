@@ -1,11 +1,13 @@
 import { demoAppApplicationId, fullSignInExperienceGuard } from '@logto/schemas';
 import { z } from 'zod';
 
-import { updateSignInExperience } from '#src/api/sign-in-experience.js';
-import { demoAppUrl, logtoUrl } from '#src/constants.js';
+import { getSignInExperience, updateSignInExperience } from '#src/api/sign-in-experience.js';
+import { createSsoConnector, deleteSsoConnectorById } from '#src/api/sso-connector.js';
+import { demoAppUrl, logtoUrl, newOidcSsoConnectorPayload } from '#src/constants.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
 import { Trace } from '#src/ui-helpers/trace.js';
+import { generateSsoConnectorName } from '#src/utils.js';
 
 const ssrDataGuard = z.object({
   signInExperience: z.object({
@@ -58,6 +60,55 @@ describe('server-side rendering', () => {
 
     // Check network requests
     await expectTraceNotToHaveWellKnownEndpoints();
+  });
+
+  it('should include SSO connector branding by default and hide it when disabled', async () => {
+    const { branding } = newOidcSsoConnectorPayload;
+    const { singleSignOnEnabled, ssoBrandingBeforeEmailMatch } = await getSignInExperience();
+    const { id } = await createSsoConnector({
+      ...newOidcSsoConnectorPayload,
+      connectorName: generateSsoConnectorName(),
+    });
+    const experience = new ExpectExperience(await browser.newPage());
+
+    try {
+      await updateSignInExperience({ singleSignOnEnabled: true });
+      await experience.navigateTo(demoAppUrl.href);
+
+      const data = await experience.page.evaluate(() => {
+        return window.logtoSsr;
+      });
+      const parsed = ssrDataGuard.parse(data);
+      const connector = parsed.signInExperience.data.ssoConnectors.find(
+        (connector) => connector.id === id
+      );
+
+      expect(connector).toMatchObject({
+        id,
+        connectorName: branding.displayName,
+        logo: branding.logo,
+        darkLogo: branding.darkLogo,
+      });
+
+      await updateSignInExperience({ ssoBrandingBeforeEmailMatch: false });
+      await experience.navigateTo(demoAppUrl.href);
+
+      const hiddenData = await experience.page.evaluate(() => {
+        return window.logtoSsr;
+      });
+      const hiddenParsed = ssrDataGuard.parse(hiddenData);
+      const hiddenConnector = hiddenParsed.signInExperience.data.ssoConnectors.find(
+        (connector) => connector.id === id
+      );
+
+      expect(hiddenConnector).toMatchObject({ id, connectorName: 'OIDC' });
+      expect(hiddenConnector?.logo).not.toBe(branding.logo);
+      expect(hiddenConnector?.darkLogo).not.toBe(branding.darkLogo);
+    } finally {
+      await experience.page.close();
+      await deleteSsoConnectorById(id);
+      await updateSignInExperience({ singleSignOnEnabled, ssoBrandingBeforeEmailMatch });
+    }
   });
 
   it('should render the page with data from the server with invalid organization ID', async () => {

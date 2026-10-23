@@ -150,30 +150,51 @@ describe('.well-known api', () => {
       });
     });
 
-    it('should get the sso connectors in sign-in experience', async () => {
+    it('should include branding by default and hide it when disabled in the sign-in experience', async () => {
+      const { branding } = newOidcSsoConnectorPayload;
+      const { ssoBrandingBeforeEmailMatch } = await getSignInExperience();
       const { id } = await createSsoConnector({
         ...newOidcSsoConnectorPayload,
         connectorName: generateSsoConnectorName(),
       });
 
-      const signInExperience = await api
-        .get('.well-known/sign-in-exp')
-        .json<SignInExperience & { ssoConnectors: SsoConnectorMetadata[] }>();
+      try {
+        const signInExperience = await api
+          .get('.well-known/sign-in-exp')
+          .json<SignInExperience & { ssoConnectors: SsoConnectorMetadata[] }>();
 
-      expect(signInExperience.ssoConnectors.length).toBeGreaterThan(0);
+        const connector = signInExperience.ssoConnectors.find((connector) => connector.id === id);
 
-      const newCreatedConnector = signInExperience.ssoConnectors.find(
-        (connector) => connector.id === id
-      );
+        expect(connector).toMatchObject({
+          id,
+          connectorName: branding.displayName,
+          logo: branding.logo,
+          darkLogo: branding.darkLogo,
+        });
 
-      expect(newCreatedConnector).toMatchObject({
-        id,
-        connectorName: newOidcSsoConnectorPayload.branding.displayName,
-        logo: newOidcSsoConnectorPayload.branding.logo,
-        darkLogo: newOidcSsoConnectorPayload.branding.darkLogo,
-      });
+        const experienceSignInExperience = await api
+          .get('.well-known/experience')
+          .json<SignInExperience & { ssoConnectors: SsoConnectorMetadata[] }>();
+        expect(
+          experienceSignInExperience.ssoConnectors.find((connector) => connector.id === id)
+        ).toEqual(connector);
 
-      await deleteSsoConnectorById(id);
+        await updateSignInExperience({ ssoBrandingBeforeEmailMatch: false });
+
+        const hiddenSignInExperience = await api
+          .get('.well-known/sign-in-exp')
+          .json<SignInExperience & { ssoConnectors: SsoConnectorMetadata[] }>();
+        const hiddenConnector = hiddenSignInExperience.ssoConnectors.find(
+          (connector) => connector.id === id
+        );
+
+        expect(hiddenConnector).toMatchObject({ id, connectorName: 'OIDC' });
+        expect(hiddenConnector?.logo).not.toBe(branding.logo);
+        expect(hiddenConnector?.darkLogo).not.toBe(branding.darkLogo);
+      } finally {
+        await deleteSsoConnectorById(id);
+        await updateSignInExperience({ ssoBrandingBeforeEmailMatch });
+      }
     });
 
     it('should filter out the sso connectors with invalid config', async () => {

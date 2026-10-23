@@ -13,6 +13,10 @@ const enterprise_sso_details = {
   custom_branding_title: 'Anzeige',
   custom_branding_description:
     'Passen Sie den Namen und das Logo an, die im Single Sign-On-Fluss der Endbenutzer angezeigt werden. Wenn leer, werden Standardwerte verwendet.',
+  custom_branding_visibility_notice:
+    'Anzeigename und Logo sind für alle sichtbar, die Ihre Anmeldeseite öffnen, es sei denn, "SSO-Connector-Namen und -Logos vor der E-Mail-Domain-Übereinstimmung anzeigen" ist in der Anmeldeerfahrung deaktiviert. Fügen Sie keine vertraulichen Informationen hinzu.',
+  custom_branding_console_sso_visibility_notice:
+    'Anzeigename und Logo können auf der Console-Anmeldeseite sichtbar sein, bevor eine E-Mail-Domain übereinstimmt. Fügen Sie keine vertraulichen Informationen hinzu.',
   email_domain_field_name: 'Unternehmens-E-Mail-Domain',
   email_domain_field_description:
     'Benutzer mit dieser E-Mail-Domain können SSO zur Authentifizierung verwenden. Bitte überprüfen Sie, ob die Domain dem Unternehmen gehört.',
