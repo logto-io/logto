@@ -93,7 +93,11 @@ const usePasswordAndSocialSignIn = async () =>
 /* eslint-disable @silverhand/fp/no-mutating-methods -- collector arrays owned by the listener */
 const recordRequests = (experience: ExpectExperience) => {
   const authorizationUrls: string[] = [];
-  const accountApiRequests: Array<{ url: string; headers: Record<string, string> }> = [];
+  const accountApiRequests: Array<{
+    method: string;
+    url: string;
+    headers: Record<string, string>;
+  }> = [];
   const verificationApiUrls: string[] = [];
 
   experience.page.on('request', (request) => {
@@ -107,8 +111,10 @@ const recordRequests = (experience: ExpectExperience) => {
       verificationApiUrls.push(url);
     }
 
-    if (url.includes('/api/my-account/')) {
-      accountApiRequests.push({ url, headers: request.headers() });
+    // The bare `/api/my-account` path is a mutation (e.g. removing the username), so it has no
+    // trailing slash.
+    if (url.includes('/api/my-account')) {
+      accountApiRequests.push({ method: request.method(), url, headers: request.headers() });
     }
   });
 
@@ -249,12 +255,15 @@ devFeatureTest.describe('Account Center OIDC step-up', () => {
 
   it('starts a step-up from an RFC 9470 challenge and resumes the action', async () => {
     await usePasswordSignIn();
-    const { user, username, password } = await createDefaultTenantUserWithPassword();
+    // The primary email stays after the removal, so the username is not the last identifier.
+    const { user, username, password } = await createDefaultTenantUserWithPassword({
+      primaryEmail: generateEmail(),
+    });
     const context = await browser.createBrowserContext();
     const experience = new ExpectExperience(await context.newPage());
 
-    // What the Account API answers once the elevated token ages out. The first read after the
-    // page loads is challenged; every later one is served normally, so the resume can succeed.
+    // What the Account API answers once the elevated token ages out. The first username removal
+    // is challenged; every later request is served normally, so the resume can succeed.
     // The values are deliberately not Account Center's own fallback (`max_age=600`), so a client
     // that ignored the header and used the fallback cannot pass the assertions below.
     // eslint-disable-next-line @silverhand/fp/no-let -- the interceptor answers exactly one request
@@ -268,7 +277,11 @@ devFeatureTest.describe('Account Center OIDC step-up', () => {
       const requests = recordRequests(experience);
       await experience.page.setRequestInterception(true);
       experience.page.on('request', (request) => {
-        if (isChallengePending && request.url().endsWith('/api/my-account/trusted-devices')) {
+        if (
+          isChallengePending &&
+          request.method() === 'PATCH' &&
+          request.url().endsWith('/api/my-account')
+        ) {
           // eslint-disable-next-line @silverhand/fp/no-mutation -- one-shot interceptor state
           isChallengePending = false;
           void request.respond({
@@ -288,22 +301,28 @@ devFeatureTest.describe('Account Center OIDC step-up', () => {
 
       await signInWithPassword(experience, 'security', { username, password });
 
-      // The challenged read starts a step-up; the resumed read is the second trusted devices one.
-      const trustedDeviceReads = () =>
-        requests.accountApiRequests.filter(({ url }) => url.includes('/trusted-devices'));
+      // A challenged username removal is only sent again when the pending action resumes; the
+      // page does not replay it on its own, so a lost action leaves the username in place.
+      await experience.toClickButton('Remove', false);
+      await experience.toClick('[role=dialog] button', 'Remove', false);
+
+      const usernameRemovals = () =>
+        requests.accountApiRequests.filter(
+          ({ method, url }) => method === 'PATCH' && url.endsWith('/api/my-account')
+        );
       await waitForCondition(
         () => requests.authorizationUrls.some((url) => url.includes('acr_values')),
         'the step-up authorization started from the challenge'
       );
       await waitForCondition(
-        () => trustedDeviceReads().length >= 2,
-        'the resumed trusted devices read'
+        () => usernameRemovals().length >= 2,
+        'the resumed username removal'
       );
 
       await experience.waitForUrl(accountUrl('security'));
-      await expect(experience.page).toMatchElement('div', { text: 'No trusted devices.' });
+      await expect(waitForUsernameRemoval(user.id)).resolves.toHaveProperty('username', null);
       // The action resumed once, and the elevated token stayed the only proof.
-      expect(trustedDeviceReads()).toHaveLength(2);
+      expect(usernameRemovals()).toHaveLength(2);
       expect(requests.verificationApiUrls).toEqual([]);
 
       const challengeAuthorizationUrl = requests.authorizationUrls.find((url) =>

@@ -340,14 +340,14 @@ describe('account API authentication context', () => {
       }
     });
 
-    devFeatureTest.it('rejects a verification record created for another purpose', async () => {
+    devFeatureTest.it('rejects a binding verification record that has no owner', async () => {
       const { user } = await createDefaultTenantUserWithPassword();
       const api = await signInWithoutContext(user.id);
 
       try {
         // A code sent to an address that is not the user's primary one creates a
-        // `BindNewIdentifier` record: it may bind the identifier, but it is not the
-        // `UserPermissionValidation` proof a sensitive Account API operation needs.
+        // `BindNewIdentifier` record, which is stored without a `userId`. It may bind the
+        // identifier, but it proves no account and cannot authorize a sensitive operation.
         const bindNewIdentifierRecordId = await createAndVerifyVerificationCode(api, {
           type: SignInIdentifier.Email,
           value: generateEmail(),
