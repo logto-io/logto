@@ -99,11 +99,9 @@ Add the framework:
 ```swift
 let logtoClient = LogtoClient(
   useConfig: config,
-  socialPlugins: [LogtoSocialPluginAlipay(callbackScheme: "your-scheme")]
+  socialPlugins: [LogtoSocialPluginAlipay()]
 )
 ```
-
-Where `callbackScheme` is one of the [custom URL Schemes](https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app) that can navigate to your app.
 
 ### Android
 
@@ -219,11 +217,9 @@ Once Alipay native connector is enabled, you can build and run your app to see i
 ```swift
 let logtoClient = LogtoClient(
   useConfig: config,
-  socialPlugins: [LogtoSocialPluginAlipay(callbackScheme: "your-scheme")]
+  socialPlugins: [LogtoSocialPluginAlipay()]
 )
 ```
-
-其中 `callbackScheme` 是 [custom URL Schemes](https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app) 中之一，它将被用来在登录成功后跳转回应用。
 
 ### Android
 
