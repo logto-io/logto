@@ -99,7 +99,8 @@ function MultiSelect<T extends string>({
         className
       )}
       role="button"
-      tabIndex={0}
+      aria-disabled={isSelectionReadOnly ? true : undefined}
+      tabIndex={isSelectionReadOnly ? -1 : 0}
       onKeyDown={onKeyDownHandler(() => {
         if (!isSelectionReadOnly) {
           inputRef.current?.focus();
@@ -145,6 +146,7 @@ function MultiSelect<T extends string>({
         placeholder={cond(value.length === 0 && placeholder && String(t(placeholder)))}
         value={keyword}
         readOnly={isSelectionReadOnly}
+        tabIndex={isSelectionReadOnly ? -1 : undefined}
         onKeyDown={(event) => {
           if (event.key === 'Backspace' && keyword === '' && !isSelectionReadOnly) {
             if (focusedValue) {

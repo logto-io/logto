@@ -3,6 +3,7 @@ import { useCallback, useContext } from 'react';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { getSsoAuthorizationUrl, initInteraction } from '@/apis/experience';
+import useAbortDirectSignIn from '@/hooks/use-abort-direct-sign-in';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import { searchKeys } from '@/shared/utils/search-parameters';
@@ -16,6 +17,7 @@ import { usePureStepUpErrorHandler } from './use-step-up-error-handler';
 
 const useSingleSignOn = () => {
   const handleError = useErrorHandler();
+  const abortDirectSignIn = useAbortDirectSignIn();
   const { isPureStepUp } = useStepUpContext();
   const stepUpErrorHandlers = usePureStepUpErrorHandler();
   const getAuthorizationUrl = useCallback(
@@ -70,6 +72,12 @@ const useSingleSignOn = () => {
       });
 
       if (error) {
+        // Failures before the IdP redirect never reach the callback listener, so a direct sign-in
+        // must exit here as well. Hosted sign-ins keep the regular error handling.
+        if (!isPureStepUp && (await abortDirectSignIn())) {
+          return;
+        }
+
         await handleError(error, stepUpErrorHandlers);
 
         return;
@@ -103,8 +111,10 @@ const useSingleSignOn = () => {
       await redirectTo(authorizationUri);
     },
     [
+      abortDirectSignIn,
       asyncInvokeSingleSignOn,
       handleError,
+      isPureStepUp,
       nativeSignInHandler,
       redirectTo,
       setVerificationId,

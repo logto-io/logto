@@ -43,6 +43,11 @@ const error = {
   access_denied: '拒絕存取',
   application_access_denied: '您沒有權限存取此應用程式。\n請聯繫管理員尋求協助。',
   feature_not_enabled: '您沒有權限存取此功能。請聯繫管理員尋求協助。',
+  wallet_not_found: '未偵測到以太坊錢包。請安裝瀏覽器錢包擴充功能後重試。',
+  wallet_not_supported: '錢包登入僅支援已安裝錢包擴充功能的瀏覽器。',
+  wallet_request_rejected: '錢包請求已被拒絕，請重試。',
+  wallet_unsupported_chain: '錢包連接了不支援的網路，請切換網路後重試。',
+  wallet_signature_invalid: '錢包簽名無效或已過期，請重試。',
 };
 
 export default Object.freeze(error);

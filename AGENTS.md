@@ -42,6 +42,10 @@ When adding or changing API behavior, update the corresponding OpenAPI document 
 
 When changing copy under `packages/phrases`, sync and translate the corresponding entries for the other locale files in the same PR unless the change is intentionally source-locale only.
 
+## Database Schema
+
+Core queries run as each tenant's database role under row-level security, which changes which indexes the planner can use. Before adding an index, a hot predicate, or a backfill, read `packages/schemas/README.md` (indexes under row-level security) and `packages/schemas/alterations/README.md` (indexes, backfills).
+
 ## Lint and TypeScript Suppressions
 
 Every `eslint-disable` and `@ts-expect-error` must include a short reason explaining why the suppression is safe or necessary.

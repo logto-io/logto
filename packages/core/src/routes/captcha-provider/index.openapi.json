@@ -30,7 +30,8 @@
               "schema": {
                 "properties": {
                   "config": {
-                    "description": "The captcha provider config."
+                    "type": "object",
+                    "description": "The captcha provider config. The `type` must be `RecaptchaEnterprise`, `Turnstile`, `Cap`, or `Geetest`, together with the provider-specific fields."
                   }
                 }
               }

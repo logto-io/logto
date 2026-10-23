@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { oidcPromptsGuard, OidcPrompt } from './social.js';
+import { oidcPromptsGuard, OidcPrompt, tokenResponseGuard } from './social.js';
 
 describe('oidcPromptsGuard', () => {
   it('allows valid prompt configurations, including undefined, single prompts, and combinations without none', () => {
@@ -20,5 +20,11 @@ describe('oidcPromptsGuard', () => {
       OidcPrompt.None,
     ]);
     expect(result.success).toBe(false);
+  });
+});
+
+describe('tokenResponseGuard', () => {
+  it('rejects a `scope` array with non-string elements', () => {
+    expect(tokenResponseGuard.safeParse({ scope: ['chat:read', 1, null] }).success).toBe(false);
   });
 });

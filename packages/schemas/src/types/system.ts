@@ -1,6 +1,8 @@
 import type { ZodType } from 'zod';
 import { z } from 'zod';
 
+import { licenseUsageWarningGuard } from '../consts/license.js';
+
 // Alteration state
 export enum AlterationStateKey {
   AlterationState = 'alterationState',
@@ -259,6 +261,11 @@ export const licenseRefreshStateGuard = z.object({
   lastAttemptAt: z.string().optional(),
   /** The refusal reason returned by the license service, if the last attempt was refused. */
   refusalReason: z.string().optional(),
+  /**
+   * The usage warnings returned by the license service with the last answered refresh, such as too
+   * many production deployments, which only Logto Cloud can count.
+   */
+  cloudNotices: z.array(licenseUsageWarningGuard).optional(),
 });
 
 export type LicenseRefreshState = z.infer<typeof licenseRefreshStateGuard>;

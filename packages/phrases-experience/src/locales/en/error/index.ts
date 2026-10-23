@@ -48,6 +48,14 @@ const error = {
     'You do not have permission to access this application.\nPlease contact your administrator for assistance.',
   feature_not_enabled:
     'You do not have permission to access this feature. Please contact your administrator for assistance.',
+  wallet_not_found:
+    'No Ethereum wallet detected. Install a browser wallet extension and try again.',
+  wallet_not_supported:
+    'Wallet sign-in is only supported in a browser with an installed wallet extension.',
+  wallet_request_rejected: 'The wallet request was rejected. Please try again.',
+  wallet_unsupported_chain:
+    'Your wallet is connected to an unsupported network. Switch networks and try again.',
+  wallet_signature_invalid: 'The wallet signature is invalid or has expired. Please try again.',
 };
 
 export default Object.freeze(error);

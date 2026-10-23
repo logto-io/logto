@@ -460,6 +460,24 @@ describe('findCaptchaPublicConfig', () => {
     });
   });
 
+  it('should return the GeeTest public config without the secret key', async () => {
+    findCaptchaProvider.mockResolvedValueOnce({
+      ...mockCaptchaProvider,
+      config: {
+        type: CaptchaType.Geetest,
+        siteKey: 'captcha_id',
+        secretKey: 'captcha_key',
+      },
+    });
+
+    const captchaPublicConfig = await findCaptchaPublicConfig();
+
+    expect(captchaPublicConfig).toEqual({
+      type: CaptchaType.Geetest,
+      siteKey: 'captcha_id',
+    });
+  });
+
   it('should return undefined if captcha provider is not found', async () => {
     // eslint-disable-next-line unicorn/no-useless-undefined
     findCaptchaProvider.mockResolvedValueOnce(undefined);

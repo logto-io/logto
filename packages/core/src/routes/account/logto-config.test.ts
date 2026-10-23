@@ -1,5 +1,10 @@
 import { UserScope } from '@logto/core-kit';
-import { AccountCenterControlValue, userPasskeySignInDataKey, type User } from '@logto/schemas';
+import {
+  AccountCenterControlValue,
+  userMfaDataKey,
+  userPasskeySignInDataKey,
+  type User,
+} from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
 import { mockUser } from '#src/__mocks__/index.js';
@@ -75,6 +80,7 @@ describe('account logto-config routes', () => {
         mfa: { skipped: false, skipMfaOnSignIn: false },
         passkeySignIn: { skipped: false },
       });
+      expect(response.body.mfa).not.toHaveProperty('required');
     });
   });
 
@@ -119,6 +125,21 @@ describe('account logto-config routes', () => {
       expect(response.status).toBe(400);
       expect(response.body).toHaveProperty('code', 'account_center.field_not_editable');
       expect(updateUserById).not.toHaveBeenCalled();
+    });
+
+    it('does not allow users to clear the admin-managed MFA requirement', async () => {
+      findUserById.mockResolvedValueOnce({
+        ...mockUser,
+        logtoConfig: { [userMfaDataKey]: { required: true } },
+      });
+
+      const response = await accountRequest
+        .patch('/my-account/logto-configs')
+        .send({ mfa: { required: false } });
+
+      expect(response.status).toBe(200);
+      const [, updatedData] = updateUserById.mock.calls[0] ?? [];
+      expect(updatedData?.logtoConfig?.[userMfaDataKey]).toMatchObject({ required: true });
     });
   });
 });

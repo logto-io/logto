@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- MFA binding and mandatory policy scenarios share the same test harness. */
 import {
   InteractionEvent,
   MfaFactor,
@@ -209,6 +210,70 @@ describe('Mfa.assertMfaFulfilled', () => {
     await expect(assertion).rejects.not.toHaveProperty('data.skippable');
   });
 
+  it('enforces MFA for a user required to set up MFA regardless of policy and prior skip', async () => {
+    const { mfa } = createMfa({
+      mfaSettings: {
+        policy: MfaPolicy.NoPrompt,
+        factors: [MfaFactor.TOTP],
+        organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+      },
+      user: {
+        id: 'user-id',
+        logtoConfig: {
+          [userMfaDataKey]: { enabled: false, skipped: true, required: true },
+        },
+        mfaVerifications: [],
+      },
+    });
+
+    const assertion = mfa.assertMfaFulfilled();
+
+    await expect(assertion).rejects.toMatchObject({
+      code: 'user.missing_mfa',
+      status: 422,
+      data: { availableFactors: [MfaFactor.TOTP] },
+    });
+    await expect(assertion).rejects.not.toHaveProperty('data.skippable');
+  });
+
+  it('bypasses the optional MFA suggestion when the user is required to set up MFA', async () => {
+    const { mfa } = createMfa({
+      mfaSettings: {
+        policy: MfaPolicy.PromptAtSignInAndSignUp,
+        factors: [MfaFactor.TOTP],
+        organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+      },
+      user: {
+        id: 'user-id',
+        logtoConfig: { [userMfaDataKey]: { enabled: false, required: true } },
+        mfaVerifications: [],
+      },
+    });
+
+    await expect(mfa.assertMfaFulfilled()).rejects.toMatchObject({
+      code: 'user.missing_mfa',
+      status: 422,
+      data: { availableFactors: [MfaFactor.TOTP] },
+    });
+  });
+
+  it('does not enforce a user requirement when no MFA factors are enabled', async () => {
+    const { mfa } = createMfa({
+      mfaSettings: {
+        policy: MfaPolicy.PromptAtSignInAndSignUp,
+        factors: [],
+        organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+      },
+      user: {
+        id: 'user-id',
+        logtoConfig: { [userMfaDataKey]: { required: true } },
+        mfaVerifications: [],
+      },
+    });
+
+    await expect(mfa.assertMfaFulfilled()).resolves.toBeUndefined();
+  });
+
   it('honors the policy skips and marks the requirement skippable without the option', async () => {
     const { mfa } = createMfa({
       mfaSettings: {
@@ -361,4 +426,42 @@ describe('Mfa.skip', () => {
       status: 422,
     });
   });
+
+  it('rejects skip when the user is required to set up MFA', async () => {
+    const { mfa } = createMfa({
+      mfaSettings: {
+        policy: MfaPolicy.PromptAtSignInAndSignUp,
+        factors: [MfaFactor.TOTP],
+        organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+      },
+      user: {
+        id: 'user-id',
+        logtoConfig: { [userMfaDataKey]: { required: true } },
+        mfaVerifications: [],
+      },
+    });
+
+    await expect(mfa.skip()).rejects.toMatchObject({
+      code: 'session.mfa.mfa_policy_not_user_controlled',
+      status: 422,
+    });
+  });
+
+  it('allows skip when no MFA factors are enabled even if the user is required', async () => {
+    const { mfa } = createMfa({
+      mfaSettings: {
+        policy: MfaPolicy.PromptAtSignInAndSignUp,
+        factors: [],
+        organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+      },
+      user: {
+        id: 'user-id',
+        logtoConfig: { [userMfaDataKey]: { required: true } },
+        mfaVerifications: [],
+      },
+    });
+
+    await expect(mfa.skip()).resolves.toBeUndefined();
+  });
 });
+/* eslint-enable max-lines */

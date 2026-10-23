@@ -79,25 +79,46 @@ describe('verifyEmailIdentifier tests', () => {
 
     getAvailableSsoConnectorsMock.mockResolvedValueOnce([connector]);
 
+    const promise = verifySsoOnlyEmailIdentifier(
+      ssoConnectorLibrary,
+      {
+        email: 'foo@example.com',
+        verificationCode: 'bar',
+      },
+      mockSignInExperience
+    );
+
+    await expect(promise).rejects.toMatchError(
+      new RequestError({
+        code: 'session.sso_enabled',
+        status: 422,
+      })
+    );
+    await expect(promise).rejects.toMatchObject({ data: undefined });
+  });
+
+  it('should throw an error if the email domain matches an sso connector domain case-insensitively', async () => {
+    getAvailableSsoConnectorsMock.mockResolvedValueOnce([
+      {
+        ...wellConfiguredSsoConnector,
+        domains: ['EXAMPLE.com'],
+      },
+    ]);
+
     await expect(
       verifySsoOnlyEmailIdentifier(
         ssoConnectorLibrary,
         {
-          email: 'foo@example.com',
+          email: 'foo@example.COM',
           verificationCode: 'bar',
         },
         mockSignInExperience
       )
     ).rejects.toMatchError(
-      new RequestError(
-        {
-          code: 'session.sso_enabled',
-          status: 422,
-        },
-        {
-          ssoConnectors: [connector],
-        }
-      )
+      new RequestError({
+        code: 'session.sso_enabled',
+        status: 422,
+      })
     );
   });
 });

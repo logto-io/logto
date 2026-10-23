@@ -22,10 +22,14 @@ const pool = createMockPool({
 });
 
 const { createSentinelActivitiesQueries } = await import('./sentinel-activities.js');
-const { insertActivity, countActivities } = createSentinelActivitiesQueries(pool);
+const { insertActivity, countActivities, deleteActivities } = createSentinelActivitiesQueries(pool);
 
 describe('sentinel activities queries', () => {
   const { table, fields } = convertToIdentifiers(SentinelActivities, true);
+
+  beforeEach(() => {
+    mockQuery.mockClear();
+  });
 
   it('countActivities counts matching rows within the window', async () => {
     const expectSql = sql`
@@ -58,6 +62,36 @@ describe('sentinel activities queries', () => {
         windowSeconds: 3600,
       })
     ).resolves.toBe(2);
+  });
+
+  it('deleteActivities also deletes active blocked rows outside the one-hour window', async () => {
+    const expectSql = sql`
+      delete from ${table}
+      where ${fields.targetType} = $1
+        and ${fields.targetHash} = any($2::"varchar"[])
+        and (
+          ${fields.createdAt} > now() - interval '1 hour'
+          or (
+            ${fields.decision} = $3
+            and ${fields.decisionExpiresAt} > now()
+          )
+        )
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([
+        SentinelActivityTargetType.User,
+        ['target-hash'],
+        SentinelDecision.Blocked,
+      ]);
+
+      return createMockQueryResult([]);
+    });
+
+    await deleteActivities(SentinelActivityTargetType.User, ['target-hash']);
+
+    expect(mockQuery).toHaveBeenCalledTimes(1);
   });
 
   it('insertActivity inserts into the sentinel_activities table', async () => {

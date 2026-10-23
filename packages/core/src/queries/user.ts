@@ -29,6 +29,9 @@ const { table, fields } = convertToIdentifiers(Users);
  * in the database, not the camel case one.
  * - `identity`: The exact external identity condition. Social identities are matched by connector
  * target and social user ID; enterprise SSO identities are matched by issuer and identity ID.
+ * - `customData`: The raw JSON object strings to match against `users.custom_data` using JSONB
+ * containment (`@>`). Values within one object are combined with AND, multiple values are
+ * combined with OR, and the whole condition is combined with other conditions using AND.
  *
  * @example
  * ```ts
@@ -50,6 +53,7 @@ export type UserConditions = {
     value: string;
     type: 'exists' | 'not exists';
   };
+  customData?: readonly string[];
 };
 
 /**
@@ -307,7 +311,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
    *
    * @see {@link UserConditions} for more information about the conditions.
    */
-  const buildUserConditions = ({ search, identity, relation }: UserConditions) => {
+  const buildUserConditions = ({ search, identity, relation, customData }: UserConditions) => {
     const hasSearch = search?.matches.length;
     const id = sql.identifier;
     const buildIdentityCondition = () => {
@@ -352,10 +356,22 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
       `;
     };
 
+    const buildCustomDataCondition = () => {
+      if (!customData || customData.length === 0) {
+        return;
+      }
+
+      return sql`(${sql.join(
+        customData.map((value) => sql`${fields.customData} @> ${value}::jsonb`),
+        sql` or `
+      )})`;
+    };
+
     const conditions = conditionalArray(
       buildIdentityCondition(),
       buildRelationCondition(),
-      hasSearch && sql`(${buildConditionsFromSearch(search, userSearchFields)})`
+      hasSearch && sql`(${buildConditionsFromSearch(search, userSearchFields)})`,
+      buildCustomDataCondition()
     );
 
     if (conditions.length === 0) {

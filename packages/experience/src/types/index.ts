@@ -26,6 +26,12 @@ export enum SearchParameters {
   NativeCallbackLink = 'native_callback',
   RedirectTo = 'redirect_to',
   LinkSocial = 'link_social',
+  /**
+   * Internal marker for the wallet sign-in callback. The signature has already been verified
+   * before the browser navigates to the social callback page, so the page must not verify it
+   * again with a consumed connector session.
+   */
+  SiweCallback = 'siwe_callback',
 }
 
 export type VerificationCodeIdentifier = SignInIdentifier.Email | SignInIdentifier.Phone;

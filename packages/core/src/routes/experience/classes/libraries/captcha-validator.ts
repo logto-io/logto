@@ -1,6 +1,9 @@
+import { createHmac } from 'node:crypto';
+
 import {
   type CapConfig,
   CaptchaType,
+  type GeetestConfig,
   RecaptchaEnterpriseMode,
   type CaptchaProvider,
   type RecaptchaEnterpriseConfig,
@@ -14,6 +17,18 @@ import { ssrfProtectedFetch } from '#src/utils/outbound-request.js';
 
 const DEFAULT_SCORE_THRESHOLD = 0.5;
 
+/**
+ * The validation result returned by GeeTest CAPTCHA v4 on the client side.
+ *
+ * @see https://docs.geetest.com/BehaviorVerification/apirefer/api/web#getvalidate
+ */
+const geetestValidateGuard = z.object({
+  lot_number: z.string(),
+  captcha_output: z.string(),
+  pass_token: z.string(),
+  gen_time: z.string(),
+});
+
 function isRecaptchaEnterprise(
   config: CaptchaProvider['config']
 ): config is RecaptchaEnterpriseConfig {
@@ -22,6 +37,10 @@ function isRecaptchaEnterprise(
 
 function isCap(config: CaptchaProvider['config']): config is CapConfig {
   return config.type === CaptchaType.Cap;
+}
+
+function isGeetest(config: CaptchaProvider['config']): config is GeetestConfig {
+  return config.type === CaptchaType.Geetest;
 }
 
 function isTurnstile(config: CaptchaProvider['config']): config is TurnstileConfig {
@@ -66,6 +85,10 @@ export class CaptchaValidator {
       return this.verifyCap(config, captchaToken);
     }
 
+    if (isGeetest(config)) {
+      return this.verifyGeetest(config, captchaToken);
+    }
+
     throw new Error('Invalid captcha provider');
   }
 
@@ -98,6 +121,64 @@ export class CaptchaValidator {
       this.log.append({
         success: false,
         errorMessage: 'Failed to get the result from Cloudflare Turnstile',
+      });
+
+      return false;
+    }
+  }
+
+  /**
+   * Verify the token against the GeeTest CAPTCHA v4 secondary validation API.
+   *
+   * The client sends the four fields returned by `getValidate()` as a JSON string to keep the
+   * public `captchaToken` contract unchanged.
+   *
+   * @see https://docs.geetest.com/BehaviorVerification/deploy/server/node
+   */
+  private async verifyGeetest(config: GeetestConfig, captchaToken: string) {
+    try {
+      const validate = geetestValidateGuard.parse(JSON.parse(captchaToken));
+      const signToken = createHmac('sha256', config.secretKey)
+        .update(validate.lot_number)
+        .digest('hex');
+
+      const result = await ky
+        .post(
+          `https://gcaptcha4.geetest.com/validate?captcha_id=${encodeURIComponent(config.siteKey)}`,
+          {
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+              lot_number: validate.lot_number,
+              captcha_output: validate.captcha_output,
+              pass_token: validate.pass_token,
+              gen_time: validate.gen_time,
+              sign_token: signToken,
+            }),
+            retry: 0,
+            timeout: 10_000,
+            // Keep the outbound call on the same guarded fetch path as other captcha providers.
+            fetch: ssrfProtectedFetch,
+          }
+        )
+        .json();
+
+      const responseGuard = z.object({
+        result: z.string(),
+        reason: z.string().optional(),
+      });
+      const response = responseGuard.parse(result);
+      const success = response.result === 'success';
+
+      this.log.append({
+        success,
+        errorMessage: success ? undefined : response.reason,
+      });
+
+      return success;
+    } catch {
+      this.log.append({
+        success: false,
+        errorMessage: 'Failed to get the result from GeeTest',
       });
 
       return false;

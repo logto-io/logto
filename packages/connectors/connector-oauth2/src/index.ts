@@ -66,7 +66,7 @@ const _getUserInfo = async (
     return { ...userProfileMapping(rawData, config.profileMap), rawData };
   } catch (error: unknown) {
     if (error instanceof HTTPError) {
-      throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(error.response.body));
+      throw new ConnectorError(ConnectorErrorCodes.General, await error.response.text());
     }
 
     throw error;

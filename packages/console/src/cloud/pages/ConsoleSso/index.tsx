@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -22,6 +22,7 @@ import pageLayout from '@/scss/page-layout.module.scss';
 import CreationModal from './CreationModal';
 import { getConsoleSsoDetailsPath } from './Details/paths';
 import DomainTags from './DomainTags';
+import { readPendingConnectorCreation } from './connector-creation-idempotency';
 import styles from './index.module.scss';
 import { useConsoleSsoConnectors } from './use-console-sso';
 
@@ -31,6 +32,11 @@ function ConsoleSso() {
   const { user, error: userError, reload } = useCurrentUser();
   const { data, error, isLoading, mutate } = useConsoleSsoConnectors();
   const [creationUserId, setCreationUserId] = useState<string>();
+  useEffect(() => {
+    if (user && !userError && readPendingConnectorCreation(user.id)) {
+      setCreationUserId(user.id);
+    }
+  }, [user, userError]);
   const addButton = (
     <Button
       title="cloud.console_sso.create"

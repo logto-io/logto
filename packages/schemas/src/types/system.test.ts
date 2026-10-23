@@ -27,6 +27,7 @@ describe('license system entries', () => {
       lastRefreshedAt: '2026-01-01T00:00:00.000Z',
       lastAttemptAt: '2026-01-02T00:00:00.000Z',
       refusalReason: 'canceled',
+      cloudNotices: [{ metric: 'productionDeployments', limit: 1, value: 2 }],
     };
 
     expect(systemGuards[LicenseKey.LicenseRefreshState].parse(state)).toEqual(state);
