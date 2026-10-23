@@ -113,6 +113,14 @@ const sign_in_exp = {
     csp_source_duplicate_error: 'Bu kaynak ifadesi zaten listede.',
   },
   account_center: {
+    recent_authentication: {
+      title: 'Son kimlik doğrulama',
+      description:
+        "Parola değiştirme veya 2 aşamalı doğrulamayı kapatma gibi hassas hesap işlemleri, Account Center'da ya da Account API'yi çağıran bir uygulamada yapılsın, yakın zamanda oturum açmayı gerektirir. Bu pencere, oturum açmanın ne kadar yeni olması gerektiğini tanımlar.",
+      maximum_authentication_age_in_minutes: 'Dakika cinsinden maksimum kimlik doğrulama yaşı',
+      maximum_authentication_age_in_minutes_tip:
+        'Bir oturum açmanın hassas işlemler için ne kadar süre yeterince yeni kaldığı. Bir istemci `max_age` parametresiyle daha kısa bir pencere isteyebilir.',
+    },
     title: 'HESAP MERKEZİ',
     description: "Hesap merkezi akışlarını Logto API'leriyle özelleştirin.",
     enable_account_api: "Hesap merkezi ve Account API'yi etkinleştir",

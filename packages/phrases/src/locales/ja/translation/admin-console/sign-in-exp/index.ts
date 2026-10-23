@@ -113,6 +113,14 @@ const sign_in_exp = {
     csp_source_duplicate_error: 'このソース式はすでに一覧に含まれています。',
   },
   account_center: {
+    recent_authentication: {
+      title: '最近の認証',
+      description:
+        'パスワードの変更や2段階認証の無効化など、機密性の高いアカウント操作では、Account Center でも Account API を呼び出すアプリでも、最近のサインインが必要です。この期間は、サインインがどれくらい最近である必要があるかを定義します。',
+      maximum_authentication_age_in_minutes: '最大認証経過時間（分）',
+      maximum_authentication_age_in_minutes_tip:
+        'サインインが機密性の高い操作に対して十分新しいとみなされる期間です。クライアントは `max_age` パラメーターでより短い期間を要求できます。',
+    },
     title: 'アカウントセンター',
     description: 'Logto API を使用してアカウントセンターのフローをカスタマイズします。',
     enable_account_api: 'アカウントセンターと Account API を有効化',

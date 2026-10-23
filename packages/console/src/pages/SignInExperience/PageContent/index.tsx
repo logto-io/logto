@@ -7,7 +7,6 @@ import {
 import classNames from 'classnames';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
@@ -16,8 +15,6 @@ import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import ReadOnlyFieldScope from '@/contexts/ReadOnlyFieldScope/ReadOnlyFieldScope';
 import ConfirmModal from '@/ds-components/ConfirmModal';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
-import useApi from '@/hooks/use-api';
-import useConfigs from '@/hooks/use-configs';
 import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
 import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
@@ -30,12 +27,9 @@ import usePreviewConfigs from '../hooks/use-preview-configs';
 import {
   SignInExperienceTab,
   convertAccountCenterToForm,
-  normalizeAccountCenterFieldsForSubmit,
   type SignInExperiencePageManagedData,
   type SignInExperienceForm,
-  type AccountCenterFormValues,
-  normalizeDeleteAccountUrl,
-  normalizeWebauthnRelatedOrigins,
+  type SignInExperiencePageForm,
 } from '../types';
 
 import AccountCenter from './AccountCenter';
@@ -45,6 +39,7 @@ import CollectUserProfile from './CollectUserProfile';
 import Content from './Content';
 import SignUpAndSignIn from './SignUpAndSignIn';
 import SignUpAndSignInChangePreview from './SignUpAndSignInChangePreview';
+import { useSaveSignInExperiencePage } from './hooks/use-save-sign-in-experience-page';
 import styles from './index.module.scss';
 import {
   getBrandingErrorCount,
@@ -69,11 +64,9 @@ function PageContent({ data, onSignInExperienceUpdated, onAccountCenterUpdated }
     access: { isReadOnly, isWriteAccessConfirmed },
   } = useCurrentTenantScopes();
   const { tab } = useParams();
-  const [isSaving, setIsSaving] = useState(false);
   const [isForgotPasswordMigrationNoticeVisible, setIsForgotPasswordMigrationNoticeVisible] =
     useState(false);
 
-  const { updateConfigs } = useConfigs();
   const { getPathname } = useTenantPathname();
   const { isUploading, cancelUpload } = useContext(SignInExperienceContext);
   const { isConnectorTypeEnabled, ready: isConnectorsReady } = useEnabledConnectorTypes();
@@ -81,88 +74,38 @@ function PageContent({ data, onSignInExperienceUpdated, onAccountCenterUpdated }
 
   const [dataToCompare, setDataToCompare] = useState<SignInExperiencePageManagedData>();
 
-  const methods = useForm<SignInExperienceForm & { accountCenter: AccountCenterFormValues }>({
+  const methods = useForm<SignInExperiencePageForm>({
     defaultValues: {
       ...sieFormDataParser.fromSignInExperience(data),
       accountCenter: convertAccountCenterToForm(data.accountCenter),
     },
   });
 
+  const handleSaved = useCallback(() => {
+    setDataToCompare(undefined);
+  }, []);
+
+  const { isSaving, saveData } = useSaveSignInExperiencePage({
+    data,
+    methods,
+    isHideLogtoBrandingAvailable,
+    isCustomUiCspEnabled,
+    onSignInExperienceUpdated,
+    onAccountCenterUpdated,
+    onSaved: handleSaved,
+  });
+
   const {
     reset,
     handleSubmit,
-    getValues,
     watch,
     formState: { isDirty, errors },
     setValue,
   } = methods;
-  const api = useApi();
   const formData = watch();
   const hasPasswordMethod = formData.signIn.methods.some((method) => method.password);
 
   const previewConfigs = usePreviewConfigs(formData, isDirty, data);
-
-  const saveData = useCallback(async () => {
-    setIsSaving(true);
-
-    try {
-      const { accountCenter, ...formValues } = getValues();
-      const webauthnRelatedOrigins = normalizeWebauthnRelatedOrigins(
-        accountCenter.webauthnRelatedOrigins
-      );
-      const deleteAccountUrl = normalizeDeleteAccountUrl(accountCenter.deleteAccountUrl);
-      const fields = accountCenter.enabled
-        ? normalizeAccountCenterFieldsForSubmit(accountCenter.fields, data.accountCenter.fields)
-        : {};
-
-      const updatedData = await api
-        .patch('api/sign-in-exp', {
-          json: sieFormDataParser.toSignInExperience(formValues, {
-            isHideLogtoBrandingAvailable,
-            isCustomUiCspEnabled,
-          }),
-        })
-        .json<SignInExperience>();
-
-      const updatedAccountCenter = await api
-        .patch('api/account-center', {
-          json: {
-            enabled: accountCenter.enabled,
-            // Disable all fields when account center is disabled
-            fields,
-            webauthnRelatedOrigins,
-            deleteAccountUrl,
-            customCss: accountCenter.customCss?.length ? accountCenter.customCss : null,
-            profileFields: accountCenter.profileFields,
-          },
-        })
-        .json<AccountCenterConfig>();
-
-      onAccountCenterUpdated(updatedAccountCenter);
-      reset({
-        ...sieFormDataParser.fromSignInExperience(updatedData),
-        accountCenter: convertAccountCenterToForm(updatedAccountCenter),
-      });
-
-      onSignInExperienceUpdated(updatedData);
-      setDataToCompare(undefined);
-      await updateConfigs({ signInExperienceCustomized: true });
-      toast.success(t('general.saved'));
-    } finally {
-      setIsSaving(false);
-    }
-  }, [
-    api,
-    data.accountCenter.fields,
-    getValues,
-    isCustomUiCspEnabled,
-    isHideLogtoBrandingAvailable,
-    onAccountCenterUpdated,
-    onSignInExperienceUpdated,
-    reset,
-    t,
-    updateConfigs,
-  ]);
 
   const onSubmit = useCallback(
     async (formData: SignInExperienceForm) => {
