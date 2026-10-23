@@ -7,7 +7,7 @@
     "@logto/connector-kit": "workspace:^",
     "@spruceid/siwe-parser": "^3.0.0",
     "viem": "^2.57.7",
-    "zod": "3.24.3"
+    "zod": "3.25.76"
   },
   "main": "./lib/index.js",
   "module": "./lib/index.js",
