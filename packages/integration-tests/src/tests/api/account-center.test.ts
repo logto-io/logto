@@ -47,6 +47,7 @@ describe('account center', () => {
 
   devFeatureDisabledTest.it('should not expose the recent-authentication window', async () => {
     const updatedAccountCenter = await updateAccountCenter({
+      enabled: true,
       maximumAuthenticationAgeInSeconds: 7200,
     });
 
