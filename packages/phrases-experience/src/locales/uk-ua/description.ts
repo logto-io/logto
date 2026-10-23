@@ -146,6 +146,7 @@ const description = {
     phone_verification_code: 'Код підтвердження телефоном',
     verification_code_description: 'Надіслати на {{target}}',
   },
+  select_wallet: 'Виберіть гаманець',
 };
 
 export default Object.freeze(description);

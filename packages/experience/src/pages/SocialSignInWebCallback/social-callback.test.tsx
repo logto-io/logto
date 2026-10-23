@@ -10,6 +10,8 @@ import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider
 import { mockSignInExperienceSettings } from '@/__mocks__/logto';
 import { socialConnectors } from '@/__mocks__/social-connectors';
 import {
+  abortInteraction,
+  getDirectSignIn,
   identifyAndSubmitInteraction,
   registerWithVerifiedIdentifier,
   verifySocialVerification,
@@ -36,6 +38,8 @@ jest.mock('@/apis/experience', () => ({
   identifyAndSubmitInteraction: jest.fn().mockResolvedValue({ redirectTo: `/sign-in` }),
   registerWithVerifiedIdentifier: jest.fn().mockResolvedValue({ redirectTo: `/sign-in` }),
   signInWithSso: jest.fn().mockResolvedValue({ redirectTo: `/sign-in` }),
+  getDirectSignIn: jest.fn().mockResolvedValue({}),
+  abortInteraction: jest.fn().mockResolvedValue({ redirectTo: '/client-callback' }),
 }));
 
 jest.mock('@/hooks/use-global-redirect-to', () => ({
@@ -60,6 +64,8 @@ const mockedIdentifyAndSubmitInteraction = identifyAndSubmitInteraction as jest.
 const mockedRegisterWithVerifiedIdentifier = registerWithVerifiedIdentifier as jest.MockedFunction<
   typeof registerWithVerifiedIdentifier
 >;
+const mockedGetDirectSignIn = getDirectSignIn as jest.MockedFunction<typeof getDirectSignIn>;
+const mockedAbortInteraction = abortInteraction as jest.MockedFunction<typeof abortInteraction>;
 
 const verificationIdsMap = {
   [VerificationType.Social]: 'foo',
@@ -89,6 +95,8 @@ describe('SocialCallbackPage — social sign-in', () => {
     mockedVerifySocialVerification.mockResolvedValue({ verificationId: 'foo' });
     mockedIdentifyAndSubmitInteraction.mockResolvedValue({ redirectTo: `/sign-in` });
     mockedRegisterWithVerifiedIdentifier.mockResolvedValue({ redirectTo: `/sign-in` });
+    mockedGetDirectSignIn.mockResolvedValue({});
+    mockedAbortInteraction.mockResolvedValue({ redirectTo: '/client-callback' });
   });
 
   describe('fallback', () => {
@@ -135,6 +143,26 @@ describe('SocialCallbackPage — social sign-in', () => {
 
       await waitFor(() => {
         expect(verifySocialVerification).toBeCalled();
+      });
+    });
+
+    it('continues with an already verified wallet identity without re-verifying', async () => {
+      mockUseSearchParameters.mockReturnValue([new URLSearchParams('siwe_callback=1'), jest.fn()]);
+
+      renderWithPageContext(
+        <SettingsProvider>
+          <UserInteractionContextProvider>
+            <Routes>
+              <Route path="/callback/social/:connectorId" element={<SocialCallback />} />
+            </Routes>
+          </UserInteractionContextProvider>
+        </SettingsProvider>,
+        { initialEntries: [`/callback/social/${connectorId}`] }
+      );
+
+      await waitFor(() => {
+        expect(verifySocialVerification).not.toBeCalled();
+        expect(identifyAndSubmitInteraction).toBeCalledWith({ verificationId: 'foo' });
       });
     });
 
@@ -211,6 +239,44 @@ describe('SocialCallbackPage — social sign-in', () => {
 
       await waitFor(() => {
         expect(getByText('Sign in page')).not.toBeNull();
+      });
+    });
+  });
+
+  describe('direct sign-in abort', () => {
+    const connectorId = socialConnectors[0]!.id;
+
+    it('should abort back to the client when the social callback fails', async () => {
+      const state = generateState();
+      storeState(state, connectorId);
+      mockedGetDirectSignIn.mockResolvedValueOnce({ directSignIn: 'social:mock-social' });
+      mockedVerifySocialVerification.mockRejectedValueOnce(
+        createRequestError({
+          code: 'connector.general',
+          message: 'Connector error.',
+          data: undefined,
+        })
+      );
+
+      mockUseSearchParameters.mockReturnValue([
+        new URLSearchParams(`state=${state}&code=foo`),
+        jest.fn(),
+      ]);
+
+      renderWithPageContext(
+        <SettingsProvider>
+          <UserInteractionContextProvider>
+            <Routes>
+              <Route path="/callback/social/:connectorId" element={<SocialCallback />} />
+            </Routes>
+          </UserInteractionContextProvider>
+        </SettingsProvider>,
+        { initialEntries: [`/callback/social/${connectorId}`] }
+      );
+
+      await waitFor(() => {
+        expect(mockedAbortInteraction).toHaveBeenCalledWith('connector.general');
+        expect(mockRedirectTo).toHaveBeenCalledWith('/client-callback');
       });
     });
   });

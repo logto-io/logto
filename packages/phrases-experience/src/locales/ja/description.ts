@@ -140,6 +140,7 @@ const description = {
     phone_verification_code: '電話認証コード',
     verification_code_description: '{{target}}に送信',
   },
+  select_wallet: 'ウォレットを選択',
 };
 
 export default Object.freeze(description);

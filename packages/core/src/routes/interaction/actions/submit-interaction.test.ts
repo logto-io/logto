@@ -407,6 +407,43 @@ describe('submit action', () => {
     });
   });
 
+  it('sign-in with mfaSkipped keeps the admin-managed MFA requirement', async () => {
+    getLogtoConnectorById.mockResolvedValueOnce({
+      metadata: { target: 'logto' },
+      dbEntry: { syncProfile: false },
+    });
+    userQueries.findUserById.mockResolvedValueOnce({
+      identities: { google: { userId: 'googleId', details: {} } },
+      mfaVerifications: [],
+      logtoConfig: { [userMfaDataKey]: { required: true } },
+    });
+    const interaction: VerifiedSignInInteractionResult = {
+      event: InteractionEvent.SignIn,
+      accountId: 'foo',
+      profile: { connectorId: 'logto', password: 'password' },
+      identifiers,
+      mfaSkipped: true,
+    };
+
+    await submitInteraction(interaction, ctx, tenant);
+
+    expect(updateUserById).toBeCalledWith('foo', {
+      passwordEncrypted: 'passwordEncrypted',
+      passwordEncryptionMethod: 'plain',
+      identities: {
+        logto: { userId: userInfo.id, details: userInfo },
+        google: { userId: 'googleId', details: {} },
+      },
+      lastSignInAt: now,
+      logtoConfig: {
+        [userMfaDataKey]: {
+          required: true,
+          skipped: true,
+        },
+      },
+    });
+  });
+
   it('sign-in and sync new Social', async () => {
     getLogtoConnectorById.mockResolvedValueOnce({
       metadata: { target: 'logto' },

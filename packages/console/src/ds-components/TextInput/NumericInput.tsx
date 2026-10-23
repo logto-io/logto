@@ -22,10 +22,15 @@ function Button({ className, onTrigger, children, isDisabled }: ButtonProps) {
   return (
     <div
       role="button"
-      tabIndex={0}
+      tabIndex={isDisabled ? -1 : 0}
       className={classNames(styles.button, isDisabled && styles.disabled, className)}
       aria-disabled={isDisabled}
-      onKeyDown={onKeyDownHandler(onTrigger)}
+      onKeyDown={onKeyDownHandler((event) => {
+        if (isDisabled) {
+          return;
+        }
+        onTrigger?.(event);
+      })}
       onClick={(event) => {
         event.preventDefault();
         if (isDisabled) {

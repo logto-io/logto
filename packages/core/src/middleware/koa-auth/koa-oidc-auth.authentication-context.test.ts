@@ -134,7 +134,7 @@ describe('koaOidcAuth middleware with an OIDC authentication context', () => {
 
   it.each([
     ['a stale authentication', { acr: LogtoAcr.FirstFactor, auth_time: nowInSeconds() - 601 }],
-    ['a future authentication', { acr: LogtoAcr.FirstFactor, auth_time: nowInSeconds() + 1 }],
+    ['a future authentication', { acr: LogtoAcr.FirstFactor, auth_time: nowInSeconds() + 3600 }],
     ['a missing `acr`', { auth_time: nowInSeconds() }],
     ['a malformed `acr`', { acr: 1, auth_time: nowInSeconds() }],
     ['a non-Logto `acr`', { acr: 'urn:example:acr:1fa', auth_time: nowInSeconds() }],

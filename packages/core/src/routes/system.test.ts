@@ -1,4 +1,12 @@
-import { LicenseEnv, LicenseKey, ossDefaultQuota, ReservedPlanId } from '@logto/schemas';
+import {
+  LicenseEnv,
+  LicenseKey,
+  LicenseUsageMetric,
+  ossDefaultQuota,
+  ReservedPlanId,
+  type LicenseUsage,
+  type LicenseUsageStatement,
+} from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import { type JWK, importJWK } from 'jose';
 
@@ -33,6 +41,28 @@ const findSystemByKey = jest.fn(async (_key: string): Promise<unknown> => null);
 const upsertSystem = jest.fn(async (key: string, value: unknown) => ({ key, value }));
 mockEsm('#src/queries/system.js', () => ({
   createSystemsQuery: () => ({ findSystemByKey, upsertSystem }),
+}));
+
+/**
+ * Usage is collected from the shared pool, which unit tests cannot reach. Imported before it is
+ * mocked, so the evaluation keeps its real implementation.
+ */
+const actualUsage = await import('#src/license/usage.js');
+const usage = {
+  month: '2026-10',
+  mau: { lastMonth: 60_000, monthToDate: 1000 },
+  monthlyAccessTokens: { lastMonth: 9000, monthToDate: 3000 },
+  tenants: 2,
+} satisfies LicenseUsage;
+const statement = {
+  months: [{ month: '2026-09', mau: 60_000, monthlyAccessTokens: 9000 }],
+} satisfies LicenseUsageStatement;
+const collectLicenseUsage = jest.fn(async (): Promise<LicenseUsage | undefined> => usage);
+const getLicenseUsageStatement = jest.fn(async () => statement);
+mockEsm('#src/license/usage.js', () => ({
+  ...actualUsage,
+  collectLicenseUsage,
+  getLicenseUsageStatement,
 }));
 
 /**
@@ -240,5 +270,143 @@ describe('system license route', () => {
     expect(getResponse.status).toEqual(501);
     expect(putResponse.status).toEqual(501);
     expect(upsertSystem).not.toHaveBeenCalled();
+  });
+});
+
+describe('system license usage', () => {
+  const { isLicenseUsageReportingDisabled } = EnvSet.values;
+
+  // The usage fields and the statement route are still in development.
+  Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+  const systemRequest = createRequester(requesterOptions);
+  Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+  const releasedSystemRequest = createRequester(requesterOptions);
+
+  const productionDeploymentsNotice = {
+    metric: LicenseUsageMetric.ProductionDeployments,
+    limit: 1,
+    value: 2,
+  };
+
+  /** Install a key and the notices of its last refresh into the mocked `systems` rows. */
+  const installWithNotices = async () => {
+    const payload = buildLicensePayload({
+      usageLimits: { mau: 50_000, productionDeployments: 1 },
+    });
+    const jwt = await signLicenseKey(payload, keyPair.privateKey);
+    const lastRefreshedAt = new Date().toISOString();
+
+    findSystemByKey.mockImplementation(async (key) => {
+      if (key === LicenseKey.License) {
+        return { value: { jwt, installedAt } };
+      }
+      if (key === LicenseKey.LicenseRefreshState) {
+        return {
+          value: {
+            lastRefreshedAt,
+            lastAttemptAt: lastRefreshedAt,
+            cloudNotices: [productionDeploymentsNotice],
+          },
+        };
+      }
+      return null;
+    });
+    LicenseReader.shared.invalidate();
+  };
+
+  beforeEach(() => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+  });
+
+  afterEach(() => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+    Reflect.set(EnvSet.values, 'isLicenseUsageReportingDisabled', isLicenseUsageReportingDisabled);
+    jest.clearAllMocks();
+    findSystemByKey.mockReset();
+    findSystemByKey.mockResolvedValue(null);
+    LicenseReader.shared.invalidate();
+  });
+
+  it('GET /systems/license should return the usage, its limits and the warnings', async () => {
+    await installWithNotices();
+
+    const response = await systemRequest.get('/systems/license');
+
+    expect(response.status).toEqual(200);
+    expect(response.body).toMatchObject({
+      usageLimits: { mau: 50_000, productionDeployments: 1 },
+      usage,
+      usageWarnings: [
+        { metric: LicenseUsageMetric.Mau, limit: 50_000, value: 60_000 },
+        productionDeploymentsNotice,
+      ],
+      usageReportingEnabled: true,
+    });
+  });
+
+  it('GET /systems/license should still warn when reporting is disabled', async () => {
+    await installWithNotices();
+    Reflect.set(EnvSet.values, 'isLicenseUsageReportingDisabled', true);
+
+    const response = await systemRequest.get('/systems/license');
+
+    expect(response.body).toMatchObject({
+      usageWarnings: [
+        { metric: LicenseUsageMetric.Mau, limit: 50_000, value: 60_000 },
+        productionDeploymentsNotice,
+      ],
+      usageReportingEnabled: false,
+    });
+  });
+
+  it('GET /systems/license should keep the notices when usage cannot be collected', async () => {
+    await installWithNotices();
+    // eslint-disable-next-line unicorn/no-useless-undefined -- a failed collection answers `undefined`
+    collectLicenseUsage.mockResolvedValueOnce(undefined);
+
+    const response = await systemRequest.get('/systems/license');
+
+    expect(response.status).toEqual(200);
+    expect(response.body).not.toHaveProperty('usage');
+    expect(response.body.usageWarnings).toEqual([productionDeploymentsNotice]);
+  });
+
+  it('GET /systems/license should leave the usage out without dev features', async () => {
+    await installWithNotices();
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+
+    const response = await releasedSystemRequest.get('/systems/license');
+
+    expect(response.status).toEqual(200);
+    for (const field of ['usageLimits', 'usage', 'usageWarnings', 'usageReportingEnabled']) {
+      expect(response.body).not.toHaveProperty(field);
+    }
+  });
+
+  it('GET /systems/license/usage-statement should return the statement', async () => {
+    await installWithNotices();
+
+    const response = await systemRequest.get('/systems/license/usage-statement');
+
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual(statement);
+  });
+
+  it('GET /systems/license/usage-statement should require an installed license', async () => {
+    const response = await systemRequest.get('/systems/license/usage-statement');
+
+    expect(response.status).toEqual(404);
+    expect(response.body).toMatchObject({ code: 'license.not_installed' });
+    expect(getLicenseUsageStatement).not.toHaveBeenCalled();
+  });
+
+  it('GET /systems/license/usage-statement should not exist without dev features', async () => {
+    await installWithNotices();
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+
+    const response = await releasedSystemRequest.get('/systems/license/usage-statement');
+
+    expect(response.status).toEqual(404);
+    expect(getLicenseUsageStatement).not.toHaveBeenCalled();
   });
 });

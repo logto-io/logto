@@ -72,6 +72,9 @@ const user_details = {
   },
   mfa: {
     field_name: 'Wieloetapowa autoryzacja',
+    require_mfa: 'Wymagaj konfiguracji MFA',
+    require_mfa_description:
+      'Ten użytkownik musi skonfigurować co najmniej jeden czynnik MFA przed ukończeniem logowania. Nie może pominąć konfiguracji.',
     field_description: 'Ten użytkownik włączył autoryzację dwuetapową.',
     name_column: 'Wieloetapowa autoryzacja',
     field_description_empty: 'Ten użytkownik nie włączył autoryzacji dwuetapowej.',
@@ -95,6 +98,11 @@ const user_details = {
     'Czy na pewno chcesz aktywować tego użytkownika? Umożliwi to wszystkie próby logowania dla tego użytkownika.',
   reactivate_action: 'Aktywuj',
   user_reactivated: 'Użytkownik został aktywowany.',
+  unlock_user: 'Odblokuj użytkownika',
+  unlock_user_reminder:
+    'Czy na pewno chcesz odblokować tego użytkownika? Spowoduje to usunięcie wszystkich blokad powstałych w wyniku nieudanych prób logowania i weryfikacji bezpieczeństwa. Odblokuj ręcznie tylko wtedy, gdy potwierdzisz tożsamość użytkownika i upewnisz się, że nie miały miejsca nieautoryzowane próby dostępu.',
+  unlock_action: 'Odblokuj',
+  user_unlocked: 'Użytkownik został odblokowany.',
   roles: {
     name_column: 'Rola użytkownika',
     description_column: 'Opis',

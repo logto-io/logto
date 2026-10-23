@@ -14,6 +14,7 @@ import {
   defaultTenantId,
   getTenantOrganizationId,
   getTenantRole,
+  userLogtoConfigGuard,
   userMfaDataKey,
   userOnboardingDataKey,
 } from '@logto/schemas';
@@ -243,7 +244,10 @@ async function handleSubmitSignIn(
       mfaSkipped && {
         logtoConfig: {
           ...user.logtoConfig,
+          // Merge instead of replacing, so admin-managed MFA data such as `required` is not
+          // cleared by the legacy flow, which does not understand those fields.
           [userMfaDataKey]: {
+            ...userLogtoConfigGuard.safeParse(user.logtoConfig).data?.[userMfaDataKey],
             skipped: true,
           },
         },

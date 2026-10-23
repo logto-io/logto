@@ -1,6 +1,7 @@
 import { yes } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { tokenResponseScopeGuard } from '@logto/connector-kit';
 import { oauth2ConfigGuard } from '@logto/connector-oauth';
 
 const scopeOpenid = 'openid';
@@ -124,9 +125,9 @@ export const accessTokenResponseGuard = z.object({
   id_token: z.string(),
   access_token: z.string().optional(),
   token_type: z.string().optional(),
-  expires_in: z.number().optional(),
+  expires_in: z.number().or(z.string()).optional(),
   refresh_token: z.string().optional(),
-  scope: z.string().optional(),
+  scope: tokenResponseScopeGuard.optional(),
   code: z.string().optional(),
 });
 

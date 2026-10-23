@@ -5,6 +5,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import { type UserConditions } from '#src/queries/user.js';
+import assertThat from '#src/utils/assert-that.js';
 import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
 import {
@@ -60,6 +61,101 @@ const getIdentityCondition = (searchParams: URLSearchParams): UserConditions['id
   return { type, provider, identityId };
 };
 
+const customDataSearchHint =
+  'Parameter `customData` must be a URL-encoded JSON object, e.g. `customData={"customId":114514}`. Nested parameters such as `customData.customId`, `customData[customId]`, and `mode.customData` are not supported.';
+
+const maxCustomDataSearchValues = 20;
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value);
+
+const isFieldAccessor = (key: string, field: string) =>
+  key === field || key.startsWith(`${field}.`) || key.startsWith(`${field}[`);
+
+const isNestedCustomDataParameter = (key: string) =>
+  (key !== 'customData' && isFieldAccessor(key, 'customData')) ||
+  isFieldAccessor(key, 'mode.customData') ||
+  isFieldAccessor(key, 'search.customData');
+
+const hasEmptyContainer = (value: unknown): boolean => {
+  if (Array.isArray(value)) {
+    return value.length === 0 || value.some((item) => hasEmptyContainer(item));
+  }
+
+  if (isRecord(value)) {
+    const values = Object.values(value);
+
+    return values.length === 0 || values.some((item) => hasEmptyContainer(item));
+  }
+
+  return false;
+};
+
+const parseJson = (value: string): unknown => {
+  try {
+    return JSON.parse(value);
+  } catch {
+    throw new TypeError(`Parameter \`customData\` must be valid JSON. ${customDataSearchHint}`);
+  }
+};
+
+const parseCustomDataParameter = (value: string): string => {
+  const parsed = parseJson(value);
+
+  assertThat(
+    isRecord(parsed),
+    new TypeError(`Parameter \`customData\` must be a JSON object. ${customDataSearchHint}`)
+  );
+  assertThat(
+    Object.keys(parsed).length > 0,
+    new TypeError(
+      `Parameter \`customData\` must be a non-empty JSON object. ${customDataSearchHint}`
+    )
+  );
+  assertThat(
+    !hasEmptyContainer(parsed),
+    new TypeError(
+      `Parameter \`customData\` must not contain empty objects or arrays. ${customDataSearchHint}`
+    )
+  );
+
+  // Return the original JSON text instead of re-serializing the parsed value, so numbers that
+  // exceed the safe integer range keep their precision.
+  return value;
+};
+
+/**
+ * Parse the repeatable `customData` query parameter. Every value is a raw JSON object string used
+ * for JSONB containment (`@>`); values are combined with OR, and the whole condition is combined
+ * with all other user filters using AND.
+ *
+ * The number of values is capped because each one adds another containment check to every scanned
+ * user row, and the count and the list queries both scan the tenant.
+ */
+const parseCustomDataSearchParams = (searchParams: URLSearchParams) => {
+  for (const key of searchParams.keys()) {
+    assertThat(
+      !isNestedCustomDataParameter(key),
+      new TypeError(`Nested \`customData\` parameters are not supported. ${customDataSearchHint}`)
+    );
+  }
+
+  const values = searchParams.getAll('customData');
+
+  if (values.length === 0) {
+    return;
+  }
+
+  assertThat(
+    values.length <= maxCustomDataSearchValues,
+    new TypeError(
+      `Parameter \`customData\` can be repeated at most ${maxCustomDataSearchValues} times. ${customDataSearchHint}`
+    )
+  );
+
+  return values.map((value) => parseCustomDataParameter(value));
+};
+
 export default function adminUserSearchRoutes<T extends ManagementApiRouter>(
   ...[router, { queries }]: RouterInitArgs<T>
 ) {
@@ -92,10 +188,15 @@ export default function adminUserSearchRoutes<T extends ManagementApiRouter>(
             });
           }
 
+          // Parse custom data first so that nested syntax like `mode.customData` gets the custom
+          // data hint instead of a generic search mode error.
+          const customDataSearchValues = parseCustomDataSearchParams(searchParams);
+
           const conditions: UserConditions = {
             search: parseSearchParamsForSearch(searchParams),
             identity: getIdentityCondition(searchParams),
             relation: getQueryRelation(excludeRoleId, excludeOrganizationId),
+            customData: customDataSearchValues,
           };
 
           const [{ count }, users] = await Promise.all([

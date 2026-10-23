@@ -85,7 +85,7 @@ function Invitations() {
 
   const handleDelete = async (invitationId: string) => {
     const [result] = await show({
-      ModalContent: t('delete_user_confirm'),
+      ModalContent: t('delete_invitation_confirm'),
       confirmButtonText: 'general.delete',
     });
 

@@ -18,6 +18,10 @@ export type BaseConnector<Type extends ConnectorType> = {
   configGuard: ZodType;
 };
 
+/**
+ * Asserts that a zod object guard covers every key of `T` and parses each into `T[K]`. Only the
+ * output is constrained, so a field guard may normalize its input (e.g. via `z.preprocess`).
+ */
 export type ToZodObject<T> = z.ZodObject<{
-  [K in keyof T]-?: z.ZodType<T[K]>;
+  [K in keyof T]-?: z.ZodType<T[K], z.ZodTypeDef, unknown>;
 }>;

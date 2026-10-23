@@ -258,7 +258,8 @@
   }
 }
 
-.plain.disabled {
+.plain.disabled,
+.plain.readOnly {
   color: var(--color-text);
 
   .content {
@@ -269,6 +270,15 @@
         background: var(--color-bg-state-unselected);
         border-color: var(--color-bg-state-unselected);
       }
+    }
+  }
+
+  &.checked .content .indicator {
+    border-color: var(--color-specific-selected-disabled);
+
+    &::before {
+      background: var(--color-specific-selected-disabled);
+      border-color: var(--color-layer-1);
     }
   }
 }
@@ -297,7 +307,7 @@
   }
 }
 
-// A read-only radio keeps its checked style but offers no interaction.
+// A read-only radio offers no interaction.
 .radio.readOnly {
   cursor: default;
 }

@@ -21,7 +21,6 @@ import {
   signInWithSocialAndGetUserApi,
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
-import { devFeatureTest } from '#src/utils.js';
 
 type TestUser = Readonly<{
   user: User;
@@ -44,7 +43,7 @@ const createTestUser = async (
   return { user, api, verificationRecordId };
 };
 
-devFeatureTest.describe('account personal access tokens', () => {
+describe('account personal access tokens', () => {
   /* eslint-disable @silverhand/fp/no-let -- Integration setup resources are initialized in hooks. */
   let pool: DatabasePool;
   let owner: TestUser;

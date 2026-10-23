@@ -49,6 +49,14 @@ const error = {
     'Você não tem permissão para acessar este aplicativo.\nEntre em contato com seu administrador para obter ajuda.',
   feature_not_enabled:
     'Você não tem permissão para acessar esse recurso. Entre em contato com seu administrador para obter ajuda.',
+  wallet_not_found:
+    'Nenhuma carteira Ethereum detectada. Instale uma extensão de carteira no navegador e tente novamente.',
+  wallet_not_supported:
+    'O login com carteira só é compatível com um navegador que tenha uma extensão de carteira instalada.',
+  wallet_request_rejected: 'A solicitação da carteira foi rejeitada. Tente novamente.',
+  wallet_unsupported_chain:
+    'Sua carteira está conectada a uma rede não compatível. Troque de rede e tente novamente.',
+  wallet_signature_invalid: 'A assinatura da carteira é inválida ou expirou. Tente novamente.',
 };
 
 export default Object.freeze(error);

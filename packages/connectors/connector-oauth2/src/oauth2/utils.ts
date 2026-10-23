@@ -73,7 +73,7 @@ export const requestTokenEndpoint = async ({
       });
     } catch (error: unknown) {
       if (error instanceof HTTPError) {
-        throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(error.response.body));
+        throw new ConnectorError(ConnectorErrorCodes.General, await error.response.text());
       }
 
       throw error;
