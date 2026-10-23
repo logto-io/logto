@@ -8,4 +8,5 @@ export const experienceRoutes = Object.freeze({
   profile: `${prefix}/profile`,
   mfa: `${prefix}/profile/mfa`,
   abort: `${prefix}/abort`,
+  directSignIn: `${prefix}/interaction/direct-sign-in`,
 });

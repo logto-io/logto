@@ -4,10 +4,16 @@ import {
   ConnectorPlatform,
   type ExperienceSocialConnector,
 } from '@logto/schemas';
-import { act, renderHook } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
+import { type ReactNode } from 'react';
+import { MemoryRouter } from 'react-router-dom';
 
+import PageContextProvider from '@/Providers/PageContextProvider';
 import useWalletModal from '@/Providers/WalletModalProvider/use-wallet-modal';
+import { socialConnectors } from '@/__mocks__/logto';
 import {
+  abortInteraction,
+  getDirectSignIn,
   getSocialAuthorizationUrl,
   identifyUser,
   verifySocialVerification,
@@ -30,6 +36,8 @@ import {
 import useSocial from './use-social';
 
 jest.mock('@/apis/experience', () => ({
+  abortInteraction: jest.fn(),
+  getDirectSignIn: jest.fn(),
   getSocialAuthorizationUrl: jest.fn(),
   identifyUser: jest.fn(),
   initInteraction: jest.fn(),
@@ -94,6 +102,8 @@ jest.mock('@/utils/wallet/evm', () => {
   };
 });
 
+const mockAbortInteraction = abortInteraction as jest.MockedFunction<typeof abortInteraction>;
+const mockGetDirectSignIn = getDirectSignIn as jest.MockedFunction<typeof getDirectSignIn>;
 const mockGetSocialAuthorizationUrl = getSocialAuthorizationUrl as jest.MockedFunction<
   typeof getSocialAuthorizationUrl
 >;
@@ -253,5 +263,89 @@ describe('useSocial wallet sign-in', () => {
 
     expect(setToast).toHaveBeenCalledWith('error.wallet_request_rejected');
     expect(mockVerifySocialVerification).not.toHaveBeenCalled();
+  });
+});
+
+const socialConnector = socialConnectors[0]!;
+
+const wrapper = ({ children }: { readonly children: ReactNode }) => (
+  <MemoryRouter>
+    <PageContextProvider>{children}</PageContextProvider>
+  </MemoryRouter>
+);
+
+describe('useSocial direct sign-in', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    mockUseStepUpContext.mockReturnValue({
+      isPureStepUp: false,
+      refetch: refetchStepUp,
+    } as never);
+    mockUseTerms.mockReturnValue({
+      termsValidation: jest.fn(async () => true),
+      agreeToTermsPolicy: AgreeToTermsPolicy.Automatic,
+    } as never);
+    mockUseToast.mockReturnValue({ setToast } as never);
+    mockUseNavigate.mockReturnValue(navigate);
+    mockUseErrorHandler.mockReturnValue(handleError as never);
+    mockUseGlobalRedirectTo.mockReturnValue(redirectTo as never);
+    mockUseWalletModal.mockReturnValue({ show: showWalletModal });
+
+    mockGetDirectSignIn.mockResolvedValue({});
+    mockAbortInteraction.mockResolvedValue({ redirectTo: 'https://client.example.com/callback' });
+  });
+
+  it('should abort a direct sign-in when the authorization URL request fails', async () => {
+    mockGetSocialAuthorizationUrl.mockRejectedValueOnce(new Error('connector error'));
+    mockGetDirectSignIn.mockResolvedValueOnce({ directSignIn: 'social:google' });
+
+    const { result } = renderHook(() => useSocial(), { wrapper });
+
+    await act(async () => {
+      await result.current.invokeSocialSignIn(socialConnector);
+    });
+
+    await waitFor(() => {
+      expect(mockAbortInteraction).toHaveBeenCalled();
+      expect(redirectTo).toHaveBeenCalledWith('https://client.example.com/callback');
+    });
+    expect(handleError).not.toHaveBeenCalled();
+  });
+
+  it('should abort a direct sign-in when the user declines the terms', async () => {
+    mockUseTerms.mockReturnValueOnce({
+      termsValidation: jest.fn(async () => false),
+      agreeToTermsPolicy: AgreeToTermsPolicy.Manual,
+    } as never);
+    mockGetDirectSignIn.mockResolvedValueOnce({ directSignIn: 'social:google' });
+
+    const { result } = renderHook(() => useSocial(), { wrapper });
+
+    await act(async () => {
+      await result.current.invokeSocialSignIn(socialConnector);
+    });
+
+    await waitFor(() => {
+      expect(mockAbortInteraction).toHaveBeenCalled();
+      expect(redirectTo).toHaveBeenCalledWith('https://client.example.com/callback');
+    });
+    expect(mockGetSocialAuthorizationUrl).not.toHaveBeenCalled();
+    expect(handleError).not.toHaveBeenCalled();
+  });
+
+  it('should keep the regular error handling for a hosted sign-in', async () => {
+    mockGetSocialAuthorizationUrl.mockRejectedValueOnce(new Error('connector error'));
+
+    const { result } = renderHook(() => useSocial(), { wrapper });
+
+    await act(async () => {
+      await result.current.invokeSocialSignIn(socialConnector);
+    });
+
+    await waitFor(() => {
+      expect(handleError).toHaveBeenCalled();
+    });
+    expect(mockAbortInteraction).not.toHaveBeenCalled();
   });
 });
