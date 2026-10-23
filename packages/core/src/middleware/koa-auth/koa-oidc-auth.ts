@@ -75,13 +75,14 @@ const getVerificationRecordResultById = async ({
 
 /**
  * Evaluate the OIDC authentication-context branch of `identityVerified`: the access token must
- * carry a Logto authentication context that satisfies the Account API policy, and must have been
- * issued to a first-party application.
+ * carry a Logto authentication context that satisfies the Account API policy under the tenant's
+ * freshness window, and must have been issued to a first-party application.
  *
  * The caller's application is resolved here as well, even when the token's own context is already
  * insufficient: it decides whether the RFC 9470 challenge that the sensitive routes answer with
- * can help. The sensitive routes still call `assertFirstPartyClient`, which resolves the
- * application independently.
+ * can help, and recording it keeps those routes from looking the application up again. A
+ * third-party token never reads the tenant policy, because no context would let it operate on the
+ * account here.
  */
 const getOidcIdentityVerification = async ({
   extra,
@@ -91,13 +92,28 @@ const getOidcIdentityVerification = async ({
   extra: unknown;
   queries: Queries;
   clientId?: string;
-}): Promise<{ identityVerified: boolean; isFirstPartyClient: boolean }> => {
-  // The policy check reads only the token's own claims; the application check always runs, since
-  // the challenge decision needs to know whether the caller is first-party.
-  const satisfiesPolicy = satisfiesAuthenticationContextPolicy(extra);
+}): Promise<{
+  identityVerified: boolean;
+  isFirstPartyClient: boolean;
+  maximumAuthenticationAgeInSeconds?: number;
+}> => {
   const isFirstParty = await isFirstPartyClient(queries, clientId);
 
-  return { identityVerified: satisfiesPolicy && isFirstParty, isFirstPartyClient: isFirstParty };
+  if (!isFirstParty) {
+    return { identityVerified: false, isFirstPartyClient: false };
+  }
+
+  const maximumAuthenticationAgeInSeconds =
+    await queries.accountCenters.getMaximumAuthenticationAgeInSeconds();
+
+  return {
+    identityVerified: satisfiesAuthenticationContextPolicy(
+      extra,
+      maximumAuthenticationAgeInSeconds
+    ),
+    isFirstPartyClient: true,
+    maximumAuthenticationAgeInSeconds,
+  };
 };
 
 /**
@@ -151,6 +167,7 @@ export default function koaOidcAuth<StateT, ContextT extends IRouterParamContext
       identityVerified: oidcIdentityVerified || legacyIdentityVerified,
       sessionUid,
       isFirstPartyClient: oidcVerification?.isFirstPartyClient,
+      maximumAuthenticationAgeInSeconds: oidcVerification?.maximumAuthenticationAgeInSeconds,
     };
 
     return next();

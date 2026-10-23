@@ -1,11 +1,13 @@
 import {
   accountCenterProfileFieldsGuard,
   deleteAccountUrlGuard,
+  maximumAuthenticationAgeInSecondsGuard,
   webauthnRelatedOriginsGuard,
 } from '@logto/schemas';
 import { deduplicate } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
@@ -43,6 +45,7 @@ export default function accountCentersRoutes<T extends ManagementApiRouter>(
         deleteAccountUrl: deleteAccountUrlGuard.nullable().optional(),
         customCss: z.string().nullish(),
         profileFields: accountCenterProfileFieldsGuard.nullable().optional(),
+        maximumAuthenticationAgeInSeconds: maximumAuthenticationAgeInSecondsGuard.optional(),
       }),
       response: accountCenterApiGuard,
       status: [200, 400],
@@ -56,6 +59,7 @@ export default function accountCentersRoutes<T extends ManagementApiRouter>(
         deleteAccountUrl,
         customCss,
         profileFields,
+        maximumAuthenticationAgeInSeconds,
       } = ctx.guard.body;
       const normalizedDeleteAccountUrl = deleteAccountUrl === '' ? null : deleteAccountUrl;
       const normalizedProfileFields = await normalizeProfileFields(profileFields);
@@ -70,6 +74,11 @@ export default function accountCentersRoutes<T extends ManagementApiRouter>(
           : undefined,
         deleteAccountUrl: normalizedDeleteAccountUrl,
         customCss,
+        // DEV: OIDC step-up authentication. Nothing enforces the window until the feature is
+        // released, so a value saved now would have no effect.
+        maximumAuthenticationAgeInSeconds: EnvSet.values.isDevFeaturesEnabled
+          ? maximumAuthenticationAgeInSeconds
+          : undefined,
         ...(normalizedProfileFields !== undefined && {
           profileFields: normalizedProfileFields,
         }),

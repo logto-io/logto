@@ -1,3 +1,4 @@
+export * from './account-center.js';
 export * from './connector.js';
 export * from './log/index.js';
 export * from './oidc-config.js';

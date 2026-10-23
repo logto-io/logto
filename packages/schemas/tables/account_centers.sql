@@ -13,5 +13,7 @@ create table account_centers (
   custom_css text,
   /** Ordered list of custom profile fields to show in the prebuilt account center */
   profile_fields jsonb /* @use AccountCenterProfileFields */,
+  /** How recent a user's authentication must be for the Account API to allow sensitive operations */
+  maximum_authentication_age_in_seconds integer not null default 600,
   primary key (tenant_id, id)
 );

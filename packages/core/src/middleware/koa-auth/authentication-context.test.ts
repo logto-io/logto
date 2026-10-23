@@ -1,10 +1,9 @@
-import { LogtoAcr } from '@logto/schemas';
+import { LogtoAcr, defaultMaximumAuthenticationAgeInSeconds } from '@logto/schemas';
 
 import {
   buildInsufficientUserAuthenticationChallenge,
   escapeQuotedString,
   isAuthenticationContextFresh,
-  maximumAuthenticationAgeInSeconds,
   satisfiesAuthenticationContextPolicy,
 } from './authentication-context.js';
 
@@ -20,38 +19,98 @@ const buildExtra = (overrides: Record<string, unknown> = {}) => ({
 describe('isAuthenticationContextFresh()', () => {
   it.each([
     ['a just-completed authentication', 0],
-    ['an authentication at the end of the window', maximumAuthenticationAgeInSeconds],
+    [
+      'an authentication at the end of the default window',
+      defaultMaximumAuthenticationAgeInSeconds,
+    ],
   ])('should accept %s', (_, ageInSeconds) => {
-    expect(isAuthenticationContextFresh(nowInSeconds - ageInSeconds, now)).toBe(true);
+    expect(
+      isAuthenticationContextFresh(
+        nowInSeconds - ageInSeconds,
+        defaultMaximumAuthenticationAgeInSeconds,
+        now
+      )
+    ).toBe(true);
   });
 
-  it('should reject an authentication one second past the window', () => {
+  it('should reject an authentication one second past the default window', () => {
     expect(
-      isAuthenticationContextFresh(nowInSeconds - maximumAuthenticationAgeInSeconds - 1, now)
+      isAuthenticationContextFresh(
+        nowInSeconds - defaultMaximumAuthenticationAgeInSeconds - 1,
+        defaultMaximumAuthenticationAgeInSeconds,
+        now
+      )
     ).toBe(false);
   });
 
+  it.each([
+    ['the shortest tenant window', 60, 60, true],
+    ['the shortest tenant window, one second late', 61, 60, false],
+    ['a two-hour tenant window', 7200, 7200, true],
+    ['a two-hour tenant window, one second late', 7201, 7200, false],
+  ])(
+    'should apply %s to the boundary',
+    (_, ageInSeconds, maximumAuthenticationAgeInSeconds, expected) => {
+      expect(
+        isAuthenticationContextFresh(
+          nowInSeconds - ageInSeconds,
+          maximumAuthenticationAgeInSeconds,
+          now
+        )
+      ).toBe(expected);
+    }
+  );
+
   it('should reject a timestamp in the future', () => {
-    expect(isAuthenticationContextFresh(nowInSeconds + 1, now)).toBe(false);
+    expect(
+      isAuthenticationContextFresh(nowInSeconds + 1, defaultMaximumAuthenticationAgeInSeconds, now)
+    ).toBe(false);
   });
 });
 
 describe('satisfiesAuthenticationContextPolicy()', () => {
+  const maximumAuthenticationAgeInSeconds = defaultMaximumAuthenticationAgeInSeconds;
+
   it('should accept a fresh first-factor context', () => {
-    expect(satisfiesAuthenticationContextPolicy(buildExtra(), now)).toBe(true);
+    expect(
+      satisfiesAuthenticationContextPolicy(buildExtra(), maximumAuthenticationAgeInSeconds, now)
+    ).toBe(true);
   });
 
   it('should accept a fresh MFA context, which satisfies the first-factor class', () => {
-    expect(satisfiesAuthenticationContextPolicy(buildExtra({ acr: LogtoAcr.Mfa }), now)).toBe(true);
+    expect(
+      satisfiesAuthenticationContextPolicy(
+        buildExtra({ acr: LogtoAcr.Mfa }),
+        maximumAuthenticationAgeInSeconds,
+        now
+      )
+    ).toBe(true);
   });
 
   it('should accept a context that carries unrelated claims, such as token exchange extras', () => {
     expect(
       satisfiesAuthenticationContextPolicy(
         { ...buildExtra(), amr: ['pwd'], organization_id: 'organization' },
+        maximumAuthenticationAgeInSeconds,
         now
       )
     ).toBe(true);
+  });
+
+  it('should accept a context that is only fresh for a longer tenant window', () => {
+    expect(
+      satisfiesAuthenticationContextPolicy(
+        buildExtra({ auth_time: nowInSeconds - 7000 }),
+        7200,
+        now
+      )
+    ).toBe(true);
+  });
+
+  it('should reject a context that is stale for a shorter tenant window', () => {
+    expect(
+      satisfiesAuthenticationContextPolicy(buildExtra({ auth_time: nowInSeconds - 61 }), 60, now)
+    ).toBe(false);
   });
 
   it.each([
@@ -66,7 +125,9 @@ describe('satisfiesAuthenticationContextPolicy()', () => {
     ['no extra at all', undefined],
     ['an empty extra', {}],
   ])('should reject %s', (_, extra) => {
-    expect(satisfiesAuthenticationContextPolicy(extra, now)).toBe(false);
+    expect(
+      satisfiesAuthenticationContextPolicy(extra, maximumAuthenticationAgeInSeconds, now)
+    ).toBe(false);
   });
 });
 
@@ -77,11 +138,19 @@ describe('escapeQuotedString()', () => {
 });
 
 describe('buildInsufficientUserAuthenticationChallenge()', () => {
-  it('should build the RFC 9470 challenge that asks for the Account API policy', () => {
+  it('should build the RFC 9470 challenge that asks for the default policy', () => {
     expect(buildInsufficientUserAuthenticationChallenge()).toBe(
       'Bearer error="insufficient_user_authentication", ' +
         'error_description="Recent user authentication is required", ' +
         'acr_values="urn:logto:acr:1fa", max_age="600"'
+    );
+  });
+
+  it('should advertise the tenant window the request was evaluated against', () => {
+    expect(buildInsufficientUserAuthenticationChallenge(7200)).toBe(
+      'Bearer error="insufficient_user_authentication", ' +
+        'error_description="Recent user authentication is required", ' +
+        'acr_values="urn:logto:acr:1fa", max_age="7200"'
     );
   });
 });

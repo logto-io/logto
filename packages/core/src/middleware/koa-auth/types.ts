@@ -24,6 +24,12 @@ type Auth = {
    * identity verification from its token, and cannot act on an authentication challenge either.
    */
   isFirstPartyClient?: boolean;
+  /**
+   * The tenant's authentication freshness window, in seconds, resolved by `koaOidcAuth` when it
+   * evaluated the OIDC authentication context for a first-party caller. The RFC 9470 challenge
+   * advertises it as `max_age`, so the client and the policy that rejected the request agree.
+   */
+  maximumAuthenticationAgeInSeconds?: number;
   /** Set by `koaReadOnlyAccess` for a read-only Management API request. */
   isReadOnly?: boolean;
 };

@@ -40,6 +40,10 @@
                   },
                   "profileFields": {
                     "description": "Ordered list of custom profile fields to show in the prebuilt account center. Each entry references an existing field by name in the custom profile fields catalog."
+                  },
+                  "maximumAuthenticationAgeInSeconds": {
+                    "description": "How recent a user's authentication must be for the Account API to allow sensitive operations, in seconds.",
+                    "x-logto-dev-feature": true
                   }
                 }
               }
