@@ -18,6 +18,7 @@ import {
   createDefaultTenantUserWithPassword,
   deleteDefaultTenantUser,
   initClientAndSignInForDefaultTenant,
+  signInWithSocialAndGetUserApi,
 } from '#src/helpers/profile.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 
@@ -141,8 +142,16 @@ describe('account personal access tokens', () => {
   });
 
   it('requires identity verification to create, rename, and delete tokens', async () => {
+    // A social sign-in carries no `acr`, so this token alone does not verify the identity.
+    const noAuthenticationContextApi = await signInWithSocialAndGetUserApi(owner.user.id, {
+      scopes: [UserScope.PersonalAccessTokens],
+    });
+
     await expectRejects(
-      createPersonalAccessToken(owner.api, { name: 'cli', expiresAt: expiresInDays(1) }),
+      createPersonalAccessToken(noAuthenticationContextApi, {
+        name: 'cli',
+        expiresAt: expiresInDays(1),
+      }),
       { code: 'verification_record.permission_denied', status: 401 }
     );
 
@@ -152,11 +161,14 @@ describe('account personal access tokens', () => {
       owner.verificationRecordId
     );
 
-    await expectRejects(renamePersonalAccessToken(owner.api, { currentName: 'cli', name: 'x' }), {
-      code: 'verification_record.permission_denied',
-      status: 401,
-    });
-    await expectRejects(deletePersonalAccessToken(owner.api, 'cli'), {
+    await expectRejects(
+      renamePersonalAccessToken(noAuthenticationContextApi, { currentName: 'cli', name: 'x' }),
+      {
+        code: 'verification_record.permission_denied',
+        status: 401,
+      }
+    );
+    await expectRejects(deletePersonalAccessToken(noAuthenticationContextApi, 'cli'), {
       code: 'verification_record.permission_denied',
       status: 401,
     });

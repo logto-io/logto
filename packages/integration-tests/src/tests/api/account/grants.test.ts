@@ -13,6 +13,7 @@ import {
   createDefaultTenantUserWithPassword,
   deleteDefaultTenantUser,
   signInAndGetUserApi,
+  signInWithSocialAndGetUserApi,
 } from '#src/helpers/profile.js';
 import {
   assertRefreshTokenInvalidGrant,
@@ -43,8 +44,9 @@ describe('account center grant management', () => {
     });
 
     it('should fail if identity is not verified', async () => {
-      const { user, username, password } = await createDefaultTenantUserWithPassword();
-      const api = await signInAndGetUserApi(username, password, {
+      const { user } = await createDefaultTenantUserWithPassword();
+      // A social sign-in carries no `acr`, so the token alone does not verify the identity.
+      const api = await signInWithSocialAndGetUserApi(user.id, {
         scopes: [UserScope.Sessions],
       });
 
@@ -197,7 +199,13 @@ describe('account center grant management', () => {
       const grant = grants.find((item) => item.payload.clientId === app.id);
       assert(grant, new Error('Grant not found for application'));
 
-      await expectRejects(revokeMyAccountGrant(api, grant.id, ''), {
+      // A social sign-in carries no `acr`: the empty verification record is the only proof, and it
+      // is not acceptable.
+      const noAuthenticationContextApi = await signInWithSocialAndGetUserApi(user.id, {
+        scopes: [UserScope.Sessions],
+      });
+
+      await expectRejects(revokeMyAccountGrant(noAuthenticationContextApi, grant.id, ''), {
         code: 'verification_record.permission_denied',
         status: 401,
       });

@@ -3,6 +3,7 @@ import { AccountCenterControlValue, type TrustedDevice } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
 import { createMockTrustedDevice, mockUser } from '#src/__mocks__/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
@@ -58,11 +59,13 @@ const buildRequester = ({
   identityVerified = true,
   scopes = new Set([UserScope.TrustedDevices]),
   clientId,
+  isFirstPartyClient,
 }: {
   field?: AccountCenterControlValue;
   identityVerified?: boolean;
   scopes?: Set<string>;
   clientId?: string;
+  isFirstPartyClient?: boolean;
 } = {}) => {
   return createRequester({
     middlewares: [koaI18next(), koaErrorHandler()],
@@ -75,6 +78,7 @@ const buildRequester = ({
             identityVerified,
             scopes,
             clientId,
+            isFirstPartyClient,
           };
           ctx.accountCenter = {
             enabled: true,
@@ -242,5 +246,62 @@ describe('account trusted device routes', () => {
 
     expect(response.status).toBe(404);
     expect(clearCredential).not.toHaveBeenCalled();
+  });
+
+  describe('reauthentication challenge', () => {
+    const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+
+    afterEach(() => {
+      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
+    });
+
+    it('asks a first-party caller that needs recent authentication to step up', async () => {
+      const response = await buildRequester({
+        identityVerified: false,
+        isFirstPartyClient: true,
+      }).get('/my-account/trusted-devices');
+
+      expect(response.status).toBe(401);
+      expect(response.body).toHaveProperty('code', 'verification_record.permission_denied');
+      expect(response.headers['www-authenticate']).toBe(
+        'Bearer error="insufficient_user_authentication", ' +
+          'error_description="Recent user authentication is required", ' +
+          'acr_values="urn:logto:acr:1fa", max_age="600"'
+      );
+    });
+
+    it.each([
+      ['a third-party caller, which cannot step up', { isFirstPartyClient: false }],
+      ['a caller whose application was not resolved', {}],
+    ])('does not challenge %s', async (_, options) => {
+      const response = await buildRequester({
+        ...options,
+        identityVerified: false,
+      }).get('/my-account/trusted-devices');
+
+      expect(response.status).toBe(401);
+      expect(response.headers['www-authenticate']).toBeUndefined();
+    });
+
+    it('does not challenge a caller that already carries recent authentication', async () => {
+      const response = await buildRequester({ isFirstPartyClient: true }).get(
+        '/my-account/trusted-devices'
+      );
+
+      expect(response.status).toBe(200);
+      expect(response.headers['www-authenticate']).toBeUndefined();
+    });
+
+    it('does not challenge when OIDC step-up authentication is off', async () => {
+      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+
+      const response = await buildRequester({
+        identityVerified: false,
+        isFirstPartyClient: true,
+      }).get('/my-account/trusted-devices');
+
+      expect(response.status).toBe(401);
+      expect(response.headers['www-authenticate']).toBeUndefined();
+    });
   });
 });

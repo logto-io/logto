@@ -1,6 +1,15 @@
 import RequestError from '#src/errors/RequestError/index.js';
 import { isThirdPartyApplication } from '#src/oidc/resource.js';
 import type Queries from '#src/tenants/Queries.js';
+import assertThat from '#src/utils/assert-that.js';
+
+/**
+ * Whether the access token behind this request was issued to a first-party application. A request
+ * without a client ID has no application to resolve and is treated as first-party, the same way
+ * {@link assertFirstPartyClient} treats it.
+ */
+export const isFirstPartyClient = async (queries: Queries, clientId?: string) =>
+  clientId === undefined || !(await isThirdPartyApplication(queries, clientId));
 
 /**
  * Assert that the access token behind this request was issued to a first-party application.
@@ -17,7 +26,8 @@ import type Queries from '#src/tenants/Queries.js';
  * client identifier URL, which never names a registered application — is rejected here as well.
  */
 export const assertFirstPartyClient = async (queries: Queries, clientId?: string) => {
-  if (clientId !== undefined && (await isThirdPartyApplication(queries, clientId))) {
-    throw new RequestError({ code: 'auth.third_party_application_forbidden', status: 403 });
-  }
+  assertThat(
+    await isFirstPartyClient(queries, clientId),
+    new RequestError({ code: 'auth.third_party_application_forbidden', status: 403 })
+  );
 };
