@@ -448,7 +448,7 @@
             "description": "The request would remove the user's last identifier."
           },
           "401": {
-            "description": "Permission denied, recent user authentication is required or the access token does not include the `identities` scope."
+            "description": "Permission denied, recent user authentication is required."
           },
           "404": {
             "description": "The identity does not exist."
