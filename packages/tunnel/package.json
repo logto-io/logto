@@ -56,8 +56,8 @@
     "zod": "3.24.3"
   },
   "devDependencies": {
-    "@silverhand/eslint-config": "6.0.1",
-    "@silverhand/ts-config": "6.0.0",
+    "@silverhand/eslint-config": "^6.1.0",
+    "@silverhand/ts-config": "^6.1.0",
     "@types/adm-zip": "^0.5.5",
     "@types/node": "^26.0.0",
     "@types/yargs": "^17.0.13",
