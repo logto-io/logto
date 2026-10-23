@@ -24,6 +24,7 @@ const account_center = {
     error_invalid_code: '验证码无效或已过期。',
     error_verify_failed: '验证失败，请重新输入验证码。',
     verification_required: '验证已失效，请重新验证身份。',
+    step_up_not_completed: '身份验证未完成，你的账户未做任何更改。',
     try_another_method: '尝试其他验证方式',
     no_available_methods_title: '没有可用的验证方式',
     no_available_methods_description:

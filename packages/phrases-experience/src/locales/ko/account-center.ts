@@ -24,6 +24,8 @@ const account_center = {
     error_invalid_code: '인증 코드가 잘못되었거나 만료되었습니다.',
     error_verify_failed: '인증에 실패했습니다. 코드를 다시 입력해주세요.',
     verification_required: '인증이 만료되었습니다. 다시 신원을 확인해주세요.',
+    step_up_not_completed:
+      '본인 확인이 완료되지 않았습니다. 계정에 변경 사항이 적용되지 않았습니다.',
     try_another_method: '다른 방법으로 인증하기',
     no_available_methods_title: '사용 가능한 인증 방법이 없습니다',
     no_available_methods_description:

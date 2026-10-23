@@ -24,6 +24,7 @@ const account_center = {
     error_invalid_code: '驗證碼無效或已過期。',
     error_verify_failed: '驗證失敗，請重新輸入驗證碼。',
     verification_required: '驗證已失效，請再次驗證您的身分。',
+    step_up_not_completed: '身分驗證未完成，您的帳戶未做任何變更。',
     try_another_method: '嘗試其他驗證方式',
     no_available_methods_title: '沒有可用的驗證方式',
     no_available_methods_description:

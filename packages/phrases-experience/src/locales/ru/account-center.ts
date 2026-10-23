@@ -25,6 +25,8 @@ const account_center = {
     error_invalid_code: 'Код подтверждения недействителен или истёк.',
     error_verify_failed: 'Не удалось подтвердить. Введите код ещё раз.',
     verification_required: 'Срок действия проверки истёк. Подтвердите личность ещё раз.',
+    step_up_not_completed:
+      'Подтверждение личности не завершено. В ваш аккаунт не внесено никаких изменений.',
     try_another_method: 'Попробовать другой способ подтверждения',
     no_available_methods_title: 'Нет доступных способов подтверждения',
     no_available_methods_description:

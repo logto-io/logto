@@ -25,6 +25,7 @@ const account_center = {
     error_invalid_code: 'رمز التحقق غير صالح أو منتهي الصلاحية.',
     error_verify_failed: 'فشل التحقق. يرجى إدخال الرمز مرة أخرى.',
     verification_required: 'انتهت صلاحية التحقق. يرجى التحقق من هويتك مرة أخرى.',
+    step_up_not_completed: 'لم يكتمل التحقق من الهوية. لم يتم إجراء أي تغييرات على حسابك.',
     try_another_method: 'جرّب طريقة أخرى للتحقق',
     no_available_methods_title: 'لا توجد طرق تحقق متاحة',
     no_available_methods_description:

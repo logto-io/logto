@@ -6,7 +6,7 @@ import {
   type BindWebAuthnPayload,
 } from '@logto/schemas';
 
-import { verificationRecordIdHeader } from './account';
+import { getVerificationRecordHeaders, verificationRecordIdHeader } from './account';
 import { createAuthenticatedKy } from './base-ky';
 
 export type TotpSecretResponse = {
@@ -163,13 +163,13 @@ export const getMfaSettings = async (accessToken: string): Promise<UserMfaSettin
 
 export const updateMfaSettings = async (
   accessToken: string,
-  verificationRecordId: string,
+  verificationRecordId: string | undefined,
   payload: { skipMfaOnSignIn: boolean }
 ): Promise<UserMfaSettingsResponse> => {
   return createAuthenticatedKy(accessToken)
     .patch('/api/my-account/mfa-settings', {
       json: payload,
-      headers: { [verificationRecordIdHeader]: verificationRecordId },
+      headers: getVerificationRecordHeaders(verificationRecordId),
     })
     .json<UserMfaSettingsResponse>();
 };

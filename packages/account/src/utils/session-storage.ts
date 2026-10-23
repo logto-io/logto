@@ -4,6 +4,8 @@ import * as s from 'superstruct';
 const storagePrefix = 'logto:account-center:';
 const pendingReturnTtl = 10 * 60 * 1000;
 const routeRestoreTtl = 10 * 60 * 1000;
+/** A step-up left unfinished for longer than this is treated as abandoned. */
+const pendingStepUpTtl = 10 * 60 * 1000;
 
 const storageKeys = Object.freeze({
   routeRestore: `${storagePrefix}route-restore`,
@@ -14,6 +16,7 @@ const storageKeys = Object.freeze({
   socialFlow: `${storagePrefix}social-verification`,
   pendingReturn: `${storagePrefix}pending-return`,
   pendingVerifiedAction: `${storagePrefix}pending-verified-action`,
+  pendingStepUp: `${storagePrefix}pending-step-up`,
   pendingSocialRemoveConnectorId: `${storagePrefix}pending-social-remove-connector-id`,
   pendingPersonalAccessTokenCreate: `${storagePrefix}pending-personal-access-token-create`,
   pendingPersonalAccessTokenRename: `${storagePrefix}pending-personal-access-token-rename`,
@@ -33,6 +36,47 @@ export type StoredPendingPersonalAccessTokenCreate = {
 export type StoredPendingPersonalAccessTokenRename = {
   currentName: string;
   name: string;
+};
+
+const pendingStepUpActionsWithoutInput = Object.freeze([
+  'enable-mfa',
+  'disable-mfa',
+  'enable-passkey-prompt',
+  'disable-passkey-prompt',
+  'remove-username',
+  'remove-email',
+  'remove-phone',
+  'load-sessions',
+  'load-trusted-devices',
+] as const);
+
+type PendingStepUpActionWithoutInput = (typeof pendingStepUpActionsWithoutInput)[number];
+
+/**
+ * A sensitive Account Center action that is waiting for an OIDC step-up. It carries only the input
+ * needed to run the action again: never a credential, a one-time code, a WebAuthn payload, or a
+ * token.
+ */
+export type PendingStepUpAction =
+  | { [Type in PendingStepUpActionWithoutInput]: { type: Type } }[PendingStepUpActionWithoutInput]
+  | { type: 'remove-social'; connectorId: string }
+  | { type: 'create-personal-access-token'; name: string; expiryDays: number }
+  | { type: 'rename-personal-access-token'; currentName: string; name: string }
+  | { type: 'revoke-personal-access-token'; name: string };
+
+/**
+ * - `authorizing`: Account Center redirected to the authorization endpoint for the step-up.
+ * - `authorized`: the callback exchanged the code, and the elevated token set replaced the old one.
+ * - `resumable`: the page that loaded after the callback may run the action, once.
+ */
+export type PendingStepUpPhase = 'authorizing' | 'authorized' | 'resumable';
+
+export type StoredPendingStepUp = {
+  action: PendingStepUpAction;
+  /** The Account Center pathname to return to, including the base path. */
+  route: string;
+  phase: PendingStepUpPhase;
+  createdAt: number;
 };
 
 type StoredPathState = {
@@ -105,6 +149,29 @@ const storedSocialFlowRecordGuard = s.union([
     mode: s.optional(s.union([s.literal('add'), s.literal('change')])),
   }),
 ]);
+
+const pendingStepUpActionGuard = s.union([
+  s.object({ type: s.enums(pendingStepUpActionsWithoutInput) }),
+  s.object({ type: s.literal('remove-social'), connectorId: s.string() }),
+  s.object({
+    type: s.literal('create-personal-access-token'),
+    name: s.string(),
+    expiryDays: s.number(),
+  }),
+  s.object({
+    type: s.literal('rename-personal-access-token'),
+    currentName: s.string(),
+    name: s.string(),
+  }),
+  s.object({ type: s.literal('revoke-personal-access-token'), name: s.string() }),
+]);
+
+const storedPendingStepUpGuard = s.object({
+  action: pendingStepUpActionGuard,
+  route: s.string(),
+  phase: s.enums(['authorizing', 'authorized', 'resumable']),
+  createdAt: s.number(),
+});
 
 const pendingVerifiedActions = Object.freeze([
   'enable-mfa',
@@ -301,6 +368,29 @@ export const accountStorage = Object.freeze({
     },
     clear: () => {
       removeItem(storageKeys.pendingVerifiedAction, 'session');
+    },
+  },
+  /** The action waiting for an OIDC step-up; see `utils/step-up.ts`. TTL: 10min. */
+  pendingStepUp: {
+    get: (): StoredPendingStepUp | undefined => {
+      const record = getStructuredValue(
+        storageKeys.pendingStepUp,
+        storedPendingStepUpGuard,
+        'session'
+      );
+
+      if (!record || !isWithinTtl(record.createdAt, pendingStepUpTtl)) {
+        removeItem(storageKeys.pendingStepUp, 'session');
+        return;
+      }
+
+      return record;
+    },
+    set: (record: StoredPendingStepUp) => {
+      setStructuredValue(storageKeys.pendingStepUp, record, 'session');
+    },
+    clear: () => {
+      removeItem(storageKeys.pendingStepUp, 'session');
     },
   },
   pendingSocialRemoveConnectorId: {

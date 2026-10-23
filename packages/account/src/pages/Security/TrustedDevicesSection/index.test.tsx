@@ -205,12 +205,15 @@ describe('<TrustedDevicesSection />', () => {
     consoleError.mockRestore();
   });
 
-  it('starts the independent trusted-device verification action when verification is unavailable', () => {
+  it('starts the independent trusted-device verification action when verification is unavailable', async () => {
     const { getByRole, getByText } = renderTrustedDevices({ verificationId: undefined });
 
     expect(mockGetTrustedDevices).not.toHaveBeenCalled();
     fireEvent.click(getByRole('button', { name: 'Manage' }));
-    expect(getByText('verified action page')).toBeTruthy();
+
+    await waitFor(() => {
+      expect(getByText('verified action page')).toBeTruthy();
+    });
     expect(sessionStorage.getPendingVerifiedAction()).toBe('load-trusted-devices');
   });
 
