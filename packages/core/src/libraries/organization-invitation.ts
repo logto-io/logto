@@ -72,8 +72,7 @@ export class OrganizationInvitationLibrary {
     if (await this.queries.organizations.relations.users.isMember(organizationId, invitee)) {
       throw new RequestError({
         status: 422,
-        code: 'request.invalid_input',
-        details: 'The invitee is already a member of the organization.',
+        code: 'organization.invitee_already_member',
       });
     }
 
@@ -162,7 +161,7 @@ export class OrganizationInvitationLibrary {
     acceptedUserId: string,
     connection?: DatabaseTransactionConnection
   ): Promise<OrganizationInvitationEntity>;
-  // TODO: Error i18n
+
   async updateStatus(
     id: string,
     status: OrganizationInvitationStatus,
@@ -196,8 +195,7 @@ export class OrganizationInvitationLibrary {
       if (endingStatuses.includes(entity.status)) {
         throw new RequestError({
           status: 422,
-          code: 'request.invalid_input',
-          details: 'The status of the invitation cannot be changed anymore.',
+          code: 'organization.invitation_status_not_changeable',
         });
       }
 
@@ -213,8 +211,7 @@ export class OrganizationInvitationLibrary {
           if (user.primaryEmail?.toLowerCase() !== entity.invitee.toLowerCase()) {
             throw new RequestError({
               status: 422,
-              code: 'request.invalid_input',
-              details: 'The accepted user must have the same email as the invitee.',
+              code: 'organization.accepted_user_email_mismatch',
             });
           }
 
