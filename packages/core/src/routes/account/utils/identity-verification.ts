@@ -15,12 +15,11 @@ type IdentityVerificationContext = WithAuthContext & ExtendableContext;
 /**
  * Assert that the request carries recent user authentication, as `koaOidcAuth` recorded it: a
  * qualifying OIDC authentication context on the access token, or a valid `logto-verification-id`
- * verification record.
+ * verification record. Throws a 401 `verification_record.permission_denied` error otherwise.
  *
- * The failure keeps the existing status and JSON body, and adds the RFC 9470 challenge when only a
- * first-party caller can act on it: a third-party application can neither reach a step-up for this
- * user nor gain Account API permissions, so it must not be sent through a reauthentication it
- * cannot complete.
+ * A first-party caller also gets the RFC 9470 challenge with the error: a third-party application
+ * can neither reach a step-up for this user nor gain Account API permissions, so it must not be
+ * sent through a reauthentication it cannot complete.
  */
 export const assertIdentityVerified = (ctx: IdentityVerificationContext) => {
   if (

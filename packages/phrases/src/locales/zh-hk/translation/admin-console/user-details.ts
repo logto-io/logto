@@ -68,6 +68,8 @@ const user_details = {
   },
   mfa: {
     field_name: '多重因素驗證',
+    require_mfa: '要求設定 MFA',
+    require_mfa_description: '此使用者必須至少設定一個 MFA 因素才能完成登入，且無法略過設定。',
     field_description: '這個使用者已啟用 2 步驗證因素。',
     name_column: '多重因素驗證',
     field_description_empty: '此用戶尚未啟用兩步驟身份驗證因素。',
@@ -88,6 +90,11 @@ const user_details = {
   reactivate_user_reminder: '你確定要重新啟用該用戶？這樣做將允許該用戶的任何登錄嘗試。',
   reactivate_action: '重新啟用',
   user_reactivated: '用戶已重新啟用。',
+  unlock_user: '解鎖用戶',
+  unlock_user_reminder:
+    '確定要解鎖該用戶嗎？此操作將清除因登入和安全驗證失敗而導致的所有鎖定。僅在確認用戶身份並確保沒有未經授權的存取嘗試後，才手動解鎖。',
+  unlock_action: '解鎖',
+  user_unlocked: '用戶已解鎖。',
   roles: {
     name_column: '用戶角色',
     description_column: '描述',

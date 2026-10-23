@@ -142,6 +142,7 @@ const description = {
     phone_verification_code: 'کد تأیید تلفن',
     verification_code_description: 'ارسال به {{target}}',
   },
+  select_wallet: 'یک کیف پول انتخاب کنید',
 };
 
 export default Object.freeze(description);

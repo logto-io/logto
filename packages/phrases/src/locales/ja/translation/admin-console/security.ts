@@ -41,6 +41,11 @@ const security = {
       description:
         '視覚的パズルやサードパーティサービスを使わない、オープンソースでセルフホスト型のプルーフ・オブ・ワーク CAPTCHA。他の CAPTCHA サービスにアクセスできない地域に最適です。',
     },
+    geetest: {
+      name: 'GeeTest',
+      description:
+        '中国本土で安定して利用できる、ローカライズされたチャレンジを備えた GeeTest の適応型 CAPTCHA です。',
+    },
   },
   captcha_details: {
     back_to_security: 'セキュリティへ戻る',
@@ -60,6 +65,8 @@ const security = {
     cap_endpoint_placeholder: 'https://cap.example.com',
     cap_endpoint_http_notice:
       'このエンドポイントは HTTP を使用しており、ローカル開発にのみ適しています。ブラウザーは HTTPS のサインインページからの HTTP リクエストをブロックし、シークレットキーは暗号化されずに送信されます。本番環境では HTTPS を使用してください。',
+    geetest_captcha_id: 'CAPTCHA ID',
+    geetest_captcha_key: 'CAPTCHA キー',
     deletion_description: 'この CAPTCHA プロバイダーを削除してもよろしいですか？',
     captcha_deleted: 'CAPTCHA プロバイダーが正常に削除されました',
     setup_captcha: 'CAPTCHA をセットアップ',
@@ -156,17 +163,19 @@ const security = {
     },
     manual_unlock: {
       title: '手動での解除',
-      description: 'ユーザーの身元確認と識別子の入力により、即座にロックを解除します。',
-      unblock_by_identifiers: '識別子での解除',
+      description:
+        'ユーザーの身元確認と識別子またはユーザー ID の入力により、即座にロックを解除します。',
+      unblock_by_identifiers: '識別子またはユーザー ID での解除',
       modal_description_1:
-        '識別子はサインイン/サインアップの複数の失敗により一時的にロックされました。セキュリティを保護するため、ロックアウト期間後にアクセスが自動的に復元されます。',
+        '識別子またはユーザー ID は、サインイン/サインアップまたはセキュリティ検証の複数の失敗により一時的にロックされました。セキュリティを保護するため、ロックアウト期間後にアクセスが自動的に復元されます。',
       modal_description_2:
         'ユーザーの身元を確認し、無許可のアクセス試行がないことを確認した場合にのみ、手動でロックを解除してください。',
-      placeholder: '識別子を入力してください (メールアドレス / 電話番号 / ユーザー名)',
+      placeholder:
+        '識別子またはユーザー ID を入力してください (メールアドレス / 電話番号 / ユーザー名 / ユーザー ID)',
       confirm_button_text: '今すぐ解除',
       success_toast: '正常に解除されました',
-      duplicate_identifier_error: '識別子は既に追加されています',
-      empty_identifier_error: '少なくとも 1 つの識別子を入力してください',
+      duplicate_identifier_error: '識別子またはユーザー ID は既に追加されています',
+      empty_identifier_error: '少なくとも 1 つの識別子またはユーザー ID を入力してください',
     },
   },
   blocklist: {

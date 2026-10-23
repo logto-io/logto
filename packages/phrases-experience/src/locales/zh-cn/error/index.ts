@@ -43,6 +43,11 @@ const error = {
   access_denied: '访问被拒绝',
   application_access_denied: '您没有权限访问此应用。\n请联系管理员寻求帮助。',
   feature_not_enabled: '您没有权限访问此功能。请联系管理员寻求帮助。',
+  wallet_not_found: '未检测到以太坊钱包。请安装浏览器钱包扩展后重试。',
+  wallet_not_supported: '钱包登录仅支持安装了钱包扩展的浏览器。',
+  wallet_request_rejected: '钱包请求已被拒绝，请重试。',
+  wallet_unsupported_chain: '钱包连接到了不支持的网络，请切换网络后重试。',
+  wallet_signature_invalid: '钱包签名无效或已过期，请重试。',
 };
 
 export default Object.freeze(error);

@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import ErrorPage from '@ac/components/ErrorPage';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
-import { isDevFeaturesEnabled } from '@ac/constants/env';
 import { getPasskeyFieldControl, isVisibleField } from '@ac/utils/security-page';
 import { sessionStorage } from '@ac/utils/session-storage';
 import type { PendingVerifiedAction } from '@ac/utils/session-storage';
@@ -76,11 +75,7 @@ const VerifiedAction = () => {
       case 'create-personal-access-token':
       case 'rename-personal-access-token':
       case 'revoke-personal-access-token': {
-        // DEV: Self-service personal access tokens
-        return (
-          isDevFeaturesEnabled &&
-          accountCenterSettings.fields.personalAccessToken === AccountCenterControlValue.Edit
-        );
+        return accountCenterSettings.fields.personalAccessToken === AccountCenterControlValue.Edit;
       }
       default: {
         return false;

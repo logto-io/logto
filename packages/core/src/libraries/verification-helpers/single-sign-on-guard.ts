@@ -29,20 +29,16 @@ export const verifySsoOnlyEmailIdentifier = async (
     return;
   }
 
+  const normalizedDomain = domain.toLowerCase();
   const availableConnectors = availableSsoConnectors.filter(({ domains }) =>
-    domains.includes(domain)
+    domains.some((configuredDomain) => configuredDomain.toLowerCase() === normalizedDomain)
   );
 
   assertThat(
     availableConnectors.length === 0,
-    new RequestError(
-      {
-        code: 'session.sso_enabled',
-        status: 422,
-      },
-      {
-        ssoConnectors: availableConnectors,
-      }
-    )
+    new RequestError({
+      code: 'session.sso_enabled',
+      status: 422,
+    })
   );
 };

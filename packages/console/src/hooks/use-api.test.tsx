@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react';
 
-import { mockEnv, resetMockEnv, type EnvTestUtils } from '@/test-utils/env';
+import { type EnvTestUtils } from '@/test-utils/env';
 
 import { useGlobalRequestErrorHandler } from './use-api';
 
@@ -27,25 +27,7 @@ jest.mock('react-hot-toast', () => ({
 const insufficientPermissions = { message: 'Insufficient permissions.' };
 
 describe('useGlobalRequestErrorHandler', () => {
-  beforeEach(() => {
-    resetMockEnv();
-    jest.clearAllMocks();
-  });
-
-  it('signs out on an insufficient permissions 403 with dev features off', async () => {
-    const { result } = renderHook(() => useGlobalRequestErrorHandler());
-
-    await result.current.handleError({
-      status: 403,
-      clone: () => ({ json: async () => insufficientPermissions }),
-    } as Response);
-
-    expect(mockSignOut).toHaveBeenCalled();
-    expect(mockToastError).not.toHaveBeenCalled();
-  });
-
-  it('shows an insufficient permissions 403 as a toast with dev features on', async () => {
-    mockEnv({ isDevFeaturesEnabled: true });
+  it('shows an insufficient permissions 403 as a toast', async () => {
     const { result } = renderHook(() => useGlobalRequestErrorHandler());
 
     await result.current.handleError({

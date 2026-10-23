@@ -16,6 +16,8 @@ import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { assertTrustedSiweRedirectUri } from './siwe.js';
+
 type SocialAuthorizationUrlPayload = {
   connectorId: string;
   state: string;
@@ -25,7 +27,7 @@ type SocialAuthorizationUrlPayload = {
 
 export const createSocialAuthorizationUrl = async (
   ctx: WithLogContext,
-  { provider, connectors }: TenantContext,
+  { provider, connectors, envSet, queries }: TenantContext,
   payload: SocialAuthorizationUrlPayload
 ) => {
   const { getLogtoConnectorById } = connectors;
@@ -36,6 +38,8 @@ export const createSocialAuthorizationUrl = async (
   const connector = await getLogtoConnectorById(connectorId);
 
   assertThat(connector.type === ConnectorType.Social, 'connector.unexpected_type');
+
+  await assertTrustedSiweRedirectUri({ envSet, queries }, connector.metadata.target, redirectUri);
 
   const {
     headers: { 'user-agent': userAgent },

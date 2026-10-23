@@ -2,7 +2,7 @@ import { type TenantRole } from '@logto/schemas';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { type Option } from '@/ds-components/Select';
 
 import { getAssignableTenantRoles, getTenantRolePhrase } from './utils';
@@ -12,7 +12,7 @@ const useTenantRoleOptions = (): Array<Option<TenantRole>> => {
 
   return useMemo(
     () =>
-      getAssignableTenantRoles({ isCloud, isDevFeaturesEnabled }).map((role) => ({
+      getAssignableTenantRoles({ isCloud }).map((role) => ({
         value: role,
         title: t(getTenantRolePhrase(role)),
       })),

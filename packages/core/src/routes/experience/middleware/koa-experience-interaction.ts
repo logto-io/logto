@@ -32,6 +32,21 @@ const whiteListedEndpoint = [
     method: 'POST',
     path: `${experienceRoutes.prefix}/preflight/sign-in-passkey/authentication`,
   },
+  // POST /experience/abort:  Finish the interaction with an OAuth error. The endpoint must work
+  // regardless of the interaction storage state: by the time an error surfaces, the interaction
+  // may not have been initialized yet, or may be at a step (e.g. consent) that stores no
+  // experience interaction data.
+  {
+    method: 'POST',
+    path: experienceRoutes.abort,
+  },
+  // GET /experience/interaction/direct-sign-in:  Reads the OIDC request parameters only. It must
+  // work before the experience interaction is initialized, e.g. when requesting the authorization
+  // URL fails, so it cannot depend on interaction storage.
+  {
+    method: 'GET',
+    path: experienceRoutes.directSignIn,
+  },
 ];
 
 /**

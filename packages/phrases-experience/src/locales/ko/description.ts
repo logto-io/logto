@@ -135,6 +135,7 @@ const description = {
     phone_verification_code: '전화 인증 코드',
     verification_code_description: '{{target}}로 전송',
   },
+  select_wallet: '지갑 선택',
 };
 
 export default Object.freeze(description);

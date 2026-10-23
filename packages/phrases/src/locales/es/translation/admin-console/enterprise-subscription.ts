@@ -33,6 +33,38 @@ const enterprise_subscription = {
     private_region_title: 'Instancia de nube privada ({{regionName}})',
     shared_cross_tenants: 'Entre inquilinos',
   },
+  user_subscriptions: {
+    description:
+      'Consulta tus suscripciones personales y la cobertura Enterprise contratada, independientemente del tenant seleccionado.',
+    personal_title: 'Suscripciones personales',
+    personal_description: 'Suscripciones facturadas a tu cuenta, incluidas las anteriores.',
+    price: 'Precio',
+    billing_period: 'Periodo de facturación',
+    list_price_note:
+      'Los precios no incluyen impuestos ni descuentos. Los cambios se prorratean en tu próxima factura.',
+    overdue_note:
+      'El pago está vencido. Si sigue sin pagarse, la suscripción puede pausarse y sus funciones de pago pueden eliminarse.',
+    cancel_on: 'Cancelación prevista para {{date}}',
+    other_product: 'Otra suscripción',
+    enterprise_invoices_description:
+      'Facturas de tu contrato Enterprise. Selecciona una factura para verla y descargar la factura o el recibo.',
+    personal_invoices_description:
+      'Facturas de las suscripciones cobradas a tu cuenta, incluidas las suscripciones anteriores. Selecciona una factura para verla y descargar la factura o el recibo.',
+    credit_note:
+      'Los créditos por eliminaciones o prorrateos reducen facturas posteriores y no se reembolsan necesariamente de inmediato a tu método de pago.',
+    invoice_link_unavailable:
+      'La página de esta factura no está disponible. Contáctanos si necesitas una copia.',
+    status: {
+      active: 'Activa',
+      trialing: 'En prueba',
+      past_due: 'Vencida',
+      unpaid: 'Sin pagar',
+      canceled: 'Cancelada',
+      incomplete: 'Incompleta',
+      incomplete_expired: 'Expirada',
+      paused: 'En pausa',
+    },
+  },
 };
 
 export default Object.freeze(enterprise_subscription);

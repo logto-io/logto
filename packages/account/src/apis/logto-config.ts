@@ -23,7 +23,7 @@ export const getLogtoConfig = async (accessToken: string): Promise<UserLogtoConf
 export const updateLogtoConfig = async (
   accessToken: string,
   verificationRecordId: string | undefined,
-  payload: { mfa?: UserMfaData; passkeySignIn?: UserPasskeySignInData }
+  payload: { mfa?: Omit<UserMfaData, 'required'>; passkeySignIn?: UserPasskeySignInData }
 ): Promise<UserLogtoConfigResponse> => {
   return createAuthenticatedKy(accessToken)
     .patch('/api/my-account/logto-configs', {

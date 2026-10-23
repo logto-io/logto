@@ -31,10 +31,10 @@ import {
   mockUserTotpMfaVerification,
   mockUserWebAuthnMfaVerification,
 } from '#src/__mocks__/user.js';
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
+import { resetDevFeaturesEnabled, setDevFeaturesEnabled } from '#src/test-utils/dev-features.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -660,14 +660,8 @@ describe('POST /experience/profile', () => {
 });
 
 describe('POST /experience/submit', () => {
-  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-  const setDevFeaturesEnabled = (enabled: boolean) => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Exercise route behavior in the selected feature environment.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = enabled;
-  };
-
   afterEach(() => {
-    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
+    resetDevFeaturesEnabled();
     jest.useRealTimers();
     jest.restoreAllMocks();
   });
@@ -1757,5 +1751,200 @@ describe('POST /experience/submit', () => {
       expect(createCredential).toHaveBeenCalledWith(expect.objectContaining({ userId: user.id }));
     }
   );
+});
+
+describe('POST /experience/abort', () => {
+  afterEach(() => {
+    resetDevFeaturesEnabled();
+  });
+
+  it('should finish the interaction with access_denied and return the redirect URL', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester, provider } = createRequesterWithMocks();
+
+    const response = await requester.post('/experience/abort').send({});
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ redirectTo: 'redirectTo' });
+    expect(provider.interactionResult).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      { error: 'access_denied' },
+      { mergeWithLastSubmission: false }
+    );
+  });
+
+  it('should forward the reason as error_description', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester, provider } = createRequesterWithMocks();
+    const reason = 'Denied by user: [test] ~!#';
+
+    const response = await requester.post('/experience/abort').send({ reason });
+
+    expect(response.status).toBe(200);
+    expect(provider.interactionResult).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      { error: 'access_denied', error_description: reason },
+      { mergeWithLastSubmission: false }
+    );
+  });
+
+  it('should reject a reason outside the RFC 6749 error_description charset', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester, provider } = createRequesterWithMocks();
+
+    for (const reason of ['"', '\\', '\u007F', 'é', '\n']) {
+      // eslint-disable-next-line no-await-in-loop
+      const response = await requester.post('/experience/abort').send({ reason });
+
+      expect(response.status).toBe(400);
+      expect(response.body).toMatchObject({ code: 'guard.invalid_input' });
+    }
+
+    expect(provider.interactionResult).not.toHaveBeenCalled();
+  });
+
+  it('should accept a 256-character reason and reject a longer one', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester } = createRequesterWithMocks();
+
+    const accepted = await requester.post('/experience/abort').send({ reason: 'a'.repeat(256) });
+    const rejected = await requester.post('/experience/abort').send({ reason: 'a'.repeat(257) });
+
+    expect(accepted.status).toBe(200);
+    expect(rejected.status).toBe(400);
+    expect(rejected.body).toMatchObject({ code: 'guard.invalid_input' });
+  });
+
+  it('should abort an interaction that is at the consent step', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester, provider } = createRequesterWithMocks({
+      interactionDetailsOverrides: {
+        prompt: { name: 'consent', reasons: ['consent_required'], details: {} },
+        // A consent interaction stores the login submission in `lastSubmission`; its own result
+        // stays empty until the user decides.
+        result: undefined,
+        lastSubmission: {
+          interactionEvent: InteractionEvent.SignIn,
+          userId: mockUser.id,
+          login: { accountId: mockUser.id },
+        },
+      },
+    });
+
+    const response = await requester.post('/experience/abort').send({ reason: 'User cancelled' });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ redirectTo: 'redirectTo' });
+    expect(provider.interactionResult).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      { error: 'access_denied', error_description: 'User cancelled' },
+      { mergeWithLastSubmission: false }
+    );
+  });
+
+  it.each([
+    { name: 'empty', result: {} },
+    {
+      name: 'unreadable step-up context',
+      result: { authenticationContext: { requestedAcrValues: ['urn:logto:acr:unknown'] } },
+    },
+  ])(
+    'should abort even when the interaction storage cannot be restored ($name)',
+    async ({ result }) => {
+      setDevFeaturesEnabled(true);
+      const { requester, provider } = createRequesterWithMocks({
+        interactionDetailsOverrides: { result },
+      });
+
+      const response = await requester.post('/experience/abort').send({});
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({ redirectTo: 'redirectTo' });
+      expect(provider.interactionResult).toHaveBeenCalled();
+    }
+  );
+
+  it('should not be registered when dev features are disabled', async () => {
+    setDevFeaturesEnabled(false);
+    const { requester, provider } = createRequesterWithMocks();
+
+    const response = await requester.post('/experience/abort').send({});
+
+    expect(response.status).toBe(404);
+    expect(provider.interactionResult).not.toHaveBeenCalled();
+  });
+});
+
+describe('GET /experience/interaction/direct-sign-in', () => {
+  afterEach(() => {
+    resetDevFeaturesEnabled();
+  });
+
+  it('should return the direct sign-in target from the interaction params', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester } = createRequesterWithMocks({
+      interactionDetailsOverrides: {
+        params: { client_id: 'client_id', direct_sign_in: 'social:google' },
+      },
+    });
+
+    const response = await requester.get('/experience/interaction/direct-sign-in');
+
+    expect(response.status).toBe(200);
+    expect(response.headers['cache-control']).toBe('no-store');
+    expect(response.body).toEqual({ directSignIn: 'social:google' });
+  });
+
+  it('should return an empty object for a hosted sign-in interaction', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester } = createRequesterWithMocks();
+
+    const response = await requester.get('/experience/interaction/direct-sign-in');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({});
+  });
+
+  it('should work before the experience interaction storage is initialized', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester } = createRequesterWithMocks({
+      interactionDetailsOverrides: {
+        // The regular experience middleware would reject this with `session.interaction_not_found`.
+        result: {},
+        params: { client_id: 'client_id', direct_sign_in: 'sso:connector-id' },
+      },
+    });
+
+    const response = await requester.get('/experience/interaction/direct-sign-in');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ directSignIn: 'sso:connector-id' });
+  });
+
+  it('should ignore a malformed direct sign-in parameter', async () => {
+    setDevFeaturesEnabled(true);
+    const { requester } = createRequesterWithMocks({
+      interactionDetailsOverrides: {
+        params: { client_id: 'client_id', direct_sign_in: ['social:google'] },
+      },
+    });
+
+    const response = await requester.get('/experience/interaction/direct-sign-in');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({});
+  });
+
+  it('should not be registered when dev features are disabled', async () => {
+    setDevFeaturesEnabled(false);
+    const { requester } = createRequesterWithMocks();
+
+    const response = await requester.get('/experience/interaction/direct-sign-in');
+
+    expect(response.status).toBe(404);
+  });
 });
 /* eslint-enable max-lines */

@@ -80,7 +80,8 @@ const getVerificationRecordResultById = async ({
  *
  * The caller's application is resolved here as well, even when the token's own context is already
  * insufficient: it decides whether the RFC 9470 challenge that the sensitive routes answer with
- * can help, and recording it keeps those routes from looking the application up again.
+ * can help. The sensitive routes still call `assertFirstPartyClient`, which resolves the
+ * application independently.
  */
 const getOidcIdentityVerification = async ({
   extra,
@@ -91,8 +92,8 @@ const getOidcIdentityVerification = async ({
   queries: Queries;
   clientId?: string;
 }): Promise<{ identityVerified: boolean; isFirstPartyClient: boolean }> => {
-  // The cheap checks read the token's own claims; the application lookup is the only database
-  // access in this branch and runs last.
+  // The policy check reads only the token's own claims; the application check always runs, since
+  // the challenge decision needs to know whether the caller is first-party.
   const satisfiesPolicy = satisfiesAuthenticationContextPolicy(extra);
   const isFirstParty = await isFirstPartyClient(queries, clientId);
 

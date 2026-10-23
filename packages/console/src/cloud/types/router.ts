@@ -5,6 +5,7 @@ import {
   type selfHostedLicensesRouter,
   type tenantAuthRouter,
   type userStripeCustomersRouter,
+  type userSubscriptionsRouter,
 } from '@logto/cloud/routes';
 import { type GuardedPayload, type GuardedResponse, type RouterRoutes } from '@withtyped/client';
 
@@ -13,6 +14,18 @@ type PostRoutes = RouterRoutes<typeof router>['post'];
 type GetTenantAuthRoutes = RouterRoutes<typeof tenantAuthRouter>['get'];
 type GetEmailLogsRoutes = RouterRoutes<typeof emailLogsRouter>['get'];
 type GetUserStripeCustomersRoutes = RouterRoutes<typeof userStripeCustomersRouter>['get'];
+
+/** Billing facts for a user-owned subscription, independent of its service resources. */
+export type UserSubscription = GuardedResponse<
+  RouterRoutes<typeof userSubscriptionsRouter>['get']['/api/me/subscriptions']
+>['subscriptions'][number];
+
+/** A page of authorized invoices for the user's own subscriptions, newest first, without drafts. */
+export type UserSubscriptionInvoicesResponse = GuardedResponse<
+  RouterRoutes<typeof userSubscriptionsRouter>['get']['/api/me/subscriptions/invoices']
+>;
+
+export type UserSubscriptionInvoice = UserSubscriptionInvoicesResponse['invoices'][number];
 
 /** The paginated hosted-email log page returned by the cloud email-logs endpoint. */
 export type TenantEmailLogsResponse = GuardedResponse<

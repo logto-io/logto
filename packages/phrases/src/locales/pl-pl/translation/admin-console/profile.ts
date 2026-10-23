@@ -28,6 +28,7 @@ const profile = {
       quit_tenant_other: 'Zamierzasz opuścić poniższych najemców:',
     },
     issues: {
+      console_sso: 'Przed usunięciem konta usuń wszystkie należące do niego konektory Console SSO.',
       paid_plan: 'Poniższy najemca ma płatny plan, proszę najpierw anulować subskrypcję:',
       paid_plan_other: 'Poniżsi najemcy mają płatne plany, proszę najpierw anulować subskrypcję:',
       subscription_status: 'Poniższy najemca ma problem ze statusem subskrypcji:',

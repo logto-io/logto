@@ -536,15 +536,10 @@ describe('SignInExperienceValidator', () => {
       domains: [emailDomain],
     };
 
-    const expectError = new RequestError(
-      {
-        code: 'session.sso_enabled',
-        status: 422,
-      },
-      {
-        ssoConnectors: [mockSsoConnector],
-      }
-    );
+    const expectError = new RequestError({
+      code: 'session.sso_enabled',
+      status: 422,
+    });
 
     it('email password verification record', async () => {
       ssoConnectors.getAvailableSsoConnectors.mockResolvedValueOnce([mockSsoConnector]);
@@ -554,12 +549,13 @@ describe('SignInExperienceValidator', () => {
         mockTenant.queries
       );
 
-      await expect(
-        signInExperienceSettings.guardIdentificationMethod(
-          InteractionEvent.SignIn,
-          passwordVerificationRecords[SignInIdentifier.Email]
-        )
-      ).rejects.toMatchError(expectError);
+      const promise = signInExperienceSettings.guardIdentificationMethod(
+        InteractionEvent.SignIn,
+        passwordVerificationRecords[SignInIdentifier.Email]
+      );
+
+      await expect(promise).rejects.toMatchError(expectError);
+      await expect(promise).rejects.toMatchObject({ data: undefined });
     });
 
     it('email verification code verification record', async () => {

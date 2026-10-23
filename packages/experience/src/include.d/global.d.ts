@@ -26,6 +26,24 @@ declare global {
   const logtoNativeSdk: LogtoNativeSdkInfo | undefined;
   const logtoSsr: LogtoSsr;
 
+  type GeetestValidate = {
+    lot_number: string;
+    captcha_output: string;
+    pass_token: string;
+    gen_time: string;
+  };
+
+  type GeetestCaptcha = {
+    onReady: (callback: () => void) => GeetestCaptcha;
+    onSuccess: (callback: () => void) => GeetestCaptcha;
+    onError: (callback: (error: unknown) => void) => GeetestCaptcha;
+    onClose: (callback: () => void) => GeetestCaptcha;
+    showCaptcha: () => void;
+    getValidate: () => GeetestValidate | false;
+    reset: () => void;
+    destroy: () => void;
+  };
+
   namespace JSX {
     interface IntrinsicElements {
       'cap-widget': CapWidgetAttributes;
@@ -64,5 +82,15 @@ declare global {
         }
       ) => void;
     };
+    initGeetest4?: (
+      config: {
+        captchaId: string;
+        product: 'bind';
+        language?: string;
+        protocol?: 'https://';
+        onError?: (error: unknown) => void;
+      },
+      callback: (captcha: GeetestCaptcha) => void
+    ) => void;
   }
 }

@@ -301,7 +301,7 @@ describe('oidc-model-instance query', () => {
     await destroyInstanceById(instance.modelName, instance.id);
   });
 
-  const revokeBatchSize = 500;
+  const revokeBatchSize = 2000;
   const revokeCases = {
     revokeInstanceByGrantId: {
       revoke: async (target: string) => revokeInstanceByGrantId(instance.modelName, target),
@@ -334,12 +334,12 @@ describe('oidc-model-instance query', () => {
   } as const;
 
   it.each([
-    ['revokeInstanceByGrantId', [500, 0]],
+    ['revokeInstanceByGrantId', [revokeBatchSize, 0]],
     // A partial batch must not end the loop — see the early-exit bug closed in #9151.
     ['revokeInstanceByGrantId', [300, 200, 0]],
-    ['revokeInstanceByUserId', [500, 0]],
+    ['revokeInstanceByUserId', [revokeBatchSize, 0]],
     ['revokeInstanceByUserId', [300, 200, 0]],
-    ['revokeInstanceByUserId', [500, undefined]],
+    ['revokeInstanceByUserId', [revokeBatchSize, undefined]],
   ] as const)('%s deletes in batches until drained %j', async (method, rowCounts) => {
     const target = 'target-id';
     const { revoke, expectSql } = revokeCases[method];

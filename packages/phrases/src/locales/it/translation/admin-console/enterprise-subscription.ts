@@ -34,6 +34,38 @@ const enterprise_subscription = {
     private_region_title: 'Istanza cloud privata ({{regionName}})',
     shared_cross_tenants: 'Tra tenant',
   },
+  user_subscriptions: {
+    description:
+      'Visualizza gli abbonamenti personali e la copertura Enterprise contrattuale, indipendentemente dal tenant selezionato.',
+    personal_title: 'Abbonamenti personali',
+    personal_description: 'Abbonamenti fatturati al tuo account, inclusi quelli passati.',
+    price: 'Prezzo',
+    billing_period: 'Periodo di fatturazione',
+    list_price_note:
+      'I prezzi escludono imposte e sconti. Le modifiche vengono calcolate in modo proporzionale nella prossima fattura.',
+    overdue_note:
+      'Il pagamento è scaduto. Se resta non pagato, l’abbonamento può essere sospeso e le sue funzionalità a pagamento rimosse.',
+    cancel_on: 'Annullamento previsto per {{date}}',
+    other_product: 'Altro abbonamento',
+    enterprise_invoices_description:
+      'Fatture del tuo contratto Enterprise. Seleziona una fattura per visualizzarla e scaricare la fattura o la ricevuta.',
+    personal_invoices_description:
+      'Fatture degli abbonamenti addebitati al tuo account, inclusi gli abbonamenti passati. Seleziona una fattura per visualizzarla e scaricare la fattura o la ricevuta.',
+    credit_note:
+      'I crediti derivanti da rimozioni o ripartizioni proporzionali riducono le fatture successive e non vengono necessariamente rimborsati subito sul tuo metodo di pagamento.',
+    invoice_link_unavailable:
+      'La pagina di questa fattura non è disponibile. Contattaci se ti serve una copia.',
+    status: {
+      active: 'Attivo',
+      trialing: 'In prova',
+      past_due: 'Scaduto da pagare',
+      unpaid: 'Non pagato',
+      canceled: 'Annullato',
+      incomplete: 'Incompleto',
+      incomplete_expired: 'Scaduto',
+      paused: 'In pausa',
+    },
+  },
 };
 
 export default Object.freeze(enterprise_subscription);

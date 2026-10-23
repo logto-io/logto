@@ -134,6 +134,7 @@ const description = {
   about_yourself: 'Tell us about yourself',
   verify_identity: 'Verify your identity',
   choose_verification_method: 'Choose how you want to sign in',
+  select_wallet: 'Select a wallet',
   verification_method: {
     passkey: 'Passkey',
     passkey_description: 'Verify via your device or USB hardware',

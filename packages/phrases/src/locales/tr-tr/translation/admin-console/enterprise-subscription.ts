@@ -33,6 +33,38 @@ const enterprise_subscription = {
     private_region_title: 'Özel bulut örneği ({{regionName}})',
     shared_cross_tenants: 'Kiracılar arası',
   },
+  user_subscriptions: {
+    description:
+      'Seçili kiracıdan bağımsız olarak kişisel aboneliklerinizi ve sözleşmeye bağlı Enterprise kapsamınızı görüntüleyin.',
+    personal_title: 'Kişisel abonelikler',
+    personal_description: 'Geçmiş abonelikler dahil hesabınıza faturalandırılan abonelikler.',
+    price: 'Fiyat',
+    billing_period: 'Fatura dönemi',
+    list_price_note:
+      'Fiyatlara vergiler ve indirimler dahil değildir. Değişiklikler bir sonraki faturanızda kıst olarak hesaplanır.',
+    overdue_note:
+      'Ödemenin vadesi geçti. Ödenmemeye devam ederse abonelik duraklatılabilir ve ücretli özellikleri kaldırılabilir.',
+    cancel_on: '{{date}} tarihinde iptal edilecek',
+    other_product: 'Diğer abonelik',
+    enterprise_invoices_description:
+      'Enterprise sözleşmenizin faturaları. Görüntülemek ve fatura ya da makbuzu indirmek için bir fatura seçin.',
+    personal_invoices_description:
+      'Geçmiş abonelikler dahil, hesabınıza faturalanan aboneliklerin faturaları. Görüntülemek ve fatura ya da makbuzu indirmek için bir fatura seçin.',
+    credit_note:
+      'Kaldırma veya kıst hesaplamadan doğan krediler sonraki faturalardan düşülür ve ödeme yönteminize hemen iade edilmeyebilir.',
+    invoice_link_unavailable:
+      'Bu fatura sayfası kullanılamıyor. Bir kopyaya ihtiyacınız varsa bizimle iletişime geçin.',
+    status: {
+      active: 'Etkin',
+      trialing: 'Deneme',
+      past_due: 'Vadesi geçmiş',
+      unpaid: 'Ödenmemiş',
+      canceled: 'İptal edilmiş',
+      incomplete: 'Tamamlanmamış',
+      incomplete_expired: 'Süresi dolmuş',
+      paused: 'Duraklatılmış',
+    },
+  },
 };
 
 export default Object.freeze(enterprise_subscription);

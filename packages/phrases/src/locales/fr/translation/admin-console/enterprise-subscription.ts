@@ -34,6 +34,38 @@ const enterprise_subscription = {
     private_region_title: 'Instance cloud privée ({{regionName}})',
     shared_cross_tenants: 'Entre locataires',
   },
+  user_subscriptions: {
+    description:
+      'Consultez vos abonnements personnels et votre couverture Enterprise contractuelle, quel que soit le tenant sélectionné.',
+    personal_title: 'Abonnements personnels',
+    personal_description: 'Abonnements facturés à votre compte, y compris les abonnements passés.',
+    price: 'Prix',
+    billing_period: 'Période de facturation',
+    list_price_note:
+      'Les prix excluent les taxes et les remises. Les modifications sont calculées au prorata sur votre prochaine facture.',
+    overdue_note:
+      'Le paiement est en retard. S’il reste impayé, l’abonnement peut être suspendu et ses fonctionnalités payantes supprimées.',
+    cancel_on: 'Annulation prévue le {{date}}',
+    other_product: 'Autre abonnement',
+    enterprise_invoices_description:
+      "Factures de votre contrat Enterprise. Sélectionnez une facture pour l'afficher et télécharger la facture ou le reçu.",
+    personal_invoices_description:
+      "Factures des abonnements facturés à votre compte, y compris les abonnements passés. Sélectionnez une facture pour l'afficher et télécharger la facture ou le reçu.",
+    credit_note:
+      'Les crédits issus de suppressions ou de proratisations réduisent les factures suivantes et ne sont pas nécessairement remboursés immédiatement sur votre moyen de paiement.',
+    invoice_link_unavailable:
+      "La page de cette facture n'est pas disponible. Contactez-nous si vous avez besoin d'une copie.",
+    status: {
+      active: 'Actif',
+      trialing: 'En essai',
+      past_due: 'En retard',
+      unpaid: 'Impayé',
+      canceled: 'Annulé',
+      incomplete: 'Incomplet',
+      incomplete_expired: 'Expiré',
+      paused: 'En pause',
+    },
+  },
 };
 
 export default Object.freeze(enterprise_subscription);

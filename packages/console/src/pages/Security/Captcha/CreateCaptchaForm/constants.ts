@@ -1,6 +1,7 @@
 import { CaptchaType } from '@logto/schemas';
 
 import cap from '@/assets/images/cap.svg?react';
+import geetest from '@/assets/images/geetest.svg?react';
 import recaptchaEnterprise from '@/assets/images/recaptcha.svg?react';
 import turnstile from '@/assets/images/turnstile.svg?react';
 
@@ -101,6 +102,49 @@ Cap's instrumentation challenge evaluates scripts in the browser to detect bots.
 ${enableCaptchaReadme}
 `;
 
+const geetestReadme = `
+# GeeTest
+
+[GeeTest](https://www.geetest.com) is an adaptive CAPTCHA service with localized challenges, widely used in mainland China.
+
+## Prerequisites
+
+- A GeeTest account with CAPTCHA v4 enabled.
+
+## Get the CAPTCHA ID and key
+
+1. Log in to the [GeeTest dashboard](https://auth.geetest.com/login).
+2. Create an application and a CAPTCHA v4 event.
+3. Copy the **CAPTCHA ID** and **CAPTCHA key** from the dashboard.
+
+## Configure Logto
+
+- **CAPTCHA ID** and **CAPTCHA key**: The values you copied above.
+
+${enableCaptchaReadme}
+`;
+
+const geetestProvider: CaptchaProviderMetadata = {
+  name: 'security.captcha_providers.geetest.name',
+  type: CaptchaType.Geetest,
+  logo: geetest,
+  logoDark: geetest,
+  description: 'security.captcha_providers.geetest.description',
+  readme: geetestReadme,
+  requiredFields: [
+    {
+      field: 'siteKey',
+      label: 'security.captcha_details.geetest_captcha_id',
+      placeholder: 'security.captcha_details.geetest_captcha_id',
+    },
+    {
+      field: 'secretKey',
+      label: 'security.captcha_details.geetest_captcha_key',
+      placeholder: 'security.captcha_details.geetest_captcha_key',
+    },
+  ],
+};
+
 export const captchaProviders: CaptchaProviderMetadata[] = [
   {
     name: 'security.captcha_providers.recaptcha_enterprise.name',
@@ -189,4 +233,5 @@ export const captchaProviders: CaptchaProviderMetadata[] = [
       },
     ],
   },
+  geetestProvider,
 ];
