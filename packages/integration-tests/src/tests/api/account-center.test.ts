@@ -5,6 +5,7 @@ import {
   getAccountCenter,
   updateAccountCenter,
 } from '#src/api/account-center.js';
+import { devFeatureDisabledTest } from '#src/utils.js';
 
 describe('account center', () => {
   beforeAll(async () => {
@@ -42,5 +43,16 @@ describe('account center', () => {
     });
 
     expect(clearedAccountCenter.deleteAccountUrl).toBeNull();
+  });
+
+  devFeatureDisabledTest.it('should not expose the recent-authentication window', async () => {
+    const updatedAccountCenter = await updateAccountCenter({
+      maximumAuthenticationAgeInSeconds: 7200,
+    });
+
+    expect(updatedAccountCenter).not.toHaveProperty('maximumAuthenticationAgeInSeconds');
+    await expect(getAccountCenter()).resolves.not.toHaveProperty(
+      'maximumAuthenticationAgeInSeconds'
+    );
   });
 });

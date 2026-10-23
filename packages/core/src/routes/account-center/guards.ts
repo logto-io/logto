@@ -9,8 +9,16 @@ export const getAccountCenterApiGuards = () => {
     : { personalAccessToken: true as const };
   const fields = accountCenterFieldControlGuard.omit(personalAccessTokenOmitMask);
 
+  // DEV: OIDC step-up authentication. The Account API does not enforce the window while the
+  // feature is in development, so the response omits it.
+  const maximumAuthenticationAgeInSecondsOmitMask = EnvSet.values.isDevFeaturesEnabled
+    ? {}
+    : { maximumAuthenticationAgeInSeconds: true as const };
+
   return {
     fields,
-    accountCenter: AccountCenters.guard.extend({ fields }),
+    accountCenter: AccountCenters.guard
+      .extend({ fields })
+      .omit(maximumAuthenticationAgeInSecondsOmitMask),
   };
 };

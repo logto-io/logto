@@ -17,7 +17,7 @@ import {
 
 import { waitFor } from '#src/utils.js';
 
-import api, { authedAdminApi } from './api.js';
+import { authedAdminApi } from './api.js';
 
 // OIDC config mutation APIs invalidate tenant cache asynchronously. These integration helpers wait
 // before returning so follow-up test requests do not race the cache refresh while the production API
@@ -137,9 +137,3 @@ export const updateCimdConfig = async (payload: Partial<CimdConfig>) => {
   await waitForTenantCacheInvalidation();
   return cimdConfig;
 };
-
-/** The public freshness window, as the Account Center reads it. */
-export const getPublicAuthenticationPolicy = async () =>
-  api
-    .get('.well-known/authentication-policy')
-    .json<{ maximumAuthenticationAgeInSeconds: number }>();

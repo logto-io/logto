@@ -23,7 +23,6 @@ import LoadingContext, {
   type LoadingContextValue,
 } from '@ac/Providers/LoadingContextProvider/LoadingContext';
 import PageContext, { type PageContextType } from '@ac/Providers/PageContextProvider/PageContext';
-import type { AuthenticationPolicy } from '@ac/apis/authentication-policy';
 
 export const mockAccountCenterSettings = {
   tenantId: 'default',
@@ -159,10 +158,6 @@ const clone = <T,>(value: T): T => {
   return clonedValue;
 };
 
-export const mockAuthenticationPolicy = {
-  maximumAuthenticationAgeInSeconds: defaultMaximumAuthenticationAgeInSeconds,
-} satisfies AuthenticationPolicy;
-
 export const createMockPageContext = (
   overrides: Partial<PageContextType> = {}
 ): PageContextType => ({
@@ -175,7 +170,6 @@ export const createMockPageContext = (
   setExperienceSettings: noop,
   accountCenterSettings: clone(mockAccountCenterSettings),
   setAccountCenterSettings: noop,
-  authenticationPolicy: clone(mockAuthenticationPolicy),
   userInfo: clone(mockUserInfo),
   refreshUserInfo: noopAsync,
   userInfoError: undefined,

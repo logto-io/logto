@@ -3,8 +3,6 @@ import { Theme, type AccountCenter, type UserProfileResponse } from '@logto/sche
 import { createContext } from 'react';
 import { isMobile } from 'react-device-detect';
 
-import type { AuthenticationPolicy } from '@ac/apis/authentication-policy';
-
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
 const noopAsync = async (): Promise<void> => undefined;
@@ -19,12 +17,6 @@ export type PageContextType = {
   setExperienceSettings: React.Dispatch<React.SetStateAction<SignInExperienceResponse | undefined>>;
   accountCenterSettings?: AccountCenter;
   setAccountCenterSettings: React.Dispatch<React.SetStateAction<AccountCenter | undefined>>;
-  /**
-   * The tenant's authentication policy, which decides how recent a sign-in must be for sensitive
-   * operations. `undefined` while it loads, or when the public configuration is unavailable; the
-   * step-up helpers fall back to the default window then.
-   */
-  authenticationPolicy?: AuthenticationPolicy;
   userInfo?: Partial<UserProfileResponse>;
   refreshUserInfo: () => Promise<void>;
   userInfoError?: Error;
@@ -45,7 +37,6 @@ const PageContext = createContext<PageContextType>({
   setExperienceSettings: noop,
   accountCenterSettings: undefined,
   setAccountCenterSettings: noop,
-  authenticationPolicy: undefined,
   userInfo: undefined,
   refreshUserInfo: noopAsync,
   userInfoError: undefined,

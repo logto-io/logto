@@ -1,4 +1,3 @@
-import { defaultMaximumAuthenticationAgeInSeconds } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
 import {
@@ -54,11 +53,6 @@ const tenantContext = new MockTenant(
     users: { hasActiveUsers: jest.fn().mockResolvedValue(true) },
     ssoConnectors: { findAll: getSsoConnectors },
     captchaProviders: { findCaptchaProvider: jest.fn().mockResolvedValue(mockCaptchaProvider) },
-    accountCenters: {
-      getMaximumAuthenticationAgeInSeconds: jest
-        .fn()
-        .mockResolvedValue(defaultMaximumAuthenticationAgeInSeconds),
-    },
   },
   { getLogtoConnectors }
 );
@@ -114,26 +108,5 @@ describe('GET /.well-known/sign-in-exp', () => {
     });
     expect(response.body).not.toHaveProperty('emailBlocklistPolicy');
     expect(response.body).not.toHaveProperty('forgotPasswordMethods');
-  });
-});
-
-describe('GET /.well-known/authentication-policy', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  const routeRequester = createRequester({
-    anonymousRoutes: wellKnownRoutes,
-    tenantContext,
-  });
-
-  it('should return the resolved tenant authentication policy', async () => {
-    const response = await routeRequester.get('/.well-known/authentication-policy');
-
-    expect(response.status).toEqual(200);
-    // The mock account center keeps the default window.
-    expect(response.body).toEqual({
-      maximumAuthenticationAgeInSeconds: defaultMaximumAuthenticationAgeInSeconds,
-    });
   });
 });

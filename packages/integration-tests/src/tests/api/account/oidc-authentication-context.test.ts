@@ -7,7 +7,6 @@ import {
   updateAccountCenter,
 } from '#src/api/account-center.js';
 import { authedAdminApi } from '#src/api/api.js';
-import { getPublicAuthenticationPolicy } from '#src/api/logto-config.js';
 import { getSessions, updateMyLogtoConfig } from '#src/api/my-account.js';
 import { createVerificationRecordByPassword } from '#src/api/verification-record.js';
 import {
@@ -129,7 +128,7 @@ describe('account API authentication context', () => {
   );
 
   devFeatureTest.it(
-    'advertises the tenant maximum authentication age in the challenge and the public policy',
+    'advertises the tenant maximum authentication age in the challenge',
     async () => {
       const { user } = await createDefaultTenantUserWithPassword();
       const api = await signInWithSocialAndGetUserApi(user.id, {
@@ -143,12 +142,8 @@ describe('account API authentication context', () => {
         const response = await getTrustedDevicesResponse(api);
         expect(response.status).toBe(401);
         expect(getChallengeMaxAge(response)).toBe('7200');
-        // The Account Center setting stores the value...
+        // The challenge and the Account Center setting that the client reads carry the same value.
         await expect(getAccountCenter()).resolves.toMatchObject({
-          maximumAuthenticationAgeInSeconds: 7200,
-        });
-        // ...and the public configuration exposes the same window.
-        await expect(getPublicAuthenticationPolicy()).resolves.toEqual({
           maximumAuthenticationAgeInSeconds: 7200,
         });
       } finally {
