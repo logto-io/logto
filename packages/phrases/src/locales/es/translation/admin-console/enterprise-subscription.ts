@@ -38,21 +38,12 @@ const enterprise_subscription = {
       'Consulta tus suscripciones personales y la cobertura Enterprise contratada, independientemente del tenant seleccionado.',
     personal_title: 'Suscripciones personales',
     personal_description: 'Suscripciones facturadas a tu cuenta, incluidas las anteriores.',
-    enterprise_description:
-      'El cupo de Console SSO se define en tu contrato y se comparte entre los administradores autorizados. Las suscripciones personales se facturan por separado.',
-    allowance: 'Cupo contratado',
-    not_covered:
-      'Este plan Enterprise no incluye cupo de Console SSO. Los nuevos conectores se facturan en una suscripción personal.',
-    quantity_price: 'Cantidad × precio unitario',
+    price: 'Precio',
     billing_period: 'Periodo de facturación',
-    connectors: 'Conectores de Console SSO',
-    no_connectors: 'Sin conectores',
     list_price_note:
-      'La cantidad, el precio unitario y el estado mostrados proceden del registro de la suscripción. Pausar el cobro puede dejar la cantidad y el estado sin cambios. Los precios unitarios excluyen impuestos, descuentos y ajustes prorrateados y no representan los cargos actuales ni un importe adeudado.',
-    proration_note:
-      'Las altas y bajas de Console SSO se prorratean en la factura habitual. Eliminar el último conector de pago cancela y liquida la suscripción.',
+      'Los precios no incluyen impuestos ni descuentos. Los cambios se prorratean en tu próxima factura.',
     overdue_note:
-      'Tras tres periodos de facturación consecutivos sin pagar y agotar los reintentos, se pausa el cobro y se eliminan los conectores de Console SSO de pago. Actualizar el pago no restaura su configuración. Contáctanos si necesitas ayuda.',
+      'El pago está vencido. Si sigue sin pagarse, la suscripción puede pausarse y sus funciones de pago pueden eliminarse.',
     cancel_on: 'Cancelación prevista para {{date}}',
     other_product: 'Otra suscripción',
     enterprise_invoices_description:

@@ -11,7 +11,7 @@ import {
 } from './connector-creation-idempotency';
 
 /** Only an active or trialing shared Enterprise plan grants Console SSO coverage. */
-export const isEnterpriseCoverageEligible = (enterprise?: LogtoEnterpriseSubscriptionResponse) =>
+const isEnterpriseCoverageEligible = (enterprise?: LogtoEnterpriseSubscriptionResponse) =>
   enterprise?.quotaScope === 'shared' &&
   (enterprise.subscription?.status === 'active' || enterprise.subscription?.status === 'trialing');
 
