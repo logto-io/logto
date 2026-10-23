@@ -36,12 +36,12 @@ export const updatePrimaryPhone = async (
 
 export const updateUsername = async (
   accessToken: string,
-  verificationRecordId: string,
+  verificationRecordId: string | undefined,
   payload: { username: string }
 ) => {
   await createAuthenticatedKy(accessToken).patch('/api/my-account', {
     json: payload,
-    headers: { [verificationRecordIdHeader]: verificationRecordId },
+    headers: getVerificationRecordHeaders(verificationRecordId),
   });
 };
 
