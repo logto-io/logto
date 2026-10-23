@@ -75,11 +75,8 @@ describe('useCurrentTenantScopes', () => {
     expect(renderWithEntitlement(false).canInviteMember).toBe(true);
   });
 
-  it('lets only managers convert to production with dev features', () => {
-    expect(renderWithEntitlement(true).canConvertToProduction).toBe(true);
-
-    mockEnv({ isDevFeaturesEnabled: true });
-    expect(renderWithEntitlement(true).canConvertToProduction).toBe(false);
+  it('lets only managers manage the tenant', () => {
+    expect(renderWithEntitlement(true).canManageTenant).toBe(false);
 
     jest.mocked(useSWR).mockReturnValue({
       data: [TenantScope.ManageTenant],
@@ -88,13 +85,13 @@ describe('useCurrentTenantScopes', () => {
       isValidating: false,
       mutate: jest.fn(),
     });
-    expect(renderWithEntitlement(true).canConvertToProduction).toBe(true);
+    expect(renderWithEntitlement(true).canManageTenant).toBe(true);
   });
 
   it('reads credentials only once Cloud scopes confirm write access', () => {
     expect(renderWithEntitlement(true).canReadCredentials).toBe(true);
 
-    mockEnv({ isCloud: true, isDevFeaturesEnabled: true });
+    mockEnv({ isCloud: true });
     expect(renderWithEntitlement(true).canReadCredentials).toBe(false);
 
     jest.mocked(useSWR).mockReturnValue({

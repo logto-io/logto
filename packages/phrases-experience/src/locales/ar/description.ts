@@ -141,6 +141,7 @@ const description = {
     phone_verification_code: 'رمز التحقق عبر الهاتف',
     verification_code_description: 'إرسال إلى {{target}}',
   },
+  select_wallet: 'اختر محفظة',
 };
 
 export default Object.freeze(description);

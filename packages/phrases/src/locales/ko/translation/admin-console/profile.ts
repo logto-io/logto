@@ -27,6 +27,7 @@ const profile = {
       quit_tenant_other: '다음 테넌트를 나가려고 합니다:',
     },
     issues: {
+      console_sso: '계정을 삭제하기 전에 이 계정이 소유한 모든 Console SSO 커넥터를 삭제하세요.',
       paid_plan: '다음 테넌트는 유료 플랜을 가지고 있으므로, 구독을 먼저 취소해야 해요:',
       paid_plan_other: '다음 테넌트들은 유료 플랜을 가지고 있으므로, 구독을 먼저 취소해야 해요:',
       subscription_status: '다음 테넌트는 구독 상태에 문제가 있어요:',

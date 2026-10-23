@@ -7,8 +7,6 @@ import type {
 } from '@logto/schemas';
 import { AccountCenterControlValue, MfaFactor } from '@logto/schemas';
 
-import { isDevFeaturesEnabled } from '@ac/constants/env';
-
 import { getProfileFieldControlKey } from './profile-field-control';
 import { getAvailableSocialConnectors } from './social-connector.js';
 
@@ -131,8 +129,7 @@ export const hasVisibleSecuritySection = (
     hasVisibleMfaSection(mfa, experienceSettings) ||
     hasVisiblePasskeySection(getPasskeyFieldControl(passkey, mfa), experienceSettings) ||
     isVisibleField(trustedDevice) ||
-    // DEV: Self-service personal access tokens
-    (isDevFeaturesEnabled && isVisibleField(personalAccessToken))
+    isVisibleField(personalAccessToken)
   );
 };
 

@@ -54,6 +54,15 @@ const error = {
     "Vous n'avez pas la permission d'accéder à cette application.\nVeuillez contacter votre administrateur pour obtenir de l'aide.",
   feature_not_enabled:
     "Vous n'avez pas la permission d'accéder à cette fonctionnalité. Veuillez contacter votre administrateur pour obtenir de l'aide.",
+  wallet_not_found:
+    'Aucun portefeuille Ethereum détecté. Installez une extension de portefeuille dans votre navigateur et réessayez.',
+  wallet_not_supported:
+    "La connexion par portefeuille n'est prise en charge que dans un navigateur avec une extension de portefeuille installée.",
+  wallet_request_rejected: 'La demande du portefeuille a été refusée. Veuillez réessayer.',
+  wallet_unsupported_chain:
+    'Votre portefeuille est connecté à un réseau non pris en charge. Changez de réseau et réessayez.',
+  wallet_signature_invalid:
+    'La signature du portefeuille est invalide ou a expiré. Veuillez réessayer.',
 };
 
 export default Object.freeze(error);

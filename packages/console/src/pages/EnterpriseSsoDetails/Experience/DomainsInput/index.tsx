@@ -75,7 +75,8 @@ function DomainsInput({ className, values, onChange: rawOnChange, error, placeho
           className
         )}
         role="button"
-        tabIndex={0}
+        aria-disabled={isReadOnlyField ? true : undefined}
+        tabIndex={isReadOnlyField ? -1 : 0}
         onKeyDown={onKeyDownHandler(() => {
           inputRef.current?.focus();
         })}

@@ -3,10 +3,8 @@ import { Theme } from '@logto/schemas';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { getAccountCenterSettings } from '@ac/apis/account-center';
-import { getAuthenticationPolicy } from '@ac/apis/authentication-policy';
 import { getSignInExperienceSettings } from '@ac/apis/sign-in-experience';
 import { getUserInfo } from '@ac/apis/user';
-import { isDevFeaturesEnabled } from '@ac/constants/env';
 import useApi from '@ac/hooks/use-api';
 import { changeLanguage, getPreferredLanguage } from '@ac/i18n/utils';
 import { getUiLocales } from '@ac/utils/account-center-route';
@@ -22,19 +20,6 @@ import {
 
 type Props = {
   readonly children: React.ReactNode;
-};
-
-/**
- * The policy only aligns the proactive step-up with the server, so a failed load must not block
- * Account Center: the step-up helpers fall back to the default window, and the Account API
- * challenge still corrects any disagreement.
- */
-const getOptionalAuthenticationPolicy = async (): Promise<
-  PageContextType['authenticationPolicy']
-> => {
-  try {
-    return await getAuthenticationPolicy();
-  } catch {}
 };
 
 const getInitialTheme = () => {
@@ -57,8 +42,6 @@ const PageContextProvider = ({ children }: Props) => {
     useState<PageContextType['experienceSettings']>(undefined);
   const [accountCenterSettings, setAccountCenterSettings] =
     useState<PageContextType['accountCenterSettings']>(undefined);
-  const [authenticationPolicy, setAuthenticationPolicy] =
-    useState<PageContextType['authenticationPolicy']>(undefined);
   const [userInfo, setUserInfo] = useState<PageContextType['userInfo']>(undefined);
   const [userInfoError, setUserInfoError] = useState<Error>();
   const [isLoadingUserInfo, setIsLoadingUserInfo] = useState(false);
@@ -156,12 +139,9 @@ const PageContextProvider = ({ children }: Props) => {
       setIsLoadingExperience(true);
 
       try {
-        const [settings, accountCenter, authenticationPolicy] = await Promise.all([
+        const [settings, accountCenter] = await Promise.all([
           getSignInExperienceSettings(),
           getAccountCenterSettings(),
-          // DEV: OIDC step-up authentication. The public policy only exists with the feature, and
-          // only the step-up helpers consume it.
-          isDevFeaturesEnabled ? getOptionalAuthenticationPolicy() : Promise.resolve(undefined),
         ]);
         await changeLanguage(
           getPreferredLanguage({
@@ -171,7 +151,6 @@ const PageContextProvider = ({ children }: Props) => {
         );
         setExperienceSettings(settings);
         setAccountCenterSettings(accountCenter);
-        setAuthenticationPolicy(authenticationPolicy);
         setExperienceError(undefined);
       } catch (error: unknown) {
         setExperienceSettings(undefined);
@@ -222,7 +201,6 @@ const PageContextProvider = ({ children }: Props) => {
       setExperienceSettings,
       accountCenterSettings,
       setAccountCenterSettings,
-      authenticationPolicy,
       userInfo,
       refreshUserInfo,
       userInfoError,
@@ -234,7 +212,6 @@ const PageContextProvider = ({ children }: Props) => {
     }),
     [
       accountCenterSettings,
-      authenticationPolicy,
       experienceError,
       experienceSettings,
       isLoadingExperience,

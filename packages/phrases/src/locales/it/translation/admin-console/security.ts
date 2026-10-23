@@ -41,6 +41,11 @@ const security = {
       description:
         'CAPTCHA open source e self-hosted basato su proof-of-work, senza puzzle visivi né servizi di terze parti, ideale per le regioni in cui altri servizi CAPTCHA non sono raggiungibili.',
     },
+    geetest: {
+      name: 'GeeTest',
+      description:
+        'CAPTCHA adattivo di GeeTest con sfide localizzate e buone prestazioni nella Cina continentale.',
+    },
   },
   captcha_details: {
     back_to_security: 'Torna alla sicurezza',
@@ -60,6 +65,8 @@ const security = {
     cap_endpoint_placeholder: 'https://cap.example.com',
     cap_endpoint_http_notice:
       'Questo endpoint usa HTTP, adatto solo allo sviluppo locale. I browser bloccano le richieste HTTP da una pagina di accesso HTTPS e la chiave segreta verrebbe inviata non crittografata. Usa HTTPS in produzione.',
+    geetest_captcha_id: 'ID CAPTCHA',
+    geetest_captcha_key: 'Chiave CAPTCHA',
     deletion_description: 'Sei sicuro di voler eliminare questo fornitore di CAPTCHA?',
     captcha_deleted: 'Fornitore di CAPTCHA eliminato con successo',
     setup_captcha: 'Configura CAPTCHA',
@@ -164,17 +171,18 @@ const security = {
     manual_unlock: {
       title: 'Sblocco manuale',
       description:
-        'Sblocca gli utenti immediatamente confermando la loro identità e inserendo il loro identificatore.',
-      unblock_by_identifiers: 'Sblocca tramite identificatore',
+        'Sblocca gli utenti immediatamente confermando la loro identità e inserendo il loro identificatore o ID utente.',
+      unblock_by_identifiers: 'Sblocca tramite identificatore o ID utente',
       modal_description_1:
-        "Un identificatore è stato temporaneamente bloccato a causa di più tentativi di accesso/registrazione falliti. Per proteggere la sicurezza, l'accesso verrà automaticamente ripristinato dopo la durata del blocco.",
+        "Un identificatore o ID utente è stato temporaneamente bloccato a causa di più tentativi di accesso/registrazione o verifica di sicurezza falliti. Per proteggere la sicurezza, l'accesso verrà automaticamente ripristinato dopo la durata del blocco.",
       modal_description_2:
         "Sblocca manualmente solo se hai confermato l'identità dell'utente e assicurato che non vi siano tentativi di accesso non autorizzati.",
-      placeholder: 'Inserisci identificatori (indirizzo email / numero di telefono / nome utente)',
+      placeholder:
+        'Inserisci identificatori o ID utente (indirizzo email / numero di telefono / nome utente / ID utente)',
       confirm_button_text: 'Sblocca adesso',
       success_toast: 'Sbloccato con successo',
-      duplicate_identifier_error: 'Identificatore già aggiunto',
-      empty_identifier_error: 'Inserisci almeno un identificatore',
+      duplicate_identifier_error: 'Identificatore o ID utente già aggiunto',
+      empty_identifier_error: 'Inserisci almeno un identificatore o ID utente',
     },
   },
   blocklist: {

@@ -28,6 +28,13 @@ export const userMfaDataGuard = z.object({
    */
   skipped: z.boolean().optional(),
   /**
+   * Whether the user is required to set up MFA and cannot skip the binding flow
+   *
+   * This is an admin-managed requirement. It only affects MFA binding and does not force MFA
+   * verification on sign-in; use `skipMfaOnSignIn` for the latter.
+   */
+  required: z.boolean().optional(),
+  /**
    * Whether the user has skipped optional additional MFA binding suggestion
    */
   additionalBindingSuggestionSkipped: z.boolean().optional(),

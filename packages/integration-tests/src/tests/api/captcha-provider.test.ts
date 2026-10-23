@@ -76,6 +76,18 @@ describe('captcha provider', () => {
     );
   });
 
+  it('should update and get GeeTest captcha provider successfully', async () => {
+    const config = {
+      type: CaptchaType.Geetest,
+      siteKey: 'captcha_id',
+      secretKey: 'captcha_key',
+    } as const;
+
+    await updateCaptchaProvider({ config });
+
+    await expect(getCaptchaProvider()).resolves.toMatchObject({ config });
+  });
+
   it('should reject an out-of-range score threshold', async () => {
     await expectRejects(
       updateCaptchaProvider({

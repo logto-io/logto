@@ -41,6 +41,11 @@ const security = {
       description:
         'Görsel bulmaca veya üçüncü taraf hizmet gerektirmeyen, iş kanıtı tabanlı, açık kaynaklı ve kendi sunucunuzda barındırılan CAPTCHA; diğer CAPTCHA hizmetlerine erişilemeyen bölgeler için idealdir.',
     },
+    geetest: {
+      name: 'GeeTest',
+      description:
+        'Yerelleştirilmiş sorgulamalar ve anakara Çin’de güçlü performans sunan GeeTest uyarlanabilir CAPTCHA.',
+    },
   },
   captcha_details: {
     back_to_security: 'Güvenliğe dön',
@@ -60,6 +65,8 @@ const security = {
     cap_endpoint_placeholder: 'https://cap.example.com',
     cap_endpoint_http_notice:
       'Bu uç nokta HTTP kullanıyor ve yalnızca yerel geliştirme için uygundur. Tarayıcılar HTTPS oturum açma sayfasından yapılan HTTP isteklerini engeller ve gizli anahtar şifrelenmeden gönderilir. Üretimde HTTPS kullanın.',
+    geetest_captcha_id: 'CAPTCHA Kimliği',
+    geetest_captcha_key: 'CAPTCHA Anahtarı',
     deletion_description: 'Bu CAPTCHA sağlayıcısını silmek istediğinizden emin misiniz?',
     captcha_deleted: 'CAPTCHA sağlayıcısı başarıyla silindi',
     setup_captcha: "CAPTCHA'yı ayarla",
@@ -160,17 +167,18 @@ const security = {
     manual_unlock: {
       title: 'Manuel kilit açma',
       description:
-        'Kullanıcının kimliğini doğrulayıp kimliklerini girdikten sonra anında kilidi açın.',
-      unblock_by_identifiers: 'Kimlik ile engeli kaldır',
+        "Kullanıcının kimliğini doğrulayıp tanımlayıcısını veya kullanıcı ID'sini girdikten sonra anında kilidi açın.",
+      unblock_by_identifiers: "Tanımlayıcı veya kullanıcı ID'si ile engeli kaldır",
       modal_description_1:
-        'Bir kimlik, birden fazla başarısız oturum açma/kayıt olma denemesi nedeniyle geçici olarak kilitlendi. Güvenliği korumak için, erişim kilitleme süresi bittikten sonra otomatik olarak geri yüklenecektir.',
+        "Bir tanımlayıcı veya kullanıcı ID'si, birden fazla başarısız oturum açma/kayıt olma veya güvenlik doğrulama denemesi nedeniyle geçici olarak kilitlendi. Güvenliği korumak için, erişim kilitleme süresi bittikten sonra otomatik olarak geri yüklenecektir.",
       modal_description_2:
         'Kullanıcının kimliğini doğrulayıp yetkisiz erişim denemesi olmadığından emin olduysanız yalnızca manuel olarak kilidi açın.',
-      placeholder: 'Kimlikleri girin (e-posta adresi / telefon numarası / kullanıcı adı)',
+      placeholder:
+        "Tanımlayıcıları veya kullanıcı ID'lerini girin (e-posta adresi / telefon numarası / kullanıcı adı / kullanıcı ID'si)",
       confirm_button_text: 'Şimdi kilidini aç',
       success_toast: 'Başarıyla kilidi açıldı',
-      duplicate_identifier_error: 'Kimlik zaten eklendi',
-      empty_identifier_error: 'Lütfen en az bir kimlik girin',
+      duplicate_identifier_error: "Tanımlayıcı veya kullanıcı ID'si zaten eklendi",
+      empty_identifier_error: "Lütfen en az bir tanımlayıcı veya kullanıcı ID'si girin",
     },
   },
   blocklist: {

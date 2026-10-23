@@ -22,7 +22,7 @@ function TenantEnvironment({ tag }: Props) {
   const [isConvertModalOpen, setIsConvertModalOpen] = useState(false);
   const { currentTenant, isDevTenant } = useContext(TenantsContext);
   const {
-    access: { canConvertToProduction },
+    access: { canManageTenant },
   } = useCurrentTenantScopes();
 
   return (
@@ -40,7 +40,7 @@ function TenantEnvironment({ tag }: Props) {
           {isDevTenant && <LearnMore href={logtoCloudTenantSettings} />}
         </div>
       </div>
-      {isDevTenant && !isDevOnlyRegion(currentTenant?.regionName) && canConvertToProduction && (
+      {isDevTenant && !isDevOnlyRegion(currentTenant?.regionName) && canManageTenant && (
         <>
           <Button
             className={styles.button}

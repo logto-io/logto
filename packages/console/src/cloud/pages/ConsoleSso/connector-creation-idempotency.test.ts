@@ -4,6 +4,8 @@ import {
   clearPendingConnectorCreation,
   readPendingConnectorCreation,
   getOrCreatePendingConnectorCreation,
+  isPendingConnectorCreationCurrent,
+  savePendingConnectorCreation,
 } from './connector-creation-idempotency';
 
 beforeEach(() => {
@@ -13,6 +15,19 @@ beforeEach(() => {
     configurable: true,
     value: jest.fn().mockReturnValueOnce('operation-one').mockReturnValueOnce('operation-two'),
   });
+});
+
+it('recovers the funding Enterprise and detects a different selection in another tab', () => {
+  const saved = savePendingConnectorCreation('alice', {
+    key: 'creation-one',
+    providerName: SsoProviderName.OIDC,
+    funding: 'included',
+    enterpriseId: 'enterprise-one',
+  });
+  expect(readPendingConnectorCreation('alice')).toEqual(saved);
+  expect(isPendingConnectorCreationCurrent('alice', saved)).toBe(true);
+  savePendingConnectorCreation('alice', { ...saved, enterpriseId: 'enterprise-two' });
+  expect(isPendingConnectorCreationCurrent('alice', saved)).toBe(false);
 });
 
 it('recovers a creation after reload without changing its key or provider', () => {

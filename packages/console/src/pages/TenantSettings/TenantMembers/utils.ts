@@ -13,17 +13,6 @@ export const findTenantRole = (roleId?: string) =>
 export const getTenantRolePhrase = (roleId: string) =>
   tenantRolePhrases[findTenantRole(roleId) ?? TenantRole.Collaborator];
 
-/**
- * Viewer is assignable on Cloud only, and only with dev features until the read-only tenant role is
- * released.
- */
-export const getAssignableTenantRoles = ({
-  isCloud,
-  isDevFeaturesEnabled,
-}: {
-  isCloud: boolean;
-  isDevFeaturesEnabled: boolean;
-}) =>
-  Object.values(TenantRole).filter(
-    (role) => role !== TenantRole.Viewer || (isCloud && isDevFeaturesEnabled)
-  );
+/** Viewer is Cloud-only: only the Cloud Management API proxy enforces its read-only scopes. */
+export const getAssignableTenantRoles = ({ isCloud }: { isCloud: boolean }) =>
+  Object.values(TenantRole).filter((role) => role !== TenantRole.Viewer || isCloud);

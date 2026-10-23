@@ -167,9 +167,7 @@ export const getAccessTokenByRefreshToken = async (
     return result.data;
   } catch (error: unknown) {
     if (error instanceof HTTPError) {
-      const { body: rawBody } = error.response;
-
-      throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(rawBody));
+      throw new ConnectorError(ConnectorErrorCodes.General, await error.response.text());
     }
 
     throw error;

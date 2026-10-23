@@ -1,9 +1,8 @@
 import classNames from 'classnames';
-import useSWR from 'swr';
 
 import CardIcon from '@/assets/icons/card.svg?react';
-import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
-import { type LogtoEnterpriseResponse } from '@/cloud/types/router';
+import { useSubscriptionEntry } from '@/cloud/hooks/use-user-subscriptions';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { GlobalRoute } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import TextLink from '@/ds-components/TextLink';
@@ -15,32 +14,22 @@ type Props = {
 };
 
 function EnterpriseSubscriptions({ className }: Props) {
-  const cloudApi = useCloudApi();
-
-  const { data } = useSWR<{ logtoEnterprises: LogtoEnterpriseResponse[] }, Error>(
-    '/api/me/logto-enterprises',
-    async () => cloudApi.get('/api/me/logto-enterprises')
-  );
-
-  if (!data || data.logtoEnterprises.length === 0) {
-    return null;
-  }
-
-  // Currently only support one enterprise subscription per user
-  // If there are multiple, consider adding a dropdown selector in the future
-  const defaultEnterpriseSubscription = data.logtoEnterprises[0];
-
-  if (!defaultEnterpriseSubscription) {
+  const { enterprises, hasSubscriptions } = useSubscriptionEntry();
+  const enterprise = enterprises.data?.[0];
+  if (!enterprise && !hasSubscriptions) {
     return null;
   }
 
   return (
     <TextLink
+      targetBlank
       className={classNames(styles.button, className)}
       icon={<CardIcon className={styles.icon} />}
-      onClick={() => {
-        window.open(`${GlobalRoute.EnterpriseSubscription}/${defaultEnterpriseSubscription.id}`);
-      }}
+      href={
+        enterprise && !isDevFeaturesEnabled
+          ? `${GlobalRoute.EnterpriseSubscription}/${enterprise.id}`
+          : GlobalRoute.EnterpriseSubscription
+      }
     >
       <DynamicT forKey="topbar.subscription" />
     </TextLink>

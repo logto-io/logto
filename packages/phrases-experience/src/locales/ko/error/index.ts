@@ -45,6 +45,13 @@ const error = {
   application_access_denied:
     '이 애플리케이션에 액세스할 권한이 없습니다.\n관리자에게 도움을 요청하세요.',
   feature_not_enabled: '이 기능에 액세스할 권한이 없습니다. 관리자에게 도움을 요청하세요.',
+  wallet_not_found:
+    '이더리움 지갑을 찾을 수 없습니다. 브라우저 지갑 확장 프로그램을 설치한 후 다시 시도하세요.',
+  wallet_not_supported: '지갑 로그인은 지갑 확장 프로그램이 설치된 브라우저에서만 지원됩니다.',
+  wallet_request_rejected: '지갑 요청이 거부되었습니다. 다시 시도하세요.',
+  wallet_unsupported_chain:
+    '지갑이 지원되지 않는 네트워크에 연결되어 있습니다. 네트워크를 전환한 후 다시 시도하세요.',
+  wallet_signature_invalid: '지갑 서명이 유효하지 않거나 만료되었습니다. 다시 시도하세요.',
 };
 
 export default Object.freeze(error);

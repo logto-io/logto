@@ -5,6 +5,7 @@ import {
   type selfHostedLicensesRouter,
   type tenantAuthRouter,
   type userStripeCustomersRouter,
+  type userSubscriptionsRouter,
 } from '@logto/cloud/routes';
 import { useLogto } from '@logto/react';
 import { getTenantOrganizationId } from '@logto/schemas';
@@ -56,6 +57,7 @@ type ConsoleCloudRouter =
   | typeof router
   | typeof emailLogsRouter
   | typeof userStripeCustomersRouter
+  | typeof userSubscriptionsRouter
   | typeof consoleSsoRouter
   | typeof selfHostedLicensesRouter;
 

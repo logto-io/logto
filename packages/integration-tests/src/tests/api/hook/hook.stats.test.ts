@@ -1,7 +1,7 @@
 import {
   type Hook,
   type HookResponse,
-  type Log,
+  type LogResponse,
   LogResult,
   SignInIdentifier,
   InteractionHookEvent,
@@ -44,7 +44,7 @@ describe('hook logs', () => {
 
     const logs = await authedAdminApi
       .get(`hooks/${createdHook.id}/recent-logs?page_size=100`)
-      .json<Log[]>();
+      .json<LogResponse[]>();
     expect(
       logs.some(
         ({ payload: { hookId, result } }) =>

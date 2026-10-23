@@ -93,7 +93,7 @@ export const getProactiveStepUpChallenge = (
 /**
  * Whether the ID token carries a first-factor authentication context recent enough for the Account
  * API. The access token stays opaque; the ID token is the client's local source for coordinating
- * the UX before a sensitive request. The window is the tenant's authentication policy, fetched
+ * the UX before a sensitive request. The window is the tenant's Account Center setting, read
  * from the public configuration; it falls back to the default when that configuration is
  * unavailable, and any disagreement with the server is still corrected by the challenge.
  */

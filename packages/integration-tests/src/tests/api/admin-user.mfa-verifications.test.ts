@@ -62,7 +62,7 @@ describe('admin console user management (mfa verifications)', () => {
 
     const config = await getUserLogtoConfig(user.id);
     expect(config).toEqual({
-      mfa: { skipped: false, skipMfaOnSignIn: false },
+      mfa: { skipped: false, required: false, skipMfaOnSignIn: false },
       passkeySignIn: { skipped: false },
     });
 
@@ -71,7 +71,7 @@ describe('admin console user management (mfa verifications)', () => {
       passkeySignIn: { skipped: false },
     });
     expect(response).toEqual({
-      mfa: { skipped: true, skipMfaOnSignIn: false },
+      mfa: { skipped: true, required: false, skipMfaOnSignIn: false },
       passkeySignIn: { skipped: false },
     });
 
@@ -84,7 +84,7 @@ describe('admin console user management (mfa verifications)', () => {
       passkeySignIn: { skipped: true },
     });
     expect(response2).toEqual({
-      mfa: { skipped: false, skipMfaOnSignIn: true },
+      mfa: { skipped: false, required: false, skipMfaOnSignIn: true },
       passkeySignIn: { skipped: true },
     });
 
@@ -99,9 +99,33 @@ describe('admin console user management (mfa verifications)', () => {
       passkeySignIn: { skipped: false },
     });
     expect(response3).toEqual({
-      mfa: { skipped: false, skipMfaOnSignIn: false },
+      mfa: { skipped: false, required: false, skipMfaOnSignIn: false },
       passkeySignIn: { skipped: false },
     });
+
+    await deleteUser(user.id);
+  });
+
+  it('should update logto_config MFA requirement successfully', async () => {
+    const user = await createUserByAdmin();
+
+    const response = await updateUserLogtoConfig(user.id, {
+      mfa: { required: true },
+      passkeySignIn: {},
+    });
+    expect(response.mfa.required).toBe(true);
+
+    const updatedConfig = await getUserLogtoConfig(user.id);
+    expect(updatedConfig.mfa.required).toBe(true);
+
+    const response2 = await updateUserLogtoConfig(user.id, {
+      mfa: { required: false },
+      passkeySignIn: {},
+    });
+    expect(response2.mfa.required).toBe(false);
+
+    const updatedConfig2 = await getUserLogtoConfig(user.id);
+    expect(updatedConfig2.mfa.required).toBe(false);
 
     await deleteUser(user.id);
   });

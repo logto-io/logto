@@ -40,6 +40,8 @@ const jwt_claims = {
   test_tab: 'Contesto di test',
   jwt_claims_description:
     'Le richieste predefinite sono incluse automaticamente nel JWT e non possono essere sovrascritte.',
+  reserved_claims_description:
+    '`acr`, `amr` e `auth_time` sono riservate nei token di accesso utente: Logto le deriva sempre e ignora le richieste personalizzate che usano queste chiavi.',
   user_data: {
     title: 'Dati utente',
     subtitle:

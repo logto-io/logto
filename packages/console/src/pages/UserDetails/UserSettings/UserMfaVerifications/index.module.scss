@@ -1,5 +1,20 @@
 @use '@/scss/underscore' as _;
 
+.mfaRequirement {
+  margin-bottom: _.unit(3);
+
+  .mfaRequirementTitle {
+    font: var(--font-body-2);
+    font-weight: 600;
+  }
+
+  .mfaRequirementDescription {
+    margin-top: _.unit(1);
+    font: var(--font-body-3);
+    color: var(--color-text-secondary);
+  }
+}
+
 .fieldDescription {
   font: var(--font-body-2);
   color: var(--color-text-secondary);

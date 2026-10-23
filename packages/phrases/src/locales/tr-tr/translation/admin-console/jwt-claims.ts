@@ -39,6 +39,8 @@ const jwt_claims = {
   test_tab: 'Test bağlamı',
   jwt_claims_description:
     "Varsayılan iddialar JWT'de otomatik olarak dahil edilir ve geçersiz kılınabilir.",
+  reserved_claims_description:
+    '`acr`, `amr` ve `auth_time` kullanıcı erişim belgelerinde ayrılmıştır: Logto bunları her zaman kendisi türetir ve bu anahtarları kullanan özel iddiaları yok sayar.',
   user_data: {
     title: 'Kullanıcı verisi',
     subtitle:

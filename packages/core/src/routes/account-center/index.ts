@@ -7,6 +7,7 @@ import {
 import { deduplicate } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
@@ -73,7 +74,11 @@ export default function accountCentersRoutes<T extends ManagementApiRouter>(
           : undefined,
         deleteAccountUrl: normalizedDeleteAccountUrl,
         customCss,
-        maximumAuthenticationAgeInSeconds,
+        // DEV: OIDC step-up authentication. Nothing enforces the window until the feature is
+        // released, so a value saved now would have no effect.
+        maximumAuthenticationAgeInSeconds: EnvSet.values.isDevFeaturesEnabled
+          ? maximumAuthenticationAgeInSeconds
+          : undefined,
         ...(normalizedProfileFields !== undefined && {
           profileFields: normalizedProfileFields,
         }),

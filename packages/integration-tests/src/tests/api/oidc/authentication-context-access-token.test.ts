@@ -199,10 +199,15 @@ describe('authentication context in access tokens', () => {
   );
 
   it.each(['opaque', 'jwt'] as const)(
-    'preserves customizer precedence for authentication context claims in %s tokens',
+    'reserves authentication context claims against the customizer in %s tokens',
     async (format) => {
       const resource = format === 'jwt' ? await createResource() : undefined;
-      const customClaims = { acr: 'custom:acr', amr: ['custom'], auth_time: 123 };
+      const customClaims = {
+        acr: 'custom:acr',
+        amr: ['custom'],
+        auth_time: 123,
+        custom_claim: true,
+      };
       const readClaims = async (token: string) =>
         format === 'jwt' ? decodeJwt(token) : introspectToken(token);
 
@@ -213,11 +218,29 @@ describe('authentication context in access tokens', () => {
         });
 
         const client = await signIn(resource?.indicator);
-        expect(await readClaims(await client.getAccessToken())).toMatchObject(customClaims);
+        const idTokenClaims = await client.getIdTokenClaims();
+
+        const expectClaims = (claims: Record<string, unknown>) => {
+          if (isDevFeaturesEnabled) {
+            expect(typeof idTokenClaims.auth_time).toBe('number');
+            // Logto's derivation wins; the script still contributes its other claims.
+            expect(claims).toMatchObject({
+              acr: 'urn:logto:acr:1fa',
+              amr: ['pwd'],
+              auth_time: idTokenClaims.auth_time,
+              custom_claim: true,
+            });
+          } else {
+            // Without the feature the released merge order stands, customizer output included.
+            expect(claims).toMatchObject(customClaims);
+          }
+        };
+
+        expectClaims(await readClaims(await client.getAccessToken()));
         const refreshToken = await client.getRefreshToken();
         assert(refreshToken, new Error('Missing refresh token after code exchange'));
         const refreshed = await refreshTokens(refreshToken, resource?.indicator);
-        expect(await readClaims(refreshed.access_token)).toMatchObject(customClaims);
+        expectClaims(await readClaims(refreshed.access_token));
 
         await logoutClient(client);
       } finally {

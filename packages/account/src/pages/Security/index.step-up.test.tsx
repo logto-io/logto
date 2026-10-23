@@ -73,7 +73,9 @@ const createChallengeError = () =>
     {} as NormalizedOptions
   );
 
-const renderMfaSection = (maximumAuthenticationAgeInSeconds?: number) =>
+const renderMfaSection = (
+  maximumAuthenticationAgeInSeconds = mockAccountCenterSettings.maximumAuthenticationAgeInSeconds
+) =>
   renderWithPageContext(
     <Routes>
       <Route path={securityRoute} element={<Security />} />
@@ -90,6 +92,7 @@ const renderMfaSection = (maximumAuthenticationAgeInSeconds?: number) =>
           fields: {
             mfa: AccountCenterControlValue.Edit,
           },
+          maximumAuthenticationAgeInSeconds,
         },
         experienceSettings: {
           ...mockSignInExperienceSettings,
@@ -100,9 +103,6 @@ const renderMfaSection = (maximumAuthenticationAgeInSeconds?: number) =>
             policy: MfaPolicy.PromptAtSignInAndSignUp,
           },
         },
-        ...(maximumAuthenticationAgeInSeconds !== undefined && {
-          authenticationPolicy: { maximumAuthenticationAgeInSeconds },
-        }),
         // A record the legacy flow cached; the step-up path must not send it.
         verificationId: 'legacy-verification-record-id',
         setToast: mockSetToast,

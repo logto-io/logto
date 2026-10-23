@@ -60,7 +60,8 @@ export default function logtoConfigRoutes<T extends UserRouter>(...args: RouterI
     `${accountApiPrefix}/logto-configs`,
     koaGuard({
       body: z.object({
-        mfa: userMfaDataGuard.optional(),
+        // `required` is admin-managed and must not be editable through the Account API.
+        mfa: userMfaDataGuard.omit({ required: true }).optional(),
         passkeySignIn: userPasskeySignInDataGuard.optional(),
       }),
       response: userLogtoConfigResponseGuard,

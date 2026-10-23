@@ -45,15 +45,16 @@ export type IdentityProof = {
 };
 
 /**
- * The tenant's freshness window from the public authentication policy. Falls back to the default
- * window until the configuration loads, or when it is unavailable: the Account API challenge
- * always corrects a disagreement, so this only affects when Account Center acts proactively.
+ * The tenant's freshness window from the public Account Center configuration. Falls back to the
+ * default window until the configuration loads, or when it omits the window: the Account API
+ * challenge always corrects a disagreement, so this only affects when Account Center acts
+ * proactively.
  */
 const useMaximumAuthenticationAgeInSeconds = (): number => {
-  const { authenticationPolicy } = useContext(PageContext);
+  const { accountCenterSettings } = useContext(PageContext);
 
   return (
-    authenticationPolicy?.maximumAuthenticationAgeInSeconds ??
+    accountCenterSettings?.maximumAuthenticationAgeInSeconds ??
     defaultMaximumAuthenticationAgeInSeconds
   );
 };

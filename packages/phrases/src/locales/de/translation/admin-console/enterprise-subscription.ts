@@ -33,6 +33,39 @@ const enterprise_subscription = {
     private_region_title: 'Private Cloud-Instanz ({{regionName}})',
     shared_cross_tenants: 'Über Mandanten hinweg',
   },
+  user_subscriptions: {
+    description:
+      'Persönliche Abonnements und vertragliche Enterprise-Kontingente unabhängig vom ausgewählten Mandanten anzeigen.',
+    personal_title: 'Persönliche Abonnements',
+    personal_description:
+      'Ihrem Konto in Rechnung gestellte Abonnements, einschließlich früherer Abonnements.',
+    price: 'Preis',
+    billing_period: 'Abrechnungszeitraum',
+    list_price_note:
+      'Preise verstehen sich ohne Steuern und Rabatte. Änderungen werden anteilig mit Ihrer nächsten Rechnung verrechnet.',
+    overdue_note:
+      'Die Zahlung ist überfällig. Bleibt sie unbezahlt, kann das Abonnement pausiert und seine kostenpflichtigen Funktionen entfernt werden.',
+    cancel_on: 'Kündigung geplant für {{date}}',
+    other_product: 'Anderes Abonnement',
+    enterprise_invoices_description:
+      'Rechnungen für deinen Enterprise-Vertrag. Wähle eine Rechnung aus, um sie anzusehen und die Rechnung oder Quittung herunterzuladen.',
+    personal_invoices_description:
+      'Rechnungen für Abonnements, die deinem Konto in Rechnung gestellt werden, einschließlich früherer Abonnements. Wähle eine Rechnung aus, um sie anzusehen und die Rechnung oder Quittung herunterzuladen.',
+    credit_note:
+      'Gutschriften aus Entfernungen oder anteiligen Abrechnungen verringern spätere Rechnungen und werden nicht unbedingt sofort auf deine Zahlungsmethode erstattet.',
+    invoice_link_unavailable:
+      'Diese Rechnungsseite ist nicht verfügbar. Kontaktiere uns, wenn du eine Kopie benötigst.',
+    status: {
+      active: 'Aktiv',
+      trialing: 'Testphase',
+      past_due: 'Überfällig',
+      unpaid: 'Unbezahlt',
+      canceled: 'Gekündigt',
+      incomplete: 'Unvollständig',
+      incomplete_expired: 'Abgelaufen',
+      paused: 'Pausiert',
+    },
+  },
 };
 
 export default Object.freeze(enterprise_subscription);
