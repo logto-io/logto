@@ -13,6 +13,7 @@ import {
   scopesDataHookTestCases,
   userDataHookTestCases,
 } from './test-cases.js';
+import { assertHookLogResult } from './utils.js';
 import { createDataHookFixture, partitionManagementApiHookKeys } from './webhook-fixtures.js';
 
 const fixture = createDataHookFixture(9999, 'management-api-hook');
@@ -35,8 +36,11 @@ describe('user data hook events', () => {
     const { user } = await generateNewUser({ username: true, password: true });
     // eslint-disable-next-line @silverhand/fp/no-mutation
     userId = user.id;
-    const userCreateHook = await getWebhookResult('POST /users');
-    expect(userCreateHook?.payload.event).toBe('User.Created');
+    // Read the log instead of the per-route mock result: `POST /users` may also emit
+    // `User.Roles.Updated` when a default role exists, and both share the same route key.
+    await assertHookLogResult(webHookApi.hooks.get(hookName)!, 'User.Created', {
+      hookPayload: { event: 'User.Created', path: '/users' },
+    });
   });
 
   it.each(userDataHookTestCases)(

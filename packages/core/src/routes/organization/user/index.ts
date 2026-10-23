@@ -195,13 +195,30 @@ export default function userRoutes(
       const { id } = ctx.guard.params;
       const { userIds, organizationRoleIds } = ctx.guard.body;
 
-      await organizations.relations.usersRoles.insert(
+      const insertedRelations = await organizations.relations.usersRoles.insertWithResult(
         ...organizationRoleIds.flatMap((roleId) =>
           userIds.map((userId) => ({ organizationId: id, organizationRoleId: roleId, userId }))
         )
       );
 
       ctx.status = 201;
+
+      for (const userId of new Set(userIds)) {
+        const addedOrganizationRoleIds = insertedRelations
+          .filter((relation) => relation.userId === userId)
+          .map(({ organizationRoleId }) => organizationRoleId);
+
+        if (addedOrganizationRoleIds.length > 0) {
+          ctx.appendDataHookContext('Organization.UserRoles.Updated', {
+            ...buildManagementApiContext(ctx),
+            organizationId: id,
+            userId,
+            addedOrganizationRoleIds,
+            removedOrganizationRoleIds: [],
+          });
+        }
+      }
+
       return next();
     }
   );

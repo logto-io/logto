@@ -47,6 +47,7 @@ const mockLibraries = {
           ...mockUser,
           ...removeUndefinedKeys(user), // No undefined values will be returned from database
         },
+        [],
       ]
     ),
     addUserMfaVerification: jest.fn(),

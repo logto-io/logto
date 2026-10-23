@@ -153,7 +153,8 @@ export class OrganizationInvitationLibrary {
    * @param status The new status of the invitation (`Accepted`).
    * @param acceptedUserId The user ID of the user who accepted the invitation.
    * @param connection A transaction to run in, instead of a new one.
-   * @returns A promise that resolves to the updated invitation.
+   * @returns A promise that resolves to the updated invitation plus the organization role IDs
+   * that were actually assigned by this acceptance.
    * @see {@link endingStatuses} for the ending statuses.
    */
   async updateStatus(
@@ -161,14 +162,14 @@ export class OrganizationInvitationLibrary {
     status: OrganizationInvitationStatus.Accepted,
     acceptedUserId: string,
     connection?: DatabaseTransactionConnection
-  ): Promise<OrganizationInvitationEntity>;
+  ): Promise<OrganizationInvitationEntity & { addedOrganizationRoleIds: readonly string[] }>;
   // TODO: Error i18n
   async updateStatus(
     id: string,
     status: OrganizationInvitationStatus,
     acceptedUserId?: string,
     connection?: DatabaseTransactionConnection
-  ): Promise<OrganizationInvitationEntity> {
+  ): Promise<OrganizationInvitationEntity & { addedOrganizationRoleIds: readonly string[] }> {
     const run = async (transaction: DatabaseTransactionConnection) => {
       const organizationQueries = new OrganizationQueries(transaction);
       const userQueries = createUserQueries(transaction);
@@ -201,6 +202,9 @@ export class OrganizationInvitationLibrary {
         });
       }
 
+      // eslint-disable-next-line @silverhand/fp/no-let
+      let addedOrganizationRoleIds: readonly string[] = [];
+
       switch (status) {
         case OrganizationInvitationStatus.Accepted: {
           // Normally this shouldn't happen, so we use `TypeError` instead of `RequestError`.
@@ -224,12 +228,18 @@ export class OrganizationInvitationLibrary {
           });
 
           if (entity.organizationRoles.length > 0) {
-            await organizationQueries.relations.usersRoles.insert(
-              ...entity.organizationRoles.map((role) => ({
-                organizationId: entity.organizationId,
-                organizationRoleId: role.id,
-                userId: acceptedUserId,
-              }))
+            const insertedRelations =
+              await organizationQueries.relations.usersRoles.insertWithResult(
+                ...entity.organizationRoles.map((role) => ({
+                  organizationId: entity.organizationId,
+                  organizationRoleId: role.id,
+                  userId: acceptedUserId,
+                }))
+              );
+
+            // eslint-disable-next-line @silverhand/fp/no-mutation
+            addedOrganizationRoleIds = insertedRelations.map(
+              ({ organizationRoleId }) => organizationRoleId
             );
           }
           break;
@@ -249,7 +259,7 @@ export class OrganizationInvitationLibrary {
       };
       await organizationQueries.invitations.updateById(id, updated);
 
-      return { ...entity, ...removeUndefinedKeys(updated) };
+      return { ...entity, ...removeUndefinedKeys(updated), addedOrganizationRoleIds };
     };
 
     return connection ? run(connection) : this.queries.pool.transaction(run);

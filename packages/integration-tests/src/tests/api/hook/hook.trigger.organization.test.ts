@@ -3,6 +3,8 @@ import { assert, noop } from '@silverhand/essentials';
 
 import { authedAdminApi } from '#src/api/api.js';
 import { createApplication, deleteApplication } from '#src/api/application.js';
+import { createResource, deleteResource } from '#src/api/resource.js';
+import { createScope } from '#src/api/scope.js';
 import {
   OrganizationApiTest,
   OrganizationInvitationApiTest,
@@ -171,6 +173,8 @@ describe('organization role data hook events', () => {
   /* eslint-disable @silverhand/fp/no-let */
   let roleId: string;
   let scopeId: string;
+  let resourceId: string;
+  let resourceScopeId: string;
   /* eslint-enable @silverhand/fp/no-let */
 
   const organizationScopeApi = new OrganizationScopeApiTest();
@@ -187,9 +191,14 @@ describe('organization role data hook events', () => {
       description: 'organization role data hook test scope.',
     });
 
+    const resource = await createResource();
+    const resourceScope = await createScope(resource.id);
+
     /* eslint-disable @silverhand/fp/no-mutation */
     roleId = role.id;
     scopeId = scope.id;
+    resourceId = resource.id;
+    resourceScopeId = resourceScope.id;
     /* eslint-enable @silverhand/fp/no-mutation */
 
     const organizationRoleCreateHook = await getWebhookResult('POST /organization-roles');
@@ -198,14 +207,24 @@ describe('organization role data hook events', () => {
 
   afterAll(async () => {
     await Promise.all([organizationScopeApi.cleanUp(), roleApi.cleanUp()]);
+    await deleteResource(resourceId);
   });
 
   it.each(organizationRoleDataHookTestCases)(
     'test case %#: %p',
     async ({ route, event, method, endpoint, payload }) => {
       await authedAdminApi[method](
-        endpoint.replace('{organizationRoleId}', roleId).replace('{scopeId}', scopeId),
-        { json: JSON.parse(JSON.stringify(payload).replace('{scopeId}', scopeId)) }
+        endpoint
+          .replace('{organizationRoleId}', roleId)
+          .replace('{scopeId}', scopeId)
+          .replace('{resourceScopeId}', resourceScopeId),
+        {
+          json: JSON.parse(
+            JSON.stringify(payload)
+              .replace('{scopeId}', scopeId)
+              .replace('{resourceScopeId}', resourceScopeId)
+          ),
+        }
       );
       const hook = await getWebhookResult(route);
       expect(hook?.payload.event).toBe(event);

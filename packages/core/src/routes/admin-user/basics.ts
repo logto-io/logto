@@ -313,7 +313,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
             })
           : undefined;
 
-      const [user] = await insertUser({
+      const [user, assignedRoleIds] = await insertUser({
         id,
         primaryEmail,
         primaryPhone,
@@ -326,6 +326,16 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       });
 
       ctx.body = transpileAdminUserProfileResponse(user);
+
+      if (assignedRoleIds.length > 0) {
+        ctx.appendDataHookContext('User.Roles.Updated', {
+          ...buildManagementApiContext(ctx),
+          userId: user.id,
+          addedRoleIds: assignedRoleIds,
+          removedRoleIds: [],
+        });
+      }
+
       return next();
     }
   );
