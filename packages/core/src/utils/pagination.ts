@@ -12,8 +12,21 @@ export const buildLink = (
   // Fall back to a relative URL when the request origin is unavailable, see `getRequestOrigin()`.
   const baseUrl = `${getRequestOrigin(request) ?? ''}${request.path}`;
 
-  return `<${baseUrl}?${new URLSearchParams({
-    ...request.query,
-    page: String(page),
-  }).toString()}>; rel="${type}"`;
+  const searchParams = new URLSearchParams();
+  for (const [key, value] of Object.entries(request.query)) {
+    if (key === 'page' || value === undefined) {
+      continue;
+    }
+
+    if (Array.isArray(value)) {
+      for (const item of value) {
+        searchParams.append(key, item);
+      }
+    } else {
+      searchParams.append(key, value);
+    }
+  }
+  searchParams.set('page', String(page));
+
+  return `<${baseUrl}?${searchParams.toString()}>; rel="${type}"`;
 };

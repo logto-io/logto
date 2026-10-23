@@ -32,4 +32,19 @@ describe('buildLink()', () => {
     const link = buildLink({ ...request, URL: Object.create(null) as URL }, 1, 'first');
     expect(link).toEqual('</users?order=desc&page=1>; rel="first"');
   });
+
+  it('preserve repeated query parameters in links', () => {
+    const link = buildLink(
+      {
+        URL: new URL('https://logto.dev/users?search.id=foo&search.id=bar&page=1'),
+        path: '/users',
+        query: { 'search.id': ['foo', 'bar'], page: '1' },
+      },
+      2,
+      'next'
+    );
+    expect(link).toEqual(
+      '<https://logto.dev/users?search.id=foo&search.id=bar&page=2>; rel="next"'
+    );
+  });
 });
