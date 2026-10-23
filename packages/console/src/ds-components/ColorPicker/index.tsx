@@ -29,7 +29,7 @@ function ColorPicker({ name, onChange, value = '#000000' }: Props) {
 
   return (
     <div
-      tabIndex={0}
+      tabIndex={isReadOnlyField ? -1 : 0}
       role="button"
       aria-disabled={isReadOnlyField || undefined}
       className={classNames(styles.container, isOpen && styles.highlight)}

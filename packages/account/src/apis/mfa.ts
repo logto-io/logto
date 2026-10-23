@@ -92,13 +92,13 @@ export const addBackupCodeMfa = async (
 
 export const deleteMfaVerification = async (
   accessToken: string,
-  verificationRecordId: string,
+  verificationRecordId: string | undefined,
   mfaVerificationId: string
 ): Promise<void> => {
   await createAuthenticatedKy(accessToken).delete(
     `/api/my-account/mfa-verifications/${mfaVerificationId}`,
     {
-      headers: { [verificationRecordIdHeader]: verificationRecordId },
+      headers: getVerificationRecordHeaders(verificationRecordId),
     }
   );
 };
@@ -142,7 +142,7 @@ export const addWebAuthnMfa = async (
 
 export const updateWebAuthnName = async (
   accessToken: string,
-  verificationRecordId: string,
+  verificationRecordId: string | undefined,
   mfaVerificationId: string,
   name: string
 ) => {
@@ -150,7 +150,7 @@ export const updateWebAuthnName = async (
     `/api/my-account/mfa-verifications/${mfaVerificationId}/name`,
     {
       json: { name },
-      headers: { [verificationRecordIdHeader]: verificationRecordId },
+      headers: getVerificationRecordHeaders(verificationRecordId),
     }
   );
 };

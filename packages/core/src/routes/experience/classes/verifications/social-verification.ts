@@ -25,6 +25,7 @@ import { generateStandardId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { assertTrustedSiweRedirectUri } from '#src/libraries/verification-helpers/siwe.js';
 import {
   createSocialAuthorizationUrl,
   getConnectorSessionResult,
@@ -127,7 +128,11 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
   ) {
     // For the profile API, connector session result is stored in the current verification record directly.
     if (connectorSessionType === 'verificationRecord') {
-      return this.createSocialAuthorizationSession(ctx, { state, redirectUri, scope });
+      return this.createSocialAuthorizationSession(ctx, tenantContext, {
+        state,
+        redirectUri,
+        scope,
+      });
     }
 
     // For the experience API, connector session result is stored in the provider's interactionDetails.
@@ -374,11 +379,14 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
    */
   private async createSocialAuthorizationSession(
     ctx: WithLogContext,
+    tenantContext: TenantContext,
     { state, redirectUri, scope }: SocialAuthorizationUrlPayload
   ) {
     assertThat(state && redirectUri, 'session.insufficient_info');
 
     const connector = await this.getConnectorData();
+
+    await assertTrustedSiweRedirectUri(tenantContext, connector.metadata.target, redirectUri);
 
     const {
       headers: { 'user-agent': userAgent },

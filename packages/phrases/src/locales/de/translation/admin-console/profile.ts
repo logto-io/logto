@@ -28,6 +28,8 @@ const profile = {
       quit_tenant_other: 'Du bist dabei, die folgenden Mandanten zu verlassen:',
     },
     issues: {
+      console_sso:
+        'Entferne alle Console SSO-Konnektoren deines Kontos, bevor du dein Konto löschst.',
       paid_plan:
         'Der folgende Mandant hat einen kostenpflichtigen Plan, bitte kündige das Abonnement zuerst:',
       paid_plan_other:

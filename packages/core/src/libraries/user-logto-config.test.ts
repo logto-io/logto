@@ -1,6 +1,10 @@
 import { userMfaDataKey, userPasskeySignInDataKey } from '@logto/schemas';
 
-import { buildUpdatedUserLogtoConfig, buildUserLogtoConfigResponse } from './user-logto-config.js';
+import {
+  buildAdminUserLogtoConfigResponse,
+  buildUpdatedUserLogtoConfig,
+  buildUserLogtoConfigResponse,
+} from './user-logto-config.js';
 
 describe('buildUserLogtoConfigResponse', () => {
   it('returns all-false defaults with empty logtoConfig', () => {
@@ -78,6 +82,44 @@ describe('buildUserLogtoConfigResponse', () => {
       [userPasskeySignInDataKey]: {},
     });
     expect(result.passkeySignIn.skipped).toBe(false);
+  });
+
+  it('does not expose the admin-managed MFA requirement', () => {
+    expect(
+      buildUserLogtoConfigResponse({
+        [userMfaDataKey]: { required: true },
+      })
+    ).toStrictEqual({
+      mfa: { enabled: undefined, skipped: false, skipMfaOnSignIn: false },
+      passkeySignIn: { skipped: false },
+    });
+  });
+});
+
+describe('buildAdminUserLogtoConfigResponse', () => {
+  it('defaults mfa.required to false when absent', () => {
+    expect(buildAdminUserLogtoConfigResponse({})).toStrictEqual({
+      mfa: { enabled: undefined, skipped: false, required: false, skipMfaOnSignIn: false },
+      passkeySignIn: { skipped: false },
+    });
+  });
+
+  it('returns mfa.required as true when set', () => {
+    expect(
+      buildAdminUserLogtoConfigResponse({
+        [userMfaDataKey]: { required: true },
+      })
+    ).toStrictEqual({
+      mfa: { enabled: undefined, skipped: false, required: true, skipMfaOnSignIn: false },
+      passkeySignIn: { skipped: false },
+    });
+  });
+
+  it('returns mfa.required as false when explicitly disabled', () => {
+    const result = buildAdminUserLogtoConfigResponse({
+      [userMfaDataKey]: { required: false },
+    });
+    expect(result.mfa.required).toBe(false);
   });
 });
 
@@ -194,5 +236,27 @@ describe('buildUpdatedUserLogtoConfig', () => {
     });
     expect((result[userMfaDataKey] as Record<string, unknown>).enabled).toBe(true);
     expect(result[userPasskeySignInDataKey]).toStrictEqual({ skipped: true });
+  });
+
+  it('writes the MFA requirement and preserves it when not updated', () => {
+    const user = {
+      logtoConfig: {
+        [userMfaDataKey]: { skipped: true },
+      },
+    };
+    const required = buildUpdatedUserLogtoConfig(user, { mfa: { required: true } });
+    expect(required[userMfaDataKey]).toStrictEqual({ skipped: true, required: true });
+
+    const preserved = buildUpdatedUserLogtoConfig(
+      { logtoConfig: required },
+      { mfa: { skipped: false } }
+    );
+    expect(preserved[userMfaDataKey]).toStrictEqual({ skipped: false, required: true });
+
+    const cleared = buildUpdatedUserLogtoConfig(
+      { logtoConfig: preserved },
+      { mfa: { required: false } }
+    );
+    expect(cleared[userMfaDataKey]).toStrictEqual({ skipped: false, required: false });
   });
 });

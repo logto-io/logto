@@ -166,7 +166,7 @@ export const createUserMfaVerification = async (userId: string, type: MfaFactor)
     >();
 
 type UserLogtoConfig = {
-  mfa: { enabled?: boolean; skipped?: boolean; skipMfaOnSignIn?: boolean };
+  mfa: { enabled?: boolean; skipped?: boolean; required?: boolean; skipMfaOnSignIn?: boolean };
   passkeySignIn: { skipped?: boolean };
 };
 

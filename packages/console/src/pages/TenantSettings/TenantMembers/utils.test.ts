@@ -3,30 +3,20 @@ import { TenantRole } from '@logto/schemas';
 import { findTenantRole, getAssignableTenantRoles, getTenantRolePhrase } from './utils';
 
 describe('getAssignableTenantRoles', () => {
-  it('offers Viewer on Cloud with dev features on', () => {
-    expect(getAssignableTenantRoles({ isCloud: true, isDevFeaturesEnabled: true })).toEqual([
+  it('offers Viewer on Cloud', () => {
+    expect(getAssignableTenantRoles({ isCloud: true })).toEqual([
       TenantRole.Admin,
       TenantRole.Collaborator,
       TenantRole.Viewer,
     ]);
   });
 
-  it('withholds Viewer on Cloud with dev features off', () => {
-    expect(getAssignableTenantRoles({ isCloud: true, isDevFeaturesEnabled: false })).toEqual([
+  it('never offers Viewer on self-hosted', () => {
+    expect(getAssignableTenantRoles({ isCloud: false })).toEqual([
       TenantRole.Admin,
       TenantRole.Collaborator,
     ]);
   });
-
-  it.each([true, false])(
-    'never offers Viewer on self-hosted (dev features: %s)',
-    (isDevFeaturesEnabled) => {
-      expect(getAssignableTenantRoles({ isCloud: false, isDevFeaturesEnabled })).toEqual([
-        TenantRole.Admin,
-        TenantRole.Collaborator,
-      ]);
-    }
-  );
 });
 
 describe('findTenantRole', () => {

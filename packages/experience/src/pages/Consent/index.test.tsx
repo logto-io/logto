@@ -7,6 +7,7 @@ import UserInteractionContextProvider from '@/Providers/UserInteractionContextPr
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { consent, getConsentInfo } from '@/apis/consent';
+import { abortInteraction } from '@/apis/experience';
 import { setupI18nForTesting } from '@/jest.setup';
 import { searchKeys } from '@/shared/utils/search-parameters';
 
@@ -17,10 +18,25 @@ jest.mock('@/apis/consent', () => ({
   getConsentInfo: jest.fn(),
 }));
 
+jest.mock('@/apis/experience', () => ({
+  ...jest.requireActual('@/apis/experience'),
+  abortInteraction: jest.fn(),
+}));
+
+const mockIsDevFeaturesEnabled = jest.fn(() => true);
+
+jest.mock('@/constants/env', () => ({
+  get isDevFeaturesEnabled() {
+    return mockIsDevFeaturesEnabled();
+  },
+}));
+
 const mockedConsent = consent as jest.MockedFunction<typeof consent>;
 const mockedGetConsentInfo = getConsentInfo as jest.MockedFunction<typeof getConsentInfo>;
+const mockedAbortInteraction = abortInteraction as jest.MockedFunction<typeof abortInteraction>;
 const originalLocation = window.location;
 const assign = jest.fn();
+const replace = jest.fn();
 
 const consentInfo: ConsentInfoResponse = {
   application: {
@@ -98,6 +114,7 @@ describe('Consent', () => {
       configurable: true,
       value: {
         assign,
+        replace,
         origin: 'http://localhost',
         search: `?${searchKeys.appId}=application_id`,
       },
@@ -106,6 +123,7 @@ describe('Consent', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    mockIsDevFeaturesEnabled.mockReturnValue(true);
   });
 
   afterAll(() => {
@@ -151,6 +169,64 @@ describe('Consent', () => {
     expect(queryByText('account_center.sessions.revoke_session')).not.toBeNull();
     expect(queryByText('action.authorize')).toBeNull();
     expect(queryByText('action.cancel')).toBeNull();
+  });
+
+  describe('Cancel', () => {
+    const abortRedirectTo = 'https://example.com/callback?error=access_denied&state=state';
+
+    it('aborts the interaction and follows the returned redirect', async () => {
+      mockedGetConsentInfo.mockResolvedValueOnce(consentInfo);
+      mockedAbortInteraction.mockResolvedValueOnce({ redirectTo: abortRedirectTo });
+
+      const { getByText } = renderConsent();
+
+      await waitFor(() => {
+        expect(getByText('action.cancel')).not.toBeNull();
+      });
+
+      fireEvent.click(getByText('action.cancel'));
+
+      await waitFor(() => {
+        expect(replace).toHaveBeenCalledWith(abortRedirectTo);
+      });
+
+      expect(mockedAbortInteraction).toHaveBeenCalledTimes(1);
+    });
+
+    it('falls back to the bare redirect when aborting fails', async () => {
+      mockedGetConsentInfo.mockResolvedValueOnce(consentInfo);
+      mockedAbortInteraction.mockRejectedValueOnce(new Error('Interaction not found'));
+
+      const { getByText } = renderConsent();
+
+      await waitFor(() => {
+        expect(getByText('action.cancel')).not.toBeNull();
+      });
+
+      fireEvent.click(getByText('action.cancel'));
+
+      await waitFor(() => {
+        expect(replace).toHaveBeenCalledWith(consentInfo.redirectUri);
+      });
+
+      expect(mockedAbortInteraction).toHaveBeenCalledTimes(1);
+    });
+
+    it('keeps the bare redirect when the dev feature is disabled', async () => {
+      mockIsDevFeaturesEnabled.mockReturnValue(false);
+      mockedGetConsentInfo.mockResolvedValueOnce(consentInfo);
+
+      const { getByText } = renderConsent();
+
+      await waitFor(() => {
+        expect(getByText('action.cancel')).not.toBeNull();
+      });
+
+      fireEvent.click(getByText('action.cancel'));
+
+      expect(mockedAbortInteraction).not.toHaveBeenCalled();
+      expect(replace).toHaveBeenCalledWith(consentInfo.redirectUri);
+    });
   });
 
   describe('CIMD client', () => {

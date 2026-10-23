@@ -37,6 +37,8 @@ const jwt_claims = {
   error_handling_tab: 'การจัดการข้อผิดพลาด',
   test_tab: 'ทดสอบ context',
   jwt_claims_description: 'Default claims จะถูกเพิ่มใน token อัตโนมัติและไม่สามารถเขียนทับได้',
+  reserved_claims_description:
+    '`acr`, `amr` และ `auth_time` เป็นค่าเคลมที่สงวนไว้ใน user access token โดย Logto จะคำนวณค่าเหล่านี้เองเสมอและไม่สนใจค่าเคลมที่กำหนดเองซึ่งใช้คีย์เหล่านี้',
   user_data: {
     title: 'ข้อมูลผู้ใช้',
     subtitle: 'ใช้พารามิเตอร์ `context.user` เพื่อใส่ข้อมูลสำคัญของผู้ใช้',

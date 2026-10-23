@@ -49,6 +49,15 @@ const error = {
   application_access_denied:
     'このアプリケーションにアクセスする権限がありません。\n管理者にお問い合わせください。',
   feature_not_enabled: 'この機能にアクセスする権限がありません。管理者にお問い合わせください。',
+  wallet_not_found:
+    'Ethereumウォレットが見つかりません。ブラウザのウォレット拡張機能をインストールして、もう一度お試しください。',
+  wallet_not_supported:
+    'ウォレットでのサインインは、ウォレット拡張機能がインストールされたブラウザでのみサポートされています。',
+  wallet_request_rejected: 'ウォレットのリクエストが拒否されました。もう一度お試しください。',
+  wallet_unsupported_chain:
+    'ウォレットがサポートされていないネットワークに接続されています。ネットワークを切り替えて、もう一度お試しください。',
+  wallet_signature_invalid:
+    'ウォレットの署名が無効か、有効期限が切れています。もう一度お試しください。',
 };
 
 export default Object.freeze(error);

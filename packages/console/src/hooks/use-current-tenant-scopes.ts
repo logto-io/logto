@@ -4,7 +4,7 @@ import useSWR from 'swr';
 
 import { useAuthedCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { adminTenantEndpoint, meApi } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import { getIsReadOnlyAccess, getIsWriteAccessConfirmed } from '@/utils/read-only-access';
@@ -56,16 +56,11 @@ const useCurrentTenantScopes = () => {
       canRemoveMember: Boolean(scopes?.includes(TenantScope.RemoveMember)),
       canUpdateMemberRole: Boolean(scopes?.includes(TenantScope.UpdateMemberRole)),
       canManageTenant: Boolean(scopes?.includes(TenantScope.ManageTenant)),
-      // Until read-only tenant access is released, every member may convert a tenant.
-      canConvertToProduction:
-        !isDevFeaturesEnabled || Boolean(scopes?.includes(TenantScope.ManageTenant)),
-      // Read-only tenant access ships behind dev features: until it is released, no one is
-      // read-only and every write is allowed.
-      isReadOnly: getIsReadOnlyAccess({ isDevFeaturesEnabled, isCloud, scopes }),
-      isWriteAccessConfirmed: getIsWriteAccessConfirmed({ isDevFeaturesEnabled, isCloud, scopes }),
+      isReadOnly: getIsReadOnlyAccess({ isCloud, scopes }),
+      isWriteAccessConfirmed: getIsWriteAccessConfirmed({ isCloud, scopes }),
       // The Management API refuses credentials to a read-only member, so they are requested only
       // once the scopes confirm write access.
-      canReadCredentials: getIsWriteAccessConfirmed({ isDevFeaturesEnabled, isCloud, scopes }),
+      canReadCredentials: getIsWriteAccessConfirmed({ isCloud, scopes }),
     }),
     [licenseQuota.consoleCollaboration, scopes]
   );

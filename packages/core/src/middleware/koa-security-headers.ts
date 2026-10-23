@@ -1,7 +1,7 @@
 import { type IncomingMessage, type ServerResponse } from 'node:http';
 import { promisify } from 'node:util';
 
-import type { CustomUiCsp } from '@logto/schemas';
+import { CaptchaType, type CustomUiCsp } from '@logto/schemas';
 import { conditional, conditionalArray } from '@silverhand/essentials';
 import helmet, { type HelmetOptions } from 'helmet';
 import type { MiddlewareType } from 'koa';
@@ -44,7 +44,8 @@ type SecurityHeaderSettings = {
   readonly defaultExperienceSecurityHeaderSettings: HelmetOptions;
   readonly getExperienceSecurityHeaderSettings: (
     customUiCsp?: CustomUiCsp,
-    capEndpoint?: string
+    capEndpoint?: string,
+    isGeetest?: boolean
   ) => HelmetOptions;
 };
 
@@ -87,6 +88,33 @@ const createSecurityHeaderSettings = (tenantId: string): SecurityHeaderSettings 
   const logtoOrigin = 'https://*.logto.io';
   /** Google Sign-In (GSI) origin for Google One Tap. */
   const gsiOrigin = 'https://accounts.google.com/gsi/';
+
+  /**
+   * GeeTest CAPTCHA v4 sources. The SDK is loaded from `static.geetest.com`, then loads the
+   * challenge from an API server via JSONP. The API and static hosts have China, overseas, and
+   * disaster-recovery variants; GeeTest's own SDK falls back across them.
+   *
+   * @see https://docs.geetest.com/BehaviorVerification/BusinessDisasterRecovery
+   */
+  const geetestScriptSources = [
+    'https://static.geetest.com/',
+    'https://static.geevisit.com/',
+    'https://gcaptcha4.geetest.com/',
+    'https://gcaptcha4.geevisit.com/',
+    'https://gcaptcha4.gsensebot.com/',
+    'https://dn-staticdown.qbox.me/',
+  ];
+
+  const geetestConnectSources = [
+    // The challenge picture is fetched as SVG via XHR, so the static hosts must be allowed here
+    'https://static.geetest.com/',
+    'https://static.geevisit.com/',
+    'https://gcaptcha4.geetest.com/',
+    'https://gcaptcha4.geevisit.com/',
+    'https://gcaptcha4.gsensebot.com/',
+    'https://monitor.geetest.com/',
+    'https://dn-staticdown.qbox.me/',
+  ];
 
   // Parse the OSS survey endpoint origin for CSP connect-src allowlisting.
   const ossSurveyOrigins = getOssServerOrigins();
@@ -168,10 +196,14 @@ const createSecurityHeaderSettings = (tenantId: string): SecurityHeaderSettings 
    * WebAssembly, and runs the instance's instrumentation challenge (which evaluates scripts to
    * fingerprint the browser) in a sandboxed `srcdoc` iframe that inherits this policy. These
    * sources are only allowed while Cap is configured.
+   * @param isGeetest Whether GeeTest is the configured captcha provider. The GeeTest widget loads
+   * its SDK and challenge from GeeTest-owned hosts, so they are only allowed while GeeTest is
+   * configured.
    */
   const getExperienceSecurityHeaderSettings = (
     customUiCsp: CustomUiCsp = {},
-    capEndpoint?: string
+    capEndpoint?: string,
+    isGeetest?: boolean
   ) => {
     const capOrigin = capEndpoint && new URL(capEndpoint).origin;
 
@@ -193,12 +225,17 @@ const createSecurityHeaderSettings = (tenantId: string): SecurityHeaderSettings 
             [
               ...experienceScriptSource,
               ...conditionalArray(capOrigin && ["'wasm-unsafe-eval'", "'unsafe-eval'"]),
+              ...conditionalArray(isGeetest && geetestScriptSources),
             ],
             customUiCsp.scriptSrc
           ),
           scriptSrcAttr: ["'unsafe-inline'"],
           connectSrc: appendCustomSources(
-            [...experienceConnectSource, ...conditionalArray(capOrigin)],
+            [
+              ...experienceConnectSource,
+              ...conditionalArray(capOrigin),
+              ...conditionalArray(isGeetest && geetestConnectSources),
+            ],
             customUiCsp.connectSrc
           ),
           ...(capOrigin && { workerSrc: ["'self'", 'blob:'] }),
@@ -292,19 +329,25 @@ export const koaExperienceSecurityHeaders = <StateT, ContextT, ResponseBodyT>(
     }
 
     const { req, res } = ctx;
-    const [{ customUiAssets, customUiCsp, captchaPolicy }, configuredCapEndpoint] =
-      await Promise.all([
-        queries.signInExperiences.findDefaultSignInExperience(),
-        queries.captchaProviders.findCapEndpoint(),
-      ]);
-    // The Cap widget is only loaded when CAPTCHA is enabled, so only relax the CSP in that case
+    const [
+      { customUiAssets, customUiCsp, captchaPolicy },
+      configuredCapEndpoint,
+      configuredCaptchaType,
+    ] = await Promise.all([
+      queries.signInExperiences.findDefaultSignInExperience(),
+      queries.captchaProviders.findCapEndpoint(),
+      queries.captchaProviders.findCaptchaProviderType(),
+    ]);
+    // Captcha assets are only loaded when CAPTCHA is enabled, so only relax the CSP in that case
     const capEndpoint = captchaPolicy.enabled ? configuredCapEndpoint : null;
+    const isGeetest = captchaPolicy.enabled && configuredCaptchaType === CaptchaType.Geetest;
 
     await helmetPromise(
-      (customUiAssets ?? capEndpoint)
+      (customUiAssets ?? capEndpoint ?? isGeetest)
         ? getExperienceSecurityHeaderSettings(
             conditional(customUiAssets && customUiCsp),
-            capEndpoint ?? undefined
+            capEndpoint ?? undefined,
+            isGeetest
           )
         : defaultExperienceSecurityHeaderSettings,
       req,

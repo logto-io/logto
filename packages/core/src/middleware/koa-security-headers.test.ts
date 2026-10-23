@@ -1,3 +1,4 @@
+import { CaptchaType } from '@logto/schemas';
 import { GlobalValues } from '@logto/shared';
 import { createMockUtils } from '@logto/shared/esm';
 import { noop } from '@silverhand/essentials';
@@ -33,6 +34,7 @@ type CustomUiSettings = {
   readonly customUiAssets?: { readonly id: string; readonly createdAt: number };
   readonly customUiCsp?: Record<string, string[]>;
   readonly capEndpoint?: string;
+  readonly captchaProviderType?: CaptchaType;
   readonly isCaptchaEnabled?: boolean;
 };
 
@@ -40,6 +42,7 @@ const createQueries = ({
   customUiAssets,
   customUiCsp = {},
   capEndpoint,
+  captchaProviderType,
   isCaptchaEnabled = true,
 }: CustomUiSettings = {}) =>
   ({
@@ -52,6 +55,7 @@ const createQueries = ({
     },
     captchaProviders: {
       findCapEndpoint: jest.fn(async () => capEndpoint ?? null),
+      findCaptchaProviderType: jest.fn(async () => captchaProviderType ?? null),
     },
   }) as unknown as Queries;
 
@@ -164,6 +168,76 @@ describe('koaSecurityHeaders() middleware — experience CSP', () => {
     expect(getCspDirective(ctx, 'connect-src')).not.toContain('https://cap.example.com');
     expect(getCspDirective(ctx, 'script-src')).not.toContain("'wasm-unsafe-eval'");
     expect(getCspDirective(ctx, 'worker-src')).toBeUndefined();
+  });
+
+  it('allows GeeTest sources when GeeTest is the captcha provider', async () => {
+    const run = koaExperienceSecurityHeaders(
+      'default',
+      createQueries({ captchaProviderType: CaptchaType.Geetest })
+    );
+    const ctx = createMockContext({ method: 'GET', url: '/sign-in' });
+
+    await run(ctx, koaNoop);
+
+    const scriptSource = getCspDirective(ctx, 'script-src');
+    const connectSource = getCspDirective(ctx, 'connect-src');
+
+    expect(scriptSource).toContain('https://static.geetest.com/');
+    expect(scriptSource).toContain('https://static.geevisit.com/');
+    expect(scriptSource).toContain('https://gcaptcha4.geetest.com/');
+    expect(scriptSource).toContain('https://gcaptcha4.geevisit.com/');
+    expect(scriptSource).toContain('https://gcaptcha4.gsensebot.com/');
+    expect(connectSource).toContain('https://static.geetest.com/');
+    expect(connectSource).toContain('https://gcaptcha4.geetest.com/');
+    expect(connectSource).toContain('https://monitor.geetest.com/');
+  });
+
+  it('keeps Custom UI CSP sources along with the GeeTest sources', async () => {
+    const run = koaExperienceSecurityHeaders(
+      'default',
+      createQueries({
+        customUiAssets,
+        customUiCsp: { connectSrc: [customConnectSource] },
+        captchaProviderType: CaptchaType.Geetest,
+      })
+    );
+    const ctx = createMockContext({ method: 'GET', url: '/sign-in' });
+
+    await run(ctx, koaNoop);
+
+    const connectSource = getCspDirective(ctx, 'connect-src');
+
+    expect(connectSource).toContain(customConnectSource);
+    expect(connectSource).toContain('https://gcaptcha4.geetest.com/');
+  });
+
+  it('does not allow GeeTest sources when GeeTest is not the captcha provider', async () => {
+    const run = koaExperienceSecurityHeaders(
+      'default',
+      createQueries({ captchaProviderType: CaptchaType.Turnstile })
+    );
+    const ctx = createMockContext({ method: 'GET', url: '/sign-in' });
+
+    await run(ctx, koaNoop);
+
+    expect(getCspDirective(ctx, 'script-src')).not.toContain('https://static.geetest.com/');
+    expect(getCspDirective(ctx, 'connect-src')).not.toContain('https://gcaptcha4.geetest.com/');
+  });
+
+  it('does not allow GeeTest sources when CAPTCHA is disabled', async () => {
+    const run = koaExperienceSecurityHeaders(
+      'default',
+      createQueries({
+        captchaProviderType: CaptchaType.Geetest,
+        isCaptchaEnabled: false,
+      })
+    );
+    const ctx = createMockContext({ method: 'GET', url: '/sign-in' });
+
+    await run(ctx, koaNoop);
+
+    expect(getCspDirective(ctx, 'script-src')).not.toContain('https://static.geetest.com/');
+    expect(getCspDirective(ctx, 'connect-src')).not.toContain('https://gcaptcha4.geetest.com/');
   });
 
   it('does not add Custom UI CSP sources when Custom UI assets are not configured', async () => {

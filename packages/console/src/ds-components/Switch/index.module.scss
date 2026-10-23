@@ -46,6 +46,10 @@
     cursor: not-allowed;
   }
 
+  input:checked:disabled + .slider {
+    background-color: var(--color-success-90);
+  }
+
   input:disabled + .slider::before {
     background-color: var(--color-specific-toggle-thumb-disabled);
     box-shadow: unset;

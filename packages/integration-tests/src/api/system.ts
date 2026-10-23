@@ -1,4 +1,12 @@
-import { type LicenseEnv, type LicenseQuota, type SelfHostedPlanId } from '@logto/schemas';
+import {
+  type LicenseEnv,
+  type LicenseQuota,
+  type LicenseUsage,
+  type LicenseUsageLimits,
+  type LicenseUsageStatement,
+  type LicenseUsageWarning,
+  type SelfHostedPlanId,
+} from '@logto/schemas';
 
 import { authedAdminApi } from './api.js';
 
@@ -17,6 +25,10 @@ export type SystemLicenseResponse = {
   lastRefreshedAt: string;
   graceEndsAt: string;
   refusalReason?: string;
+  usageLimits?: LicenseUsageLimits;
+  usage?: LicenseUsage;
+  usageWarnings?: LicenseUsageWarning[];
+  usageReportingEnabled?: boolean;
 };
 
 export const getSystemLicense = async () =>
@@ -24,3 +36,6 @@ export const getSystemLicense = async () =>
 
 export const putSystemLicense = async (license: string) =>
   authedAdminApi.put('systems/license', { json: { license } });
+
+export const getSystemLicenseUsageStatement = async () =>
+  authedAdminApi.get('systems/license/usage-statement').json<LicenseUsageStatement>();

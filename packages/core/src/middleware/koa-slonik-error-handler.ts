@@ -32,7 +32,6 @@ export default function koaSlonikErrorHandler<StateT, ContextT>(): Middleware<St
       if (error instanceof DatabaseError) {
         // https://www.postgresql.org/docs/14/errcodes-appendix.html
         // Can better infer SlonikError type.
-        // eslint-disable-next-line unicorn/no-lonely-if
         if (error.code === '22001') {
           throw new RequestError(
             {
@@ -43,6 +42,16 @@ export default function koaSlonikErrorHandler<StateT, ContextT>(): Middleware<St
               message: error.message,
             }
           );
+        }
+
+        // A value that is valid JSON can still be rejected by the JSONB parser, e.g. `\u0000`
+        // (`22P05`) or a number that overflows the numeric format (`22003`). Both mean the request
+        // input is invalid rather than the server failed.
+        if (error.code === '22P05' || error.code === '22003') {
+          throw new RequestError({
+            code: 'request.invalid_input',
+            status: 400,
+          });
         }
       }
 

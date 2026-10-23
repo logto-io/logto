@@ -127,6 +127,7 @@ const description = {
     phone_verification_code: '簡訊驗證碼',
     verification_code_description: '發送至 {{target}}',
   },
+  select_wallet: '選擇錢包',
 };
 
 export default Object.freeze(description);

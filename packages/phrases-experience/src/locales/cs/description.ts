@@ -143,6 +143,7 @@ const description = {
     phone_verification_code: 'Ověřovací kód SMS',
     verification_code_description: 'Odeslat na {{target}}',
   },
+  select_wallet: 'Vyberte peněženku',
 };
 
 export default Object.freeze(description);

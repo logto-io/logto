@@ -28,6 +28,8 @@ const profile = {
       quit_tenant_other: 'Vous êtes sur le point de quitter les locataires suivants :',
     },
     issues: {
+      console_sso:
+        'Supprimez tous les connecteurs Console SSO appartenant à votre compte avant de supprimer celui-ci.',
       paid_plan: 'Le locataire suivant a un plan payant, veuillez d’abord annuler l’abonnement :',
       paid_plan_other:
         'Les locataires suivants ont des plans payants, veuillez d’abord annuler l’abonnement :',
