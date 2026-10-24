@@ -13,6 +13,7 @@ import SettingsProvider from './Providers/SettingsProvider';
 import UserInteractionContextProvider from './Providers/UserInteractionContextProvider';
 import DevelopmentTenantNotification from './containers/DevelopmentTenantNotification';
 import MfaVerificationGuard from './containers/MfaVerificationGuard';
+import StepUpEntryGuard from './containers/StepUpEntryGuard';
 import StepUpGuard from './containers/StepUpGuard';
 import StepUpRecoveryGuard from './containers/StepUpRecoveryGuard';
 import Callback from './pages/Callback';
@@ -87,14 +88,16 @@ const App = () => {
                         element={<SocialSignInWebCallback />}
                       />
                     </Route>
-                    <Route path="direct/:method/:target?" element={<DirectSignIn />} />
-                    <Route path={experience.routes.oneTimeToken} element={<OneTimeToken />} />
+                    {/* Normal sign-in entries are blocked while a step-up pins the subject. */}
+                    <Route element={isDevFeaturesEnabled ? <StepUpEntryGuard /> : undefined}>
+                      <Route path="direct/:method/:target?" element={<DirectSignIn />} />
+                      <Route path={experience.routes.oneTimeToken} element={<OneTimeToken />} />
+                    </Route>
                     <Route element={<AppLayout />}>
                       <Route
                         path={`${experience.routes.oneTimeToken}/error`}
                         element={<OneTimeTokenErrorPage />}
                       />
-                      <Route path={experience.routes.switchAccount} element={<SwitchAccount />} />
                       <Route
                         path="unknown-session"
                         element={<ErrorPage message="error.invalid_session" />}
@@ -115,14 +118,71 @@ const App = () => {
                         }
                       />
 
-                      {/* Sign-in */}
-                      <Route path={experience.routes.signIn}>
-                        <Route index element={<SignIn />} />
-                        <Route path="password" element={<SignInPassword />} />
-                        <Route path="passkey" element={<SignInPasskeyVerification />} />
+                      {/*
+                       * Normal entry routes. A pure step-up pins its subject, so every route that
+                       * could identify, create, or reset an account is blocked before its form
+                       * renders. Core enforces the same restriction; the guard only prevents a
+                       * form that can never complete.
+                       */}
+                      <Route element={isDevFeaturesEnabled ? <StepUpEntryGuard /> : undefined}>
+                        <Route path={experience.routes.switchAccount} element={<SwitchAccount />} />
+
+                        {/* Sign-in */}
+                        <Route path={experience.routes.signIn}>
+                          <Route index element={<SignIn />} />
+                          <Route path="password" element={<SignInPassword />} />
+                          <Route path="passkey" element={<SignInPasskeyVerification />} />
+                          <Route
+                            path="verification-methods"
+                            element={<SignInVerificationMethods />}
+                          />
+                        </Route>
+
+                        {/* Register */}
+                        <Route path={experience.routes.register}>
+                          <Route index element={<Register />} />
+                          <Route path="password" element={<RegisterPassword />} />
+                        </Route>
+
+                        {/* Forgot password */}
+                        <Route path="forgot-password">
+                          <Route index element={<ForgotPassword />} />
+                          <Route path="reset" element={<ResetPassword />} />
+                        </Route>
+
+                        {/* Single sign-on */}
+                        <Route path={experience.routes.sso}>
+                          {/* Single sign-on first screen landing page */}
+                          <Route index element={<SingleSignOnLanding />} />
+                          <Route path="email" element={<SingleSignOnEmail />} />
+                          <Route path="connectors" element={<SingleSignOnConnectors />} />
+                        </Route>
+
+                        {/*
+                         * Identifier sign-in (first screen)
+                         * The first screen which only display specific identifier-based sign-in methods to users
+                         */}
                         <Route
-                          path="verification-methods"
-                          element={<SignInVerificationMethods />}
+                          path={experience.routes.identifierSignIn}
+                          element={<IdentifierSignIn />}
+                        />
+
+                        {/*
+                         * Identifier register (first screen)
+                         * The first screen which only display specific identifier-based registration methods to users
+                         */}
+                        <Route
+                          path={experience.routes.identifierRegister}
+                          element={<IdentifierRegister />}
+                        />
+
+                        {/*
+                         * Reset password (first screen)
+                         * The first screen which allow users to directly access the password reset page
+                         */}
+                        <Route
+                          path={experience.routes.resetPassword}
+                          element={<ResetPasswordLanding />}
                         />
                       </Route>
 
@@ -131,18 +191,6 @@ const App = () => {
 
                       {/* Trusted device */}
                       <Route path={experience.routes.trustedDevice} element={<TrustedDevice />} />
-
-                      {/* Register */}
-                      <Route path={experience.routes.register}>
-                        <Route index element={<Register />} />
-                        <Route path="password" element={<RegisterPassword />} />
-                      </Route>
-
-                      {/* Forgot password */}
-                      <Route path="forgot-password">
-                        <Route index element={<ForgotPassword />} />
-                        <Route path="reset" element={<ResetPassword />} />
-                      </Route>
 
                       {/* Step-up establishment and enrollment reuse the existing pages. */}
                       <Route element={isDevFeaturesEnabled ? <StepUpRecoveryGuard /> : undefined}>
@@ -218,14 +266,6 @@ const App = () => {
                         <Route path="landing/:connectorId" element={<SocialLanding />} />
                       </Route>
 
-                      {/* Single sign-on */}
-                      <Route path={experience.routes.sso}>
-                        {/* Single sign-on first screen landing page */}
-                        <Route index element={<SingleSignOnLanding />} />
-                        <Route path="email" element={<SingleSignOnEmail />} />
-                        <Route path="connectors" element={<SingleSignOnConnectors />} />
-                      </Route>
-
                       {/* Consent */}
                       <Route path="consent" element={<Consent />} />
 
@@ -236,32 +276,6 @@ const App = () => {
                         element={<DeviceSuccess />}
                       />
 
-                      {/*
-                       * Identifier sign-in (first screen)
-                       * The first screen which only display specific identifier-based sign-in methods to users
-                       */}
-                      <Route
-                        path={experience.routes.identifierSignIn}
-                        element={<IdentifierSignIn />}
-                      />
-
-                      {/*
-                       * Identifier register (first screen)
-                       * The first screen which only display specific identifier-based registration methods to users
-                       */}
-                      <Route
-                        path={experience.routes.identifierRegister}
-                        element={<IdentifierRegister />}
-                      />
-
-                      {/*
-                       * Reset password (first screen)
-                       * The first screen which allow users to directly access the password reset page
-                       */}
-                      <Route
-                        path={experience.routes.resetPassword}
-                        element={<ResetPasswordLanding />}
-                      />
                       <Route path="*" element={<ErrorPage />} />
                     </Route>
                   </Route>
