@@ -2067,21 +2067,28 @@ describe('ExperienceInteraction class', () => {
       expect(signInUserQueries.updateUserById).toHaveBeenCalledTimes(1);
     });
 
-    const firstFactorCompletionCases: Array<{
+    const requestedMfaPursuitCases: Array<{
       name: string;
       user: User;
       logtoConfig: User['logtoConfig'];
+      error: { code: string; status: number };
     }> = [
-      { name: 'no enrolled factor', user: mockUser, logtoConfig: {} },
       {
         name: 'an enrolled factor the tenant would skip',
         user: mockUserWithMfaVerifications,
         logtoConfig: { [userMfaDataKey]: { skipMfaOnSignIn: true } },
+        error: { code: 'session.mfa.require_mfa_verification', status: 403 },
+      },
+      {
+        name: 'no enrolled factor but one the tenant lets the user enroll',
+        user: mockUser,
+        logtoConfig: {},
+        error: { code: 'user.missing_mfa', status: 422 },
       },
     ];
-    it.each(firstFactorCompletionCases)(
-      'completes immediately when the request also lists the class the password reached ($name)',
-      async ({ user, logtoConfig }) => {
+    it.each(requestedMfaPursuitCases)(
+      'keeps pursuing the first reachable mfa when the request also lists the class the password reached ($name)',
+      async ({ user, logtoConfig, error }) => {
         setDevFeaturesEnabled(true);
         const { experienceInteraction, provider, signInUserQueries } = createSignInInteraction({
           user: { ...user, logtoConfig },
@@ -2097,26 +2104,48 @@ describe('ExperienceInteraction class', () => {
           },
         });
 
-        await experienceInteraction.submit();
-
-        // Any listed class is enough and enrolled factors are never consulted: the password
-        // reached `1fa`, which the request lists, so the enrolled TOTP is not asked for even
-        // where `skipMfaOnSignIn` alone would have let it pass.
-        expect(provider.interactionResult).toHaveBeenCalledWith(
-          expect.anything(),
-          expect.anything(),
-          expect.objectContaining({
-            login: {
-              accountId: mockUser.id,
-              acr: LogtoAcr.FirstFactor,
-              amr: [AuthenticationMethodReference.Password],
-            },
-          })
-        );
-        // The sign-in side effects run exactly once, on the submission that passes.
-        expect(signInUserQueries.updateUserById).toHaveBeenCalledTimes(1);
+        // `mfa` is listed first and is reachable — through an enrolled factor to verify, or a
+        // factor the tenant lets the user enroll — so the password that reached `1fa` never ends
+        // the pursuit at the weaker listed class.
+        await expect(experienceInteraction.submit()).rejects.toMatchObject(error);
+        expect(signInUserQueries.updateUserById).not.toHaveBeenCalled();
+        expect(provider.interactionResult).not.toHaveBeenCalled();
       }
     );
+
+    it('falls back to 1fa when the earlier requested mfa is unreachable', async () => {
+      setDevFeaturesEnabled(true);
+      const { experienceInteraction, provider, signInUserQueries } = createSignInInteraction({
+        // The tenant configures no MFA factor: `mfa` cannot be reached even through enrollment,
+        // so the request falls back to the next listed class the password already reached.
+        signInExperienceOverrides: {
+          mfa: { policy: MfaPolicy.NoPrompt, factors: [] },
+        },
+        interactionResult: {
+          authenticationContext: {
+            requestedAcrValues: [LogtoAcr.Mfa, LogtoAcr.FirstFactor],
+          },
+          authenticationProofs: [passwordProof(AuthenticationProofRole.Identify)],
+          verificationRecords: [passwordRecord],
+        },
+      });
+
+      await experienceInteraction.submit();
+
+      expect(provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({
+          login: {
+            accountId: mockUser.id,
+            acr: LogtoAcr.FirstFactor,
+            amr: [AuthenticationMethodReference.Password],
+          },
+        })
+      );
+      // The sign-in side effects run exactly once, on the submission that passes.
+      expect(signInUserQueries.updateUserById).toHaveBeenCalledTimes(1);
+    });
 
     it('asks for a verifiable first factor on a social sign-in under a requested 1fa', async () => {
       setDevFeaturesEnabled(true);
@@ -2534,6 +2563,13 @@ describe('ExperienceInteraction class', () => {
         status: 403,
         data: {
           selectedAcr: LogtoAcr.FirstFactor,
+          availableMethods: [VerificationType.Password],
+        },
+      });
+      // The server-driven UI state describes the same pursued class, so the landing page offers
+      // the password instead of the methods of the unreachable first-listed `mfa`.
+      await expect(experienceInteraction.toSanitizedJson()).resolves.toMatchObject({
+        authenticationContext: {
           availableMethods: [VerificationType.Password],
         },
       });
