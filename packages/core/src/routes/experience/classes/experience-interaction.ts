@@ -755,25 +755,6 @@ export default class ExperienceInteraction {
   }
 
   /**
-   * Whether the context the interaction has proven so far satisfies the request. Any requested
-   * class is enough — the rule `interaction-policy.ts` applies to the OIDC session and re-applies
-   * to the login result when the interaction resumes — so a submission this lets through is never
-   * rejected as `unmet_authentication_requirements` afterwards. Only the proofs of this
-   * interaction are read; enrolled factors are never consulted.
-   */
-  private get isRequestedAcrSatisfied(): boolean {
-    const { requestedAcrValues } = this;
-
-    if (requestedAcrValues.length === 0) {
-      return true;
-    }
-
-    const achievedAcr = achieveAcr(this.countedAuthenticationProofs);
-
-    return requestedAcrValues.some((requestedAcr) => acrSatisfies(achievedAcr, requestedAcr));
-  }
-
-  /**
    * Whether the interaction has proven a Logto-verifiable first factor: a proof of class `1fa` or
    * `both`, verified or established in this interaction. An `mfa`-class proof never satisfies it:
    * one alone reaches only `urn:logto:acr:1fa`, so a requested `mfa` still needs the first-factor
@@ -1083,11 +1064,11 @@ export default class ExperienceInteraction {
     });
 
     // Defense in depth: assert once more, right before the first side effect, that the derived
-    // context satisfies the requested class. A submission below the request fails with 403 and
-    // leaves nothing behind; the one that passes runs the side effects exactly once below and
+    // context satisfies the class the interaction pursues. A submission below it fails with 403
+    // and leaves nothing behind; the one that passes runs the side effects exactly once below and
     // finishes with the `login` result carrying the same derived context.
     assertThat(
-      this.isRequestedAcrSatisfied,
+      !(await this.getPursuedRequestedAcr()),
       new RequestError({ code: 'session.step_up.acr_not_satisfied', status: 403 })
     );
 
@@ -1535,15 +1516,39 @@ export default class ExperienceInteraction {
   /**
    * The requested class the interaction is pursuing, re-derived on every read and never persisted:
    * the first requested class the user can reach with the methods they have, or the first one when
-   * none is reachable. `undefined` when the request is already satisfied or carries no class.
+   * none is reachable. `undefined` once what the interaction has proven satisfies that class, or
+   * when the request carries no class.
+   *
+   * `acr_values` is an ordered list of preferences, so a weaker listed class never ends the
+   * pursuit while an earlier one is still reachable: `[mfa, 1fa]` on a password sign-in keeps
+   * asking for MFA while the user or the tenant can reach it, and only falls back to `1fa` when
+   * `mfa` cannot be reached. Only the proofs of this interaction are read; enrolled factors are
+   * never consulted for satisfaction.
    */
   private async getPursuedRequestedAcr(): Promise<
+    { acr: LogtoAcr; decision?: StepUpEligibility } | undefined
+  > {
+    const pursued = await this.getPursuedAcr();
+
+    if (!pursued || acrSatisfies(achieveAcr(this.countedAuthenticationProofs), pursued.acr)) {
+      return;
+    }
+
+    return pursued;
+  }
+
+  /**
+   * The class the interaction pursues, whether or not it is already satisfied: the first requested
+   * class the user can reach, or the first requested one when none is reachable. `undefined` when
+   * the interaction carries no requested class.
+   */
+  private async getPursuedAcr(): Promise<
     { acr: LogtoAcr; decision?: StepUpEligibility } | undefined
   > {
     const { requestedAcrValues } = this;
     const [firstAcr] = requestedAcrValues;
 
-    if (!firstAcr || this.isRequestedAcrSatisfied) {
+    if (!firstAcr) {
       return;
     }
 
@@ -1574,14 +1579,13 @@ export default class ExperienceInteraction {
    * The step-up decision for the subject and the selected class: what `PUT /experience` acts on
    * and `GET /experience/interaction` projects, computed from the same inputs so the two cannot
    * disagree. Evaluated on read and never persisted. `undefined` while no subject
-   * is known or the interaction carries no requested class. A pure step-up pairs the context its
-   * session carries; a sign-in with requested ACR has no session, and passes the class it pursues
-   * (see {@link getPursuedRequestedAcr}).
+   * is known or no class is selected. A pure step-up pairs the context its session carries and
+   * reads its persisted `selectedAcr`; a sign-in with requested ACR has no session and passes the
+   * class it pursues (see {@link getPursuedAcr}).
    */
   private async getStepUpDecision(acr?: LogtoAcr): Promise<StepUpEligibility | undefined> {
     const { authenticationContext, subjectUserId } = this;
-    const selectedAcr =
-      acr ?? authenticationContext?.selectedAcr ?? authenticationContext?.requestedAcrValues[0];
+    const selectedAcr = acr ?? authenticationContext?.selectedAcr;
 
     if (!selectedAcr || !subjectUserId) {
       return;
@@ -1720,12 +1724,16 @@ export default class ExperienceInteraction {
 
   /**
    * The authentication context for the sanitized projection: the stored context plus the lists
-   * computed on this read.
+   * computed on this read. A pure step-up persists its `selectedAcr`; a SignIn or Register with
+   * requested ACR does not, so it projects the class it pursues (see {@link getPursuedAcr}) — the
+   * same class the guards enforce, so the SPA never renders methods for a class the interaction
+   * has already passed over.
    */
   private async toSanitizedAuthenticationContext(
     authenticationContext: RequestedAuthenticationContext
   ): Promise<InteractionAuthenticationContext> {
-    const decision = await this.getStepUpDecision();
+    const pursued = authenticationContext.selectedAcr ? undefined : await this.getPursuedAcr();
+    const decision = pursued ? pursued.decision : await this.getStepUpDecision();
 
     return {
       ...authenticationContext,
