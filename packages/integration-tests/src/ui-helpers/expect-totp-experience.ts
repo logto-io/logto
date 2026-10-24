@@ -27,7 +27,7 @@ export default class ExpectTotpExperience extends ExpectMfaExperience {
 
     const secretDiv = await expect(this.page).toMatchElement(dcls('rawSecret'));
 
-    const secret = (await secretDiv.evaluate((element) => element.textContent)) ?? '';
+    const secret = await secretDiv.evaluate((element) => element.textContent);
 
     const code = authenticator.generate(secret);
 

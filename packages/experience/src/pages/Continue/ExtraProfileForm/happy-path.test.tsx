@@ -165,7 +165,7 @@ describe('ExtraProfileForm', () => {
     });
     // Checkbox (custom component rendered without native checkbox name attr; query by role and label span)
     const subscribeCheckbox = querySelectorAll(container, '[role="checkbox"]').find((element) =>
-      element.textContent?.includes('Subscribe Email')
+      element.textContent.includes('Subscribe Email')
     );
     if (!subscribeCheckbox) {
       throw new Error('Subscribe Email checkbox not found');

@@ -25,11 +25,11 @@
     "@logto/phrases": "workspace:^",
     "@logto/react": "^4.0.14",
     "@logto/schemas": "workspace:^",
-    "@silverhand/eslint-config": "6.0.1",
-    "@silverhand/eslint-config-react": "6.0.2",
+    "@silverhand/eslint-config": "^6.1.0",
+    "@silverhand/eslint-config-react": "^6.1.0",
     "@silverhand/essentials": "^2.9.3",
-    "@silverhand/ts-config": "6.0.0",
-    "@silverhand/ts-config-react": "6.0.0",
+    "@silverhand/ts-config": "^6.1.0",
+    "@silverhand/ts-config-react": "^6.1.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@types/react-helmet": "^6.1.6",
@@ -45,13 +45,13 @@
     "react-helmet": "^6.1.0",
     "react-i18next": "^12.3.1",
     "stylelint": "^15.0.0",
-    "typescript": "^5.5.3",
+    "typescript": "^5.9.3",
     "vite": "^6.2.7",
     "vite-plugin-compression": "^0.5.1",
     "zod": "3.24.3"
   },
   "engines": {
-    "node": "^22.14.0"
+    "node": "^26.0.0"
   },
   "eslintConfig": {
     "extends": "@silverhand/react"

@@ -10,7 +10,11 @@ const endpoint = 'sms.tencentcloudapi.com';
 function sha256Hmac(message: string, secret: string): string;
 // eslint-disable-next-line @typescript-eslint/ban-types
 function sha256Hmac(message: string, secret: string, encoding: BinaryToTextEncoding): Buffer;
-function sha256Hmac(message: string, secret: string, encoding?: BinaryToTextEncoding) {
+function sha256Hmac(
+  message: string,
+  secret: string,
+  encoding?: BinaryToTextEncoding
+): string | Uint8Array {
   const hmac = crypto.createHmac('sha256', secret);
 
   return encoding ? hmac.update(message).digest(encoding) : hmac.update(message).digest();

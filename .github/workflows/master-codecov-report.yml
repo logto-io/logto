@@ -17,7 +17,7 @@ jobs:
         uses: silverhand-io/actions-node-pnpm-run-steps@v5
         with:
           pnpm-version: 10
-          node-version: ^22.14.0
+          node-version: ^26.0.0
 
       - name: Install playwright for element tests
         working-directory: ./packages/elements

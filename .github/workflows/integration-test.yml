@@ -27,6 +27,7 @@ jobs:
       - uses: logto-io/actions-package-logto-artifact@v3
         with:
           artifact-name: integration-test-${{ github.sha }}-dev-features-${{ matrix.dev-features-enabled }}
+          node-version: ^26.0.0
           pnpm-version: 10
 
   run-logto:
@@ -57,12 +58,16 @@ jobs:
       SELF_HOSTED_LICENSE_PUBLIC_KEY: '{"kty":"EC","crv":"P-256","x":"r79NM6kQhcFX7GZwo6gh0qGMYapn3XkwwkcdW-EWXC4","y":"XElMflsuc4fEc3iUJc-LLuVpaAWfqm-vZEb_JzZEOi8"}'
 
     steps:
+      # Puppeteer 23's postinstall starts the browser download without awaiting it, which exits
+      # early on Node.js 26. Pre-install the matching Chrome so the integration tests can find it.
+      - name: Install Puppeteer Chrome
+        run: npx --yes puppeteer@23.10.3 browsers install chrome
       - uses: logto-io/actions-run-logto-integration-tests@v4.0.1
         with:
           logto-artifact: integration-test-${{ github.sha }}-dev-features-${{ env.DEV_FEATURES_ENABLED }}
           test-target: ${{ matrix.target }}
           pnpm-version: 10
-          node-version: ^22.14.0
+          node-version: ^26.0.0
 
   # Automatically rerun the workflow since the integration tests are moody
   # From this genius: https://github.com/orgs/community/discussions/67654#discussioncomment-8038649

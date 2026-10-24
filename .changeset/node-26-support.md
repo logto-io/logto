@@ -1,0 +1,75 @@
+---
+"@logto/api": patch
+"@logto/app-insights": patch
+"@logto/cli": patch
+"@logto/connector-alipay-native": patch
+"@logto/connector-alipay-web": patch
+"@logto/connector-aliyun-dm": patch
+"@logto/connector-aliyun-sms": patch
+"@logto/connector-aliyun-sms-mas": patch
+"@logto/connector-amazon": patch
+"@logto/connector-apple": patch
+"@logto/connector-aws-ses": patch
+"@logto/connector-azuread": patch
+"@logto/connector-dingtalk-web": patch
+"@logto/connector-discord": patch
+"@logto/connector-facebook": patch
+"@logto/connector-feishu-web": patch
+"@logto/connector-gatewayapi-sms": patch
+"@logto/connector-github": patch
+"@logto/connector-gitlab": patch
+"@logto/connector-google": patch
+"@logto/connector-http-email": patch
+"@logto/connector-http-sms": patch
+"@logto/connector-huggingface": patch
+"@logto/connector-kakao": patch
+"@logto/connector-kit": patch
+"@logto/connector-kook": patch
+"@logto/connector-line": patch
+"@logto/connector-linkedin": patch
+"@logto/connector-logto-email": patch
+"@logto/connector-logto-social-demo": patch
+"@logto/connector-mailgun": patch
+"@logto/connector-mailjunky": patch
+"@logto/connector-mock-email": patch
+"@logto/connector-mock-sms": patch
+"@logto/connector-mock-social": patch
+"@logto/connector-mock-standard-email": patch
+"@logto/connector-naver": patch
+"@logto/connector-oauth": patch
+"@logto/connector-oidc": patch
+"@logto/connector-patreon": patch
+"@logto/connector-postmark": patch
+"@logto/connector-qq": patch
+"@logto/connector-saml": patch
+"@logto/connector-sendgrid-email": patch
+"@logto/connector-siwe": patch
+"@logto/connector-slack": patch
+"@logto/connector-smsaero": patch
+"@logto/connector-smsbao-sms": patch
+"@logto/connector-smtp": patch
+"@logto/connector-smtp2go-email": patch
+"@logto/connector-tencent-sms": patch
+"@logto/connector-twilio-sms": patch
+"@logto/connector-vonage-sms": patch
+"@logto/connector-wechat-native": patch
+"@logto/connector-wechat-web": patch
+"@logto/connector-wecom": patch
+"@logto/connector-whatsapp-sms": patch
+"@logto/connector-x": patch
+"@logto/connector-xiaomi": patch
+"@logto/connector-yunpian-sms": patch
+"@logto/core-kit": patch
+"@logto/create": patch
+"@logto/language-kit": patch
+"@logto/phrases": patch
+"@logto/phrases-experience": patch
+"@logto/schemas": patch
+"@logto/shared": patch
+"@logto/translate": patch
+"@logto/tunnel": patch
+---
+
+support Node.js 26
+
+Published packages now include Node.js 26 in their engine requirements while continuing to support Node.js 22 and 24.
