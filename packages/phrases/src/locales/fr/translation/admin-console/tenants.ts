@@ -23,7 +23,7 @@ const tenants = {
     install_button: 'Installer la licence',
     key_field: 'Clé de licence',
     key_field_description:
-      'La clé est vérifiée sur votre instance et n’en sort jamais. Contactez Logto pour obtenir une nouvelle clé si la vôtre a expiré.',
+      'La clé est vérifiée sur votre instance et envoyée à Logto lors de l’actualisation de la licence. Contactez Logto pour obtenir une nouvelle clé si la vôtre a expiré.',
     key_placeholder: 'Collez votre clé de licence ici',
     installed_toast: 'Licence installée avec succès.',
     details_title: 'LICENCE',
@@ -49,6 +49,14 @@ const tenants = {
       'La période de grâce de la licence s’est terminée le {{graceEndsAt}}. Ce déploiement est revenu aux valeurs OSS par défaut. Contactez Logto pour obtenir une nouvelle clé de licence et installez-la à nouveau.',
     get_fresh_key_button: 'Obtenir une nouvelle clé',
     replace_button: 'Remplacer la licence',
+    usage_banner_description:
+      'Ce déploiement dépasse les limites d’utilisation de son offre auto-hébergée :',
+    usage_banner_metric: '{{metric}} : {{value}} (limite {{limit}})',
+    usage_banner_action:
+      'Contactez-nous sous 30 jours pour mettre à niveau votre offre ou réduire votre utilisation.',
+    usage_metric_mau: 'Utilisateurs actifs mensuels',
+    usage_metric_access_tokens: 'Jetons d’accès mensuels',
+    usage_metric_production_deployments: 'Déploiements de production',
   },
   members: {
     card_title: 'Gérez vos locataires plus sûrement avec Logto Cloud',

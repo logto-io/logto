@@ -21,7 +21,7 @@ const tenants = {
     install_button: 'تثبيت الترخيص',
     key_field: 'مفتاح الترخيص',
     key_field_description:
-      'يتم التحقق من المفتاح على مثيلك ولا يغادره أبدًا. تواصل مع Logto للحصول على مفتاح جديد إذا كان المفتاح الحالي منتهي الصلاحية.',
+      'يتم التحقق من المفتاح على مثيلك ويُرسل إلى Logto عند تحديث الترخيص. تواصل مع Logto للحصول على مفتاح جديد إذا كان المفتاح الحالي منتهي الصلاحية.',
     key_placeholder: 'الصق مفتاح الترخيص هنا',
     installed_toast: 'تم تثبيت الترخيص بنجاح.',
     details_title: 'الترخيص',
@@ -47,6 +47,12 @@ const tenants = {
       'انتهت فترة السماح للترخيص في {{graceEndsAt}}. عاد هذا النشر إلى إعدادات OSS الافتراضية. تواصل مع Logto للحصول على مفتاح ترخيص جديد وثبّته مرة أخرى.',
     get_fresh_key_button: 'الحصول على مفتاح ترخيص جديد',
     replace_button: 'استبدال الترخيص',
+    usage_banner_description: 'يتجاوز استخدام هذا النشر حدود الاستخدام لخطتك المستضافة ذاتيًا:',
+    usage_banner_metric: '{{metric}}: {{value}} (الحد {{limit}})',
+    usage_banner_action: 'تواصل معنا خلال 30 يومًا لترقية خطتك أو تقليل استخدامك.',
+    usage_metric_mau: 'المستخدمون النشطون شهريًا',
+    usage_metric_access_tokens: 'رموز الوصول الشهرية',
+    usage_metric_production_deployments: 'عمليات النشر الإنتاجية',
   },
   members: {
     card_title: 'أدر المستأجرين بأمان أكبر مع Logto Cloud',

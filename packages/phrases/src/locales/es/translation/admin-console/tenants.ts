@@ -22,7 +22,7 @@ const tenants = {
     install_button: 'Instalar licencia',
     key_field: 'Clave de licencia',
     key_field_description:
-      'La clave se verifica en tu instancia y nunca sale de ella. Contacta con Logto para obtener una clave nueva si la que tienes ha caducado.',
+      'La clave se verifica en tu instancia y se envía a Logto cuando se actualiza la licencia. Contacta con Logto para obtener una clave nueva si la que tienes ha caducado.',
     key_placeholder: 'Pega aquí tu clave de licencia',
     installed_toast: 'Licencia instalada correctamente.',
     details_title: 'LICENCIA',
@@ -48,6 +48,13 @@ const tenants = {
       'El periodo de gracia de la licencia terminó el {{graceEndsAt}}. Esta implementación volvió a los valores predeterminados de OSS. Contacta con Logto para obtener una clave de licencia nueva e instálala de nuevo.',
     get_fresh_key_button: 'Obtener una clave nueva',
     replace_button: 'Reemplazar licencia',
+    usage_banner_description: 'Este despliegue supera los límites de uso de su plan autoalojado:',
+    usage_banner_metric: '{{metric}}: {{value}} (límite {{limit}})',
+    usage_banner_action:
+      'Contacta con nosotros en un plazo de 30 días para actualizar tu plan o reducir tu uso.',
+    usage_metric_mau: 'Usuarios activos mensuales',
+    usage_metric_access_tokens: 'Tokens de acceso mensuales',
+    usage_metric_production_deployments: 'Despliegues de producción',
   },
   members: {
     card_title: 'Administra los inquilinos de forma más segura con Logto Cloud',

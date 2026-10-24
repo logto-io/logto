@@ -23,7 +23,7 @@ const tenants = {
     install_button: 'Instalar licença',
     key_field: 'Chave de licença',
     key_field_description:
-      'A chave é verificada na sua instância e nunca sai dela. Entre em contato com a Logto para obter uma chave nova se a que você tem expirou.',
+      'A chave é verificada na sua instância e enviada à Logto quando a licença é atualizada. Entre em contato com a Logto para obter uma nova chave se a sua expirou.',
     key_placeholder: 'Cole sua chave de licença aqui',
     installed_toast: 'Licença instalada com sucesso.',
     details_title: 'LICENÇA',
@@ -49,6 +49,14 @@ const tenants = {
       'O período de tolerância da licença terminou em {{graceEndsAt}}. Esta implantação voltou aos padrões do OSS. Entre em contato com a Logto para obter uma nova chave de licença e instale-a novamente.',
     get_fresh_key_button: 'Obter uma nova chave de licença',
     replace_button: 'Substituir licença',
+    usage_banner_description:
+      'Esta implantação ultrapassa os limites de uso do seu plano auto-hospedado:',
+    usage_banner_metric: '{{metric}}: {{value}} (limite {{limit}})',
+    usage_banner_action:
+      'Entre em contato conosco em até 30 dias para fazer upgrade do plano ou reduzir o uso.',
+    usage_metric_mau: 'Usuários ativos mensais',
+    usage_metric_access_tokens: 'Tokens de acesso mensais',
+    usage_metric_production_deployments: 'Implantações de produção',
   },
   members: {
     card_title: 'Gerencie tenants com mais segurança usando o Logto Cloud',

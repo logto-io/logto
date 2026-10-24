@@ -22,7 +22,7 @@ const tenants = {
     install_button: 'Install license',
     key_field: 'License key',
     key_field_description:
-      'The key is verified on your instance and never leaves it. Contact Logto for a fresh key if the one you have has expired.',
+      'The key is verified on your instance and sent to Logto when the license refreshes. Contact Logto for a fresh key if the one you have has expired.',
     key_placeholder: 'Paste your license key here',
     installed_toast: 'License installed successfully.',
     details_title: 'LICENSE',
@@ -48,6 +48,12 @@ const tenants = {
       'The license grace period ended on {{graceEndsAt}}. This deployment has reverted to OSS defaults. Contact Logto for a fresh license key and install it again.',
     get_fresh_key_button: 'Get a fresh license key',
     replace_button: 'Replace license',
+    usage_banner_description: 'This deployment is above the usage limits of its self-hosted plan:',
+    usage_banner_metric: '{{metric}}: {{value}} (limit {{limit}})',
+    usage_banner_action: 'Contact us within 30 days to upgrade your plan or reduce your usage.',
+    usage_metric_mau: 'Monthly active users',
+    usage_metric_access_tokens: 'Monthly access tokens',
+    usage_metric_production_deployments: 'Production deployments',
   },
   members: {
     card_title: 'Manage tenants more securely with Logto Cloud',

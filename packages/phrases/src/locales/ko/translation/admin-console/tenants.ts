@@ -21,7 +21,7 @@ const tenants = {
     install_button: '라이선스 설치',
     key_field: '라이선스 키',
     key_field_description:
-      '키는 내 인스턴스에서 검증되며 외부로 전송되지 않습니다. 가지고 있는 키가 만료되었다면 Logto에 문의하여 새 키를 받으세요.',
+      '키는 내 인스턴스에서 검증되며 라이선스가 갱신될 때 Logto로 전송됩니다. 가지고 있는 키가 만료되었다면 Logto에 문의하여 새 키를 받으세요.',
     key_placeholder: '여기에 라이선스 키를 붙여넣으세요',
     installed_toast: '라이선스를 설치했습니다.',
     details_title: '라이선스',
@@ -47,6 +47,13 @@ const tenants = {
       '라이선스 유예 기간이 {{graceEndsAt}}에 끝났습니다. 이 배포는 OSS 기본값으로 되돌아갔습니다. Logto에 문의하여 새 라이선스 키를 받고 다시 설치하세요.',
     get_fresh_key_button: '새 라이선스 키 받기',
     replace_button: '라이선스 교체',
+    usage_banner_description: '이 배포의 사용량이 셀프 호스팅 요금제의 사용량 한도를 초과했습니다:',
+    usage_banner_metric: '{{metric}}: {{value}} (한도 {{limit}})',
+    usage_banner_action:
+      '30일 이내에 Logto에 문의하여 요금제를 업그레이드하거나 사용량을 줄이세요.',
+    usage_metric_mau: '월간 활성 사용자',
+    usage_metric_access_tokens: '월간 액세스 토큰',
+    usage_metric_production_deployments: '프로덕션 배포',
   },
   members: {
     card_title: 'Logto Cloud로 테넌트를 더 안전하게 관리하세요',
