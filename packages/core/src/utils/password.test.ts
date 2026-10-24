@@ -4,7 +4,12 @@ import { UsersPasswordEncryptionMethod } from '@logto/schemas';
 
 import RequestError from '../errors/RequestError/index.js';
 
-import { encryptPassword, executeLegacyHash, parseLegacyPassword } from './password.js';
+import {
+  encryptPassword,
+  executeLegacyHash,
+  legacyVerify,
+  parseLegacyPassword,
+} from './password.js';
 
 describe('parseLegacyPassword', () => {
   it('should parse valid legacy password expression', () => {
@@ -193,6 +198,65 @@ describe('executeLegacyHash', () => {
   it('should reject wrong password with firebase-scrypt', async () => {
     const result = await executeLegacyHash(firebaseScryptExpression, 'wrong-password');
     expect(result).not.toBe(firebaseScryptExpression.encryptedPassword);
+  });
+
+  const shaCryptExpression = {
+    algorithm: 'sha512-crypt',
+    args: ['@'],
+    encryptedPassword:
+      '$6$rounds=10000$saltstringsaltst$OW1/O6BYHV6BcXZu8QVeXbDWra3Oeqh0sbHbbMCVNSnCM/UrjmM0Dp8vOuZeHBy/YTBmSK6H9qs/y3RnOaw5v.',
+  };
+
+  it('should parse a sha512-crypt expression', () => {
+    expect(parseLegacyPassword(JSON.stringify(Object.values(shaCryptExpression)))).toEqual(
+      shaCryptExpression
+    );
+  });
+
+  it('should parse a sha512-crypt expression that fits in the 256-character digest column', () => {
+    const longest = {
+      algorithm: 'sha512-crypt',
+      args: ['@'],
+      encryptedPassword: '$6$rounds=1000000$asaltof16chars..$' + 'a'.repeat(86),
+    };
+    const json = JSON.stringify(Object.values(longest));
+    expect(json.length).toBeLessThanOrEqual(256);
+    expect(parseLegacyPassword(json)).toEqual(longest);
+  });
+
+  it('should reject a sha512-crypt expression with an invalid stored string', () => {
+    expect(() =>
+      parseLegacyPassword(
+        JSON.stringify(['sha512-crypt', ['@'], '$6$rounds=10$salt$' + 'a'.repeat(86)])
+      )
+    ).toThrow(new RequestError({ code: 'password.invalid_legacy_password_format' }));
+    expect(() =>
+      parseLegacyPassword(
+        JSON.stringify(['sha256-crypt', ['@'], shaCryptExpression.encryptedPassword])
+      )
+    ).toThrow(new RequestError({ code: 'password.invalid_legacy_password_format' }));
+  });
+
+  it('should correctly hash with sha512-crypt', async () => {
+    const result = await executeLegacyHash(shaCryptExpression, 'Hello world!');
+    expect(result).toBe(shaCryptExpression.encryptedPassword);
+  });
+
+  it('should reject wrong password with sha512-crypt', async () => {
+    const result = await executeLegacyHash(shaCryptExpression, 'Hello world?');
+    expect(result).not.toBe(shaCryptExpression.encryptedPassword);
+  });
+
+  it('should verify a sha256-crypt expression end to end', async () => {
+    const stored = JSON.stringify([
+      'sha256-crypt',
+      ['@'],
+      '$5$rounds=77777$short$JiO1O3ZpDAxGJeaDIuqCoEFysAe1mZNJRs3pw0KQRd/',
+    ]);
+    await expect(
+      legacyVerify(stored, 'we have a short salt string but not a short password')
+    ).resolves.toBe(true);
+    await expect(legacyVerify(stored, 'we have a short salt string')).resolves.toBe(false);
   });
 });
 
