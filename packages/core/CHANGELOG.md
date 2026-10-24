@@ -1,5 +1,77 @@
 # Change Log
 
+## 1.46.0
+
+### Minor Changes
+
+- e8c954a: create self-service personal access tokens in Account Center
+
+  Users can create, rename, and revoke personal access tokens on the Security page of Account Center when the tenant enables the personal access token field. Each token is shown only once at creation and expires within 365 days. The same operations are available through the Account API under `/api/my-account/personal-access-tokens`.
+
+- 4c2822c: support GeeTest as a CAPTCHA provider
+
+  [GeeTest](https://www.geetest.com) CAPTCHA v4 adds an adaptive CAPTCHA service with localized challenges, which suits sign-in experiences targeting mainland China where Google reCAPTCHA is often unreachable.
+
+  To use it, create a CAPTCHA v4 event in the GeeTest dashboard, then go to Console > Security > CAPTCHA and add GeeTest with its CAPTCHA ID and CAPTCHA key. The same configuration is available through the `PUT /api/captcha-provider` Management API with `type: "Geetest"`.
+
+  While GeeTest is the CAPTCHA provider, the sign-in page's Content Security Policy allows GeeTest's SDK, API, and static hosts, which the widget loads the challenge from.
+
+- 7945f99: support search users by exact custom data in the Management API
+
+  `GET /api/users` now accepts a repeatable `customData` query parameter that matches users whose custom data contains the given JSON object, for example `customData={"customId":114514}`. Repeated values are combined with OR, and the condition is combined with other user filters using AND.
+
+- d62fd36: add `sha256-crypt` and `sha512-crypt` legacy password hash support
+
+  Users can now be imported with SHA-crypt hashes (`$5$` and `$6$`, as used by Linux, passlib, PHP, and others) by setting the password algorithm to `Legacy` and passing the complete stored crypt string in the password digest.
+
+- 2caaf0a: add an unlock action on the user details page to clear sign-in and security verification
+  lockouts
+
+  The action clears lockouts keyed on the user ID, primary email, primary phone, and username,
+  so an admin can unlock a user without knowing which identifier triggered the lockout.
+
+- 4dc1d1b: allow admins to require individual users to set up MFA, preventing those users from skipping the setup flow
+
+  Set `mfa.required` to `true` through the Management API, or turn on "Require MFA setup" on the user details page in Console. The user must bind MFA on their next sign-in and cannot skip it, regardless of the organization-level MFA policy.
+
+### Patch Changes
+
+- ae8412d: warn once when a `/console` request reaches the default tenant because the request origin does not match any configured admin endpoint, asking operators to check the Console URL and `ADMIN_ENDPOINT`
+- 71e8285: nest the social user info under `userInfo` in the `Interaction.SignIn.Identifier.Social.Submit` audit log of the deprecated interaction API
+
+  This only affects social sign-in through the deprecated `/api/interaction` endpoints; the current experience API (`/api/experience`) is unchanged. The change is precautionary: connector profile fields were spread at the top level of that log's payload, so a connector that returns its own `userId` (for example Feishu's employee user ID) could replace the Logto user ID on that entry. Queries that read this entry's profile fields need to read them from `payload.userInfo` instead.
+
+- cec1c1a: fix manual unlock not clearing active security verification lockouts
+
+  Sentinel activity deletion now also removes active blocked decisions older than one hour, so manually unlocking a user works when the lockout duration exceeds 60 minutes. The manual unlock dialog and API documentation now mention user IDs and security verification lockouts.
+
+- 214a5b7: prevent sso connector configuration from being returned in sign-in error responses
+- 1b4aee2: reject account API reads that need recent authentication from third-party applications
+
+  Reading backup codes, sessions, grants, and trusted devices now requires a first-party application, matching the first-party only policy that the account mutations already enforce.
+
+- 792197d: keep repeated query parameters in pagination `Link` headers
+
+  Management API list endpoints, such as `GET /api/applications?types=SPA&types=Traditional&page=1`, now return `first`, `prev`, `next` and `last` links that keep every value of a repeated query parameter, instead of joining them into a single comma-separated value that changes the results of the linked page.
+
+- Updated dependencies [e8c954a]
+- Updated dependencies [4c2822c]
+- Updated dependencies [9193c59]
+- Updated dependencies [cec1c1a]
+- Updated dependencies [9d7d323]
+- Updated dependencies [664e6ac]
+- Updated dependencies [05678f9]
+- Updated dependencies [4dc1d1b]
+  - @logto/account@0.8.0
+  - @logto/console@1.43.0
+  - @logto/schemas@1.46.0
+  - @logto/experience@1.24.0
+  - @logto/phrases@1.33.0
+  - @logto/core-kit@2.14.0
+  - @logto/connector-kit@5.2.0
+  - @logto/phrases-experience@1.16.0
+  - @logto/cli@1.46.0
+
 ## 1.45.0
 
 ### Minor Changes

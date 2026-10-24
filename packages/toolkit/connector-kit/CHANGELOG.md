@@ -1,5 +1,21 @@
 # Change Log
 
+## 5.2.0
+
+### Minor Changes
+
+- 9d7d323: add Sign-In with Ethereum (SIWE / EIP-4361) for EVM wallets
+
+  Administrators can enable an Ethereum Wallet social connector. Users with an injected EIP-1193 wallet can sign a one-time SIWE message without leaving the sign-in page. A single address works across supported EVM chains, and administrators can restrict the allowed chain IDs.
+
+- 05678f9: accept token responses that return `scope` as an array
+
+  Some providers, such as Twitch, return `scope` in the token response as a JSON array instead of a space-delimited string. Social sign-in with the generic OAuth 2.0 and OIDC connectors no longer fails with an invalid response error for these providers; the scopes are normalized to a space-delimited string.
+
+### Patch Changes
+
+- 664e6ac: show the provider's actual error message instead of `{}` when a social connector request fails
+
 ## 5.1.2
 
 ### Patch Changes
