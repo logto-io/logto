@@ -74,7 +74,7 @@ function AssignPermissionsModal({ roleId, roleType, onClose }: Props) {
           href: 'https://docs.logto.io/docs/recipes/rbac/manage-permissions-and-roles#manage-role-permissions',
           targetBlank: 'noopener',
         }}
-        size="large"
+        size="xlarge"
         footer={
           shouldBlockScopeAssignment ? (
             <QuotaGuardFooter>
