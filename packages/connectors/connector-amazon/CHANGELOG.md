@@ -1,5 +1,15 @@
 # @logto/connector-amazon
 
+## 0.3.7
+
+### Patch Changes
+
+- 664e6ac: show the provider's actual error message instead of `{}` when a social connector request fails
+- Updated dependencies [9d7d323]
+- Updated dependencies [664e6ac]
+- Updated dependencies [05678f9]
+  - @logto/connector-kit@5.2.0
+
 ## 0.3.6
 
 ### Patch Changes

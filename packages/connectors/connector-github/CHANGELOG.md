@@ -1,5 +1,15 @@
 # @logto/connector-github
 
+## 1.7.7
+
+### Patch Changes
+
+- 664e6ac: show the provider's actual error message instead of `{}` when a social connector request fails
+- Updated dependencies [9d7d323]
+- Updated dependencies [664e6ac]
+- Updated dependencies [05678f9]
+  - @logto/connector-kit@5.2.0
+
 ## 1.7.6
 
 ### Patch Changes

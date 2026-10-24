@@ -1,5 +1,19 @@
 # Change Log
 
+## 1.46.0
+
+### Patch Changes
+
+- Updated dependencies [4c2822c]
+- Updated dependencies [9193c59]
+- Updated dependencies [9d7d323]
+- Updated dependencies [664e6ac]
+- Updated dependencies [05678f9]
+- Updated dependencies [4dc1d1b]
+  - @logto/schemas@1.46.0
+  - @logto/core-kit@2.14.0
+  - @logto/connector-kit@5.2.0
+
 ## 1.45.0
 
 ### Patch Changes
