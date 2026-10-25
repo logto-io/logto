@@ -10,6 +10,54 @@ import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
 import { type WithI18nContext } from './koa-i18next.js';
 
+/** The slice of a `got` `RequestError` this module reads. */
+type GotRequestErrorLike = Error & {
+  code: string;
+  options: { method: string; url?: URL | string };
+};
+
+/**
+ * Duck-typed check for a `got` `RequestError` (and its subclasses: `TimeoutError`, `HTTPError`…).
+ * Connectors ship their own copy of `got`, so an `instanceof` check against core's copy would
+ * silently miss the errors thrown from a connector package.
+ */
+const isGotRequestError = (error: unknown): error is GotRequestErrorLike =>
+  error instanceof Error &&
+  'code' in error &&
+  typeof error.code === 'string' &&
+  'options' in error &&
+  typeof error.options === 'object' &&
+  error.options !== null &&
+  'method' in error.options &&
+  typeof error.options.method === 'string';
+
+/**
+ * Reduce an error to what is safe to print.
+ *
+ * `got` attaches the full request `Options` to its `RequestError` as an **enumerable** property
+ * (`request` and `response` are not), so `console.error(error)` dumps the request body. For a
+ * social connector's token exchange that body is `code=…&client_id=…&client_secret=…`: one network
+ * timeout towards the IdP was enough to print the connector's client secret in plain text in the
+ * production logs. Keep the diagnostic value (name, code, message, method, URL, stack) and drop the
+ * options.
+ */
+const toLoggable = (error: unknown): unknown => {
+  if (!isGotRequestError(error)) {
+    return error;
+  }
+
+  const { name, code, message, stack, options } = error;
+
+  return {
+    name,
+    code,
+    message,
+    method: options.method,
+    url: options.url === undefined ? undefined : String(options.url),
+    stack,
+  };
+};
+
 /**
  * The middleware to handle errors.
  *
@@ -27,7 +75,7 @@ export default function koaErrorHandler<
       await next();
     } catch (error: unknown) {
       if (!EnvSet.values.isUnitTest && !EnvSet.values.isProduction) {
-        consoleLog.error(error);
+        consoleLog.error(toLoggable(error));
       }
 
       // Report all exceptions to ApplicationInsights
@@ -58,7 +106,7 @@ export default function koaErrorHandler<
 
       // Should log 500 errors in prod anyway
       if (EnvSet.values.isProduction) {
-        consoleLog.error(error);
+        consoleLog.error(toLoggable(error));
       }
 
       ctx.status = 500;
