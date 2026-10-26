@@ -9,6 +9,7 @@ import SkuName from '@/components/SkuName';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import FormField from '@/ds-components/FormField';
 import { isPaidPlan } from '@/utils/subscription';
+import { getUpcomingBillAmount } from '@/utils/upcoming-invoice';
 
 import AddOnUsageChangesNotification from './AddOnUsageChangesNotification';
 import MauLimitExceedNotification from './MauLimitExceededNotification';
@@ -32,7 +33,7 @@ function CurrentPlan({ periodicUsage, usageAddOnSkus }: Props) {
    * However, for compatibility reasons, the price of the SKU's corresponding `unitPrice` will be used as a fallback when it does not exist. If `unitPrice` also does not exist, it means that the tenant does not have any applicable paid subscription, and the bill will be 0.
    */
   const upcomingCost = useMemo(
-    () => upcomingInvoice?.subtotal ?? unitPrice ?? 0,
+    () => getUpcomingBillAmount(upcomingInvoice) ?? unitPrice ?? 0,
     [unitPrice, upcomingInvoice]
   );
 

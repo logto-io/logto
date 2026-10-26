@@ -37,14 +37,14 @@ const enterprise_subscription = {
     description:
       'Seçili kiracıdan bağımsız olarak kişisel aboneliklerinizi ve sözleşmeye bağlı Enterprise kapsamınızı görüntüleyin.',
     personal_title: 'Kişisel abonelikler',
-    personal_description: 'Geçmiş abonelikler dahil hesabınıza faturalandırılan abonelikler.',
+    personal_description:
+      'Hesabınıza faturalandırılan etkin abonelikler. Geçmiş abonelikler fatura geçmişinde kalır.',
     price: 'Fiyat',
-    billing_period: 'Fatura dönemi',
-    list_price_note:
-      'Fiyatlara vergiler ve indirimler dahil değildir. Değişiklikler bir sonraki faturanızda kıst olarak hesaplanır.',
+    next_charge: 'Sonraki ödeme',
+    cancels_on: '{{date}} tarihinde iptal',
+    ends_on: '{{date}} tarihinde sona erer',
     overdue_note:
       'Ödemenin vadesi geçti. Ödenmemeye devam ederse abonelik duraklatılabilir ve ücretli özellikleri kaldırılabilir.',
-    cancel_on: '{{date}} tarihinde iptal edilecek',
     other_product: 'Diğer abonelik',
     enterprise_invoices_description:
       'Enterprise sözleşmenizin faturaları. Görüntülemek ve fatura ya da makbuzu indirmek için bir fatura seçin.',

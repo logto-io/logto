@@ -38,14 +38,13 @@ const enterprise_subscription = {
       'Persönliche Abonnements und vertragliche Enterprise-Kontingente unabhängig vom ausgewählten Mandanten anzeigen.',
     personal_title: 'Persönliche Abonnements',
     personal_description:
-      'Ihrem Konto in Rechnung gestellte Abonnements, einschließlich früherer Abonnements.',
+      'Aktive Abonnements, die Ihrem Konto in Rechnung gestellt werden. Frühere Abonnements finden Sie im Zahlungsverlauf.',
     price: 'Preis',
-    billing_period: 'Abrechnungszeitraum',
-    list_price_note:
-      'Preise verstehen sich ohne Steuern und Rabatte. Änderungen werden anteilig mit Ihrer nächsten Rechnung verrechnet.',
+    next_charge: 'Nächste Abbuchung',
+    cancels_on: 'Endet zum {{date}}',
+    ends_on: 'Endet am {{date}}',
     overdue_note:
       'Die Zahlung ist überfällig. Bleibt sie unbezahlt, kann das Abonnement pausiert und seine kostenpflichtigen Funktionen entfernt werden.',
-    cancel_on: 'Kündigung geplant für {{date}}',
     other_product: 'Anderes Abonnement',
     enterprise_invoices_description:
       'Rechnungen für deinen Enterprise-Vertrag. Wähle eine Rechnung aus, um sie anzusehen und die Rechnung oder Quittung herunterzuladen.',

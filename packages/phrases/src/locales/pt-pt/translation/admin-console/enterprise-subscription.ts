@@ -37,14 +37,14 @@ const enterprise_subscription = {
     description:
       'Consulte as suas subscrições pessoais e a cobertura Enterprise contratada, independentemente do tenant selecionado.',
     personal_title: 'Subscrições pessoais',
-    personal_description: 'Subscrições faturadas à sua conta, incluindo subscrições anteriores.',
+    personal_description:
+      'Subscrições ativas faturadas à sua conta. As subscrições anteriores mantêm-se no histórico de faturação.',
     price: 'Preço',
-    billing_period: 'Período de faturação',
-    list_price_note:
-      'Os preços não incluem impostos nem descontos. As alterações são calculadas proporcionalmente na sua próxima fatura.',
+    next_charge: 'Próxima cobrança',
+    cancels_on: 'Cancela a {{date}}',
+    ends_on: 'Termina a {{date}}',
     overdue_note:
       'O pagamento está em atraso. Se continuar por pagar, a subscrição pode ser suspensa e as suas funcionalidades pagas removidas.',
-    cancel_on: 'Cancelamento agendado para {{date}}',
     other_product: 'Outra subscrição',
     enterprise_invoices_description:
       'Faturas do seu contrato Enterprise. Selecione uma fatura para a ver e transferir a fatura ou o recibo.',

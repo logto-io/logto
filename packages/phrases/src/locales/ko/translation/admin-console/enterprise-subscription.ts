@@ -35,14 +35,13 @@ const enterprise_subscription = {
   user_subscriptions: {
     description: '선택한 테넌트와 관계없이 개인 구독 및 Enterprise 계약 할당량을 확인하세요.',
     personal_title: '개인 구독',
-    personal_description: '과거 구독을 포함하여 계정에 청구되는 구독입니다.',
+    personal_description: '계정에 청구되는 활성 구독입니다. 과거 구독은 청구 내역에 남아 있습니다.',
     price: '가격',
-    billing_period: '청구 기간',
-    list_price_note:
-      '가격에는 세금과 할인이 포함되지 않습니다. 변경 사항은 다음 청구서에 일할 계산되어 반영됩니다.',
+    next_charge: '다음 청구',
+    cancels_on: '{{date}}에 취소',
+    ends_on: '{{date}}에 종료',
     overdue_note:
       '결제가 연체되었습니다. 계속 미납되면 구독이 일시 중지되고 유료 기능이 제거될 수 있습니다.',
-    cancel_on: '{{date}}에 취소 예정',
     other_product: '기타 구독',
     enterprise_invoices_description:
       'Enterprise 계약의 청구서입니다. 청구서를 선택하면 내용을 확인하고 청구서 또는 영수증을 다운로드할 수 있습니다.',

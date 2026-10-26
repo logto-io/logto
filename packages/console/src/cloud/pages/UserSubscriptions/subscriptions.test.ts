@@ -1,5 +1,6 @@
 import phrases from '@logto/phrases';
-import { render, screen, waitFor } from '@testing-library/react';
+import { noop } from '@silverhand/essentials';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import i18next from 'i18next';
 import { createElement, type ReactNode } from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
@@ -62,6 +63,7 @@ jest.mock('@/containers/AppBoundary', () => ({
 }));
 
 const get = jest.fn();
+const post = jest.fn();
 const mutate = jest.fn();
 const price = {
   id: 'price',
@@ -78,9 +80,16 @@ const subscription = {
   items: [{ id: 'item', quantity: 2, price }],
   currentPeriodStart: new Date('2026-10-01'),
   currentPeriodEnd: new Date('2026-11-01'),
+  upcomingInvoice: {
+    subtotal: 25_600,
+    subtotalExcludingTax: 25_600,
+    total: 30_000,
+    totalExcludingTax: 23_040,
+  },
   cancelAtPeriodEnd: false,
   cancelAt: null,
   canceledAt: null,
+  openInvoices: [],
 };
 const enterprise: Pick<LogtoEnterpriseResponse, 'id' | 'name'> = {
   id: 'contract',
@@ -140,7 +149,9 @@ beforeEach(() => {
     quota: { basicQuota: { consoleSsoConnectorLimit: 0 } },
     usages: { consoleSsoConnectorLimit: 0 },
   });
-  jest.mocked(useCloudApi).mockReturnValue({ get } as unknown as ReturnType<typeof useCloudApi>);
+  jest
+    .mocked(useCloudApi)
+    .mockReturnValue({ get, post } as unknown as ReturnType<typeof useCloudApi>);
   jest
     .mocked(useUserSubscriptions)
     .mockReturnValue({ data: [subscription], isLoading: false, mutate } as unknown as ReturnType<
@@ -148,21 +159,68 @@ beforeEach(() => {
     >);
 });
 
-it('shows the recurring unit list price with a short pricing note', () => {
+it('shows the list price and the next charge after discounts, without a status tag', () => {
   renderView(createElement(PersonalSubscriptions));
   expect(screen.getByText('Console SSO')).toBeTruthy();
   expect(screen.queryByText('sub-sso')).toBeNull();
   expect(screen.getByText('2 × $128.00')).toBeTruthy();
   expect(screen.getByText('/ month')).toBeTruthy();
+  expect(screen.getByText('Next charge')).toBeTruthy();
+  expect(screen.getByText('$230.40')).toBeTruthy();
+  expect(screen.getByText('Nov 1, 2026')).toBeTruthy();
   expect(screen.queryByText(/\$256/)).toBeNull();
-  expect(screen.getByText('Active')).toBeTruthy();
-  expect(screen.queryByText('Console SSO connectors')).toBeNull();
-  expect(
-    screen.getByText(
-      'Prices exclude taxes and discounts. Changes are prorated on your next invoice.'
-    )
-  ).toBeTruthy();
+  expect(screen.queryByText('Active')).toBeNull();
+  expect(screen.queryByText('Status')).toBeNull();
+  expect(screen.queryByText('Billing period')).toBeNull();
+  expect(screen.getByRole('button', { name: 'Manage payment' })).toBeTruthy();
   expect(screen.queryByText(/Payment is overdue/)).toBeNull();
+});
+
+it('falls back to the subtotal, and to a dash when there is no upcoming invoice', () => {
+  jest.mocked(useUserSubscriptions).mockReturnValue({
+    data: [
+      {
+        ...subscription,
+        upcomingInvoice: { ...subscription.upcomingInvoice, totalExcludingTax: null },
+      },
+      { ...subscription, id: 'sub-unsynced', upcomingInvoice: null },
+    ],
+    isLoading: false,
+    mutate,
+  } as unknown as ReturnType<typeof useUserSubscriptions>);
+  renderView(createElement(PersonalSubscriptions));
+  expect(screen.getByText('$256.00')).toBeTruthy();
+  expect(screen.getByText('—')).toBeTruthy();
+});
+
+it('shows an end date instead of a next charge for a scheduled cancellation', () => {
+  jest.mocked(useUserSubscriptions).mockReturnValue({
+    data: [{ ...subscription, cancelAtPeriodEnd: true }],
+    isLoading: false,
+    mutate,
+  } as unknown as ReturnType<typeof useUserSubscriptions>);
+  renderView(createElement(PersonalSubscriptions));
+  expect(screen.getByText('Cancels Nov 1, 2026')).toBeTruthy();
+  expect(screen.getByText('Ends Nov 1, 2026')).toBeTruthy();
+  expect(screen.getByText('—')).toBeTruthy();
+  expect(screen.queryByText('$230.40')).toBeNull();
+});
+
+it('opens the Stripe customer portal of the row subscription', async () => {
+  jest.mocked(useUserSubscriptions).mockReturnValue({
+    data: [subscription, { ...subscription, id: 'sub-license', product: 'self-hosted-license' }],
+    isLoading: false,
+    mutate,
+  } as unknown as ReturnType<typeof useUserSubscriptions>);
+  post.mockReturnValue(new Promise(noop));
+  renderView(createElement(PersonalSubscriptions));
+  fireEvent.click(screen.getAllByRole('button', { name: 'Manage payment' })[1]!);
+  await waitFor(() => {
+    expect(post).toHaveBeenCalledWith('/api/me/user-subscriptions/:id/stripe-customer-portal', {
+      params: { id: 'sub-license' },
+      body: { callbackUrl: window.location.href },
+    });
+  });
 });
 
 it('shows only the unit price for a single-unit subscription', () => {
@@ -183,19 +241,26 @@ it('shows only the unit price for a single-unit subscription', () => {
   expect(screen.queryByText(/×/)).toBeNull();
 });
 
-it('keeps canceled and unknown-product history', () => {
+it('hides ended subscriptions but keeps unknown products', () => {
   jest.mocked(useUserSubscriptions).mockReturnValue({
     data: [
-      subscription,
-      { ...subscription, id: 'sub-history', status: 'canceled' },
+      { ...subscription, id: 'sub-canceled', status: 'canceled' },
+      {
+        ...subscription,
+        id: 'sub-expired',
+        product: 'self-hosted-license',
+        status: 'incomplete_expired',
+      },
       { ...subscription, id: 'unknown', product: null },
     ],
     isLoading: false,
     mutate,
   } as unknown as ReturnType<typeof useUserSubscriptions>);
   renderView(createElement(PersonalSubscriptions));
-  expect(screen.getByText('Canceled')).toBeTruthy();
   expect(screen.getByText('Other subscription')).toBeTruthy();
+  expect(screen.queryByText('Console SSO')).toBeNull();
+  expect(screen.queryByText('Self-hosted licenses')).toBeNull();
+  expect(screen.getAllByRole('button', { name: 'Manage payment' })).toHaveLength(1);
 });
 
 it.each([
@@ -211,6 +276,7 @@ it.each([
   } as unknown as ReturnType<typeof useUserSubscriptions>);
   renderView(createElement(PersonalSubscriptions));
   expect(Boolean(screen.queryByText(/Payment is overdue/))).toBe(isShown);
+  expect(Boolean(screen.queryByText(/^(Past due|Unpaid)$/))).toBe(isShown);
 });
 
 it('shows the original Enterprise plan card for the first Enterprise above personal subscriptions', async () => {

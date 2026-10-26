@@ -1,6 +1,11 @@
 import { type UserSubscription } from '@/cloud/types/router';
 
-import { formatPriceInterval, formatUnitPrice, getScheduledCancellation } from './utils';
+import {
+  formatPriceInterval,
+  formatUnitPrice,
+  getNextCharge,
+  getScheduledCancellation,
+} from './utils';
 
 const price: UserSubscription['items'][number]['price'] = {
   id: 'price-sso',
@@ -19,9 +24,14 @@ const subscription: UserSubscription = {
   cancelAt: null,
   canceledAt: null,
   cancelAtPeriodEnd: false,
-  items: [{ id: 'item-sso', price, quantity: 2 }],
-  upcomingInvoice: null,
+  upcomingInvoice: {
+    subtotal: 25_600,
+    subtotalExcludingTax: 25_600,
+    total: 30_000,
+    totalExcludingTax: 23_040,
+  },
   openInvoices: [],
+  items: [{ id: 'item-sso', price, quantity: 2 }],
 };
 
 it.each([
@@ -55,4 +65,19 @@ it('uses effective scheduled cancellation instead of Stripe’s request timestam
   expect(getScheduledCancellation({ ...subscription, cancelAt })).toBe(cancelAt);
   expect(getScheduledCancellation(subscription)).toBeNull();
   expect(getScheduledCancellation({ ...subscription, status: 'canceled', cancelAt })).toBe(false);
+});
+it('dates the next charge at the period end and drops it for a scheduled cancellation', () => {
+  expect(getNextCharge(subscription)).toEqual({
+    amount: 23_040,
+    currency: 'usd',
+    date: subscription.currentPeriodEnd,
+    isEnding: false,
+  });
+  expect(getNextCharge({ ...subscription, upcomingInvoice: null }).amount).toBeUndefined();
+  const cancelAt = new Date('2026-10-25');
+  expect(getNextCharge({ ...subscription, cancelAt })).toEqual({
+    currency: null,
+    date: cancelAt,
+    isEnding: true,
+  });
 });

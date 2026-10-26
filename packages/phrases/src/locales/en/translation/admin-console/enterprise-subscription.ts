@@ -36,14 +36,14 @@ const enterprise_subscription = {
     description:
       'View your personal subscriptions and contracted Enterprise coverage, independently of your selected tenant.',
     personal_title: 'Personal subscriptions',
-    personal_description: 'Subscriptions billed to your account, including past subscriptions.',
+    personal_description:
+      'Active subscriptions billed to your account. Past subscriptions stay in Billing history.',
     price: 'Price',
-    billing_period: 'Billing period',
-    list_price_note:
-      'Prices exclude taxes and discounts. Changes are prorated on your next invoice.',
+    next_charge: 'Next charge',
+    cancels_on: 'Cancels {{date}}',
+    ends_on: 'Ends {{date}}',
     overdue_note:
       'Payment is overdue. If it remains unpaid, the subscription may be paused and its paid features removed.',
-    cancel_on: 'Cancellation scheduled for {{date}}',
     other_product: 'Other subscription',
     enterprise_invoices_description:
       'Invoices for your Enterprise contract. Select an invoice to view it and download the invoice or receipt.',
