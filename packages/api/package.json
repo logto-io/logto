@@ -47,13 +47,13 @@
   "devDependencies": {
     "@silverhand/eslint-config": "^6.1.0",
     "@silverhand/ts-config": "^6.1.0",
-    "@vitest/coverage-v8": "^4.1.11",
+    "@vitest/coverage-v8": "^4.1.12",
     "eslint": "^8.57.0",
     "lint-staged": "^15.0.0",
     "openapi-typescript": "^7.8.0",
     "prettier": "^3.5.3",
     "typescript": "^5.9.3",
-    "vitest": "^4.1.11"
+    "vitest": "^4.1.12"
   },
   "eslintConfig": {
     "ignorePatterns": [
