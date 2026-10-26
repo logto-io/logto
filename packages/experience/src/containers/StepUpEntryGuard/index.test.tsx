@@ -10,11 +10,15 @@ import { Route, Routes } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import { getStepUpContext } from '@/apis/experience';
+import { logtoCookies } from '@/utils/cookies';
 
 import StepUpEntryGuard from '.';
 
 jest.mock('@/apis/experience', () => ({
   getStepUpContext: jest.fn(),
+}));
+jest.mock('@/utils/cookies', () => ({
+  logtoCookies: {},
 }));
 
 const mockedGetStepUpContext = getStepUpContext as jest.MockedFunction<typeof getStepUpContext>;
@@ -71,6 +75,30 @@ const renderGuard = (path = '/sign-in') =>
 describe('StepUpEntryGuard', () => {
   afterEach(() => {
     jest.resetAllMocks();
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- reset the mocked flow cookie hint
+    logtoCookies.isStepUp = undefined;
+  });
+
+  it('renders the entry route from the flow cookie without reading the interaction', async () => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- stage the mocked flow cookie hint
+    logtoCookies.isStepUp = false;
+
+    renderGuard();
+
+    expect(await screen.findByText('sign in form')).not.toBeNull();
+    expect(screen.queryByText('step-up landing')).toBeNull();
+    expect(mockedGetStepUpContext).not.toHaveBeenCalled();
+  });
+
+  it('returns to the step-up landing from the flow cookie without reading the interaction', async () => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- stage the mocked flow cookie hint
+    logtoCookies.isStepUp = true;
+
+    renderGuard();
+
+    expect(await screen.findByText('step-up landing')).not.toBeNull();
+    expect(screen.queryByText('sign in form')).toBeNull();
+    expect(mockedGetStepUpContext).not.toHaveBeenCalled();
   });
 
   it('renders the entry route when there is no interaction yet', async () => {
