@@ -147,6 +147,8 @@ export const useConnectorCreation = (userId: string, onClose: (id?: string) => v
         }
         if (result.status === 'canceled') {
           discardCanceledConnectorCreation(userId, result.operation);
+          // A restarted expired session set `payment_pending`, but no payment is pending now.
+          setStatus(undefined);
           return;
         }
         if (result.status === 'created') {
