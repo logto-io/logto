@@ -70,7 +70,7 @@ const renderProbe = () =>
   );
 
 const getStoredConnectors = () =>
-  JSON.parse(screen.getByTestId('sso-connectors').textContent ?? '[]') as SsoConnectorMetadata[];
+  JSON.parse(screen.getByTestId('sso-connectors').textContent) as SsoConnectorMetadata[];
 
 describe('useCheckSingleSignOn', () => {
   afterEach(() => {
