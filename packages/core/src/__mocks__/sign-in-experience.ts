@@ -114,6 +114,7 @@ export const mockSignInExperience: SignInExperience = {
   },
   trustedDevice: {},
   singleSignOnEnabled: true,
+  ssoBrandingBeforeEmailMatch: true,
   socialSignIn: {},
   supportEmail: null,
   supportWebsiteUrl: null,

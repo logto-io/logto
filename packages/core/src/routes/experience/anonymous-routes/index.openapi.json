@@ -21,6 +21,31 @@
                   "properties": {
                     "connectorIds": {
                       "description": "The list of enabled SSO connectorIds. Returns an empty array if no enabled SSO connectors are found."
+                    },
+                    "connectors": {
+                      "type": "array",
+                      "description": "The enabled SSO connectors that match the email domain, including their display branding. Returns an empty array if no enabled SSO connectors are found.",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "The unique identifier of the SSO connector."
+                          },
+                          "connectorName": {
+                            "type": "string",
+                            "description": "The display name of the SSO connector."
+                          },
+                          "logo": {
+                            "type": "string",
+                            "description": "The light mode logo of the SSO connector."
+                          },
+                          "darkLogo": {
+                            "type": "string",
+                            "description": "The dark mode logo of the SSO connector."
+                          }
+                        }
+                      }
                     }
                   }
                 }

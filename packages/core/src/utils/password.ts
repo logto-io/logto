@@ -12,6 +12,7 @@ import passwordEncryptionWorker from '../workers/password-encryption-worker.js';
 
 import { executeFirebaseScryptHash } from './firebase-scrypt.js';
 import { safeParseJson } from './json.js';
+import { executeShaCryptHash, isShaCryptAlgorithm, parseShaCryptDigest } from './sha-crypt.js';
 
 type LegacyPassword = {
   // `openssl list -digest-algorithms` will display the available digest algorithms.
@@ -29,7 +30,11 @@ function isFirebaseScryptAlgorithm(algorithm: string): boolean {
 }
 
 function isLegacyHashAlgorithm(algorithm: string): boolean {
-  if (isPbkdf2Algorithm(algorithm) || isFirebaseScryptAlgorithm(algorithm)) {
+  if (
+    isPbkdf2Algorithm(algorithm) ||
+    isFirebaseScryptAlgorithm(algorithm) ||
+    isShaCryptAlgorithm(algorithm)
+  ) {
     return true;
   }
 
@@ -83,6 +88,7 @@ function isLegacyPassword(value: string): [string, string[], string] | undefined
 /**
  * Parse legacy password expression in format: `['hash_method', ['args0', 'args1', '@'], 'hashed_password']` where `@` will be replaced with the input password.
  * @example parseLegacyPassword(['sha256', ['salt123', 'salt12345', '@'], 'hashed2345'])
+ * @example parseLegacyPassword(['sha512-crypt', ['@'], '$6$rounds=5000$salt$checksum'])
  */
 export const parseLegacyPassword = (passwordDigest: string | undefined): LegacyPassword => {
   assertThat(passwordDigest, new RequestError({ code: 'password.unsupported_encryption_method' }));
@@ -103,6 +109,11 @@ export const parseLegacyPassword = (passwordDigest: string | undefined): LegacyP
     parsePbkdf2Salt(args[0]);
   }
 
+  // Validate the stored SHA-crypt string early to surface errors at user creation time
+  if (isShaCryptAlgorithm(algorithm)) {
+    parseShaCryptDigest(algorithm, encryptedPassword);
+  }
+
   return {
     algorithm,
     args,
@@ -112,7 +123,8 @@ export const parseLegacyPassword = (passwordDigest: string | undefined): LegacyP
 
 /**
  * Execute hash calculation based on the parsed expression
- * @returns The calculated hash as a hexadecimal string (or base64 for firebase-scrypt)
+ * @returns The calculated hash as a hexadecimal string (base64 for firebase-scrypt, the complete
+ * crypt string for sha256-crypt and sha512-crypt)
  */
 export const executeLegacyHash = async (
   parsedExpression: LegacyPassword,
@@ -122,6 +134,10 @@ export const executeLegacyHash = async (
 
   if (isFirebaseScryptAlgorithm(algorithm)) {
     return executeFirebaseScryptHash(args, inputPassword);
+  }
+
+  if (isShaCryptAlgorithm(algorithm)) {
+    return executeShaCryptHash(algorithm, parsedExpression.encryptedPassword, inputPassword);
   }
 
   // Replace @ with input password

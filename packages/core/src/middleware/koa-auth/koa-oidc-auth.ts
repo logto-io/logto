@@ -3,6 +3,7 @@ import { VerificationType } from '@logto/schemas';
 import type { MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import {
   verificationRecordDataGuard,
@@ -12,8 +13,10 @@ import {
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
+import { isFirstPartyClient } from '#src/utils/assert-first-party-client.js';
 import assertThat from '#src/utils/assert-that.js';
 
+import { satisfiesAuthenticationContextPolicy } from './authentication-context.js';
 import { verificationRecordIdHeader } from './constants.js';
 import { type WithAuthContext } from './types.js';
 import { extractBearerTokenFromHeaders } from './utils.js';
@@ -71,6 +74,49 @@ const getVerificationRecordResultById = async ({
 };
 
 /**
+ * Evaluate the OIDC authentication-context branch of `identityVerified`: the access token must
+ * carry a Logto authentication context that satisfies the Account API policy under the tenant's
+ * freshness window, and must have been issued to a first-party application.
+ *
+ * The caller's application is resolved here as well, even when the token's own context is already
+ * insufficient: it decides whether the RFC 9470 challenge that the sensitive routes answer with
+ * can help, and recording it keeps those routes from looking the application up again. A
+ * third-party token never reads the tenant policy, because no context would let it operate on the
+ * account here.
+ */
+const getOidcIdentityVerification = async ({
+  extra,
+  queries,
+  clientId,
+}: {
+  extra: unknown;
+  queries: Queries;
+  clientId?: string;
+}): Promise<{
+  identityVerified: boolean;
+  isFirstPartyClient: boolean;
+  maximumAuthenticationAgeInSeconds?: number;
+}> => {
+  const isFirstParty = await isFirstPartyClient(queries, clientId);
+
+  if (!isFirstParty) {
+    return { identityVerified: false, isFirstPartyClient: false };
+  }
+
+  const maximumAuthenticationAgeInSeconds =
+    await queries.accountCenters.getMaximumAuthenticationAgeInSeconds();
+
+  return {
+    identityVerified: satisfiesAuthenticationContextPolicy(
+      extra,
+      maximumAuthenticationAgeInSeconds
+    ),
+    isFirstPartyClient: true,
+    maximumAuthenticationAgeInSeconds,
+  };
+};
+
+/**
  * Auth middleware for OIDC opaque token
  */
 export default function koaOidcAuth<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
@@ -91,7 +137,7 @@ export default function koaOidcAuth<StateT, ContextT extends IRouterParamContext
     assertThat(scopes.has('openid'), new RequestError({ code: 'auth.forbidden', status: 403 }));
 
     const verificationRecordId = request.headers[verificationRecordIdHeader];
-    const identityVerified =
+    const legacyIdentityVerified =
       typeof verificationRecordId === 'string'
         ? await getVerificationRecordResultById({
             id: verificationRecordId,
@@ -101,13 +147,27 @@ export default function koaOidcAuth<StateT, ContextT extends IRouterParamContext
           })
         : false;
 
+    // OIDC step-up authentication: a token minted by a recent qualifying authentication lets a
+    // first-party application operate on the account without a separate verification record.
+    const oidcVerification = EnvSet.values.isDevFeaturesEnabled
+      ? await getOidcIdentityVerification({
+          extra: accessToken.extra,
+          queries: tenant.queries,
+          clientId,
+        })
+      : undefined;
+
+    const oidcIdentityVerified = oidcVerification?.identityVerified ?? false;
+
     ctx.auth = {
       type: 'user',
       id: accountId,
       scopes,
       clientId,
-      identityVerified,
+      identityVerified: oidcIdentityVerified || legacyIdentityVerified,
       sessionUid,
+      isFirstPartyClient: oidcVerification?.isFirstPartyClient,
+      maximumAuthenticationAgeInSeconds: oidcVerification?.maximumAuthenticationAgeInSeconds,
     };
 
     return next();

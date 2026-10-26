@@ -1,18 +1,11 @@
 import { type OpenAPIV3 } from 'openapi-types';
 
-import { EnvSet } from '#src/env-set/index.js';
+import { resetDevFeaturesEnabled, setDevFeaturesEnabled } from '#src/test-utils/dev-features.js';
 import { type DeepPartial } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import { assembleSwaggerDocument } from './documents.js';
 import { devFeatureSchemaExtension } from './general.js';
-
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-
-const setDevFeaturesEnabled = (isDevFeaturesEnabled: boolean) => {
-  // eslint-disable-next-line @silverhand/fp/no-mutation -- Tests need to cover both dev-feature states.
-  (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = isDevFeaturesEnabled;
-};
 
 /**
  * Mimics the generated base document: the payload schema comes from the env-free zod guards, so
@@ -86,9 +79,7 @@ const assemble = () =>
   );
 
 describe('assembleSwaggerDocument', () => {
-  afterEach(() => {
-    setDevFeaturesEnabled(originalIsDevFeaturesEnabled);
-  });
+  afterEach(resetDevFeaturesEnabled);
 
   it('should prune dev feature properties from the assembled document when dev features are disabled', () => {
     setDevFeaturesEnabled(false);

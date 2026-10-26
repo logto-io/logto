@@ -118,6 +118,7 @@ export const mockSignInExperience: SignInExperience = {
     factors: [],
   },
   singleSignOnEnabled: true,
+  ssoBrandingBeforeEmailMatch: true,
   socialSignIn: {},
   supportEmail: null,
   supportWebsiteUrl: null,

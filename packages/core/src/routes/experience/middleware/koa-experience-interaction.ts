@@ -40,6 +40,13 @@ const whiteListedEndpoint = [
     method: 'POST',
     path: experienceRoutes.abort,
   },
+  // GET /experience/interaction/direct-sign-in:  Reads the OIDC request parameters only. It must
+  // work before the experience interaction is initialized, e.g. when requesting the authorization
+  // URL fails, so it cannot depend on interaction storage.
+  {
+    method: 'GET',
+    path: experienceRoutes.directSignIn,
+  },
 ];
 
 /**

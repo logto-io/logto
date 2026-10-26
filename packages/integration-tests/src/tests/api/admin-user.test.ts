@@ -129,6 +129,34 @@ describe('admin console user management', () => {
 
       await expect(verifyUserPassword(user.id, 'password')).resolves.not.toThrow();
     });
+
+    it('should create user with sha512-crypt legacy password digest', async () => {
+      // Vector from https://www.akkadia.org/drepper/SHA-crypt.txt
+      const user = await createUserByAdmin({
+        passwordDigest:
+          '["sha512-crypt", ["@"], "$6$rounds=10000$saltstringsaltst$OW1/O6BYHV6BcXZu8QVeXbDWra3Oeqh0sbHbbMCVNSnCM/UrjmM0Dp8vOuZeHBy/YTBmSK6H9qs/y3RnOaw5v."]',
+        passwordAlgorithm: UsersPasswordEncryptionMethod.Legacy,
+      });
+
+      await expectRejects(verifyUserPassword(user.id, 'Hello world?'), {
+        code: 'session.invalid_credentials',
+        status: 422,
+      });
+      await expect(verifyUserPassword(user.id, 'Hello world!')).resolves.not.toThrow();
+    });
+
+    it('should fail to create user with an invalid sha512-crypt legacy password digest', async () => {
+      await expectRejects(
+        createUserByAdmin({
+          passwordDigest: '["sha512-crypt", ["@"], "$6$rounds=10$salt$checksum"]',
+          passwordAlgorithm: UsersPasswordEncryptionMethod.Legacy,
+        }),
+        {
+          code: 'password.invalid_legacy_password_format',
+          status: 400,
+        }
+      );
+    });
   });
 
   it('should create user with custom data and profile successfully', async () => {

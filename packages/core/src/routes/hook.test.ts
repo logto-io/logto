@@ -63,6 +63,9 @@ const mockLog: Log = {
   key: 'a',
   payload: { key: 'a', result: LogResult.Success },
   createdAt: 123,
+  payloadUserId: 'user',
+  payloadApplicationId: 'application',
+  payloadHookId: 'hook',
 };
 
 const mockExecutionStats = {
@@ -141,6 +144,14 @@ describe('hook routes', () => {
       ...mockHookList[0],
       executionStats: mockExecutionStats,
     });
+  });
+
+  it('GET /hooks/:id/recent-logs should omit the tenant id and the lookup columns', async () => {
+    const response = await hookRequest.get('/hooks/foo/recent-logs');
+
+    expect(response.body).toEqual([
+      { id: mockLog.id, key: mockLog.key, payload: mockLog.payload, createdAt: mockLog.createdAt },
+    ]);
   });
 
   it('GET /hooks/:id/recent-logs should call countLogs and findLogs with correct parameters', async () => {

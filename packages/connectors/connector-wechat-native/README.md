@@ -180,8 +180,13 @@ YourRootView()
   }
 
 // or AppDelegate
-func application(_ app: UIApplication, open url: URL, options: /*...*/) -> Bool {
+func application(
+  _ app: UIApplication,
+  open url: URL,
+  options: [UIApplication.OpenURLOptionsKey: Any] = [:]
+) -> Bool {
   LogtoClient.handle(url: url)
+  return true
 }
 ```
 
@@ -415,8 +420,13 @@ YourRootView()
   }
 
 // or AppDelegate
-func application(_ app: UIApplication, open url: URL, options: /*...*/) -> Bool {
+func application(
+  _ app: UIApplication,
+  open url: URL,
+  options: [UIApplication.OpenURLOptionsKey: Any] = [:]
+) -> Bool {
   LogtoClient.handle(url: url)
+  return true
 }
 ```
 

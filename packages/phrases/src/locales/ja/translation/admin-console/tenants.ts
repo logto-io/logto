@@ -22,7 +22,7 @@ const tenants = {
     install_button: 'ライセンスをインストール',
     key_field: 'ライセンスキー',
     key_field_description:
-      'キーはインスタンス上で検証され、外部に送信されることはありません。お持ちのキーの有効期限が切れている場合は、新しいキーの発行について Logto にお問い合わせください。',
+      'キーはインスタンス上で検証され、ライセンスの更新時に Logto へ送信されます。お持ちのキーの有効期限が切れている場合は、新しいキーの発行について Logto にお問い合わせください。',
     key_placeholder: 'ここにライセンスキーを貼り付けてください',
     installed_toast: 'ライセンスをインストールしました。',
     details_title: 'ライセンス',
@@ -48,6 +48,14 @@ const tenants = {
       'ライセンスの猶予期間は {{graceEndsAt}} に終了しました。このインスタンスは OSS のデフォルトに戻っています。Logto にお問い合わせのうえ、新しいライセンスキーを取得して再インストールしてください。',
     get_fresh_key_button: '新しいライセンスキーを取得',
     replace_button: 'ライセンスを差し替える',
+    usage_banner_description:
+      'このデプロイの使用量は、セルフホストプランの使用量制限を超えています：',
+    usage_banner_metric: '{{metric}}：{{value}}（上限 {{limit}}）',
+    usage_banner_action:
+      '30 日以内に Logto へ連絡し、プランをアップグレードするか使用量を減らしてください。',
+    usage_metric_mau: '月間アクティブユーザー',
+    usage_metric_access_tokens: '月間アクセストークン',
+    usage_metric_production_deployments: '本番デプロイ',
   },
   members: {
     card_title: 'Logto Cloud でテナントをより安全に管理',

@@ -26,6 +26,8 @@ const account_center = {
     error_invalid_code: 'Doğrulama kodu geçersiz veya süresi dolmuş.',
     error_verify_failed: 'Doğrulama başarısız. Lütfen kodu tekrar gir.',
     verification_required: 'Doğrulama süresi doldu. Lütfen kimliğini yeniden doğrula.',
+    step_up_not_completed:
+      'Kimlik doğrulaması tamamlanmadı. Hesabınızda herhangi bir değişiklik yapılmadı.',
     try_another_method: 'Başka bir doğrulama yöntemi deneyin',
     no_available_methods_title: 'Kullanılabilir doğrulama yöntemi yok',
     no_available_methods_description:

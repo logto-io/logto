@@ -25,6 +25,7 @@ const account_center = {
     error_invalid_code: 'کد تأیید نامعتبر است یا منقضی شده است.',
     error_verify_failed: 'تأیید ناموفق بود. لطفاً کد را دوباره وارد کنید.',
     verification_required: 'تأیید منقضی شد. لطفاً هویت خود را دوباره تأیید کنید.',
+    step_up_not_completed: 'تأیید هویت تکمیل نشد. هیچ تغییری در حساب شما ایجاد نشد.',
     try_another_method: 'روش دیگری برای تأیید امتحان کنید',
     no_available_methods_title: 'هیچ روش تأییدی در دسترس نیست',
     no_available_methods_description:

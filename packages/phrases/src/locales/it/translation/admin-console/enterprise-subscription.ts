@@ -39,21 +39,12 @@ const enterprise_subscription = {
       'Visualizza gli abbonamenti personali e la copertura Enterprise contrattuale, indipendentemente dal tenant selezionato.',
     personal_title: 'Abbonamenti personali',
     personal_description: 'Abbonamenti fatturati al tuo account, inclusi quelli passati.',
-    enterprise_description:
-      'La quota Console SSO è definita dal contratto e condivisa tra gli amministratori autorizzati. Gli abbonamenti personali vengono fatturati separatamente.',
-    allowance: 'Quota contrattuale',
-    not_covered:
-      'Questo piano Enterprise non include una quota Console SSO. I nuovi connettori vengono fatturati su un abbonamento personale.',
-    quantity_price: 'Quantità × prezzo unitario',
+    price: 'Prezzo',
     billing_period: 'Periodo di fatturazione',
-    connectors: 'Connettori Console SSO',
-    no_connectors: 'Nessun connettore',
     list_price_note:
-      'La quantità, il prezzo unitario e lo stato visualizzati provengono dal record dell’abbonamento. La sospensione della riscossione può lasciare invariati quantità e stato. I prezzi unitari escludono imposte, sconti e rettifiche proporzionali e non rappresentano gli addebiti attuali o un importo dovuto.',
-    proration_note:
-      'Le aggiunte e rimozioni Console SSO sono ripartite proporzionalmente nella fattura ordinaria. Eliminare l’ultimo connettore a pagamento annulla e salda l’abbonamento.',
+      'I prezzi escludono imposte e sconti. Le modifiche vengono calcolate in modo proporzionale nella prossima fattura.',
     overdue_note:
-      'Dopo tre periodi di fatturazione consecutivi non pagati e l’esaurimento dei tentativi, la riscossione viene sospesa e i connettori Console SSO a pagamento vengono rimossi. Aggiornare il pagamento non ripristina la configurazione. Contattaci per assistenza.',
+      'Il pagamento è scaduto. Se resta non pagato, l’abbonamento può essere sospeso e le sue funzionalità a pagamento rimosse.',
     cancel_on: 'Annullamento previsto per {{date}}',
     other_product: 'Altro abbonamento',
     enterprise_invoices_description:

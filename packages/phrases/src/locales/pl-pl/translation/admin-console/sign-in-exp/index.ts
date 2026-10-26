@@ -113,6 +113,14 @@ const sign_in_exp = {
     csp_source_duplicate_error: 'To wyrażenie źródła jest już na liście.',
   },
   account_center: {
+    recent_authentication: {
+      title: 'Ostatnie uwierzytelnienie',
+      description:
+        'Wrażliwe operacje na koncie, takie jak zmiana hasła lub wyłączenie weryfikacji dwuetapowej, wymagają niedawnego zalogowania, niezależnie od tego, czy użytkownik działa w Account Center, czy w aplikacji wywołującej Account API. To okno określa, jak świeże musi być to logowanie.',
+      maximum_authentication_age_in_minutes: 'Maksymalny wiek uwierzytelnienia w minutach',
+      maximum_authentication_age_in_minutes_tip:
+        'Jak długo logowanie pozostaje wystarczająco świeże dla wrażliwych operacji. Klient nadal może zażądać krótszego okna za pomocą parametru `max_age`.',
+    },
     title: 'CENTRUM KONTA',
     description: 'Dostosuj przepływy centrum konta z wykorzystaniem interfejsów API Logto.',
     enable_account_api: 'Włącz centrum konta i Account API',

@@ -23,7 +23,7 @@ const tenants = {
     install_button: 'Lizenz installieren',
     key_field: 'Lizenzschlüssel',
     key_field_description:
-      'Der Schlüssel wird auf deiner Instanz geprüft und verlässt sie nie. Kontaktiere Logto für einen neuen Schlüssel, wenn der vorhandene abgelaufen ist.',
+      'Der Schlüssel wird auf deiner Instanz geprüft und beim Aktualisieren der Lizenz an Logto gesendet. Kontaktiere Logto für einen neuen Schlüssel, wenn der vorhandene abgelaufen ist.',
     key_placeholder: 'Füge hier deinen Lizenzschlüssel ein',
     installed_toast: 'Lizenz erfolgreich installiert.',
     details_title: 'LIZENZ',
@@ -49,6 +49,14 @@ const tenants = {
       'Die Kulanzzeit der Lizenz endete am {{graceEndsAt}}. Diese Bereitstellung verwendet wieder die OSS-Standards. Kontaktiere Logto für einen neuen Lizenzschlüssel und installiere ihn erneut.',
     get_fresh_key_button: 'Neuen Lizenzschlüssel abrufen',
     replace_button: 'Lizenz ersetzen',
+    usage_banner_description:
+      'Diese Bereitstellung überschreitet die Nutzungslimits ihres Self-Hosted-Plans:',
+    usage_banner_metric: '{{metric}}: {{value}} (Limit {{limit}})',
+    usage_banner_action:
+      'Kontaktiere uns innerhalb von 30 Tagen, um deinen Plan zu upgraden oder deine Nutzung zu reduzieren.',
+    usage_metric_mau: 'Monatlich aktive Nutzer',
+    usage_metric_access_tokens: 'Monatliche Zugriffstoken',
+    usage_metric_production_deployments: 'Produktionsbereitstellungen',
   },
   members: {
     card_title: 'Verwalten Sie Mandanten sicherer mit Logto Cloud',

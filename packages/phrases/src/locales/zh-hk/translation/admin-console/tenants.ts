@@ -21,7 +21,7 @@ const tenants = {
     install_button: '安裝授權',
     key_field: '授權金鑰',
     key_field_description:
-      '金鑰會在你的實例上驗證，不會離開實例。如果現有金鑰已過期，請聯絡 Logto 取得新的金鑰。',
+      '金鑰會在你的實例上驗證，並在授權更新時傳送給 Logto。如果現有金鑰已過期，請聯絡 Logto 取得新的金鑰。',
     key_placeholder: '在此貼上你的授權金鑰',
     installed_toast: '授權安裝成功。',
     details_title: '授權',
@@ -47,6 +47,12 @@ const tenants = {
       '授權寬限期已於 {{graceEndsAt}} 結束。此實例已恢復為 OSS 預設值。請聯絡 Logto 取得新的授權金鑰並重新安裝。',
     get_fresh_key_button: '取得新的授權金鑰',
     replace_button: '更換授權',
+    usage_banner_description: '此實例的用量已超出其自託管計劃的用量限制：',
+    usage_banner_metric: '{{metric}}：{{value}}（上限 {{limit}}）',
+    usage_banner_action: '請在 30 天內聯絡我們升級計劃或減少用量。',
+    usage_metric_mau: '月活躍用戶',
+    usage_metric_access_tokens: '每月存取權杖',
+    usage_metric_production_deployments: '生產實例',
   },
   members: {
     card_title: '透過 Logto Cloud 更安全地管理租戶',

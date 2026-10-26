@@ -103,6 +103,10 @@ const sign_up_and_sign_in = {
       link: '"Enterprise SSO"',
       suffix: ' para configurar mais conectores corporativos.',
     },
+    show_sso_branding_before_email_match:
+      'Mostrar nomes e logotipos dos conectores SSO antes da correspondência do domínio de e-mail',
+    show_sso_branding_before_email_match_description:
+      'Quando ativado, os nomes e logotipos dos conectores SSO são incluídos na configuração pública de login antes que um domínio de e-mail corresponda. Quando desativado, são revelados apenas após uma correspondência.',
     enable_user_registration: 'Habilitar registro de usuário',
     enable_user_registration_description:
       'Habilitar ou desabilitar o registro de usuários. Depois de desabilitado, os usuários ainda podem ser adicionados no console de administração, mas os usuários não poderão mais criar contas através da interface de login.',

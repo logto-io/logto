@@ -26,6 +26,9 @@
                     "hideLogtoBranding": {
                       "description": "Cloud only. Whether to hide the Logto branding on hosted sign-in pages."
                     },
+                    "ssoBrandingBeforeEmailMatch": {
+                      "description": "Whether to include SSO connector branding (display name and logos) in the public sign-in experience before an email domain matches. Defaults to true."
+                    },
                     "signIn": {
                       "description": "Sign-in method settings."
                     },
@@ -145,6 +148,9 @@
                   },
                   "hideLogtoBranding": {
                     "description": "Cloud only. Whether to hide the Logto branding on hosted sign-in pages."
+                  },
+                  "ssoBrandingBeforeEmailMatch": {
+                    "description": "Whether to include SSO connector branding (display name and logos) in the public sign-in experience before an email domain matches. Defaults to true."
                   },
                   "signIn": {
                     "description": "Sign-in method settings"

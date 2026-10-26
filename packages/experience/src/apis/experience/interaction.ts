@@ -56,3 +56,16 @@ export const identifyAndSubmitInteraction = async (payload?: IdentificationApiPa
  */
 export const abortInteraction = async (reason?: string) =>
   api.post(experienceApiRoutes.abort, { json: { reason } }).json<SubmitInteractionResponse>();
+
+export type DirectSignInResponse = {
+  /** The `direct_sign_in` value of the current authorization request, e.g. `social:google`. */
+  directSignIn?: string;
+};
+
+/**
+ * Read whether the current interaction was started by a `direct_sign_in` authorization request.
+ * The value is scoped to the interaction on the server and works even before the experience
+ * interaction is initialized.
+ */
+export const getDirectSignIn = async () =>
+  api.get(experienceApiRoutes.directSignIn).json<DirectSignInResponse>();

@@ -1,10 +1,12 @@
-import { webAuthnAuthenticationOptionsGuard } from '@logto/schemas';
+import { ssoConnectorMetadataGuard, webAuthnAuthenticationOptionsGuard } from '@logto/schemas';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { buildSsoConnectorMetadata } from '#src/libraries/sign-in-experience/index.js';
 import { generateWebAuthnAuthenticationOptions } from '#src/libraries/verification-helpers/webauthn.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import { type WithI18nContext } from '#src/middleware/koa-i18next.js';
 import { type WithInteractionDetailsContext } from '#src/middleware/koa-interaction-details.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -12,10 +14,9 @@ import assertThat from '#src/utils/assert-that.js';
 import { SignInExperienceValidator } from '../classes/libraries/sign-in-experience-validator.js';
 import { experienceRoutes } from '../const.js';
 
-export default function experienceAnonymousRoutes<T extends WithInteractionDetailsContext>(
-  router: Router<unknown, T>,
-  tenantContext: TenantContext
-) {
+export default function experienceAnonymousRoutes<
+  T extends WithInteractionDetailsContext & WithI18nContext,
+>(router: Router<unknown, T>, tenantContext: TenantContext) {
   const { libraries, queries, provider } = tenantContext;
 
   router.get(
@@ -27,6 +28,7 @@ export default function experienceAnonymousRoutes<T extends WithInteractionDetai
       status: [200, 400],
       response: z.object({
         connectorIds: z.string().array(),
+        connectors: ssoConnectorMetadataGuard.array(),
       }),
     }),
     async (ctx, next) => {
@@ -42,6 +44,9 @@ export default function experienceAnonymousRoutes<T extends WithInteractionDetai
 
       ctx.body = {
         connectorIds: connectors.map(({ id }) => id),
+        connectors: connectors.map((connector) =>
+          buildSsoConnectorMetadata(connector, ctx.locale, true)
+        ),
       };
 
       return next();

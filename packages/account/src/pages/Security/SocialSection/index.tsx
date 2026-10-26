@@ -13,6 +13,7 @@ import { layoutClassNames } from '@ac/constants/layout';
 import { getSocialAddRoute, getSocialChangeRoute, verifiedActionRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
+import useStepUp, { useIdentityProof } from '@ac/hooks/use-step-up';
 import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
 import { hasVisibleSocialSection } from '@ac/utils/security-page';
 import { sessionStorage } from '@ac/utils/session-storage';
@@ -20,6 +21,7 @@ import {
   getAvailableSocialConnectors,
   getLocalizedConnectorName,
 } from '@ac/utils/social-connector';
+import { consumePendingStepUpAction } from '@ac/utils/step-up';
 
 import styles from './index.module.scss';
 
@@ -66,11 +68,12 @@ const SocialSection = () => {
     experienceSettings,
     theme,
     userInfo,
-    verificationId,
     setVerificationId,
     refreshUserInfo,
     setToast,
   } = useContext(PageContext);
+  const { verificationId, checkIdentityProof } = useIdentityProof();
+  const { requestStepUp, startStepUp } = useStepUp();
   const handleError = useErrorHandler();
   const deleteSocialIdentityRequest = useApi(deleteSocialIdentity);
   const [selectedConnectorId, setSelectedConnectorId] = useState<string>();
@@ -109,7 +112,7 @@ const SocialSection = () => {
   );
 
   const removeSocialIdentityForConnector = useCallback(
-    async (connectorId: string, verifiedId: string) => {
+    async (connectorId: string, verifiedId: string | undefined, isResumed = false) => {
       const connector = connectors.find(({ id }) => id === connectorId);
 
       if (!connector) {
@@ -120,6 +123,10 @@ const SocialSection = () => {
       const [error] = await deleteSocialIdentityRequest(verifiedId, connector.target);
 
       if (error) {
+        if (await requestStepUp(error, { type: 'remove-social', connectorId }, { isResumed })) {
+          return;
+        }
+
         await handleError(error, {
           'verification_record.permission_denied': async () => {
             setVerificationId(undefined);
@@ -138,6 +145,7 @@ const SocialSection = () => {
       handleError,
       language,
       refreshUserInfo,
+      requestStepUp,
       setToast,
       setVerificationId,
       t,
@@ -152,15 +160,34 @@ const SocialSection = () => {
     const connectorId = selectedConnectorId;
     setSelectedConnectorId(undefined);
 
-    if (verificationId) {
+    if (await checkIdentityProof()) {
       await removeSocialIdentityForConnector(connectorId, verificationId);
+      return;
+    }
+
+    if (await startStepUp({ type: 'remove-social', connectorId })) {
       return;
     }
 
     sessionStorage.setPendingVerifiedAction('remove-social');
     sessionStorage.setPendingSocialRemoveConnectorId(connectorId);
     navigateTo(verifiedActionRoute);
-  }, [navigateTo, removeSocialIdentityForConnector, selectedConnectorId, verificationId]);
+  }, [
+    checkIdentityProof,
+    navigateTo,
+    removeSocialIdentityForConnector,
+    selectedConnectorId,
+    startStepUp,
+    verificationId,
+  ]);
+
+  useEffect(() => {
+    const action = consumePendingStepUpAction(['remove-social']);
+
+    if (action) {
+      void removeSocialIdentityForConnector(action.connectorId, undefined, true);
+    }
+  }, [removeSocialIdentityForConnector]);
 
   useEffect(() => {
     if (!verificationId) {

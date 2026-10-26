@@ -38,21 +38,12 @@ const enterprise_subscription = {
       'Veja suas assinaturas pessoais e a cobertura Enterprise contratada, independentemente do tenant selecionado.',
     personal_title: 'Assinaturas pessoais',
     personal_description: 'Assinaturas cobradas da sua conta, incluindo assinaturas anteriores.',
-    enterprise_description:
-      'A cota de Console SSO é definida em contrato e compartilhada entre administradores autorizados. As assinaturas pessoais são cobradas separadamente.',
-    allowance: 'Cota contratada',
-    not_covered:
-      'Este plano Enterprise não inclui cota de Console SSO. Novos conectores são cobrados em uma assinatura pessoal.',
-    quantity_price: 'Quantidade × preço unitário',
+    price: 'Preço',
     billing_period: 'Período de cobrança',
-    connectors: 'Conectores de Console SSO',
-    no_connectors: 'Nenhum conector',
     list_price_note:
-      'A quantidade, o preço unitário e o status exibidos vêm do registro da assinatura. Pausar a cobrança pode manter a quantidade e o status inalterados. Os preços unitários excluem impostos, descontos e ajustes proporcionais e não representam cobranças atuais nem um valor devido.',
-    proration_note:
-      'Adições e remoções de Console SSO são calculadas proporcionalmente na fatura regular. Excluir o último conector pago cancela e liquida a assinatura.',
+      'Os preços não incluem impostos nem descontos. As alterações são proporcionais na sua próxima fatura.',
     overdue_note:
-      'Após três períodos de cobrança consecutivos não pagos e o esgotamento das tentativas, a cobrança é pausada e os conectores pagos de Console SSO são removidos. Atualizar o pagamento não restaura a configuração. Entre em contato para obter ajuda.',
+      'O pagamento está atrasado. Se continuar sem pagamento, a assinatura pode ser pausada e seus recursos pagos removidos.',
     cancel_on: 'Cancelamento agendado para {{date}}',
     other_product: 'Outra assinatura',
     enterprise_invoices_description:

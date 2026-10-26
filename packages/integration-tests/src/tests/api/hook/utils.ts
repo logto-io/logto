@@ -1,4 +1,4 @@
-import { LogResult, type Hook, type HookEvent, type Log } from '@logto/schemas';
+import { LogResult, type Hook, type HookEvent, type LogResponse } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 
 import { getWebhookRecentLogs } from '#src/api/logs.js';
@@ -22,7 +22,7 @@ const waitForLatestHookLog = async (
   hookId: string,
   event: HookEvent,
   retriesLeft = 50
-): Promise<Log | undefined> => {
+): Promise<LogResponse | undefined> => {
   const logEntry = await getLatestHookLog(hookId, event);
 
   if (logEntry !== undefined || retriesLeft <= 1) {
@@ -38,7 +38,7 @@ const waitForNoHookLog = async (
   hookId: string,
   event: HookEvent,
   retriesLeft = 50
-): Promise<Log | undefined> => {
+): Promise<LogResponse | undefined> => {
   const logEntry = await getLatestHookLog(hookId, event);
 
   if (logEntry !== undefined || retriesLeft <= 1) {

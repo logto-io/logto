@@ -103,6 +103,10 @@ const sign_up_and_sign_in = {
       link: 'Abschnitt "Enterprise SSO"',
       suffix: ', um weitere Unternehmens-Connectors einzurichten.',
     },
+    show_sso_branding_before_email_match:
+      'SSO-Connector-Namen und -Logos vor der E-Mail-Domain-Übereinstimmung anzeigen',
+    show_sso_branding_before_email_match_description:
+      'Wenn aktiviert, werden SSO-Connector-Namen und -Logos in der öffentlichen Anmeldekonfiguration angezeigt, bevor eine E-Mail-Domain übereinstimmt. Wenn deaktiviert, werden sie erst nach einer Übereinstimmung angezeigt.',
     enable_user_registration: 'Benutzerregistrierung aktivieren',
     enable_user_registration_description:
       'Aktivieren oder deaktivieren Sie die Benutzerregistrierung. Sobald deaktiviert, können Benutzer immer noch über die Admin-Konsole hinzugefügt werden, aber Benutzer können keine Konten mehr über die Anmelde-Benutzeroberfläche einrichten.',

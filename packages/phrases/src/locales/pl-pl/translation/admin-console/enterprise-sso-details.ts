@@ -13,6 +13,10 @@ const enterprise_sso_details = {
   custom_branding_title: 'Wyświetlanie',
   custom_branding_description:
     'Dostosuj nazwę i logo wyświetlane w przepływie jednokrotnego logowania końcowych użytkowników. Przy braku wartości domyślne są używane.',
+  custom_branding_visibility_notice:
+    'Nazwa wyświetlana i logo są widoczne dla każdego, kto otworzy Twoją stronę logowania, chyba że w ustawieniach logowania wyłączono „Pokazuj nazwy i logo connectorów SSO przed dopasowaniem domeny e-mail”. Nie umieszczaj poufnych informacji.',
+  custom_branding_console_sso_visibility_notice:
+    'Nazwa wyświetlana i logo mogą być widoczne na stronie logowania Console przed dopasowaniem domeny e-mail. Nie umieszczaj poufnych informacji.',
   email_domain_field_name: 'Domena e-mail przedsiębiorstwa',
   email_domain_field_description:
     'Użytkownicy z tą domeną e-mail mogą używać SSO do uwierzytelniania. Proszę zweryfikować, czy domena należy do przedsiębiorstwa.',

@@ -10,8 +10,13 @@
  * The experience APIs can be used by developers to build custom user interaction experiences.
  */
 
-import { identificationApiPayloadGuard, InteractionEvent } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
+import {
+  ExtraParamsKey,
+  extraParamsObjectGuard,
+  identificationApiPayloadGuard,
+  InteractionEvent,
+} from '@logto/schemas';
+import { conditional, trySafe } from '@silverhand/essentials';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
@@ -266,6 +271,34 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
           ...conditional(reason && { error_description: reason }),
         });
 
+        ctx.status = 200;
+
+        return next();
+      }
+    );
+  }
+
+  // DEV: Direct sign-in abort support.
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    experienceRouter.get(
+      experienceRoutes.directSignIn,
+      koaGuard({
+        status: [200],
+        response: z.object({
+          directSignIn: z.string().optional(),
+        }),
+      }),
+      async (ctx, next) => {
+        const params =
+          trySafe(() => extraParamsObjectGuard.parse(ctx.interactionDetails.params)) ?? {};
+        const directSignIn = params[ExtraParamsKey.DirectSignIn];
+
+        // Read the OIDC request parameter directly instead of the experience interaction storage.
+        // The lookup must work before the interaction is initialized: a direct sign-in can fail
+        // while requesting the authorization URL, which is exactly when the experience storage
+        // does not exist yet.
+        ctx.set('Cache-Control', 'no-store');
+        ctx.body = { ...conditional(directSignIn && { directSignIn }) };
         ctx.status = 200;
 
         return next();

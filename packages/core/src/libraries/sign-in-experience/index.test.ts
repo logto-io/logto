@@ -102,6 +102,7 @@ const getPublicSignInExperience = (signInExperience: SignInExperience) => {
   const {
     emailBlocklistPolicy: _emailBlocklistPolicy,
     forgotPasswordMethods: _forgotPasswordMethods,
+    ssoBrandingBeforeEmailMatch: _ssoBrandingBeforeEmailMatch,
     ...publicSignInExperience
   } = signInExperience;
 
@@ -398,17 +399,51 @@ describe('get sso connectors', () => {
     ]);
   });
 
-  it('should return displayName if provided', async () => {
+  it('should include custom branding by default', async () => {
     getLogtoConnectors.mockResolvedValueOnce(mockSocialConnectors);
     findDefaultSignInExperience.mockResolvedValueOnce(mockSignInExperience);
 
     const displayName = 'Logto Connector';
+    const logo = 'https://logto.io/custom-logo.png';
+    const darkLogo = 'https://logto.io/custom-dark-logo.png';
 
     mockSsoConnectorLibrary.getAvailableSsoConnectors.mockResolvedValueOnce([
       {
         ...wellConfiguredSsoConnector,
         branding: {
           displayName,
+          logo,
+          darkLogo,
+        },
+      },
+    ]);
+
+    const { ssoConnectors } = await getFullSignInExperience({ locale: 'en' });
+
+    expect(ssoConnectors).toEqual([
+      {
+        id: wellConfiguredSsoConnector.id,
+        connectorName: displayName,
+        logo,
+        darkLogo,
+      },
+    ]);
+  });
+
+  it('should not expose custom branding when ssoBrandingBeforeEmailMatch is false', async () => {
+    getLogtoConnectors.mockResolvedValueOnce(mockSocialConnectors);
+    findDefaultSignInExperience.mockResolvedValueOnce({
+      ...mockSignInExperience,
+      ssoBrandingBeforeEmailMatch: false,
+    });
+
+    mockSsoConnectorLibrary.getAvailableSsoConnectors.mockResolvedValueOnce([
+      {
+        ...wellConfiguredSsoConnector,
+        branding: {
+          displayName: 'Logto Connector',
+          logo: 'https://logto.io/custom-logo.png',
+          darkLogo: 'https://logto.io/custom-dark-logo.png',
         },
       },
     ]);
@@ -420,7 +455,7 @@ describe('get sso connectors', () => {
     expect(ssoConnectors).toEqual([
       {
         id: wellConfiguredSsoConnector.id,
-        connectorName: displayName,
+        connectorName: connectorFactory.name.en,
         logo: connectorFactory.logo,
         darkLogo: connectorFactory.logoDark,
       },

@@ -112,6 +112,14 @@ const sign_in_exp = {
     csp_source_duplicate_error: 'source expression นี้อยู่ในรายการแล้ว',
   },
   account_center: {
+    recent_authentication: {
+      title: 'การยืนยันตัวตนล่าสุด',
+      description:
+        'การดำเนินการกับบัญชีที่ละเอียดอ่อน เช่น การเปลี่ยนรหัสผ่านหรือการปิดการยืนยันตัวตนแบบ 2 ขั้นตอน ต้องใช้การลงชื่อเข้าใช้ล่าสุด ไม่ว่าจะทำใน Account Center หรือในแอปที่เรียกใช้ Account API ช่วงเวลานี้กำหนดว่าการลงชื่อเข้าใช้ต้องใหม่เพียงใด',
+      maximum_authentication_age_in_minutes: 'อายุการยืนยันตัวตนสูงสุด (นาที)',
+      maximum_authentication_age_in_minutes_tip:
+        'ระยะเวลาที่การลงชื่อเข้าโดยังถือว่าใหม่พอสำหรับการดำเนินการที่ละเอียดอ่อน ไคลเอนต์ยังสามารถขอช่วงเวลาที่สั้นลงได้ด้วยพารามิเตอร์ `max_age`',
+    },
     title: 'ศูนย์บัญชี',
     description: 'ปรับแต่งขั้นตอนศูนย์บัญชีของคุณด้วย Logto API.',
     enable_account_api: 'เปิดใช้งานศูนย์บัญชีและ Account API',

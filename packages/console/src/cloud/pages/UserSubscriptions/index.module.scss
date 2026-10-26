@@ -7,20 +7,12 @@
   margin-bottom: _.unit(6);
 }
 
-.coverage {
-  display: flex;
-  flex-direction: column;
-  gap: _.unit(3);
-}
-
-.coverageValues {
-  display: flex;
-  flex-wrap: wrap;
-  gap: _.unit(4);
-}
-
 .item + .item {
   margin-top: _.unit(2);
+}
+
+.alert {
+  margin-top: _.unit(3);
 }
 
 .note {

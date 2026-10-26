@@ -5,10 +5,10 @@ import { appendPath } from '@silverhand/essentials';
 import { mockSocialConnectorTarget } from '#src/__mocks__/connectors-mock.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { createSsoConnector } from '#src/api/sso-connector.js';
-import { demoAppUrl, logtoUrl } from '#src/constants.js';
+import { demoAppUrl, logtoUrl, mockSocialAuthPageUrl } from '#src/constants.js';
 import { clearConnectorsByTypes, setSocialConnector } from '#src/helpers/connector.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
-import { dcls, dmodal, randomString } from '#src/utils.js';
+import { dcls, devFeatureTest, dmodal, randomString } from '#src/utils.js';
 
 /**
  * NOTE: This test suite assumes test cases will run sequentially (which is Jest default).
@@ -82,6 +82,56 @@ describe('direct sign-in', () => {
     await experience.toClick('div[role=button]', /sign out/i);
     await experience.page.close();
   });
+
+  devFeatureTest.it(
+    'should return a denied direct sign-in to the client with access_denied',
+    async () => {
+      const experience = new ExpectExperience(await browser.newPage());
+      const url = new URL(demoAppUrl);
+
+      url.searchParams.set('direct_sign_in', `social:${mockSocialConnectorTarget}`);
+
+      const oidcAuthRequest = experience.page.waitForRequest((request) =>
+        request.url().startsWith(`${logtoUrl}/oidc/auth`)
+      );
+      const authPageRequest = experience.page.waitForRequest((request) =>
+        request.url().startsWith(mockSocialAuthPageUrl)
+      );
+      await experience.page.goto(url.href);
+
+      const oidcAuthRequestResult = await oidcAuthRequest;
+      const oidcAuthUrl = new URL(oidcAuthRequestResult.url());
+      const oidcState = oidcAuthUrl.searchParams.get('state');
+      const authRequest = await authPageRequest;
+      const authUrl = new URL(authRequest.url());
+      const redirectUri = authUrl.searchParams.get('redirect_uri');
+      const socialState = authUrl.searchParams.get('state');
+
+      expect(oidcState).toBeTruthy();
+      expect(redirectUri).toBeTruthy();
+      expect(socialState).toBeTruthy();
+
+      // Simulate the IdP denying the authorization request.
+      const callbackUrl = new URL(redirectUri!);
+      callbackUrl.searchParams.set('state', socialState!);
+      callbackUrl.searchParams.set('error', 'access_denied');
+      await experience.navigateTo(callbackUrl.href);
+
+      await experience.page.waitForFunction(
+        (pathname) => window.location.pathname === pathname,
+        {},
+        new URL(demoAppUrl).pathname
+      );
+
+      const finalUrl = new URL(experience.page.url());
+      expect(finalUrl.searchParams.get('error')).toBe('access_denied');
+      expect(finalUrl.searchParams.get('error_description')).toBeTruthy();
+      expect(finalUrl.searchParams.get('state')).toBe(oidcState);
+      expect(finalUrl.searchParams.get('iss')).toBe(`${logtoUrl}/oidc`);
+
+      await experience.page.close();
+    }
+  );
 
   it('should be landed to the sso identity provider directly', async () => {
     const experience = new ExpectExperience(await browser.newPage());

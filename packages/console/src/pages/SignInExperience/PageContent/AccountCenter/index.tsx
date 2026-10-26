@@ -5,6 +5,7 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
 import PageMeta from '@/components/PageMeta';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -22,6 +23,7 @@ import SignInExperienceTabWrapper from '../components/SignInExperienceTabWrapper
 import AccountCenterField from './AccountCenterField';
 import DeleteAccountUrlField from './DeleteAccountUrlField';
 import IntegratePrebuiltUi from './IntegratePrebuiltUi';
+import RecentAuthenticationFormCard from './RecentAuthenticationFormCard';
 import SecretVaultSection from './SecretVaultSection';
 import WebauthnRelatedOriginsField from './WebauthnRelatedOriginsField';
 import { accountCenterSections } from './constants';
@@ -206,6 +208,9 @@ function AccountCenter({ isActive, data }: Props) {
           </div>
         </FormCard>
       ))}
+      {isDevFeaturesEnabled && (
+        <RecentAuthenticationFormCard isAccountApiEnabled={isAccountApiEnabled} />
+      )}
       <SecretVaultSection isAccountApiEnabled={isAccountApiEnabled} />
       <FormCard
         title="sign_in_exp.account_center.custom_css.title"

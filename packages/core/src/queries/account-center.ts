@@ -1,4 +1,5 @@
 import {
+  defaultMaximumAuthenticationAgeInSeconds,
   type AccountCenter,
   AccountCenters,
   type AccountCenterKeys,
@@ -7,6 +8,7 @@ import {
 import { type CommonQueryMethods } from '@silverhand/slonik';
 
 import { type WellKnownCache } from '../caches/well-known.js';
+import RequestError from '../errors/RequestError/index.js';
 import SchemaQueries from '../utils/SchemaQueries.js';
 
 const id = 'default';
@@ -34,4 +36,23 @@ export class AccountCenterQueries extends SchemaQueries<
   ) {
     super(pool, AccountCenters);
   }
+
+  /**
+   * The freshness window the Account API enforces for sensitive operations. Reads the memoized
+   * account center row, and falls back to the default when the tenant has no row, which is what
+   * the previous constant did.
+   */
+  public readonly getMaximumAuthenticationAgeInSeconds = async (): Promise<number> => {
+    const accountCenter = await this.findDefaultAccountCenter().catch((error: unknown) => {
+      if (error instanceof RequestError && error.code === 'entity.not_exists_with_id') {
+        return;
+      }
+
+      throw error;
+    });
+
+    return (
+      accountCenter?.maximumAuthenticationAgeInSeconds ?? defaultMaximumAuthenticationAgeInSeconds
+    );
+  };
 }

@@ -1,13 +1,21 @@
 import { type LogtoConfig } from '@logto/node';
 import { demoAppApplicationId, SignInIdentifier, type User } from '@logto/schemas';
+import { generateStandardId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 
+import {
+  mockSocialConnectorConfig,
+  mockSocialConnectorId,
+  mockSocialConnectorTarget,
+} from '#src/__mocks__/connectors-mock.js';
+import { deleteUserIdentity, getUser, postUserIdentity } from '#src/api/admin-user.js';
+import { listConnectors, postConnector } from '#src/api/connector.js';
 import { demoAppRedirectUri, logtoUrl } from '#src/constants.js';
 import { generatePassword, generateUsername } from '#src/utils.js';
 
 import { baseApi, authedAdminApi } from '../api/api.js';
 
-import { initExperienceClient } from './client.js';
+import { initExperienceClient, processSession } from './client.js';
 
 export const createDefaultTenantUserWithPassword = async ({
   primaryEmail,
@@ -79,4 +87,100 @@ export const signInAndGetUserApi = async (
       ...conditional(locale && { 'Accept-Language': locale }),
     },
   });
+};
+
+/** The redirect URI the mock social connector accepts for the identity link and the sign-in. */
+const mockSocialRedirectUri = 'http://localhost:3000';
+
+/**
+ * Ensure the mock social connector exists, so a social sign-in works in a test file that sets up
+ * no connector of its own.
+ */
+const findOrCreateMockSocialConnector = async () => {
+  const connectors = await listConnectors();
+  const existing = connectors.find(({ connectorId }) => connectorId === mockSocialConnectorId);
+
+  if (existing) {
+    return existing.id;
+  }
+
+  const { id } = await postConnector({
+    connectorId: mockSocialConnectorId,
+    config: mockSocialConnectorConfig,
+  });
+
+  return id;
+};
+
+/**
+ * Sign in through the mock social connector and return an API client carrying the resulting access
+ * token.
+ *
+ * A social sign-in records `amr=["fed"]` and no `acr`, so the token never satisfies the Account
+ * API's OIDC authentication context policy: sensitive routes keep answering with the legacy
+ * `verification_record.permission_denied` until the request presents a valid verification record.
+ * That is the token the negative cases of the legacy `logto-verification-id` path need, next to
+ * {@link signInAndGetUserApi}, whose fresh password sign-in carries a qualifying context.
+ *
+ * The mock social connector and the identity the sign-in needs are set up here, and the identity
+ * is removed again when the user did not have one, so the account is left as it was found and
+ * callers need no social connector of their own.
+ */
+export const signInWithSocialAndGetUserApi = async (
+  userId: string,
+  config?: Partial<LogtoConfig>
+) => {
+  const connectorId = await findOrCreateMockSocialConnector();
+  const { identities } = await getUser(userId);
+  const existingIdentity = identities[mockSocialConnectorTarget];
+  const socialUserId = existingIdentity?.userId ?? generateStandardId();
+
+  await postUserIdentity(userId, connectorId, {
+    code: 'fake_code',
+    userId: socialUserId,
+    redirectUri: mockSocialRedirectUri,
+  });
+
+  try {
+    const client = await initExperienceClient({
+      config: {
+        endpoint: logtoUrl,
+        appId: demoAppApplicationId,
+        ...config,
+      },
+      redirectUri: demoAppRedirectUri,
+    });
+    const state = 'state';
+    const { verificationId } = await client.getSocialAuthorizationUri(connectorId, {
+      redirectUri: mockSocialRedirectUri,
+      state,
+    });
+
+    await client.verifySocialAuthorization(connectorId, {
+      verificationId,
+      connectorData: {
+        state,
+        redirectUri: mockSocialRedirectUri,
+        code: 'fake_code',
+        userId: socialUserId,
+      },
+    });
+
+    await client.identifyUser({ verificationId });
+
+    const { redirectTo } = await client.submitInteraction();
+    await processSession(client, redirectTo);
+    const accessToken = await client.getAccessToken();
+
+    return baseApi.extend({
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  } finally {
+    // A lingering identity for this target would collide with a caller linking its own.
+    if (!existingIdentity) {
+      await deleteUserIdentity(userId, mockSocialConnectorTarget);
+    }
+  }
 };

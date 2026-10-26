@@ -1,4 +1,9 @@
-import { type LicenseEnv, type LicenseQuota, type SelfHostedPlanId } from '@logto/schemas';
+import {
+  type LicenseEnv,
+  type LicenseQuota,
+  type LicenseUsageWarning,
+  type SelfHostedPlanId,
+} from '@logto/schemas';
 
 /**
  * The license installed on a self-hosted deployment, as `GET /api/systems/license` returns it.
@@ -22,4 +27,6 @@ export type License = {
   graceEndsAt: string;
   /** Why the last refresh was refused by the license service, if applicable. */
   refusalReason?: string;
+  /** The metrics above their limits, evaluated locally and merged with the license service notices. */
+  usageWarnings?: LicenseUsageWarning[];
 };

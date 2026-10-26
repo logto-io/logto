@@ -75,6 +75,21 @@ describe('verifySocialIdentity', () => {
     expect(userInfo).toEqual({ id: 'foo' });
   });
 
+  it('logs the user info nested so connector fields cannot replace the log userId', async () => {
+    const ctx = createMockLogContext();
+    const connectorUserInfo = { id: 'foo', userId: 'feishu-user-id' };
+    getUserInfo.mockResolvedValueOnce(connectorUserInfo);
+
+    await verifySocialIdentity(
+      { connectorId: 'connector', connectorData: {} },
+      // @ts-expect-error test mock context
+      { ...createMockContext(), ...ctx },
+      tenant
+    );
+
+    expect(ctx.mockAppend).toHaveBeenCalledWith({ userInfo: connectorUserInfo });
+  });
+
   it('should throw error if csrf token is not matched for Google One Tap verification', async () => {
     const ctx: WithLogContext = {
       ...createMockContext(),

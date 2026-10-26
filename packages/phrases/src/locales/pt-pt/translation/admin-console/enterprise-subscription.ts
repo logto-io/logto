@@ -38,21 +38,12 @@ const enterprise_subscription = {
       'Consulte as suas subscrições pessoais e a cobertura Enterprise contratada, independentemente do tenant selecionado.',
     personal_title: 'Subscrições pessoais',
     personal_description: 'Subscrições faturadas à sua conta, incluindo subscrições anteriores.',
-    enterprise_description:
-      'A quota de Console SSO é definida por contrato e partilhada entre administradores autorizados. As subscrições pessoais são faturadas separadamente.',
-    allowance: 'Quota contratada',
-    not_covered:
-      'Este plano Enterprise não inclui quota de Console SSO. Os novos conectores são faturados numa subscrição pessoal.',
-    quantity_price: 'Quantidade × preço unitário',
+    price: 'Preço',
     billing_period: 'Período de faturação',
-    connectors: 'Conectores de Console SSO',
-    no_connectors: 'Sem conectores',
     list_price_note:
-      'A quantidade, o preço unitário e o estado apresentados provêm do registo da subscrição. A suspensão da cobrança pode deixar a quantidade e o estado inalterados. Os preços unitários excluem impostos, descontos e ajustes proporcionais e não representam cobranças atuais nem um montante em dívida.',
-    proration_note:
-      'As adições e remoções de Console SSO são calculadas proporcionalmente na fatura habitual. Eliminar o último conector pago cancela e liquida a subscrição.',
+      'Os preços não incluem impostos nem descontos. As alterações são calculadas proporcionalmente na sua próxima fatura.',
     overdue_note:
-      'Após três períodos de faturação consecutivos não pagos e o esgotamento das tentativas, a cobrança é suspensa e os conectores pagos de Console SSO são removidos. Atualizar o pagamento não restaura a configuração. Contacte-nos para obter ajuda.',
+      'O pagamento está em atraso. Se continuar por pagar, a subscrição pode ser suspensa e as suas funcionalidades pagas removidas.',
     cancel_on: 'Cancelamento agendado para {{date}}',
     other_product: 'Outra subscrição',
     enterprise_invoices_description:

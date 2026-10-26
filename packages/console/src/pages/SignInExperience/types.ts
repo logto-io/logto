@@ -9,6 +9,7 @@ import {
   type SignUpIdentifier as SignUpIdentifierMethod,
   type SignUpProfileFields,
   type AccountCenterFieldControl,
+  defaultMaximumAuthenticationAgeInSeconds,
 } from '@logto/schemas';
 
 /**
@@ -82,10 +83,16 @@ export type AccountCenterFormValues = {
    * the form is initialized (see `convertAccountCenterToForm`).
    */
   profileFields: AccountCenterProfileFields;
+  /** How recent a sign-in must be for the Account API, edited in minutes and saved in seconds. */
+  maximumAuthenticationAgeInMinutes: number;
+  /** The stored value in seconds, so an untouched field is never truncated by the minute input. */
+  originalMaximumAuthenticationAgeInSeconds: number;
 };
 
 const createDefaultAccountCenterFormValues = (): AccountCenterFormValues => ({
   enabled: false,
+  maximumAuthenticationAgeInMinutes: defaultMaximumAuthenticationAgeInSeconds / 60,
+  originalMaximumAuthenticationAgeInSeconds: defaultMaximumAuthenticationAgeInSeconds,
   // eslint-disable-next-line no-restricted-syntax
   fields: Object.fromEntries(
     accountCenterFieldKeys.map((key) => [key, AccountCenterControlValue.Off])
@@ -112,6 +119,12 @@ export const convertAccountCenterToForm = (
   deleteAccountUrl: normalizeDeleteAccountUrl(accountCenter?.deleteAccountUrl ?? undefined),
   customCss: accountCenter?.customCss ?? undefined,
   profileFields: accountCenter?.profileFields ?? [],
+  maximumAuthenticationAgeInMinutes: Math.floor(
+    (accountCenter?.maximumAuthenticationAgeInSeconds ?? defaultMaximumAuthenticationAgeInSeconds) /
+      60
+  ),
+  originalMaximumAuthenticationAgeInSeconds:
+    accountCenter?.maximumAuthenticationAgeInSeconds ?? defaultMaximumAuthenticationAgeInSeconds,
 });
 
 export const normalizeAccountCenterFieldsForSubmit = (
@@ -182,6 +195,14 @@ export type SignInExperienceForm = Omit<
    */
   hasConfiguredSignUpProfileFields: boolean;
   createAccountEnabled: boolean;
+};
+
+/**
+ * The full sign-in experience page form: the sign-in experience itself and the Account Center
+ * config, which now also carries the recent-authentication window.
+ */
+export type SignInExperiencePageForm = SignInExperienceForm & {
+  accountCenter: AccountCenterFormValues;
 };
 
 export type SignInMethod = SignInExperience['signIn']['methods'][number];

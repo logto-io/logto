@@ -23,7 +23,7 @@ const tenants = {
     install_button: 'Lisansı kur',
     key_field: 'Lisans anahtarı',
     key_field_description:
-      'Anahtar örneğinizde doğrulanır ve oradan hiç çıkmaz. Elinizdeki anahtarın süresi dolduysa yeni bir anahtar almak için Logto ile iletişime geçin.',
+      "Anahtar örneğinizde doğrulanır ve lisans yenilendiğinde Logto'ya gönderilir. Elinizdeki anahtarın süresi dolduysa yeni bir anahtar için Logto ile iletişime geçin.",
     key_placeholder: 'Lisans anahtarınızı buraya yapıştırın',
     installed_toast: 'Lisans başarıyla kuruldu.',
     details_title: 'LİSANS',
@@ -49,6 +49,14 @@ const tenants = {
       'Lisansın ek süresi {{graceEndsAt}} tarihinde sona erdi. Bu örnek OSS varsayılanlarına döndü. Yeni bir lisans anahtarı almak için Logto ile iletişime geçin ve yeniden kurun.',
     get_fresh_key_button: 'Yeni lisans anahtarı al',
     replace_button: 'Lisansı değiştir',
+    usage_banner_description:
+      'Bu dağıtımın kullanımı, kendi barındırılan planının kullanım limitlerini aşıyor:',
+    usage_banner_metric: '{{metric}}: {{value}} (limit {{limit}})',
+    usage_banner_action:
+      'Planınızı yükseltmek veya kullanımınızı azaltmak için 30 gün içinde bizimle iletişime geçin.',
+    usage_metric_mau: 'Aylık aktif kullanıcılar',
+    usage_metric_access_tokens: 'Aylık erişim belirteçleri',
+    usage_metric_production_deployments: 'Üretim dağıtımları',
   },
   members: {
     card_title: 'Kiracıları Logto Cloud ile daha güvenli yönetin',

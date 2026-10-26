@@ -21,7 +21,7 @@ const tenants = {
     install_button: '安装许可证',
     key_field: '许可证密钥',
     key_field_description:
-      '密钥在你的实例上校验，不会离开实例。如果现有密钥已过期，请联系 Logto 获取新的密钥。',
+      '密钥在你的实例上校验，并在许可证刷新时发送给 Logto。如果现有密钥已过期，请联系 Logto 获取新的密钥。',
     key_placeholder: '在此粘贴你的许可证密钥',
     installed_toast: '许可证安装成功。',
     details_title: '许可证',
@@ -47,6 +47,12 @@ const tenants = {
       '许可证宽限期已于 {{graceEndsAt}} 结束。此实例已恢复为 OSS 默认设置。请联系 Logto 获取新的许可证密钥并重新安装。',
     get_fresh_key_button: '获取新的许可证密钥',
     replace_button: '更换许可证',
+    usage_banner_description: '此实例的用量已超出其自托管计划的用量限制：',
+    usage_banner_metric: '{{metric}}：{{value}}（限制 {{limit}}）',
+    usage_banner_action: '请在 30 天内联系我们升级计划或减少用量。',
+    usage_metric_mau: '月活跃用户',
+    usage_metric_access_tokens: '月度访问令牌',
+    usage_metric_production_deployments: '生产实例',
   },
   members: {
     card_title: '通过 Logto Cloud 更安全地管理租户',

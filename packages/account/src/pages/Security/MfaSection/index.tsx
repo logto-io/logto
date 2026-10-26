@@ -15,10 +15,12 @@ import {
   hasVisibleMfaSection,
 } from '@ac/utils/security-page';
 import { sessionStorage } from '@ac/utils/session-storage';
+import { consumePendingStepUpAction } from '@ac/utils/step-up';
 
 import { getMfaSettings, updateMfaSettings } from '../../../apis/mfa';
 import useApi from '../../../hooks/use-api';
 import useErrorHandler from '../../../hooks/use-error-handler';
+import useStepUp, { useIdentityProof } from '../../../hooks/use-step-up';
 import { useMfaVerifications } from '../MfaVerificationsProvider';
 import SecurityRow from '../components/SecurityRow';
 import SecuritySection from '../components/SecuritySection';
@@ -91,8 +93,10 @@ const MfaContent = ({
 const MfaSection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { accountCenterSettings, experienceSettings, verificationId, setVerificationId, setToast } =
+  const { accountCenterSettings, experienceSettings, setVerificationId, setToast } =
     useContext(PageContext);
+  const { verificationId, checkIdentityProof } = useIdentityProof();
+  const { requestStepUp, startStepUp } = useStepUp();
   const {
     mfaVerifications,
     isLoading: isLoadingMfaVerifications,
@@ -153,10 +157,16 @@ const MfaSection = () => {
   const shouldShowMfaCard = showToggle || rows.length > 0;
 
   const updateSkipMfaOnSignIn = useCallback(
-    async (verifiedId: string, skipMfaOnSignIn: boolean) => {
+    async (verifiedId: string | undefined, skipMfaOnSignIn: boolean, isResumed = false) => {
       const [error] = await updateMfaSettingsApi(verifiedId, { skipMfaOnSignIn });
 
       if (error) {
+        const action = skipMfaOnSignIn ? 'disable-mfa' : 'enable-mfa';
+
+        if (await requestStepUp(error, { type: action }, { isResumed })) {
+          return;
+        }
+
         await handleError(error, {
           'verification_record.permission_denied': async () => {
             setVerificationId(undefined);
@@ -168,7 +178,7 @@ const MfaSection = () => {
 
       setSkipMfaOnSignIn(skipMfaOnSignIn);
     },
-    [handleError, setToast, setVerificationId, t, updateMfaSettingsApi]
+    [handleError, requestStepUp, setToast, setVerificationId, t, updateMfaSettingsApi]
   );
 
   const handleToggleChange = useCallback(
@@ -180,28 +190,44 @@ const MfaSection = () => {
         return;
       }
 
-      if (verificationId) {
+      if (await checkIdentityProof()) {
         await updateSkipMfaOnSignIn(verificationId, skipMfa);
+        return;
+      }
+
+      if (await startStepUp({ type: 'enable-mfa' })) {
         return;
       }
 
       sessionStorage.setPendingVerifiedAction('enable-mfa');
       navigateTo(verifiedActionRoute);
     },
-    [navigateTo, updateSkipMfaOnSignIn, verificationId]
+    [checkIdentityProof, navigateTo, startStepUp, updateSkipMfaOnSignIn, verificationId]
   );
 
   const handleConfirmDisable = useCallback(async () => {
     setIsConfirmModalOpen(false);
 
-    if (verificationId) {
+    if (await checkIdentityProof()) {
       await updateSkipMfaOnSignIn(verificationId, true);
+      return;
+    }
+
+    if (await startStepUp({ type: 'disable-mfa' })) {
       return;
     }
 
     sessionStorage.setPendingVerifiedAction('disable-mfa');
     navigateTo(verifiedActionRoute);
-  }, [navigateTo, updateSkipMfaOnSignIn, verificationId]);
+  }, [checkIdentityProof, navigateTo, startStepUp, updateSkipMfaOnSignIn, verificationId]);
+
+  useEffect(() => {
+    const action = consumePendingStepUpAction(['enable-mfa', 'disable-mfa']);
+
+    if (action) {
+      void updateSkipMfaOnSignIn(undefined, action.type === 'disable-mfa', true);
+    }
+  }, [updateSkipMfaOnSignIn]);
 
   useEffect(() => {
     if (!verificationId) {

@@ -36,20 +36,10 @@ const enterprise_subscription = {
     description: '檢視你的個人訂閱與 Enterprise 合約額度，不受目前所選租戶影響。',
     personal_title: '個人訂閱',
     personal_description: '由你的帳戶支付的訂閱，包括歷史訂閱。',
-    enterprise_description:
-      'Console SSO 額度由合約約定，並由獲授權的管理員共用。個人訂閱分開計費。',
-    allowance: '合約額度',
-    not_covered: '此 Enterprise 方案不包含 Console SSO 額度。新建的連接器將透過個人訂閱計費。',
-    quantity_price: '數量 × 單價',
+    price: '價格',
     billing_period: '帳期',
-    connectors: 'Console SSO 連接器',
-    no_connectors: '暫無連接器',
-    list_price_note:
-      '顯示的數量、單價和狀態來自訂閱紀錄。暫停收款可能不會改變數量和狀態。單價不含稅費、折扣及按比例調整，不代表目前收費或應付金額。',
-    proration_note:
-      '增減 Console SSO 連接器產生的按比例調整會於例行帳單中結算。刪除最後一個付費連接器會取消並結算訂閱。',
-    overdue_note:
-      '連續三個帳期未付款且重試次數用盡後，將暫停收款並移除付費 Console SSO 連接器。更新付款資訊不會恢復其設定。如需協助，請聯絡我們。',
+    list_price_note: '價格不含稅費和折扣。變更將按比例計入你的下一張帳單。',
+    overdue_note: '付款已逾期。如仍未付款，訂閱可能會被暫停，其付費功能可能會被移除。',
     cancel_on: '預定於 {{date}} 取消',
     other_product: '其他訂閱',
     enterprise_invoices_description:

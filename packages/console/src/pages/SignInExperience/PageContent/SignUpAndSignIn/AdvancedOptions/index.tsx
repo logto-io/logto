@@ -46,6 +46,17 @@ function AdvancedOptions({ signInExperience }: Props) {
         </TextLink>
         {t('sign_in_exp.sign_up_and_sign_in.advanced_options.single_sign_on_hint.suffix')}
       </div>
+      <FormField title="sign_in_exp.sign_up_and_sign_in.advanced_options.show_sso_branding_before_email_match">
+        <Switch
+          {...register('ssoBrandingBeforeEmailMatch')}
+          aria-label={t(
+            'sign_in_exp.sign_up_and_sign_in.advanced_options.show_sso_branding_before_email_match'
+          )}
+          label={t(
+            'sign_in_exp.sign_up_and_sign_in.advanced_options.show_sso_branding_before_email_match_description'
+          )}
+        />
+      </FormField>
       <FormField title="sign_in_exp.sign_up_and_sign_in.advanced_options.enable_user_registration">
         <Switch
           {...register('createAccountEnabled')}

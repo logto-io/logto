@@ -113,6 +113,14 @@ const sign_in_exp = {
     csp_source_duplicate_error: 'Questa espressione di origine è già presente nell’elenco.',
   },
   account_center: {
+    recent_authentication: {
+      title: 'Autenticazione recente',
+      description:
+        "Le operazioni sensibili sull'account, come cambiare la password o disattivare la verifica a due passaggi, richiedono un accesso recente, sia in Account Center sia in un'app che chiama l'Account API. Questa finestra definisce quanto deve essere recente l'accesso.",
+      maximum_authentication_age_in_minutes: "Età massima dell'autenticazione in minuti",
+      maximum_authentication_age_in_minutes_tip:
+        'Per quanto tempo un accesso resta sufficientemente recente per le operazioni sensibili. Un client può comunque richiedere una finestra più breve con il parametro `max_age`.',
+    },
     title: 'CENTRO ACCOUNT',
     description: 'Personalizza i flussi del centro account con le API Logto.',
     enable_account_api: 'Abilita il centro account e l’Account API',

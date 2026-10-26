@@ -8,7 +8,7 @@ import {
   saml,
   trustedDevice,
 } from '@logto/schemas';
-import type { Log } from '@logto/schemas';
+import type { Log, LogResponse } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -17,15 +17,23 @@ import { createRequester } from '#src/utils/test-utils.js';
 const { jest } = import.meta;
 
 const mockBody = { key: 'a', payload: { key: 'a', result: LogResult.Success }, createdAt: 123 };
-const mockLog: Log = { tenantId: 'fake_tenant', id: '1', ...mockBody };
+const mockLog: LogResponse = { tenantId: 'fake_tenant', id: '1', ...mockBody };
 const mockLogs = [mockLog, { tenantId: 'fake_tenant', id: '2', ...mockBody }];
+
+// Rows as the queries return them: the trigger-kept lookup columns must not reach the response.
+const toRow = (log: LogResponse): Log => ({
+  ...log,
+  payloadUserId: 'user',
+  payloadApplicationId: 'application',
+  payloadHookId: 'hook',
+});
 
 const logs = {
   countLogs: jest.fn().mockResolvedValue({
     count: mockLogs.length,
   }),
-  findLogs: jest.fn().mockResolvedValue(mockLogs),
-  findLogById: jest.fn().mockResolvedValue(mockLog),
+  findLogs: jest.fn().mockResolvedValue(mockLogs.map((log) => toRow(log))),
+  findLogById: jest.fn().mockResolvedValue(toRow(mockLog)),
 };
 const { countLogs, findLogs, findLogById } = logs;
 const logRoutes = await pickDefault(import('./log.js'));

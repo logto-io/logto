@@ -28,6 +28,10 @@ create table users (
   password_updated_at timestamptz,
   created_at timestamptz not null default (now()),
   updated_at timestamptz not null default (now()),
+  /** `lower(primary_email)` kept by a trigger for case-insensitive lookups. Never written directly. Three times the source width because under ICU or builtin Unicode locales one character can lower-case to three. */
+  primary_email_lower varchar(384),
+  /** `lower(username)` kept by a trigger for case-insensitive lookups. Never written directly. Three times the source width because under ICU or builtin Unicode locales one character can lower-case to three. */
+  username_lower varchar(384),
   primary key (id),
   constraint users__username
     unique (tenant_id, username),
@@ -51,6 +55,19 @@ create index users_mfa_verifications_gin
 create index users__tenant_lower_username
   on users (tenant_id, lower(username))
   where username is not null;
+
+/** Copies the lower-cased email and username into their `*_lower` columns, overwriting any direct write to them. */
+create function users__set_lower_columns() returns trigger as
+$$ begin
+  new.primary_email_lower = lower(new.primary_email);
+  new.username_lower = lower(new.username);
+  return new;
+end; $$ language plpgsql;
+
+create trigger users__set_lower_columns
+  before insert or update of primary_email, username, primary_email_lower, username_lower
+    on users
+  for each row execute procedure users__set_lower_columns();
 
 create trigger set_updated_at
   before update on users
