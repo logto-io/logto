@@ -17,12 +17,12 @@ type GetUserStripeCustomersRoutes = RouterRoutes<typeof userStripeCustomersRoute
 
 /** Billing facts for a user-owned subscription, independent of its service resources. */
 export type UserSubscription = GuardedResponse<
-  RouterRoutes<typeof userSubscriptionsRouter>['get']['/api/me/subscriptions']
+  RouterRoutes<typeof userSubscriptionsRouter>['get']['/api/me/user-subscriptions']
 >['subscriptions'][number];
 
 /** A page of authorized invoices for the user's own subscriptions, newest first, without drafts. */
 export type UserSubscriptionInvoicesResponse = GuardedResponse<
-  RouterRoutes<typeof userSubscriptionsRouter>['get']['/api/me/subscriptions/invoices']
+  RouterRoutes<typeof userSubscriptionsRouter>['get']['/api/me/user-subscriptions/invoices']
 >;
 
 export type UserSubscriptionInvoice = UserSubscriptionInvoicesResponse['invoices'][number];

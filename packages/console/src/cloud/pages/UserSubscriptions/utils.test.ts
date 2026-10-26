@@ -20,6 +20,8 @@ const subscription: UserSubscription = {
   canceledAt: null,
   cancelAtPeriodEnd: false,
   items: [{ id: 'item-sso', price, quantity: 2 }],
+  upcomingInvoice: null,
+  openInvoices: [],
 };
 
 it.each([
