@@ -2480,6 +2480,11 @@ describe('ExperienceInteraction class', () => {
         status: 403,
         data: { availableFactors: [MfaFactor.TOTP] },
       });
+      await expect(experienceInteraction.guardMfaBinding()).rejects.toMatchObject({
+        code: 'session.mfa.require_mfa_verification',
+        status: 403,
+        data: { availableFactors: [MfaFactor.TOTP] },
+      });
       expect(provider.interactionResult).not.toHaveBeenCalled();
     });
 
@@ -2513,6 +2518,9 @@ describe('ExperienceInteraction class', () => {
         data: { availableFactors: [MfaFactor.TOTP] },
       });
       await expect(submission).rejects.not.toHaveProperty('data.skippable');
+      // The email factor cannot pair with the email first factor, so there is nothing to verify:
+      // enrolling the pairable TOTP is the way forward.
+      await expect(experienceInteraction.guardMfaBinding()).resolves.toBeUndefined();
     });
 
     it('pursues the first reachable requested class', async () => {
@@ -2628,6 +2636,12 @@ describe('ExperienceInteraction class', () => {
         result: {
           interactionEvent: InteractionEvent.SignIn,
           userId: mockUserWithMfaVerifications.id,
+          authenticationProofs: [
+            {
+              ...passkeyProof(AuthenticationProofRole.Identify),
+              id: 'mock-sign-in-passkey-verification-id',
+            },
+          ],
         },
       } as unknown as Interaction;
       const experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionDetails);
@@ -2642,6 +2656,31 @@ describe('ExperienceInteraction class', () => {
       );
 
       await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.not.toThrow();
+    });
+
+    it('skips MFA verification when an SSO identity identified the user', async () => {
+      const { experienceInteraction } = createSignInInteraction({
+        user: mockUserWithMfaVerifications,
+        signInExperienceOverrides: {
+          mfa: { policy: MfaPolicy.Mandatory, factors: [MfaFactor.TOTP] },
+        },
+        interactionResult: {
+          authenticationProofs: [
+            { ...federatedProof(AuthenticationProofRole.Identify), id: 'sso-verification-id' },
+          ],
+          verificationRecords: [
+            {
+              id: 'sso-verification-id',
+              type: VerificationType.EnterpriseSso,
+              connectorId: 'sso-connector-id',
+              enterpriseSsoUserInfo: { id: 'sso-user-id' },
+              issuer: 'issuer',
+            },
+          ],
+        },
+      });
+
+      await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.toBeUndefined();
     });
   });
 });

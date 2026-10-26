@@ -38,15 +38,22 @@ const buildPendingAvatarUploadObjectKeyPrefix = (tenantId: string, jti: string) 
 /**
  * This middleware is guards the current interaction status is MFA verified (if MFA is enabled)
  *
+ * @param requireMfaForBinding Also require the sign-in to have verified an existing MFA factor
+ * before it may bind a new one. A sign-in can skip the MFA gate through adaptive MFA, a trusted
+ * device or optional MFA; those paths must not open factor enrollment for an account that
+ * already has factors.
+ *
  * @throws {RequestError} with status 400 if current interaction is ForgotPassword
  * @throws {RequestError} with status 404 if current interaction is not identified
  * @throws {RequestError} with status 403 if MFA verification status is not verified
  */
-function verifiedInteractionGuard<
+function verifiedInteractionGuard<StateT, ContextT extends WithLogContext, ResponseT>({
+  requireMfaForBinding = false,
+}: { requireMfaForBinding?: boolean } = {}): MiddlewareType<
   StateT,
-  ContextT extends WithLogContext,
-  ResponseT,
->(): MiddlewareType<StateT, ExperienceInteractionRouterContext<ContextT>, ResponseT> {
+  ExperienceInteractionRouterContext<ContextT>,
+  ResponseT
+> {
   return async (ctx, next) => {
     const { experienceInteraction } = ctx;
 
@@ -66,6 +73,10 @@ function verifiedInteractionGuard<
       !experienceInteraction.isStepUp
     ) {
       await experienceInteraction.guardMfaVerificationStatus();
+
+      if (requireMfaForBinding) {
+        await experienceInteraction.guardMfaBinding();
+      }
     }
 
     return next();
@@ -349,9 +360,9 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
       body: z.object({
         verificationId: z.string(),
       }),
-      status: [204, 400, 404],
+      status: [204, 400, 403, 404],
     }),
-    verifiedInteractionGuard(),
+    verifiedInteractionGuard({ requireMfaForBinding: true }),
     async (ctx, next) => {
       const { experienceInteraction, guard } = ctx;
       const { verificationId } = guard.body;
@@ -383,7 +394,7 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
       }),
       status: [204, 400, 403, 404, 422],
     }),
-    verifiedInteractionGuard(),
+    verifiedInteractionGuard({ requireMfaForBinding: true }),
     async (ctx, next) => {
       const { experienceInteraction, guard } = ctx;
       const { type, verificationId } = guard.body;

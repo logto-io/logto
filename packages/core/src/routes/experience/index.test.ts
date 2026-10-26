@@ -17,6 +17,7 @@ import {
   type Mfa,
   type TrustedDevice,
   type User,
+  userMfaDataKey,
 } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 import { conditional } from '@silverhand/essentials';
@@ -657,6 +658,304 @@ describe('POST /experience/profile', () => {
     expect(response.status).toBe(404);
     expect(response.text).toContain('User identifier not found');
   });
+});
+
+const totpBindRecord = (userId: string) => ({
+  id: 'totp-bind-verification-id',
+  type: VerificationType.TOTP,
+  userId,
+  secret: 'totp-secret',
+  verified: true,
+});
+
+describe('POST /experience/profile/mfa', () => {
+  const mfaSettings: Mfa = {
+    policy: MfaPolicy.PromptAtSignInAndSignUp,
+    factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
+  };
+
+  it('should require an existing MFA factor to be verified before binding on sign-in', async () => {
+    const user = {
+      ...mockUser,
+      logtoConfig: { [userMfaDataKey]: { skipMfaOnSignIn: true } },
+      mfaVerifications: [],
+    };
+    const { requester } = createRequesterWithMocks({
+      user,
+      mfa: mfaSettings,
+      interactionResult: { verificationRecords: [totpBindRecord(user.id)] },
+    });
+
+    const response = await requester.post('/experience/profile/mfa').send({
+      type: MfaFactor.TOTP,
+      verificationId: 'totp-bind-verification-id',
+    });
+
+    expect(response.status).toBe(403);
+    expect(response.body).toMatchObject({
+      code: 'session.mfa.require_mfa_verification',
+      data: { availableFactors: [MfaFactor.EmailVerificationCode] },
+    });
+  });
+
+  it('should require MFA verification before binding when adaptive MFA does not trigger', async () => {
+    const user = {
+      ...mockUser,
+      // The adaptive result or the policy fallback both skip the MFA gate, so only the binding
+      // guard can reject the enrollment.
+      logtoConfig: { [userMfaDataKey]: { skipMfaOnSignIn: true } },
+      lastSignInAt: Date.now(),
+      mfaVerifications: [],
+    };
+    const { requester } = createRequesterWithMocks({
+      adaptiveMfaEnabled: true,
+      user,
+      mfa: mfaSettings,
+      interactionResult: { verificationRecords: [totpBindRecord(user.id)] },
+    });
+
+    const response = await requester
+      .post('/experience/profile/mfa')
+      .set('x-logto-cf-bot-score', '99')
+      .send({
+        type: MfaFactor.TOTP,
+        verificationId: 'totp-bind-verification-id',
+      });
+
+    expect(response.status).toBe(403);
+    expect(response.body).toMatchObject({ code: 'session.mfa.require_mfa_verification' });
+  });
+
+  it('should require MFA verification before binding when a trusted device satisfied MFA', async () => {
+    const user = {
+      ...mockUser,
+      mfaVerifications: [],
+    };
+    const { requester, validateCredential } = createRequesterWithMocks({
+      user,
+      mfa: {
+        policy: MfaPolicy.Mandatory,
+        factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
+      },
+      interactionResult: { verificationRecords: [totpBindRecord(user.id)] },
+      trustedDevicePolicy: { enabled: true, durationDays: 30 },
+    });
+    validateCredential.mockResolvedValue(buildTrustedDevice(user.id));
+
+    const response = await requester
+      .post('/experience/profile/mfa')
+      .set('x-logto-cf-bot-score', '10')
+      .send({
+        type: MfaFactor.TOTP,
+        verificationId: 'totp-bind-verification-id',
+      });
+
+    expect(response.status).toBe(403);
+    expect(response.body).toMatchObject({ code: 'session.mfa.require_mfa_verification' });
+  });
+
+  it('should allow binding a new factor after an existing MFA factor is verified', async () => {
+    const user = {
+      ...mockUser,
+      logtoConfig: { [userMfaDataKey]: { skipMfaOnSignIn: true } },
+      mfaVerifications: [],
+    };
+    const { requester } = createRequesterWithMocks({
+      user,
+      mfa: mfaSettings,
+      interactionResult: {
+        verificationRecords: [
+          {
+            id: 'email-mfa-verification-id',
+            type: VerificationType.MfaEmailVerificationCode,
+            identifier: { type: SignInIdentifier.Email, value: user.primaryEmail },
+            templateType: TemplateType.MfaVerification,
+            verified: true,
+          },
+          totpBindRecord(user.id),
+        ],
+      },
+    });
+
+    const response = await requester.post('/experience/profile/mfa').send({
+      type: MfaFactor.TOTP,
+      verificationId: 'totp-bind-verification-id',
+    });
+
+    expect(response.status).toBe(204);
+  });
+
+  it('should allow factor binding on a sign-in when the user has no MFA factor yet', async () => {
+    const user = {
+      ...mockUser,
+      primaryEmail: null,
+      primaryPhone: null,
+      logtoConfig: { [userMfaDataKey]: { skipMfaOnSignIn: true } },
+      mfaVerifications: [],
+    };
+    const { requester } = createRequesterWithMocks({
+      user,
+      mfa: {
+        policy: MfaPolicy.PromptAtSignInAndSignUp,
+        factors: [MfaFactor.TOTP],
+      },
+      interactionResult: { verificationRecords: [totpBindRecord(user.id)] },
+    });
+
+    const response = await requester.post('/experience/profile/mfa').send({
+      type: MfaFactor.TOTP,
+      verificationId: 'totp-bind-verification-id',
+    });
+
+    expect(response.status).toBe(204);
+  });
+
+  it('should block email MFA binding on a sign-in that skipped MFA verification', async () => {
+    const user = {
+      ...mockUser,
+      primaryEmail: null,
+      logtoConfig: { [userMfaDataKey]: { skipMfaOnSignIn: true } },
+      mfaVerifications: [mockUserTotpMfaVerification],
+    };
+    const { requester } = createRequesterWithMocks({
+      user,
+      mfa: {
+        policy: MfaPolicy.PromptAtSignInAndSignUp,
+        factors: [MfaFactor.TOTP, MfaFactor.EmailVerificationCode],
+      },
+      interactionResult: {
+        verificationRecords: [
+          {
+            id: 'email-bind-verification-id',
+            type: VerificationType.EmailVerificationCode,
+            identifier: { type: SignInIdentifier.Email, value: 'new-email@logto.dev' },
+            templateType: TemplateType.BindMfa,
+            verified: true,
+          },
+        ],
+      },
+    });
+
+    const response = await requester.post('/experience/profile/mfa').send({
+      type: MfaFactor.EmailVerificationCode,
+      verificationId: 'email-bind-verification-id',
+    });
+
+    expect(response.status).toBe(403);
+    expect(response.body).toMatchObject({ code: 'session.mfa.require_mfa_verification' });
+  });
+
+  it('should keep blocking passkey binding on a sign-in that skipped MFA verification', async () => {
+    const user = {
+      ...mockUser,
+      logtoConfig: { [userMfaDataKey]: { skipMfaOnSignIn: true } },
+      mfaVerifications: [],
+    };
+    const { requester } = createRequesterWithMocks({ user, mfa: mfaSettings });
+
+    const response = await requester
+      .post('/experience/profile/mfa/passkey')
+      .send({ verificationId: 'sign-in-passkey-verification-id' });
+
+    expect(response.status).toBe(403);
+    expect(response.body).toMatchObject({ code: 'session.mfa.require_mfa_verification' });
+  });
+
+  it('should allow backup-code binding after a passkey sign-in', async () => {
+    const user = {
+      ...mockUser,
+      mfaVerifications: [mockUserTotpMfaVerification],
+    };
+    const { requester } = createRequesterWithMocks({
+      user,
+      mfa: {
+        policy: MfaPolicy.Mandatory,
+        factors: [MfaFactor.TOTP, MfaFactor.BackupCode],
+      },
+      interactionResult: {
+        authenticationProofs: [
+          {
+            id: 'sign-in-passkey-verification-id',
+            factor: AuthenticationFactor.WebAuthn,
+            class: AuthenticationFactorClass.Both,
+            amr: [
+              AuthenticationMethodReference.ProofOfPossession,
+              AuthenticationMethodReference.UserPresence,
+              AuthenticationMethodReference.Mfa,
+            ],
+            role: AuthenticationProofRole.Identify,
+          },
+        ],
+        verificationRecords: [
+          {
+            id: 'sign-in-passkey-verification-id',
+            type: VerificationType.SignInPasskey,
+            userId: user.id,
+            verified: true,
+          },
+          {
+            id: 'backup-code-bind-verification-id',
+            type: VerificationType.BackupCode,
+            userId: user.id,
+            backupCodes: ['code-1'],
+          },
+        ],
+      },
+    });
+
+    const response = await requester.post('/experience/profile/mfa').send({
+      type: MfaFactor.BackupCode,
+      verificationId: 'backup-code-bind-verification-id',
+    });
+
+    expect(response.status).toBe(204);
+  });
+
+  it.each([
+    {
+      name: 'passkey',
+      record: {
+        id: 'other-user-passkey-verification-id',
+        type: VerificationType.SignInPasskey,
+        userId: 'other-user-id',
+        verified: true,
+      },
+    },
+    {
+      name: 'enterprise SSO',
+      record: {
+        id: 'other-user-sso-verification-id',
+        type: VerificationType.EnterpriseSso,
+        connectorId: 'sso-connector-id',
+        enterpriseSsoUserInfo: { id: 'other-user-id' },
+        issuer: 'issuer',
+      },
+    },
+  ])(
+    'should reject binding when a verified $name record belongs to another user',
+    async ({ record }) => {
+      const user = {
+        ...mockUser,
+        logtoConfig: { [userMfaDataKey]: { skipMfaOnSignIn: true } },
+        mfaVerifications: [],
+      };
+      const { requester } = createRequesterWithMocks({
+        user,
+        mfa: mfaSettings,
+        interactionResult: {
+          verificationRecords: [record, totpBindRecord(user.id)],
+        },
+      });
+
+      const response = await requester.post('/experience/profile/mfa').send({
+        type: MfaFactor.TOTP,
+        verificationId: 'totp-bind-verification-id',
+      });
+
+      expect(response.status).toBe(403);
+      expect(response.body).toMatchObject({ code: 'session.mfa.require_mfa_verification' });
+    }
+  );
 });
 
 describe('POST /experience/submit', () => {
@@ -1751,6 +2050,25 @@ describe('POST /experience/submit', () => {
       expect(createCredential).toHaveBeenCalledWith(expect.objectContaining({ userId: user.id }));
     }
   );
+
+  it('should not require backup codes on a sign-in that skipped MFA verification', async () => {
+    const user = {
+      ...mockUser,
+      logtoConfig: { [userMfaDataKey]: { skipMfaOnSignIn: true } },
+      mfaVerifications: [mockUserTotpMfaVerification],
+    };
+    const { requester } = createRequesterWithMocks({
+      user,
+      mfa: {
+        policy: MfaPolicy.PromptAtSignInAndSignUp,
+        factors: [MfaFactor.TOTP, MfaFactor.BackupCode],
+      },
+    });
+
+    const response = await requester.post('/experience/submit');
+
+    expect(response.status).toBe(200);
+  });
 });
 
 describe('POST /experience/abort', () => {
