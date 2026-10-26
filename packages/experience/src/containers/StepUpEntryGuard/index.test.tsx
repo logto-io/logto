@@ -63,6 +63,7 @@ const renderGuard = (path = '/sign-in') =>
         <Route path="/sign-in" element={<div>sign in form</div>} />
         <Route path="/register" element={<div>register form</div>} />
       </Route>
+      <Route path="/step-up" element={<div>step-up landing</div>} />
     </Routes>,
     { initialEntries: [path] }
   );
@@ -78,7 +79,7 @@ describe('StepUpEntryGuard', () => {
     renderGuard();
 
     expect(await screen.findByText('sign in form')).not.toBeNull();
-    expect(screen.queryByText('error.invalid_session')).toBeNull();
+    expect(screen.queryByText('step-up landing')).toBeNull();
     expect(mockedGetStepUpContext).toHaveBeenCalledTimes(1);
   });
 
@@ -88,7 +89,7 @@ describe('StepUpEntryGuard', () => {
     renderGuard('/register');
 
     expect(await screen.findByText('register form')).not.toBeNull();
-    expect(screen.queryByText('error.invalid_session')).toBeNull();
+    expect(screen.queryByText('step-up landing')).toBeNull();
   });
 
   it('renders the entry route for a sign-in with requested ACR but no step-up mode', async () => {
@@ -97,15 +98,15 @@ describe('StepUpEntryGuard', () => {
     renderGuard();
 
     expect(await screen.findByText('sign in form')).not.toBeNull();
-    expect(screen.queryByText('error.invalid_session')).toBeNull();
+    expect(screen.queryByText('step-up landing')).toBeNull();
   });
 
-  it('renders the invalid-session page for a pure step-up interaction', async () => {
+  it('sends a pure step-up interaction back to the step-up landing', async () => {
     mockedGetStepUpContext.mockResolvedValue(stepUpContext);
 
     renderGuard();
 
-    expect(await screen.findByText('error.invalid_session')).not.toBeNull();
+    expect(await screen.findByText('step-up landing')).not.toBeNull();
     expect(screen.queryByText('sign in form')).toBeNull();
   });
 
@@ -114,7 +115,7 @@ describe('StepUpEntryGuard', () => {
 
     renderGuard('/register');
 
-    expect(await screen.findByText('error.invalid_session')).not.toBeNull();
+    expect(await screen.findByText('step-up landing')).not.toBeNull();
     expect(screen.queryByText('register form')).toBeNull();
   });
 
@@ -132,13 +133,13 @@ describe('StepUpEntryGuard', () => {
     renderGuard();
 
     expect(screen.queryByText('sign in form')).toBeNull();
-    expect(screen.queryByText('error.invalid_session')).toBeNull();
+    expect(screen.queryByText('step-up landing')).toBeNull();
 
     await act(async () => {
       deferred.resolve?.(stepUpContext);
     });
 
-    expect(await screen.findByText('error.invalid_session')).not.toBeNull();
+    expect(await screen.findByText('step-up landing')).not.toBeNull();
   });
 
   it('renders the entry route when the interaction cannot be read', async () => {
@@ -147,6 +148,6 @@ describe('StepUpEntryGuard', () => {
     renderGuard();
 
     expect(await screen.findByText('sign in form')).not.toBeNull();
-    expect(screen.queryByText('error.invalid_session')).toBeNull();
+    expect(screen.queryByText('step-up landing')).toBeNull();
   });
 });

@@ -4,7 +4,7 @@ import {
   LogtoAcr,
   VerificationType,
 } from '@logto/schemas';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { type ReactNode } from 'react';
 
 import App from '@/App';
@@ -48,15 +48,20 @@ beforeEach(() => {
   window.history.pushState({}, '', '/sign-in');
 });
 
-it.each(['/sign-in', '/register'])('blocks the real %s route in pure step-up', async (path) => {
-  window.history.pushState({}, '', path);
-  mockedGetStepUpContext.mockResolvedValue(stepUpContext);
+it.each(['/sign-in', '/register'])(
+  'sends the real %s route back to the step-up landing in pure step-up',
+  async (path) => {
+    window.history.pushState({}, '', path);
+    mockedGetStepUpContext.mockResolvedValue(stepUpContext);
 
-  render(<App />);
+    render(<App />);
 
-  expect(await screen.findByText('error.invalid_session')).not.toBeNull();
-  expect(screen.queryByText('description.sign_in_to_your_account')).toBeNull();
-});
+    await waitFor(() => {
+      expect(window.location.pathname).toBe('/step-up');
+    });
+    expect(screen.queryByText('description.sign_in_to_your_account')).toBeNull();
+  }
+);
 
 it('keeps the real sign-in route without a step-up interaction', async () => {
   mockedGetStepUpContext.mockRejectedValue(new Error('no interaction'));
