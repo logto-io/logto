@@ -12,7 +12,6 @@ import useNavigateToSignIn from '@/hooks/use-navigate-to-sign-in';
 import useRedirectCallbackValidation from '@/hooks/use-redirect-callback-validation';
 import { useSieMethods } from '@/hooks/use-sie';
 import useTerms from '@/hooks/use-terms';
-import useToast from '@/hooks/use-toast';
 import { parseQueryParameters } from '@/utils';
 
 type SingleSignOnRegisterOptions = {
@@ -80,7 +79,6 @@ const useSingleSignOnListener = (connectorId: string) => {
   const [loading, setLoading] = useState(true);
   const [isConsumed, setIsConsumed] = useState(false);
   const [searchParameters, setSearchParameters] = useSearchParams();
-  const { setToast } = useToast();
   const redirectTo = useGlobalRedirectTo();
   const { signInMode } = useSieMethods();
 
@@ -116,8 +114,7 @@ const useSingleSignOnListener = (connectorId: string) => {
           'user.sso_identity_not_exist': async (error) => {
             // Should not let user register new social account under sign-in only mode
             if (signInMode === SignInMode.SignIn) {
-              setToast(error.message);
-              navigateToSignIn(error.code);
+              navigateToSignIn(error.code, { toast: error.message });
               return;
             }
 
@@ -125,8 +122,7 @@ const useSingleSignOnListener = (connectorId: string) => {
           },
           // Redirect to sign-in page if error is not handled by the error handlers
           global: async (error) => {
-            setToast(error.message);
-            navigateToSignIn(error.code);
+            navigateToSignIn(error.code, { toast: error.message });
           },
         });
         return;
@@ -141,7 +137,6 @@ const useSingleSignOnListener = (connectorId: string) => {
       navigateToSignIn,
       redirectTo,
       registerSingleSignOnIdentity,
-      setToast,
       signInMode,
       singleSignOnAuthorizationRequest,
     ]
@@ -163,8 +158,7 @@ const useSingleSignOnListener = (connectorId: string) => {
     const result = validateAndRestore(state);
 
     if (!result.valid) {
-      setToast(t(`error.${result.error}`));
-      navigateToSignIn(result.error);
+      navigateToSignIn(result.error, { toast: t(`error.${result.error}`) });
       return;
     }
 
@@ -175,7 +169,6 @@ const useSingleSignOnListener = (connectorId: string) => {
     navigateToSignIn,
     searchParameters,
     setSearchParameters,
-    setToast,
     singleSignOnHandler,
     t,
     validateAndRestore,
