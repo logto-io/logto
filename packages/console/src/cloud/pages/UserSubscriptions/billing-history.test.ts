@@ -200,9 +200,12 @@ it('opens a freshly read invoice link for each list', async () => {
   await waitFor(() => {
     expect(window.open).toHaveBeenCalledWith('https://invoice.stripe.com/i/fresh', '_blank');
   });
-  expect(get).toHaveBeenCalledWith('/api/me/subscriptions/invoices/:invoiceId/hosted-invoice-url', {
-    params: { invoiceId: 'in_sso' },
-  });
+  expect(get).toHaveBeenCalledWith(
+    '/api/me/user-subscriptions/invoices/:invoiceId/hosted-invoice-url',
+    {
+      params: { invoiceId: 'in_sso' },
+    }
+  );
   fireEvent.click(screen.getByText('$10,000.00'));
   await waitFor(() => {
     expect(get).toHaveBeenCalledWith(
