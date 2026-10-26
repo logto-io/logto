@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.7
 
 ###### [STAGE] Build ######
-FROM node:22-alpine AS builder
+FROM node:22.23.4-alpine AS builder
 WORKDIR /etc/logto
 ENV CI=true
 
@@ -45,7 +45,7 @@ RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
 RUN rm -rf .scripts pnpm-*.yaml packages/cloud
 
 ###### [STAGE] Seal ######
-FROM node:22-alpine AS app
+FROM node:22.23.4-alpine AS app
 WORKDIR /etc/logto
 ARG logto_oss_survey_endpoint=
 ARG private_key_rotation_grace_period=0
