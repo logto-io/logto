@@ -13,6 +13,7 @@ import {
   LogtoAcr,
   acrSatisfies,
   getAuthenticationFactor,
+  getAuthenticationFactorClass,
   loginPromptAuthenticationContextDetailsGuard,
   MfaFactor,
   MissingProfile,
@@ -800,7 +801,10 @@ export default class ExperienceInteraction {
    * pursued class (see {@link getPursuedRequestedAcr}) is `1fa` or `mfa` and the interaction has
    * proven no Logto-verifiable first factor yet. With an eligible method the user can verify, it
    * throws `session.step_up.require_verification` carrying the pursued class, the methods and the
-   * masked identifiers, and the next `submit()` re-evaluates the requirement from scratch.
+   * masked identifiers, and the next `submit()` re-evaluates the requirement from scratch. Once a
+   * first factor is proven, the same requirement asks for another one when it pairs with no MFA
+   * factor the user can verify or enroll: a first factor only lifts the context together with a
+   * factor of a different kind.
    *
    * With no eligible method but a fresh subject proof, `user.missing_profile` offers the methods
    * the tenant lets the user establish. If the requested class cannot be reached, even through
@@ -827,6 +831,28 @@ export default class ExperienceInteraction {
     }
 
     if (this.hasFreshFirstFactor) {
+      // A proven first factor only lifts the context together with an MFA factor of a different
+      // kind. When nothing pairs with it, ask for another first factor the eligibility offers, so
+      // the methods the sanitized context advertises can actually complete the request.
+      if (await this.hasPairableMfaFactor(decision)) {
+        return;
+      }
+
+      const firstFactorMethods = decision.availableMethods.filter(
+        (method) => getAuthenticationFactorClass(method) !== AuthenticationFactorClass.Mfa
+      );
+
+      if (firstFactorMethods.length > 0) {
+        throw new RequestError(
+          { code: 'session.step_up.require_verification', status: 403 },
+          {
+            selectedAcr,
+            availableMethods: firstFactorMethods,
+            maskedIdentifiers: decision.maskedIdentifiers,
+          }
+        );
+      }
+
       return;
     }
 
@@ -1492,10 +1518,12 @@ export default class ExperienceInteraction {
   }
 
   /**
-   * The factors that can fill the `mfa` side of a pair with the first factor this interaction has
-   * proven: a factor of the same kind as a first-factor proof is dropped. With no first-factor
-   * proof, none is kept: {@link guardFirstFactor} runs first, so reaching the MFA gate without one
-   * means no first factor can be proven, and an `mfa`-class proof alone never lifts the context.
+   * The factors that can fill the `mfa` side of a pair with the first factors this interaction has
+   * proven: a factor is kept when one of those first factors is of a different kind, so the two
+   * together reach `mfa`. A factor of the same kind as every proven first factor is dropped,
+   * because repeated records of one factor count once. With no first-factor proof, none is kept:
+   * {@link guardFirstFactor} runs first, so reaching the MFA gate without one means no first factor
+   * can be proven, and an `mfa`-class proof alone never lifts the context.
    */
   private getPairableMfaFactors(factors: readonly MfaFactor[]): MfaFactor[] {
     if (!this.hasFreshFirstFactor) {
@@ -1508,8 +1536,31 @@ export default class ExperienceInteraction {
         .map(({ factor }) => factor)
     );
 
-    return factors.filter(
-      (factor) => !firstFactors.has(getAuthenticationFactor(mfaFactorToVerificationType[factor]))
+    return factors.filter((factor) => {
+      const mfaFactor = getAuthenticationFactor(mfaFactorToVerificationType[factor]);
+
+      return [...firstFactors].some((firstFactor) => firstFactor !== mfaFactor);
+    });
+  }
+
+  /**
+   * Whether an MFA factor the user can verify or enroll can pair with a first factor this
+   * interaction has proven: one of a different kind, so the two together reach `mfa`.
+   */
+  private async hasPairableMfaFactor(decision: StepUpEligibility): Promise<boolean> {
+    if (decision.enrollableFactors.length > 0) {
+      return true;
+    }
+
+    const [user, mfaSettings] = await Promise.all([
+      this.getIdentifiedUser(),
+      this.signInExperienceValidator.getMfaSettings(),
+    ]);
+
+    return (
+      this.getPairableMfaFactors(
+        new MfaValidator(mfaSettings, user).availableUserMfaVerificationTypes
+      ).length > 0
     );
   }
 
