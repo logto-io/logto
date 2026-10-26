@@ -96,7 +96,7 @@ describe('Mfa.assertMfaFulfilled', () => {
 
     await mfa.assertMfaFulfilled();
 
-    expect(mandatorySpy).toHaveBeenCalledWith(expect.any(Object), false);
+    expect(mandatorySpy).toHaveBeenCalledWith(expect.any(Object), false, undefined);
   });
 
   it('reuses submit async context during mandatory check', async () => {

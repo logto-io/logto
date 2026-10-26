@@ -56,7 +56,10 @@ import {
 import { PasswordVerification } from './verifications/password-verification.js';
 import { SocialVerification } from './verifications/social-verification.js';
 import { TotpVerification } from './verifications/totp-verification.js';
-import { SignInPasskeyVerification } from './verifications/web-authn-verification.js';
+import {
+  SignInPasskeyVerification,
+  WebAuthnVerification,
+} from './verifications/web-authn-verification.js';
 
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
@@ -2825,6 +2828,132 @@ describe('ExperienceInteraction class', () => {
         status: 422,
         data: { availableFactors: [MfaFactor.WebAuthn] },
       });
+    });
+
+    it('requires the binding a social registration needs to reach the class it pursues', async () => {
+      setDevFeaturesEnabled(true);
+      const socialUser: User = {
+        ...mockUser,
+        username: null,
+        usernameLower: null,
+        primaryEmail: null,
+        primaryEmailLower: null,
+        primaryPhone: null,
+        passwordEncrypted: null,
+        passwordEncryptionMethod: null,
+      };
+      const createSocialRegistration = (factors: MfaFactor[]) =>
+        createSignInInteraction({
+          interactionEvent: InteractionEvent.Register,
+          user: socialUser,
+          signInExperienceOverrides: {
+            signUp: { identifiers: [], password: false, verify: false },
+            mfa: { policy: MfaPolicy.NoPrompt, factors },
+          },
+          interactionResult: {
+            authenticationContext: { requestedAcrValues: [LogtoAcr.Mfa, LogtoAcr.FirstFactor] },
+            authenticationProofs: [federatedProof(AuthenticationProofRole.Identify)],
+          },
+        });
+      const bindTotp = async (
+        interaction: ReturnType<typeof createSocialRegistration>,
+        id: string
+      ) => {
+        interaction.experienceInteraction.setVerificationRecord(
+          new TotpVerification(
+            interaction.signInTenant.libraries,
+            interaction.signInTenant.queries,
+            {
+              id,
+              type: VerificationType.TOTP,
+              userId: socialUser.id,
+              secret: `${id}-secret`,
+              verified: true,
+            }
+          )
+        );
+        await interaction.experienceInteraction.mfa.addTotpByVerificationId(id);
+      };
+
+      // Only TOTP: `mfa` is unreachable, so the listed `1fa` is pursued, and the TOTP binding is
+      // the only way to reach it. The binding is required non-skippably instead of the submission
+      // falling through to the final assert.
+      const totpOnly = createSocialRegistration([MfaFactor.TOTP]);
+      const totpOnlySubmission = totpOnly.experienceInteraction.submit();
+      await expect(totpOnlySubmission).rejects.toMatchObject({
+        code: 'user.missing_mfa',
+        status: 422,
+        data: { availableFactors: [MfaFactor.TOTP] },
+      });
+      await expect(totpOnlySubmission).rejects.not.toHaveProperty('data.skippable');
+
+      await bindTotp(totpOnly, 'totp-only');
+      await totpOnly.experienceInteraction.submit();
+      expect(totpOnly.provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({
+          login: {
+            accountId: socialUser.id,
+            acr: LogtoAcr.FirstFactor,
+            amr: [AuthenticationMethodReference.Federated, AuthenticationMethodReference.Otp],
+          },
+        })
+      );
+
+      // TOTP + WebAuthn: `mfa` is reachable through WebAuthn alone, so only WebAuthn is offered.
+      const mixed = createSocialRegistration([MfaFactor.TOTP, MfaFactor.WebAuthn]);
+      await expect(mixed.experienceInteraction.submit()).rejects.toMatchObject({
+        code: 'user.missing_mfa',
+        status: 422,
+        data: { availableFactors: [MfaFactor.WebAuthn] },
+      });
+
+      // A client that binds TOTP anyway is asked for WebAuthn again, not rejected by the assert.
+      await bindTotp(mixed, 'mixed-totp');
+      await expect(mixed.experienceInteraction.submit()).rejects.toMatchObject({
+        code: 'user.missing_mfa',
+        status: 422,
+        data: { availableFactors: [MfaFactor.WebAuthn] },
+      });
+
+      // Binding WebAuthn reaches `mfa` on its own and completes the registration.
+      mixed.experienceInteraction.setVerificationRecord(
+        new WebAuthnVerification(mixed.signInTenant.libraries, mixed.signInTenant.queries, {
+          id: 'new-webauthn',
+          type: VerificationType.WebAuthn,
+          userId: socialUser.id,
+          verified: true,
+          registrationInfo: {
+            type: MfaFactor.WebAuthn,
+            rpId: 'logto.dev',
+            credentialId: 'credential-id',
+            publicKey: 'public-key',
+            transports: [],
+            counter: 0,
+            agent: 'test',
+          },
+        })
+      );
+      await mixed.experienceInteraction.mfa.addWebAuthnByVerificationId('new-webauthn');
+      await mixed.experienceInteraction.submit();
+      expect(mixed.provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({
+          login: {
+            accountId: socialUser.id,
+            acr: LogtoAcr.Mfa,
+            amr: [
+              AuthenticationMethodReference.Federated,
+              AuthenticationMethodReference.Otp,
+              AuthenticationMethodReference.ProofOfPossession,
+              AuthenticationMethodReference.UserPresence,
+              AuthenticationMethodReference.Mfa,
+            ],
+          },
+        })
+      );
     });
 
     it('asks for the first factor before the MFA factor on a social sign-in', async () => {
