@@ -7,7 +7,7 @@ import { getSignInExperienceSettings } from '@ac/apis/sign-in-experience';
 import { getUserInfo } from '@ac/apis/user';
 import useApi from '@ac/hooks/use-api';
 import { changeLanguage, getPreferredLanguage } from '@ac/i18n/utils';
-import { getUiLocales } from '@ac/utils/account-center-route';
+import { getUiLocales, isAuthCallbackUrl } from '@ac/utils/account-center-route';
 import { getThemeBySystemPreference, subscribeToSystemTheme } from '@ac/utils/theme';
 
 import type { PageContextType } from './PageContext';
@@ -120,7 +120,9 @@ const PageContextProvider = ({ children }: Props) => {
   }, []);
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    // Skip fetching user info on the OIDC callback URL: a step-up keeps the previous token set
+    // (`clearTokens: false`) until `handleSignInCallback` replaces it and reloads `/account`.
+    if (!isAuthenticated || isAuthCallbackUrl()) {
       setUserInfo(undefined);
       setUserInfoError(undefined);
       setIsLoadingUserInfo(false);
