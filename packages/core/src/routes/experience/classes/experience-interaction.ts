@@ -430,6 +430,13 @@ export default class ExperienceInteraction {
     if (this.#interactionEvent !== interactionEvent) {
       this.profile.cleanUp();
       this.authenticationProofs.clear();
+      // An identification is verified for the event it was made under, so it cannot outlive a
+      // switch away from that event either. Registration establishes its own user through
+      // `createUser`, and the clients switch the event before identifying, never after.
+      // `userCache` goes with it: `getIdentifiedUser` answers from the cache before it reads
+      // `userId`, so leaving one behind would keep resolving the user the other just dropped.
+      this.userId = undefined;
+      this.userCache = undefined;
     }
 
     this.#interactionEvent = interactionEvent;

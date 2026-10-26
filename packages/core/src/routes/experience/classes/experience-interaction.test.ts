@@ -543,6 +543,18 @@ describe('ExperienceInteraction class', () => {
       expect(experienceInteraction.toJson().authenticationProofs).toEqual([]);
     });
 
+    it('clears the identified user when the interaction event changes, like the profile', async () => {
+      const { experienceInteraction } = createSignInInteraction({
+        interactionResult: { userId: mockUser.id },
+      });
+
+      await experienceInteraction.setInteractionEvent(InteractionEvent.SignIn);
+      expect(experienceInteraction.toJson().userId).toBe(mockUser.id);
+
+      await experienceInteraction.setInteractionEvent(InteractionEvent.Register);
+      expect(experienceInteraction.toJson().userId).toBeUndefined();
+    });
+
     it('does not let the proofs outlive the interaction', async () => {
       const { experienceInteraction, provider } = createSignInInteraction({
         interactionEvent: InteractionEvent.ForgotPassword,

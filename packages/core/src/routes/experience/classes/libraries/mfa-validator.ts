@@ -165,6 +165,10 @@ export class MfaValidator {
         verification.isVerified &&
         // New bind MFA verification can not be used for verification
         !verification.isNewBindMfaVerification &&
+        // A record that names an owner answers for that account only, so it never counts for
+        // another. An MFA email or phone code built from a client-supplied identifier names no
+        // owner (see `code-verification.ts`) and keeps the identifier checks it already has.
+        (verification.userId === undefined || verification.userId === this.user.id) &&
         // Check if the verification type is enabled in the user's MFA settings
         userEnabledMfaVerifications.includes(mfaVerificationTypeToMfaFactorMap[verification.type])
     );
