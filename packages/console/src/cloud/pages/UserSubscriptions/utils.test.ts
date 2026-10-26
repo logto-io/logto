@@ -66,18 +66,31 @@ it('uses effective scheduled cancellation instead of Stripe’s request timestam
   expect(getScheduledCancellation(subscription)).toBeNull();
   expect(getScheduledCancellation({ ...subscription, status: 'canceled', cancelAt })).toBe(false);
 });
-it('dates the next charge at the period end and drops it for a scheduled cancellation', () => {
+it('dates the next charge at the period end and drops it for a cancellation by then', () => {
   expect(getNextCharge(subscription)).toEqual({
     amount: 23_040,
     currency: 'usd',
-    date: subscription.currentPeriodEnd,
-    isEnding: false,
+    chargeDate: subscription.currentPeriodEnd,
+    endsAt: undefined,
   });
   expect(getNextCharge({ ...subscription, upcomingInvoice: null }).amount).toBeUndefined();
   const cancelAt = new Date('2026-10-25');
   expect(getNextCharge({ ...subscription, cancelAt })).toEqual({
     currency: null,
-    date: cancelAt,
-    isEnding: true,
+    endsAt: cancelAt,
+  });
+  expect(getNextCharge({ ...subscription, cancelAtPeriodEnd: true })).toEqual({
+    currency: null,
+    endsAt: subscription.currentPeriodEnd,
+  });
+});
+
+it('keeps the renewal charge when the cancellation falls after the period end', () => {
+  const cancelAt = new Date('2027-01-01');
+  expect(getNextCharge({ ...subscription, cancelAt })).toEqual({
+    amount: 23_040,
+    currency: 'usd',
+    chargeDate: subscription.currentPeriodEnd,
+    endsAt: cancelAt,
   });
 });

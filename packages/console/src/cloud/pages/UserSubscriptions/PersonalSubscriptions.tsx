@@ -77,7 +77,7 @@ function PersonalSubscriptions() {
               <span className={styles.columnTitle}>
                 {t('enterprise_subscription.user_subscriptions.next_charge')}
                 <ToggleTip content={<DynamicT forKey="subscription.next_bill_tip" />}>
-                  <IconButton size="small">
+                  <IconButton size="small" aria-label={t('general.learn_more')}>
                     <Tip />
                   </IconButton>
                 </ToggleTip>
@@ -86,7 +86,7 @@ function PersonalSubscriptions() {
             dataIndex: 'upcomingInvoice',
             colSpan: 6,
             render: (subscription) => {
-              const { amount, currency, date, isEnding } = getNextCharge(subscription);
+              const { amount, currency, chargeDate, endsAt } = getNextCharge(subscription);
               return (
                 <>
                   <div className={styles.charge}>
@@ -102,13 +102,14 @@ function PersonalSubscriptions() {
                       </Tag>
                     )}
                   </div>
-                  <div className={styles.note}>
-                    {isEnding
-                      ? t('enterprise_subscription.user_subscriptions.ends_on', {
-                          date: formatDate(date),
-                        })
-                      : formatDate(date)}
-                  </div>
+                  {chargeDate && <div className={styles.note}>{formatDate(chargeDate)}</div>}
+                  {endsAt && (
+                    <div className={styles.note}>
+                      {t('enterprise_subscription.user_subscriptions.ends_on', {
+                        date: formatDate(endsAt),
+                      })}
+                    </div>
+                  )}
                 </>
               );
             },

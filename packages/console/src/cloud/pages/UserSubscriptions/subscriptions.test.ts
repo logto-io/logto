@@ -166,6 +166,7 @@ it('shows the list price and the next charge after discounts, without a status t
   expect(screen.getByText('2 × $128.00')).toBeTruthy();
   expect(screen.getByText('/ month')).toBeTruthy();
   expect(screen.getByText('Next charge')).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'Learn more' })).toBeTruthy();
   expect(screen.getByText('$230.40')).toBeTruthy();
   expect(screen.getByText('Nov 1, 2026')).toBeTruthy();
   expect(screen.queryByText(/\$256/)).toBeNull();
@@ -349,4 +350,16 @@ it.each([
   } else {
     expect(screen.queryByText(/^Price$/)).toBeNull();
   }
+});
+
+it('shows the renewal charge and the end date when the cancellation is after the period end', () => {
+  jest.mocked(useUserSubscriptions).mockReturnValue({
+    data: [{ ...subscription, cancelAt: new Date('2027-01-01') }],
+    isLoading: false,
+    mutate,
+  } as unknown as ReturnType<typeof useUserSubscriptions>);
+  renderView(createElement(PersonalSubscriptions));
+  expect(screen.getByText('$230.40')).toBeTruthy();
+  expect(screen.getByText('Nov 1, 2026')).toBeTruthy();
+  expect(screen.getByText('Ends Jan 1, 2027')).toBeTruthy();
 });

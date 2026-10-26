@@ -1,4 +1,4 @@
-import { type Nullable } from '@silverhand/essentials';
+import { conditional, type Nullable } from '@silverhand/essentials';
 
 import { type UserSubscription } from '@/cloud/types/router';
 import { getUpcomingBillAmount } from '@/utils/upcoming-invoice';
@@ -78,21 +78,25 @@ export const getScheduledCancellation = (subscription: UserSubscription) =>
     (subscription.cancelAtPeriodEnd ? subscription.currentPeriodEnd : null));
 
 /**
- * The next invoice of one subscription, dated at its own period end. A subscription scheduled to
- * cancel has no next charge, only an end date.
+ * The next invoice of one subscription, dated at its own period end, and when the subscription
+ * ends. A subscription that cancels by its period end has no next charge; a later cancellation
+ * still renews at period end.
  */
 export const getNextCharge = (
   subscription: UserSubscription
-): { amount?: number; currency: Nullable<string>; date: Date; isEnding: boolean } => {
-  const scheduled = getScheduledCancellation(subscription);
-  if (scheduled) {
-    return { currency: null, date: scheduled, isEnding: true };
+): { amount?: number; currency: Nullable<string>; chargeDate?: Date; endsAt?: Date } => {
+  const scheduled = conditional(getScheduledCancellation(subscription));
+  if (
+    scheduled &&
+    new Date(scheduled).getTime() <= new Date(subscription.currentPeriodEnd).getTime()
+  ) {
+    return { currency: null, endsAt: scheduled };
   }
   return {
     amount: getUpcomingBillAmount(subscription.upcomingInvoice),
     // Upcoming invoices carry no currency; a subscription's prices share the invoice currency.
     currency: subscription.items[0]?.price.currency ?? null,
-    date: subscription.currentPeriodEnd,
-    isEnding: false,
+    chargeDate: subscription.currentPeriodEnd,
+    endsAt: scheduled,
   };
 };
