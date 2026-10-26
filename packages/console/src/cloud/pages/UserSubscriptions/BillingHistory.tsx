@@ -206,9 +206,12 @@ function BillingHistory() {
           }}
           onOpen={(invoiceId) => {
             void openInvoice(async () =>
-              subscriptionsApi.get('/api/me/subscriptions/invoices/:invoiceId/hosted-invoice-url', {
-                params: { invoiceId },
-              })
+              subscriptionsApi.get(
+                '/api/me/user-subscriptions/invoices/:invoiceId/hosted-invoice-url',
+                {
+                  params: { invoiceId },
+                }
+              )
             );
           }}
         />

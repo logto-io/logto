@@ -53,7 +53,7 @@
     "access": "public"
   },
   "devDependencies": {
-    "@logto/cloud": "0.2.5-f3c0fc9",
+    "@logto/cloud": "0.2.5-b2b27b2",
     "@silverhand/eslint-config": "^6.1.0",
     "@silverhand/ts-config": "^6.1.0",
     "@types/node": "^26.0.0",

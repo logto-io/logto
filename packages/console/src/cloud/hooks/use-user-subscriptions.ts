@@ -25,8 +25,8 @@ export const useSubscriptionEntry = () => {
   );
   // Console SSO billing: retain the existing Enterprise entry until this feature is released.
   const summary = useSWR<{ hasSubscriptions: boolean }, ResponseError>(
-    isDevFeaturesEnabled && user && !userError && ['/api/me/subscriptions/summary', user.id],
-    async () => subscriptionsApi.get('/api/me/subscriptions/summary'),
+    isDevFeaturesEnabled && user && !userError && ['/api/me/user-subscriptions/summary', user.id],
+    async () => subscriptionsApi.get('/api/me/user-subscriptions/summary'),
     { keepPreviousData: false }
   );
   return {
@@ -48,8 +48,8 @@ export const useUserSubscriptions = () => {
   const { user, error: userError, isLoading: isUserLoading } = useCurrentUser();
   const api = useCloudApi<typeof userSubscriptionsRouter>({ hideErrorToast: true });
   const result = useSWR<{ subscriptions: UserSubscription[] }, ResponseError>(
-    user && !userError && ['/api/me/subscriptions', user.id],
-    async () => api.get('/api/me/subscriptions'),
+    user && !userError && ['/api/me/user-subscriptions', user.id],
+    async () => api.get('/api/me/user-subscriptions'),
     { keepPreviousData: false }
   );
   return {
@@ -65,9 +65,9 @@ export const useUserSubscriptionInvoices = (page: number, pageSize: number) => {
   const { user, error: userError, isLoading: isUserLoading } = useCurrentUser();
   const api = useCloudApi<typeof userSubscriptionsRouter>({ hideErrorToast: true });
   const result = useSWR<UserSubscriptionInvoicesResponse, ResponseError>(
-    user && !userError && ['/api/me/subscriptions/invoices', user.id, page, pageSize],
+    user && !userError && ['/api/me/user-subscriptions/invoices', user.id, page, pageSize],
     async () =>
-      api.get('/api/me/subscriptions/invoices', {
+      api.get('/api/me/user-subscriptions/invoices', {
         search: { page: String(page), page_size: String(pageSize) },
       }),
     { keepPreviousData: false }
