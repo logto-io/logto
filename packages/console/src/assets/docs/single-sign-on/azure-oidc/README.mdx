@@ -1,4 +1,5 @@
 import OidcCallbackUri from '@/mdx-components/OidcCallbackUri';
+import SsoEmailDomainsStep from '@/mdx-components/SsoEmailDomainsStep';
 import Step from '@/mdx-components/Step';
 
 import createApplication from './assets/create_application.webp';
@@ -114,10 +115,10 @@ If you want to access [Microsoft Graph APIs](https://docs.microsoft.com/en-us/gr
 </Step>
 
 
-<Step index={4} title="Set email domains and enable the SSO connector">
+<SsoEmailDomainsStep index={4} title="Set email domains and enable the SSO connector">
 
 Provide the email `domains` of your organization on the connector `experience` tab. This will enable the SSO connector as an authentication method for those users.
 
 Users with email addresses in the specified domains will be exclusively limited to use your SSO connector as their only authentication method.
 
-</Step>
+</SsoEmailDomainsStep>

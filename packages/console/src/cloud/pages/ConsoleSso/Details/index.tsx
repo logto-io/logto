@@ -10,6 +10,7 @@ import File from '@/assets/icons/file.svg?react';
 import DetailsPage from '@/components/DetailsPage';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import Skeleton from '@/components/DetailsPage/Skeleton';
+import Drawer from '@/components/Drawer';
 import PageMeta from '@/components/PageMeta';
 import Topbar from '@/components/Topbar';
 import AppBoundary from '@/containers/AppBoundary';
@@ -22,6 +23,7 @@ import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import useCurrentUser from '@/hooks/use-current-user';
 import SsoConnectorLogo from '@/pages/EnterpriseSso/SsoConnectorLogo';
+import SsoGuide from '@/pages/EnterpriseSsoDetails/SsoGuide';
 import connectorStyles from '@/pages/EnterpriseSsoDetails/index.module.scss';
 
 import { toastResponseError, useCloudApi } from '../../../hooks/use-cloud-api';
@@ -43,6 +45,7 @@ function Details() {
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
+  const [isReadmeOpen, setIsReadmeOpen] = useState(false);
 
   if (!connectorId) {
     return <Navigate replace to={GlobalRoute.ConsoleSso} />;
@@ -126,7 +129,7 @@ function Details() {
                       title: 'enterprise_sso_details.check_connection_guide',
                       icon: <File />,
                       onClick: () => {
-                        // TODO (LOG-14299): Open the localized docs-site connection guide.
+                        setIsReadmeOpen(true);
                       },
                     }}
                     actionMenuItems={[
@@ -140,6 +143,16 @@ function Details() {
                       },
                     ]}
                   />
+                  <Drawer
+                    title="cloud.console_sso.title"
+                    subtitle="cloud.console_sso.description"
+                    isOpen={isReadmeOpen}
+                    onClose={() => {
+                      setIsReadmeOpen(false);
+                    }}
+                  >
+                    <SsoGuide consoleSsoConnector={data} className={connectorStyles.readme} />
+                  </Drawer>
                   <TabNav>
                     <TabNavItem
                       isActive={tab === ConsoleSsoDetailsTab.Connection}
