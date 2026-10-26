@@ -680,6 +680,9 @@
           },
           "401": {
             "description": "Permission denied, the access_token is expired and the offline_access scope is not granted or expired."
+          },
+          "403": {
+            "description": "Permission denied, the access token does not include the identities scope, or the application is a third-party application. Stored third-party provider tokens are only available to first-party applications."
           }
         }
       },
@@ -693,6 +696,9 @@
           },
           "422": {
             "description": "The verification record is invalid; the social identity does not exist; or the access token is not available."
+          },
+          "403": {
+            "description": "Permission denied, the access token does not include the identities scope, or the application is a third-party application. Stored third-party provider tokens are only available to first-party applications."
           }
         }
       }
@@ -711,6 +717,9 @@
           },
           "401": {
             "description": "Permission denied, the access_token is expired and the offline_access scope is not granted or expired."
+          },
+          "403": {
+            "description": "Permission denied, the access token does not include the identities scope, or the application is a third-party application. Stored third-party provider tokens are only available to first-party applications."
           }
         }
       }
