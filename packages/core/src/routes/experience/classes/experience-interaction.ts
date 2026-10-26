@@ -1747,20 +1747,7 @@ export default class ExperienceInteraction {
 
     const input = {
       user,
-      // A registration cannot challenge the implicit email / phone factor derived from the
-      // identifier it is setting as its own second factor, so that factor never makes `mfa`
-      // reachable there. Stored TOTP / WebAuthn factors stay: the registration flow binds them.
-      mfaSettings:
-        this.interactionEvent === InteractionEvent.Register
-          ? {
-              ...mfaSettings,
-              factors: mfaSettings.factors.filter(
-                (factor) =>
-                  factor !== MfaFactor.EmailVerificationCode &&
-                  factor !== MfaFactor.PhoneVerificationCode
-              ),
-            }
-          : mfaSettings,
+      mfaSettings,
       selectedAcr,
       connectors: messageConnectors,
       carried: this.carriedContributions,
@@ -1769,14 +1756,42 @@ export default class ExperienceInteraction {
 
     return computeStepUpEligibility({
       ...input,
-      // Establishing a first factor and enrolling a factor are offered in pure step-up, in a
-      // sign-in with requested ACR, and in a registration, whose flow binds TOTP / WebAuthn; an
-      // ordinary sign-in never gets this far, since it carries no requested class.
-      ...((this.isStepUp ||
-        this.interactionEvent === InteractionEvent.SignIn ||
-        this.interactionEvent === InteractionEvent.Register) &&
-        (await this.getStepUpEnrollmentInput(input, connectors))),
+      ...(await this.getEnrollmentInput(input, connectors)),
     });
+  }
+
+  /**
+   * The enrollment inputs of the interaction. A registration drives only what its flow holds: the
+   * identifier and profile it recorded, and the TOTP / WebAuthn factors `assertMfaFulfilled`
+   * requires, which it binds without proving a first factor first. A step-up or sign-in also offers
+   * establishing a first factor and the factors the tenant lets the user enroll. An ordinary
+   * sign-in never gets this far, since it carries no requested class.
+   */
+  private async getEnrollmentInput(
+    input: StepUpEligibilityInput,
+    connectors: Awaited<ReturnType<TenantContext['connectors']['getLogtoConnectors']>>
+  ): Promise<Partial<StepUpEligibilityInput>> {
+    if (this.interactionEvent === InteractionEvent.Register) {
+      const configuredFactors = await this.signInExperienceValidator.getConfiguredMfaFactors();
+
+      return {
+        hasFreshSubjectProof: this.hasFreshSubjectProof,
+        hasFreshFirstFactor: this.hasFreshFirstFactor,
+        // A registration prompts for neither establishing nor verifying another first factor: the
+        // identifier it verified is already a proof. Only the factors `assertMfaFulfilled` requires
+        // can be bound, and a `both`-class WebAuthn factor reaches `mfa` on its own.
+        tenantEstablishableMethods: [],
+        tenantEnrollableFactors: configuredFactors.filter(
+          (factor) => factor === MfaFactor.TOTP || factor === MfaFactor.WebAuthn
+        ),
+        linkedConnectors: [],
+        registration: true,
+      };
+    }
+
+    return this.isStepUp || this.interactionEvent === InteractionEvent.SignIn
+      ? this.getStepUpEnrollmentInput(input, connectors)
+      : {};
   }
 
   /**
