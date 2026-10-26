@@ -2695,6 +2695,95 @@ describe('ExperienceInteraction class', () => {
       expect(provider.interactionResult).not.toHaveBeenCalled();
     });
 
+    it('pairs the email MFA factor with a distinct first factor instead of dead-ending', async () => {
+      setDevFeaturesEnabled(true);
+      const emailCodeProof: AuthenticationProof = {
+        id: 'email-code',
+        factor: AuthenticationFactor.Email,
+        class: AuthenticationFactorClass.FirstFactor,
+        amr: [AuthenticationMethodReference.Otp],
+        role: AuthenticationProofRole.Identify,
+      };
+      const mfaEmailCodeProof: AuthenticationProof = {
+        id: 'mfa-email',
+        factor: AuthenticationFactor.Email,
+        class: AuthenticationFactorClass.Mfa,
+        amr: [AuthenticationMethodReference.Otp],
+        role: AuthenticationProofRole.Mfa,
+      };
+      const createEmailMfaInteraction = (
+        authenticationProofs: AuthenticationProof[],
+        verificationRecords: Array<Record<string, unknown>> = []
+      ) =>
+        createSignInInteraction({
+          // The email code is a first factor and the email MFA factor is the same kind, so only the
+          // password can complete the pair on this tenant.
+          connectors: [{ type: ConnectorType.Email }],
+          signInExperienceOverrides: {
+            mfa: { policy: MfaPolicy.UserControlled, factors: [MfaFactor.EmailVerificationCode] },
+          },
+          interactionResult: {
+            authenticationContext: { requestedAcrValues: [LogtoAcr.Mfa, LogtoAcr.FirstFactor] },
+            authenticationProofs,
+            verificationRecords,
+          },
+        });
+
+      // The proven first factor pairs with no MFA factor: the interaction asks for the password
+      // instead of failing the submission with no prompt.
+      await expect(
+        createEmailMfaInteraction([emailCodeProof]).experienceInteraction.submit()
+      ).rejects.toMatchObject({
+        code: 'session.step_up.require_verification',
+        status: 403,
+        data: { selectedAcr: LogtoAcr.Mfa, availableMethods: [VerificationType.Password] },
+      });
+
+      // The password is a different kind from the email MFA factor, so the MFA gate asks for it.
+      await expect(
+        createEmailMfaInteraction([
+          emailCodeProof,
+          passwordProof(AuthenticationProofRole.Identify),
+        ]).experienceInteraction.submit()
+      ).rejects.toMatchObject({
+        code: 'session.mfa.require_mfa_verification',
+        status: 403,
+        data: { availableFactors: [MfaFactor.EmailVerificationCode] },
+      });
+
+      // Answering it completes the pair and reaches `mfa`.
+      const { experienceInteraction, provider } = createEmailMfaInteraction(
+        [emailCodeProof, passwordProof(AuthenticationProofRole.Identify), mfaEmailCodeProof],
+        [
+          {
+            id: 'mfa-email',
+            type: VerificationType.MfaEmailVerificationCode,
+            identifier: { type: SignInIdentifier.Email, value: mockUser.primaryEmail },
+            templateType: TemplateType.MfaVerification,
+            verified: true,
+          },
+        ]
+      );
+
+      await experienceInteraction.submit();
+
+      expect(provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({
+          login: {
+            accountId: mockUser.id,
+            acr: LogtoAcr.Mfa,
+            amr: [
+              AuthenticationMethodReference.Otp,
+              AuthenticationMethodReference.Password,
+              AuthenticationMethodReference.Mfa,
+            ],
+          },
+        })
+      );
+    });
+
     it('asks for the first factor before the MFA factor on a social sign-in', async () => {
       setDevFeaturesEnabled(true);
       const { experienceInteraction } = createSignInInteraction({
