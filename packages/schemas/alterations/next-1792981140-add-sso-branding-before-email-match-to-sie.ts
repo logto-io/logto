@@ -6,7 +6,7 @@ const alteration: AlterationScript = {
   up: async (pool) => {
     await pool.query(sql`
       alter table sign_in_experiences
-        add column sso_branding_before_email_match boolean not null default true;
+        add column if not exists sso_branding_before_email_match boolean not null default true;
     `);
   },
   down: async (pool) => {
