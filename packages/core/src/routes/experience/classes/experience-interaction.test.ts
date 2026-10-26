@@ -2698,6 +2698,64 @@ describe('ExperienceInteraction class', () => {
       });
     });
 
+    it('enforces a requested ACR on registration only through what the flow can drive', async () => {
+      setDevFeaturesEnabled(true);
+      const createRegistration = (acrValues: LogtoAcr[], factors: MfaFactor[]) =>
+        createSignInInteraction({
+          interactionEvent: InteractionEvent.Register,
+          connectors: [{ type: ConnectorType.Email }],
+          signInExperienceOverrides: {
+            mfa: { policy: MfaPolicy.UserControlled, factors },
+          },
+          interactionResult: {
+            authenticationContext: { requestedAcrValues: acrValues },
+            authenticationProofs: [passwordProof(AuthenticationProofRole.Bind)],
+          },
+        });
+
+      // A registration cannot challenge the implicit email factor as its own second factor, so
+      // `mfa` is unreachable and the request falls back to the listed `1fa`.
+      const fallback = createRegistration(
+        [LogtoAcr.Mfa, LogtoAcr.FirstFactor],
+        [MfaFactor.EmailVerificationCode]
+      );
+      await fallback.experienceInteraction.submit();
+      expect(fallback.provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({
+          login: {
+            accountId: mockUser.id,
+            acr: LogtoAcr.FirstFactor,
+            amr: [AuthenticationMethodReference.Password],
+          },
+        })
+      );
+
+      // With no weaker class to fall back to, the interaction is finished with the OIDC error
+      // before any side effect instead of failing the submission with 403.
+      const unmet = createRegistration([LogtoAcr.Mfa], [MfaFactor.EmailVerificationCode]);
+      await unmet.experienceInteraction.submit();
+      expect(unmet.signInContext.body).toEqual({ redirectTo: 'redirectTo' });
+      expect(unmet.provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({ error: 'unmet_authentication_requirements' })
+      );
+      expect(unmet.signInUserQueries.updateUserById).not.toHaveBeenCalled();
+      expect(unmet.runAction).not.toHaveBeenCalled();
+      expect(unmet.signInContext.appendDataHookContext).not.toHaveBeenCalled();
+      expect(userLibraries.insertUser).not.toHaveBeenCalled();
+
+      // TOTP is bound by the registration flow itself, so `mfa` stays reachable and is enforced.
+      const enroll = createRegistration([LogtoAcr.Mfa], [MfaFactor.TOTP]);
+      await expect(enroll.experienceInteraction.submit()).rejects.toMatchObject({
+        code: 'user.missing_mfa',
+        status: 422,
+        data: { availableFactors: [MfaFactor.TOTP] },
+      });
+    });
+
     it('asks for the first factor before the MFA factor on a social sign-in', async () => {
       setDevFeaturesEnabled(true);
       const { experienceInteraction } = createSignInInteraction({
