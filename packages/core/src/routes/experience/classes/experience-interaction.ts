@@ -1067,8 +1067,10 @@ export default class ExperienceInteraction {
 
     // The first-factor requirement of a requested authentication context joins the chain right
     // before the MFA verification gate, so a first factor is proven before an MFA factor is asked
-    // for, all before the first side effect.
-    const unmetRedirectTo = await this.guardFirstFactor();
+    // for, all before the first side effect. A registration runs no such guard, so its request is
+    // finished as unmet here instead.
+    const unmetRedirectTo =
+      (await this.guardFirstFactor()) ?? (await this.guardUnreachableRequestedAcr());
 
     if (unmetRedirectTo) {
       log?.append({ error: 'unmet_authentication_requirements' });
@@ -1425,6 +1427,26 @@ export default class ExperienceInteraction {
     };
   }
 
+  /**
+   * Finish a registration whose requested class the registration flow cannot reach, with the same
+   * `unmet_authentication_requirements` redirect a sign-in uses and before any side effect. A
+   * registration runs neither of the sign-in guards, so without this the defense-in-depth assert
+   * would reject the submission with 403 instead of returning the client to its application.
+   *
+   * @returns The redirect URL when the interaction was finished as unmet.
+   */
+  private async guardUnreachableRequestedAcr(): Promise<string | undefined> {
+    if (this.interactionEvent !== InteractionEvent.Register) {
+      return;
+    }
+
+    const pursued = await this.getPursuedRequestedAcr();
+
+    if (pursued?.decision && !pursued.decision.isReachable) {
+      return this.finishUnmetAuthenticationRequirements();
+    }
+  }
+
   /** Finish an unreachable authentication request without running sign-in finalization. */
   private async finishUnmetAuthenticationRequirements(): Promise<string> {
     const { provider } = this.tenant;
@@ -1725,7 +1747,20 @@ export default class ExperienceInteraction {
 
     const input = {
       user,
-      mfaSettings,
+      // A registration cannot challenge the implicit email / phone factor derived from the
+      // identifier it is setting as its own second factor, so that factor never makes `mfa`
+      // reachable there. Stored TOTP / WebAuthn factors stay: the registration flow binds them.
+      mfaSettings:
+        this.interactionEvent === InteractionEvent.Register
+          ? {
+              ...mfaSettings,
+              factors: mfaSettings.factors.filter(
+                (factor) =>
+                  factor !== MfaFactor.EmailVerificationCode &&
+                  factor !== MfaFactor.PhoneVerificationCode
+              ),
+            }
+          : mfaSettings,
       selectedAcr,
       connectors: messageConnectors,
       carried: this.carriedContributions,
@@ -1734,10 +1769,12 @@ export default class ExperienceInteraction {
 
     return computeStepUpEligibility({
       ...input,
-      // Establishing a first factor and enrolling a factor are offered in pure step-up and in a
-      // sign-in with requested ACR alike; an ordinary sign-in never gets this far, since it
-      // carries no requested class.
-      ...((this.isStepUp || this.interactionEvent === InteractionEvent.SignIn) &&
+      // Establishing a first factor and enrolling a factor are offered in pure step-up, in a
+      // sign-in with requested ACR, and in a registration, whose flow binds TOTP / WebAuthn; an
+      // ordinary sign-in never gets this far, since it carries no requested class.
+      ...((this.isStepUp ||
+        this.interactionEvent === InteractionEvent.SignIn ||
+        this.interactionEvent === InteractionEvent.Register) &&
         (await this.getStepUpEnrollmentInput(input, connectors))),
     });
   }
