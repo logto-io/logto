@@ -2665,6 +2665,39 @@ describe('ExperienceInteraction class', () => {
       );
     });
 
+    it('ignores an MFA factor whose connector is unavailable when pairing', async () => {
+      setDevFeaturesEnabled(true);
+      const { experienceInteraction } = createSignInInteraction({
+        // The phone MFA factor is enabled and the user has a phone, but no SMS connector is
+        // configured: the only usable pair is the password plus the email MFA factor.
+        connectors: [{ type: ConnectorType.Email }],
+        signInExperienceOverrides: {
+          mfa: {
+            policy: MfaPolicy.UserControlled,
+            factors: [MfaFactor.EmailVerificationCode, MfaFactor.PhoneVerificationCode],
+          },
+        },
+        interactionResult: {
+          authenticationContext: { requestedAcrValues: [LogtoAcr.Mfa, LogtoAcr.FirstFactor] },
+          authenticationProofs: [
+            {
+              id: 'email-code',
+              factor: AuthenticationFactor.Email,
+              class: AuthenticationFactorClass.FirstFactor,
+              amr: [AuthenticationMethodReference.Otp],
+              role: AuthenticationProofRole.Identify,
+            },
+          ],
+        },
+      });
+
+      await expect(experienceInteraction.submit()).rejects.toMatchObject({
+        code: 'session.step_up.require_verification',
+        status: 403,
+        data: { selectedAcr: LogtoAcr.Mfa, availableMethods: [VerificationType.Password] },
+      });
+    });
+
     it('asks for the first factor before the MFA factor on a social sign-in', async () => {
       setDevFeaturesEnabled(true);
       const { experienceInteraction } = createSignInInteraction({
