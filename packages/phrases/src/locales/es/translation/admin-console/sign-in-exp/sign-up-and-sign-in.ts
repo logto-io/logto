@@ -109,6 +109,10 @@ const sign_up_and_sign_in = {
       link: '"Enterprise SSO"',
       suffix: 'sección para configurar más conectores empresariales.',
     },
+    show_sso_branding_before_email_match:
+      'Mostrar nombres y logotipos de conectores SSO antes de que coincida el dominio de correo',
+    show_sso_branding_before_email_match_description:
+      'Cuando está activado, los nombres y logotipos de los conectores SSO se incluyen en la configuración de inicio de sesión pública antes de que coincida un dominio de correo electrónico. Cuando está desactivado, solo se revelan después de una coincidencia.',
     enable_user_registration: 'Habilitar registro de usuario',
     enable_user_registration_description:
       'Habilitar o deshabilitar el registro de usuarios. Una vez deshabilitado, los usuarios aún se pueden agregar en la consola de administración, pero los usuarios ya no pueden establecer cuentas a través de la interfaz de inicio de sesión.',

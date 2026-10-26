@@ -11,6 +11,10 @@ const enterprise_sso_details = {
   custom_branding_title: '顯示',
   custom_branding_description:
     '自定義在終端用戶單點登錄流程中顯示的名稱和圖標。 當為空時，將使用默認值。',
+  custom_branding_visibility_notice:
+    '除非在登入體驗中關閉「在電郵域名匹配前顯示 SSO 連接器名稱和標誌」，否則任何開啟登入頁的人都可以看到顯示名稱和標誌。請勿包含敏感資料。',
+  custom_branding_console_sso_visibility_notice:
+    '在電郵域名匹配前，顯示名稱和標誌可能會在 Console 登入頁上公開可見。請勿包含敏感資料。',
   email_domain_field_name: '企業郵箱域',
   email_domain_field_description:
     '使用此郵箱域的用戶可以使用SSO進行身份驗證。 請驗證該域是否屬於企業。',
