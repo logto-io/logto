@@ -67,6 +67,8 @@ const cloud = {
       'Recommencer peut supprimer votre configuration SSO inachevée. Voulez-vous continuer ?',
     resume_creation:
       'Une création inachevée a été trouvée. Continuez avec le même fournisseur pour récupérer ce connecteur.',
+    creation_charge_notice:
+      "Chaque connecteur SSO de la console coûte <span>{{price, number}} $ par mois</span>. Pour toute assistance, n'hésitez pas à <a>nous contacter</a>.",
   },
   general: {
     onboarding: 'Intégration',
