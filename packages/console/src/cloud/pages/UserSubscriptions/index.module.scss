@@ -26,6 +26,14 @@
   gap: _.unit(1);
 }
 
+.charge {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: _.unit(1) _.unit(2);
+}
+
 .action {
-  text-align: right;
+  display: flex;
+  justify-content: flex-end;
 }

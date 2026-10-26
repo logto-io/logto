@@ -172,7 +172,7 @@ it('shows the list price and the next charge after discounts, without a status t
   expect(screen.queryByText('Active')).toBeNull();
   expect(screen.queryByText('Status')).toBeNull();
   expect(screen.queryByText('Billing period')).toBeNull();
-  expect(screen.getByRole('button', { name: 'Manage payment' })).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'Manage' })).toBeTruthy();
   expect(screen.queryByText(/Payment is overdue/)).toBeNull();
 });
 
@@ -200,7 +200,8 @@ it('shows an end date instead of a next charge for a scheduled cancellation', ()
     mutate,
   } as unknown as ReturnType<typeof useUserSubscriptions>);
   renderView(createElement(PersonalSubscriptions));
-  expect(screen.getByText('Cancels Nov 1, 2026')).toBeTruthy();
+  // The end date already says it is ending, so the row carries no separate cancellation tag.
+  expect(screen.queryByText(/^Cancels/)).toBeNull();
   expect(screen.getByText('Ends Nov 1, 2026')).toBeTruthy();
   expect(screen.getByText('—')).toBeTruthy();
   expect(screen.queryByText('$230.40')).toBeNull();
@@ -214,7 +215,7 @@ it('opens the Stripe customer portal of the row subscription', async () => {
   } as unknown as ReturnType<typeof useUserSubscriptions>);
   post.mockReturnValue(new Promise(noop));
   renderView(createElement(PersonalSubscriptions));
-  fireEvent.click(screen.getAllByRole('button', { name: 'Manage payment' })[1]!);
+  fireEvent.click(screen.getAllByRole('button', { name: 'Manage' })[1]!);
   await waitFor(() => {
     expect(post).toHaveBeenCalledWith('/api/me/user-subscriptions/:id/stripe-customer-portal', {
       params: { id: 'sub-license' },
@@ -260,7 +261,7 @@ it('hides ended subscriptions but keeps unknown products', () => {
   expect(screen.getByText('Other subscription')).toBeTruthy();
   expect(screen.queryByText('Console SSO')).toBeNull();
   expect(screen.queryByText('Self-hosted licenses')).toBeNull();
-  expect(screen.getAllByRole('button', { name: 'Manage payment' })).toHaveLength(1);
+  expect(screen.getAllByRole('button', { name: 'Manage' })).toHaveLength(1);
 });
 
 it.each([
@@ -276,7 +277,13 @@ it.each([
   } as unknown as ReturnType<typeof useUserSubscriptions>);
   renderView(createElement(PersonalSubscriptions));
   expect(Boolean(screen.queryByText(/Payment is overdue/))).toBe(isShown);
-  expect(Boolean(screen.queryByText(/^(Past due|Unpaid)$/))).toBe(isShown);
+  const tag = screen.queryByText(/^(Past due|Unpaid)$/);
+  expect(Boolean(tag)).toBe(isShown);
+  if (tag) {
+    // The overdue tag sits with the charge it concerns, leaving the product name room.
+    expect(tag.closest('td')?.textContent).toContain('$230.40');
+    expect(tag.closest('td')?.textContent).not.toContain('Console SSO');
+  }
 });
 
 it('shows the original Enterprise plan card for the first Enterprise above personal subscriptions', async () => {

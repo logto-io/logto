@@ -15,8 +15,9 @@ function ManagePaymentButton({ subscriptionId }: Props) {
 
   return (
     <Button
+      type="text"
       size="small"
-      title="subscription.manage_payment"
+      title="general.manage"
       isLoading={isLoading}
       onClick={async () => {
         setIsLoading(true);

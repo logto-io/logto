@@ -5,7 +5,6 @@ import Tip from '@/assets/icons/tip.svg?react';
 import { useUserSubscriptions } from '@/cloud/hooks/use-user-subscriptions';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import FormCard from '@/components/FormCard';
-import ItemPreview from '@/components/ItemPreview';
 import DynamicT from '@/ds-components/DynamicT';
 import IconButton from '@/ds-components/IconButton';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -21,7 +20,6 @@ import {
   formatUnitPrice,
   getNextCharge,
   getProductTitleKey,
-  getScheduledCancellation,
   isCurrentSubscription,
   isPaymentOverdue,
 } from './utils';
@@ -51,35 +49,14 @@ function PersonalSubscriptions() {
           {
             title: t('enterprise_subscription.subscription.basic_plan_column_title.product'),
             dataIndex: 'id',
-            render: (subscription) => {
-              const scheduled = getScheduledCancellation(subscription);
-              return (
-                <ItemPreview
-                  title={t(getProductTitleKey(subscription.product))}
-                  suffix={
-                    isPaymentOverdue(subscription) ? (
-                      <Tag type="state" status="error">
-                        {t(
-                          `enterprise_subscription.user_subscriptions.status.${subscription.status}`
-                        )}
-                      </Tag>
-                    ) : (
-                      scheduled && (
-                        <Tag type="state" status="alert">
-                          {t('enterprise_subscription.user_subscriptions.cancels_on', {
-                            date: formatDate(scheduled),
-                          })}
-                        </Tag>
-                      )
-                    )
-                  }
-                />
-              );
-            },
+            colSpan: 6,
+            // Plain text wraps; long localized product names must not be truncated.
+            render: ({ product }) => t(getProductTitleKey(product)),
           },
           {
             title: t('enterprise_subscription.user_subscriptions.price'),
             dataIndex: 'items',
+            colSpan: 5,
             render: ({ items }) =>
               items.length === 0
                 ? '—'
@@ -107,14 +84,23 @@ function PersonalSubscriptions() {
               </span>
             ),
             dataIndex: 'upcomingInvoice',
+            colSpan: 6,
             render: (subscription) => {
               const { amount, currency, date, isEnding } = getNextCharge(subscription);
               return (
                 <>
-                  <div>
+                  <div className={styles.charge}>
                     {amount === undefined
                       ? '—'
                       : formatCurrencyAmount(amount, currency, i18n.language)}
+                    {/* Only payment problems need a tag; an ending subscription already says so. */}
+                    {isPaymentOverdue(subscription) && (
+                      <Tag type="state" status="error">
+                        {t(
+                          `enterprise_subscription.user_subscriptions.status.${subscription.status}`
+                        )}
+                      </Tag>
+                    )}
                   </div>
                   <div className={styles.note}>
                     {isEnding
@@ -130,8 +116,12 @@ function PersonalSubscriptions() {
           {
             title: null,
             dataIndex: 'action',
-            className: styles.action,
-            render: ({ id }) => <ManagePaymentButton subscriptionId={id} />,
+            colSpan: 4,
+            render: ({ id }) => (
+              <div className={styles.action}>
+                <ManagePaymentButton subscriptionId={id} />
+              </div>
+            ),
           },
         ]}
         onRetry={() => {

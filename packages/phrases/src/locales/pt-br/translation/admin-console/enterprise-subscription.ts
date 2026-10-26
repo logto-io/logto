@@ -41,7 +41,6 @@ const enterprise_subscription = {
       'Assinaturas ativas cobradas da sua conta. As assinaturas anteriores continuam no histórico de cobranças.',
     price: 'Preço',
     next_charge: 'Próxima cobrança',
-    cancels_on: 'Cancela em {{date}}',
     ends_on: 'Termina em {{date}}',
     overdue_note:
       'O pagamento está atrasado. Se continuar sem pagamento, a assinatura pode ser pausada e seus recursos pagos removidos.',

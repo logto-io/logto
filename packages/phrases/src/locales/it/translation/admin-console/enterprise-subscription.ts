@@ -42,7 +42,6 @@ const enterprise_subscription = {
       'Abbonamenti attivi fatturati al tuo account. Quelli passati restano nello storico fatturazioni.',
     price: 'Prezzo',
     next_charge: 'Prossimo addebito',
-    cancels_on: 'Si annulla il {{date}}',
     ends_on: 'Termina il {{date}}',
     overdue_note:
       'Il pagamento è scaduto. Se resta non pagato, l’abbonamento può essere sospeso e le sue funzionalità a pagamento rimosse.',

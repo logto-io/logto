@@ -38,7 +38,6 @@ const enterprise_subscription = {
     personal_description: '由你的帳戶支付的有效訂閱。歷史訂閱保留在賬單歷史中。',
     price: '價格',
     next_charge: '下次扣款',
-    cancels_on: '將於 {{date}} 取消',
     ends_on: '於 {{date}} 結束',
     overdue_note: '付款已逾期。如仍未付款，訂閱可能會被暫停，其付費功能可能會被移除。',
     other_product: '其他訂閱',

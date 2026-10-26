@@ -42,7 +42,6 @@ const enterprise_subscription = {
       'Abonnements actifs facturés à votre compte. Les abonnements passés restent dans l’historique de facturation.',
     price: 'Prix',
     next_charge: 'Prochain prélèvement',
-    cancels_on: 'Résilié le {{date}}',
     ends_on: 'Se termine le {{date}}',
     overdue_note:
       'Le paiement est en retard. S’il reste impayé, l’abonnement peut être suspendu et ses fonctionnalités payantes supprimées.',

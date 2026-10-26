@@ -41,7 +41,6 @@ const enterprise_subscription = {
       'Hesabınıza faturalandırılan etkin abonelikler. Geçmiş abonelikler fatura geçmişinde kalır.',
     price: 'Fiyat',
     next_charge: 'Sonraki ödeme',
-    cancels_on: '{{date}} tarihinde iptal',
     ends_on: '{{date}} tarihinde sona erer',
     overdue_note:
       'Ödemenin vadesi geçti. Ödenmemeye devam ederse abonelik duraklatılabilir ve ücretli özellikleri kaldırılabilir.',

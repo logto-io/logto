@@ -41,7 +41,6 @@ const enterprise_subscription = {
       'Subscrições ativas faturadas à sua conta. As subscrições anteriores mantêm-se no histórico de faturação.',
     price: 'Preço',
     next_charge: 'Próxima cobrança',
-    cancels_on: 'Cancela a {{date}}',
     ends_on: 'Termina a {{date}}',
     overdue_note:
       'O pagamento está em atraso. Se continuar por pagar, a subscrição pode ser suspensa e as suas funcionalidades pagas removidas.',

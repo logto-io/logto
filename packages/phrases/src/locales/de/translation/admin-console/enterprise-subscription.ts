@@ -41,7 +41,6 @@ const enterprise_subscription = {
       'Aktive Abonnements, die Ihrem Konto in Rechnung gestellt werden. Frühere Abonnements finden Sie im Zahlungsverlauf.',
     price: 'Preis',
     next_charge: 'Nächste Abbuchung',
-    cancels_on: 'Endet zum {{date}}',
     ends_on: 'Endet am {{date}}',
     overdue_note:
       'Die Zahlung ist überfällig. Bleibt sie unbezahlt, kann das Abonnement pausiert und seine kostenpflichtigen Funktionen entfernt werden.',

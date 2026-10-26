@@ -41,7 +41,6 @@ const enterprise_subscription = {
       'Aktywne subskrypcje rozliczane na Twoim koncie. Wcześniejsze subskrypcje pozostają w historii rozliczeń.',
     price: 'Cena',
     next_charge: 'Następna płatność',
-    cancels_on: 'Anulowanie {{date}}',
     ends_on: 'Kończy się {{date}}',
     overdue_note:
       'Płatność jest zaległa. Jeśli pozostanie nieopłacona, subskrypcja może zostać wstrzymana, a jej płatne funkcje usunięte.',

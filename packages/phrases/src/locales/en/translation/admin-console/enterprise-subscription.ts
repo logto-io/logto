@@ -40,7 +40,6 @@ const enterprise_subscription = {
       'Active subscriptions billed to your account. Past subscriptions stay in Billing history.',
     price: 'Price',
     next_charge: 'Next charge',
-    cancels_on: 'Cancels {{date}}',
     ends_on: 'Ends {{date}}',
     overdue_note:
       'Payment is overdue. If it remains unpaid, the subscription may be paused and its paid features removed.',

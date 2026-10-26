@@ -38,7 +38,6 @@ const enterprise_subscription = {
     personal_description: '계정에 청구되는 활성 구독입니다. 과거 구독은 청구 내역에 남아 있습니다.',
     price: '가격',
     next_charge: '다음 청구',
-    cancels_on: '{{date}}에 취소',
     ends_on: '{{date}}에 종료',
     overdue_note:
       '결제가 연체되었습니다. 계속 미납되면 구독이 일시 중지되고 유료 기능이 제거될 수 있습니다.',

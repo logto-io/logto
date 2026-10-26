@@ -40,7 +40,6 @@ const enterprise_subscription = {
       'アカウントに請求される有効なサブスクリプションです。過去のサブスクリプションは請求履歴に残ります。',
     price: '価格',
     next_charge: '次回の請求',
-    cancels_on: '{{date}} に解約',
     ends_on: '{{date}} に終了',
     overdue_note:
       '支払いが期限を過ぎています。未払いのままの場合、サブスクリプションが一時停止され、有料機能が削除されることがあります。',
