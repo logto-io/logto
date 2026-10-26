@@ -79,6 +79,17 @@ export const defaultMetadata: ConnectorMetadata = {
       required: false,
       defaultValue: {},
     },
+    {
+      key: 'disableEmailSync',
+      type: ConnectorConfigFormItemType.Switch,
+      required: false,
+      label: 'Disable Email Sync',
+      description:
+        'Stop syncing the mapped `email` value to the user profile. Turn this on if you do not want the provider to supply the email address.',
+      tooltip:
+        'The standard OAuth2 protocol reports no verification state, so whatever the user info endpoint maps to `email` is taken at face value. Turning this on leaves the address in `rawData` only.',
+      defaultValue: false,
+    },
   ],
   isTokenStorageSupported: true,
 };
