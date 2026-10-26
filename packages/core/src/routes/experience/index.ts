@@ -105,19 +105,21 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
 
       ctx.experienceInteraction = experienceInteraction;
 
-      // A pure step-up whose pinned user has no method that can reach the selected class is
-      // finished here, and the client is sent back to the application with the OIDC error.
-      const redirectTo = await experienceInteraction.finishUnreachableStepUp();
+      // A pure step-up that needs no UI is finished here, before anything is rendered: either the
+      // session's context already satisfies the class it pursues, or the pinned user cannot reach
+      // that class at all. The latter is returned to the client as the OIDC error
+      // `unmet_authentication_requirements`.
+      const finished = await experienceInteraction.finishStepUpAtCreation();
 
-      if (redirectTo) {
+      if (finished) {
         log.append({
           interaction: experienceInteraction.toJson(),
           // The subject is pinned but unverified, so `identifiedUserId` is unset here.
           userId: experienceInteraction.subjectUserId,
-          error: 'unmet_authentication_requirements',
+          ...conditional(finished.unmet && { error: 'unmet_authentication_requirements' }),
         });
 
-        ctx.body = { redirectTo };
+        ctx.body = { redirectTo: finished.redirectTo };
         ctx.status = 200;
 
         return next();
