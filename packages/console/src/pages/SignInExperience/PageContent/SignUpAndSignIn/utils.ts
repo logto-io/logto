@@ -7,13 +7,17 @@ import {
   type SignUpIdentifier as SignUpIdentifierMethod,
 } from '@logto/schemas';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
+
 export const createSignInMethod = (identifier: SignInIdentifier, mfaFactors: MfaFactor[] = []) => {
-  // Check if the identifier is already used in MFA factors
+  // Coexistence of email/phone verification-code sign-in and MFA.
   const isVerificationCodeDisabled =
     identifier === SignInIdentifier.Username ||
-    (identifier === SignInIdentifier.Email &&
-      mfaFactors.includes(MfaFactor.EmailVerificationCode)) ||
-    (identifier === SignInIdentifier.Phone && mfaFactors.includes(MfaFactor.PhoneVerificationCode));
+    (!isDevFeaturesEnabled &&
+      ((identifier === SignInIdentifier.Email &&
+        mfaFactors.includes(MfaFactor.EmailVerificationCode)) ||
+        (identifier === SignInIdentifier.Phone &&
+          mfaFactors.includes(MfaFactor.PhoneVerificationCode))));
 
   return {
     identifier,

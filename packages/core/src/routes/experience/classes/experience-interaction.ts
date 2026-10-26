@@ -681,28 +681,34 @@ export default class ExperienceInteraction {
 
     const mfaValidator = new MfaValidator(mfaSettings, user, adaptiveMfaResult);
 
-    // A requested `mfa` only offers the factors that pair with the first factor already proven:
-    // a factor of the same kind (an MFA email code after an email sign-in) counts once and never
-    // lifts the context to `mfa`.
-    const availableFactors = isRequestedMfaUnmet
-      ? this.getPairableMfaFactors(mfaValidator.availableUserMfaVerificationTypes)
-      : mfaValidator.availableUserMfaVerificationTypes;
+    // A factor that already served as the first factor of this interaction cannot be asked for
+    // again as its own second factor: an email / phone verification code sign-in has proven
+    // possession of that channel, so its MFA code is not prompted again. Other enrolled factors
+    // (TOTP, WebAuthn, ...) remain available.
+    const availableFactors = this.getChallengeableMfaFactors(
+      mfaValidator.availableUserMfaVerificationTypes,
+      isRequestedMfaUnmet
+    );
 
     // Declared non-proof: an adaptive-MFA non-trigger result skips the gate and proves nothing,
     // so it records no authentication proof.
     // A requested `mfa` is enforced here only with a pairable enrolled factor to verify with; a
     // user who has none reaches the enrollment requirement of `assertMfaFulfilled` instead.
+    // An ordinary sign-in also skips the gate when every enrolled factor is the first factor
+    // already proven, since a same-factor challenge would not add a second factor.
     const isMfaRequired = isRequestedMfaUnmet
       ? availableFactors.length > 0
-      : mfaValidator.isMfaRequired;
+      : mfaValidator.isMfaRequired && availableFactors.length > 0;
 
     if (!isMfaRequired) {
       return;
     }
 
-    // A verified MFA record satisfies the tenant's policy, but while a requested `mfa` is unmet it
-    // has not lifted the context, so the gate keeps asking for a pairable factor.
-    if (!isRequestedMfaUnmet && mfaValidator.isMfaVerified(this.verificationRecordsArray)) {
+    // A verified MFA record satisfies the tenant's policy only when it is a factor the gate may
+    // still challenge: a verified code of the first factor's own kind is not a second factor and
+    // cannot stand in for another bound factor. While a requested `mfa` is unmet, the gate keeps
+    // asking for a pairable factor regardless.
+    if (!isRequestedMfaUnmet && this.isMfaVerified(mfaValidator)) {
       return;
     }
 
@@ -1446,7 +1452,9 @@ export default class ExperienceInteraction {
     const mfaValidator = new MfaValidator(mfaSettings, user);
     const hasEligibleVerification = mfaValidator.hasEligibleTrustedDeviceVerification(
       this.verificationRecordsArray,
-      this.profile.data
+      this.profile.data,
+      // Coexistence of email/phone verification-code sign-in and MFA.
+      EnvSet.values.isDevFeaturesEnabled ? this.sameFactorMfaFactors : []
     );
 
     const hasEligibleBinding = this.mfa.bindMfaFactorsArray.some(
@@ -1511,25 +1519,91 @@ export default class ExperienceInteraction {
   }
 
   /**
-   * The factors that can fill the `mfa` side of a pair with the first factor this interaction has
-   * proven: a factor of the same kind as a first-factor proof is dropped. With no first-factor
-   * proof, none is kept: {@link guardFirstFactor} runs first, so reaching the MFA gate without one
-   * means no first factor can be proven, and an `mfa`-class proof alone never lifts the context.
+   * Whether the interaction has answered an MFA challenge that can satisfy the gate. A verified
+   * code of the first factor's own kind is not a second factor; the legacy behavior is kept when
+   * the coexistence feature is disabled.
    */
-  private getPairableMfaFactors(factors: readonly MfaFactor[]): MfaFactor[] {
+  private isMfaVerified(mfaValidator: MfaValidator): boolean {
+    // Coexistence of email/phone verification-code sign-in and MFA.
+    return mfaValidator.isMfaVerified(
+      this.verificationRecordsArray,
+      EnvSet.values.isDevFeaturesEnabled ? this.sameFactorMfaFactors : []
+    );
+  }
+
+  /**
+   * The enrolled MFA factors the current interaction may still challenge. A requested `mfa` only
+   * reads pairable factors, and with no first-factor proof none can pair. An ordinary sign-in
+   * keeps the full list when no first factor was proven here, and otherwise drops the factors of
+   * the first factor's kind.
+   */
+  private getChallengeableMfaFactors(
+    factors: readonly MfaFactor[],
+    isRequestedMfaUnmet: boolean
+  ): MfaFactor[] {
+    // Coexistence of email/phone verification-code sign-in and MFA.
+    if (!EnvSet.values.isDevFeaturesEnabled) {
+      return isRequestedMfaUnmet ? this.getPairableMfaFactors(factors) : [...factors];
+    }
+
+    const candidates =
+      !isRequestedMfaUnmet && !this.hasFreshFirstFactor
+        ? [...factors]
+        : this.getPairableMfaFactors(factors);
+
+    // Backup codes are a fallback for another primary factor, not a standalone second factor on
+    // an ordinary sign-in. If the challengeable set is only backup codes, there is nothing left
+    // to ask for. A requested `mfa` may still use a backup code to lift `1fa`.
+    return !isRequestedMfaUnmet &&
+      candidates.length > 0 &&
+      candidates.every((factor) => factor === MfaFactor.BackupCode)
+      ? []
+      : candidates;
+  }
+
+  /**
+   * The MFA factors whose kind the interaction already proved as its sign-in factor. A challenge
+   * for one of them would repeat the same factor instead of adding a second one. Only `identify`
+   * proofs count: a credential bound through the profile is not the sign-in method.
+   */
+  private get sameFactorMfaFactors(): MfaFactor[] {
     if (!this.hasFreshFirstFactor) {
       return [];
     }
 
     const firstFactors = new Set(
       this.authenticationProofs.proofs
-        .filter(({ class: factorClass }) => factorClass === AuthenticationFactorClass.FirstFactor)
+        .filter(
+          ({ class: factorClass, role }) =>
+            role === AuthenticationProofRole.Identify &&
+            factorClass === AuthenticationFactorClass.FirstFactor
+        )
         .map(({ factor }) => factor)
     );
 
-    return factors.filter(
-      (factor) => !firstFactors.has(getAuthenticationFactor(mfaFactorToVerificationType[factor]))
+    return Object.values(MfaFactor).filter((factor) =>
+      firstFactors.has(getAuthenticationFactor(mfaFactorToVerificationType[factor]))
     );
+  }
+
+  /**
+   * The factors that can fill the `mfa` side of a pair with the first factor this interaction has
+   * proven: a factor of the same kind as a first-factor proof is dropped. This is what keeps an
+   * email / phone verification code sign-in from being challenged for its own MFA code again,
+   * while a factor of another kind (TOTP, WebAuthn, ...) still pairs with it.
+   *
+   * With no first-factor proof, none is kept: for a requested `mfa`, {@link guardFirstFactor} runs
+   * first, so reaching the MFA gate without one means no first factor can be proven, and an
+   * `mfa`-class proof alone never lifts the context.
+   */
+  private getPairableMfaFactors(factors: readonly MfaFactor[]): MfaFactor[] {
+    if (!this.hasFreshFirstFactor) {
+      return [];
+    }
+
+    const sameFactorMfaFactors = new Set(this.sameFactorMfaFactors);
+
+    return factors.filter((factor) => !sameFactorMfaFactors.has(factor));
   }
 
   /**

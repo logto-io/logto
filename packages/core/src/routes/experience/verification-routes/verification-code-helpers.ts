@@ -289,8 +289,9 @@ type GetMfaIdentifierParams = {
 
 /**
  * Helper to get MFA identifier from user profile. The factor must be enabled in the sign-in
- * experience: otherwise a sign-in could request a second code for the very contact that already
- * identified the user, which is a second proof of the same factor and not a second factor.
+ * experience. When the email/phone verification-code sign-in and MFA coexistence feature is
+ * enabled, the interaction's MFA gate never asks for a factor of the same kind as the first factor
+ * it already proved; otherwise the legacy cross-check applies.
  * @internal
  */
 export const getMfaIdentifier = async ({

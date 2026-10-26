@@ -7,12 +7,16 @@ import {
   mockSignUp,
 } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { resetDevFeaturesEnabled, setDevFeaturesEnabled } from '#src/test-utils/dev-features.js';
 
 import { validateSignIn } from './sign-in.js';
 
 const enabledConnectors = [mockAliyunDmConnector, mockAliyunSmsConnector];
 
 describe('validate sign-in', () => {
+  afterEach(() => {
+    resetDevFeaturesEnabled();
+  });
   describe('pass on valid cases', () => {
     test('email or phone sign up', () => {
       expect(() => {
@@ -174,8 +178,10 @@ describe('validate sign-in', () => {
     );
   });
 
-  describe('MFA conflicts', () => {
-    test('should throw when email verification code is used for both sign-in and MFA', () => {
+  describe('verification-code sign-in and MFA coexistence', () => {
+    it('should reject email verification code sign-in when email MFA is enabled with dev features disabled', () => {
+      setDevFeaturesEnabled(false);
+
       expect(() => {
         validateSignIn(
           {
@@ -202,7 +208,9 @@ describe('validate sign-in', () => {
       );
     });
 
-    test('should throw when phone verification code is used for both sign-in and MFA', () => {
+    it('should reject phone verification code sign-in when phone MFA is enabled with dev features disabled', () => {
+      setDevFeaturesEnabled(false);
+
       expect(() => {
         validateSignIn(
           {
@@ -229,7 +237,9 @@ describe('validate sign-in', () => {
       );
     });
 
-    test('should pass when email is used with password and MFA uses email verification code', () => {
+    it('should allow email and phone verification code sign-in with the matching MFA factor with dev features enabled', () => {
+      setDevFeaturesEnabled(true);
+
       expect(() => {
         validateSignIn(
           {
@@ -237,8 +247,8 @@ describe('validate sign-in', () => {
               {
                 ...mockSignInMethod,
                 identifier: SignInIdentifier.Email,
-                verificationCode: false,
-                password: true,
+                verificationCode: true,
+                password: false,
               },
             ],
           },
@@ -249,19 +259,14 @@ describe('validate sign-in', () => {
             factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
           }
         );
-      }).not.toThrow();
-    });
-
-    test('should pass when phone is used with password and MFA uses phone verification code', () => {
-      expect(() => {
         validateSignIn(
           {
             methods: [
               {
                 ...mockSignInMethod,
                 identifier: SignInIdentifier.Phone,
-                verificationCode: false,
-                password: true,
+                verificationCode: true,
+                password: false,
               },
             ],
           },
@@ -269,7 +274,7 @@ describe('validate sign-in', () => {
           enabledConnectors,
           {
             policy: MfaPolicy.Mandatory,
-            factors: [MfaFactor.PhoneVerificationCode, MfaFactor.TOTP],
+            factors: [MfaFactor.PhoneVerificationCode, MfaFactor.BackupCode],
           }
         );
       }).not.toThrow();

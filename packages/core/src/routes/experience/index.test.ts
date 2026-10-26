@@ -1380,6 +1380,49 @@ describe('POST /experience/submit', () => {
     expect(createCredential).not.toHaveBeenCalled();
   });
 
+  it('should exclude a same-factor MFA code from trusted-device creation when coexistence is enabled', async () => {
+    setDevFeaturesEnabled(true);
+    const user = {
+      ...mockUser,
+      mfaVerifications: [],
+    };
+    const { requester, createCredential } = createRequesterWithMocks({
+      user,
+      mfa: {
+        policy: MfaPolicy.PromptAtSignInAndSignUp,
+        factors: [MfaFactor.EmailVerificationCode],
+      },
+      interactionResult: {
+        authenticationProofs: [
+          {
+            id: 'email-code',
+            factor: AuthenticationFactor.Email,
+            class: AuthenticationFactorClass.FirstFactor,
+            amr: [AuthenticationMethodReference.Otp],
+            role: AuthenticationProofRole.Identify,
+          },
+        ],
+        verificationRecords: [
+          {
+            id: 'mfa-email',
+            type: VerificationType.MfaEmailVerificationCode,
+            identifier: { type: SignInIdentifier.Email, value: mockUser.primaryEmail },
+            templateType: TemplateType.MfaVerification,
+            verified: true,
+          },
+        ],
+      },
+      trustedDevicePolicy: { enabled: true, durationDays: 30 },
+    });
+
+    const response = await requester
+      .post('/experience/profile/trusted-device')
+      .send({ trusted: true });
+
+    expect(response.status).toBe(403);
+    expect(createCredential).not.toHaveBeenCalled();
+  });
+
   it('should exclude a verified MFA factor that is disabled in the sign-in experience', async () => {
     setDevFeaturesEnabled(false);
     const user = {

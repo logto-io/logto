@@ -20,7 +20,7 @@ import FormCard from '@/components/FormCard';
 import InlineUpsell from '@/components/InlineUpsell';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { mfa } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
@@ -97,6 +97,7 @@ function MfaForm({ data, adaptiveMfa, trustedDevice, signInMethods, onMfaUpdated
     return validateBackupCodeFactor(factors);
   }, [formValues]);
 
+  // Coexistence of email/phone verification-code sign-in and MFA.
   const isEmailCodePrimarySignInMethod = useMemo(() => {
     return signInMethods.some(
       (method) => method.identifier === SignInIdentifier.Email && method.verificationCode
@@ -309,10 +310,14 @@ function MfaForm({ data, adaptiveMfa, trustedDevice, signInMethods, onMfaUpdated
               />
               <div>
                 <Switch
-                  disabled={isMfaDisabled || isPhoneCodePrimarySignInMethod}
+                  disabled={
+                    isMfaDisabled || (!isDevFeaturesEnabled && isPhoneCodePrimarySignInMethod)
+                  }
                   label={<FactorLabel type={MfaFactor.PhoneVerificationCode} />}
                   tooltip={
-                    isPhoneCodePrimarySignInMethod ? t('mfa.phone_primary_method_tip') : undefined
+                    !isDevFeaturesEnabled && isPhoneCodePrimarySignInMethod
+                      ? t('mfa.phone_primary_method_tip')
+                      : undefined
                   }
                   {...register('phoneVerificationCodeEnabled')}
                 />
@@ -332,10 +337,14 @@ function MfaForm({ data, adaptiveMfa, trustedDevice, signInMethods, onMfaUpdated
               </div>
               <div>
                 <Switch
-                  disabled={isMfaDisabled || isEmailCodePrimarySignInMethod}
+                  disabled={
+                    isMfaDisabled || (!isDevFeaturesEnabled && isEmailCodePrimarySignInMethod)
+                  }
                   label={<FactorLabel type={MfaFactor.EmailVerificationCode} />}
                   tooltip={
-                    isEmailCodePrimarySignInMethod ? t('mfa.email_primary_method_tip') : undefined
+                    !isDevFeaturesEnabled && isEmailCodePrimarySignInMethod
+                      ? t('mfa.email_primary_method_tip')
+                      : undefined
                   }
                   {...register('emailVerificationCodeEnabled')}
                 />

@@ -33,6 +33,7 @@ import { conditional } from '@silverhand/essentials';
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import {
   mockUser,
+  mockUserBackupCodeMfaVerification,
   mockUserTotpMfaVerification,
   mockUserWithMfaVerifications,
 } from '#src/__mocks__/user.js';
@@ -72,6 +73,22 @@ const passwordProof = (role: AuthenticationProofRole): AuthenticationProof => ({
   factor: AuthenticationFactor.Password,
   class: AuthenticationFactorClass.FirstFactor,
   amr: [AuthenticationMethodReference.Password],
+  role,
+});
+/** The proof an email verification code sign-in records as the first factor. */
+const emailCodeProof = (role: AuthenticationProofRole): AuthenticationProof => ({
+  id: 'email-code',
+  factor: AuthenticationFactor.Email,
+  class: AuthenticationFactorClass.FirstFactor,
+  amr: [AuthenticationMethodReference.Otp],
+  role,
+});
+/** The proof a phone verification code sign-in records as the first factor. */
+const phoneCodeProof = (role: AuthenticationProofRole): AuthenticationProof => ({
+  id: 'phone-code',
+  factor: AuthenticationFactor.Phone,
+  class: AuthenticationFactorClass.FirstFactor,
+  amr: [AuthenticationMethodReference.Otp],
   role,
 });
 /** The proof a user-verified passkey records: `both`-class, it reaches `mfa` alone. */
@@ -919,6 +936,260 @@ describe('ExperienceInteraction class', () => {
         -122.4194
       );
       expect(userSignInCountries.upsertUserSignInCountry).toHaveBeenCalledWith(mockUser.id, 'US');
+    });
+  });
+
+  describe('same-factor MFA overlap', () => {
+    beforeEach(() => {
+      setDevFeaturesEnabled(true);
+    });
+
+    it('does not ask for the email MFA code again after an email code sign-in', async () => {
+      const { experienceInteraction, provider } = createSignInInteraction({
+        user: mockUser,
+        signInExperienceOverrides: {
+          mfa: {
+            policy: MfaPolicy.PromptAtSignInAndSignUp,
+            factors: [MfaFactor.EmailVerificationCode],
+          },
+        },
+        interactionResult: {
+          authenticationProofs: [emailCodeProof(AuthenticationProofRole.Identify)],
+        },
+      });
+
+      await expect(experienceInteraction.submit()).resolves.toBeUndefined();
+      expect(provider.interactionResult).toHaveBeenCalled();
+    });
+
+    it('keeps the same-factor MFA challenge when dev features are disabled', async () => {
+      setDevFeaturesEnabled(false);
+
+      const { experienceInteraction } = createSignInInteraction({
+        user: mockUser,
+        signInExperienceOverrides: {
+          mfa: {
+            policy: MfaPolicy.PromptAtSignInAndSignUp,
+            factors: [MfaFactor.EmailVerificationCode],
+          },
+        },
+        interactionResult: {
+          authenticationProofs: [emailCodeProof(AuthenticationProofRole.Identify)],
+        },
+      });
+
+      await expect(experienceInteraction.submit()).rejects.toMatchObject({
+        code: 'session.mfa.require_mfa_verification',
+        status: 403,
+        data: { availableFactors: [MfaFactor.EmailVerificationCode] },
+      });
+    });
+
+    it('does not treat a profile email bind as the sign-in first factor', async () => {
+      const { experienceInteraction } = createSignInInteraction({
+        user: mockUserWithMfaVerifications,
+        signInExperienceOverrides: {
+          mfa: {
+            policy: MfaPolicy.PromptAtSignInAndSignUp,
+            factors: [MfaFactor.TOTP, MfaFactor.EmailVerificationCode],
+          },
+        },
+        interactionResult: {
+          authenticationProofs: [
+            passwordProof(AuthenticationProofRole.Identify),
+            emailCodeProof(AuthenticationProofRole.Bind),
+          ],
+          verificationRecords: [
+            {
+              id: 'mfa-email',
+              type: VerificationType.MfaEmailVerificationCode,
+              identifier: { type: SignInIdentifier.Email, value: mockUser.primaryEmail },
+              templateType: TemplateType.MfaVerification,
+              verified: true,
+            },
+          ],
+        },
+      });
+
+      await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.toBeUndefined();
+    });
+
+    it('does not challenge backup codes alone after a social sign-in', async () => {
+      const { experienceInteraction } = createSignInInteraction({
+        user: {
+          ...mockUser,
+          primaryEmail: null,
+          primaryPhone: null,
+          mfaVerifications: [mockUserBackupCodeMfaVerification],
+        },
+        signInExperienceOverrides: {
+          mfa: {
+            policy: MfaPolicy.PromptAtSignInAndSignUp,
+            factors: [MfaFactor.TOTP, MfaFactor.BackupCode],
+          },
+        },
+        interactionResult: {
+          authenticationProofs: [federatedProof(AuthenticationProofRole.Identify)],
+        },
+      });
+
+      await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.toBeUndefined();
+    });
+
+    it('does not ask for the phone MFA code again after a phone code sign-in', async () => {
+      const { experienceInteraction, provider } = createSignInInteraction({
+        user: mockUser,
+        signInExperienceOverrides: {
+          mfa: {
+            policy: MfaPolicy.PromptAtSignInAndSignUp,
+            factors: [MfaFactor.PhoneVerificationCode],
+          },
+        },
+        interactionResult: {
+          authenticationProofs: [phoneCodeProof(AuthenticationProofRole.Identify)],
+        },
+      });
+
+      await expect(experienceInteraction.submit()).resolves.toBeUndefined();
+      expect(provider.interactionResult).toHaveBeenCalled();
+    });
+
+    it('still asks for a bound TOTP after an email code sign-in', async () => {
+      const { experienceInteraction } = createSignInInteraction({
+        user: mockUserWithMfaVerifications,
+        signInExperienceOverrides: {
+          mfa: {
+            policy: MfaPolicy.PromptAtSignInAndSignUp,
+            factors: [MfaFactor.TOTP, MfaFactor.EmailVerificationCode],
+          },
+        },
+        interactionResult: {
+          authenticationProofs: [emailCodeProof(AuthenticationProofRole.Identify)],
+        },
+      });
+
+      await expect(experienceInteraction.submit()).rejects.toMatchObject({
+        code: 'session.mfa.require_mfa_verification',
+        status: 403,
+        data: { availableFactors: [MfaFactor.TOTP] },
+      });
+    });
+
+    it('does not challenge backup codes alone after an email code sign-in', async () => {
+      const { experienceInteraction, provider } = createSignInInteraction({
+        user: {
+          ...mockUser,
+          mfaVerifications: [mockUserBackupCodeMfaVerification],
+        },
+        signInExperienceOverrides: {
+          mfa: {
+            policy: MfaPolicy.PromptAtSignInAndSignUp,
+            factors: [MfaFactor.EmailVerificationCode, MfaFactor.BackupCode],
+          },
+        },
+        interactionResult: {
+          authenticationProofs: [emailCodeProof(AuthenticationProofRole.Identify)],
+        },
+      });
+
+      await expect(experienceInteraction.submit()).resolves.toBeUndefined();
+      expect(provider.interactionResult).toHaveBeenCalled();
+    });
+
+    it('keeps backup codes alongside a remaining primary MFA factor', async () => {
+      const { experienceInteraction } = createSignInInteraction({
+        user: {
+          ...mockUser,
+          mfaVerifications: [mockUserTotpMfaVerification, mockUserBackupCodeMfaVerification],
+        },
+        signInExperienceOverrides: {
+          mfa: {
+            policy: MfaPolicy.PromptAtSignInAndSignUp,
+            factors: [MfaFactor.TOTP, MfaFactor.BackupCode, MfaFactor.EmailVerificationCode],
+          },
+        },
+        interactionResult: {
+          authenticationProofs: [emailCodeProof(AuthenticationProofRole.Identify)],
+        },
+      });
+
+      await expect(experienceInteraction.submit()).rejects.toMatchObject({
+        code: 'session.mfa.require_mfa_verification',
+        status: 403,
+        data: { availableFactors: [MfaFactor.TOTP, MfaFactor.BackupCode] },
+      });
+    });
+
+    it('does not accept a verified same-factor email MFA code in place of TOTP', async () => {
+      const { experienceInteraction } = createSignInInteraction({
+        user: mockUserWithMfaVerifications,
+        signInExperienceOverrides: {
+          mfa: {
+            policy: MfaPolicy.PromptAtSignInAndSignUp,
+            factors: [MfaFactor.TOTP, MfaFactor.EmailVerificationCode],
+          },
+        },
+        interactionResult: {
+          authenticationProofs: [emailCodeProof(AuthenticationProofRole.Identify)],
+          verificationRecords: [
+            {
+              id: 'mfa-email',
+              type: VerificationType.MfaEmailVerificationCode,
+              identifier: { type: SignInIdentifier.Email, value: mockUser.primaryEmail },
+              templateType: TemplateType.MfaVerification,
+              verified: true,
+            },
+          ],
+        },
+      });
+
+      await expect(experienceInteraction.submit()).rejects.toMatchObject({
+        code: 'session.mfa.require_mfa_verification',
+        status: 403,
+        data: { availableFactors: [MfaFactor.TOTP] },
+      });
+    });
+
+    it('still asks for a phone MFA code after an email code sign-in', async () => {
+      const { experienceInteraction } = createSignInInteraction({
+        user: mockUser,
+        signInExperienceOverrides: {
+          mfa: {
+            policy: MfaPolicy.PromptAtSignInAndSignUp,
+            factors: [MfaFactor.EmailVerificationCode, MfaFactor.PhoneVerificationCode],
+          },
+        },
+        interactionResult: {
+          authenticationProofs: [emailCodeProof(AuthenticationProofRole.Identify)],
+        },
+      });
+
+      await expect(experienceInteraction.submit()).rejects.toMatchObject({
+        code: 'session.mfa.require_mfa_verification',
+        status: 403,
+        data: { availableFactors: [MfaFactor.PhoneVerificationCode] },
+      });
+    });
+
+    it('still asks for the email MFA code after a password sign-in', async () => {
+      const { experienceInteraction } = createSignInInteraction({
+        user: mockUser,
+        signInExperienceOverrides: {
+          mfa: {
+            policy: MfaPolicy.PromptAtSignInAndSignUp,
+            factors: [MfaFactor.EmailVerificationCode],
+          },
+        },
+        interactionResult: {
+          authenticationProofs: [passwordProof(AuthenticationProofRole.Identify)],
+        },
+      });
+
+      await expect(experienceInteraction.submit()).rejects.toMatchObject({
+        code: 'session.mfa.require_mfa_verification',
+        status: 403,
+        data: { availableFactors: [MfaFactor.EmailVerificationCode] },
+      });
     });
   });
 

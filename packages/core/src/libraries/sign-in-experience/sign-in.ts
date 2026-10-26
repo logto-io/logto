@@ -1,6 +1,7 @@
 import type { SignIn, SignUp, Mfa } from '@logto/schemas';
 import { ConnectorType, SignInIdentifier, MfaFactor } from '@logto/schemas';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import assertThat from '#src/utils/assert-that.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
@@ -60,8 +61,9 @@ export const validateSignIn = (
     );
   }
 
-  // Validate that email/phone verification codes are not used as both sign-in method and MFA
-  if (mfa) {
+  // Coexistence of email/phone verification-code sign-in and MFA.
+  if (!EnvSet.values.isDevFeaturesEnabled && mfa) {
+    // Validate that email/phone verification codes are not used as both sign-in method and MFA
     const isEmailVerificationCodeSignIn = signIn.methods.some(
       ({ identifier, verificationCode }) =>
         verificationCode && identifier === SignInIdentifier.Email

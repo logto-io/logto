@@ -2,6 +2,7 @@ import { MfaFactor, type SignInExperience, SignInIdentifier } from '@logto/schem
 import { useEffect, useRef } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { type SignInExperienceForm } from '@/pages/SignInExperience/types';
 
 /**
@@ -50,13 +51,14 @@ const useSignUpPasswordListeners = (signInExperience: SignInExperience) => {
           return method;
         }
 
-        // Check if the identifier is already used in MFA factors
+        // Coexistence of email/phone verification-code sign-in and MFA.
         const mfaFactors = signInExperience.mfa.factors;
         const disabledByMfa =
-          (method.identifier === SignInIdentifier.Email &&
+          !isDevFeaturesEnabled &&
+          ((method.identifier === SignInIdentifier.Email &&
             mfaFactors.includes(MfaFactor.EmailVerificationCode)) ||
-          (method.identifier === SignInIdentifier.Phone &&
-            mfaFactors.includes(MfaFactor.PhoneVerificationCode));
+            (method.identifier === SignInIdentifier.Phone &&
+              mfaFactors.includes(MfaFactor.PhoneVerificationCode)));
 
         return {
           ...method,
@@ -86,7 +88,7 @@ const useSignUpPasswordListeners = (signInExperience: SignInExperience) => {
         void trigger('signIn.methods');
       }, 0);
     }
-  }, [getValues, setValue, signUpPassword, trigger]);
+  }, [getValues, setValue, signInExperience.mfa.factors, signUpPassword, trigger]);
 };
 
 export default useSignUpPasswordListeners;

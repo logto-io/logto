@@ -214,7 +214,15 @@ export enum OrganizationRequiredMfaPolicy {
 }
 
 export type Mfa = {
-  /** Enabled MFA factors */
+  /**
+   * Enabled MFA factors.
+   *
+   * @remarks
+   * When the email/phone verification-code sign-in and MFA coexistence feature is enabled,
+   * `EmailVerificationCode` and `PhoneVerificationCode` may also be enabled as sign-in methods.
+   * When one of them is used as the first factor of a sign-in interaction, the same factor is not
+   * challenged again as MFA in that interaction; other bound factors remain available.
+   */
   factors: MfaFactor[];
   /** Global MFA prompt policy */
   policy: MfaPolicy;

@@ -136,22 +136,32 @@ export class MfaValidator {
     return hasUserFactors;
   }
 
-  isMfaVerified(verificationRecords: VerificationRecord[]) {
-    return this.getVerifiedMfaVerificationRecords(verificationRecords).length > 0;
+  isMfaVerified(
+    verificationRecords: VerificationRecord[],
+    excludedFactors: readonly MfaFactor[] = []
+  ) {
+    return (
+      this.getVerifiedMfaVerificationRecords(verificationRecords, undefined, excludedFactors)
+        .length > 0
+    );
   }
 
   hasEligibleTrustedDeviceVerification(
     verificationRecords: VerificationRecord[],
-    currentProfile?: InteractionProfile
+    currentProfile?: InteractionProfile,
+    excludedFactors: readonly MfaFactor[] = []
   ) {
-    return this.getVerifiedMfaVerificationRecords(verificationRecords, currentProfile).some(
-      ({ type }) => type !== VerificationType.BackupCode
-    );
+    return this.getVerifiedMfaVerificationRecords(
+      verificationRecords,
+      currentProfile,
+      excludedFactors
+    ).some(({ type }) => type !== VerificationType.BackupCode);
   }
 
   private getVerifiedMfaVerificationRecords(
     verificationRecords: VerificationRecord[],
-    currentProfile?: InteractionProfile
+    currentProfile?: InteractionProfile,
+    excludedFactors: readonly MfaFactor[] = []
   ) {
     const userEnabledMfaVerifications = getAllUserEnabledMfaVerifications(
       this.mfaSettings,
@@ -159,14 +169,21 @@ export class MfaValidator {
       currentProfile
     );
 
-    return verificationRecords.filter(
-      (verification) =>
-        isMfaVerificationRecord(verification) &&
-        verification.isVerified &&
+    return verificationRecords.filter((verification) => {
+      if (
+        !isMfaVerificationRecord(verification) ||
+        !verification.isVerified ||
         // New bind MFA verification can not be used for verification
-        !verification.isNewBindMfaVerification &&
-        // Check if the verification type is enabled in the user's MFA settings
-        userEnabledMfaVerifications.includes(mfaVerificationTypeToMfaFactorMap[verification.type])
-    );
+        verification.isNewBindMfaVerification
+      ) {
+        return false;
+      }
+
+      const factor = mfaVerificationTypeToMfaFactorMap[verification.type];
+
+      // Check if the verification type is enabled in the user's MFA settings, and that the
+      // interaction has not already proved the same factor as its first factor.
+      return userEnabledMfaVerifications.includes(factor) && !excludedFactors.includes(factor);
+    });
   }
 }

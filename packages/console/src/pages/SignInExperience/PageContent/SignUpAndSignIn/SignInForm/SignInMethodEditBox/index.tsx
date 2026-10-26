@@ -9,6 +9,7 @@ import { useCallback } from 'react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { DragDropProvider, DraggableItem } from '@/ds-components/DragDrop';
 import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
 
@@ -67,15 +68,18 @@ function SignInMethodEditBox({ signInExperience }: Props) {
         return false;
       }
 
-      // Check if the identifier is already used in MFA factors
-      const mfaFactors = signInExperience.mfa.factors;
-      if (
-        (identifier === SignInIdentifier.Email &&
-          mfaFactors.includes(MfaFactor.EmailVerificationCode)) ||
-        (identifier === SignInIdentifier.Phone &&
-          mfaFactors.includes(MfaFactor.PhoneVerificationCode))
-      ) {
-        return false;
+      // Coexistence of email/phone verification-code sign-in and MFA.
+      if (!isDevFeaturesEnabled) {
+        // Check if the identifier is already used in MFA factors
+        const mfaFactors = signInExperience.mfa.factors;
+        if (
+          (identifier === SignInIdentifier.Email &&
+            mfaFactors.includes(MfaFactor.EmailVerificationCode)) ||
+          (identifier === SignInIdentifier.Phone &&
+            mfaFactors.includes(MfaFactor.PhoneVerificationCode))
+        ) {
+          return false;
+        }
       }
 
       if (isSignUpPasswordRequired) {
@@ -107,19 +111,22 @@ function SignInMethodEditBox({ signInExperience }: Props) {
         return t('sign_in_exp.sign_up_and_sign_in.tip.verification_code_auth');
       }
 
-      // Check if the identifier is already used in MFA factors
-      const mfaFactors = signInExperience.mfa.factors;
-      if (
-        identifier === SignInIdentifier.Email &&
-        mfaFactors.includes(MfaFactor.EmailVerificationCode)
-      ) {
-        return t('sign_in_exp.sign_up_and_sign_in.tip.email_mfa_enabled');
-      }
-      if (
-        identifier === SignInIdentifier.Phone &&
-        mfaFactors.includes(MfaFactor.PhoneVerificationCode)
-      ) {
-        return t('sign_in_exp.sign_up_and_sign_in.tip.phone_mfa_enabled');
+      // Coexistence of email/phone verification-code sign-in and MFA.
+      if (!isDevFeaturesEnabled) {
+        // Check if the identifier is already used in MFA factors
+        const mfaFactors = signInExperience.mfa.factors;
+        if (
+          identifier === SignInIdentifier.Email &&
+          mfaFactors.includes(MfaFactor.EmailVerificationCode)
+        ) {
+          return t('sign_in_exp.sign_up_and_sign_in.tip.email_mfa_enabled');
+        }
+        if (
+          identifier === SignInIdentifier.Phone &&
+          mfaFactors.includes(MfaFactor.PhoneVerificationCode)
+        ) {
+          return t('sign_in_exp.sign_up_and_sign_in.tip.phone_mfa_enabled');
+        }
       }
     },
     [isVerificationCodeCheckable, isSignUpPasswordRequired, signInExperience.mfa.factors, t]

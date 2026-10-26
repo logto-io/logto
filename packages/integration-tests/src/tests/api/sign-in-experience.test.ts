@@ -22,7 +22,7 @@ import {
 } from '#src/helpers/connector.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { defaultSignInSignUpConfigs } from '#src/helpers/sign-in-experience.js';
-import { generatePassword } from '#src/utils.js';
+import { devFeatureDisabledTest, devFeatureTest, generatePassword } from '#src/utils.js';
 
 describe('admin console sign-in experience', () => {
   afterAll(async () => {
@@ -328,61 +328,185 @@ describe('MFA validation', () => {
     await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
   });
 
-  it('should reject email verification code MFA when email verification is used for sign-in', async () => {
-    await updateSignInExperience({
-      signIn: {
-        methods: [
-          {
-            identifier: SignInIdentifier.Email,
-            password: false,
-            verificationCode: true,
-            isPasswordPrimary: false,
-          },
-        ],
-      },
-    });
+  devFeatureDisabledTest.it(
+    'should reject email verification code MFA when email verification is used for sign-in',
+    async () => {
+      await updateSignInExperience({
+        signIn: {
+          methods: [
+            {
+              identifier: SignInIdentifier.Email,
+              password: false,
+              verificationCode: true,
+              isPasswordPrimary: false,
+            },
+          ],
+        },
+      });
 
-    await expectRejects(
-      updateSignInExperience({
+      await expectRejects(
+        updateSignInExperience({
+          mfa: {
+            policy: MfaPolicy.Mandatory,
+            factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
+          },
+        }),
+        {
+          code: 'sign_in_experiences.email_verification_code_cannot_be_used_for_mfa',
+          status: 400,
+        }
+      );
+    }
+  );
+
+  devFeatureDisabledTest.it(
+    'should reject phone verification code MFA when phone verification is used for sign-in',
+    async () => {
+      await updateSignInExperience({
+        signIn: {
+          methods: [
+            {
+              identifier: SignInIdentifier.Phone,
+              password: false,
+              verificationCode: true,
+              isPasswordPrimary: false,
+            },
+          ],
+        },
+      });
+
+      await expectRejects(
+        updateSignInExperience({
+          mfa: {
+            policy: MfaPolicy.Mandatory,
+            factors: [MfaFactor.PhoneVerificationCode, MfaFactor.BackupCode],
+          },
+        }),
+        {
+          code: 'sign_in_experiences.phone_verification_code_cannot_be_used_for_mfa',
+          status: 400,
+        }
+      );
+    }
+  );
+
+  devFeatureDisabledTest.it(
+    'should reject email verification code sign-in when email MFA is enabled',
+    async () => {
+      await updateSignInExperience({
+        mfa: {
+          policy: MfaPolicy.NoPrompt,
+          factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
+        },
+      });
+
+      await expectRejects(
+        updateSignInExperience({
+          signIn: {
+            methods: [
+              {
+                identifier: SignInIdentifier.Email,
+                password: false,
+                verificationCode: true,
+                isPasswordPrimary: false,
+              },
+            ],
+          },
+        }),
+        {
+          code: 'sign_in_experiences.email_verification_code_cannot_be_used_for_sign_in',
+          status: 400,
+        }
+      );
+    }
+  );
+
+  devFeatureDisabledTest.it(
+    'should reject phone verification code sign-in when phone MFA is enabled',
+    async () => {
+      await updateSignInExperience({
+        mfa: {
+          policy: MfaPolicy.NoPrompt,
+          factors: [MfaFactor.PhoneVerificationCode, MfaFactor.BackupCode],
+        },
+      });
+
+      await expectRejects(
+        updateSignInExperience({
+          signIn: {
+            methods: [
+              {
+                identifier: SignInIdentifier.Phone,
+                password: false,
+                verificationCode: true,
+                isPasswordPrimary: false,
+              },
+            ],
+          },
+        }),
+        {
+          code: 'sign_in_experiences.phone_verification_code_cannot_be_used_for_sign_in',
+          status: 400,
+        }
+      );
+    }
+  );
+
+  devFeatureTest.it(
+    'should allow email verification code MFA when email verification is used for sign-in',
+    async () => {
+      await updateSignInExperience({
+        signIn: {
+          methods: [
+            {
+              identifier: SignInIdentifier.Email,
+              password: false,
+              verificationCode: true,
+              isPasswordPrimary: false,
+            },
+          ],
+        },
+      });
+
+      const result = await updateSignInExperience({
         mfa: {
           policy: MfaPolicy.Mandatory,
           factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
         },
-      }),
-      {
-        code: 'sign_in_experiences.email_verification_code_cannot_be_used_for_mfa',
-        status: 400,
-      }
-    );
-  });
+      });
 
-  it('should reject phone verification code MFA when phone verification is used for sign-in', async () => {
-    await updateSignInExperience({
-      signIn: {
-        methods: [
-          {
-            identifier: SignInIdentifier.Phone,
-            password: false,
-            verificationCode: true,
-            isPasswordPrimary: false,
-          },
-        ],
-      },
-    });
+      expect(result.mfa.factors).toContain(MfaFactor.EmailVerificationCode);
+      expect(result.mfa.factors).toContain(MfaFactor.TOTP);
+    }
+  );
 
-    await expectRejects(
-      updateSignInExperience({
+  devFeatureTest.it(
+    'should allow phone verification code MFA when phone verification is used for sign-in',
+    async () => {
+      await updateSignInExperience({
+        signIn: {
+          methods: [
+            {
+              identifier: SignInIdentifier.Phone,
+              password: false,
+              verificationCode: true,
+              isPasswordPrimary: false,
+            },
+          ],
+        },
+      });
+
+      const result = await updateSignInExperience({
         mfa: {
           policy: MfaPolicy.Mandatory,
           factors: [MfaFactor.PhoneVerificationCode, MfaFactor.BackupCode],
         },
-      }),
-      {
-        code: 'sign_in_experiences.phone_verification_code_cannot_be_used_for_mfa',
-        status: 400,
-      }
-    );
-  });
+      });
+
+      expect(result.mfa.factors).toContain(MfaFactor.PhoneVerificationCode);
+      expect(result.mfa.factors).toContain(MfaFactor.BackupCode);
+    }
+  );
 
   it('should allow email verification code MFA when email is used with password for sign-in', async () => {
     await updateSignInExperience({
@@ -434,16 +558,17 @@ describe('MFA validation', () => {
     expect(result.mfa.factors).toContain(MfaFactor.TOTP);
   });
 
-  it('should reject email verification code sign-in when email MFA is enabled', async () => {
-    await updateSignInExperience({
-      mfa: {
-        policy: MfaPolicy.NoPrompt,
-        factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
-      },
-    });
+  devFeatureTest.it(
+    'should allow email verification code sign-in when email MFA is enabled',
+    async () => {
+      await updateSignInExperience({
+        mfa: {
+          policy: MfaPolicy.NoPrompt,
+          factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
+        },
+      });
 
-    await expectRejects(
-      updateSignInExperience({
+      const result = await updateSignInExperience({
         signIn: {
           methods: [
             {
@@ -454,24 +579,28 @@ describe('MFA validation', () => {
             },
           ],
         },
-      }),
-      {
-        code: 'sign_in_experiences.email_verification_code_cannot_be_used_for_sign_in',
-        status: 400,
-      }
-    );
-  });
+      });
 
-  it('should reject phone verification code sign-in when phone MFA is enabled', async () => {
-    await updateSignInExperience({
-      mfa: {
-        policy: MfaPolicy.NoPrompt,
-        factors: [MfaFactor.PhoneVerificationCode, MfaFactor.BackupCode],
-      },
-    });
+      expect(result.signIn.methods).toContainEqual(
+        expect.objectContaining({
+          identifier: SignInIdentifier.Email,
+          verificationCode: true,
+        })
+      );
+    }
+  );
 
-    await expectRejects(
-      updateSignInExperience({
+  devFeatureTest.it(
+    'should allow phone verification code sign-in when phone MFA is enabled',
+    async () => {
+      await updateSignInExperience({
+        mfa: {
+          policy: MfaPolicy.NoPrompt,
+          factors: [MfaFactor.PhoneVerificationCode, MfaFactor.BackupCode],
+        },
+      });
+
+      const result = await updateSignInExperience({
         signIn: {
           methods: [
             {
@@ -482,12 +611,15 @@ describe('MFA validation', () => {
             },
           ],
         },
-      }),
-      {
-        code: 'sign_in_experiences.phone_verification_code_cannot_be_used_for_sign_in',
-        status: 400,
-      }
-    );
-  });
+      });
+
+      expect(result.signIn.methods).toContainEqual(
+        expect.objectContaining({
+          identifier: SignInIdentifier.Phone,
+          verificationCode: true,
+        })
+      );
+    }
+  );
 });
 /* eslint-enable max-lines */
