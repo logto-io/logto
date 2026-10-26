@@ -1590,7 +1590,9 @@ export default class ExperienceInteraction {
 
   /**
    * Whether an MFA factor the user can verify or enroll can pair with a first factor this
-   * interaction has proven: one of a different kind, so the two together reach `mfa`.
+   * interaction has proven: one of a different kind, so the two together reach `mfa`. The factor
+   * must also be one the eligibility offers, which is where the connector availability of the
+   * code-based factors is applied.
    */
   private async hasPairableMfaFactor(decision: StepUpEligibility): Promise<boolean> {
     if (decision.enrollableFactors.length > 0) {
@@ -1601,12 +1603,11 @@ export default class ExperienceInteraction {
       this.getIdentifiedUser(),
       this.signInExperienceValidator.getMfaSettings(),
     ]);
+    const availableMethods = new Set(decision.availableMethods);
 
-    return (
-      this.getPairableMfaFactors(
-        new MfaValidator(mfaSettings, user).availableUserMfaVerificationTypes
-      ).length > 0
-    );
+    return this.getPairableMfaFactors(
+      new MfaValidator(mfaSettings, user).availableUserMfaVerificationTypes
+    ).some((factor) => availableMethods.has(mfaFactorToVerificationType[factor]));
   }
 
   /**
