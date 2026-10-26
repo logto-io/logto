@@ -82,22 +82,21 @@ const isReauthenticationRequired = (ctx: KoaContextWithOIDC) =>
 const isResumedPass = ({ oidc }: KoaContextWithOIDC) => oidc.route.endsWith('resume');
 
 /**
- * Whether an authenticated session ends the request on the first pass. Without `prompt=none` only
- * the first listed class does, because the interaction pursues the caller's preference order; with
- * `prompt=none` no UI is possible, so any listed class the session can prove is accepted.
+ * Whether an authenticated session ends the request on the first pass. A request that forces a
+ * fresh authentication — `prompt=login`, which the provider also sets for `max_age=0`, or an unmet
+ * `max_age` — never does. Otherwise `prompt=none` has no UI to pursue the preference order, so any
+ * listed class the session can prove is accepted; without it only the first listed class is.
  */
 const isFirstPassSatisfied = (ctx: KoaContextWithOIDC, requestedAcrValues: LogtoAcr[]) => {
   const { oidc } = ctx;
 
-  if (!isSessionFresh(ctx)) {
+  if (isReauthenticationRequired(ctx)) {
     return false;
   }
 
-  if (oidc.promptPending('none')) {
-    return satisfiesAnyRequestedAcr(ctx, requestedAcrValues);
-  }
-
-  return !oidc.promptPending('login') && satisfiesFirstRequestedAcr(ctx, requestedAcrValues);
+  return oidc.promptPending('none')
+    ? satisfiesAnyRequestedAcr(ctx, requestedAcrValues)
+    : satisfiesFirstRequestedAcr(ctx, requestedAcrValues);
 };
 
 /**

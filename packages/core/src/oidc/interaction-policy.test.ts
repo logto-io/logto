@@ -206,6 +206,20 @@ describe('buildInteractionPolicy', () => {
       ).resolves.toBe(true);
     });
 
+    it('does not let prompt=none skip a freshness requirement', async () => {
+      // The provider rewrites `max_age=0` into `prompt=login` and clears `max_age`, so the request
+      // still forces a fresh authentication even though the session satisfies the class.
+      await expect(
+        check.check(
+          buildContext({
+            session: { acr: LogtoAcr.FirstFactor },
+            params: { acr_values: LogtoAcr.FirstFactor, prompt: 'none login' },
+            pendingPrompts: ['none', 'login'],
+          })
+        )
+      ).resolves.toBe(true);
+    });
+
     it('applies the max_age freshness requirement on top of the acr', async () => {
       const params = { acr_values: LogtoAcr.FirstFactor, max_age: '600' };
 

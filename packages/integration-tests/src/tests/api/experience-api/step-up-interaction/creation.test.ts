@@ -105,6 +105,7 @@ devFeatureTest.describe('step-up interaction creation', () => {
       mode: 'stepUp',
       requestedAcrValues: [mfaAcr],
       selectedAcr: mfaAcr,
+      reauthenticationRequired: false,
       // The session's `1fa` skips the first-factor prompt for a user with an MFA factor.
       availableMethods: [VerificationType.TOTP],
       establishableMethods: [],
