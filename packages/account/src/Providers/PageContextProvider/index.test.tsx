@@ -42,15 +42,7 @@ jest.mock('@ac/i18n/utils', () => ({
 }));
 
 const setLocation = (pathname: string, search = '') => {
-  // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-  Object.defineProperty(window, 'location', {
-    configurable: true,
-    value: {
-      pathname,
-      search,
-      origin: 'http://localhost',
-    },
-  });
+  window.history.replaceState({}, '', `${pathname}${search}`);
 };
 
 describe('<PageContextProvider />', () => {
