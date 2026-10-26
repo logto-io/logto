@@ -29,6 +29,7 @@ const Main = () => {
   const [showDevPanel, setShowDevPanel] = useState(getLocalData('ui').showDevPanel ?? false);
   const error = params.get('error');
   const errorDescription = params.get('error_description');
+  const shouldReauthenticate = params.get('reauthenticate') === '1';
   const redirectUri = window.location.origin + window.location.pathname;
 
   const toggleDevPanel = useCallback(() => {
@@ -58,12 +59,24 @@ const Main = () => {
       void loadIdTokenClaims();
     }
 
+    const searchParams = new URLSearchParams(window.location.search);
+    searchParams.delete('reauthenticate');
     const extraParams = Object.fromEntries(
       new URLSearchParams([
         ...new URLSearchParams(config.signInExtraParams).entries(),
-        ...new URLSearchParams(window.location.search).entries(),
+        ...searchParams.entries(),
       ]).entries()
     );
+
+    // Apply saved dev panel config with a fresh authorization request. The provider was
+    // recreated on page load, but existing tokens still belong to the previous grant.
+    if (isAuthenticated && shouldReauthenticate) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('reauthenticate');
+      window.history.replaceState({}, '', url);
+      void signIn({ clearTokens: false, redirectUri, extraParams });
+      return;
+    }
 
     // If user is not authenticated, redirect to sign-in page
     if (!isAuthenticated) {
@@ -87,6 +100,7 @@ const Main = () => {
     isInCallback,
     isLoading,
     signIn,
+    shouldReauthenticate,
     user,
     redirectUri,
   ]);

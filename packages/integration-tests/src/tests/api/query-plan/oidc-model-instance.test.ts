@@ -30,6 +30,16 @@ const seedRows = async (connection: DatabasePoolConnection) => {
       now() + interval '1 hour'
     from generate_series(1, 10) as n
   `);
+  await connection.query(sql`
+    insert into oidc_model_instances (tenant_id, model_name, id, payload, expires_at)
+    select
+      ${defaultTenantId},
+      model,
+      'query-plan-seed-' || lower(model) || '-' || n,
+      jsonb_build_object('accountId', 'query-plan-seed-account-' || n),
+      now() + interval '1 hour'
+    from generate_series(1, 10) as n, unnest(array['Session', 'Grant']) as model
+  `);
   await connection.query(sql`analyze oidc_model_instances`);
 };
 
@@ -91,5 +101,16 @@ describe('oidc_model_instances query plans under the tenant role', () => {
     });
 
     it.todo('seeks by the grant id once it is stored in a column');
+  });
+
+  it.each(['Session', 'Grant'])('seeks a %s lookup by the account id column', async (modelName) => {
+    const plan = await explain(sql`
+      select id from oidc_model_instances
+      where model_name = ${modelName}
+        and payload_account_id = ${'query-plan-seed-account-1'}
+        and expires_at > now()
+    `);
+
+    expectIndexCondition(plan, 'payload_account_id');
   });
 });

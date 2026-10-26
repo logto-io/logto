@@ -7,6 +7,8 @@ export type LogtoUiCookie = Partial<{
   organizationId: string;
   uiLocales: string;
   theme: string;
+  /** A UX hint for the entry guard; Core remains the security boundary. */
+  isStepUp: boolean;
 }>;
 
 export const logtoUiCookieGuard = z
@@ -15,5 +17,6 @@ export const logtoUiCookieGuard = z
     organizationId: z.string(),
     uiLocales: z.string(),
     theme: z.string(),
+    isStepUp: z.boolean(),
   })
   .partial() satisfies ToZodObject<LogtoUiCookie>;

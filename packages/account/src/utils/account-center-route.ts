@@ -199,3 +199,9 @@ export const setRouteRestore = (pathname: string) => {
     sessionStorage.setRouteRestore(pathname);
   }
 };
+
+export const isAuthCallbackUrl = (
+  { pathname, search }: Pick<Location, 'pathname' | 'search'> = window.location
+): boolean =>
+  (pathname === accountCenterBasePath || pathname === `${accountCenterBasePath}/`) &&
+  Boolean(new URLSearchParams(search).get('code'));
