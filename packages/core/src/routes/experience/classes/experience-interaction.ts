@@ -1528,9 +1528,20 @@ export default class ExperienceInteraction {
   private async getPursuedRequestedAcr(): Promise<
     { acr: LogtoAcr; decision?: StepUpEligibility } | undefined
   > {
+    const achievedAcr = achieveAcr(this.countedAuthenticationProofs);
+    const [firstAcr] = this.requestedAcrValues;
+
+    // A satisfied first class is also the pursued one: `distanceTo` is 0 for it, so it is reachable,
+    // and the lookup below returns `undefined` all the same. Skipping it spares the subject,
+    // connector and eligibility lookups of every listed class on the happy path, which `submit()`
+    // asks for four times.
+    if (firstAcr && acrSatisfies(achievedAcr, firstAcr)) {
+      return;
+    }
+
     const pursued = await this.getPursuedAcr();
 
-    if (!pursued || acrSatisfies(achieveAcr(this.countedAuthenticationProofs), pursued.acr)) {
+    if (!pursued || acrSatisfies(achievedAcr, pursued.acr)) {
       return;
     }
 
