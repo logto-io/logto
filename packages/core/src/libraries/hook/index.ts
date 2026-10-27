@@ -28,7 +28,8 @@ import {
 } from './context-manager.js';
 import { generateHookTestPayload, parseResponse, sendWebhookRequest } from './utils.js';
 
-type HookEventPayloadWithoutHookId = BetterOmit<HookEventPayload, 'hookId'>;
+/** A payload before `sendWebhook` stamps it with the hook id and the delivery id. */
+type HookEventPayloadWithoutHookId = BetterOmit<HookEventPayload, 'hookId' | 'id'>;
 
 export const createHookLibrary = (queries: Queries) => {
   const {
@@ -50,7 +51,7 @@ export const createHookLibrary = (queries: Queries) => {
     const { id, config, signingKey } = hook;
     consoleLog.info(`\tTriggering hook ${id} due to ${payload.event} event`);
 
-    const json: HookEventPayload = { ...payload, hookId: id };
+    const json: HookEventPayload = { ...payload, hookId: id, id: generateStandardId() };
     const logEntry = new LogEntry(`TriggerHook.${payload.event}`);
 
     logEntry.append({ hookId: id, hookRequest: { body: json } });
@@ -140,7 +141,7 @@ export const createHookLibrary = (queries: Queries) => {
 
     const webhooks: Array<{
       hook: Hook;
-      payload: BetterOmit<InteractionHookEventPayload, 'hookId'>;
+      payload: BetterOmit<InteractionHookEventPayload, 'hookId' | 'id'>;
     }> = [];
 
     for (const interactionHookResult of interactionHookResults) {
@@ -172,7 +173,7 @@ export const createHookLibrary = (queries: Queries) => {
         user: user && pick(user, ...userInfoSelectFields),
         application: application && pick(application, 'id', 'type', 'name', 'description'),
         cimdClientId,
-      } satisfies BetterOmit<InteractionHookEventPayload, 'hookId'>;
+      } satisfies BetterOmit<InteractionHookEventPayload, 'hookId' | 'id'>;
 
       // eslint-disable-next-line @silverhand/fp/no-mutating-methods
       webhooks.push(...hooks.map((hook) => ({ hook, payload })));
@@ -337,7 +338,7 @@ export const createHookLibrary = (queries: Queries) => {
           application && { application: pick(application, 'id', 'type', 'name', 'description') }
         ),
         ...payload,
-      } satisfies BetterOmit<ExceptionHookEventPayload, 'hookId'>,
+      } satisfies BetterOmit<ExceptionHookEventPayload, 'hookId' | 'id'>,
     }));
 
     await sendWebhooks(webhookPayloads, consoleLog);

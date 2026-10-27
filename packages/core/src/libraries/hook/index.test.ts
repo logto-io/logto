@@ -110,6 +110,7 @@ describe('triggerInteractionHooks()', () => {
     expect(sendWebhookRequest).toHaveBeenCalledWith({
       hookConfig: hook.config,
       payload: {
+        id: mockId,
         hookId: 'foo',
         event: 'PostSignIn',
         interactionEvent: 'SignIn',
@@ -270,7 +271,8 @@ describe('triggerTestHook', () => {
     );
     expect(sendWebhookRequest).toHaveBeenCalledWith({
       hookConfig: hook.config,
-      payload: triggerTestHookPayload,
+      // The delivery id is generated per call
+      payload: { ...triggerTestHookPayload, id: expect.any(String) },
       signingKey: hook.signingKey,
     });
 
@@ -321,6 +323,7 @@ describe('triggerDataHooks()', () => {
     expect(sendWebhookRequest).toHaveBeenCalledWith({
       hookConfig: dataHook.config,
       payload: {
+        id: mockId,
         hookId: 'foo',
         event: 'Role.Created',
         createdAt: new Date(100_000).toISOString(),
@@ -341,6 +344,7 @@ describe('triggerDataHooks()', () => {
         hookRequest: {
           body: {
             event: 'Role.Created',
+            id: mockId,
             hookId: 'foo',
             ...hookData,
           },
@@ -379,6 +383,7 @@ describe('triggerDataHooks()', () => {
     expect(sendWebhookRequest).toHaveBeenCalledWith({
       hookConfig: dataHook.config,
       payload: {
+        id: mockId,
         hookId: 'foo',
         event: 'Role.Created',
         createdAt: new Date(100_000).toISOString(),
@@ -411,6 +416,7 @@ describe('triggerDataHooks()', () => {
     expect(sendWebhookRequest).toHaveBeenCalledWith({
       hookConfig: trustedDeviceHook.config,
       payload: {
+        id: mockId,
         hookId: trustedDeviceHook.id,
         event: 'TrustedDevice.Created',
         createdAt: new Date(100_000).toISOString(),

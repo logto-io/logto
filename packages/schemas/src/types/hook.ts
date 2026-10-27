@@ -62,6 +62,11 @@ export type InteractionHookEventPayload = {
   event: InteractionHookEvent;
   createdAt: string;
   hookId: string;
+  /**
+   * The identifier of this delivery: unique per hook and event, kept across the retries of the
+   * same request. Use it to deduplicate deliveries on the receiving end.
+   */
+  id: string;
   userAgent?: string;
   userIp?: string;
   /** InteractionHook result */
@@ -94,6 +99,11 @@ export type DataHookEventPayload = {
   event: DataHookEvent;
   createdAt: string;
   hookId: string;
+  /**
+   * The identifier of this delivery: unique per hook and event, kept across the retries of the
+   * same request. Use it to deduplicate deliveries on the receiving end.
+   */
+  id: string;
   ip?: string;
   userAgent?: string;
   data?: unknown;
