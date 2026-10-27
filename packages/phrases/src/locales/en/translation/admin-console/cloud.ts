@@ -63,6 +63,8 @@ const cloud = {
       'Starting over may delete your incomplete SSO configuration. Do you want to continue?',
     resume_creation:
       'An unfinished creation was found. Continue with the same provider to recover this connector.',
+    creation_charge_notice:
+      'Each Console SSO connector costs <span>${{price, number}} per mo</span>. For any assistance, feel free to <a>contact us</a>.',
   },
   general: {
     onboarding: 'Onboarding',

@@ -67,6 +67,8 @@ const cloud = {
       'Wenn Sie von vorne beginnen, wird Ihre unvollständige SSO-Konfiguration möglicherweise gelöscht. Möchten Sie fortfahren?',
     resume_creation:
       'Eine unvollständige Erstellung wurde gefunden. Fahre mit demselben Anbieter fort, um diesen Konnektor wiederherzustellen.',
+    creation_charge_notice:
+      'Jeder Konsolen-SSO-Connector kostet <span>${{price, number}} pro Monat</span>. Wenn Sie Hilfe benötigen, können Sie uns gerne <a>kontaktieren</a>.',
   },
   general: {
     onboarding: 'Einführung',

@@ -13,6 +13,13 @@ import {
   selectCreationFunding,
 } from './creation-billing';
 
+// Jest's CommonJS resolver needs a virtual module for the ESM-only client package.
+jest.mock('@withtyped/client', () => ({ ResponseError: class extends Error {} }), {
+  virtual: true,
+});
+jest.mock('@/cloud/hooks/use-cloud-api', () => ({ tryReadResponseErrorBody: jest.fn() }));
+
+const chooseBillingCustomer = jest.fn(async () => ({}));
 const api = { get: jest.fn(), post: jest.fn(), delete: jest.fn() };
 const getApi = jest.fn(() => api as unknown as Client<typeof consoleSsoRouter>);
 const operation: PendingConnectorCreation = {
@@ -55,7 +62,10 @@ it('requires an Enterprise selector before persisting a new included selection',
 it('keeps legacy included recovery for explicit cleanup instead of guessing its Enterprise', async () => {
   const saved = savePendingConnectorCreation('alice', { ...operation, funding: 'included' });
   await expect(
-    continueConnectorCreation('alice', saved, getApi, { restartExpired: true })
+    continueConnectorCreation('alice', saved, getApi, {
+      restartExpired: true,
+      chooseBillingCustomer,
+    })
   ).rejects.toThrow('Start over');
   expect(api.post).not.toHaveBeenCalled();
   expect(readPendingConnectorCreation('alice')).toEqual(saved);
@@ -71,14 +81,20 @@ it('replays a lost Enterprise creation response with the same funding and creati
   });
   api.post.mockRejectedValueOnce(new Error('Network failed'));
   await expect(
-    continueConnectorCreation('alice', saved, getApi, { restartExpired: true })
+    continueConnectorCreation('alice', saved, getApi, {
+      restartExpired: true,
+      chooseBillingCustomer,
+    })
   ).rejects.toThrow('Network failed');
   const recovered = readPendingConnectorCreation('alice');
   expect(recovered).toEqual(saved);
   if (!recovered) {
     throw new Error('Expected recovery');
   }
-  await continueConnectorCreation('alice', recovered, getApi, { restartExpired: true });
+  await continueConnectorCreation('alice', recovered, getApi, {
+    restartExpired: true,
+    chooseBillingCustomer,
+  });
   expect(getApi.mock.calls).toEqual([[saved.key], [saved.key]]);
   expect(api.post.mock.calls).toEqual(
     Array.from({ length: 2 }, () => [

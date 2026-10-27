@@ -13,8 +13,10 @@ import { identifyAndSubmitInteraction } from './interaction';
 
 type StepUpInitResult = {
   /**
-   * Present when the step-up cannot proceed: Core finished the interaction with
-   * `unmet_authentication_requirements` and the client is sent back to the application.
+   * Present when the step-up needs no UI and Core finished the interaction: either the session
+   * already satisfies the class it pursues, so it returns to the application with its context
+   * untouched, or the pinned user cannot reach that class and the request is answered with
+   * `unmet_authentication_requirements`.
    */
   redirectTo?: string;
 };
@@ -24,7 +26,8 @@ type StepUpInitResult = {
  * detects the step-up from the login prompt details and pins the subject from the OIDC session;
  * the SPA sends nothing that identifies the user.
  *
- * Resolves with `{}` on 204 (the interaction proceeds), or with `{ redirectTo }` on 200.
+ * Resolves with `{}` on 204 (the interaction proceeds), or with `{ redirectTo }` on 200 (the
+ * step-up needed no UI and Core finished it, so the client returns to the application).
  */
 export const initStepUp = async (): Promise<StepUpInitResult> => {
   const response = await api.put(experienceApiRoutes.prefix, {

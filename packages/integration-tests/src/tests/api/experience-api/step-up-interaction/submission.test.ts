@@ -277,6 +277,56 @@ devFeatureTest.describe('pure step-up submission', () => {
     expect(claims).toMatchObject({ sub: id, acr: mfaAcr, amr: ['otp', 'mfa'] });
   });
 
+  it('pursues mfa for [mfa, 1fa] on a 1fa session and completes at mfa', async () => {
+    const { profile, id, secret } = await createTotpUser();
+    const client = await signInWithPassword(profile);
+    await startStepUp(client, { acrValues: `${mfaAcr} ${firstFactorAcr}` });
+
+    const { authenticationContext } = await client.getInteractionData();
+    expect(authenticationContext).toMatchObject({
+      requestedAcrValues: [mfaAcr, firstFactorAcr],
+      selectedAcr: mfaAcr,
+      // The session's `1fa` satisfies the weaker listed class; the enrolled factor still has to
+      // answer, because `mfa` is listed first and is reachable.
+      availableMethods: [VerificationType.TOTP],
+    });
+
+    await successfullyVerifyTotp(client, { code: authenticator.generate(secret) });
+    const claims = await submitStepUp(client);
+
+    expect(claims).toMatchObject({ sub: id, acr: mfaAcr, amr: ['otp', 'mfa'] });
+  });
+
+  it('falls back to a fresh 1fa verification for [mfa, 1fa] when mfa is unreachable', async () => {
+    const client = await signInWithPassword(passwordUser);
+    const issuedAt = Math.floor(Date.now() / 1000);
+
+    // With no MFA factor on the tenant, `mfa` is out of reach even through enrollment; `prompt=login`
+    // still forces a fresh authentication of the fallback `1fa` class instead of failing as unmet.
+    await resetMfaSettings();
+
+    try {
+      await startStepUp(client, {
+        acrValues: `${mfaAcr} ${firstFactorAcr}`,
+        prompt: Prompt.Login,
+      });
+
+      const { authenticationContext } = await client.getInteractionData();
+      expect(authenticationContext).toMatchObject({
+        selectedAcr: firstFactorAcr,
+        availableMethods: [VerificationType.Password, VerificationType.EmailVerificationCode],
+      });
+
+      await verifyPassword(client, passwordUser);
+      const claims = await submitStepUp(client);
+
+      expect(claims).toMatchObject({ sub: passwordUserId, acr: firstFactorAcr, amr: ['pwd'] });
+      expect(claims.auth_time).toBeGreaterThanOrEqual(issuedAt);
+    } finally {
+      await enableUserControlledMfaWithNoPrompt();
+    }
+  });
+
   it('replaces the session context instead of merging it', async () => {
     const { profile, id, secret } = await createTotpUser();
     const client = await signInWithPassword(profile);

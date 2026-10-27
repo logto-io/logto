@@ -37,6 +37,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { buildUserPasswordPayload } from '#src/libraries/user.utils.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 import { getClientIdentifierPayload } from '#src/oidc/cimd/index.js';
+import { stepUpSatisfiedBySessionKey } from '#src/oidc/interaction-policy.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
@@ -104,10 +105,12 @@ const loginPromptInteractionGuard = z.object({
 
 /**
  * The session fields a pure step-up reads on every request (the provider copies the session into
- * the interaction payload); see {@link ExperienceInteraction.subjectUserId}.
+ * the interaction payload); see {@link ExperienceInteraction.subjectUserId} and
+ * {@link ExperienceInteraction.isSessionSatisfied}.
  */
 const stepUpSessionGuard = z.object({
   accountId: z.string().min(1),
+  acr: z.string().optional(),
   amr: z.string().array().optional(),
 });
 
@@ -735,10 +738,11 @@ export default class ExperienceInteraction {
   }
 
   /**
-   * The authentication classes the authorization request asked for, empty when it carried no
-   * supported `acr_values`. A sign-in with a requested context treats them as one more completion
-   * requirement of {@link submit}: `selectedAcr` is never persisted for one, the requirement is
-   * re-derived from these values on every submission, and the request cannot change mid-flow.
+   * The authentication classes the authorization request asked for, in the caller's order and
+   * empty when it carried no supported `acr_values`. Both a SignIn with a requested context and a
+   * pure step-up treat them as one more completion requirement of their completion path: no
+   * selection is persisted, the class pursued is re-derived from these values on every read, and
+   * the request cannot change mid-flow.
    */
   private get requestedAcrValues(): LogtoAcr[] {
     return this.authenticationContext?.requestedAcrValues ?? [];
@@ -932,37 +936,69 @@ export default class ExperienceInteraction {
 
   /**
    * The step-up decision the route guard of a pure step-up gates the establishment and
-   * subject-proof routes on; the same one `GET /experience/interaction` projects.
+   * subject-proof routes on; the same one `GET /experience/interaction` projects. Evaluated for the
+   * class the step-up pursues, which is re-derived on every read from the requested list and the
+   * subject's reachable methods.
    */
   public async getStepUpEligibility(): Promise<StepUpEligibility | undefined> {
     if (!this.isStepUp) {
       return;
     }
 
-    return this.getStepUpDecision();
+    const pursued = await this.getPursuedAcr();
+
+    return pursued?.decision;
   }
 
   /**
-   * Fast-fail a pure step-up whose pinned user cannot reach `selectedAcr` with the methods they
-   * have: the interaction is finished with `unmet_authentication_requirements`, which the provider
-   * returns to the client's `redirect_uri` as a standard OIDC error, instead of rendering a
-   * step-up UI with nothing to offer. Decided here at creation rather than in the UI. A step-up
-   * that can proceed, and any other interaction, is left untouched.
+   * Resolve a pure step-up at creation, before any UI is rendered:
    *
-   * @returns The URL to redirect the user to when the step-up was finished as unmet.
+   * - The class the step-up pursues is already satisfied by the OIDC session and the request does
+   *   not force a fresh authentication event (`prompt=login` or an unmet `max_age`): the
+   *   interaction is finished with the session's context, so no verification is asked for and
+   *   `auth_time` is not refreshed. This is how `[mfa, 1fa]` on a `1fa` session with no reachable
+   *   `mfa` completes at `1fa`.
+   * - The pinned user cannot reach the pursued class with the methods they have: the interaction is
+   *   finished with `unmet_authentication_requirements`, which the provider returns to the
+   *   client's `redirect_uri` as a standard OIDC error, instead of rendering a step-up UI with
+   *   nothing to offer.
+   *
+   * A step-up that has to ask for something, and any other interaction, is left untouched.
+   *
+   * @returns The URL to redirect the user to when the interaction was finished here, and whether
+   * it was finished as unmet.
    */
-  public async finishUnreachableStepUp(): Promise<string | undefined> {
+  public async finishStepUpAtCreation(): Promise<
+    { redirectTo: string; unmet?: boolean } | undefined
+  > {
     if (!this.isStepUp) {
       return;
     }
 
-    const decision = await this.getStepUpDecision();
+    const pursued = await this.getPursuedAcr();
 
-    if (decision?.isReachable) {
+    if (!pursued) {
       return;
     }
 
-    return this.finishUnmetAuthenticationRequirements();
+    if (pursued.decision?.isReachable) {
+      if (!this.isSessionSatisfied(pursued.acr)) {
+        return;
+      }
+
+      // Submitting the interaction without a `login` result leaves the session untouched: its
+      // `acr`, `amr`, and `auth_time` already satisfy the request, and nothing was verified here.
+      // The marker tells the policy's resume check that a step-up finished here, since there is no
+      // `login` to read and the route alone cannot tell it from a revisit of the authorization URL.
+      const redirectTo = await this.tenant.provider.interactionResult(this.ctx.req, this.ctx.res, {
+        ...this.toJson(),
+        [stepUpSatisfiedBySessionKey]: true,
+      });
+
+      return { redirectTo };
+    }
+
+    return { redirectTo: await this.finishUnmetAuthenticationRequirements(), unmet: true };
   }
 
   /** Save the current interaction result. */
@@ -1282,9 +1318,9 @@ export default class ExperienceInteraction {
    * methods are persisted; no sign-in interaction hook is queued.
    *
    * @throws {RequestError} with 400 if the interaction is not a pure step-up
-   * @throws {RequestError} with 403 if the achieved context does not satisfy `selectedAcr`; the
-   * assertion runs before the subject is read, so a submission that counted no verification ends
-   * here rather than as a missing subject
+   * @throws {RequestError} with 403 if the achieved context does not satisfy the class the step-up
+   * pursues; the assertion runs before the subject is read, so a submission that counted no
+   * verification ends here rather than as a missing subject
    * @throws {RequestError} with 404 if a counted proof never identified the subject, which the
    * allow-list blocks today: identification and an answered MFA challenge both set the user, and
    * the only proof that does not is a `bind`
@@ -1292,14 +1328,25 @@ export default class ExperienceInteraction {
   public async submitStepUp(log?: LogEntry) {
     const { authenticationContext } = this;
 
-    // Only a pure step-up completes here: the OIDC policy writes the mode and `selectedAcr`
+    // Only a pure step-up completes here: the OIDC policy writes the mode and the requested list
     // together, and a `SignIn` with a requested ACR keeps neither.
     assertThat(
-      this.isStepUp && authenticationContext?.selectedAcr,
+      this.isStepUp && authenticationContext && authenticationContext.requestedAcrValues.length > 0,
       new RequestError({ code: 'session.step_up.invalid_interaction_event', status: 400 })
     );
 
-    const { requestedAcrValues, selectedAcr } = authenticationContext;
+    const { requestedAcrValues } = authenticationContext;
+
+    // The class is re-derived on this read, exactly as the guards and the projection derive it: the
+    // first requested class the user can reach, or the first one when none is reachable. Nothing
+    // pinned it earlier, so a method the user gained or lost mid-flow cannot disagree with what is
+    // asserted below.
+    const pursued = await this.getPursuedAcr();
+
+    assertThat(
+      pursued,
+      new RequestError({ code: 'session.step_up.invalid_interaction_event', status: 400 })
+    );
 
     // A factor enrolled in this interaction counts only on top of a fresh first factor, the same
     // predicate that gates the enrollment routes, so the route guard and the completion rule
@@ -1314,7 +1361,7 @@ export default class ExperienceInteraction {
 
     log?.append({
       requestedAcrValues,
-      selectedAcr,
+      selectedAcr: pursued.acr,
       achievedAcr: achievedContext.acr,
       // The factor families the interaction proved. Auditable and unambiguous, unlike `amr`, where
       // `otp` alone cannot tell an email code from a TOTP or a backup code. Credentials never reach
@@ -1325,7 +1372,7 @@ export default class ExperienceInteraction {
     // The UI only offers sufficient methods; this is defense in depth. Thrown before anything is
     // written, so a rejected submission leaves no interaction result behind.
     assertThat(
-      acrSatisfies(achievedContext.acr, selectedAcr),
+      acrSatisfies(achievedContext.acr, pursued.acr),
       new RequestError({ code: 'session.step_up.acr_not_satisfied', status: 403 })
     );
 
@@ -1609,6 +1656,20 @@ export default class ExperienceInteraction {
   }
 
   /**
+   * Whether the OIDC session's recorded context already satisfies the given class, and the request
+   * does not force a fresh authentication event. Reads the session's `acr`, the same value the
+   * policy re-checks when the interaction resumes, rather than the carried contributions: `amr`
+   * alone cannot tell some classes apart, and the session's recorded class is authoritative for a
+   * step-up that verifies nothing.
+   */
+  private isSessionSatisfied(acr: LogtoAcr): boolean {
+    return (
+      !this.authenticationContext?.reauthenticationRequired &&
+      acrSatisfies(this.stepUpSession?.acr, acr)
+    );
+  }
+
+  /**
    * The requested class the interaction is pursuing, re-derived on every read and never persisted:
    * the first requested class the user can reach with the methods they have, or the first one when
    * none is reachable. `undefined` once what the interaction has proven satisfies that class, or
@@ -1671,18 +1732,16 @@ export default class ExperienceInteraction {
   }
 
   /**
-   * The step-up decision for the subject and the selected class: what `PUT /experience` acts on
-   * and `GET /experience/interaction` projects, computed from the same inputs so the two cannot
-   * disagree. Evaluated on read and never persisted. `undefined` while no subject
-   * is known or no class is selected. A pure step-up pairs the context its session carries and
-   * reads its persisted `selectedAcr`; a sign-in with requested ACR has no session and passes the
-   * class it pursues (see {@link getPursuedAcr}).
+   * The step-up decision for the subject and the class the interaction pursues: what
+   * `PUT /experience` acts on and `GET /experience/interaction` projects, computed from the same
+   * inputs so the two cannot disagree. Evaluated on read and never persisted. `undefined` while no
+   * subject is known. Every caller passes the class it pursues (see {@link getPursuedAcr}); a pure
+   * step-up pairs the context its session carries.
    */
-  private async getStepUpDecision(acr?: LogtoAcr): Promise<StepUpEligibility | undefined> {
-    const { authenticationContext, subjectUserId } = this;
-    const selectedAcr = acr ?? authenticationContext?.selectedAcr;
+  private async getStepUpDecision(selectedAcr: LogtoAcr): Promise<StepUpEligibility | undefined> {
+    const { subjectUserId } = this;
 
-    if (!selectedAcr || !subjectUserId) {
+    if (!subjectUserId) {
       return;
     }
 
@@ -1848,20 +1907,22 @@ export default class ExperienceInteraction {
   }
 
   /**
-   * The authentication context for the sanitized projection: the stored context plus the lists
-   * computed on this read. A pure step-up persists its `selectedAcr`; a SignIn or Register with
-   * requested ACR does not, so it projects the class it pursues (see {@link getPursuedAcr}) — the
-   * same class the guards enforce, so the SPA never renders methods for a class the interaction
-   * has already passed over.
+   * The authentication context for the sanitized projection: the stored context plus the class the
+   * interaction pursues and the lists computed on this read. Neither mode persists a selection —
+   * a pure step-up and a SignIn or Register with requested ACR both re-derive it from the requested
+   * list and the subject's reachable methods — so the SPA renders the class the guards enforce and
+   * never one the interaction has already passed over. `selectedAcr` is absent while no subject is
+   * known.
    */
   private async toSanitizedAuthenticationContext(
     authenticationContext: RequestedAuthenticationContext
   ): Promise<InteractionAuthenticationContext> {
-    const pursued = authenticationContext.selectedAcr ? undefined : await this.getPursuedAcr();
-    const decision = pursued ? pursued.decision : await this.getStepUpDecision();
+    const pursued = await this.getPursuedAcr();
+    const decision = pursued?.decision;
 
     return {
       ...authenticationContext,
+      ...conditional(pursued && decision && { selectedAcr: pursued.acr }),
       availableMethods: decision?.availableMethods ?? [],
       establishableMethods: decision?.establishableMethods ?? [],
       enrollableFactors: decision?.enrollableFactors ?? [],

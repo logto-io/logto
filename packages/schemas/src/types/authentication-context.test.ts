@@ -69,8 +69,8 @@ describe('requestedAuthenticationContextGuard', () => {
   it('accepts a step-up context', () => {
     const context = {
       requestedAcrValues: [LogtoAcr.Mfa, LogtoAcr.FirstFactor],
-      selectedAcr: LogtoAcr.Mfa,
       mode: AuthenticationContextMode.StepUp,
+      reauthenticationRequired: true,
     };
 
     expect(requestedAuthenticationContextGuard.parse(context)).toEqual(context);

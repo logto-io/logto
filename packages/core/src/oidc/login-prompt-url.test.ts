@@ -11,8 +11,7 @@ describe('buildLoginPromptUrl with login prompt details', () => {
   const stepUpDetails = {
     max_age: '600',
     authenticationContext: {
-      requestedAcrValues: [LogtoAcr.Mfa],
-      selectedAcr: LogtoAcr.Mfa,
+      requestedAcrValues: [LogtoAcr.Mfa, LogtoAcr.FirstFactor],
       mode: AuthenticationContextMode.StepUp,
     },
   };
@@ -58,17 +57,16 @@ describe('buildLoginPromptUrl with login prompt details', () => {
 
   it.each([
     { requestedAcrValues: [LogtoAcr.Mfa] },
-    { requestedAcrValues: [LogtoAcr.Mfa], selectedAcr: LogtoAcr.FirstFactor },
-    { requestedAcrValues: [], selectedAcr: LogtoAcr.Mfa },
-  ])('should keep the sign-in url for an invalid step-up selection: %j', (context) => {
-    expect(
-      buildLoginPromptUrl(
-        {},
-        { appId: 'app_123' },
-        { authenticationContext: { ...context, mode: AuthenticationContextMode.StepUp } }
-      )
-    ).toBe('sign-in?app_id=app_123');
-  });
+    { requestedAcrValues: [], mode: AuthenticationContextMode.StepUp },
+    { mode: AuthenticationContextMode.StepUp },
+  ])(
+    'should keep the sign-in url for a context without a step-up mode and class: %j',
+    (context) => {
+      expect(
+        buildLoginPromptUrl({}, { appId: 'app_123' }, { authenticationContext: context })
+      ).toBe('sign-in?app_id=app_123');
+    }
+  );
 
   it('should keep the sign-in url for prompts without an authentication context', () => {
     expect(buildLoginPromptUrl({}, { appId: 'app_123' }, { max_age: '600' })).toBe(

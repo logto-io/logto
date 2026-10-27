@@ -927,8 +927,8 @@ describe('ExperienceInteraction class', () => {
 
   const stepUpContext = {
     requestedAcrValues: [LogtoAcr.Mfa],
-    selectedAcr: LogtoAcr.Mfa,
     mode: AuthenticationContextMode.StepUp,
+    reauthenticationRequired: false,
   };
   const requestedOnlyContext = { requestedAcrValues: [LogtoAcr.Mfa, LogtoAcr.FirstFactor] };
 
@@ -1263,9 +1263,10 @@ describe('ExperienceInteraction class', () => {
         mfaFactors: [],
       });
 
-      await expect(unreachable.experienceInteraction.finishUnreachableStepUp()).resolves.toBe(
-        'redirectTo'
-      );
+      await expect(unreachable.experienceInteraction.finishStepUpAtCreation()).resolves.toEqual({
+        redirectTo: 'redirectTo',
+        unmet: true,
+      });
       expect(unreachable.provider.interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
@@ -1275,22 +1276,72 @@ describe('ExperienceInteraction class', () => {
       const reachable = createInteraction({ details: { authenticationContext: stepUpContext } });
 
       await expect(
-        reachable.experienceInteraction.finishUnreachableStepUp()
+        reachable.experienceInteraction.finishStepUpAtCreation()
       ).resolves.toBeUndefined();
       expect(reachable.provider.interactionResult).not.toHaveBeenCalled();
 
       const plain = createInteraction({ details: { authenticationContext: requestedOnlyContext } });
 
-      await expect(plain.experienceInteraction.finishUnreachableStepUp()).resolves.toBeUndefined();
+      await expect(plain.experienceInteraction.finishStepUpAtCreation()).resolves.toBeUndefined();
       expect(plain.provider.interactionResult).not.toHaveBeenCalled();
+    });
+
+    it('finishes a step-up the session already satisfies without submitting a login', async () => {
+      const { experienceInteraction, provider } = createInteraction({
+        // `mfa` is listed first but unreachable on a tenant with no MFA factor, so the step-up
+        // pursues the listed `1fa` the password session already carries.
+        details: {
+          authenticationContext: {
+            requestedAcrValues: [LogtoAcr.Mfa, LogtoAcr.FirstFactor],
+            mode: AuthenticationContextMode.StepUp,
+            reauthenticationRequired: false,
+          },
+        },
+        user: mockUser,
+        mfaFactors: [],
+      });
+
+      await expect(experienceInteraction.finishStepUpAtCreation()).resolves.toEqual({
+        redirectTo: 'redirectTo',
+      });
+      // No `login` result: the session keeps its `1fa`, `amr`, and `auth_time` untouched, since
+      // nothing was verified here. The marker is what tells the policy's resume check that the
+      // step-up finished instead of being revisited.
+      const submitted = jest.mocked(provider.interactionResult).mock.calls[0]?.[2];
+      expect(submitted).toBeDefined();
+      expect(submitted).not.toHaveProperty('login');
+      expect(submitted).toMatchObject({ stepUpSatisfiedBySession: true });
+      expect(experienceInteraction.identifiedUserId).toBeUndefined();
+    });
+
+    it('keeps asking when the request forces a fresh authentication of the satisfied class', async () => {
+      const { experienceInteraction, provider } = createInteraction({
+        details: {
+          authenticationContext: {
+            requestedAcrValues: [LogtoAcr.Mfa, LogtoAcr.FirstFactor],
+            mode: AuthenticationContextMode.StepUp,
+            reauthenticationRequired: true,
+          },
+        },
+        user: mockUser,
+        mfaFactors: [],
+      });
+
+      // `prompt=login` or a stale `max_age` cannot be answered by the context the session carries,
+      // so the unreachable `mfa` falls back to a fresh `1fa` verification instead of finishing.
+      await expect(experienceInteraction.finishStepUpAtCreation()).resolves.toBeUndefined();
+      expect(provider.interactionResult).not.toHaveBeenCalled();
+      await expect(experienceInteraction.getStepUpEligibility()).resolves.toMatchObject({
+        availableMethods: [VerificationType.Password],
+      });
     });
   });
 
   describe('step-up submission', () => {
     const firstFactorContext = {
       requestedAcrValues: [LogtoAcr.FirstFactor],
-      selectedAcr: LogtoAcr.FirstFactor,
       mode: AuthenticationContextMode.StepUp,
+      reauthenticationRequired: false,
     };
 
     /** The account shape a step-up establishes methods for: no password, no primary identifier. */
@@ -1373,10 +1424,74 @@ describe('ExperienceInteraction class', () => {
           },
         })
       );
-      // A pure step-up never reads the tenant's MFA policy or any other sign-in experience setting.
-      expect(
-        stepUpTenant.queries.signInExperiences.findDefaultSignInExperience
-      ).not.toHaveBeenCalled();
+      // The sign-in experience settings were read only to decide what the pinned user can reach;
+      // no tenant MFA or profile policy ran, and the factor alone completed the interaction.
+      expect(provider.interactionResult).toHaveBeenCalledTimes(1);
+    });
+
+    it('keeps pursuing the first reachable mfa when the request also lists the reached 1fa', async () => {
+      const { experienceInteraction } = await createIdentifiedStepUp({
+        details: {
+          authenticationContext: {
+            requestedAcrValues: [LogtoAcr.Mfa, LogtoAcr.FirstFactor],
+            mode: AuthenticationContextMode.StepUp,
+            reauthenticationRequired: false,
+          },
+        },
+      });
+
+      // The password proof reached `1fa`, which the request also lists, but the session's `1fa`
+      // plus the enrolled TOTP still reaches `mfa`, so the step-up keeps asking for the factor.
+      await expect(experienceInteraction.getStepUpEligibility()).resolves.toMatchObject({
+        availableMethods: [VerificationType.TOTP],
+      });
+      await expect(experienceInteraction.submitStepUp()).rejects.toMatchError(
+        new RequestError({ code: 'session.step_up.acr_not_satisfied', status: 403 })
+      );
+    });
+
+    it('falls back to a fresh 1fa verification when mfa is unreachable and reauthentication is forced', async () => {
+      const { experienceInteraction, provider, stepUpTenant } = createInteraction({
+        details: {
+          authenticationContext: {
+            requestedAcrValues: [LogtoAcr.Mfa, LogtoAcr.FirstFactor],
+            mode: AuthenticationContextMode.StepUp,
+            reauthenticationRequired: true,
+          },
+        },
+        user: mockUser,
+        mfaFactors: [],
+      });
+      const { libraries, queries } = stepUpTenant;
+
+      // `prompt=login` or a stale `max_age` cannot be answered by the context the session carries,
+      // so creation does not finish even though the session's `1fa` satisfies the fallback class.
+      await expect(experienceInteraction.finishStepUpAtCreation()).resolves.toBeUndefined();
+      expect(provider.interactionResult).not.toHaveBeenCalled();
+
+      experienceInteraction.setVerificationRecord(
+        new PasswordVerification(libraries, queries, {
+          id: 'password-verification-id',
+          type: VerificationType.Password,
+          identifier: { type: AdditionalIdentifier.UserId, value: mockUser.id },
+          verified: true,
+        })
+      );
+      await experienceInteraction.identifyUser('password-verification-id');
+      await experienceInteraction.submitStepUp();
+
+      // A fresh `1fa` verification, not `unmet_authentication_requirements`.
+      expect(provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({
+          login: {
+            accountId: mockUser.id,
+            acr: LogtoAcr.FirstFactor,
+            amr: [AuthenticationMethodReference.Password],
+          },
+        })
+      );
     });
 
     it('rejects a submission that did not reach the selected class without writing a result', async () => {
@@ -1550,8 +1665,8 @@ describe('ExperienceInteraction class', () => {
     };
     const firstFactorContext = {
       requestedAcrValues: [LogtoAcr.FirstFactor],
-      selectedAcr: LogtoAcr.FirstFactor,
       mode: AuthenticationContextMode.StepUp,
+      reauthenticationRequired: false,
     };
     const githubConnector = {
       type: ConnectorType.Social,
@@ -1665,7 +1780,7 @@ describe('ExperienceInteraction class', () => {
     it('offers subject-proof connectors, then the establishable methods after a subject proof', async () => {
       const { experienceInteraction, stepUpTenant } = createSocialOnlyStepUp();
 
-      await expect(experienceInteraction.finishUnreachableStepUp()).resolves.toBeUndefined();
+      await expect(experienceInteraction.finishStepUpAtCreation()).resolves.toBeUndefined();
       await expect(experienceInteraction.getStepUpEligibility()).resolves.toMatchObject({
         availableMethods: [],
         establishableMethods: [],
@@ -1697,7 +1812,10 @@ describe('ExperienceInteraction class', () => {
         },
       });
 
-      await expect(experienceInteraction.finishUnreachableStepUp()).resolves.toBe('redirectTo');
+      await expect(experienceInteraction.finishStepUpAtCreation()).resolves.toEqual({
+        redirectTo: 'redirectTo',
+        unmet: true,
+      });
       expect(provider.interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
@@ -1711,7 +1829,10 @@ describe('ExperienceInteraction class', () => {
       });
 
       // The sign-in page cannot render the connector, so it is no subject proof the user can give.
-      await expect(experienceInteraction.finishUnreachableStepUp()).resolves.toBe('redirectTo');
+      await expect(experienceInteraction.finishStepUpAtCreation()).resolves.toEqual({
+        redirectTo: 'redirectTo',
+        unmet: true,
+      });
       expect(provider.interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
@@ -1819,7 +1940,7 @@ describe('ExperienceInteraction class', () => {
 
       // The TOTP reaches `1fa` only and nothing pairs with it, so establishing a first factor is
       // what makes the class reachable.
-      await expect(experienceInteraction.finishUnreachableStepUp()).resolves.toBeUndefined();
+      await expect(experienceInteraction.finishStepUpAtCreation()).resolves.toBeUndefined();
       await expect(experienceInteraction.getStepUpEligibility()).resolves.toMatchObject({
         availableMethods: [],
         establishableMethods: [],

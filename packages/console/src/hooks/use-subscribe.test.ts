@@ -34,6 +34,7 @@ jest.mock('@/contexts/SubscriptionDataProvider', () => {
 
   return {
     SubscriptionDataContext: createContext({
+      currentSubscription: { hasBillingCustomer: false },
       mutateSubscriptionQuotaAndUsages: jest.fn(),
       onCurrentSubscriptionUpdated: jest.fn(),
     }),
@@ -74,6 +75,7 @@ describe('useSubscribe', () => {
     mockChooseBillingCustomer.mockResolvedValue({ customerId: 'cus_other' });
 
     await expect(subscribe()).resolves.toBe(true);
+    expect(mockChooseBillingCustomer).toHaveBeenCalledWith({ hasBillingCustomer: false });
     const [path, { body }] = mockPost.mock.lastCall as [string, { body: Record<string, unknown> }];
     expect(path).toBe('/api/checkout-session');
     expect(body).toMatchObject({ customerId: 'cus_other', skuId: 'pro', tenantId: 'tenant-1' });

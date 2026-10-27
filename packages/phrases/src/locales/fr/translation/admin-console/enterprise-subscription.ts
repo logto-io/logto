@@ -38,14 +38,13 @@ const enterprise_subscription = {
     description:
       'Consultez vos abonnements personnels et votre couverture Enterprise contractuelle, quel que soit le tenant sélectionné.',
     personal_title: 'Abonnements personnels',
-    personal_description: 'Abonnements facturés à votre compte, y compris les abonnements passés.',
+    personal_description:
+      'Abonnements actifs facturés à votre compte. Les abonnements passés restent dans l’historique de facturation.',
     price: 'Prix',
-    billing_period: 'Période de facturation',
-    list_price_note:
-      'Les prix excluent les taxes et les remises. Les modifications sont calculées au prorata sur votre prochaine facture.',
+    next_charge: 'Prochain prélèvement',
+    ends_on: 'Se termine le {{date}}',
     overdue_note:
       'Le paiement est en retard. S’il reste impayé, l’abonnement peut être suspendu et ses fonctionnalités payantes supprimées.',
-    cancel_on: 'Annulation prévue le {{date}}',
     other_product: 'Autre abonnement',
     enterprise_invoices_description:
       "Factures de votre contrat Enterprise. Sélectionnez une facture pour l'afficher et télécharger la facture ou le reçu.",

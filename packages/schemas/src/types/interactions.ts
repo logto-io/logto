@@ -12,6 +12,7 @@ import {
 import { type ToZodObject } from '../utils/zod.js';
 
 import {
+  LogtoAcr,
   requestedAuthenticationContextGuard,
   type RequestedAuthenticationContext,
 } from './authentication-context.js';
@@ -373,6 +374,12 @@ export type MaskedIdentifiers = {
  * far, and are never persisted, so a factor change during the interaction's lifetime is reflected.
  */
 export type InteractionAuthenticationContext = RequestedAuthenticationContext & {
+  /**
+   * The class the interaction pursues, computed on every read and never persisted: the first
+   * requested class the subject can reach, or the first requested one when none is reachable.
+   * Absent while no subject is known.
+   */
+  selectedAcr?: LogtoAcr;
   /** The methods that can still contribute to the selected class from where the interaction stands. */
   availableMethods: VerificationType[];
   /** The first factors the user may establish under a fresh subject proof; `[]` until enrollment lands. */
@@ -385,6 +392,7 @@ export type InteractionAuthenticationContext = RequestedAuthenticationContext & 
 };
 
 export const interactionAuthenticationContextGuard = requestedAuthenticationContextGuard.extend({
+  selectedAcr: z.nativeEnum(LogtoAcr).optional(),
   availableMethods: z.nativeEnum(VerificationType).array(),
   establishableMethods: z.nativeEnum(MissingProfile).array(),
   enrollableFactors: z.nativeEnum(MfaFactor).array(),
