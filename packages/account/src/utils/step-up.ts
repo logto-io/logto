@@ -43,8 +43,14 @@ export type StepUpChallenge = {
  */
 const maximumAuthenticationFreshnessMarginSeconds = 60;
 
-/** The freshness margin for the tenant window, in seconds. Always leaves room to reuse a context. */
-const getAuthenticationFreshnessMarginSeconds = (maximumAuthenticationAgeInSeconds: number) =>
+/**
+ * The freshness margin for the tenant window, in seconds. Treats a context as stale this early,
+ * and allows a future `auth_time` this far ahead when the client clock runs behind the
+ * authorization server. Always leaves room to reuse a context.
+ */
+export const getAuthenticationFreshnessMarginSeconds = (
+  maximumAuthenticationAgeInSeconds: number
+) =>
   Math.max(
     1,
     Math.min(
@@ -175,12 +181,15 @@ export const hasFreshFirstFactorAuthentication = (
  * `maxAgeSeconds`.
  *
  * `maxAgeSeconds` is already the final cutoff, such as a subpage entry threshold; it is not a
- * tenant policy window with its own freshness margin. Future `auth_time` values are still allowed
- * within the clock-skew margin because the client clock may be behind the authorization server.
+ * tenant policy window with its own freshness margin. `clockSkewSeconds` is the tenant window's
+ * allowance for a client clock that runs behind the authorization server, so a token a step-up has
+ * just issued is not rejected for an `auth_time` a few seconds in the future. It is passed
+ * separately because deriving it from the cutoff leaves the shortest window a few seconds only.
  */
 export const hasFreshAuthenticationContext = (
   claims: Record<string, unknown> | undefined,
   maxAgeSeconds: number,
+  clockSkewSeconds: number,
   now = Date.now()
 ): boolean => {
   const ageSeconds = getAuthenticationAgeSeconds(claims, now);
@@ -189,9 +198,7 @@ export const hasFreshAuthenticationContext = (
     return false;
   }
 
-  const marginSeconds = getAuthenticationFreshnessMarginSeconds(maxAgeSeconds);
-
-  return ageSeconds >= -marginSeconds && ageSeconds <= maxAgeSeconds;
+  return ageSeconds >= -clockSkewSeconds && ageSeconds <= maxAgeSeconds;
 };
 
 const authParameterPattern =

@@ -12,6 +12,7 @@ import {
 import {
   consumePendingStepUpAction,
   getAccountApiStepUpChallenge,
+  getAuthenticationFreshnessMarginSeconds,
   getProactiveStepUpChallenge,
   getStepUpChallenge,
   getSubpageAuthenticationMaxAgeSeconds,
@@ -325,7 +326,10 @@ export const useStepUpEntry = ({ enabled, skip = false }: StepUpEntryOptions): S
         const claims = await getIdTokenClaims();
         const ready = hasFreshAuthenticationContext(
           claims,
-          getSubpageAuthenticationMaxAgeSeconds(maximumAuthenticationAgeInSeconds)
+          getSubpageAuthenticationMaxAgeSeconds(maximumAuthenticationAgeInSeconds),
+          // The tenant window's skew allowance, not a fraction of the shorter entry cutoff: a
+          // step-up completed on a client clock behind the server must count as fresh here.
+          getAuthenticationFreshnessMarginSeconds(maximumAuthenticationAgeInSeconds)
         );
 
         if (isCancelled) {

@@ -97,6 +97,23 @@ describe('useStepUpEntry', () => {
     expect(mockSignIn).not.toHaveBeenCalled();
   });
 
+  it('accepts a future auth_time within the tenant-window skew at the shortest window', async () => {
+    // A one-minute window keeps a 15-second skew allowance while its entry cutoff is 15 seconds.
+    // A browser clock 5 seconds behind the authorization server must not make the token the
+    // step-up has just issued look stale, or the page shows the failure fallback.
+    mockGetIdTokenClaims.mockResolvedValue(createClaims(now + 5));
+
+    const { result } = renderHook(() => useStepUpEntry({ enabled: true }), {
+      wrapper: createWrapper(60),
+    });
+
+    await waitFor(() => {
+      expect(result.current.isReady).toBe(true);
+    });
+    expect(result.current.hasFailed).toBe(false);
+    expect(mockSignIn).not.toHaveBeenCalled();
+  });
+
   it('starts an entry step-up with the subpage max_age when the context is stale', async () => {
     mockGetIdTokenClaims.mockResolvedValue(createClaims(now - 301));
 
