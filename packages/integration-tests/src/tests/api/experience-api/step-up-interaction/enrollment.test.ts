@@ -294,7 +294,7 @@ devFeatureTest.describe('establishing and enrolling inside pure step-up', () => 
           connectorId,
           target === 'another account' ? otherSocialId : generateTestName()
         ),
-        { code: 'session.identity_conflict', status: 403 }
+        { code: 'session.step_up.subject_mismatch', status: 403 }
       );
       const rejected = await client.getInteractionData();
       expect(rejected.authenticationContext).toMatchObject({

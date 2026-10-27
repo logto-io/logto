@@ -300,14 +300,16 @@ devFeatureTest.describe('step-up social subject proof', () => {
 
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
+    await clearConnectorsByTypes([ConnectorType.Social]);
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    ({ id: connectorId } = await setSocialConnector());
+    // Install the connector first: the sign-in experience PATCH drops targets without an
+    // installed connector, and deleting a social connector removes its target.
     await updateSignInExperience({
       signInMode: SignInMode.SignIn,
       socialSignInConnectorTargets: ['mock-social'],
       mfa: { factors: [], policy: MfaPolicy.UserControlled },
     });
-    await clearConnectorsByTypes([ConnectorType.Social]);
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    ({ id: connectorId } = await setSocialConnector());
 
     // A username keeps the shared sign-up configuration from prompting for one; it is not a
     // verification method, so the user still has nothing to satisfy the step-up with.
