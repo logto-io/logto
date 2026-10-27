@@ -1,4 +1,5 @@
 import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
+import { Options, RequestError as GotRequestError } from 'got';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
@@ -6,6 +7,16 @@ import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 import koaConnectorErrorHandler from './koa-connector-error-handler.js';
 
 const { jest } = import.meta;
+
+const rejection = async (promise: Promise<unknown>): Promise<unknown> => {
+  try {
+    await promise;
+  } catch (error: unknown) {
+    return error;
+  }
+
+  throw new Error('Expected the promise to reject');
+};
 
 describe('koaConnectorErrorHandler middleware', () => {
   const next = jest.fn();
@@ -259,5 +270,35 @@ describe('koaConnectorErrorHandler middleware', () => {
         message
       )
     );
+  });
+  it('General connector errors wrapping a `got` request error', async () => {
+    // What an email connector throws when its provider times out: the error carries the request,
+    // `Authorization` header included.
+    const gotError = new GotRequestError(
+      'Timeout awaiting request',
+      { code: 'ETIMEDOUT' },
+      new Options({
+        method: 'POST',
+        url: 'https://api.sendgrid.com/v3/mail/send',
+        headers: { Authorization: 'Bearer sendgrid-api-key' },
+        json: { personalizations: [{ to: [{ email: 'foo@bar.com' }] }] },
+      })
+    );
+    const error = new ConnectorError(ConnectorErrorCodes.General, gotError);
+    next.mockImplementationOnce(() => {
+      throw error;
+    });
+
+    const thrown = await rejection(koaConnectorErrorHandler()(ctx, next) as Promise<unknown>);
+
+    expect(thrown).toMatchError(
+      new RequestError(
+        { code: 'connector.general', status: 400, errorDescription: 'Timeout awaiting request' },
+        { name: 'RequestError', code: 'ETIMEDOUT', errorDescription: 'Timeout awaiting request' }
+      )
+    );
+    const serialized = JSON.stringify(thrown, Object.getOwnPropertyNames(thrown));
+    expect(serialized).not.toContain('sendgrid-api-key');
+    expect(serialized).not.toContain('foo@bar.com');
   });
 });

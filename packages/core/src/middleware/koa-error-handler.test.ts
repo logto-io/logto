@@ -221,6 +221,13 @@ describe('koaErrorHandler middleware', () => {
       await koaErrorHandler()(ctx, next);
 
       expect(ctx.status).toEqual(400);
+      // What the end user's browser receives
+      const body = JSON.stringify(ctx.body);
+      expect(body).not.toContain('mailgun-api-key');
+      expect(body).not.toContain('foo@bar.com');
+      expect(body).toContain('connector.general');
+      expect(body).toContain('Timeout awaiting request');
+
       expect(trackException).toHaveBeenCalledTimes(1);
       const tracked = serialize(trackException.mock.calls[0]);
       expect(tracked).not.toContain('mailgun-api-key');
