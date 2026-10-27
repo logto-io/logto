@@ -104,7 +104,7 @@ const account_center = {
     two_step_verification_incomplete_description:
       '2 adımlı doğrulama açık, ancak henüz etkin değil.',
     two_step_verification_off_description:
-      '2 adımlı doğrulama kapalı. Oturum açarken ikinci bir adım istenmeyecek.',
+      '2 adımlı doğrulama tercihiniz kapalı. Güvenlik politikaları ek doğrulama gerektirmeye devam edebilir.',
     turn_off_2_step_verification: '2 adımlı doğrulamayı kapat',
     turn_off_2_step_verification_description:
       '2 adımlı doğrulamayı devre dışı bırakmak, oturum açarken hesabınızdaki ek koruma katmanını kaldıracaktır. Devam etmek istediğinizden emin misiniz?',

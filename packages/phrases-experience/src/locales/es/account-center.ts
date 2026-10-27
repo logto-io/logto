@@ -107,7 +107,7 @@ const account_center = {
     two_step_verification_incomplete_description:
       'La verificación en dos pasos está activada, pero todavía no se aplica.',
     two_step_verification_off_description:
-      'La verificación en dos pasos está desactivada. No se te pedirá un segundo paso al iniciar sesión.',
+      'Tu preferencia de verificación en dos pasos está desactivada. Es posible que las políticas de seguridad sigan exigiendo una verificación adicional.',
     turn_off_2_step_verification: 'Desactivar verificación en dos pasos',
     turn_off_2_step_verification_description:
       'Desactivar la verificación en dos pasos eliminará la capa extra de protección de tu cuenta al iniciar sesión. ¿Estás seguro de que quieres continuar?',

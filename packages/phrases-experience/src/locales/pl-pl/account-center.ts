@@ -104,7 +104,7 @@ const account_center = {
     two_step_verification_incomplete_description:
       'Weryfikacja dwuetapowa jest włączona, ale jeszcze nie działa.',
     two_step_verification_off_description:
-      'Weryfikacja dwuetapowa jest wyłączona. Podczas logowania nie zostaniesz poproszony o drugi krok.',
+      'Preferencja weryfikacji dwuetapowej jest wyłączona. Zasady bezpieczeństwa mogą nadal wymagać dodatkowej weryfikacji.',
     turn_off_2_step_verification: 'Wyłącz weryfikację dwuetapową',
     turn_off_2_step_verification_description:
       'Wyłączenie weryfikacji dwuetapowej usunie dodatkową warstwę ochrony z Twojego konta podczas logowania. Czy na pewno chcesz kontynuować?',

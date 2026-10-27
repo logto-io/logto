@@ -596,6 +596,44 @@ describe('<Security />', () => {
     expect(queryByText('account_center.security.no_verification_method_warning')).toBeNull();
   });
 
+  it('does not warn when a primary email is hidden by the email field control', async () => {
+    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
+
+    const { getByLabelText, queryByText } = renderSecurity({
+      accountCenterSettings: {
+        fields: {
+          username: AccountCenterControlValue.Off,
+          email: AccountCenterControlValue.Off,
+          phone: AccountCenterControlValue.Off,
+          password: AccountCenterControlValue.Off,
+          social: AccountCenterControlValue.Off,
+          mfa: AccountCenterControlValue.Edit,
+        },
+      },
+      experienceSettings: {
+        mfa: {
+          factors: [MfaFactor.EmailVerificationCode],
+          policy: MfaPolicy.NoPrompt,
+        },
+      },
+      userInfo: {
+        primaryEmail: undefined,
+        primaryPhone: undefined,
+        hasPrimaryEmail: true,
+        hasPrimaryPhone: true,
+      },
+    });
+
+    await waitFor(() => {
+      expect(getByLabelText('Toggle switch')).not.toBeNull();
+    });
+
+    expect(
+      queryByText('account_center.security.turn_on_2_step_verification_description')
+    ).not.toBeNull();
+    expect(queryByText('account_center.security.no_verification_method_warning')).toBeNull();
+  });
+
   it('does not mark an exhausted backup code as configured', async () => {
     mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
     mockGetMfaVerifications.mockResolvedValue([

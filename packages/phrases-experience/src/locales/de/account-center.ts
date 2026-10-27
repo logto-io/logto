@@ -110,7 +110,7 @@ const account_center = {
     two_step_verification_incomplete_description:
       'Die 2-Faktor-Verifizierung ist aktiviert, aber noch nicht wirksam.',
     two_step_verification_off_description:
-      'Die 2-Faktor-Verifizierung ist deaktiviert. Bei der Anmeldung werden Sie nicht zu einem zweiten Schritt aufgefordert.',
+      'Ihre Präferenz für die 2-Faktor-Verifizierung ist deaktiviert. Zusätzliche Verifizierung kann durch Sicherheitsrichtlinien weiterhin erforderlich sein.',
     turn_off_2_step_verification: '2-Faktor-Verifizierung deaktivieren',
     turn_off_2_step_verification_description:
       'Das Deaktivieren der 2-Faktor-Verifizierung entfernt die zusätzliche Schutzebene für Ihr Konto bei der Anmeldung. Möchten Sie wirklich fortfahren?',

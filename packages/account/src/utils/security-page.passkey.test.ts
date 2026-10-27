@@ -209,6 +209,19 @@ describe('hasConfiguredSecondFactor', () => {
     expect(hasConfiguredSecondFactor([], getSettings([MfaFactor.EmailVerificationCode]))).toBe(
       false
     );
+
+    // The Account Center can hide the email / phone fields, so the profile exposes
+    // privacy-safe availability flags independently of the identifiers.
+    expect(
+      hasConfiguredSecondFactor([], getSettings([MfaFactor.EmailVerificationCode]), {
+        hasPrimaryEmail: true,
+      })
+    ).toBe(true);
+    expect(
+      hasConfiguredSecondFactor([], getSettings([MfaFactor.PhoneVerificationCode]), {
+        hasPrimaryPhone: true,
+      })
+    ).toBe(true);
   });
 
   it('counts backup codes only while unused codes remain', () => {

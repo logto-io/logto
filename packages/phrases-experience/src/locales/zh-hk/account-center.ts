@@ -98,7 +98,8 @@ const account_center = {
     manage: '管理',
     turn_on_2_step_verification_description: '增加額外的安全保護。登入時將要求進行第二步驗證。',
     two_step_verification_incomplete_description: '兩步驗證已開啟，但尚未生效。',
-    two_step_verification_off_description: '兩步驗證已關閉。登入時不會要求進行第二步驗證。',
+    two_step_verification_off_description:
+      '你的兩步驗證偏好已關閉。安全策略仍可能要求進行額外驗證。',
     turn_off_2_step_verification: '關閉兩步驗證',
     turn_off_2_step_verification_description:
       '關閉兩步驗證將移除登入時帳戶的額外保護層。確定要繼續嗎？',

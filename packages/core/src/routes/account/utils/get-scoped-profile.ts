@@ -118,6 +118,8 @@ export const getAccountCenterFilteredProfile = (
     ...conditional(
       securityVerificationUser && {
         hasSecurityVerificationMethod: hasSecurityVerificationMethod(securityVerificationUser),
+        hasPrimaryEmail: Boolean(securityVerificationUser.primaryEmail),
+        hasPrimaryPhone: Boolean(securityVerificationUser.primaryPhone),
       }
     ),
   };

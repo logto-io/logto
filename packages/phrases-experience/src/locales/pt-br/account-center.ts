@@ -106,7 +106,7 @@ const account_center = {
     two_step_verification_incomplete_description:
       'A verificação em duas etapas está ativada, mas ainda não está em funcionamento.',
     two_step_verification_off_description:
-      'A verificação em duas etapas está desativada. Você não será solicitado a realizar uma segunda etapa ao fazer login.',
+      'Sua preferência de verificação em duas etapas está desativada. Uma verificação adicional ainda pode ser exigida pelas políticas de segurança.',
     turn_off_2_step_verification: 'Desativar verificação em duas etapas',
     turn_off_2_step_verification_description:
       'Desativar a verificação em duas etapas removerá a camada extra de proteção da sua conta ao fazer login. Tem certeza de que deseja continuar?',

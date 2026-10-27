@@ -102,7 +102,7 @@ const account_center = {
     two_step_verification_incomplete_description:
       '2段階認証はオンですが、まだ有効になっていません。',
     two_step_verification_off_description:
-      '2段階認証はオフです。サインイン時に2段階目の認証は求められません。',
+      '2段階認証の設定はオフです。セキュリティポリシーにより、追加の認証が求められる場合があります。',
     turn_off_2_step_verification: '2段階認証を無効にする',
     turn_off_2_step_verification_description:
       '2段階認証を無効にすると、サインイン時の追加の保護レイヤーが削除されます。続行してもよろしいですか？',

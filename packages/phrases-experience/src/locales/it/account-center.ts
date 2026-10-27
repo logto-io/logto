@@ -108,7 +108,7 @@ const account_center = {
     two_step_verification_incomplete_description:
       'La verifica in due passaggi è attiva, ma non ancora effettiva.',
     two_step_verification_off_description:
-      "La verifica in due passaggi è disattivata. All'accesso non ti verrà richiesto un secondo passaggio.",
+      'La tua preferenza per la verifica in due passaggi è disattivata. Una verifica aggiuntiva potrebbe essere comunque richiesta dalle politiche di sicurezza.',
     turn_off_2_step_verification: 'Disattiva la verifica in due passaggi',
     turn_off_2_step_verification_description:
       "La disattivazione della verifica in due passaggi rimuoverà il livello di protezione aggiuntivo dal tuo account all'accesso. Sei sicuro di voler continuare?",

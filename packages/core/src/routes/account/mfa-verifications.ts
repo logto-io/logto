@@ -188,8 +188,10 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
             })
           );
           const { codes } = ctx.guard.body;
+          // An exhausted backup-code factor cannot be managed, so replace it instead of
+          // appending a second record that the row and management flow would have to disambiguate.
           const mfaVerifications = [
-            ...user.mfaVerifications,
+            ...user.mfaVerifications.filter(({ type }) => type !== MfaFactor.BackupCode),
             {
               id: generateStandardId(),
               createdAt: new Date().toISOString(),

@@ -117,9 +117,12 @@ export const hasConfiguredSecondFactor = (
     return true;
   }
 
+  const hasPrimaryEmail = userInfo?.hasPrimaryEmail ?? Boolean(userInfo?.primaryEmail);
+  const hasPrimaryPhone = userInfo?.hasPrimaryPhone ?? Boolean(userInfo?.primaryPhone);
+
   return (
-    (enabledFactors.includes(MfaFactor.EmailVerificationCode) && Boolean(userInfo?.primaryEmail)) ||
-    (enabledFactors.includes(MfaFactor.PhoneVerificationCode) && Boolean(userInfo?.primaryPhone))
+    (enabledFactors.includes(MfaFactor.EmailVerificationCode) && hasPrimaryEmail) ||
+    (enabledFactors.includes(MfaFactor.PhoneVerificationCode) && hasPrimaryPhone)
   );
 };
 

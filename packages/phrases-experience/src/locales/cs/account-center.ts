@@ -103,7 +103,7 @@ const account_center = {
     two_step_verification_incomplete_description:
       'Dvoufázové ověření je zapnuté, ale zatím není aktivní.',
     two_step_verification_off_description:
-      'Dvoufázové ověření je vypnuté. Při přihlášení nebudete vyzváni k druhému kroku.',
+      'Vaše preference dvoufázového ověření je vypnutá. Další ověření může být stále vyžadováno bezpečnostními zásadami.',
     turn_off_2_step_verification: 'Vypnout dvoufázové ověření',
     turn_off_2_step_verification_description:
       'Vypnutí dvoufázového ověření odstraní další vrstvu ochrany vašeho účtu při přihlášení. Opravdu chcete pokračovat?',
