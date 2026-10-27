@@ -37,6 +37,7 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { buildUserPasswordPayload } from '#src/libraries/user.utils.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 import { getClientIdentifierPayload } from '#src/oidc/cimd/index.js';
+import { stepUpSatisfiedBySessionKey } from '#src/oidc/interaction-policy.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
@@ -981,11 +982,12 @@ export default class ExperienceInteraction {
 
       // Submitting the interaction without a `login` result leaves the session untouched: its
       // `acr`, `amr`, and `auth_time` already satisfy the request, and nothing was verified here.
-      const redirectTo = await this.tenant.provider.interactionResult(
-        this.ctx.req,
-        this.ctx.res,
-        this.toJson()
-      );
+      // The marker tells the policy's resume check that a step-up finished here, since there is no
+      // `login` to read and the route alone cannot tell it from a revisit of the authorization URL.
+      const redirectTo = await this.tenant.provider.interactionResult(this.ctx.req, this.ctx.res, {
+        ...this.toJson(),
+        [stepUpSatisfiedBySessionKey]: true,
+      });
 
       return { redirectTo };
     }

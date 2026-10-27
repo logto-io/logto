@@ -334,11 +334,42 @@ describe('buildInteractionPolicy', () => {
             buildContext({
               session: { acr: LogtoAcr.FirstFactor },
               params: { acr_values: `${LogtoAcr.Mfa} ${LogtoAcr.FirstFactor}` },
-              result: { interactionEvent: 'SignIn' },
+              result: { interactionEvent: 'SignIn', stepUpSatisfiedBySession: true },
               route,
             })
           )
         ).resolves.toBe(false);
+      });
+
+      it('prompts again when the resumed route carries no submission', async () => {
+        // Revisiting the authorization URL while the step-up is pending lands on `resume` without
+        // going through Experience, so a `1fa` session must not satisfy `[mfa, 1fa]` by itself.
+        await expect(
+          check.check(
+            buildContext({
+              session: { acr: LogtoAcr.FirstFactor },
+              params: { acr_values: `${LogtoAcr.Mfa} ${LogtoAcr.FirstFactor}` },
+              result: { interactionEvent: 'SignIn' },
+              route,
+            })
+          )
+        ).resolves.toBe(true);
+      });
+
+      it('prompts for a fresh authentication when a step-up that verified nothing aged out', async () => {
+        // The session satisfied the pursued class at creation, then crossed `max_age` before the
+        // resume pass. The next prompt carries `reauthenticationRequired`, so asking again does not
+        // loop, while failing would strand the client with an OIDC error.
+        await expect(
+          check.check(
+            buildContext({
+              session: { acr: LogtoAcr.FirstFactor, age: 1000 },
+              params: { acr_values: `${LogtoAcr.Mfa} ${LogtoAcr.FirstFactor}`, max_age: '600' },
+              result: { stepUpSatisfiedBySession: true },
+              route,
+            })
+          )
+        ).resolves.toBe(true);
       });
 
       it('fails instead of prompting again when the achieved acr is still unmet', async () => {

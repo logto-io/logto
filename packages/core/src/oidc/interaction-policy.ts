@@ -32,6 +32,13 @@ const { Check, base } = interactionPolicy;
 export const acrUnmetReason = 'acr_unmet';
 
 /**
+ * The interaction-result key Experience writes when a pure step-up finished because the OIDC
+ * session already satisfied the class it pursues. That finish submits no `login` result, so the
+ * resume check needs the marker to tell a finished step-up from a pass that never went through one.
+ */
+export const stepUpSatisfiedBySessionKey = 'stepUpSatisfiedBySession';
+
+/**
  * Resolve the supported classes from `acr_values`, preserving the caller's order and ignoring
  * unsupported values and duplicates. Returns `undefined` when the request carries no `acr_values`
  * (the provider already normalizes an empty parameter to `undefined`), so such a request behaves
@@ -74,12 +81,22 @@ const isReauthenticationRequired = (ctx: KoaContextWithOIDC) =>
   ctx.oidc.promptPending('login') || !isSessionFresh(ctx);
 
 /**
- * Whether this pass is the one after an interaction submission, detected the same way the
- * provider's `promptPending` detects it. `oidc.result` is not a signal: `loadGrant` runs before the
- * interaction policy on the first pass and records app-level access control in `oidc.result`
- * whenever the session already has a grant for a registered client.
+ * Whether the provider matched the resume route. The route alone does not prove the interaction
+ * was submitted — revisiting the authorization URL while it is pending lands here too — so the
+ * check pairs it with {@link isInteractionSubmitted}. `oidc.result` is not a signal on its own:
+ * `loadGrant` runs before the interaction policy on the first pass and records app-level access
+ * control in `oidc.result` whenever the session already has a grant for a registered client.
  */
 const isResumedPass = ({ oidc }: KoaContextWithOIDC) => oidc.route.endsWith('resume');
+
+/**
+ * Whether the interaction submitted a result before this pass: a `login` result, or the marker
+ * Experience writes when the session already satisfied the pursued class and nothing was verified.
+ * The route alone is not enough — revisiting the authorization URL while the step-up is pending
+ * also lands on `resume`, with no submission behind it.
+ */
+const isInteractionSubmitted = ({ oidc }: KoaContextWithOIDC) =>
+  Boolean(oidc.result?.login) || oidc.result?.[stepUpSatisfiedBySessionKey] === true;
 
 /**
  * Whether an authenticated session ends the request on the first pass. A request that forces a
@@ -107,12 +124,17 @@ const isFirstPassSatisfied = (ctx: KoaContextWithOIDC, requestedAcrValues: Logto
  * 1. Every requested value unsupported: fail before any interaction.
  * 2. No session: the `no_session` check applies and the sign-in never enters step-up mode; the
  *    prompt-level details carry only the requested values (see {@link buildInteractionPolicy}).
- * 3. On the pass after the interaction resumed, accept a session that satisfies any listed class
- *    within `max_age`, because Experience only finishes once the class it pursues is met and that
- *    class is one of the listed ones. Fail instead of requesting another interaction, so a result
- *    that still does not satisfy the request never loops into another prompt and never issues a
- *    token with insufficient assurance. The resumed pass is detected by route, never by
- *    `oidc.result`, which the first pass already carries for application-level access control.
+ * 3. On the pass after an interaction was submitted, accept a session that satisfies any listed
+ *    class within `max_age`, because Experience only finishes once the class it pursues is met and
+ *    that class is one of the listed ones. The submission is the signal — a `login` result, or the
+ *    marker written when the session already satisfied the class — because the route alone cannot
+ *    tell a finished interaction from a revisit of the authorization URL. A resumed pass without a
+ *    submission falls through to rule 4 and asks for the prompt again; so does a submission that
+ *    verified nothing and has since aged out of `max_age`, since the next prompt carries
+ *    `reauthenticationRequired`. Fail instead of prompting again once a `login` result still does
+ *    not satisfy the request, so it never loops into another prompt and never issues a token with
+ *    insufficient assurance. The resumed pass is detected by route, never by `oidc.result`, which
+ *    the first pass already carries for application-level access control.
  * 4. Otherwise, on the first pass, continue without interaction only when the session satisfies
  *    the first listed class and `max_age`, and `prompt=login` was not requested — or, for
  *    `prompt=none`, any listed class. Any other case requests a step-up that carries the whole
@@ -145,12 +167,22 @@ const buildAcrUnmetCheck = () =>
         return Check.NO_NEED_TO_PROMPT;
       }
 
-      // The pass after an interaction was submitted: the request resumed the interaction, and a
-      // step-up the session already satisfies submits no `login`. An unmet request is final, since
-      // requesting another interaction would loop.
-      if (isResumedPass(ctx)) {
+      // The pass after an interaction was submitted: the session now carries the context the
+      // interaction achieved, so an unmet request is final. The submission itself is the signal — a
+      // `login` result, or the marker a step-up writes when the session already satisfied the class
+      // and nothing was verified. A resumed pass without either never went through Experience
+      // (revisiting the authorization URL lands on the same route), so it falls through to the
+      // first-pass rule and asks for the prompt again instead of accepting a weaker class.
+      if (isResumedPass(ctx) && isInteractionSubmitted(ctx)) {
         if (isSessionFresh(ctx) && satisfiesAnyRequestedAcr(ctx, requestedAcrValues)) {
           return Check.NO_NEED_TO_PROMPT;
+        }
+
+        // A step-up that verified nothing leaves the session as it was, so it can age out of
+        // `max_age` before this pass; ask for the fresh authentication the next prompt carries. A
+        // `login` result that still misses `max_age` is final, since prompting again would loop.
+        if (!isSessionFresh(ctx) && !ctx.oidc.result?.login) {
+          return Check.REQUEST_PROMPT;
         }
 
         throw new errors.UnmetAuthenticationRequirements(

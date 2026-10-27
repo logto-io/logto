@@ -51,8 +51,9 @@ const getErrorCode = async (error: unknown): Promise<string | undefined> => {
  *   refresh, or a return to the method list after a rejected submission, therefore keeps the
  *   proofs the interaction already recorded instead of starting over.
  * - A child route reads the context once when it mounts, so a refresh recovers the same state.
- * - When the interaction cannot proceed, `PUT /experience` answers `200 { redirectTo }` and the
- *   client is sent back to the application with `window.location.replace()`.
+ * - When the step-up needs no UI, `PUT /experience` answers `200 { redirectTo }` and the client is
+ *   sent back to the application with `window.location.replace()`. This covers both the session
+ *   that already satisfies the class the step-up pursues and the pinned user that cannot reach it.
  */
 const StepUpContextProvider = ({ children }: Props) => {
   const [authenticationContext, setAuthenticationContext] =

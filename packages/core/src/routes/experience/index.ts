@@ -80,8 +80,10 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
           redirectTo: z.string(),
         })
         .optional(),
-      // 200 is returned when a pure step-up cannot proceed and the interaction was finished with
-      // `unmet_authentication_requirements`; 400 is returned if a pure step-up cannot be created;
+      // 200 is returned when a pure step-up needs no UI and the interaction was finished here:
+      // either the session already satisfies the class it pursues (the client returns to the
+      // application with the session's context untouched), or the pinned user cannot reach it
+      // (`unmet_authentication_requirements`); 400 is returned if a pure step-up cannot be created;
       // 404 is returned if the pinned subject of a pure step-up no longer exists; 422 is returned
       // if the captcha verification fails
       status: [200, 204, 400, 404, 422],

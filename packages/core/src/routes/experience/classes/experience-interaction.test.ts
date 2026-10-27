@@ -1305,10 +1305,12 @@ describe('ExperienceInteraction class', () => {
         redirectTo: 'redirectTo',
       });
       // No `login` result: the session keeps its `1fa`, `amr`, and `auth_time` untouched, since
-      // nothing was verified here.
+      // nothing was verified here. The marker is what tells the policy's resume check that the
+      // step-up finished instead of being revisited.
       const submitted = jest.mocked(provider.interactionResult).mock.calls[0]?.[2];
       expect(submitted).toBeDefined();
       expect(submitted).not.toHaveProperty('login');
+      expect(submitted).toMatchObject({ stepUpSatisfiedBySession: true });
       expect(experienceInteraction.identifiedUserId).toBeUndefined();
     });
 
