@@ -18,6 +18,7 @@ import PasskeyBinding from '.';
 const mockGetAccessToken = jest.fn().mockResolvedValue('access-token');
 const mockGetIdTokenClaims = jest.fn();
 const mockSignIn = jest.fn();
+const mockBrowserSupportsWebAuthn = jest.fn();
 
 jest.mock('@ac/constants/env', () => ({
   __esModule: true,
@@ -37,6 +38,22 @@ jest.mock('@ac/apis/mfa', () => ({
   createWebAuthnRegistration: jest.fn(),
   verifyWebAuthnRegistration: jest.fn(),
   addWebAuthnMfa: jest.fn(),
+}));
+
+jest.mock('@simplewebauthn/browser', () => ({
+  browserSupportsWebAuthn: () => mockBrowserSupportsWebAuthn(),
+  startRegistration: jest.fn(),
+  WebAuthnError: class WebAuthnError extends Error {},
+}));
+
+jest.mock('@ac/components/ErrorPage', () => ({
+  __esModule: true,
+  default: ({ titleKey, messageKey }: { titleKey?: string; messageKey?: string }) => (
+    <div>
+      <div>{titleKey}</div>
+      <div>{messageKey}</div>
+    </div>
+  ),
 }));
 
 const now = Math.floor(Date.now() / 1000);
@@ -75,6 +92,7 @@ describe('<PasskeyBinding /> OIDC step-up', () => {
     window.sessionStorage.clear();
     mockGetAccessToken.mockResolvedValue('access-token');
     mockSignIn.mockResolvedValue(undefined);
+    mockBrowserSupportsWebAuthn.mockReturnValue(true);
     jest.mocked(createWebAuthnRegistration).mockResolvedValue({
       verificationRecordId: 'web-authn-record',
       registrationOptions: {
@@ -113,5 +131,18 @@ describe('<PasskeyBinding /> OIDC step-up', () => {
     });
     expect(getByText('mfa.create_a_passkey')).toBeTruthy();
     expect(mockSignIn).not.toHaveBeenCalled();
+  });
+
+  it('does not start an entry step-up when WebAuthn is unsupported', async () => {
+    mockBrowserSupportsWebAuthn.mockReturnValue(false);
+    mockGetIdTokenClaims.mockResolvedValue(createClaims(now - 301));
+
+    const { getByText } = renderPasskeyBinding();
+
+    await waitFor(() => {
+      expect(getByText('mfa.webauthn_not_supported')).toBeTruthy();
+    });
+    expect(mockSignIn).not.toHaveBeenCalled();
+    expect(createWebAuthnRegistration).not.toHaveBeenCalled();
   });
 });

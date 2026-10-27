@@ -57,7 +57,8 @@ const PasskeyBinding = () => {
       AccountCenterControlValue.Edit &&
     isWebAuthnConfigurable(experienceSettings);
   const { isReady, hasFailed, verificationId } = useStepUpEntry({
-    enabled: isPageEnabled,
+    // Do not start a step-up for a browser that cannot complete the WebAuthn ceremony.
+    enabled: isPageEnabled && isWebAuthnSupported === true,
   });
 
   // Generate default passkey name from user-agent

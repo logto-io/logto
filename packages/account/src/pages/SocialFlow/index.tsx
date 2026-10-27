@@ -100,9 +100,11 @@ const SocialFlow = ({ mode }: Props) => {
       }
 
       await handleError(error, {
-        'verification_record.permission_denied': async () => {
-          await resetVerification();
-        },
+        // A permission denial after a step-up is terminal in the OIDC path. Only the legacy
+        // verification flow resets and retries; retrying here would loop the automatic request.
+        'verification_record.permission_denied': isDevFeaturesEnabled
+          ? undefined
+          : resetVerification,
         'user.social_account_exists_in_profile': async (requestError) => {
           finalizeSocialFlowFailure({
             connectorId,
