@@ -363,14 +363,21 @@ it('ignores a stale poll when the same creation has a newer payment attempt', as
 
 it('does not save a stale enrollment response over a new purchase', async () => {
   const response = deferred<typeof session>();
-  api.post.mockReturnValue(response.promise);
+  const requested = deferred<void>();
+  api.post.mockImplementation(async () => {
+    requested.resolve();
+    return response.promise;
+  });
   const pending = continueConnectorCreation('alice', operation, getApi, options(true));
+  // Replace the purchase only once Checkout is in flight, so the stale response is what is checked.
+  await requested.promise;
   const replacement = savePendingConnectorCreation('alice', {
     ...operation,
     key: 'another-purchase',
   });
   response.resolve(session);
   await expect(pending).rejects.toMatchObject({ name: 'AbortError' });
+  expect(api.post).toHaveBeenCalledTimes(1);
   expect(readPendingConnectorCreation('alice')).toEqual(replacement);
 });
 
