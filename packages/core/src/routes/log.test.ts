@@ -34,8 +34,9 @@ const logs = {
   }),
   findLogs: jest.fn().mockResolvedValue(mockLogs.map((log) => toRow(log))),
   findLogById: jest.fn().mockResolvedValue(toRow(mockLog)),
+  deleteLogsBefore: jest.fn().mockResolvedValue({ deletedCount: 0 }),
 };
-const { countLogs, findLogs, findLogById } = logs;
+const { countLogs, findLogs, findLogById, deleteLogsBefore } = logs;
 const logRoutes = await pickDefault(import('./log.js'));
 
 describe('logRoutes', () => {
@@ -197,6 +198,92 @@ describe('logRoutes', () => {
       const response = await logRequest.get(`/logs/${logId}`);
       expect(response.status).toEqual(200);
       expect(response.body).toEqual(mockLog);
+    });
+  });
+
+  describe('DELETE /logs', () => {
+    it('deletes with parsed bounds and returns the summary', async () => {
+      deleteLogsBefore.mockResolvedValueOnce({
+        deletedCount: 2,
+        deletedRange: { oldest: 1000, newest: 2000 },
+      });
+
+      const response = await logRequest.delete('/logs?before=5000&after=500&limit=10');
+
+      expect(response.status).toEqual(200);
+      expect(deleteLogsBefore).toHaveBeenCalledWith({ before: 5000, after: 500, limit: 10 });
+      expect(response.body).toEqual({
+        deletedCount: 2,
+        hasMore: false,
+        deletedRange: { oldest: 1000, newest: 2000 },
+      });
+    });
+
+    it('defaults limit to 1000 and passes after as undefined when omitted', async () => {
+      await logRequest.delete('/logs?before=5000');
+
+      expect(deleteLogsBefore).toHaveBeenCalledWith({
+        before: 5000,
+        after: undefined,
+        limit: 1000,
+      });
+    });
+
+    it('reports hasMore=true when the batch was full', async () => {
+      deleteLogsBefore.mockResolvedValueOnce({ deletedCount: 10 });
+
+      const response = await logRequest.delete('/logs?before=5000&limit=10');
+
+      expect(response.body).toEqual({ deletedCount: 10, hasMore: true });
+    });
+
+    it('omits deletedRange when nothing was deleted', async () => {
+      const response = await logRequest.delete('/logs?before=5000');
+
+      expect(response.status).toEqual(200);
+      expect(response.body).toEqual({ deletedCount: 0, hasMore: false });
+    });
+
+    it('returns 400 when before is missing', async () => {
+      const response = await logRequest.delete('/logs');
+
+      expect(response.status).toEqual(400);
+      expect(deleteLogsBefore).not.toHaveBeenCalled();
+    });
+
+    it('returns 400 when before is in the future', async () => {
+      const response = await logRequest.delete(`/logs?before=${Date.now() + 3_600_000}`);
+
+      expect(response.status).toEqual(400);
+      expect(deleteLogsBefore).not.toHaveBeenCalled();
+    });
+
+    it('returns 400 when after is not earlier than before', async () => {
+      const sameBound = await logRequest.delete('/logs?before=5000&after=5000');
+      expect(sameBound.status).toEqual(400);
+
+      const inverted = await logRequest.delete('/logs?before=5000&after=6000');
+      expect(inverted.status).toEqual(400);
+      expect(deleteLogsBefore).not.toHaveBeenCalled();
+    });
+
+    it.each([
+      ['zero', '0'],
+      ['above the cap', '10001'],
+      ['fractional', '1.5'],
+      ['not a number', 'abc'],
+    ])('returns 400 when limit is %s', async (_name, limit) => {
+      const response = await logRequest.delete(`/logs?before=5000&limit=${limit}`);
+
+      expect(response.status).toEqual(400);
+      expect(deleteLogsBefore).not.toHaveBeenCalled();
+    });
+
+    it('returns 400 when before is not a finite number', async () => {
+      const response = await logRequest.delete('/logs?before=abc');
+
+      expect(response.status).toEqual(400);
+      expect(deleteLogsBefore).not.toHaveBeenCalled();
     });
   });
 });
