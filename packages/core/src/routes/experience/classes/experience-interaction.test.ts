@@ -532,6 +532,8 @@ describe('ExperienceInteraction class', () => {
     it('clears the proofs when the interaction event changes, like the profile', async () => {
       const { experienceInteraction } = createSignInInteraction({
         interactionResult: {
+          // Only an unidentified interaction may switch events.
+          userId: undefined,
           authenticationProofs: [passwordProof(AuthenticationProofRole.Identify)],
         },
       });
@@ -2587,6 +2589,61 @@ describe('ExperienceInteraction class', () => {
         code: 'session.mfa.require_mfa_verification',
         status: 403,
         data: { availableFactors: [MfaFactor.TOTP] },
+      });
+    });
+
+    it('keeps enrollment open for backup codes after the requested mfa enrollment', async () => {
+      setDevFeaturesEnabled(true);
+      const user = {
+        ...mockUser,
+        logtoConfig: { [userMfaDataKey]: { skipMfaOnSignIn: true } },
+        mfaVerifications: [],
+      };
+      const { experienceInteraction } = createSignInInteraction({
+        user,
+        signInExperienceOverrides: {
+          mfa: {
+            policy: MfaPolicy.PromptAtSignInAndSignUp,
+            factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP, MfaFactor.BackupCode],
+          },
+        },
+        interactionResult: {
+          authenticationContext: { requestedAcrValues: [LogtoAcr.Mfa] },
+          // An email first factor and the TOTP enrolled as the way forward for the requested `mfa`.
+          authenticationProofs: [
+            {
+              id: 'one-time-token',
+              factor: AuthenticationFactor.Email,
+              class: AuthenticationFactorClass.FirstFactor,
+              amr: [AuthenticationMethodReference.Otp],
+              role: AuthenticationProofRole.Identify,
+            },
+            {
+              id: 'new-totp',
+              factor: AuthenticationFactor.Totp,
+              class: AuthenticationFactorClass.Mfa,
+              amr: [AuthenticationMethodReference.Otp],
+              role: AuthenticationProofRole.Bind,
+            },
+          ],
+          verificationRecords: [
+            {
+              id: 'new-totp',
+              type: VerificationType.TOTP,
+              userId: user.id,
+              secret: 'new-totp-secret',
+              verified: true,
+            },
+          ],
+        },
+      });
+
+      // The enrollment keeps the rest of the onboarding open, and the configured backup-code
+      // requirement is not silently skipped.
+      await expect(experienceInteraction.guardMfaBinding()).resolves.toBeUndefined();
+      await expect(experienceInteraction.submit()).rejects.toMatchObject({
+        code: 'session.mfa.backup_code_required',
+        status: 422,
       });
     });
 

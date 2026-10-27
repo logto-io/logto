@@ -53,7 +53,7 @@
             "description": "The interaction event has been successfully updated."
           },
           "400": {
-            "description": "The interaction event is invalid or cannot be updated.  Only `SignIn` and `Register` are interchangeable. If the current interaction event is `ForgotPassword`, it cannot be updated."
+            "description": "The interaction event is invalid or cannot be updated.  Only `SignIn` and `Register` are interchangeable. If the interaction is already identified, or the current interaction event is `ForgotPassword`, it cannot be updated."
           },
           "403": {
             "description": "The given interaction event is not enabled in the sign-in experience settings."

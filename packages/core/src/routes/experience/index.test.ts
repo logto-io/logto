@@ -958,6 +958,58 @@ describe('POST /experience/profile/mfa', () => {
   );
 });
 
+describe('PUT /experience/interaction-event', () => {
+  it('should reject switching the event once the interaction is identified', async () => {
+    const user = {
+      ...mockUser,
+      logtoConfig: { [userMfaDataKey]: { skipMfaOnSignIn: true } },
+      mfaVerifications: [mockUserTotpMfaVerification],
+    };
+    const { requester } = createRequesterWithMocks({
+      user,
+      mfa: {
+        policy: MfaPolicy.PromptAtSignInAndSignUp,
+        factors: [MfaFactor.WebAuthn, MfaFactor.TOTP],
+      },
+      interactionResult: {
+        verificationRecords: [
+          {
+            id: 'webauthn-registration-id',
+            type: VerificationType.WebAuthn,
+            userId: user.id,
+            verified: true,
+            registrationChallenge: 'challenge',
+            registrationInfo: {
+              type: MfaFactor.WebAuthn,
+              rpId: 'rp-id',
+              credentialId: 'credential-id',
+              publicKey: 'public-key',
+              transports: [],
+              counter: 0,
+              agent: 'agent',
+            },
+          },
+        ],
+      },
+    });
+
+    const switched = await requester
+      .put('/experience/interaction-event')
+      .send({ interactionEvent: InteractionEvent.Register });
+
+    expect(switched.status).toBe(400);
+    expect(switched.body).toMatchObject({ code: 'session.invalid_interaction_type' });
+
+    // The registration exemption stays out of reach, so the binding guard still rejects it.
+    const bound = await requester
+      .post('/experience/profile/mfa/passkey')
+      .send({ verificationId: 'webauthn-registration-id' });
+
+    expect(bound.status).toBe(403);
+    expect(bound.body).toMatchObject({ code: 'session.mfa.require_mfa_verification' });
+  });
+});
+
 describe('POST /experience/submit', () => {
   afterEach(() => {
     resetDevFeaturesEnabled();
