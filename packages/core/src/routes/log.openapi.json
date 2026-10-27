@@ -64,6 +64,36 @@
             }
           }
         }
+      },
+      "delete": {
+        "summary": "Delete logs",
+        "description": "Delete audit logs in bounded batches. The deleted set is `after < createdAt < before`, with both bounds exclusive.\n\n`before` is required, so a bare `DELETE /api/logs` never means \"delete everything\". `before` must not be in the future; a boundary in the future is rejected with `400` because it is almost always a unit mistake (seconds instead of milliseconds) or a miscomputed timezone offset.\n\nEach call deletes at most `limit` rows in a single statement and reports `hasMore`. Keep both bounds fixed across calls and repeat while `hasMore` is `true`; a boundary that is recomputed between calls would advance past rows that were never exported.\n\n### Performance\n\n`DELETE` marks rows dead and leaves index cleanup to autovacuum, so cost is dominated by heap writes and WAL. On a typical self-hosted instance with warm cache, expect roughly 20-200 ms per call at `limit=1000` and 0.2-2 s at `limit=10000`; a cold range can be several times slower. These are typical values, not guarantees — measure with `EXPLAIN (ANALYZE, BUFFERS)` on your own instance.\n\nFreed space is reused by later inserts but the table file does not shrink, so disk usage will not drop immediately after a purge.",
+        "parameters": [
+          {
+            "name": "before",
+            "in": "query",
+            "required": true,
+            "description": "Exclusive upper bound on `createdAt`, in unix milliseconds. Only logs with `createdAt < before` are deleted. Returns `400` if the value is in the future."
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "description": "Exclusive lower bound on `createdAt`, in unix milliseconds. Only logs with `createdAt > after` are deleted. Omit to purge everything older than `before`. Returns `400` if it is not strictly earlier than `before`."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum rows deleted by this call. Default `1000`, maximum `10000`. Returns `400` for values outside that range."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Summary of the rows deleted by this call. `hasMore` is `true` when `deletedCount` equals `limit`, meaning the caller should repeat the request with the same bounds."
+          },
+          "400": {
+            "description": "Returned when `before` is missing or malformed, when `before` is in the future, when `after` is not strictly earlier than `before`, or when `limit` is outside `1..10000`."
+          }
+        }
       }
     },
     "/api/logs/{id}": {
