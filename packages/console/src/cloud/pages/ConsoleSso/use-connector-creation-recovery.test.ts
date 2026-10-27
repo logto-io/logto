@@ -9,6 +9,7 @@ import {
 } from './connector-creation-idempotency';
 import {
   mockApi,
+  mockChooseBillingCustomer,
   onCreated,
   operation,
   paidConnectors,
@@ -52,6 +53,30 @@ it.each(['open', 'expired'])(
     expect(mockApi.post).not.toHaveBeenCalled();
   }
 );
+
+it('re-enables creation when the billing account dialog is canceled while restarting an expired session', async () => {
+  savePendingConnectorCreation('alice', operation);
+  mockApi.get.mockResolvedValue({ ...paidSession, status: 'expired', subscriptionId: null });
+  // eslint-disable-next-line unicorn/no-useless-undefined -- The dialog resolves to nothing on cancel.
+  mockChooseBillingCustomer.mockResolvedValue(undefined);
+  const { result } = renderCreation();
+  await waitFor(() => {
+    expect(result.current.status).toBe('expired');
+  });
+  await act(async () => {
+    await result.current.create(SsoProviderName.OIDC);
+  });
+  expect(mockChooseBillingCustomer).toHaveBeenCalledTimes(1);
+  expect(result.current.status).toBeUndefined();
+  expect(result.current.isSubmitting).toBe(false);
+  expect(mockApi.post).not.toHaveBeenCalled();
+  const { sessionId, ...restarted } = operation;
+  expect(readPendingConnectorCreation('alice')).toEqual({
+    ...restarted,
+    checkoutKey: 'new-creation',
+  });
+  expect(onCreated).not.toHaveBeenCalled();
+});
 
 it('pauses pending payment checks after a minute and allows manual retry', async () => {
   savePendingConnectorCreation('alice', operation);

@@ -15,12 +15,16 @@ jest.mock(
       readonly delete = mockApi.delete;
       constructor(readonly config: unknown) {}
     },
+    ResponseError: class extends Error {},
   }),
   { virtual: true }
 );
 jest.mock('@/cloud/hooks/use-cloud-api', () => ({
   useCloudApi: () => mockApi,
   toastResponseError: jest.fn(),
+}));
+jest.mock('@/hooks/use-billing-customer-choice', () => ({
+  useBillingCustomerChoice: () => ({ chooseBillingCustomer: mockChooseBillingCustomer }),
 }));
 jest.mock('@/hooks/use-current-user', () => ({
   __esModule: true,
@@ -33,6 +37,7 @@ export const mockApi = {
   post: jest.fn(),
   delete: jest.fn(),
 };
+export const mockChooseBillingCustomer = jest.fn();
 export const onCreated = jest.fn();
 export const operation = {
   key: 'creation-one',
@@ -89,6 +94,7 @@ beforeEach(() => {
   });
   mockApi.post.mockResolvedValue({ id: 'connector-one' });
   mockApi.delete.mockResolvedValue({});
+  mockChooseBillingCustomer.mockResolvedValue({});
   // eslint-disable-next-line @silverhand/fp/no-mutating-methods -- Supply the browser UUID API in jsdom.
   Object.defineProperty(crypto, 'randomUUID', {
     configurable: true,
