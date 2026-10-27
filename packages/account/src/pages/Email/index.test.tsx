@@ -3,6 +3,7 @@ import { act, fireEvent, waitFor } from '@testing-library/react';
 import { HTTPError, type NormalizedOptions } from 'ky';
 import { Route, Routes } from 'react-router-dom';
 
+import LoadingContextProvider from '@ac/Providers/LoadingContextProvider';
 import type { PageContextType } from '@ac/Providers/PageContextProvider/PageContext';
 import renderWithPageContext, {
   mockAccountCenterSettings,
@@ -70,10 +71,12 @@ type EmailRenderOptions = {
 
 const renderEmail = ({ pageContext, initialEntries = [emailRoute] }: EmailRenderOptions = {}) =>
   renderWithPageContext(
-    <Routes>
-      <Route path={emailRoute} element={<Email />} />
-      <Route path={emailSuccessRoute} element={<div>Email success page</div>} />
-    </Routes>,
+    <LoadingContextProvider>
+      <Routes>
+        <Route path={emailRoute} element={<Email />} />
+        <Route path={emailSuccessRoute} element={<div>Email success page</div>} />
+      </Routes>
+    </LoadingContextProvider>,
     {
       initialEntries,
       future: {
@@ -374,5 +377,28 @@ describe('<Email />', () => {
       expect(setVerificationId).toHaveBeenCalledWith(undefined);
       expect(setToast).toHaveBeenCalledWith('account_center.verification.verification_required');
     });
+  });
+
+  it('verifies the code once when the binding starts a step-up', async () => {
+    mockRequestStepUp.mockResolvedValue(true);
+    jest.mocked(updatePrimaryEmail).mockImplementation(async () => {
+      // Let the loading state render before the challenge, as a real request does.
+      await new Promise((resolve) => {
+        setTimeout(resolve, 0);
+      });
+      throw createHttpError('verification_record.permission_denied', 401);
+    });
+
+    const { getByText, container } = renderEmail();
+
+    await advanceToVerifyStep(container, getByText);
+    fillVerificationCode(container, '123456');
+
+    await waitFor(() => {
+      expect(mockRequestStepUp).toHaveBeenCalledTimes(1);
+    });
+
+    expect(verifyEmailVerificationCode).toHaveBeenCalledTimes(1);
+    expect(updatePrimaryEmail).toHaveBeenCalledTimes(1);
   });
 });

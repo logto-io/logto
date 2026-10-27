@@ -6,7 +6,7 @@ import VerificationCodeInput, {
 import { AccountCenterControlValue, MfaFactor, type Mfa } from '@logto/schemas';
 import type { TFuncKey } from 'i18next';
 import qrcode from 'qrcode';
-import { useCallback, useContext, useEffect, useState, type FormEvent } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState, type FormEvent } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -197,13 +197,22 @@ const TotpBinding = ({ isReplace }: Props) => {
     ]
   );
 
-  // Auto-submit when all 6 digits are entered
+  /**
+   * Auto-submit once the code is fully entered. `handleSubmit` is intentionally accessed through a
+   * ref so this effect does not depend on its identity: `useApi` clears `loading` before the
+   * challenge handler starts a step-up, which rebuilds the callback and would otherwise submit the
+   * same code again while the redirect is being prepared.
+   */
+  const handleSubmitRef = useRef(handleSubmit);
+  // eslint-disable-next-line @silverhand/fp/no-mutation
+  handleSubmitRef.current = handleSubmit;
+
   useEffect(() => {
     if (!isCodeReady(codeInput)) {
       return;
     }
-    void handleSubmit();
-  }, [codeInput, handleSubmit]);
+    void handleSubmitRef.current();
+  }, [codeInput]);
   if (
     !accountCenterSettings?.enabled ||
     accountCenterSettings.fields.mfa !== AccountCenterControlValue.Edit

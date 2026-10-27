@@ -1,7 +1,9 @@
 import { AccountCenterControlValue, LogtoAcr } from '@logto/schemas';
-import { waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
+import { HTTPError, type NormalizedOptions } from 'ky';
 import { Route, Routes } from 'react-router-dom';
 
+import LoadingContextProvider from '@ac/Providers/LoadingContextProvider';
 import renderWithPageContext, {
   mockAccountCenterSettings,
   mockSignInExperienceSettings,
@@ -46,11 +48,34 @@ const createClaims = (authTime = now - 60) => ({
   auth_time: authTime,
 });
 
+const challenge =
+  'Bearer error="insufficient_user_authentication", ' +
+  'error_description="Recent user authentication is required", ' +
+  'acr_values="urn:logto:acr:1fa", max_age="600"';
+
+const createChallengeError = () =>
+  new HTTPError(
+    {
+      status: 401,
+      headers: {
+        get: (name: string) => (name === 'www-authenticate' ? challenge : null),
+      },
+      json: async () => ({
+        code: 'verification_record.permission_denied',
+        message: 'Permission denied, please re-authenticate.',
+      }),
+    } as unknown as Response,
+    {} as Request,
+    {} as NormalizedOptions
+  );
+
 const renderTotpBinding = () =>
   renderWithPageContext(
-    <Routes>
-      <Route path={authenticatorAppRoute} element={<TotpBinding />} />
-    </Routes>,
+    <LoadingContextProvider>
+      <Routes>
+        <Route path={authenticatorAppRoute} element={<TotpBinding />} />
+      </Routes>
+    </LoadingContextProvider>,
     {
       initialEntries: [authenticatorAppRoute],
       future: { v7_relativeSplatPath: true, v7_startTransition: true },
@@ -103,5 +128,34 @@ describe('<TotpBinding /> OIDC step-up', () => {
     });
     expect(getByText('mfa.add_authenticator_app')).toBeTruthy();
     expect(mockSignIn).not.toHaveBeenCalled();
+  });
+
+  it('submits the TOTP code once when the write is challenged for step-up', async () => {
+    mockGetIdTokenClaims.mockResolvedValue(createClaims());
+    jest.mocked(createOrReplaceTotpMfa).mockImplementation(async () => {
+      // Let the loading state render before the challenge, as a real request does.
+      await new Promise((resolve) => {
+        setTimeout(resolve, 0);
+      });
+      throw createChallengeError();
+    });
+
+    const { container } = renderTotpBinding();
+
+    await waitFor(() => {
+      expect(container.querySelectorAll('input[name^="totpCode_"]')).toHaveLength(6);
+    });
+
+    const inputs = container.querySelectorAll('input[name^="totpCode_"]');
+
+    for (const [index, input] of [...inputs].entries()) {
+      fireEvent.input(input, { target: { value: String(index + 1) } });
+    }
+
+    await waitFor(() => {
+      expect(mockSignIn).toHaveBeenCalledTimes(1);
+    });
+
+    expect(createOrReplaceTotpMfa).toHaveBeenCalledTimes(1);
   });
 });
