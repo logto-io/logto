@@ -4,7 +4,7 @@ import { HTTPError } from 'ky';
 
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import { UserApiTest } from '#src/helpers/user.js';
-import { generateTestName } from '#src/utils.js';
+import { generatePassword, generateTestName } from '#src/utils.js';
 
 describe('organization user APIs', () => {
   describe('organization get users', () => {
@@ -61,6 +61,21 @@ describe('organization user APIs', () => {
       // `hasPassword` is part of `createdUser` and of the response alike
       expect(users[0]).toMatchObject(createdUser);
       expect(users[0]!.hasPassword).toBe(false);
+    });
+
+    it('should tell whether each organization user has a password', async () => {
+      const organizationId = organizationApi.organizations[0]!.id;
+      const withPassword = await userApi.create({
+        username: generateTestName(),
+        password: generatePassword(),
+      });
+      const withoutPassword = await userApi.create({ username: generateTestName() });
+
+      await organizationApi.addUsers(organizationId, [withPassword.id, withoutPassword.id]);
+      const [users] = await organizationApi.getUsers(organizationId, { page_size: 50 });
+
+      expect(users.find(({ id }) => id === withPassword.id)?.hasPassword).toBe(true);
+      expect(users.find(({ id }) => id === withoutPassword.id)?.hasPassword).toBe(false);
     });
 
     it('should be able to get organization users with their roles', async () => {
