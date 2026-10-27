@@ -90,6 +90,6 @@ describe('webhook delivery id', () => {
     // Each delivery's audit log entry is keyed on the delivery id it sent
     expect(insertLog).toHaveBeenCalledTimes(2);
     const logged = insertLog.mock.calls.map(([entry]: [{ id: string }]) => entry.id);
-    expect([...logged].sort()).toEqual(['delivery-1', 'delivery-2']);
+    expect(logged.slice().sort()).toEqual(['delivery-1', 'delivery-2']);
   });
 });
