@@ -112,7 +112,7 @@ const maxGuardIssues = 100;
  * the steps of `safeParse` with a root issue list that throws once it overflows. Issues inside a
  * `z.union` branch or `.catch()` go to their own lists and are not capped.
  */
-const parseWithIssueCap = <Output, Definition extends ZodTypeDef, Input>(
+export const parseWithIssueCap = <Output, Definition extends ZodTypeDef, Input>(
   guard: ZodType<Output, Definition, Input>,
   data: unknown
 ): Output => {

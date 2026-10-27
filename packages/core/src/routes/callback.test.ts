@@ -1,13 +1,22 @@
 import { accountCenterSocialStatePrefix, experienceSocialStatePrefix } from '@logto/schemas';
 import Koa from 'koa';
 import supertest from 'supertest';
+import { ZodString } from 'zod';
+
+import RequestError from '#src/errors/RequestError/index.js';
 
 import { mountCallbackRouter } from './callback.js';
+
+const { jest } = import.meta;
 
 describe('social connector form post callback', () => {
   const app = new Koa();
   mountCallbackRouter(app);
   const request = supertest(app.callback());
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
 
   it('should redirect to the same path with query string', async () => {
     const response = await request.post('/callback/some_connector_id').send({ some: 'data' });
@@ -83,5 +92,18 @@ describe('social connector form post callback', () => {
     expect(response.header.location).toBe('/account/callback/social/some_connector_id?some=data');
   });
 
-  // No counter-case here since `koa-body` has a high tolerance for invalid requests
+  it.each(['/callback/some_connector_id', '/account/callback/social/some_connector_id'])(
+    'should stop validating a POST %s body after 100 invalid values',
+    async (path) => {
+      const parseString = jest.spyOn(ZodString.prototype, '_parse');
+      const body = Object.fromEntries(Array.from({ length: 10_000 }, (_, index) => [index, index]));
+
+      const response = await request.post(path).send(body);
+
+      expect(response.status).toBe(400);
+      expect(response.text).toBe(new RequestError('oidc.invalid_request').message);
+      // Each visited entry parses its key and its value
+      expect(parseString).toHaveBeenCalledTimes(202);
+    }
+  );
 });
