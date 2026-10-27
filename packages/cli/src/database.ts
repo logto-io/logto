@@ -11,6 +11,7 @@ import {
 import decamelize from 'decamelize';
 import { DatabaseError } from 'pg-protocol';
 
+import { createPoolWithRetry } from './pool-retry.js';
 import { convertToPrimitiveOrSql } from './sql.js';
 import { ConfigKey, consoleLog, getCliConfigWithPrompt } from './utils.js';
 
@@ -29,12 +30,16 @@ export const createPoolFromConfig = async () => {
   const databaseUrl = await getDatabaseUrlFromConfig();
   assert(parseDsn(databaseUrl).databaseName, new Error('Database name is required in URL'));
 
-  return createPool(databaseUrl, {
-    interceptors: createInterceptorsPreset(),
-    ...conditional(
-      databaseStatementTimeout !== undefined && { statementTimeout: databaseStatementTimeout }
-    ),
-  });
+  // `db seed` and `db alteration deploy` usually run right before `npm start` in the same
+  // container, so they meet the same not-ready database or resolver as core does at startup.
+  return createPoolWithRetry(async () =>
+    createPool(databaseUrl, {
+      interceptors: createInterceptorsPreset(),
+      ...conditional(
+        databaseStatementTimeout !== undefined && { statementTimeout: databaseStatementTimeout }
+      ),
+    })
+  );
 };
 
 /**
