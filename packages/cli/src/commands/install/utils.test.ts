@@ -28,11 +28,18 @@ describe('checkNodeVersion', () => {
   });
 
   it('should pass for a version inside a multi-range requirement', () => {
-    const required = '^22.14.0 || ^24.0.0 || ^26.0.0';
+    const required = '^22.23.4 || ^24.22.1 || ^26.12.1';
 
-    expect(checkNodeVersion(required, 'v22.14.0')).toEqual({});
-    expect(checkNodeVersion(required, 'v24.5.0')).toEqual({});
+    expect(checkNodeVersion(required, 'v22.23.4')).toEqual({});
+    expect(checkNodeVersion(required, 'v24.22.1')).toEqual({});
     expect(checkNodeVersion(required, 'v26.12.1')).toEqual({});
+  });
+
+  it('should only warn for a supported major version below the minimum', () => {
+    expect(checkNodeVersion('^22.23.4 || ^24.22.1 || ^26.12.1', 'v22.14.0')).toEqual({
+      warning:
+        'Logto is tested under NodeJS ^22.23.4 || ^24.22.1 || ^26.12.1, but version 22.14.0 found.',
+    });
   });
 
   it('should only warn for a higher major version', () => {
@@ -42,8 +49,8 @@ describe('checkNodeVersion', () => {
   });
 
   it('should only warn for a major version between the supported ranges', () => {
-    expect(checkNodeVersion('^22.14.0 || ^26.0.0', 'v24.0.0')).toEqual({
-      warning: 'Logto is tested under NodeJS ^22.14.0 || ^26.0.0, but version 24.0.0 found.',
+    expect(checkNodeVersion('^22.23.4 || ^26.12.1', 'v24.0.0')).toEqual({
+      warning: 'Logto is tested under NodeJS ^22.23.4 || ^26.12.1, but version 24.0.0 found.',
     });
   });
 });
