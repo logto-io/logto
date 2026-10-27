@@ -676,7 +676,7 @@ export default class ExperienceInteraction {
     const pursued = await this.getPursuedRequestedAcr();
     const isRequestedMfaUnmet = pursued?.acr === LogtoAcr.Mfa;
 
-    if (!isRequestedMfaUnmet && (this.hasVerifiedSsoIdentity || this.hasVerifiedSignInPasskey)) {
+    if (!isRequestedMfaUnmet && this.isMfaGateFulfilled()) {
       return;
     }
 
@@ -1605,6 +1605,23 @@ export default class ExperienceInteraction {
 
   private get verificationRecordsArray() {
     return this.verificationRecords.array();
+  }
+
+  /**
+   * Whether what the interaction proved already fulfills the tenant MFA gate while no requested
+   * `mfa` is owed: an SSO or passkey sign-in satisfies the policy without a verification, and a
+   * request that listed `mfa` and reached it here has proved a first factor plus a distinct MFA
+   * factor, at least what the policy asks for. A factor bound in this interaction is a new-bind
+   * record the gate never accepts, so without the latter the gate could only re-offer the
+   * challenge the enrollment just replaced.
+   */
+  private isMfaGateFulfilled(): boolean {
+    return (
+      this.hasVerifiedSsoIdentity ||
+      this.hasVerifiedSignInPasskey ||
+      (this.requestedAcrValues.includes(LogtoAcr.Mfa) &&
+        acrSatisfies(achieveAcr(this.countedAuthenticationProofs), LogtoAcr.Mfa))
+    );
   }
 
   /**
