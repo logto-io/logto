@@ -5048,7 +5048,7 @@ importers:
         specifier: ^3.5.3
         version: 3.5.3
       puppeteer:
-        specifier: ^23.10.3
+        specifier: 23.10.3
         version: 23.10.3(typescript@5.9.3)
       tsup:
         specifier: ^8.5.1

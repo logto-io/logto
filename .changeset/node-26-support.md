@@ -59,6 +59,7 @@
 "@logto/connector-x": patch
 "@logto/connector-xiaomi": patch
 "@logto/connector-yunpian-sms": patch
+"@logto/core": minor
 "@logto/core-kit": patch
 "@logto/create": patch
 "@logto/language-kit": patch
@@ -72,4 +73,4 @@
 
 support Node.js 26
 
-Published packages now include Node.js 26 in their engine requirements while continuing to support Node.js 22 and 24.
+Logto now requires Node.js ^26.0.0 to run, and `logto init` stops and cleans up the installation when the downloaded release needs a newer Node.js version. Published packages now declare support for Node.js 22, 24 and 26.

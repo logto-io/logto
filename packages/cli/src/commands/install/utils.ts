@@ -80,11 +80,21 @@ export const validateNodeVersion = (requiredVersionString = packageJson.engines.
   }
 };
 
+const readServerNodeRequirement = async (installPath: string) => {
+  try {
+    const { engines } = serverPackageJsonGuard.parse(
+      JSON.parse(await fs.readFile(path.join(installPath, 'package.json'), 'utf8'))
+    );
+
+    return engines?.node;
+  } catch {
+    // A custom `--download-url` tarball may not follow the release layout. Without a readable
+    // manifest there is no requirement to validate, so continue the installation as before.
+  }
+};
+
 export const validateServerNodeVersion = async (installPath: string) => {
-  const { engines } = serverPackageJsonGuard.parse(
-    JSON.parse(await fs.readFile(path.join(installPath, 'package.json'), 'utf8'))
-  );
-  const requiredVersionString = engines?.node;
+  const requiredVersionString = await readServerNodeRequirement(installPath);
 
   if (!requiredVersionString) {
     return;
@@ -99,7 +109,9 @@ export const validateServerNodeVersion = async (installPath: string) => {
   if (fatalError) {
     // The release cannot run on the current Node.js version; remove the partial installation so
     // the path can be reused.
-    await fs.rm(installPath, { force: true, recursive: true });
+    await oraPromise(fs.rm(installPath, { force: true, recursive: true }), {
+      text: 'Clean up',
+    });
     consoleLog.fatal(fatalError);
   }
 

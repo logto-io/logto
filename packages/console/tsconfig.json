@@ -2,6 +2,8 @@
   "extends": "@silverhand/ts-config-react/tsconfig.base",
   "compilerOptions": {
     "baseUrl": "./",
+    // Console is bundled by Vite and emits no declarations. TypeScript 5.9 reports TS4023 for
+    // inferred types that reference unexported names from `@logto/cloud`, so keep it off.
     "declaration": false,
     "paths": {
       "@/*": ["./src/*"]

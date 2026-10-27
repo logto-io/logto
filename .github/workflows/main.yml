@@ -103,6 +103,8 @@ jobs:
       - name: Build for test
         run: pnpm -r build:test
 
+      # Playwright 1.56's browser installer hangs on Node.js 26; the root `pnpm.overrides` pins
+      # 1.64.1 so this step and the element tests use a version that works.
       - name: Install playwright for element tests
         working-directory: ./packages/elements
         timeout-minutes: 20
