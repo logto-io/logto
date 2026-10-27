@@ -2830,6 +2830,69 @@ describe('ExperienceInteraction class', () => {
       });
     });
 
+    it('offers TOTP enrollment instead of an undeliverable code and completes once bound', async () => {
+      setDevFeaturesEnabled(true);
+      const { experienceInteraction, signInTenant, provider } = createSignInInteraction({
+        // The tenant enables the phone MFA factor and the user has a phone, but no SMS connector can
+        // deliver its code. TOTP is not enrolled yet, so binding it is what reaches `mfa`.
+        connectors: [],
+        signInExperienceOverrides: {
+          mfa: {
+            policy: MfaPolicy.NoPrompt,
+            factors: [MfaFactor.TOTP, MfaFactor.PhoneVerificationCode],
+          },
+        },
+        interactionResult: {
+          authenticationContext: { requestedAcrValues: [LogtoAcr.Mfa, LogtoAcr.FirstFactor] },
+          authenticationProofs: [passwordProof(AuthenticationProofRole.Identify)],
+        },
+      });
+
+      // The projection offers only the TOTP binding, so the gate must not ask for the undeliverable
+      // phone code and leave the user with no way to complete the sign-in.
+      await expect(experienceInteraction.toSanitizedJson()).resolves.toMatchObject({
+        authenticationContext: { availableMethods: [], enrollableFactors: [MfaFactor.TOTP] },
+      });
+      await expect(experienceInteraction.submit()).rejects.toMatchObject({
+        code: 'user.missing_mfa',
+        status: 422,
+        data: { availableFactors: [MfaFactor.TOTP] },
+      });
+
+      const { libraries, queries } = signInTenant;
+      experienceInteraction.setVerificationRecord(
+        new TotpVerification(libraries, queries, {
+          id: 'totp-enroll-id',
+          type: VerificationType.TOTP,
+          userId: mockUser.id,
+          secret: 'new-secret',
+          verified: true,
+        })
+      );
+      await experienceInteraction.mfa.addTotpByVerificationId('totp-enroll-id');
+
+      // Binding the factor completes the requested class, and the tenant policy must not ask for the
+      // phone code again: a factor bound in this interaction never counts as its verification, so
+      // the gate would otherwise re-offer the one challenge the enrollment just replaced.
+      await experienceInteraction.submit();
+
+      expect(provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({
+          login: {
+            accountId: mockUser.id,
+            acr: LogtoAcr.Mfa,
+            amr: [
+              AuthenticationMethodReference.Password,
+              AuthenticationMethodReference.Otp,
+              AuthenticationMethodReference.Mfa,
+            ],
+          },
+        })
+      );
+    });
+
     it('enforces a requested ACR on registration only through what the flow can drive', async () => {
       setDevFeaturesEnabled(true);
       const createRegistration = (acrValues: LogtoAcr[], factors: MfaFactor[]) =>

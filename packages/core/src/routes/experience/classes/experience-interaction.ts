@@ -684,9 +684,10 @@ export default class ExperienceInteraction {
     // A requested `mfa` is a requirement of the relying party, not of the tenant's sign-in MFA
     // policy: `skipMfaOnSignIn`, an adaptive-MFA non-trigger result and a trusted device are all
     // decisions about the tenant's policy, so none of them satisfies a class the client asked for.
-    const isRequestedMfaUnmet = await this.isRequestedMfaUnmet();
+    const pursued = await this.getPursuedRequestedAcr();
+    const isRequestedMfaUnmet = pursued?.acr === LogtoAcr.Mfa;
 
-    if (this.isMfaGateExempt(isRequestedMfaUnmet)) {
+    if (!isRequestedMfaUnmet && this.isMfaGateFulfilled()) {
       return;
     }
 
@@ -696,11 +697,16 @@ export default class ExperienceInteraction {
 
     const mfaValidator = new MfaValidator(mfaSettings, user, adaptiveMfaResult);
 
-    // A requested `mfa` only offers the factors that pair with the first factor already proven:
-    // a factor of the same kind (an MFA email code after an email sign-in) counts once and never
-    // lifts the context to `mfa`.
+    // A requested `mfa` only offers the factors that pair with the first factor already proven and
+    // that the eligibility offers: a factor of the same kind (an MFA email code after an email
+    // sign-in) counts once and never lifts the context to `mfa`, and a code whose connector is
+    // unavailable cannot be delivered at all. A user left with none of them reaches the enrollment
+    // requirement of `assertMfaFulfilled`, which offers a factor that does reach the class.
     const availableFactors = isRequestedMfaUnmet
-      ? this.getPairableMfaFactors(mfaValidator.availableUserMfaVerificationTypes)
+      ? this.getPairableMfaFactors(mfaValidator.availableUserMfaVerificationTypes).filter(
+          (factor) =>
+            (pursued.decision?.availableMethods ?? []).includes(mfaFactorToVerificationType[factor])
+        )
       : mfaValidator.availableUserMfaVerificationTypes;
 
     // Declared non-proof: an adaptive-MFA non-trigger result skips the gate and proves nothing,
@@ -1646,12 +1652,20 @@ export default class ExperienceInteraction {
   }
 
   /**
-   * Whether a verified SSO identity or sign-in passkey satisfies the MFA gate on its own. A
-   * requested `mfa` is never satisfied this way: the relying party asked for the class, and the
-   * gate keeps its own requirement.
+   * Whether what the interaction proved already fulfills the tenant MFA gate while no requested
+   * `mfa` is owed: an SSO or passkey sign-in satisfies the policy without a verification, and a
+   * request that listed `mfa` and reached it here has proved a first factor plus a distinct MFA
+   * factor, at least what the policy asks for. A factor bound in this interaction is a new-bind
+   * record the gate never accepts, so without the latter the gate could only re-offer the
+   * challenge the enrollment just replaced.
    */
-  private isMfaGateExempt(isRequestedMfaUnmet: boolean) {
-    return !isRequestedMfaUnmet && (this.hasVerifiedSsoIdentity || this.hasVerifiedSignInPasskey);
+  private isMfaGateFulfilled(): boolean {
+    return (
+      this.hasVerifiedSsoIdentity ||
+      this.hasVerifiedSignInPasskey ||
+      (this.requestedAcrValues.includes(LogtoAcr.Mfa) &&
+        acrSatisfies(achieveAcr(this.countedAuthenticationProofs), LogtoAcr.Mfa))
+    );
   }
 
   /**
@@ -1660,17 +1674,19 @@ export default class ExperienceInteraction {
    *
    * Mirrors {@link guardMfaVerificationStatus}: a verified SSO identity or sign-in passkey
    * satisfies the gate, and a requested `mfa` only accepts a factor pairable with the proven first
-   * factor. Enrollment is the only way forward only when a first factor is proven and nothing can
-   * pair with it; without one, the enabled factors still have to be proven first.
+   * factor that the eligibility can also deliver. Enrollment is the only way forward only when a
+   * first factor is proven and nothing can pair with it; without one, the enabled factors still
+   * have to be proven first.
    */
   private async getMfaBindingBlock(): Promise<MfaBindingBlock | undefined> {
     if (this.interactionEvent !== InteractionEvent.SignIn || this.isStepUp) {
       return;
     }
 
-    const isRequestedMfaUnmet = await this.isRequestedMfaUnmet();
+    const pursued = await this.getPursuedRequestedAcr();
+    const isRequestedMfaUnmet = pursued?.acr === LogtoAcr.Mfa;
 
-    if (this.isMfaGateExempt(isRequestedMfaUnmet)) {
+    if (!isRequestedMfaUnmet && this.isMfaGateFulfilled()) {
       return;
     }
 
@@ -1681,10 +1697,13 @@ export default class ExperienceInteraction {
 
     // Without a fresh first factor the pairable list is empty because the pair has no first side
     // yet, not because there is nothing to challenge: keep the full list so an account with
-    // factors must still prove one before it may enroll another.
+    // factors must still prove one before it may enroll another. A factor the eligibility cannot
+    // deliver is dropped, exactly as the gate drops it.
     const availableFactors =
       isRequestedMfaUnmet && this.hasFreshFirstFactor
-        ? this.getPairableMfaFactors(userFactors)
+        ? this.getPairableMfaFactors(userFactors).filter((factor) =>
+            (pursued.decision?.availableMethods ?? []).includes(mfaFactorToVerificationType[factor])
+          )
         : userFactors;
 
     // While a requested `mfa` is unmet, a verified record of a non-pairable factor does not lift
@@ -1832,17 +1851,6 @@ export default class ExperienceInteraction {
         decision: decisions[0]?.decision,
       }
     );
-  }
-
-  /**
-   * Whether a requested `mfa` is still owed: the class being pursued is `mfa` and what the
-   * interaction has proven does not reach it yet. The class the relying party asked for is one
-   * requirement of its own, so the tenant policy's skips and exemptions never satisfy it.
-   */
-  private async isRequestedMfaUnmet(): Promise<boolean> {
-    const pursued = await this.getPursuedRequestedAcr();
-
-    return pursued?.acr === LogtoAcr.Mfa;
   }
 
   /**

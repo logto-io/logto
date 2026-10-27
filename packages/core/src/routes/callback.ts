@@ -4,16 +4,23 @@
  */
 
 import { accountCenterSocialStatePrefix } from '@logto/schemas';
+import { tryThat } from '@silverhand/essentials';
 import type Koa from 'koa';
 import { koaBody } from 'koa-body';
 import Router from 'koa-router';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import assertThat from '#src/utils/assert-that.js';
+import { parseWithIssueCap } from '#src/middleware/koa-guard.js';
 
 const getAccountCenterCallbackLocation = (connectorId: string | undefined, searchParams: string) =>
   `/account/callback/social/${connectorId ?? ''}?${searchParams}`;
+
+const parseCallbackBody = (body: unknown) =>
+  tryThat(
+    () => parseWithIssueCap(z.record(z.string()), body),
+    new RequestError('oidc.invalid_request')
+  );
 
 function callbackRoutes<T extends Router>(router: T) {
   /**
@@ -35,12 +42,9 @@ function callbackRoutes<T extends Router>(router: T) {
     await next();
   });
   router.post('/callback/:connectorId', koaBody(), async (ctx) => {
-    const parsed = z.record(z.string()).safeParse(ctx.request.body);
-
-    assertThat(parsed.success, new RequestError('oidc.invalid_request'));
-
-    const searchParams = new URLSearchParams(parsed.data).toString();
-    const { state } = parsed.data;
+    const data = parseCallbackBody(ctx.request.body);
+    const searchParams = new URLSearchParams(data).toString();
+    const { state } = data;
 
     ctx.status = 303;
     if (state?.startsWith(accountCenterSocialStatePrefix)) {
@@ -51,12 +55,10 @@ function callbackRoutes<T extends Router>(router: T) {
     ctx.set('Location', ctx.request.path + '?' + searchParams);
   });
   router.post('/account/callback/social/:connectorId', koaBody(), async (ctx) => {
-    const parsed = z.record(z.string()).safeParse(ctx.request.body);
-
-    assertThat(parsed.success, new RequestError('oidc.invalid_request'));
+    const data = parseCallbackBody(ctx.request.body);
 
     ctx.status = 303;
-    ctx.set('Location', ctx.request.path + '?' + new URLSearchParams(parsed.data).toString());
+    ctx.set('Location', ctx.request.path + '?' + new URLSearchParams(data).toString());
   });
 }
 
