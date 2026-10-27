@@ -14,7 +14,9 @@ import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 import { assertNoAuthorizationError } from '#src/utils/connectors/authorization-error.js';
+import { describeTransportFailure } from '#src/utils/connectors/transport-failure.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
+import { getConsoleLogFromContext, unknownConsole } from '#src/utils/console.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 import {
   deserializeEncryptedSecret,
@@ -23,62 +25,43 @@ import {
   isValidAccessTokenResponse,
 } from '#src/utils/secret-encryption.js';
 
-/** The slice of a `got` `RequestError` this module reads. */
-type GotRequestErrorLike = Error & {
-  code: string;
-  options: { method: string; url?: URL | string };
-  response?: unknown;
-};
-
-/**
- * Duck-typed check for a `got` `RequestError`. Connectors ship their own copy of `got`, so an
- * `instanceof` check against core's copy would silently miss the errors thrown from a connector.
- */
-const isGotRequestError = (error: unknown): error is GotRequestErrorLike =>
-  error instanceof Error &&
-  'code' in error &&
-  typeof error.code === 'string' &&
-  'options' in error &&
-  typeof error.options === 'object' &&
-  error.options !== null &&
-  'method' in error.options &&
-  typeof error.options.method === 'string';
-
-/** Origin and pathname only: the query string of a token exchange can carry the client secret. */
-const toSafeUrl = (url: URL | string | undefined): string | undefined => {
-  if (url === undefined) {
-    return undefined;
-  }
-
-  try {
-    const { origin, pathname } = new URL(String(url));
-    return origin + pathname;
-  } catch {
-    return undefined;
-  }
-};
-
 /**
  * Run a call to the social provider made through the connector.
  *
- * The connectors map the provider's HTTP errors to `ConnectorError`s, but a request that fails
- * before any response (timeout, connection reset, DNS failure, TLS error) is rethrown as it is and
+ * The connectors map the provider's HTTP errors to `ConnectorError`s, but a request that fails at
+ * the transport level (timeout, connection reset, DNS failure, TLS error) is rethrown as it is and
  * used to surface as a 500 "Internal server error.", indistinguishable from a bug in Logto. Such a
- * failure is relayed as a 502 instead, with the network code and the request's method and URL, so
- * the caller and the logs can tell "the provider is unreachable" from "Logto is broken".
+ * failure is relayed as a 502 instead, so the caller can tell "the provider is unreachable" from
+ * "Logto is broken". The response only carries the network code: the request's method and URL go
+ * to the server log, since the endpoint of an OIDC / OAuth 2.0 connector is admin-configured and
+ * may be an internal host.
  */
-const callSocialProvider = async <T>(run: () => Promise<T>): Promise<T> => {
+const callSocialProvider = async <T>(
+  connectorId: string,
+  run: () => Promise<T>,
+  ctx?: WithLogContext
+): Promise<T> => {
   try {
     return await run();
   } catch (error: unknown) {
-    if (isGotRequestError(error) && error.response === undefined) {
-      throw new RequestError(
-        { code: 'connector.social_provider_unreachable', status: 502, reason: error.code },
-        { code: error.code, method: error.options.method, url: toSafeUrl(error.options.url) }
-      );
+    const failure = describeTransportFailure(error);
+
+    if (!failure) {
+      throw error;
     }
 
-    throw error;
+    const { code, method, url } = failure;
+    const consoleLog = ctx ? getConsoleLogFromContext(ctx) : unknownConsole;
+    consoleLog.warn(
+      `Social provider unreachable (${code}) for connector ${connectorId}: ${[method, url]
+        .filter(Boolean)
+        .join(' ')}`
+    );
+
+    throw new RequestError(
+      { code: 'connector.social_provider_unreachable', status: 502, reason: code },
+      { code, connectorId }
+    );
   }
 };
 
@@ -143,7 +126,9 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
 
     assertNoAuthorizationError(data);
 
-    return callSocialProvider(async () => connector.getUserInfo(data, getConnectorSession));
+    return callSocialProvider(connectorId, async () =>
+      connector.getUserInfo(data, getConnectorSession)
+    );
   };
 
   /**
@@ -184,8 +169,10 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
     assertNoAuthorizationError(data);
 
     if (enableTokenStorage && isTokenStorageSupported && getTokenResponseAndUserInfo) {
-      const { userInfo, tokenResponse } = await callSocialProvider(async () =>
-        getTokenResponseAndUserInfo(data, getConnectorSession)
+      const { userInfo, tokenResponse } = await callSocialProvider(
+        connectorId,
+        async () => getTokenResponseAndUserInfo(data, getConnectorSession),
+        ctx
       );
 
       // Only store the token response if it contains an access token.
@@ -210,7 +197,11 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
     }
 
     return {
-      userInfo: await callSocialProvider(async () => getUserInfo(data, getConnectorSession)),
+      userInfo: await callSocialProvider(
+        connectorId,
+        async () => getUserInfo(data, getConnectorSession),
+        ctx
+      ),
     };
   };
 
@@ -303,7 +294,7 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
       })
     );
 
-    const tokenResponse = await callSocialProvider(async () =>
+    const tokenResponse = await callSocialProvider(connectorId, async () =>
       getAccessTokenByRefreshToken(refreshToken)
     );
 
