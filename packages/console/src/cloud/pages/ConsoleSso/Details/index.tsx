@@ -1,4 +1,5 @@
 import { type consoleSsoRouter } from '@logto/cloud/routes';
+import { ResponseError } from '@withtyped/client';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -57,6 +58,14 @@ function Details() {
   const refresh = async () => {
     await Promise.allSettled([mutate(), mutateList()]);
   };
+  const completeDeletion = () => {
+    setIsDeleted(true);
+    toast.success(t('enterprise_sso_details.enterprise_sso_deleted'));
+    void Promise.allSettled([
+      mutateList(),
+      ...(user ? [mutateCache(['console-sso-coverage', user.id], undefined, true)] : []),
+    ]);
+  };
   const onDelete = async () => {
     if (isDeleting) {
       return;
@@ -66,19 +75,25 @@ function Details() {
       await api.delete('/api/me/console-sso/connectors/:connectorId', {
         params: { connectorId },
       });
-      toast.success(t('enterprise_sso_details.enterprise_sso_deleted'));
-      await refresh();
-      if (user) {
-        await Promise.allSettled([mutateCache(['console-sso-coverage', user.id], undefined, true)]);
+    } catch (deleteError) {
+      try {
+        // Deletion may have committed even when its response was lost.
+        await api.get('/api/me/console-sso/connectors/:connectorId', {
+          params: { connectorId },
+        });
+      } catch (error) {
+        if (error instanceof ResponseError && error.response.status === 404) {
+          completeDeletion();
+          return;
+        }
       }
-      setIsDeleted(true);
-    } catch (error) {
-      await refresh();
-      await toastResponseError(error);
+      await toastResponseError(deleteError);
+      return;
     } finally {
       setIsDeleting(false);
       setIsDeleteAlertOpen(false);
     }
+    completeDeletion();
   };
 
   if (isDeleted) {
