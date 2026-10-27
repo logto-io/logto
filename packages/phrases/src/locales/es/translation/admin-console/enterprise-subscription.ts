@@ -37,14 +37,13 @@ const enterprise_subscription = {
     description:
       'Consulta tus suscripciones personales y la cobertura Enterprise contratada, independientemente del tenant seleccionado.',
     personal_title: 'Suscripciones personales',
-    personal_description: 'Suscripciones facturadas a tu cuenta, incluidas las anteriores.',
+    personal_description:
+      'Suscripciones activas facturadas a tu cuenta. Las anteriores siguen en el historial de facturación.',
     price: 'Precio',
-    billing_period: 'Periodo de facturación',
-    list_price_note:
-      'Los precios no incluyen impuestos ni descuentos. Los cambios se prorratean en tu próxima factura.',
+    next_charge: 'Próximo cargo',
+    ends_on: 'Finaliza el {{date}}',
     overdue_note:
       'El pago está vencido. Si sigue sin pagarse, la suscripción puede pausarse y sus funciones de pago pueden eliminarse.',
-    cancel_on: 'Cancelación prevista para {{date}}',
     other_product: 'Otra suscripción',
     enterprise_invoices_description:
       'Facturas de tu contrato Enterprise. Selecciona una factura para verla y descargar la factura o el recibo.',
