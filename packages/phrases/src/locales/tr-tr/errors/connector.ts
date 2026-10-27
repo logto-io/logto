@@ -20,6 +20,8 @@ const connector = {
   invalid_auth_code: 'Bağlayıcının yetki kodu geçersiz.',
   social_invalid_id_token: 'Bağlayıcının kimliği geçersiz.',
   authorization_failed: 'Kullanıcının yetkilendirme işlemi başarısız oldu.',
+  social_provider_unreachable:
+    'Sosyal sağlayıcıya ulaşılamadı ({{reason}}). Lütfen daha sonra tekrar deneyin.',
   social_auth_code_invalid:
     'Erişim belirtici alınamıyor, lütfen yetkilendirme kodunu kontrol edin.',
   more_than_one_sms: "SMS bağlayıcılarının sayısı 1'den fazla.",

@@ -19,6 +19,8 @@ const connector = {
   invalid_auth_code: '연동 서비스의 Auth 코드가 유효하지 않아요.',
   social_invalid_id_token: '연동 서비스의 ID 토큰이 유효하지 않아요.',
   authorization_failed: '사용자의 인증 과정이 성공적으로 마무리되지 않았어요.',
+  social_provider_unreachable:
+    '소셜 제공자에 연결할 수 없습니다 ({{reason}}). 나중에 다시 시도해 주세요.',
   social_auth_code_invalid: 'Access 토큰을 가져올 수 없어요. Authorization 코드를 확인해 주세요.',
   more_than_one_sms: 'SMS 서비스는 1개만 연동되어야 해요.',
   more_than_one_email: '이메일 서비스는 1개만 연동되어야 해요.',

@@ -22,6 +22,8 @@ const connector = {
   invalid_auth_code: 'Der Authentifizierungscode des Connectors ist ungültig.',
   social_invalid_id_token: 'Der ID-Token des Connectors ist ungültig.',
   authorization_failed: 'Der Autorisierungsprozess des Benutzers war erfolglos.',
+  social_provider_unreachable:
+    'Der Social-Anbieter konnte nicht erreicht werden ({{reason}}). Bitte versuche es später erneut.',
   social_auth_code_invalid:
     'Es konnte kein Access Token abgerufen werden. Bitte prüfen Sie den Autorisierungscode.',
   more_than_one_sms: 'Die Anzahl der SMS-Connectors ist größer als 1.',

@@ -20,6 +20,8 @@ const connector = {
   invalid_auth_code: "Le code d'authentification du connecteur n'est pas valide.",
   social_invalid_id_token: "Le jeton d'identification du connecteur n'est pas valide.",
   authorization_failed: "Le processus d'autorisation de l'utilisateur n'a pas abouti.",
+  social_provider_unreachable:
+    "Le fournisseur social n'a pas pu être joint ({{reason}}). Veuillez réessayer plus tard.",
   social_auth_code_invalid:
     "Impossible d'obtenir le jeton d'accès, veuillez vérifier le code d'autorisation.",
   more_than_one_sms: 'Le nombre de connecteurs SMS est supérieur à 1.',

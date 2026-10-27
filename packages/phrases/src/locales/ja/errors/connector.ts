@@ -20,6 +20,8 @@ const connector = {
   invalid_auth_code: 'コネクタの認証コードが無効です。',
   social_invalid_id_token: 'コネクタのIDトークンが無効です。',
   authorization_failed: 'ユーザーの認証プロセスが失敗しました。',
+  social_provider_unreachable:
+    'ソーシャルプロバイダーに接続できませんでした（{{reason}}）。しばらくしてからもう一度お試しください。',
   social_auth_code_invalid: 'アクセストークンを取得できません。承認コードを確認してください。',
   more_than_one_sms: 'SMSコネクタの数が1より大きいです。',
   more_than_one_email: '電子メールコネクタの数が1より大きいです。',

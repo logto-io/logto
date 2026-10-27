@@ -23,6 +23,65 @@ import {
   isValidAccessTokenResponse,
 } from '#src/utils/secret-encryption.js';
 
+/** The slice of a `got` `RequestError` this module reads. */
+type GotRequestErrorLike = Error & {
+  code: string;
+  options: { method: string; url?: URL | string };
+  response?: unknown;
+};
+
+/**
+ * Duck-typed check for a `got` `RequestError`. Connectors ship their own copy of `got`, so an
+ * `instanceof` check against core's copy would silently miss the errors thrown from a connector.
+ */
+const isGotRequestError = (error: unknown): error is GotRequestErrorLike =>
+  error instanceof Error &&
+  'code' in error &&
+  typeof error.code === 'string' &&
+  'options' in error &&
+  typeof error.options === 'object' &&
+  error.options !== null &&
+  'method' in error.options &&
+  typeof error.options.method === 'string';
+
+/** Origin and pathname only: the query string of a token exchange can carry the client secret. */
+const toSafeUrl = (url: URL | string | undefined): string | undefined => {
+  if (url === undefined) {
+    return undefined;
+  }
+
+  try {
+    const { origin, pathname } = new URL(String(url));
+    return origin + pathname;
+  } catch {
+    return undefined;
+  }
+};
+
+/**
+ * Run a call to the social provider made through the connector.
+ *
+ * The connectors map the provider's HTTP errors to `ConnectorError`s, but a request that fails
+ * before any response (timeout, connection reset, DNS failure, TLS error) is rethrown as it is and
+ * used to surface as a 500 "Internal server error.", indistinguishable from a bug in Logto. Such a
+ * failure is relayed as a 502 instead, with the network code and the request's method and URL, so
+ * the caller and the logs can tell "the provider is unreachable" from "Logto is broken".
+ */
+const callSocialProvider = async <T>(run: () => Promise<T>): Promise<T> => {
+  try {
+    return await run();
+  } catch (error: unknown) {
+    if (isGotRequestError(error) && error.response === undefined) {
+      throw new RequestError(
+        { code: 'connector.social_provider_unreachable', status: 502, reason: error.code },
+        { code: error.code, method: error.options.method, url: toSafeUrl(error.options.url) }
+      );
+    }
+
+    throw error;
+  }
+};
+
 const getUserInfoFromInteractionResult = async (
   connectorId: string,
   interactionResult: InteractionResults
@@ -84,7 +143,7 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
 
     assertNoAuthorizationError(data);
 
-    return connector.getUserInfo(data, getConnectorSession);
+    return callSocialProvider(async () => connector.getUserInfo(data, getConnectorSession));
   };
 
   /**
@@ -125,9 +184,8 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
     assertNoAuthorizationError(data);
 
     if (enableTokenStorage && isTokenStorageSupported && getTokenResponseAndUserInfo) {
-      const { userInfo, tokenResponse } = await getTokenResponseAndUserInfo(
-        data,
-        getConnectorSession
+      const { userInfo, tokenResponse } = await callSocialProvider(async () =>
+        getTokenResponseAndUserInfo(data, getConnectorSession)
       );
 
       // Only store the token response if it contains an access token.
@@ -152,7 +210,7 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
     }
 
     return {
-      userInfo: await getUserInfo(data, getConnectorSession),
+      userInfo: await callSocialProvider(async () => getUserInfo(data, getConnectorSession)),
     };
   };
 
@@ -245,7 +303,9 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
       })
     );
 
-    const tokenResponse = await getAccessTokenByRefreshToken(refreshToken);
+    const tokenResponse = await callSocialProvider(async () =>
+      getAccessTokenByRefreshToken(refreshToken)
+    );
 
     assertThat(
       isValidAccessTokenResponse(tokenResponse),

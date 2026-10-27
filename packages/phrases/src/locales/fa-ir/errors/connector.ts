@@ -19,6 +19,8 @@ const connector = {
   invalid_auth_code: 'کد auth اتصال‌دهنده نامعتبر است.',
   social_invalid_id_token: 'توکن شناسایی اتصال‌دهنده نامعتبر است.',
   authorization_failed: 'فرایند مجوز کاربر ناموفق بود.',
+  social_provider_unreachable:
+    'امکان دسترسی به ارائه‌دهنده ورود اجتماعی وجود ندارد ({{reason}}). لطفاً بعداً دوباره تلاش کنید.',
   social_auth_code_invalid: 'امکان دریافت توکن دسترسی نیست، لطفاً کد مجوز را بررسی کنید.',
   more_than_one_sms: 'تعداد اتصال‌دهنده‌های پیامکی بیش از ۱ است.',
   more_than_one_email: 'تعداد اتصال‌دهنده‌های ایمیل بیش از ۱ است.',
