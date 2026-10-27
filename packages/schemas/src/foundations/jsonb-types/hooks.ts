@@ -42,8 +42,10 @@ type BasicDataHookEvent = `${DataHookSchema}.${DataHookBasicMutationType}`;
 type CustomDataHookMutableSchema =
   | `${Exclude<DataHookSchema, DataHookSchema.TrustedDevice>}.Data`
   | `${DataHookSchema.User}.SuspensionStatus`
+  | `${DataHookSchema.User}.Roles`
   | `${DataHookSchema.Role}.Scopes`
   | `${DataHookSchema.Organization}.Membership`
+  | `${DataHookSchema.Organization}.UserRoles`
   | `${DataHookSchema.OrganizationRole}.Scopes`;
 
 type DataHookPropertyUpdateEvent =
@@ -55,6 +57,15 @@ export type ExceptionHookEvent =
   | 'Grant.LimitExceeded';
 
 export type DataHookEvent = BasicDataHookEvent | DataHookPropertyUpdateEvent;
+
+/** Data hook events that are available only while their feature is under development. */
+export const devFeatureHookEvents = Object.freeze([
+  // User role assignment webhooks: tenant user roles and organization user roles.
+  'User.Roles.Updated',
+  'Organization.UserRoles.Updated',
+] as const satisfies readonly DataHookEvent[]);
+
+export type DevFeatureHookEvent = (typeof devFeatureHookEvents)[number];
 
 /** The hook event values that can be registered. */
 export const hookEvents = Object.freeze([
@@ -68,6 +79,7 @@ export const hookEvents = Object.freeze([
   'User.SuspensionStatus.Updated',
   'TrustedDevice.Created',
   'TrustedDevice.Deleted',
+  ...devFeatureHookEvents,
   'Role.Created',
   'Role.Deleted',
   'Role.Data.Updated',
@@ -157,4 +169,7 @@ export const managementApiHooksRegistration = Object.freeze({
   'PUT /organization-roles/:id/scopes': 'OrganizationRole.Scopes.Updated',
   'POST /organization-roles/:id/scopes': 'OrganizationRole.Scopes.Updated',
   'DELETE /organization-roles/:id/scopes/:organizationScopeId': 'OrganizationRole.Scopes.Updated',
+  'PUT /organization-roles/:id/resource-scopes': 'OrganizationRole.Scopes.Updated',
+  'POST /organization-roles/:id/resource-scopes': 'OrganizationRole.Scopes.Updated',
+  'DELETE /organization-roles/:id/resource-scopes/:scopeId': 'OrganizationRole.Scopes.Updated',
 } satisfies Record<`${ApiMethod} ${string}`, DataHookEvent>);

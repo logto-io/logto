@@ -4,6 +4,7 @@ import { tryThat } from '@silverhand/essentials';
 import { object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import { type UserConditions } from '#src/queries/user.js';
@@ -108,6 +109,15 @@ export default function roleUserRoutes<T extends ManagementApiRouter>(
       );
       ctx.status = 201;
 
+      for (const userId of userIds) {
+        ctx.appendDataHookContext('User.Roles.Updated', {
+          ...buildManagementApiContext(ctx),
+          userId,
+          addedRoleIds: [id],
+          removedRoleIds: [],
+        });
+      }
+
       return next();
     }
   );
@@ -124,6 +134,13 @@ export default function roleUserRoutes<T extends ManagementApiRouter>(
       } = ctx.guard;
       await deleteUsersRolesByUserIdAndRoleId(userId, id);
       ctx.status = 204;
+
+      ctx.appendDataHookContext('User.Roles.Updated', {
+        ...buildManagementApiContext(ctx),
+        userId,
+        addedRoleIds: [],
+        removedRoleIds: [id],
+      });
 
       return next();
     }

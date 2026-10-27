@@ -63,6 +63,21 @@ type DataHookContextMap = {
   'User.Created': UserContext;
   'User.Data.Updated': UserContext;
   'User.Deleted': UserContext;
+  'User.Roles.Updated': {
+    userId: string;
+    /** Role IDs actually added by this request; empty when only roles were removed. */
+    addedRoleIds: readonly string[];
+    /** Role IDs actually removed by this request; empty when only roles were added. */
+    removedRoleIds: readonly string[];
+  };
+  'Organization.UserRoles.Updated': {
+    organizationId: string;
+    userId: string;
+    /** Organization role IDs actually added by this request. */
+    addedOrganizationRoleIds: readonly string[];
+    /** Organization role IDs actually removed by this request. */
+    removedOrganizationRoleIds: readonly string[];
+  };
   'TrustedDevice.Created': { data: TrustedDeviceEventData };
   'TrustedDevice.Deleted': { data: TrustedDeviceEventData };
 };
@@ -109,6 +124,27 @@ export class HookContextManager {
     const { user, ...rest } = context;
     // eslint-disable-next-line @silverhand/fp/no-mutating-methods
     this.dataHookContextArray.push({
+      event,
+      // eslint-disable-next-line no-restricted-syntax -- trust the input
+      ...(user ? { data: pick(user as User, ...userInfoSelectFields) } : {}),
+      ...rest,
+    });
+  }
+
+  /**
+   * Prepend a data hook context. Used for the route's registered primary event so it is triggered
+   * before follow-up events appended inside the route handler (e.g. `User.Created` before
+   * `User.Roles.Updated` on `POST /users`).
+   */
+  prependDataHookContext<Event extends DataHookEvent>(
+    event: Event,
+    context: Event extends keyof DataHookContextMap
+      ? DataHookContextMap[Event] & Partial<ManagementApiContext> & Record<string, unknown>
+      : HookContext
+  ) {
+    const { user, ...rest } = context;
+    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+    this.dataHookContextArray.unshift({
       event,
       // eslint-disable-next-line no-restricted-syntax -- trust the input
       ...(user ? { data: pick(user as User, ...userInfoSelectFields) } : {}),

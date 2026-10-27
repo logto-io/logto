@@ -54,6 +54,7 @@ const usersLibraries = {
         ...mockUser,
         ...removeUndefinedKeys(user), // No undefined values will be returned from database
       },
+      [],
     ]
   ),
 } satisfies Partial<Libraries['users']>;

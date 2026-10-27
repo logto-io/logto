@@ -8,6 +8,7 @@ import { StatementTimeoutError } from '@silverhand/slonik';
 import { mockSignInExperience, mockUser, mockUserResponse } from '#src/__mocks__/index.js';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { type HookContextManager } from '#src/libraries/hook/context-manager.js';
 import { type InsertUserResult } from '#src/libraries/user.js';
 import { koaManagementApiHooks } from '#src/middleware/koa-management-api-hooks.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -91,6 +92,7 @@ const usersLibraries = {
         ...mockUser,
         ...removeUndefinedKeys(user), // No undefined values will be returned from database
       },
+      [],
     ]
   ),
   verifyUserPassword,
@@ -100,14 +102,24 @@ const usersLibraries = {
 const adminUserRoutes = await pickDefault(import('./basics.js'));
 
 describe('adminUserRoutes', () => {
+  const triggerDataHooks = jest.fn();
   const tenantContext = new MockTenant(undefined, mockedQueries, undefined, {
     users: usersLibraries,
+    hooks: { triggerDataHooks },
   });
   const userRequest = createRequester({
     middlewares: [koaManagementApiHooks(tenantContext.libraries.hooks)],
     authedRoutes: adminUserRoutes,
     tenantContext,
   });
+
+  const getDataHookContextArray = () => {
+    const contextManager = triggerDataHooks.mock.calls.at(-1)?.[1] as
+      | HookContextManager
+      | undefined;
+
+    return contextManager?.dataHookContextArray ?? [];
+  };
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -153,6 +165,33 @@ describe('adminUserRoutes', () => {
 
     const [insertedUser] = usersLibraries.insertUser.mock.calls[0] as [CreateUser];
     expect(insertedUser.passwordUpdatedAt).toBeDefined();
+  });
+
+  it('POST /users emits initial roles after User.Created', async () => {
+    usersLibraries.insertUser.mockResolvedValueOnce([{ ...mockUser, id: 'fooId' }, ['role-id']]);
+
+    const response = await userRequest.post('/users').send({
+      username: 'MJAtLogto',
+      password: 'PASSWORD1234',
+      name: 'Michael',
+    });
+
+    expect(response.status).toEqual(200);
+    expect(getDataHookContextArray()).toHaveLength(2);
+
+    const [createdEvent, roleEvent] = getDataHookContextArray();
+    expect(createdEvent).toMatchObject({
+      event: 'User.Created',
+      matchedRoute: '/users',
+    });
+    expect(createdEvent?.data).toEqual(response.body);
+    expect(roleEvent).toMatchObject({
+      event: 'User.Roles.Updated',
+      userId: 'fooId',
+      addedRoleIds: ['role-id'],
+      removedRoleIds: [],
+      matchedRoute: '/users',
+    });
   });
 
   it('POST /users should be ok with simple passwords', async () => {
