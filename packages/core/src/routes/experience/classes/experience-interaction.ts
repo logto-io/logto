@@ -670,7 +670,8 @@ export default class ExperienceInteraction {
     // A requested `mfa` is a requirement of the relying party, not of the tenant's sign-in MFA
     // policy: `skipMfaOnSignIn`, an adaptive-MFA non-trigger result and a trusted device are all
     // decisions about the tenant's policy, so none of them satisfies a class the client asked for.
-    const isRequestedMfaUnmet = await this.isRequestedMfaUnmet();
+    const pursued = await this.getPursuedRequestedAcr();
+    const isRequestedMfaUnmet = pursued?.acr === LogtoAcr.Mfa;
 
     if (!isRequestedMfaUnmet && (this.hasVerifiedSsoIdentity || this.hasVerifiedSignInPasskey)) {
       return;
@@ -682,11 +683,16 @@ export default class ExperienceInteraction {
 
     const mfaValidator = new MfaValidator(mfaSettings, user, adaptiveMfaResult);
 
-    // A requested `mfa` only offers the factors that pair with the first factor already proven:
-    // a factor of the same kind (an MFA email code after an email sign-in) counts once and never
-    // lifts the context to `mfa`.
+    // A requested `mfa` only offers the factors that pair with the first factor already proven and
+    // that the eligibility offers: a factor of the same kind (an MFA email code after an email
+    // sign-in) counts once and never lifts the context to `mfa`, and a code whose connector is
+    // unavailable cannot be delivered at all. A user left with none of them reaches the enrollment
+    // requirement of `assertMfaFulfilled`, which offers a factor that does reach the class.
     const availableFactors = isRequestedMfaUnmet
-      ? this.getPairableMfaFactors(mfaValidator.availableUserMfaVerificationTypes)
+      ? this.getPairableMfaFactors(mfaValidator.availableUserMfaVerificationTypes).filter(
+          (factor) =>
+            (pursued.decision?.availableMethods ?? []).includes(mfaFactorToVerificationType[factor])
+        )
       : mfaValidator.availableUserMfaVerificationTypes;
 
     // Declared non-proof: an adaptive-MFA non-trigger result skips the gate and proves nothing,
@@ -1662,17 +1668,6 @@ export default class ExperienceInteraction {
         decision: decisions[0]?.decision,
       }
     );
-  }
-
-  /**
-   * Whether a requested `mfa` is still owed: the class being pursued is `mfa` and what the
-   * interaction has proven does not reach it yet. The class the relying party asked for is one
-   * requirement of its own, so the tenant policy's skips and exemptions never satisfy it.
-   */
-  private async isRequestedMfaUnmet(): Promise<boolean> {
-    const pursued = await this.getPursuedRequestedAcr();
-
-    return pursued?.acr === LogtoAcr.Mfa;
   }
 
   /**
