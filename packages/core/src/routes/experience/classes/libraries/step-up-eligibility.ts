@@ -69,6 +69,13 @@ export type StepUpEligibilityInput = {
   tenantEnrollableFactors?: readonly MfaFactor[];
   /** The subject's linked social / SSO connectors that could serve as subject proof. */
   linkedConnectors?: readonly SubjectProofConnector[];
+  /**
+   * Whether the decision is for a registration. A registration drives only the identifier and
+   * profile it already recorded and the MFA factors it can bind: it never prompts for another
+   * method to be verified or for a first factor to be established, and enrolling a factor needs no
+   * fresh first factor first because a `both`-class WebAuthn factor reaches `mfa` on its own.
+   */
+  registration?: boolean;
 };
 
 /** The first factors a user lacking one to reach the class with may establish. */
@@ -401,6 +408,7 @@ const computeEnrollment = ({
   tenantEstablishableMethods,
   tenantEnrollableFactors,
   linkedConnectors,
+  registration,
 }: Required<Omit<StepUpEligibilityInput, 'user' | 'mfaSettings' | 'connectors'>> & {
   candidates: readonly VerificationType[];
   isReachableWithEnrolled: boolean;
@@ -424,8 +432,10 @@ const computeEnrollment = ({
       established: canEstablish ? establishable : [],
       enrollable: tenantEnrollableFactors,
       // Enrolling needs a fresh first factor, so it only counts when one is proven, or can be:
-      // by verifying an eligible first-factor method or by establishing one.
-      canProveFirstFactor: hasFreshFirstFactor || canEstablish,
+      // by verifying an eligible first-factor method or by establishing one. A registration is
+      // exempt: its flow binds the factors directly, and only a `both`-class factor reaches `mfa`
+      // without a first factor.
+      canProveFirstFactor: hasFreshFirstFactor || canEstablish || registration,
     });
 
   return {
@@ -433,7 +443,7 @@ const computeEnrollment = ({
     establishableMethods: hasFreshSubjectProof ? establishable : [],
     // None while an enrolled factor can still reach the class.
     enrollableFactors:
-      hasFreshFirstFactor && !isReachableWithEnrolled
+      (hasFreshFirstFactor || registration) && !isReachableWithEnrolled
         ? filterFactorsReaching(tenantEnrollableFactors, { selectedAcr, carried, proofs })
         : [],
     subjectProofConnectors:
@@ -466,10 +476,13 @@ export const computeStepUpEligibility = ({
   user,
   mfaSettings,
   connectors,
+  registration = false,
   ...input
 }: StepUpEligibilityInput): StepUpEligibility => {
   const { selectedAcr, carried, proofs } = input;
-  const candidates = getEligibleMethods(user, mfaSettings, connectors);
+  // A registration never prompts for a method to be verified: what it already recorded is in the
+  // proofs, and what it can drive is enrolling a factor.
+  const candidates = registration ? [] : getEligibleMethods(user, mfaSettings, connectors);
   const distance = distanceTo({ target: selectedAcr, carried, proofs, candidates });
   const remainingCandidates = (index: number) =>
     candidates.filter((_, otherIndex) => otherIndex !== index);
@@ -530,6 +543,7 @@ export const computeStepUpEligibility = ({
     tenantEstablishableMethods: [],
     tenantEnrollableFactors: [],
     linkedConnectors: [],
+    registration,
     ...input,
     candidates,
     isReachableWithEnrolled: Number.isFinite(distance),

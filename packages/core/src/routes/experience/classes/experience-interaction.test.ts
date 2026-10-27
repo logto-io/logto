@@ -56,7 +56,10 @@ import {
 import { PasswordVerification } from './verifications/password-verification.js';
 import { SocialVerification } from './verifications/social-verification.js';
 import { TotpVerification } from './verifications/totp-verification.js';
-import { SignInPasskeyVerification } from './verifications/web-authn-verification.js';
+import {
+  SignInPasskeyVerification,
+  WebAuthnVerification,
+} from './verifications/web-authn-verification.js';
 
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
@@ -2067,21 +2070,28 @@ describe('ExperienceInteraction class', () => {
       expect(signInUserQueries.updateUserById).toHaveBeenCalledTimes(1);
     });
 
-    const firstFactorCompletionCases: Array<{
+    const requestedMfaPursuitCases: Array<{
       name: string;
       user: User;
       logtoConfig: User['logtoConfig'];
+      error: { code: string; status: number };
     }> = [
-      { name: 'no enrolled factor', user: mockUser, logtoConfig: {} },
       {
         name: 'an enrolled factor the tenant would skip',
         user: mockUserWithMfaVerifications,
         logtoConfig: { [userMfaDataKey]: { skipMfaOnSignIn: true } },
+        error: { code: 'session.mfa.require_mfa_verification', status: 403 },
+      },
+      {
+        name: 'no enrolled factor but one the tenant lets the user enroll',
+        user: mockUser,
+        logtoConfig: {},
+        error: { code: 'user.missing_mfa', status: 422 },
       },
     ];
-    it.each(firstFactorCompletionCases)(
-      'completes immediately when the request also lists the class the password reached ($name)',
-      async ({ user, logtoConfig }) => {
+    it.each(requestedMfaPursuitCases)(
+      'keeps pursuing the first reachable mfa when the request also lists the class the password reached ($name)',
+      async ({ user, logtoConfig, error }) => {
         setDevFeaturesEnabled(true);
         const { experienceInteraction, provider, signInUserQueries } = createSignInInteraction({
           user: { ...user, logtoConfig },
@@ -2097,26 +2107,48 @@ describe('ExperienceInteraction class', () => {
           },
         });
 
-        await experienceInteraction.submit();
-
-        // Any listed class is enough and enrolled factors are never consulted: the password
-        // reached `1fa`, which the request lists, so the enrolled TOTP is not asked for even
-        // where `skipMfaOnSignIn` alone would have let it pass.
-        expect(provider.interactionResult).toHaveBeenCalledWith(
-          expect.anything(),
-          expect.anything(),
-          expect.objectContaining({
-            login: {
-              accountId: mockUser.id,
-              acr: LogtoAcr.FirstFactor,
-              amr: [AuthenticationMethodReference.Password],
-            },
-          })
-        );
-        // The sign-in side effects run exactly once, on the submission that passes.
-        expect(signInUserQueries.updateUserById).toHaveBeenCalledTimes(1);
+        // `mfa` is listed first and is reachable — through an enrolled factor to verify, or a
+        // factor the tenant lets the user enroll — so the password that reached `1fa` never ends
+        // the pursuit at the weaker listed class.
+        await expect(experienceInteraction.submit()).rejects.toMatchObject(error);
+        expect(signInUserQueries.updateUserById).not.toHaveBeenCalled();
+        expect(provider.interactionResult).not.toHaveBeenCalled();
       }
     );
+
+    it('falls back to 1fa when the earlier requested mfa is unreachable', async () => {
+      setDevFeaturesEnabled(true);
+      const { experienceInteraction, provider, signInUserQueries } = createSignInInteraction({
+        // The tenant configures no MFA factor: `mfa` cannot be reached even through enrollment,
+        // so the request falls back to the next listed class the password already reached.
+        signInExperienceOverrides: {
+          mfa: { policy: MfaPolicy.NoPrompt, factors: [] },
+        },
+        interactionResult: {
+          authenticationContext: {
+            requestedAcrValues: [LogtoAcr.Mfa, LogtoAcr.FirstFactor],
+          },
+          authenticationProofs: [passwordProof(AuthenticationProofRole.Identify)],
+          verificationRecords: [passwordRecord],
+        },
+      });
+
+      await experienceInteraction.submit();
+
+      expect(provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({
+          login: {
+            accountId: mockUser.id,
+            acr: LogtoAcr.FirstFactor,
+            amr: [AuthenticationMethodReference.Password],
+          },
+        })
+      );
+      // The sign-in side effects run exactly once, on the submission that passes.
+      expect(signInUserQueries.updateUserById).toHaveBeenCalledTimes(1);
+    });
 
     it('asks for a verifiable first factor on a social sign-in under a requested 1fa', async () => {
       setDevFeaturesEnabled(true);
@@ -2537,7 +2569,391 @@ describe('ExperienceInteraction class', () => {
           availableMethods: [VerificationType.Password],
         },
       });
+      // The server-driven UI state describes the same pursued class, so the landing page offers
+      // the password instead of the methods of the unreachable first-listed `mfa`.
+      await expect(experienceInteraction.toSanitizedJson()).resolves.toMatchObject({
+        authenticationContext: {
+          availableMethods: [VerificationType.Password],
+        },
+      });
       expect(provider.interactionResult).not.toHaveBeenCalled();
+    });
+
+    it('pairs the email MFA factor with a distinct first factor instead of dead-ending', async () => {
+      setDevFeaturesEnabled(true);
+      const emailCodeProof: AuthenticationProof = {
+        id: 'email-code',
+        factor: AuthenticationFactor.Email,
+        class: AuthenticationFactorClass.FirstFactor,
+        amr: [AuthenticationMethodReference.Otp],
+        role: AuthenticationProofRole.Identify,
+      };
+      const mfaEmailCodeProof: AuthenticationProof = {
+        id: 'mfa-email',
+        factor: AuthenticationFactor.Email,
+        class: AuthenticationFactorClass.Mfa,
+        amr: [AuthenticationMethodReference.Otp],
+        role: AuthenticationProofRole.Mfa,
+      };
+      const createEmailMfaInteraction = (
+        authenticationProofs: AuthenticationProof[],
+        verificationRecords: Array<Record<string, unknown>> = []
+      ) =>
+        createSignInInteraction({
+          // The email code is a first factor and the email MFA factor is the same kind, so only the
+          // password can complete the pair on this tenant.
+          connectors: [{ type: ConnectorType.Email }],
+          signInExperienceOverrides: {
+            mfa: { policy: MfaPolicy.UserControlled, factors: [MfaFactor.EmailVerificationCode] },
+          },
+          interactionResult: {
+            authenticationContext: { requestedAcrValues: [LogtoAcr.Mfa, LogtoAcr.FirstFactor] },
+            authenticationProofs,
+            verificationRecords,
+          },
+        });
+
+      // The proven first factor pairs with no MFA factor: the interaction asks for the password
+      // instead of failing the submission with no prompt.
+      await expect(
+        createEmailMfaInteraction([emailCodeProof]).experienceInteraction.submit()
+      ).rejects.toMatchObject({
+        code: 'session.step_up.require_verification',
+        status: 403,
+        data: { selectedAcr: LogtoAcr.Mfa, availableMethods: [VerificationType.Password] },
+      });
+
+      // The password is a different kind from the email MFA factor, so the MFA gate asks for it.
+      await expect(
+        createEmailMfaInteraction([
+          emailCodeProof,
+          passwordProof(AuthenticationProofRole.Identify),
+        ]).experienceInteraction.submit()
+      ).rejects.toMatchObject({
+        code: 'session.mfa.require_mfa_verification',
+        status: 403,
+        data: { availableFactors: [MfaFactor.EmailVerificationCode] },
+      });
+
+      // Answering it completes the pair and reaches `mfa`.
+      const { experienceInteraction, provider } = createEmailMfaInteraction(
+        [emailCodeProof, passwordProof(AuthenticationProofRole.Identify), mfaEmailCodeProof],
+        [
+          {
+            id: 'mfa-email',
+            type: VerificationType.MfaEmailVerificationCode,
+            identifier: { type: SignInIdentifier.Email, value: mockUser.primaryEmail },
+            templateType: TemplateType.MfaVerification,
+            verified: true,
+          },
+        ]
+      );
+
+      await experienceInteraction.submit();
+
+      expect(provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({
+          login: {
+            accountId: mockUser.id,
+            acr: LogtoAcr.Mfa,
+            amr: [
+              AuthenticationMethodReference.Otp,
+              AuthenticationMethodReference.Password,
+              AuthenticationMethodReference.Mfa,
+            ],
+          },
+        })
+      );
+    });
+
+    it('ignores an MFA factor whose connector is unavailable when pairing', async () => {
+      setDevFeaturesEnabled(true);
+      const { experienceInteraction } = createSignInInteraction({
+        // The phone MFA factor is enabled and the user has a phone, but no SMS connector is
+        // configured: the only usable pair is the password plus the email MFA factor.
+        connectors: [{ type: ConnectorType.Email }],
+        signInExperienceOverrides: {
+          mfa: {
+            policy: MfaPolicy.UserControlled,
+            factors: [MfaFactor.EmailVerificationCode, MfaFactor.PhoneVerificationCode],
+          },
+        },
+        interactionResult: {
+          authenticationContext: { requestedAcrValues: [LogtoAcr.Mfa, LogtoAcr.FirstFactor] },
+          authenticationProofs: [
+            {
+              id: 'email-code',
+              factor: AuthenticationFactor.Email,
+              class: AuthenticationFactorClass.FirstFactor,
+              amr: [AuthenticationMethodReference.Otp],
+              role: AuthenticationProofRole.Identify,
+            },
+          ],
+        },
+      });
+
+      await expect(experienceInteraction.submit()).rejects.toMatchObject({
+        code: 'session.step_up.require_verification',
+        status: 403,
+        data: { selectedAcr: LogtoAcr.Mfa, availableMethods: [VerificationType.Password] },
+      });
+    });
+
+    it('enforces a requested ACR on registration only through what the flow can drive', async () => {
+      setDevFeaturesEnabled(true);
+      const createRegistration = (acrValues: LogtoAcr[], factors: MfaFactor[]) =>
+        createSignInInteraction({
+          interactionEvent: InteractionEvent.Register,
+          connectors: [{ type: ConnectorType.Email }],
+          signInExperienceOverrides: {
+            mfa: { policy: MfaPolicy.UserControlled, factors },
+          },
+          interactionResult: {
+            authenticationContext: { requestedAcrValues: acrValues },
+            authenticationProofs: [passwordProof(AuthenticationProofRole.Bind)],
+          },
+        });
+
+      // A registration cannot challenge the implicit email factor as its own second factor, so
+      // `mfa` is unreachable and the request falls back to the listed `1fa`.
+      const fallback = createRegistration(
+        [LogtoAcr.Mfa, LogtoAcr.FirstFactor],
+        [MfaFactor.EmailVerificationCode]
+      );
+      await fallback.experienceInteraction.submit();
+      expect(fallback.provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({
+          login: {
+            accountId: mockUser.id,
+            acr: LogtoAcr.FirstFactor,
+            amr: [AuthenticationMethodReference.Password],
+          },
+        })
+      );
+
+      // With no weaker class to fall back to, the interaction is finished with the OIDC error
+      // before any side effect instead of failing the submission with 403.
+      const unmet = createRegistration([LogtoAcr.Mfa], [MfaFactor.EmailVerificationCode]);
+      await unmet.experienceInteraction.submit();
+      expect(unmet.signInContext.body).toEqual({ redirectTo: 'redirectTo' });
+      expect(unmet.provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({ error: 'unmet_authentication_requirements' })
+      );
+      expect(unmet.signInUserQueries.updateUserById).not.toHaveBeenCalled();
+      expect(unmet.runAction).not.toHaveBeenCalled();
+      expect(unmet.signInContext.appendDataHookContext).not.toHaveBeenCalled();
+      expect(userLibraries.insertUser).not.toHaveBeenCalled();
+
+      // TOTP is bound by the registration flow itself, so `mfa` stays reachable and is enforced.
+      const enroll = createRegistration([LogtoAcr.Mfa], [MfaFactor.TOTP]);
+      await expect(enroll.experienceInteraction.submit()).rejects.toMatchObject({
+        code: 'user.missing_mfa',
+        status: 422,
+        data: { availableFactors: [MfaFactor.TOTP] },
+      });
+    });
+
+    it('counts only the MFA binding a social registration drives', async () => {
+      setDevFeaturesEnabled(true);
+      const socialUser: User = {
+        ...mockUser,
+        username: null,
+        usernameLower: null,
+        primaryEmail: null,
+        primaryEmailLower: null,
+        primaryPhone: null,
+        passwordEncrypted: null,
+        passwordEncryptionMethod: null,
+      };
+      const createSocialRegistration = (acrValues: LogtoAcr[], factors: MfaFactor[]) =>
+        createSignInInteraction({
+          interactionEvent: InteractionEvent.Register,
+          user: socialUser,
+          signInExperienceOverrides: {
+            signUp: { identifiers: [], password: false, verify: false },
+            mfa: { policy: MfaPolicy.UserControlled, factors },
+          },
+          interactionResult: {
+            authenticationContext: { requestedAcrValues: acrValues },
+            authenticationProofs: [federatedProof(AuthenticationProofRole.Identify)],
+          },
+        });
+
+      // A first factor the registration never prompts for (an establishable password) does not
+      // make `mfa` reachable: the listed `1fa` is pursued, and binding TOTP completes it.
+      const totp = createSocialRegistration([LogtoAcr.Mfa, LogtoAcr.FirstFactor], [MfaFactor.TOTP]);
+      await expect(totp.experienceInteraction.toSanitizedJson()).resolves.toMatchObject({
+        authenticationContext: {
+          establishableMethods: [],
+          enrollableFactors: [MfaFactor.TOTP],
+        },
+      });
+      totp.experienceInteraction.setVerificationRecord(
+        new TotpVerification(totp.signInTenant.libraries, totp.signInTenant.queries, {
+          id: 'new-totp',
+          type: VerificationType.TOTP,
+          userId: socialUser.id,
+          secret: 'new-totp-secret',
+          verified: true,
+        })
+      );
+      await totp.experienceInteraction.mfa.addTotpByVerificationId('new-totp');
+      await totp.experienceInteraction.submit();
+      expect(totp.provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({
+          login: {
+            accountId: socialUser.id,
+            acr: LogtoAcr.FirstFactor,
+            amr: [AuthenticationMethodReference.Federated, AuthenticationMethodReference.Otp],
+          },
+        })
+      );
+
+      // WebAuthn is a `both`-class factor the registration binds directly, so it keeps `mfa`
+      // reachable without a first factor: the flow asks for the binding instead of finishing unmet.
+      const webAuthn = createSocialRegistration([LogtoAcr.Mfa], [MfaFactor.WebAuthn]);
+      await expect(webAuthn.experienceInteraction.toSanitizedJson()).resolves.toMatchObject({
+        authenticationContext: { enrollableFactors: [MfaFactor.WebAuthn] },
+      });
+      await expect(webAuthn.experienceInteraction.submit()).rejects.toMatchObject({
+        code: 'user.missing_mfa',
+        status: 422,
+        data: { availableFactors: [MfaFactor.WebAuthn] },
+      });
+    });
+
+    it('requires the binding a social registration needs to reach the class it pursues', async () => {
+      setDevFeaturesEnabled(true);
+      const socialUser: User = {
+        ...mockUser,
+        username: null,
+        usernameLower: null,
+        primaryEmail: null,
+        primaryEmailLower: null,
+        primaryPhone: null,
+        passwordEncrypted: null,
+        passwordEncryptionMethod: null,
+      };
+      const createSocialRegistration = (factors: MfaFactor[]) =>
+        createSignInInteraction({
+          interactionEvent: InteractionEvent.Register,
+          user: socialUser,
+          signInExperienceOverrides: {
+            signUp: { identifiers: [], password: false, verify: false },
+            mfa: { policy: MfaPolicy.NoPrompt, factors },
+          },
+          interactionResult: {
+            authenticationContext: { requestedAcrValues: [LogtoAcr.Mfa, LogtoAcr.FirstFactor] },
+            authenticationProofs: [federatedProof(AuthenticationProofRole.Identify)],
+          },
+        });
+      const bindTotp = async (
+        interaction: ReturnType<typeof createSocialRegistration>,
+        id: string
+      ) => {
+        interaction.experienceInteraction.setVerificationRecord(
+          new TotpVerification(
+            interaction.signInTenant.libraries,
+            interaction.signInTenant.queries,
+            {
+              id,
+              type: VerificationType.TOTP,
+              userId: socialUser.id,
+              secret: `${id}-secret`,
+              verified: true,
+            }
+          )
+        );
+        await interaction.experienceInteraction.mfa.addTotpByVerificationId(id);
+      };
+
+      // Only TOTP: `mfa` is unreachable, so the listed `1fa` is pursued, and the TOTP binding is
+      // the only way to reach it. The binding is required non-skippably instead of the submission
+      // falling through to the final assert.
+      const totpOnly = createSocialRegistration([MfaFactor.TOTP]);
+      const totpOnlySubmission = totpOnly.experienceInteraction.submit();
+      await expect(totpOnlySubmission).rejects.toMatchObject({
+        code: 'user.missing_mfa',
+        status: 422,
+        data: { availableFactors: [MfaFactor.TOTP] },
+      });
+      await expect(totpOnlySubmission).rejects.not.toHaveProperty('data.skippable');
+
+      await bindTotp(totpOnly, 'totp-only');
+      await totpOnly.experienceInteraction.submit();
+      expect(totpOnly.provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({
+          login: {
+            accountId: socialUser.id,
+            acr: LogtoAcr.FirstFactor,
+            amr: [AuthenticationMethodReference.Federated, AuthenticationMethodReference.Otp],
+          },
+        })
+      );
+
+      // TOTP + WebAuthn: `mfa` is reachable through WebAuthn alone, so only WebAuthn is offered.
+      const mixed = createSocialRegistration([MfaFactor.TOTP, MfaFactor.WebAuthn]);
+      await expect(mixed.experienceInteraction.submit()).rejects.toMatchObject({
+        code: 'user.missing_mfa',
+        status: 422,
+        data: { availableFactors: [MfaFactor.WebAuthn] },
+      });
+
+      // A client that binds TOTP anyway is asked for WebAuthn again, not rejected by the assert.
+      await bindTotp(mixed, 'mixed-totp');
+      await expect(mixed.experienceInteraction.submit()).rejects.toMatchObject({
+        code: 'user.missing_mfa',
+        status: 422,
+        data: { availableFactors: [MfaFactor.WebAuthn] },
+      });
+
+      // Binding WebAuthn reaches `mfa` on its own and completes the registration.
+      mixed.experienceInteraction.setVerificationRecord(
+        new WebAuthnVerification(mixed.signInTenant.libraries, mixed.signInTenant.queries, {
+          id: 'new-webauthn',
+          type: VerificationType.WebAuthn,
+          userId: socialUser.id,
+          verified: true,
+          registrationInfo: {
+            type: MfaFactor.WebAuthn,
+            rpId: 'logto.dev',
+            credentialId: 'credential-id',
+            publicKey: 'public-key',
+            transports: [],
+            counter: 0,
+            agent: 'test',
+          },
+        })
+      );
+      await mixed.experienceInteraction.mfa.addWebAuthnByVerificationId('new-webauthn');
+      await mixed.experienceInteraction.submit();
+      expect(mixed.provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({
+          login: {
+            accountId: socialUser.id,
+            acr: LogtoAcr.Mfa,
+            amr: [
+              AuthenticationMethodReference.Federated,
+              AuthenticationMethodReference.Otp,
+              AuthenticationMethodReference.ProofOfPossession,
+              AuthenticationMethodReference.UserPresence,
+              AuthenticationMethodReference.Mfa,
+            ],
+          },
+        })
+      );
     });
 
     it('asks for the first factor before the MFA factor on a social sign-in', async () => {
