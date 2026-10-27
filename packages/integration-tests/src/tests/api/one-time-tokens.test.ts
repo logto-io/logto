@@ -371,10 +371,16 @@ describe('one-time tokens API', () => {
     await updateOneTimeTokenStatus(oneTimeToken1.id, OneTimeTokenStatus.Revoked);
     await verifyOneTimeToken({ email: fooEmail, token: oneTimeToken2.token });
 
-    const revokedTokens = await getOneTimeTokens({ status: OneTimeTokenStatus.Revoked });
+    const revokedTokens = await getOneTimeTokens({
+      email: fooEmail,
+      status: OneTimeTokenStatus.Revoked,
+    });
     expect(revokedTokens).toEqual([{ ...oneTimeToken1, status: OneTimeTokenStatus.Revoked }]);
 
-    const consumedTokens = await getOneTimeTokens({ status: OneTimeTokenStatus.Consumed });
+    const consumedTokens = await getOneTimeTokens({
+      email: fooEmail,
+      status: OneTimeTokenStatus.Consumed,
+    });
     expect(consumedTokens).toEqual([{ ...oneTimeToken2, status: OneTimeTokenStatus.Consumed }]);
 
     const activeBarTokens = await getOneTimeTokens({
