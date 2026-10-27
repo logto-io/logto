@@ -8,7 +8,6 @@ import { ExperienceClient } from '#src/client/experience/index.js';
 import { logtoUrl } from '#src/constants.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
 
 const followRedirect = async (client: ExperienceClient, redirectTo: string) =>
   ky.get(redirectTo, {
@@ -17,7 +16,7 @@ const followRedirect = async (client: ExperienceClient, redirectTo: string) =>
     throwHttpErrors: false,
   });
 
-devFeatureTest.describe('POST /experience/abort', () => {
+describe('POST /experience/abort', () => {
   const redirectUri = 'http://example.com/callback';
   const state = 'abort-at-consent-state';
   const userApi = new UserApiTest();
