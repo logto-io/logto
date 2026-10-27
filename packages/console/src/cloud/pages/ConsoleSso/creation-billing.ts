@@ -1,7 +1,12 @@
 import { type consoleSsoRouter } from '@logto/cloud/routes';
 import type Client from '@withtyped/client';
+import { ResponseError } from '@withtyped/client';
 
-import { type LogtoEnterpriseSubscriptionResponse } from '@/cloud/types/router';
+import { tryReadResponseErrorBody } from '@/cloud/hooks/use-cloud-api';
+import {
+  type CheckoutCustomerChoice,
+  type LogtoEnterpriseSubscriptionResponse,
+} from '@/cloud/types/router';
 
 import {
   clearPendingConnectorCreation,
@@ -79,12 +84,49 @@ const requestConnectorCreation = async (
   });
 };
 
+/** Checkout refused the chosen billing Customer, so no session exists for this Checkout key. */
+const isRefusedCustomerChoice = async (error: unknown) => {
+  if (!(error instanceof ResponseError)) {
+    return false;
+  }
+  const body = await tryReadResponseErrorBody(error);
+  const code = body?.error?.code;
+  return code === 'customer_not_found' || code === 'customer_unavailable';
+};
+
+/** A dialog canceled before the first Checkout key was used left no server state, so start clean. */
+export const discardCanceledConnectorCreation = (
+  userId: string,
+  operation: PendingConnectorCreation
+) => {
+  if (!operation.checkoutKey) {
+    clearPendingConnectorCreation(userId);
+  }
+};
+
+const postCheckoutSession = async (
+  operation: PendingConnectorCreation,
+  getApi: (key: string) => Client<typeof consoleSsoRouter>
+) =>
+  getApi(operation.checkoutKey ?? operation.key).post('/api/me/console-sso/checkout-session', {
+    body: { providerName: operation.providerName, ...operation.customerChoice },
+  });
+
 /** Resume payment or fulfillment using the persisted intention, never a redirect's payment claim. */
 export const continueConnectorCreation = async (
   userId: string,
   operation: PendingConnectorCreation,
   getApi: (key: string) => Client<typeof consoleSsoRouter>,
-  { restartExpired, signal }: { restartExpired: boolean; signal?: AbortSignal }
+  {
+    restartExpired,
+    signal,
+    chooseBillingCustomer,
+  }: {
+    restartExpired: boolean;
+    signal?: AbortSignal;
+    /** Resolves to `undefined` when the user cancels. */
+    chooseBillingCustomer: () => Promise<CheckoutCustomerChoice | undefined>;
+  }
 ) => {
   const assertCurrent = (current: PendingConnectorCreation) => {
     if (signal?.aborted) {
@@ -93,19 +135,40 @@ export const continueConnectorCreation = async (
     assertCurrentOperation(userId, current);
   };
   assertCurrent(operation);
-  const enroll = async (current: PendingConnectorCreation) => {
-    const enrollment = await getApi(current.checkoutKey ?? current.key).post(
-      '/api/me/console-sso/checkout-session',
-      {
-        body: { providerName: current.providerName },
-      }
-    );
+  /** Ask once per Checkout key, and save the choice before any request can send it. */
+  const withCustomerChoice = async (current: PendingConnectorCreation) => {
+    if (current.customerChoice) {
+      return current;
+    }
+    const customerChoice = await chooseBillingCustomer();
     assertCurrent(current);
-    return enrollment;
+    return customerChoice && savePendingConnectorCreation(userId, { ...current, customerChoice });
+  };
+  const enroll = async (pending: PendingConnectorCreation) => {
+    const current = await withCustomerChoice(pending);
+    if (!current) {
+      return { enrollment: undefined, current: pending };
+    }
+    try {
+      const enrollment = await postCheckoutSession(current, getApi);
+      assertCurrent(current);
+      return { enrollment, current };
+    } catch (error) {
+      if (await isRefusedCustomerChoice(error)) {
+        // The choice is not part of the purchase key, so choosing again needs a new Checkout key.
+        assertCurrent(current);
+        const { customerChoice, ...remaining } = current;
+        savePendingConnectorCreation(userId, {
+          ...remaining,
+          checkoutKey: crypto.randomUUID(),
+        });
+      }
+      throw error;
+    }
   };
   const getEnrollment = async () => {
     if (!operation.sessionId) {
-      return { enrollment: await enroll(operation), current: operation };
+      return enroll(operation);
     }
     const session = await getApi(operation.key).get(
       '/api/me/console-sso/checkout-session/:sessionId',
@@ -123,7 +186,7 @@ export const continueConnectorCreation = async (
       ...remaining,
       checkoutKey: crypto.randomUUID(),
     });
-    return { enrollment: await enroll(current), current };
+    return enroll(current);
   };
   const createConnector = async (current: PendingConnectorCreation) => {
     assertCurrent(current);
@@ -138,6 +201,10 @@ export const continueConnectorCreation = async (
     throw new Error('Select a funding source before creating a connector.');
   }
   const { enrollment, current: enrollmentOperation } = await getEnrollment();
+  if (!enrollment) {
+    // Canceling the billing account dialog sends nothing for this Checkout key.
+    return { status: 'canceled' as const, operation: enrollmentOperation };
+  }
   assertCurrent(enrollmentOperation);
   if (enrollment.status === 'subscription_exists') {
     return createConnector(
@@ -184,14 +251,20 @@ export const abandonConnectorCreation = async (
   getApi: (key: string) => Client<typeof consoleSsoRouter>
 ) => {
   assertCurrentOperation(userId, operation);
+  const findLostEnrollment = async () => {
+    try {
+      return await postCheckoutSession(operation, getApi);
+    } catch (error) {
+      if (await isRefusedCustomerChoice(error)) {
+        return;
+      }
+      throw error;
+    }
+  };
+  // Only a saved billing choice means a Checkout request may have been sent and its response lost.
   const enrollment =
-    operation.funding === 'personal' && !operation.sessionId && !operation.subscriptionId
-      ? await getApi(operation.checkoutKey ?? operation.key).post(
-          '/api/me/console-sso/checkout-session',
-          {
-            body: { providerName: operation.providerName },
-          }
-        )
+    operation.customerChoice && !operation.sessionId && !operation.subscriptionId
+      ? await findLostEnrollment()
       : undefined;
   assertCurrentOperation(userId, operation);
   const current =

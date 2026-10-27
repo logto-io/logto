@@ -8,6 +8,7 @@ import {
 } from './connector-creation-idempotency';
 import {
   mockApi,
+  mockChooseBillingCustomer,
   onCreated,
   operation,
   paidConnectors,
@@ -29,6 +30,24 @@ it('automatically uses personal billing only after server billing reads finish',
   expect(result.current.billing.funding).toBe('personal');
   expect(mockApi.get).not.toHaveBeenCalledWith('/api/me/console-sso/checkout-preview');
   expect(mockApi.post).not.toHaveBeenCalled();
+});
+
+it('starts over without server state when the billing account dialog is canceled', async () => {
+  // eslint-disable-next-line unicorn/no-useless-undefined -- The dialog resolves to nothing on cancel.
+  mockChooseBillingCustomer.mockResolvedValue(undefined);
+  const { result } = renderCreation();
+  await waitFor(() => {
+    expect(result.current.billing.isBillingReady).toBe(true);
+  });
+  await act(async () => {
+    await result.current.create(SsoProviderName.OIDC);
+  });
+  expect(mockChooseBillingCustomer).toHaveBeenCalledTimes(1);
+  expect(mockApi.post).not.toHaveBeenCalled();
+  expect(readPendingConnectorCreation('alice')).toBeUndefined();
+  expect(result.current.operation).toBeUndefined();
+  expect(result.current.status).toBeUndefined();
+  expect(onCreated).not.toHaveBeenCalled();
 });
 
 it('keeps the resolved personal funding while coverage revalidates', async () => {

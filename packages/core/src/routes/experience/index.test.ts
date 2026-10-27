@@ -289,8 +289,8 @@ const createStoredContextRequester = (authenticationContext: Record<string, unkn
 describe('PUT /experience', () => {
   const stepUpContext = {
     requestedAcrValues: [LogtoAcr.Mfa],
-    selectedAcr: LogtoAcr.Mfa,
     mode: AuthenticationContextMode.StepUp,
+    reauthenticationRequired: false,
   };
   const totpUser = { ...mockUser, mfaVerifications: [mockUserTotpMfaVerification] };
   const totpMfa: Mfa = { policy: MfaPolicy.UserControlled, factors: [MfaFactor.TOTP] };
@@ -413,6 +413,31 @@ describe('PUT /experience', () => {
     );
   });
 
+  it('should finish a step-up the session already satisfies without a login result', async () => {
+    // `mfa` is unreachable on a tenant with no MFA factor, so the step-up pursues the `1fa` the
+    // session carries: there is nothing to ask for, and nothing verified to refresh `auth_time`.
+    const { requester, provider } = createStepUpRequester({
+      user: mockUser,
+      mfa: { policy: MfaPolicy.UserControlled, factors: [] },
+      details: {
+        authenticationContext: {
+          requestedAcrValues: [LogtoAcr.Mfa, LogtoAcr.FirstFactor],
+          mode: AuthenticationContextMode.StepUp,
+          reauthenticationRequired: false,
+        },
+      },
+    });
+
+    const response = await requester
+      .put('/experience')
+      .send({ interactionEvent: InteractionEvent.SignIn });
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({ redirectTo: 'redirectTo' });
+    expect(provider.interactionResult).toHaveBeenCalledTimes(1);
+    expect(jest.mocked(provider.interactionResult).mock.calls[0]?.[2]).not.toHaveProperty('login');
+  });
+
   it('should reject a step-up with a non-sign-in event', async () => {
     const { requester, provider } = createStepUpRequester();
 
@@ -476,8 +501,8 @@ describe('PUT /experience', () => {
 describe('step-up route allow-list', () => {
   const stepUpContext = {
     requestedAcrValues: [LogtoAcr.FirstFactor],
-    selectedAcr: LogtoAcr.FirstFactor,
     mode: AuthenticationContextMode.StepUp,
+    reauthenticationRequired: false,
   };
 
   const forbiddenPostRoutes = [
@@ -970,8 +995,8 @@ describe('POST /experience/submit', () => {
       interactionResult: {
         authenticationContext: {
           requestedAcrValues: [LogtoAcr.Mfa],
-          selectedAcr: LogtoAcr.Mfa,
           mode: AuthenticationContextMode.StepUp,
+          reauthenticationRequired: false,
         },
       },
     });

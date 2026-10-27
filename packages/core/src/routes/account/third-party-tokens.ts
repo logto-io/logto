@@ -16,6 +16,7 @@ import { buildVerificationRecordByIdAndType } from '#src/libraries/verification.
 import koaGuard from '#src/middleware/koa-guard.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
+import { assertFirstPartyClient } from '#src/utils/assert-first-party-client.js';
 import assertThat from '#src/utils/assert-that.js';
 import { decryptTokens } from '#src/utils/secret-encryption.js';
 
@@ -110,9 +111,13 @@ export default function thirdPartyTokensRoutes<T extends UserRouter>(
       response: getThirdPartyAccessTokenResponseGuard,
     }),
     async (ctx, next) => {
-      const { id: userId, scopes } = ctx.auth;
+      const { id: userId, scopes, clientId } = ctx.auth;
       const { target } = ctx.guard.params;
 
+      // A stored provider token is a bearer credential for the upstream provider, not a profile
+      // attribute, so it stays within the first-party boundary the other credential-bearing
+      // account routes enforce.
+      await assertFirstPartyClient(queries, clientId);
       // Stored provider tokens are identity data; require the same `identities` scope as the
       // other social/SSO identity endpoints.
       assertThat(scopes.has(UserScope.Identities), 'auth.forbidden', 403);
@@ -145,9 +150,10 @@ export default function thirdPartyTokensRoutes<T extends UserRouter>(
       response: getThirdPartyAccessTokenResponseGuard,
     }),
     async (ctx, next) => {
-      const { id: userId, scopes } = ctx.auth;
+      const { id: userId, scopes, clientId } = ctx.auth;
       const { connectorId } = ctx.guard.params;
 
+      await assertFirstPartyClient(queries, clientId);
       // Stored provider tokens are identity data; require the same `identities` scope as the
       // other social/SSO identity endpoints.
       assertThat(scopes.has(UserScope.Identities), 'auth.forbidden', 403);
@@ -184,10 +190,11 @@ export default function thirdPartyTokensRoutes<T extends UserRouter>(
       response: getThirdPartyAccessTokenResponseGuard,
     }),
     async (ctx, next) => {
-      const { id: userId, scopes } = ctx.auth;
+      const { id: userId, scopes, clientId } = ctx.auth;
       const { target } = ctx.guard.params;
       const { verificationRecordId } = ctx.guard.body;
 
+      await assertFirstPartyClient(queries, clientId);
       // Stored provider tokens are identity data; require the same `identities` scope as the
       // other social/SSO identity endpoints.
       assertThat(scopes.has(UserScope.Identities), 'auth.forbidden', 403);

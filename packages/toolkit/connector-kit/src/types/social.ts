@@ -46,9 +46,10 @@ export type GetAuthorizationUri = (
 // Copied from https://github.com/colinhacks/zod#json-type
 const literalSchema = z.union([z.string(), z.number(), z.boolean(), z.null()]);
 
-export const jsonGuard: z.ZodType<Json> = z.lazy(() =>
-  z.union([literalSchema, z.array(jsonGuard), z.record(jsonGuard)])
-);
+export const jsonGuard: z.ZodType<Json> = z.lazy(() => jsonUnionGuard);
+
+// Built once, since `z.lazy` calls its getter for every value it parses.
+const jsonUnionGuard = z.union([literalSchema, z.array(jsonGuard), z.record(jsonGuard)]);
 
 export const jsonObjectGuard = z.record(jsonGuard);
 

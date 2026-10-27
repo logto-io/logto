@@ -10,13 +10,13 @@
       "put": {
         "operationId": "InitInteraction",
         "summary": "Init new interaction",
-        "description": "Init a new experience interaction with the given interaction type. Any existing interaction data will be cleared. When the login prompt carries a step-up authentication context (an authenticated session that does not satisfy the requested `acr_values`), the interaction pins the session subject; if the pinned user has no method that can reach the selected authentication context class, the interaction is finished with `unmet_authentication_requirements` and a redirect URL is returned instead.",
+        "description": "Init a new experience interaction with the given interaction type. Any existing interaction data will be cleared. When the login prompt carries a step-up authentication context (an authenticated session that does not satisfy the requested `acr_values`), the interaction pins the session subject. If the session already satisfies the class the step-up pursues and the request forces no fresh authentication, the interaction is finished with the session's context untouched and a redirect URL is returned. If the pinned user has no method that can reach that class, the interaction is finished with `unmet_authentication_requirements` and a redirect URL is returned instead.",
         "responses": {
           "204": {
             "description": "A new experience interaction has been successfully initiated."
           },
           "200": {
-            "description": "The step-up interaction was finished with `unmet_authentication_requirements` because the pinned user has no method that can reach the requested authentication context; follow `redirectTo` to return to the application."
+            "description": "The step-up interaction was finished without UI and a redirect URL is returned. Either the session already satisfies the class the step-up pursues, so `acr`, `amr`, and `auth_time` stay as recorded, or the pinned user has no method that can reach it and the request is answered with `unmet_authentication_requirements`; follow `redirectTo` to return to the application."
           },
           "400": {
             "description": "A step-up interaction was requested with a non-sign-in event, or the session has no subject to pin."
