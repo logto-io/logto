@@ -39,7 +39,7 @@ function CreationModal({ onClose, userId }: Props) {
     userId,
     onClose
   );
-  const { billingError, isBillingReady, funding } = billing;
+  const { billingError, isBillingReady, funding, isFundingResolved } = billing;
   const {
     data: providers,
     error,
@@ -103,8 +103,9 @@ function CreationModal({ onClose, userId }: Props) {
         title="cloud.console_sso.create"
         size="xlarge"
         footer={
-          // Connectors not covered by an Enterprise plan are charged to the user personally.
-          isBillingReady && funding === 'personal' ? (
+          // Connectors not covered by an Enterprise plan are charged to the user personally. Keep
+          // the notice while a known coverage revalidates (e.g., on window focus) to avoid flashing.
+          isFundingResolved && funding === 'personal' ? (
             <AddOnNoticeFooter
               buttonTitle="enterprise_sso.create_modal.create_button_text"
               isCreateButtonDisabled={isCreateButtonDisabled}
