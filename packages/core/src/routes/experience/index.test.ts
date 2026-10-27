@@ -2076,6 +2076,49 @@ describe('POST /experience/submit', () => {
     }
   );
 
+  it.each([
+    {
+      name: 'passkey',
+      record: {
+        id: 'other-user-passkey-verification-id',
+        type: VerificationType.SignInPasskey,
+        userId: 'other-user-id',
+        verified: true,
+      },
+    },
+    {
+      name: 'enterprise SSO',
+      record: {
+        id: 'other-user-sso-verification-id',
+        type: VerificationType.EnterpriseSso,
+        connectorId: 'sso-connector-id',
+        enterpriseSsoUserInfo: { id: 'other-user-id' },
+        issuer: 'issuer',
+      },
+    },
+  ])(
+    'should require MFA on submit when a verified $name record belongs to another user',
+    async ({ record }) => {
+      const user = {
+        ...mockUser,
+        mfaVerifications: [mockUserTotpMfaVerification],
+      };
+      const { requester } = createRequesterWithMocks({
+        user,
+        mfa: {
+          policy: MfaPolicy.Mandatory,
+          factors: [MfaFactor.TOTP],
+        },
+        interactionResult: { verificationRecords: [record] },
+      });
+
+      const response = await requester.post('/experience/submit');
+
+      expect(response.status).toBe(403);
+      expect(response.body).toMatchObject({ code: 'session.mfa.require_mfa_verification' });
+    }
+  );
+
   it('should not require backup codes on a sign-in that skipped MFA verification', async () => {
     const user = {
       ...mockUser,
