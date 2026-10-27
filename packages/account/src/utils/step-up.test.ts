@@ -9,6 +9,7 @@ import {
   getProactiveStepUpChallenge,
   getStepUpChallenge,
   handlePendingStepUpOnPageLoad,
+  hasFreshAuthenticationContext,
   hasFreshFirstFactorAuthentication,
   parseStepUpChallenge,
   startPendingStepUp,
@@ -211,6 +212,42 @@ describe('hasFreshFirstFactorAuthentication', () => {
         now
       )
     ).toBe(false);
+  });
+});
+
+describe('hasFreshAuthenticationContext', () => {
+  const now = 1_800_000_000_000;
+  const authTimeOfAge = (ageSeconds: number) => now / 1000 - ageSeconds;
+
+  it.each([
+    [300, 300, true],
+    [300, 301, false],
+    [300, -60, true],
+    [300, -61, false],
+    [15, 15, true],
+    [15, 16, false],
+    [15, -3, true],
+    [15, -4, false],
+    [6900, 6900, true],
+    [6900, 6901, false],
+  ])('checks an age of %p seconds against a %p-second cutoff', (cutoff, age, expected) => {
+    expect(
+      hasFreshAuthenticationContext(
+        { acr: LogtoAcr.FirstFactor, auth_time: authTimeOfAge(age) },
+        cutoff,
+        now
+      )
+    ).toBe(expected);
+  });
+
+  it('does not subtract the tenant freshness margin from the cutoff', () => {
+    const claims = { acr: LogtoAcr.FirstFactor, auth_time: authTimeOfAge(270) };
+
+    // Passing the already-derived 300-second entry cutoff to the inline helper subtracts the
+    // 60-second margin again, so 270 seconds is rejected.
+    expect(hasFreshFirstFactorAuthentication(claims, 300, now)).toBe(false);
+    // The entry cutoff is already final; 270 seconds fits the 300-second cutoff.
+    expect(hasFreshAuthenticationContext(claims, 300, now)).toBe(true);
   });
 });
 

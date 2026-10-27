@@ -40,13 +40,13 @@ const createClaims = (authTime = now - 60) => ({
   auth_time: authTime,
 });
 
-const challenge =
-  'Bearer error="insufficient_user_authentication", ' +
-  'error_description="Recent user authentication is required", ' +
-  'acr_values="urn:logto:acr:1fa", max_age="600"';
+const createChallengeError = (maxAge = '600') => {
+  const challenge =
+    'Bearer error="insufficient_user_authentication", ' +
+    'error_description="Recent user authentication is required", ' +
+    `acr_values="urn:logto:acr:1fa", max_age="${maxAge}"`;
 
-const createChallengeError = () =>
-  new HTTPError(
+  return new HTTPError(
     {
       status: 401,
       headers: {
@@ -60,6 +60,7 @@ const createChallengeError = () =>
     {} as Request,
     {} as NormalizedOptions
   );
+};
 
 const renderPassword = (userInfo: Partial<UserProfileResponse> = mockUserInfo) =>
   renderWithPageContext(
@@ -164,13 +165,37 @@ describe('<Password /> OIDC step-up', () => {
       expect.objectContaining({
         extraParams: {
           acr_values: LogtoAcr.FirstFactor,
-          max_age: '600',
+          max_age: '300',
         },
       })
     );
     expect(updatePassword).toHaveBeenCalledWith('access-token', undefined, {
       password: 'password123',
     });
+  });
+
+  it('keeps a stricter server max_age for the final write', async () => {
+    mockGetIdTokenClaims.mockResolvedValue(createClaims());
+    jest.mocked(updatePassword).mockRejectedValueOnce(createChallengeError('120'));
+
+    const { getByText, container } = renderPassword();
+
+    await waitFor(() => {
+      expect(getByText('account_center.password.title')).toBeTruthy();
+    });
+    submitPassword(container, getByText);
+
+    await waitFor(() => {
+      expect(mockSignIn).toHaveBeenCalledTimes(1);
+    });
+    expect(mockSignIn).toHaveBeenCalledWith(
+      expect.objectContaining({
+        extraParams: {
+          acr_values: LogtoAcr.FirstFactor,
+          max_age: '120',
+        },
+      })
+    );
   });
 
   it('skips the entry step-up for a user who can set the initial password', async () => {

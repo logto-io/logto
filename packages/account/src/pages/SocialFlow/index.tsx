@@ -79,7 +79,7 @@ const SocialFlow = ({ mode }: Props) => {
     Boolean(connectorId) &&
     Boolean(connector) &&
     Boolean(userInfo);
-  const { isReady, hasFailed, verificationId } = useStepUpEntry({
+  const { isReady, hasFailed, isResumed, verificationId } = useStepUpEntry({
     enabled: isStepUpEntryEnabled,
     skip: canSkipVerification,
   });
@@ -95,7 +95,7 @@ const SocialFlow = ({ mode }: Props) => {
 
   const handleFlowError = useCallback(
     async (error: unknown) => {
-      if (await requestStepUp(error, { type: 'enter-subpage' })) {
+      if (await requestStepUp(error, { type: 'enter-subpage' }, { isResumed })) {
         return;
       }
 
@@ -123,7 +123,7 @@ const SocialFlow = ({ mode }: Props) => {
         },
       });
     },
-    [connectorId, handleError, navigate, requestStepUp, resetVerification, setToast]
+    [connectorId, handleError, isResumed, navigate, requestStepUp, resetVerification, setToast]
   );
 
   const handleLinkSuccess = useCallback(async () => {

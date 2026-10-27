@@ -141,6 +141,7 @@ describe('<Email />', () => {
       isReady: true,
       isChecking: false,
       hasFailed: false,
+      isResumed: false,
       verificationId: 'identity-verification-record-id',
     });
     mockRequestStepUp.mockResolvedValue(false);
@@ -168,6 +169,7 @@ describe('<Email />', () => {
       isReady: false,
       isChecking: false,
       hasFailed: false,
+      isResumed: false,
       verificationId: undefined,
     });
 
@@ -261,6 +263,7 @@ describe('<Email />', () => {
       isReady: true,
       isChecking: false,
       hasFailed: false,
+      isResumed: false,
       verificationId: undefined,
     });
 

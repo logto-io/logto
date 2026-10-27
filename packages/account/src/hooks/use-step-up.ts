@@ -16,6 +16,7 @@ import {
   getStepUpChallenge,
   getSubpageAuthenticationMaxAgeSeconds,
   getSubpageStepUpChallenge,
+  hasFreshAuthenticationContext,
   hasFreshFirstFactorAuthentication,
   startPendingStepUp,
   type PendingStepUpAction,
@@ -197,7 +198,23 @@ const useStepUp = (): StepUpController => {
         return false;
       }
 
-      await beginStepUp(action, challenge, route);
+      // A reactive entry step-up restores a page whose entry guard uses the shorter subpage
+      // threshold. Capping the requested age keeps the provider and the restored page aligned;
+      // a stricter server requirement is preserved by the minimum.
+      const effectiveChallenge =
+        action.type === 'enter-subpage'
+          ? {
+              ...challenge,
+              maxAge: String(
+                Math.min(
+                  Number(challenge.maxAge),
+                  getSubpageAuthenticationMaxAgeSeconds(maximumAuthenticationAgeInSeconds)
+                )
+              ),
+            }
+          : challenge;
+
+      await beginStepUp(action, effectiveChallenge, route);
 
       return true;
     },
@@ -234,6 +251,12 @@ export type StepUpEntryState = {
    * would loop through the authorization endpoint, so the page reports the failure instead.
    */
   hasFailed: boolean;
+  /**
+   * Whether this page load is the first load after a completed entry step-up. Automatic requests
+   * pass this to `requestStepUp` so a repeated challenge reports an error instead of redirecting
+   * through the authorization endpoint again.
+   */
+  isResumed: boolean;
   /** The legacy verification record. Only present when OIDC step-up is disabled. */
   verificationId?: string;
 };
@@ -263,6 +286,7 @@ export const useStepUpEntry = ({ enabled, skip = false }: StepUpEntryOptions): S
     isReady: skip,
     isChecking: enabled && !skip,
     hasFailed: false,
+    isResumed: false,
   }));
   const hasStartedRef = useRef(false);
 
@@ -272,12 +296,12 @@ export const useStepUpEntry = ({ enabled, skip = false }: StepUpEntryOptions): S
     }
 
     if (!enabled) {
-      setState({ isReady: false, isChecking: false, hasFailed: false });
+      setState({ isReady: false, isChecking: false, hasFailed: false, isResumed: false });
       return;
     }
 
     if (skip) {
-      setState({ isReady: true, isChecking: false, hasFailed: false });
+      setState({ isReady: true, isChecking: false, hasFailed: false, isResumed: false });
       return;
     }
 
@@ -299,7 +323,7 @@ export const useStepUpEntry = ({ enabled, skip = false }: StepUpEntryOptions): S
 
       try {
         const claims = await getIdTokenClaims();
-        const ready = hasFreshFirstFactorAuthentication(
+        const ready = hasFreshAuthenticationContext(
           claims,
           getSubpageAuthenticationMaxAgeSeconds(maximumAuthenticationAgeInSeconds)
         );
@@ -309,14 +333,19 @@ export const useStepUpEntry = ({ enabled, skip = false }: StepUpEntryOptions): S
         }
 
         if (ready) {
-          setState({ isReady: true, isChecking: false, hasFailed: false });
+          setState({
+            isReady: true,
+            isChecking: false,
+            hasFailed: false,
+            isResumed: justSteppedUp,
+          });
           return;
         }
 
         // A step-up that just completed on this route did not refresh the context far enough.
         // Starting another one would loop through the authorization endpoint.
         if (justSteppedUp) {
-          setState({ isReady: false, isChecking: false, hasFailed: true });
+          setState({ isReady: false, isChecking: false, hasFailed: true, isResumed: true });
           return;
         }
 
@@ -326,7 +355,12 @@ export const useStepUpEntry = ({ enabled, skip = false }: StepUpEntryOptions): S
         );
       } catch {
         if (!isCancelled) {
-          setState({ isReady: false, isChecking: false, hasFailed: true });
+          setState({
+            isReady: false,
+            isChecking: false,
+            hasFailed: true,
+            isResumed: justSteppedUp,
+          });
         }
       }
     };
@@ -348,6 +382,7 @@ export const useStepUpEntry = ({ enabled, skip = false }: StepUpEntryOptions): S
       isReady: Boolean(verificationId) || skip,
       isChecking: false,
       hasFailed: false,
+      isResumed: false,
       verificationId,
     };
   }

@@ -122,6 +122,29 @@ export const getProactiveStepUpChallenge = (
 });
 
 /**
+ * The authentication age in whole seconds, or `undefined` when the claims do not carry a
+ * first-factor context. `auth_time` is whole seconds, so compare whole seconds too: a context
+ * obtained a moment ago must count as fresh even at the shortest tenant window, where the
+ * threshold leaves no room for a fractional age.
+ */
+const getAuthenticationAgeSeconds = (
+  claims: Record<string, unknown> | undefined,
+  now: number
+): number | undefined => {
+  if (!claims || !acrSatisfies(claims.acr, LogtoAcr.FirstFactor)) {
+    return;
+  }
+
+  const { auth_time: authTime } = claims;
+
+  if (typeof authTime !== 'number' || !Number.isFinite(authTime)) {
+    return;
+  }
+
+  return Math.floor(now / 1000) - authTime;
+};
+
+/**
  * Whether the ID token carries a first-factor authentication context recent enough for the Account
  * API. The access token stays opaque; the ID token is the client's local source for coordinating
  * the UX before a sensitive request. The window is the tenant's Account Center setting, read
@@ -133,26 +156,42 @@ export const hasFreshFirstFactorAuthentication = (
   maximumAuthenticationAgeInSeconds = defaultMaximumAuthenticationAgeInSeconds,
   now = Date.now()
 ): boolean => {
-  if (!claims || !acrSatisfies(claims.acr, LogtoAcr.FirstFactor)) {
+  const ageSeconds = getAuthenticationAgeSeconds(claims, now);
+
+  if (ageSeconds === undefined) {
     return false;
   }
 
-  const { auth_time: authTime } = claims;
-
-  if (typeof authTime !== 'number' || !Number.isFinite(authTime)) {
-    return false;
-  }
-
-  // `auth_time` is whole seconds, so compare whole seconds too: a context obtained a moment ago
-  // must count as fresh even at the shortest tenant window, where the threshold leaves no room for
-  // a fractional age.
-  const ageSeconds = Math.floor(now / 1000) - authTime;
   const marginSeconds = getAuthenticationFreshnessMarginSeconds(maximumAuthenticationAgeInSeconds);
 
   return (
     ageSeconds >= -marginSeconds &&
     ageSeconds <= getAuthenticationFreshnessMaxAgeSeconds(maximumAuthenticationAgeInSeconds)
   );
+};
+
+/**
+ * Whether the ID token carries a first-factor authentication context no older than
+ * `maxAgeSeconds`.
+ *
+ * `maxAgeSeconds` is already the final cutoff, such as a subpage entry threshold; it is not a
+ * tenant policy window with its own freshness margin. Future `auth_time` values are still allowed
+ * within the clock-skew margin because the client clock may be behind the authorization server.
+ */
+export const hasFreshAuthenticationContext = (
+  claims: Record<string, unknown> | undefined,
+  maxAgeSeconds: number,
+  now = Date.now()
+): boolean => {
+  const ageSeconds = getAuthenticationAgeSeconds(claims, now);
+
+  if (ageSeconds === undefined) {
+    return false;
+  }
+
+  const marginSeconds = getAuthenticationFreshnessMarginSeconds(maxAgeSeconds);
+
+  return ageSeconds >= -marginSeconds && ageSeconds <= maxAgeSeconds;
 };
 
 const authParameterPattern =

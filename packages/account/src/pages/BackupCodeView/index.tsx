@@ -33,7 +33,7 @@ const BackupCodeView = () => {
     Boolean(accountCenterSettings?.enabled) &&
     accountCenterSettings?.fields.mfa === AccountCenterControlValue.Edit &&
     isBackupCodeEnabled(experienceSettings?.mfa);
-  const { isReady, hasFailed, verificationId } = useStepUpEntry({
+  const { isReady, hasFailed, isResumed, verificationId } = useStepUpEntry({
     enabled: isPageEnabled,
   });
 
@@ -46,7 +46,7 @@ const BackupCodeView = () => {
     const fetchData = async () => {
       const [codesError, codesResult] = await getBackupCodesRequest(verificationId);
       if (codesError || !codesResult) {
-        if (await requestStepUp(codesError, { type: 'enter-subpage' })) {
+        if (await requestStepUp(codesError, { type: 'enter-subpage' }, { isResumed })) {
           return;
         }
 
@@ -57,7 +57,7 @@ const BackupCodeView = () => {
     };
 
     void fetchData();
-  }, [getBackupCodesRequest, isReady, requestStepUp, verificationId]);
+  }, [getBackupCodesRequest, isReady, isResumed, requestStepUp, verificationId]);
 
   const copyText = useCallback(
     async (text: string, successMessage: string) => {

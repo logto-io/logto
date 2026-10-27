@@ -80,6 +80,20 @@ describe('useStepUpEntry', () => {
     await waitFor(() => {
       expect(result.current.isReady).toBe(true);
     });
+    expect(result.current.isResumed).toBe(false);
+    expect(mockSignIn).not.toHaveBeenCalled();
+  });
+
+  it('accepts a context within the entry cutoff without subtracting the margin twice', async () => {
+    mockGetIdTokenClaims.mockResolvedValue(createClaims(now - 270));
+
+    const { result } = renderHook(() => useStepUpEntry({ enabled: true }), {
+      wrapper: createWrapper(),
+    });
+
+    await waitFor(() => {
+      expect(result.current.isReady).toBe(true);
+    });
     expect(mockSignIn).not.toHaveBeenCalled();
   });
 
@@ -163,8 +177,24 @@ describe('useStepUpEntry', () => {
       isReady: false,
       isChecking: false,
       hasFailed: false,
+      isResumed: false,
     });
     expect(mockGetIdTokenClaims).not.toHaveBeenCalled();
+    expect(mockSignIn).not.toHaveBeenCalled();
+  });
+
+  it('marks a completed entry step-up as resumed when the context is fresh', async () => {
+    prepareResumableStepUp();
+    mockGetIdTokenClaims.mockResolvedValue(createClaims());
+
+    const { result } = renderHook(() => useStepUpEntry({ enabled: true }), {
+      wrapper: createWrapper(),
+    });
+
+    await waitFor(() => {
+      expect(result.current.isReady).toBe(true);
+    });
+    expect(result.current.isResumed).toBe(true);
     expect(mockSignIn).not.toHaveBeenCalled();
   });
 
@@ -179,6 +209,7 @@ describe('useStepUpEntry', () => {
     await waitFor(() => {
       expect(result.current.hasFailed).toBe(true);
     });
+    expect(result.current.isResumed).toBe(true);
     expect(mockSignIn).not.toHaveBeenCalled();
   });
 });
