@@ -4,6 +4,12 @@ import { type NavigateOptions } from 'react-router-dom';
 
 import useAbortDirectSignIn from './use-abort-direct-sign-in';
 import useNavigateWithPreservedSearchParams from './use-navigate-with-preserved-search-params';
+import useToast from './use-toast';
+
+type NavigateToSignInOptions = NavigateOptions & {
+  /** The error message to show on the hosted sign-in page. */
+  readonly toast?: string;
+};
 
 /**
  * Returns the terminal fallback navigation for sign-in errors.
@@ -13,24 +19,31 @@ import useNavigateWithPreservedSearchParams from './use-navigate-with-preserved-
  * read from the interaction on the server, so a hosted sign-in started later in the same tab keeps
  * the normal fallback. Everything else navigates to the hosted sign-in page as before.
  *
- * `options` defaults to `{ replace: true }`; callers that previously pushed the sign-in page pass
- * `{ replace: false }` to keep the current page in the history.
+ * `options.toast` is shown only with the hosted fallback, so an aborted direct sign-in does not
+ * flash the error before leaving for the client. The navigate options default to
+ * `{ replace: true }`; callers that previously pushed the sign-in page pass `{ replace: false }`
+ * to keep the current page in the history.
  */
 const useNavigateToSignIn = () => {
   const navigate = useNavigateWithPreservedSearchParams();
   const abortDirectSignIn = useAbortDirectSignIn();
+  const { setToast } = useToast();
 
   return useCallback(
-    (errorCode?: string, options?: NavigateOptions) => {
+    (errorCode?: string, { toast, ...options }: NavigateToSignInOptions = {}) => {
       void (async () => {
         if (await abortDirectSignIn(errorCode)) {
           return;
         }
 
-        navigate('/' + experience.routes.signIn, options ?? { replace: true });
+        if (toast) {
+          setToast(toast);
+        }
+
+        navigate('/' + experience.routes.signIn, { replace: true, ...options });
       })();
     },
-    [abortDirectSignIn, navigate]
+    [abortDirectSignIn, navigate, setToast]
   );
 };
 

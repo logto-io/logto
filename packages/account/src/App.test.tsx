@@ -65,7 +65,6 @@ type UseLogtoReturn = {
   isAuthenticated: boolean;
   isLoading: boolean;
   signIn: jest.Mock;
-  clearAllTokens: jest.Mock;
 };
 
 const setupUseLogto = (overrides: Partial<UseLogtoReturn> = {}): UseLogtoReturn => {
@@ -73,7 +72,6 @@ const setupUseLogto = (overrides: Partial<UseLogtoReturn> = {}): UseLogtoReturn 
     isAuthenticated: true,
     isLoading: false,
     signIn: jest.fn(),
-    clearAllTokens: jest.fn(),
     ...overrides,
   };
   (useLogto as jest.Mock).mockReturnValue(value);
@@ -280,17 +278,20 @@ describe('Account Center <Main /> auth-redirect effects', () => {
   });
 
   describe('auth callback in flight', () => {
-    it('does not fire the auth-redirect signIn while handling the ?code= callback', () => {
-      setLocation('/account', '?code=abc123');
-      const { signIn } = setupUseLogto({ isAuthenticated: false });
+    it.each([false, true])(
+      'does not fire the auth-redirect signIn while handling the ?code= callback (isAuthenticated=%s)',
+      (isAuthenticated) => {
+        setLocation('/account', '?code=abc123');
+        const { signIn } = setupUseLogto({ isAuthenticated });
 
-      renderWithPageContext(
-        <Main />,
-        { initialEntries: ['/account?code=abc123'] },
-        { pageContext: { userInfoError: new Error('still loading') } }
-      );
+        renderWithPageContext(
+          <Main />,
+          { initialEntries: ['/account?code=abc123'] },
+          { pageContext: { userInfoError: new Error('still loading') } }
+        );
 
-      expect(signIn).not.toHaveBeenCalled();
-    });
+        expect(signIn).not.toHaveBeenCalled();
+      }
+    );
   });
 });

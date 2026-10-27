@@ -367,10 +367,19 @@ export class Mfa {
    *
    * @param asNoSkipMandatoryPolicy Run the check exactly as a no-skip mandatory policy would:
    * neither the policy's nor the user's skips apply and `user.missing_mfa` is thrown without
-   * `skippable`. A requested `mfa` is enforced this way, since the relying party asked for the
+   * `skippable`. A requested class is enforced this way, since the relying party asked for the
    * class; the tenant's backup-code and additional-factor rules apply unchanged.
+   * @param enrollmentFactors The factors the interaction may bind to reach the class it pursues,
+   * defaulting to the configured factors. A requested class offers only the factors that reach
+   * it, so binding one cannot leave the submission below the class.
    */
-  async assertMfaFulfilled({ asNoSkipMandatoryPolicy = false } = {}) {
+  async assertMfaFulfilled({
+    asNoSkipMandatoryPolicy = false,
+    enrollmentFactors,
+  }: {
+    asNoSkipMandatoryPolicy?: boolean;
+    enrollmentFactors?: readonly MfaFactor[];
+  } = {}) {
     const submitMfaValidationContext = await this.buildSubmitMfaValidationContext();
 
     // For optional MFA, prompt an MFA enrollment page in prior if user hasn't set up or skipped MFA binding yet.
@@ -379,7 +388,11 @@ export class Mfa {
       await this.assertOptionalMfaEnablement(submitMfaValidationContext);
     }
 
-    await this.assertUserMandatoryMfaFulfilled(submitMfaValidationContext, asNoSkipMandatoryPolicy);
+    await this.assertUserMandatoryMfaFulfilled(
+      submitMfaValidationContext,
+      asNoSkipMandatoryPolicy,
+      enrollmentFactors
+    );
   }
 
   async assertPasskeySignInFulfilled() {
@@ -486,7 +499,8 @@ export class Mfa {
   // eslint-disable-next-line complexity
   private async assertUserMandatoryMfaFulfilled(
     submitMfaValidationContext: SubmitMfaValidationContext,
-    asNoSkipMandatoryPolicy = false
+    asNoSkipMandatoryPolicy = false,
+    enrollmentFactors?: readonly MfaFactor[]
   ) {
     const { mfaSettings, organizations } = submitMfaValidationContext;
     const { policy, factors } = mfaSettings;
@@ -543,7 +557,11 @@ export class Mfa {
     const isPairableFactor = (factor: MfaFactor) =>
       !asNoSkipMandatoryPolicy ||
       (factor !== MfaFactor.EmailVerificationCode && factor !== MfaFactor.PhoneVerificationCode);
-    const requiredFactors = configuredFactors.filter((factor) => isPairableFactor(factor));
+    // A registration whose pursued class needs a binding offers only the factors that reach it;
+    // the eligibility's `enrollableFactors` is exactly that list.
+    const requiredFactors = (enrollmentFactors ?? configuredFactors).filter((factor) =>
+      isPairableFactor(factor)
+    );
     const linkedFactors = deduplicate([
       ...factorsInUser.filter((factor) => isPairableFactor(factor)),
       ...factorsInBind,

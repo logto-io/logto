@@ -69,7 +69,7 @@ beforeEach(() => {
     if (path === '/api/me/logto-enterprises') {
       return { logtoEnterprises: [] };
     }
-    if (path === '/api/me/subscriptions/summary') {
+    if (path === '/api/me/user-subscriptions/summary') {
       return { hasSubscriptions: true };
     }
     return { subscriptions: [] };
@@ -95,14 +95,14 @@ it.each([
       expect(result.current.enterprises.data).toEqual(logtoEnterprises);
     });
     expect(result.current.hasSubscriptions).toBe(hasSubscriptions);
-    expect(get).toHaveBeenCalledWith('/api/me/subscriptions/summary');
-    expect(get).not.toHaveBeenCalledWith('/api/me/subscriptions');
+    expect(get).toHaveBeenCalledWith('/api/me/user-subscriptions/summary');
+    expect(get).not.toHaveBeenCalledWith('/api/me/user-subscriptions');
   }
 );
 
 it('keeps Enterprise access when the personal summary fails', async () => {
   get.mockImplementation(async (path: string) => {
-    if (path === '/api/me/subscriptions/summary') {
+    if (path === '/api/me/user-subscriptions/summary') {
       throw new Error('Unavailable');
     }
     return { logtoEnterprises: [{ id: 'enterprise' }] };
@@ -159,7 +159,7 @@ it.each([401, 403, 503])(
 
 it('clears the previous user’s billing and entry eligibility immediately on account switch', async () => {
   get.mockImplementation(async (path: string) => {
-    if (path === '/api/me/subscriptions/summary') {
+    if (path === '/api/me/user-subscriptions/summary') {
       return { hasSubscriptions: true };
     }
     if (path === '/api/me/logto-enterprises') {
@@ -211,7 +211,7 @@ it('reads the requested invoice page with a user-scoped key', async () => {
   await waitFor(() => {
     expect(result.current.data).toEqual(page);
   });
-  expect(get).toHaveBeenCalledWith('/api/me/subscriptions/invoices', {
+  expect(get).toHaveBeenCalledWith('/api/me/user-subscriptions/invoices', {
     search: { page: '3', page_size: '10' },
   });
   setUser('bob');

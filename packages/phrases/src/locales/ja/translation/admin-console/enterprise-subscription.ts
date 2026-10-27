@@ -36,13 +36,13 @@ const enterprise_subscription = {
     description:
       '選択中のテナントに関係なく、個人サブスクリプションと Enterprise の契約枠を確認できます。',
     personal_title: '個人サブスクリプション',
-    personal_description: '過去のものを含む、アカウントに請求されるサブスクリプションです。',
+    personal_description:
+      'アカウントに請求される有効なサブスクリプションです。過去のサブスクリプションは請求履歴に残ります。',
     price: '価格',
-    billing_period: '請求期間',
-    list_price_note: '価格には税金と割引は含まれません。変更は次回の請求書で日割り計算されます。',
+    next_charge: '次回の請求',
+    ends_on: '{{date}} に終了',
     overdue_note:
       '支払いが期限を過ぎています。未払いのままの場合、サブスクリプションが一時停止され、有料機能が削除されることがあります。',
-    cancel_on: '{{date}} に解約予定',
     other_product: 'その他のサブスクリプション',
     enterprise_invoices_description:
       'Enterprise 契約の請求書です。請求書を選択すると、内容を確認し、請求書または領収書をダウンロードできます。',

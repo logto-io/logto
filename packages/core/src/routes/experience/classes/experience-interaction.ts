@@ -13,6 +13,7 @@ import {
   LogtoAcr,
   acrSatisfies,
   getAuthenticationFactor,
+  getAuthenticationFactorClass,
   loginPromptAuthenticationContextDetailsGuard,
   MfaFactor,
   MissingProfile,
@@ -811,25 +812,6 @@ export default class ExperienceInteraction {
   }
 
   /**
-   * Whether the context the interaction has proven so far satisfies the request. Any requested
-   * class is enough — the rule `interaction-policy.ts` applies to the OIDC session and re-applies
-   * to the login result when the interaction resumes — so a submission this lets through is never
-   * rejected as `unmet_authentication_requirements` afterwards. Only the proofs of this
-   * interaction are read; enrolled factors are never consulted.
-   */
-  private get isRequestedAcrSatisfied(): boolean {
-    const { requestedAcrValues } = this;
-
-    if (requestedAcrValues.length === 0) {
-      return true;
-    }
-
-    const achievedAcr = achieveAcr(this.countedAuthenticationProofs);
-
-    return requestedAcrValues.some((requestedAcr) => acrSatisfies(achievedAcr, requestedAcr));
-  }
-
-  /**
    * Whether the interaction has proven a Logto-verifiable first factor: a proof of class `1fa` or
    * `both`, verified or established in this interaction. An `mfa`-class proof never satisfies it:
    * one alone reaches only `urn:logto:acr:1fa`, so a requested `mfa` still needs the first-factor
@@ -875,7 +857,10 @@ export default class ExperienceInteraction {
    * pursued class (see {@link getPursuedRequestedAcr}) is `1fa` or `mfa` and the interaction has
    * proven no Logto-verifiable first factor yet. With an eligible method the user can verify, it
    * throws `session.step_up.require_verification` carrying the pursued class, the methods and the
-   * masked identifiers, and the next `submit()` re-evaluates the requirement from scratch.
+   * masked identifiers, and the next `submit()` re-evaluates the requirement from scratch. Once a
+   * first factor is proven, the same requirement asks for another one when it pairs with no MFA
+   * factor the user can verify or enroll: a first factor only lifts the context together with a
+   * factor of a different kind.
    *
    * With no eligible method but a fresh subject proof, `user.missing_profile` offers the methods
    * the tenant lets the user establish. If the requested class cannot be reached, even through
@@ -902,6 +887,28 @@ export default class ExperienceInteraction {
     }
 
     if (this.hasFreshFirstFactor) {
+      // A proven first factor only lifts the context together with an MFA factor of a different
+      // kind. When nothing pairs with it, ask for another first factor the eligibility offers, so
+      // the methods the sanitized context advertises can actually complete the request.
+      if (await this.hasPairableMfaFactor(decision)) {
+        return;
+      }
+
+      const firstFactorMethods = decision.availableMethods.filter(
+        (method) => getAuthenticationFactorClass(method) !== AuthenticationFactorClass.Mfa
+      );
+
+      if (firstFactorMethods.length > 0) {
+        throw new RequestError(
+          { code: 'session.step_up.require_verification', status: 403 },
+          {
+            selectedAcr,
+            availableMethods: firstFactorMethods,
+            maskedIdentifiers: decision.maskedIdentifiers,
+          }
+        );
+      }
+
       return;
     }
 
@@ -1082,8 +1089,10 @@ export default class ExperienceInteraction {
 
     // The first-factor requirement of a requested authentication context joins the chain right
     // before the MFA verification gate, so a first factor is proven before an MFA factor is asked
-    // for, all before the first side effect.
-    const unmetRedirectTo = await this.guardFirstFactor();
+    // for, all before the first side effect. A registration runs no such guard, so its request is
+    // finished as unmet here instead.
+    const unmetRedirectTo =
+      (await this.guardFirstFactor()) ?? (await this.guardUnreachableRequestedAcr());
 
     if (unmetRedirectTo) {
       log?.append({ error: 'unmet_authentication_requirements' });
@@ -1126,10 +1135,25 @@ export default class ExperienceInteraction {
     // A requested `mfa` is enforced as a no-skip mandatory policy of its own, which the SSO
     // exemption of the tenant's policy does not cover: the relying party asked for the class and
     // an upstream assertion never reaches it.
-    const isRequestedMfaUnmet = await this.isRequestedMfaUnmet();
+    const pursued = await this.getPursuedRequestedAcr();
+    const isRequestedMfaUnmet = pursued?.acr === LogtoAcr.Mfa;
+    // A registration drives no verification or establishment: the only way it reaches the class
+    // it pursues is by binding a factor the eligibility says reaches it. Require that binding
+    // non-skippably, and offer only those factors, so a skippable suggestion or a factor that
+    // cannot complete the class does not fall through to the defense-in-depth assert below.
+    const requestedEnrollmentFactors =
+      this.interactionEvent === InteractionEvent.Register
+        ? (pursued?.decision?.enrollableFactors ?? [])
+        : [];
+    const requiresRequestedEnrollment = requestedEnrollmentFactors.length > 0;
 
-    if (!this.hasVerifiedSsoIdentity || isRequestedMfaUnmet) {
-      await this.mfa.assertMfaFulfilled({ asNoSkipMandatoryPolicy: isRequestedMfaUnmet });
+    if (!this.hasVerifiedSsoIdentity || isRequestedMfaUnmet || requiresRequestedEnrollment) {
+      await this.mfa.assertMfaFulfilled({
+        asNoSkipMandatoryPolicy: isRequestedMfaUnmet || requiresRequestedEnrollment,
+        ...conditional(
+          requiresRequestedEnrollment && { enrollmentFactors: requestedEnrollmentFactors }
+        ),
+      });
     }
 
     await this.trustedDevice.assertOptInDecision({
@@ -1139,11 +1163,11 @@ export default class ExperienceInteraction {
     });
 
     // Defense in depth: assert once more, right before the first side effect, that the derived
-    // context satisfies the requested class. A submission below the request fails with 403 and
-    // leaves nothing behind; the one that passes runs the side effects exactly once below and
+    // context satisfies the class the interaction pursues. A submission below it fails with 403
+    // and leaves nothing behind; the one that passes runs the side effects exactly once below and
     // finishes with the `login` result carrying the same derived context.
     assertThat(
-      this.isRequestedAcrSatisfied,
+      !(await this.getPursuedRequestedAcr()),
       new RequestError({ code: 'session.step_up.acr_not_satisfied', status: 403 })
     );
 
@@ -1429,6 +1453,26 @@ export default class ExperienceInteraction {
     };
   }
 
+  /**
+   * Finish a registration whose requested class the registration flow cannot reach, with the same
+   * `unmet_authentication_requirements` redirect a sign-in uses and before any side effect. A
+   * registration runs neither of the sign-in guards, so without this the defense-in-depth assert
+   * would reject the submission with 403 instead of returning the client to its application.
+   *
+   * @returns The redirect URL when the interaction was finished as unmet.
+   */
+  private async guardUnreachableRequestedAcr(): Promise<string | undefined> {
+    if (this.interactionEvent !== InteractionEvent.Register) {
+      return;
+    }
+
+    const pursued = await this.getPursuedRequestedAcr();
+
+    if (pursued?.decision && !pursued.decision.isReachable) {
+      return this.finishUnmetAuthenticationRequirements();
+    }
+  }
+
   /** Finish an unreachable authentication request without running sign-in finalization. */
   private async finishUnmetAuthenticationRequirements(): Promise<string> {
     const { provider } = this.tenant;
@@ -1632,10 +1676,12 @@ export default class ExperienceInteraction {
   }
 
   /**
-   * The factors that can fill the `mfa` side of a pair with the first factor this interaction has
-   * proven: a factor of the same kind as a first-factor proof is dropped. With no first-factor
-   * proof, none is kept: {@link guardFirstFactor} runs first, so reaching the MFA gate without one
-   * means no first factor can be proven, and an `mfa`-class proof alone never lifts the context.
+   * The factors that can fill the `mfa` side of a pair with the first factors this interaction has
+   * proven: a factor is kept when one of those first factors is of a different kind, so the two
+   * together reach `mfa`. A factor of the same kind as every proven first factor is dropped,
+   * because repeated records of one factor count once. With no first-factor proof, none is kept:
+   * {@link guardFirstFactor} runs first, so reaching the MFA gate without one means no first factor
+   * can be proven, and an `mfa`-class proof alone never lifts the context.
    */
   private getPairableMfaFactors(factors: readonly MfaFactor[]): MfaFactor[] {
     if (!this.hasFreshFirstFactor) {
@@ -1648,23 +1694,82 @@ export default class ExperienceInteraction {
         .map(({ factor }) => factor)
     );
 
-    return factors.filter(
-      (factor) => !firstFactors.has(getAuthenticationFactor(mfaFactorToVerificationType[factor]))
-    );
+    return factors.filter((factor) => {
+      const mfaFactor = getAuthenticationFactor(mfaFactorToVerificationType[factor]);
+
+      return [...firstFactors].some((firstFactor) => firstFactor !== mfaFactor);
+    });
+  }
+
+  /**
+   * Whether an MFA factor the user can verify or enroll can pair with a first factor this
+   * interaction has proven: one of a different kind, so the two together reach `mfa`. The factor
+   * must also be one the eligibility offers, which is where the connector availability of the
+   * code-based factors is applied.
+   */
+  private async hasPairableMfaFactor(decision: StepUpEligibility): Promise<boolean> {
+    if (decision.enrollableFactors.length > 0) {
+      return true;
+    }
+
+    const [user, mfaSettings] = await Promise.all([
+      this.getIdentifiedUser(),
+      this.signInExperienceValidator.getMfaSettings(),
+    ]);
+    const availableMethods = new Set(decision.availableMethods);
+
+    return this.getPairableMfaFactors(
+      new MfaValidator(mfaSettings, user).availableUserMfaVerificationTypes
+    ).some((factor) => availableMethods.has(mfaFactorToVerificationType[factor]));
   }
 
   /**
    * The requested class the interaction is pursuing, re-derived on every read and never persisted:
    * the first requested class the user can reach with the methods they have, or the first one when
-   * none is reachable. `undefined` when the request is already satisfied or carries no class.
+   * none is reachable. `undefined` once what the interaction has proven satisfies that class, or
+   * when the request carries no class.
+   *
+   * `acr_values` is an ordered list of preferences, so a weaker listed class never ends the
+   * pursuit while an earlier one is still reachable: `[mfa, 1fa]` on a password sign-in keeps
+   * asking for MFA while the user or the tenant can reach it, and only falls back to `1fa` when
+   * `mfa` cannot be reached. Only the proofs of this interaction are read; enrolled factors are
+   * never consulted for satisfaction.
    */
   private async getPursuedRequestedAcr(): Promise<
+    { acr: LogtoAcr; decision?: StepUpEligibility } | undefined
+  > {
+    const achievedAcr = achieveAcr(this.countedAuthenticationProofs);
+    const [firstAcr] = this.requestedAcrValues;
+
+    // A satisfied first class is also the pursued one: `distanceTo` is 0 for it, so it is reachable,
+    // and the lookup below returns `undefined` all the same. Skipping it spares the subject,
+    // connector and eligibility lookups of every listed class on the happy path, which `submit()`
+    // asks for four times.
+    if (firstAcr && acrSatisfies(achievedAcr, firstAcr)) {
+      return;
+    }
+
+    const pursued = await this.getPursuedAcr();
+
+    if (!pursued || acrSatisfies(achievedAcr, pursued.acr)) {
+      return;
+    }
+
+    return pursued;
+  }
+
+  /**
+   * The class the interaction pursues, whether or not it is already satisfied: the first requested
+   * class the user can reach, or the first requested one when none is reachable. `undefined` when
+   * the interaction carries no requested class.
+   */
+  private async getPursuedAcr(): Promise<
     { acr: LogtoAcr; decision?: StepUpEligibility } | undefined
   > {
     const { requestedAcrValues } = this;
     const [firstAcr] = requestedAcrValues;
 
-    if (!firstAcr || this.isRequestedAcrSatisfied) {
+    if (!firstAcr) {
       return;
     }
 
@@ -1695,14 +1800,13 @@ export default class ExperienceInteraction {
    * The step-up decision for the subject and the selected class: what `PUT /experience` acts on
    * and `GET /experience/interaction` projects, computed from the same inputs so the two cannot
    * disagree. Evaluated on read and never persisted. `undefined` while no subject
-   * is known or the interaction carries no requested class. A pure step-up pairs the context its
-   * session carries; a sign-in with requested ACR has no session, and passes the class it pursues
-   * (see {@link getPursuedRequestedAcr}).
+   * is known or no class is selected. A pure step-up pairs the context its session carries and
+   * reads its persisted `selectedAcr`; a sign-in with requested ACR has no session and passes the
+   * class it pursues (see {@link getPursuedAcr}).
    */
   private async getStepUpDecision(acr?: LogtoAcr): Promise<StepUpEligibility | undefined> {
     const { authenticationContext, subjectUserId } = this;
-    const selectedAcr =
-      acr ?? authenticationContext?.selectedAcr ?? authenticationContext?.requestedAcrValues[0];
+    const selectedAcr = acr ?? authenticationContext?.selectedAcr;
 
     if (!selectedAcr || !subjectUserId) {
       return;
@@ -1731,12 +1835,42 @@ export default class ExperienceInteraction {
 
     return computeStepUpEligibility({
       ...input,
-      // Establishing a first factor and enrolling a factor are offered in pure step-up and in a
-      // sign-in with requested ACR alike; an ordinary sign-in never gets this far, since it
-      // carries no requested class.
-      ...((this.isStepUp || this.interactionEvent === InteractionEvent.SignIn) &&
-        (await this.getStepUpEnrollmentInput(input, connectors))),
+      ...(await this.getEnrollmentInput(input, connectors)),
     });
+  }
+
+  /**
+   * The enrollment inputs of the interaction. A registration drives only what its flow holds: the
+   * identifier and profile it recorded, and the TOTP / WebAuthn factors `assertMfaFulfilled`
+   * requires, which it binds without proving a first factor first. A step-up or sign-in also offers
+   * establishing a first factor and the factors the tenant lets the user enroll. An ordinary
+   * sign-in never gets this far, since it carries no requested class.
+   */
+  private async getEnrollmentInput(
+    input: StepUpEligibilityInput,
+    connectors: Awaited<ReturnType<TenantContext['connectors']['getLogtoConnectors']>>
+  ): Promise<Partial<StepUpEligibilityInput>> {
+    if (this.interactionEvent === InteractionEvent.Register) {
+      const configuredFactors = await this.signInExperienceValidator.getConfiguredMfaFactors();
+
+      return {
+        hasFreshSubjectProof: this.hasFreshSubjectProof,
+        hasFreshFirstFactor: this.hasFreshFirstFactor,
+        // A registration prompts for neither establishing nor verifying another first factor: the
+        // identifier it verified is already a proof. Only the factors `assertMfaFulfilled` requires
+        // can be bound, and a `both`-class WebAuthn factor reaches `mfa` on its own.
+        tenantEstablishableMethods: [],
+        tenantEnrollableFactors: configuredFactors.filter(
+          (factor) => factor === MfaFactor.TOTP || factor === MfaFactor.WebAuthn
+        ),
+        linkedConnectors: [],
+        registration: true,
+      };
+    }
+
+    return this.isStepUp || this.interactionEvent === InteractionEvent.SignIn
+      ? this.getStepUpEnrollmentInput(input, connectors)
+      : {};
   }
 
   /**
@@ -1841,12 +1975,16 @@ export default class ExperienceInteraction {
 
   /**
    * The authentication context for the sanitized projection: the stored context plus the lists
-   * computed on this read.
+   * computed on this read. A pure step-up persists its `selectedAcr`; a SignIn or Register with
+   * requested ACR does not, so it projects the class it pursues (see {@link getPursuedAcr}) — the
+   * same class the guards enforce, so the SPA never renders methods for a class the interaction
+   * has already passed over.
    */
   private async toSanitizedAuthenticationContext(
     authenticationContext: RequestedAuthenticationContext
   ): Promise<InteractionAuthenticationContext> {
-    const decision = await this.getStepUpDecision();
+    const pursued = authenticationContext.selectedAcr ? undefined : await this.getPursuedAcr();
+    const decision = pursued ? pursued.decision : await this.getStepUpDecision();
 
     return {
       ...authenticationContext,
