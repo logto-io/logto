@@ -105,12 +105,19 @@ const account_center = {
     manage: 'Gestisci',
     turn_on_2_step_verification_description:
       "Aggiungi un ulteriore livello di sicurezza. Ti verrà richiesto un secondo passaggio di verifica all'accesso.",
+    two_step_verification_incomplete_description:
+      'La verifica in due passaggi è attiva, ma non ancora effettiva.',
+    two_step_verification_off_description:
+      "La verifica in due passaggi è disattivata. All'accesso non ti verrà richiesto un secondo passaggio.",
     turn_off_2_step_verification: 'Disattiva la verifica in due passaggi',
     turn_off_2_step_verification_description:
       "La disattivazione della verifica in due passaggi rimuoverà il livello di protezione aggiuntivo dal tuo account all'accesso. Sei sicuro di voler continuare?",
     disable_2_step_verification: 'Disattiva',
     no_verification_method_warning:
-      "Non hai aggiunto un secondo metodo di verifica. Aggiungine almeno uno per attivare la verifica in due passaggi all'accesso.",
+      'Configurazione incompleta. Aggiungi un metodo di verifica qui sotto per completare la configurazione della verifica in due passaggi.',
+    two_step_verification_load_failed:
+      'Impossibile caricare le impostazioni della verifica in due passaggi. Riprova.',
+    two_step_verification_retry: 'Riprova',
     passkey_sign_in_prompt: 'Richiedi la configurazione di un passkey',
     passkey_sign_in_prompt_description:
       'Quando è attivo, ti verrà chiesto di configurare un passkey per un accesso più rapido e sicuro.',

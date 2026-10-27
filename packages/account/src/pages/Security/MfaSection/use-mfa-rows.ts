@@ -129,7 +129,7 @@ const useMfaRows = (
       if (!enabledFactors.includes(MfaFactor.BackupCode)) {
         return [];
       }
-      const isConfigured = Boolean(backupCodeVerification);
+      const isConfigured = (backupCodeVerification?.remainCodes ?? 0) > 0;
       return [
         {
           key: 'backup-code',

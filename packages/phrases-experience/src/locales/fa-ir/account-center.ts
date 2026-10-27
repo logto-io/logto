@@ -99,12 +99,18 @@ const account_center = {
     manage: 'مدیریت',
     turn_on_2_step_verification_description:
       'یک لایه امنیتی اضافی اضافه کنید. هنگام ورود از شما یک مرحله تأیید دوم خواسته می‌شود.',
+    two_step_verification_incomplete_description: 'تأیید دو مرحله‌ای روشن است، اما هنوز فعال نیست.',
+    two_step_verification_off_description:
+      'تأیید دو مرحله‌ای خاموش است. هنگام ورود از شما مرحله دوم خواسته نمی‌شود.',
     turn_off_2_step_verification: 'خاموش کردن تأیید دو مرحله‌ای',
     turn_off_2_step_verification_description:
       'غیرفعال کردن تأیید دو مرحله‌ای، لایه حفاظتی اضافی را هنگام ورود از حساب شما حذف می‌کند. آیا مطمئن هستید که می‌خواهید ادامه دهید؟',
     disable_2_step_verification: 'غیرفعال کردن',
     no_verification_method_warning:
-      'شما روش تأیید دومی اضافه نکرده‌اید. برای فعال کردن تأیید دو مرحله‌ای هنگام ورود، حداقل یک روش اضافه کنید.',
+      'راه‌اندازی ناقص است. برای تکمیل راه‌اندازی تأیید دو مرحله‌ای، یک روش تأیید در زیر اضافه کنید.',
+    two_step_verification_load_failed:
+      'بارگذاری تنظیمات تأیید دو مرحله‌ای ناموفق بود. لطفاً دوباره تلاش کنید.',
+    two_step_verification_retry: 'تلاش دوباره',
     passkey_sign_in_prompt: 'درخواست تنظیم کلید عبور',
     passkey_sign_in_prompt_description:
       'وقتی فعال باشد، از شما خواسته می‌شود برای ورود سریع‌تر و امن‌تر یک کلید عبور تنظیم کنید.',

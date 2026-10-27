@@ -106,12 +106,19 @@ const account_center = {
     manage: 'Gérer',
     turn_on_2_step_verification_description:
       'Ajoutez une couche de sécurité supplémentaire. Vous serez invité à effectuer une deuxième étape de vérification lors de la connexion.',
+    two_step_verification_incomplete_description:
+      'La vérification en deux étapes est activée, mais pas encore effective.',
+    two_step_verification_off_description:
+      'La vérification en deux étapes est désactivée. Vous ne serez pas invité à effectuer une deuxième étape lors de la connexion.',
     turn_off_2_step_verification: 'Désactiver la vérification en deux étapes',
     turn_off_2_step_verification_description:
       'La désactivation de la vérification en deux étapes supprimera la couche de protection supplémentaire de votre compte lors de la connexion. Êtes-vous sûr de vouloir continuer ?',
     disable_2_step_verification: 'Désactiver',
     no_verification_method_warning:
-      "Vous n'avez pas ajouté de deuxième méthode de vérification. Ajoutez-en au moins une pour activer la vérification en deux étapes lors de la connexion.",
+      'Configuration incomplète. Ajoutez une méthode de vérification ci-dessous pour terminer la configuration de la vérification en deux étapes.',
+    two_step_verification_load_failed:
+      'Impossible de charger les paramètres de vérification en deux étapes. Veuillez réessayer.',
+    two_step_verification_retry: 'Réessayer',
     passkey_sign_in_prompt: 'Inviter à configurer un passkey',
     passkey_sign_in_prompt_description:
       'Lorsque cette option est activée, il vous sera demandé de configurer un passkey pour une connexion plus rapide et plus sécurisée.',

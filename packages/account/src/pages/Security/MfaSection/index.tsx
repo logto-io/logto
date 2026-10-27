@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Keep the MFA state model, content, and verification flows together. */
 import { InlineNotification } from '@experience/components/Notification';
 import { AccountCenterControlValue, MfaPolicy } from '@logto/schemas';
 import { useCallback, useContext, useEffect, useState } from 'react';
@@ -37,20 +38,52 @@ const mandatoryMfaPolicies = new Set<MfaPolicy>([
   MfaPolicy.PromptOnlyAtSignInMandatory,
 ]);
 
+type TwoStepVerificationState = 'off' | 'incomplete' | 'on' | 'unknown';
+
 type MfaContentProps = {
   readonly isLoading: boolean;
   readonly hasToggle: boolean;
-  readonly isTwoStepEnabled: boolean;
+  readonly twoStepState: TwoStepVerificationState;
   readonly rows: ReturnType<typeof useMfaRows>;
   readonly onToggleChange: (checked: boolean) => Promise<void>;
+  readonly onRetry: () => Promise<void>;
+};
+
+const getTwoStepState = (
+  isPreferred: boolean,
+  hasConfiguredFactor: boolean
+): TwoStepVerificationState => {
+  if (!isPreferred) {
+    return 'off';
+  }
+
+  return hasConfiguredFactor ? 'on' : 'incomplete';
+};
+
+const getTwoStepDescription = (state: TwoStepVerificationState) => {
+  switch (state) {
+    case 'on': {
+      return 'account_center.security.turn_on_2_step_verification_description';
+    }
+    case 'incomplete': {
+      return 'account_center.security.two_step_verification_incomplete_description';
+    }
+    case 'off': {
+      return 'account_center.security.two_step_verification_off_description';
+    }
+    case 'unknown': {
+      return 'account_center.security.two_step_verification_load_failed';
+    }
+  }
 };
 
 const MfaContent = ({
   isLoading,
   hasToggle,
-  isTwoStepEnabled,
+  twoStepState,
   rows,
   onToggleChange,
+  onRetry,
 }: MfaContentProps) => {
   const { t } = useTranslation();
 
@@ -62,6 +95,23 @@ const MfaContent = ({
     );
   }
 
+  if (twoStepState === 'unknown') {
+    return (
+      <div className={styles.errorState}>
+        <span>{t('account_center.security.two_step_verification_load_failed')}</span>
+        <button
+          type="button"
+          className={styles.retryButton}
+          onClick={() => {
+            void onRetry();
+          }}
+        >
+          {t('account_center.security.two_step_verification_retry')}
+        </button>
+      </div>
+    );
+  }
+
   return (
     <>
       {hasToggle && (
@@ -70,12 +120,10 @@ const MfaContent = ({
             <div className={styles.toggleTitle}>
               {t('account_center.security.two_step_verification')}
             </div>
-            <div className={styles.toggleDescription}>
-              {t('account_center.security.turn_on_2_step_verification_description')}
-            </div>
+            <div className={styles.toggleDescription}>{t(getTwoStepDescription(twoStepState))}</div>
           </div>
           <ToggleSwitch
-            isChecked={isTwoStepEnabled}
+            isChecked={twoStepState !== 'off'}
             onChange={(checked) => {
               void onToggleChange(checked);
             }}
@@ -93,7 +141,7 @@ const MfaContent = ({
 const MfaSection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { accountCenterSettings, experienceSettings, setVerificationId, setToast } =
+  const { accountCenterSettings, experienceSettings, userInfo, setVerificationId, setToast } =
     useContext(PageContext);
   const { verificationId, checkIdentityProof } = useIdentityProof();
   const { requestStepUp, startStepUp } = useStepUp();
@@ -101,10 +149,13 @@ const MfaSection = () => {
     mfaVerifications,
     isLoading: isLoadingMfaVerifications,
     hasLoaded: hasLoadedMfaVerifications,
+    hasError: hasMfaVerificationsError,
+    retry: retryMfaVerifications,
   } = useMfaVerifications();
   const [skipMfaOnSignIn, setSkipMfaOnSignIn] = useState<boolean>();
   const [hasLoadedMfaSettings, setHasLoadedMfaSettings] = useState(false);
   const [isLoadingMfaSettings, setIsLoadingMfaSettings] = useState(false);
+  const [hasMfaSettingsError, setHasMfaSettingsError] = useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const handleError = useErrorHandler();
 
@@ -121,8 +172,16 @@ const MfaSection = () => {
     !mandatoryMfaPolicies.has(mfaPolicy) &&
     hasEnabledSecondFactor(experienceSettings);
 
-  const isTwoStepEnabled = skipMfaOnSignIn === false;
-  const hasConfiguredMfa = hasConfiguredSecondFactor(mfaVerifications, experienceSettings);
+  const isTwoStepPreferred = skipMfaOnSignIn === false;
+  const hasConfiguredMfa = hasConfiguredSecondFactor(
+    mfaVerifications,
+    experienceSettings,
+    userInfo
+  );
+  const hasMfaLoadError = hasMfaVerificationsError || (showToggle && hasMfaSettingsError);
+  const twoStepState: TwoStepVerificationState = hasMfaLoadError
+    ? 'unknown'
+    : getTwoStepState(isTwoStepPreferred, hasConfiguredMfa);
   const isMfaSectionLoading =
     (isMfaSectionVisible && (!hasLoadedMfaVerifications || isLoadingMfaVerifications)) ||
     (showToggle && (!hasLoadedMfaSettings || isLoadingMfaSettings));
@@ -132,6 +191,7 @@ const MfaSection = () => {
   const fetchMfaSettings = useCallback(async () => {
     setIsLoadingMfaSettings(true);
     const [error, result] = await getMfaSettingsRequest();
+    setHasMfaSettingsError(Boolean(error));
     if (!error && result) {
       setSkipMfaOnSignIn(result.skipMfaOnSignIn);
     }
@@ -144,6 +204,13 @@ const MfaSection = () => {
       void fetchMfaSettings();
     }
   }, [showToggle, fetchMfaSettings]);
+
+  const retryMfa = useCallback(async () => {
+    await Promise.all([
+      retryMfaVerifications(),
+      showToggle ? fetchMfaSettings() : Promise.resolve(),
+    ]);
+  }, [fetchMfaSettings, retryMfaVerifications, showToggle]);
 
   const navigateTo = useCallback(
     (route: string) => {
@@ -253,7 +320,7 @@ const MfaSection = () => {
       <SecuritySection
         title={t('account_center.security.two_step_verification')}
         notification={
-          !isMfaSectionLoading && showToggle && isTwoStepEnabled && !hasConfiguredMfa ? (
+          !isMfaSectionLoading && showToggle && twoStepState === 'incomplete' ? (
             <InlineNotification
               message="account_center.security.no_verification_method_warning"
               className={styles.notification}
@@ -264,9 +331,10 @@ const MfaSection = () => {
         <MfaContent
           isLoading={isMfaSectionLoading}
           hasToggle={showToggle}
-          isTwoStepEnabled={isTwoStepEnabled}
+          twoStepState={twoStepState}
           rows={rows}
           onToggleChange={handleToggleChange}
+          onRetry={retryMfa}
         />
       </SecuritySection>
       <ConfirmModal
@@ -289,3 +357,4 @@ const MfaSection = () => {
 };
 
 export default MfaSection;
+/* eslint-enable max-lines */

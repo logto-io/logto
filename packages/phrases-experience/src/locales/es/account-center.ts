@@ -104,12 +104,19 @@ const account_center = {
     manage: 'Gestionar',
     turn_on_2_step_verification_description:
       'Añade una capa extra de seguridad. Se te pedirá un segundo paso de verificación al iniciar sesión.',
+    two_step_verification_incomplete_description:
+      'La verificación en dos pasos está activada, pero todavía no se aplica.',
+    two_step_verification_off_description:
+      'La verificación en dos pasos está desactivada. No se te pedirá un segundo paso al iniciar sesión.',
     turn_off_2_step_verification: 'Desactivar verificación en dos pasos',
     turn_off_2_step_verification_description:
       'Desactivar la verificación en dos pasos eliminará la capa extra de protección de tu cuenta al iniciar sesión. ¿Estás seguro de que quieres continuar?',
     disable_2_step_verification: 'Desactivar',
     no_verification_method_warning:
-      'No has añadido un segundo método de verificación. Añade al menos uno para activar la verificación en dos pasos al iniciar sesión.',
+      'Configuración incompleta. Añade un método de verificación a continuación para terminar de configurar la verificación en dos pasos.',
+    two_step_verification_load_failed:
+      'No se pudo cargar la configuración de la verificación en dos pasos. Inténtalo de nuevo.',
+    two_step_verification_retry: 'Reintentar',
     passkey_sign_in_prompt: 'Solicitar la configuración de un passkey',
     passkey_sign_in_prompt_description:
       'Cuando está activado, se te pedirá que configures un passkey para iniciar sesión de forma más rápida y segura.',
