@@ -1,4 +1,9 @@
-import { ConnectorType, GoogleConnector, SiweConnector } from '@logto/connector-kit';
+import {
+  ConnectorErrorCodes,
+  ConnectorType,
+  GoogleConnector,
+  SiweConnector,
+} from '@logto/connector-kit';
 import { VerificationType, type SocialVerificationRecordData } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
@@ -395,6 +400,30 @@ describe('SocialVerification', () => {
       ).resolves.toBe('siwe://authorize?nonce=nonce');
 
       expect(connector.getAuthorizationUri).toHaveBeenCalled();
+    });
+  });
+  describe('provider error response', () => {
+    it('should reject with `AuthorizationFailed` before calling the connector', async () => {
+      const verification = new SocialVerification(tenant.libraries, tenant.queries, {
+        id: 'test-id',
+        connectorId: 'google',
+        type: VerificationType.Social,
+      } as SocialVerificationRecordData);
+      const connectorData = {
+        error: 'access_denied',
+        error_description: 'AADSTS65004: User declined to consent to access the app.',
+        redirectUri: 'https://logto.example.com/callback/google',
+      };
+
+      await expect(
+        // @ts-expect-error test mock tenant context
+        verification.verify(createContext(), tenantContext, connectorData, 'interactionSession')
+      ).rejects.toMatchObject({
+        code: ConnectorErrorCodes.AuthorizationFailed,
+        data: { error: 'access_denied' },
+      });
+      expect(getUserInfoWithOptionalTokenResponse).not.toHaveBeenCalled();
+      expect(verification.socialUserInfo).toBeUndefined();
     });
   });
 });

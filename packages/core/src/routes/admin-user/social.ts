@@ -12,6 +12,7 @@ import { object, record, string, unknown } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
+import { assertNoAuthorizationError } from '#src/utils/connectors/authorization-error.js';
 import { desensitizeTokenSetSecret } from '#src/utils/secret-encryption.js';
 import { transpileUserProfileResponse } from '#src/utils/user.js';
 
@@ -107,6 +108,8 @@ export default function adminUserSocialRoutes<T extends ManagementApiRouter>(
        * Same as above, passing `notImplemented` only works for connectors not relying on session storage.
        * E.g. Google and GitHub
        */
+      assertNoAuthorizationError(connectorData);
+
       const socialUserInfo = await connector.getUserInfo(connectorData, notImplemented);
 
       assertThat(
