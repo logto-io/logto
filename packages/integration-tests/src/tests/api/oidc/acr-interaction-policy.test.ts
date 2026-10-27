@@ -93,8 +93,9 @@ devFeatureTest.describe('acr_values and max_age interaction policy', () => {
   it('issues an authorization code without interaction when the session satisfies the request', async () => {
     const client = await signInWithPassword();
 
-    // The session's `1fa` satisfies the weaker class of an ordered list without consulting the
-    // user's enrolled factors, and a request for `1fa` alone succeeds as well.
+    // `prompt=none` has no UI to pursue the preference order, so any listed class the session can
+    // prove is accepted: `1fa` satisfies both a request for `1fa` alone and the weaker class of
+    // `[mfa, 1fa]`. The enrolled factors are never consulted.
     for (const acrValues of [firstFactorAcr, `${mfaAcr} ${firstFactorAcr}`]) {
       // eslint-disable-next-line no-await-in-loop -- Each authorization reuses the same session.
       const { status, location } = await authorize(client, {
@@ -105,6 +106,40 @@ devFeatureTest.describe('acr_values and max_age interaction policy', () => {
       expect(status).toBe(303);
       expectAuthorizationCode(location);
     }
+
+    await logoutClient(client);
+  });
+
+  it('starts a step-up for [mfa, 1fa] on a 1fa session and finishes at 1fa when mfa is unreachable', async () => {
+    // The ordered preference: a session that satisfies the weaker listed class no longer ends the
+    // request, because `mfa` is listed first and may be reachable.
+    const client = await signInWithPassword();
+    const signedIn = await client.getIdTokenClaims();
+    const { status, location, setCookies } = await authorize(client, {
+      extraParams: { acr_values: `${mfaAcr} ${firstFactorAcr}` },
+    });
+
+    expect(status).toBe(303);
+    expect(location).toBe(`/step-up?app_id=${demoAppApplicationId}`);
+
+    const { prompt } = await findInteraction(getInteractionId(setCookies));
+    expect(prompt.details.authenticationContext).toEqual({
+      requestedAcrValues: [mfaAcr, firstFactorAcr],
+      mode: 'stepUp',
+      reauthenticationRequired: false,
+    });
+
+    // No MFA factor is configured, so `mfa` is unreachable even through enrollment: Experience
+    // pursues the listed `1fa` the session already carries and finishes without any UI.
+    const result = await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
+    expect(result?.redirectTo).toEqual(expect.any(String));
+
+    await client.resumeAuthorization(result!.redirectTo);
+
+    const claims = await client.getIdTokenClaims();
+    expect(claims).toMatchObject({ acr: firstFactorAcr, amr: ['pwd'] });
+    // Nothing was verified in the step-up, so the session's authentication time is preserved.
+    expect(claims.auth_time).toBe(signedIn.auth_time);
 
     await logoutClient(client);
   });
@@ -123,8 +158,8 @@ devFeatureTest.describe('acr_values and max_age interaction policy', () => {
     expect(prompt.reasons).toEqual(['acr_unmet']);
     expect(prompt.details.authenticationContext).toEqual({
       requestedAcrValues: [mfaAcr],
-      selectedAcr: mfaAcr,
       mode: 'stepUp',
+      reauthenticationRequired: false,
     });
     // The session subject is available to Experience for pinning.
     expect(session?.accountId).toBe(userId);
@@ -167,8 +202,8 @@ devFeatureTest.describe('acr_values and max_age interaction policy', () => {
     expect(prompt.reasons).toEqual(['acr_unmet', 'login_prompt']);
     expect(prompt.details.authenticationContext).toEqual({
       requestedAcrValues: [firstFactorAcr],
-      selectedAcr: firstFactorAcr,
       mode: 'stepUp',
+      reauthenticationRequired: true,
     });
 
     await logoutClient(client);
@@ -249,8 +284,8 @@ devFeatureTest.describe('acr_values and max_age interaction policy', () => {
       expect(prompt.reasons).toEqual(['acr_unmet']);
       expect(prompt.details.authenticationContext).toEqual({
         requestedAcrValues: [mfaAcr],
-        selectedAcr: mfaAcr,
         mode: 'stepUp',
+        reauthenticationRequired: false,
       });
       expect(session?.accountId).toBe(user.id);
 

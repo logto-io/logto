@@ -25,8 +25,8 @@ type StepUpSource = 'none' | 'prompt' | 'result' | 'invalid-result';
 
 const stepUpContext = {
   requestedAcrValues: [LogtoAcr.FirstFactor],
-  selectedAcr: LogtoAcr.FirstFactor,
   mode: AuthenticationContextMode.StepUp,
+  reauthenticationRequired: false,
 };
 
 /** A stored context this build cannot read: an ACR value a newer node wrote. */
