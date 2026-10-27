@@ -143,6 +143,8 @@ const sign_in_exp = {
           title: 'Security verification',
           description:
             'Before changing security settings, users must verify their identity to get a 10-minute verification record ID. To enable a verification method (email, phone, password), set the Account API permission to <strong>Read only</strong> (minimum) or <strong>Edit</strong> below so the system can detect if the user has it configured. <a>Learn more</a>',
+          description_step_up:
+            'Before changing security settings, the built-in Account Center requires a recent sign-in. If the current sign-in is older than the configured recent authentication window, Account Center starts an OIDC step-up and prompts the user to verify their identity. To let users view or manage a verification method (email, phone, or password) in Account Center, set the corresponding Account API permission to <strong>Read only</strong> or <strong>Edit</strong> below. For these sensitive operations, apps that call the Account API directly can still use a verification record ID instead. <a>Learn more</a>',
         },
         groups: {
           identifiers: {

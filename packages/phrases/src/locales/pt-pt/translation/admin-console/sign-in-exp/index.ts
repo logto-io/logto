@@ -142,6 +142,8 @@ const sign_in_exp = {
           title: 'Verificação de segurança',
           description:
             'Antes de alterar as definições de segurança, os utilizadores devem verificar a sua identidade para obter um ID de registo de verificação válido durante 10 minutos. Para ativar um método de verificação (e-mail, telefone, palavra-passe), defina a permissão da Account API abaixo como <strong>Só de leitura</strong> (mínimo) ou <strong>Editar</strong> para que o sistema possa detetar se o utilizador o configurou. <a>Saber mais</a>',
+          description_step_up:
+            'Antes de alterar as definições de segurança, o Account Center integrado exige um início de sessão recente. Se o início de sessão atual for mais antigo do que a janela de autenticação recente configurada, o Account Center inicia um OIDC step-up e pede ao utilizador que verifique a sua identidade. Para permitir que os utilizadores vejam ou geram um método de verificação (e-mail, telefone ou palavra-passe) no Account Center, defina a permissão correspondente da Account API abaixo como <strong>Só de leitura</strong> ou <strong>Editar</strong>. Para estas operações sensíveis, as aplicações que chamam a Account API diretamente podem continuar a usar um ID de registo de verificação. <a>Saber mais</a>',
         },
         groups: {
           identifiers: {

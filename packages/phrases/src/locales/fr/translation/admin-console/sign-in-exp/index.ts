@@ -143,6 +143,8 @@ const sign_in_exp = {
           title: 'Vérification de sécurité',
           description:
             "Avant de modifier les paramètres de sécurité, les utilisateurs doivent vérifier leur identité pour obtenir un identifiant d'enregistrement de vérification valable 10 minutes. Pour activer une méthode de vérification (e-mail, téléphone, mot de passe), définissez l'autorisation de l'API Account ci-dessous sur <strong>Lecture seule</strong> (minimum) ou <strong>Modifier</strong> afin que le système puisse détecter si l'utilisateur l'a configurée. <a>En savoir plus</a>",
+          description_step_up:
+            "Avant de modifier les paramètres de sécurité, l'Account Center intégré exige une connexion récente. Si la connexion actuelle est plus ancienne que la fenêtre d'authentification récente configurée, Account Center lance un OIDC step-up et invite l'utilisateur à vérifier son identité. Pour permettre aux utilisateurs d'afficher ou de gérer une méthode de vérification (e-mail, téléphone ou mot de passe) dans Account Center, définissez l'autorisation Account API correspondante ci-dessous sur <strong>Lecture seule</strong> ou <strong>Modifier</strong>. Pour ces opérations sensibles, les applications qui appellent directement l'Account API peuvent toujours utiliser un identifiant d'enregistrement de vérification à la place. <a>En savoir plus</a>",
         },
         groups: {
           identifiers: {

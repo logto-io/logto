@@ -142,6 +142,8 @@ const sign_in_exp = {
           title: 'Weryfikacja bezpieczeństwa',
           description:
             'Przed zmianą ustawień bezpieczeństwa użytkownicy muszą potwierdzić swoją tożsamość, aby uzyskać identyfikator rekordu weryfikacji ważny przez 10 minut. Aby włączyć metodę weryfikacji (e-mail, telefon, hasło), ustaw uprawnienie Account API poniżej na <strong>Tylko do odczytu</strong> (minimum) lub <strong>Edytuj</strong>, aby system mógł wykryć, czy użytkownik ją skonfigurował. <a>Dowiedz się więcej</a>',
+          description_step_up:
+            'Przed zmianą ustawień bezpieczeństwa wbudowany Account Center wymaga niedawnego zalogowania. Jeśli bieżące logowanie jest starsze niż skonfigurowane okno ostatniego uwierzytelnienia, Account Center rozpoczyna OIDC step-up i prosi użytkownika o potwierdzenie tożsamości. Aby użytkownicy mogli wyświetlać lub zarządzać metodą weryfikacji (e-mail, telefon lub hasło) w Account Center, ustaw odpowiednie uprawnienie Account API poniżej na <strong>Tylko do odczytu</strong> lub <strong>Edytuj</strong>. W przypadku tych wrażliwych operacji aplikacje wywołujące Account API bezpośrednio nadal mogą używać identyfikatora rekordu weryfikacji. <a>Dowiedz się więcej</a>',
         },
         groups: {
           identifiers: {

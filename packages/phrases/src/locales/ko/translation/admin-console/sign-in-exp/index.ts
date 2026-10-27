@@ -139,6 +139,8 @@ const sign_in_exp = {
           title: '보안 인증',
           description:
             '보안 설정을 변경하기 전에 사용자는 본인 확인을 완료하고 유효 기간 10분의 검증 기록 ID를 받아야 합니다. 인증 방법(이메일, 전화, 비밀번호)을 활성화하려면 아래 Account API 권한을 <strong>읽기 전용</strong>(최소) 또는 <strong>편집</strong>으로 설정하여 시스템이 사용자의 설정 여부를 감지할 수 있도록 하세요. <a>자세히 알아보기</a>',
+          description_step_up:
+            '보안 설정을 변경하기 전에 내장 Account Center에서는 최근 로그인이 필요합니다. 현재 로그인이 구성된 최근 인증 기간보다 오래된 경우 Account Center는 OIDC step-up을 시작하고 사용자에게 본인 확인을 요청합니다. 사용자가 Account Center에서 인증 방법(이메일, 전화 또는 비밀번호)을 보거나 관리할 수 있도록 하려면 아래에서 해당 Account API 권한을 <strong>읽기 전용</strong> 또는 <strong>편집</strong>으로 설정하세요. 이러한 민감한 작업의 경우 Account API를 직접 호출하는 앱은 계속 검증 기록 ID를 사용할 수 있습니다. <a>자세히 알아보기</a>',
         },
         groups: {
           identifiers: {
