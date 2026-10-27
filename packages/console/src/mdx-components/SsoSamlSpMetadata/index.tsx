@@ -24,40 +24,22 @@ const samlProviderConfigGuard = z.object({
   serviceProvider: samlServiceProviderMetadataGuard,
 });
 
-function SsoSamlSpMetadata() {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { ssoConnector } = useContext(SsoConnectorContext);
-  const [selectedDomain, setSelectedDomain] = useDomainSelection();
+type ServiceProviderMetadata = z.infer<typeof samlServiceProviderMetadataGuard>;
 
-  const serviceProviderMetadata = useMemo(() => {
-    if (!ssoConnector) {
-      return;
-    }
+const parseServiceProviderMetadata = (providerConfig: unknown) => {
+  const result = samlProviderConfigGuard.safeParse(providerConfig);
 
-    const { providerConfig } = ssoConnector;
+  return result.success ? result.data.serviceProvider : undefined;
+};
 
-    const result = samlProviderConfigGuard.safeParse(providerConfig);
+type FieldsProps = {
+  readonly serviceProviderMetadata?: ServiceProviderMetadata;
+  readonly selectedDomain?: string;
+};
 
-    if (!result.success) {
-      return;
-    }
-    return result.data.serviceProvider;
-  }, [ssoConnector]);
-
-  if (!ssoConnector) {
-    return null;
-  }
-
+function SpMetadataFields({ serviceProviderMetadata, selectedDomain }: FieldsProps) {
   return (
-    <div>
-      {isCloud && (
-        <DomainSelector
-          value={selectedDomain}
-          className={styles.domainSelector}
-          tip={t('domain.switch_saml_connector_domain_tip')}
-          onChange={setSelectedDomain}
-        />
-      )}
+    <>
       <FormField
         title="enterprise_sso.basic_info.saml.audience_uri_field_name"
         className={styles.inputField}
@@ -84,8 +66,63 @@ function SsoSamlSpMetadata() {
           )}
         />
       </FormField>
+    </>
+  );
+}
+
+function TenantSsoSamlSpMetadata({ providerConfig }: { readonly providerConfig: unknown }) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const [selectedDomain, setSelectedDomain] = useDomainSelection();
+
+  const serviceProviderMetadata = useMemo(
+    () => parseServiceProviderMetadata(providerConfig),
+    [providerConfig]
+  );
+
+  return (
+    <div>
+      {isCloud && (
+        <DomainSelector
+          value={selectedDomain}
+          className={styles.domainSelector}
+          tip={t('domain.switch_saml_connector_domain_tip')}
+          onChange={setSelectedDomain}
+        />
+      )}
+      <SpMetadataFields
+        serviceProviderMetadata={serviceProviderMetadata}
+        selectedDomain={selectedDomain}
+      />
     </div>
   );
+}
+
+/** Console SSO connectors use the fixed service provider endpoints provided by Logto Cloud. */
+function ConsoleSsoSamlSpMetadata({ providerConfig }: { readonly providerConfig: unknown }) {
+  const serviceProviderMetadata = useMemo(
+    () => parseServiceProviderMetadata(providerConfig),
+    [providerConfig]
+  );
+
+  return (
+    <div>
+      <SpMetadataFields serviceProviderMetadata={serviceProviderMetadata} />
+    </div>
+  );
+}
+
+function SsoSamlSpMetadata() {
+  const { ssoConnector, consoleSsoConnector } = useContext(SsoConnectorContext);
+
+  if (consoleSsoConnector) {
+    return <ConsoleSsoSamlSpMetadata providerConfig={consoleSsoConnector.providerConfig} />;
+  }
+
+  if (!ssoConnector) {
+    return null;
+  }
+
+  return <TenantSsoSamlSpMetadata providerConfig={ssoConnector.providerConfig} />;
 }
 
 export default SsoSamlSpMetadata;
