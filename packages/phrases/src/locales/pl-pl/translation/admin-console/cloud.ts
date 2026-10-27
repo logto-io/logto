@@ -64,6 +64,8 @@ const cloud = {
       'Rozpoczęcie od nowa może usunąć niedokończoną konfigurację SSO. Czy chcesz kontynuować?',
     resume_creation:
       'Znaleziono niedokończone tworzenie. Kontynuuj z tym samym dostawcą, aby odzyskać ten konektor.',
+    creation_charge_notice:
+      'Każdy konektor SSO konsoli kosztuje <span>${{price, number}} miesięcznie</span>. W razie potrzeby pomocy <a>skontaktuj się z nami</a>.',
   },
   general: {
     onboarding: 'Wdrażanie',

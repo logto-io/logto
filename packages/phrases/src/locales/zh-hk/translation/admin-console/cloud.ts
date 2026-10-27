@@ -54,6 +54,8 @@ const cloud = {
     start_over: '重新開始',
     start_over_confirmation: '重新開始可能會刪除尚未完成的 SSO 設定。是否繼續？',
     resume_creation: '發現未完成的建立操作。請使用相同的身分提供者繼續，以復原此連接器。',
+    creation_charge_notice:
+      '每個控制台 SSO 連接器費用為 <span>${{price, number}} / 月</span>。如需任何協助，歡迎<a>聯絡我們</a>。',
   },
   general: {
     onboarding: '入門',
