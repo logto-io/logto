@@ -223,7 +223,8 @@ export class UserRelationQueries extends TwoRelationsQueries<typeof Organization
             userInfoSelectFields.map((field) => users.fields[field]),
             sql`, `
           )},
-          user_roles.${sql.identifier(['organizationRoles'])}
+          user_roles.${sql.identifier(['organizationRoles'])},
+          (${users.fields.passwordEncrypted} is not null) as ${sql.identifier(['hasPassword'])}
         from ${this.table}
         left join ${users.table}
           on ${fields.userId} = ${users.fields.id}

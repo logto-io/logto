@@ -7,7 +7,11 @@ import { MockTenant } from '#src/test-utils/tenant.js';
 const { jest } = import.meta;
 
 const users: UserWithOrganizationRoles[] = [
-  { ...mockUserResponse, organizationRoles: [{ id: 'organization-role-id', name: 'Member' }] },
+  {
+    ...mockUserResponse,
+    organizationRoles: [{ id: 'organization-role-id', name: 'Member' }],
+    hasPassword: false,
+  },
 ];
 const getUsersByOrganizationId = jest.fn(
   async (): Promise<[number, UserWithOrganizationRoles[]]> => [4, users]
@@ -42,7 +46,11 @@ describe('organization user routes', () => {
       {}
     );
     expect(response.body).toMatchObject([
-      { id: mockUserResponse.id, organizationRoles: [{ id: 'organization-role-id' }] },
+      {
+        id: mockUserResponse.id,
+        organizationRoles: [{ id: 'organization-role-id' }],
+        hasPassword: false,
+      },
     ]);
   });
 
