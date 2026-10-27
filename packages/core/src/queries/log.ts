@@ -125,6 +125,49 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
 
   const findLogById = buildFindEntityByIdWithPool(pool)(Logs);
 
+  const deleteLogsBefore = async (condition: {
+    before: number;
+    after?: number;
+    limit: number;
+  }): Promise<{ deletedCount: number; deletedRange?: { oldest: number; newest: number } }> => {
+    const { before, after, limit } = condition;
+    // Use `=== undefined` (not `conditionalSql`) so a legitimate `after: 0` still applies a
+    // lower bound; `conditionalSql` treats `0` as falsy and would silently drop the filter.
+    const afterCondition =
+      after === undefined
+        ? sql``
+        : sql`and ${fields.createdAt} > to_timestamp(${after}::double precision / 1000)`;
+
+    const rows = await pool.any<{ createdAt: number }>(sql`
+      delete from ${table}
+      where ${fields.id} in (
+        select ${fields.id}
+        from ${table}
+        where ${fields.createdAt} < to_timestamp(${before}::double precision / 1000)
+        ${afterCondition}
+        order by ${fields.createdAt}, ${fields.id}
+        limit ${limit}
+      )
+      returning ${fields.createdAt}
+    `);
+
+    if (rows.length === 0) {
+      return { deletedCount: 0 };
+    }
+
+    // `timestamptz` may arrive as a number, a `Date`, or a numeric string depending on the
+    // driver's parser configuration; `Number` normalizes all three to unix milliseconds.
+    const timestamps = rows.map(({ createdAt }) => Number(createdAt));
+
+    return {
+      deletedCount: timestamps.length,
+      deletedRange: {
+        oldest: Math.min(...timestamps),
+        newest: Math.max(...timestamps),
+      },
+    };
+  };
+
   const getHookExecutionStatsByHookId = async (hookId: string) => {
     const startTimeExclusive = subDays(new Date(), 1).getTime();
     return pool.one<HookExecutionStats>(sql`
@@ -142,6 +185,7 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
     countLogs,
     findLogs,
     findLogById,
+    deleteLogsBefore,
     getHookExecutionStatsByHookId,
   };
 };
