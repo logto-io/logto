@@ -2568,6 +2568,28 @@ describe('ExperienceInteraction class', () => {
       });
     });
 
+    it('requires an existing factor before enrolling with a requested mfa and no first factor', async () => {
+      setDevFeaturesEnabled(true);
+      const { experienceInteraction } = createSignInInteraction({
+        user: mockUserWithMfaVerifications,
+        signInExperienceOverrides: {
+          mfa: { policy: MfaPolicy.UserControlled, factors: [MfaFactor.TOTP] },
+        },
+        interactionResult: {
+          authenticationContext: { requestedAcrValues: [LogtoAcr.Mfa] },
+          // A social sign-in proves no first factor, so no factor can pair with `mfa` yet; the
+          // existing TOTP must still be verified before another factor may be enrolled.
+          authenticationProofs: [federatedProof(AuthenticationProofRole.Identify)],
+        },
+      });
+
+      await expect(experienceInteraction.guardMfaBinding()).rejects.toMatchObject({
+        code: 'session.mfa.require_mfa_verification',
+        status: 403,
+        data: { availableFactors: [MfaFactor.TOTP] },
+      });
+    });
+
     it('offers to establish the missing first factor of an mfa pair', async () => {
       setDevFeaturesEnabled(true);
       const { experienceInteraction, provider } = createSignInInteraction({

@@ -1560,7 +1560,8 @@ export default class ExperienceInteraction {
    *
    * Mirrors {@link guardMfaVerificationStatus}: a verified SSO identity or sign-in passkey
    * satisfies the gate, and a requested `mfa` only accepts a factor pairable with the proven first
-   * factor. When no factor can be challenged, enrollment is the only way forward.
+   * factor. Enrollment is the only way forward only when a first factor is proven and nothing can
+   * pair with it; without one, the enabled factors still have to be proven first.
    */
   private async getMfaBindingBlock(): Promise<MfaBindingBlock | undefined> {
     if (this.interactionEvent !== InteractionEvent.SignIn || this.isStepUp) {
@@ -1576,9 +1577,15 @@ export default class ExperienceInteraction {
     const user = await this.getIdentifiedUser();
     const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
     const mfaValidator = new MfaValidator(mfaSettings, user);
-    const availableFactors = isRequestedMfaUnmet
-      ? this.getPairableMfaFactors(mfaValidator.availableUserMfaVerificationTypes)
-      : mfaValidator.availableUserMfaVerificationTypes;
+    const userFactors = mfaValidator.availableUserMfaVerificationTypes;
+
+    // Without a fresh first factor the pairable list is empty because the pair has no first side
+    // yet, not because there is nothing to challenge: keep the full list so an account with
+    // factors must still prove one before it may enroll another.
+    const availableFactors =
+      isRequestedMfaUnmet && this.hasFreshFirstFactor
+        ? this.getPairableMfaFactors(userFactors)
+        : userFactors;
 
     // While a requested `mfa` is unmet, a verified record of a non-pairable factor does not lift
     // the request: only a pairable factor counts, and verifying one would have cleared the
