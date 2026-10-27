@@ -65,7 +65,7 @@ const toSafeUrl = (url: URL | string | undefined): string | undefined => {
   }
 };
 
-export type TransportFailure = { code: string; method?: string; url?: string };
+type TransportFailure = { code: string; method?: string; url?: string };
 
 /**
  * Describe the error a connector let through when its request to the provider failed at the
