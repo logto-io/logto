@@ -68,6 +68,37 @@ export const getAuthenticationFreshnessMaxAgeSeconds = (
   );
 
 /**
+ * The part of the tenant window a standalone subpage reserves for the user to finish a
+ * multi-step form, OTP, QR scan, WebAuthn registration, or upstream OAuth.
+ */
+const subpageFormGraceSeconds = 300;
+
+/**
+ * The maximum authentication age for entering a standalone multi-step subpage. It leaves the
+ * form grace inside the tenant window, while never accepting a context older than the inline
+ * freshness threshold. The margin is kept as a floor so the shortest tenant window still reuses
+ * the context it has just obtained.
+ */
+export const getSubpageAuthenticationMaxAgeSeconds = (
+  maximumAuthenticationAgeInSeconds: number
+): number =>
+  Math.max(
+    getAuthenticationFreshnessMarginSeconds(maximumAuthenticationAgeInSeconds),
+    Math.min(
+      getAuthenticationFreshnessMaxAgeSeconds(maximumAuthenticationAgeInSeconds),
+      maximumAuthenticationAgeInSeconds - subpageFormGraceSeconds
+    )
+  );
+
+/** The proactive step-up of a standalone subpage; `max_age` matches its entry threshold. */
+export const getSubpageStepUpChallenge = (
+  maximumAuthenticationAgeInSeconds: number
+): StepUpChallenge => ({
+  acrValues: LogtoAcr.FirstFactor,
+  maxAge: String(getSubpageAuthenticationMaxAgeSeconds(maximumAuthenticationAgeInSeconds)),
+});
+
+/**
  * The Account API policy. Used when the challenge omits a parameter, which RFC 9470 allows; the
  * Account API sends both.
  */

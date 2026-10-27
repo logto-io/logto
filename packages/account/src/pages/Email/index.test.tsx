@@ -14,11 +14,19 @@ import { emailRoute, emailSuccessRoute } from '@ac/constants/routes';
 import Email from '.';
 
 const mockGetAccessToken = jest.fn().mockResolvedValue('access-token');
+const mockUseStepUpEntry = jest.fn();
+const mockRequestStepUp = jest.fn();
 
 jest.mock('@logto/react', () => ({
   useLogto: () => ({
     getAccessToken: mockGetAccessToken,
   }),
+}));
+
+jest.mock('@ac/hooks/use-step-up', () => ({
+  __esModule: true,
+  default: () => ({ requestStepUp: mockRequestStepUp, startStepUp: jest.fn() }),
+  useStepUpEntry: () => mockUseStepUpEntry(),
 }));
 
 jest.mock('@ac/apis/account', () => ({
@@ -129,6 +137,13 @@ describe('<Email />', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     mockGetAccessToken.mockResolvedValue('access-token');
+    mockUseStepUpEntry.mockReturnValue({
+      isReady: true,
+      isChecking: false,
+      hasFailed: false,
+      verificationId: 'identity-verification-record-id',
+    });
+    mockRequestStepUp.mockResolvedValue(false);
     jest.mocked(sendEmailVerificationCode).mockResolvedValue(mockSendCodeResult);
     jest.mocked(verifyEmailVerificationCode).mockResolvedValue(mockVerifyCodeResult);
     jest.mocked(updatePrimaryEmail).mockResolvedValue(undefined);
@@ -149,6 +164,13 @@ describe('<Email />', () => {
   });
 
   it('shows verification methods when identity is not verified', () => {
+    mockUseStepUpEntry.mockReturnValueOnce({
+      isReady: false,
+      isChecking: false,
+      hasFailed: false,
+      verificationId: undefined,
+    });
+
     const { getByText } = renderEmail({
       pageContext: {
         verificationId: undefined,
@@ -231,6 +253,28 @@ describe('<Email />', () => {
 
     await waitFor(() => {
       expect(getByText('Email success page')).toBeTruthy();
+    });
+  });
+
+  it('binds without a legacy permission record when the entry guard has none', async () => {
+    mockUseStepUpEntry.mockReturnValue({
+      isReady: true,
+      isChecking: false,
+      hasFailed: false,
+      verificationId: undefined,
+    });
+
+    const { getByText, container } = renderEmail();
+    const newEmail = 'new.user@example.com';
+
+    await advanceToVerifyStep(container, getByText, newEmail);
+    fillVerificationCode(container, '123456');
+
+    await waitFor(() => {
+      expect(updatePrimaryEmail).toHaveBeenCalledWith('access-token', undefined, {
+        email: newEmail,
+        newIdentifierVerificationRecordId: mockVerifyCodeResult.verificationRecordId,
+      });
     });
   });
 

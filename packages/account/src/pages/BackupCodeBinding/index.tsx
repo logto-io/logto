@@ -20,10 +20,13 @@ import {
   deleteMfaVerification,
 } from '@ac/apis/mfa';
 import ErrorPage from '@ac/components/ErrorPage';
+import StepUpEntryFallback from '@ac/components/StepUpEntryFallback';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
+import { isDevFeaturesEnabled } from '@ac/constants/env';
 import { backupCodesSuccessRoute, backupCodesManageRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
+import useStepUp, { useStepUpEntry } from '@ac/hooks/use-step-up';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
 import { sessionStorage } from '@ac/utils/session-storage';
 
@@ -43,18 +46,32 @@ const BackupCodeBinding = ({ isRegenerate }: Props) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { loading } = useContext(LoadingContext);
-  const { accountCenterSettings, experienceSettings, verificationId, setVerificationId, setToast } =
+  const { accountCenterSettings, experienceSettings, setVerificationId, setToast } =
     useContext(PageContext);
   const getMfaRequest = useApi(getMfaVerifications);
   const generateCodesRequest = useApi(generateBackupCodes);
   const addBackupCodeRequest = useApi(addBackupCodeMfa);
   const deleteBackupCodeRequest = useApi(deleteMfaVerification);
   const handleError = useErrorHandler();
+  const { requestStepUp } = useStepUp();
 
   const [codes, setCodes] = useState<string[]>();
   const [hasBackupCodeAlready, setHasBackupCodeAlready] = useState<boolean>();
   const [hasOtherMfa, setHasOtherMfa] = useState<boolean>();
   const [existingBackupCodeId, setExistingBackupCodeId] = useState<string>();
+  const isPageEnabled =
+    Boolean(accountCenterSettings?.enabled) &&
+    accountCenterSettings?.fields.mfa === AccountCenterControlValue.Edit &&
+    isBackupCodeEnabled(experienceSettings?.mfa);
+  const isStepUpEntryEnabled =
+    isPageEnabled &&
+    hasOtherMfa !== undefined &&
+    hasBackupCodeAlready !== undefined &&
+    hasOtherMfa &&
+    (Boolean(isRegenerate) || !hasBackupCodeAlready);
+  const { isReady, hasFailed, verificationId } = useStepUpEntry({
+    enabled: isStepUpEntryEnabled,
+  });
 
   // Check if backup code already exists and if other MFA exists on mount
   useEffect(() => {
@@ -102,10 +119,10 @@ const BackupCodeBinding = ({ isRegenerate }: Props) => {
     }
   }, [hasBackupCodeAlready, hasOtherMfa, isRegenerate, verificationId]);
 
-  // Generate backup codes on mount
+  // Generate backup codes when the entry guard is ready
   useEffect(() => {
     if (
-      !verificationId ||
+      !isReady ||
       Boolean(codes) ||
       (hasBackupCodeAlready !== false && !isRegenerate) ||
       hasOtherMfa !== true
@@ -134,7 +151,7 @@ const BackupCodeBinding = ({ isRegenerate }: Props) => {
     handleError,
     hasBackupCodeAlready,
     hasOtherMfa,
-    verificationId,
+    isReady,
   ]);
 
   const copyText = useCallback(
@@ -156,7 +173,7 @@ const BackupCodeBinding = ({ isRegenerate }: Props) => {
   }, []);
 
   const handleSubmit = useCallback(async () => {
-    if (!verificationId || !codes || loading) {
+    if (!isReady || !codes || loading) {
       return;
     }
 
@@ -164,6 +181,10 @@ const BackupCodeBinding = ({ isRegenerate }: Props) => {
     if (isRegenerate && existingBackupCodeId) {
       const [deleteError] = await deleteBackupCodeRequest(verificationId, existingBackupCodeId);
       if (deleteError) {
+        if (await requestStepUp(deleteError, { type: 'enter-subpage' })) {
+          return;
+        }
+
         await handleError(deleteError, {
           'verification_record.permission_denied': async () => {
             setVerificationId(undefined);
@@ -177,6 +198,10 @@ const BackupCodeBinding = ({ isRegenerate }: Props) => {
     const [error] = await addBackupCodeRequest(verificationId, { codes });
 
     if (error) {
+      if (await requestStepUp(error, { type: 'enter-subpage' })) {
+        return;
+      }
+
       await handleError(error, {
         'verification_record.permission_denied': async () => {
           setVerificationId(undefined);
@@ -199,9 +224,11 @@ const BackupCodeBinding = ({ isRegenerate }: Props) => {
     deleteBackupCodeRequest,
     existingBackupCodeId,
     handleError,
+    isReady,
     isRegenerate,
     loading,
     navigate,
+    requestStepUp,
     setToast,
     setVerificationId,
     t,
@@ -244,8 +271,12 @@ const BackupCodeBinding = ({ isRegenerate }: Props) => {
     );
   }
 
-  if (!verificationId) {
-    return <VerificationMethodList />;
+  if (!isReady) {
+    return isDevFeaturesEnabled ? (
+      <StepUpEntryFallback hasFailed={hasFailed} />
+    ) : (
+      <VerificationMethodList />
+    );
   }
 
   const backupCodeTextContent = codes?.join('\n') ?? '';

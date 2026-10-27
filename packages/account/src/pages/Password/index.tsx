@@ -11,15 +11,15 @@ import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { updatePassword } from '@ac/apis/account';
 import ErrorPage from '@ac/components/ErrorPage';
 import SetPassword from '@ac/components/SetPassword';
+import StepUpEntryFallback from '@ac/components/StepUpEntryFallback';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
+import { isDevFeaturesEnabled } from '@ac/constants/env';
 import { passwordSuccessRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
+import useStepUp, { useStepUpEntry } from '@ac/hooks/use-step-up';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
-import {
-  canSetInitialPasswordWithoutVerification,
-  hasAvailableSecurityVerificationMethod,
-} from '@ac/utils/security-page';
+import { canSetInitialPasswordWithoutVerification } from '@ac/utils/security-page';
 import { sessionStorage } from '@ac/utils/session-storage';
 
 import styles from '../CodeFlow/index.module.scss';
@@ -30,7 +30,6 @@ const Password = () => {
   const { loading } = useContext(LoadingContext);
   const {
     accountCenterSettings,
-    verificationId,
     setVerificationId,
     setToast,
     experienceSettings,
@@ -39,6 +38,7 @@ const Password = () => {
   } = useContext(PageContext);
   const updatePasswordRequest = useApi(updatePassword);
   const handleError = useErrorHandler();
+  const { requestStepUp } = useStepUp();
   const [errorMessage, setErrorMessage] = useState<string>();
   const clearErrorMessage = useCallback(() => {
     setErrorMessage(undefined);
@@ -68,37 +68,35 @@ const Password = () => {
     return items.length === 0 ? undefined : t('description.password_requirements', { items, max });
   }, [passwordPolicy, t]);
 
+  const isEnabled =
+    Boolean(accountCenterSettings?.enabled) &&
+    accountCenterSettings?.fields.password === AccountCenterControlValue.Edit;
+  const canSkipVerification = canSetInitialPasswordWithoutVerification(
+    userInfo,
+    accountCenterSettings?.fields
+  );
+  const { isReady, hasFailed, verificationId } = useStepUpEntry({
+    enabled: isEnabled,
+    skip: canSkipVerification,
+  });
+
   useEffect(() => {
     if (verificationId) {
       sessionStorage.clearRouteRestore();
     }
   }, [verificationId]);
 
-  if (
-    !accountCenterSettings?.enabled ||
-    accountCenterSettings.fields.password !== AccountCenterControlValue.Edit
-  ) {
+  if (!isEnabled) {
     return (
       <ErrorPage titleKey="error.something_went_wrong" messageKey="error.feature_not_enabled" />
     );
   }
 
-  const hasAvailableVerificationMethod = hasAvailableSecurityVerificationMethod(userInfo);
-  const canSkipVerification = canSetInitialPasswordWithoutVerification(
-    userInfo,
-    accountCenterSettings.fields
-  );
-
-  if (!verificationId && hasAvailableVerificationMethod) {
-    return <VerificationMethodList />;
-  }
-
-  if (!verificationId && !canSkipVerification) {
-    return (
-      <ErrorPage
-        titleKey="account_center.verification.no_available_methods_title"
-        messageKey="account_center.verification.no_available_methods_description"
-      />
+  if (!isReady) {
+    return isDevFeaturesEnabled ? (
+      <StepUpEntryFallback hasFailed={hasFailed} />
+    ) : (
+      <VerificationMethodList />
     );
   }
 
@@ -113,13 +111,17 @@ const Password = () => {
       return;
     }
 
-    if ((!verificationId && !canSkipVerification) || loading) {
+    if (loading) {
       return;
     }
 
     const [error] = await updatePasswordRequest(verificationId, { password });
 
     if (error) {
+      if (await requestStepUp(error, { type: 'enter-subpage' })) {
+        return;
+      }
+
       await handleError(error, {
         'verification_record.permission_denied': async () => {
           setVerificationId(undefined);
