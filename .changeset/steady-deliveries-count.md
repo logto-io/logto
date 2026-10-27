@@ -1,8 +1,8 @@
 ---
-"@logto/core": patch
-"@logto/schemas": patch
+"@logto/core": minor
+"@logto/schemas": minor
 ---
 
-add a delivery `id` to every webhook payload
+add a `deliveryId` to every webhook payload
 
-A webhook payload carried the hook's id (`hookId`), the event and a timestamp, but nothing that identified the delivery itself, so a receiver that wants to process each delivery once (Logto retries a failed request up to three times) had to hash the whole body. Every payload now carries an `id`, unique per hook and event and kept across the retries of the same request. The payload of the "test webhook" action carries one too.
+Every webhook payload now carries a `deliveryId`: unique per hook and event, kept across the retries of the same request, so a receiver can process each delivery exactly once without hashing the body. The same value is the id of the audit log entry that records the delivery, so a `deliveryId` reported by a receiver can be opened from the webhook's recent requests in the Console or fetched with `GET /api/logs/:id`. The payload of the "test webhook" action carries one too.

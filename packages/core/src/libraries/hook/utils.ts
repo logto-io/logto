@@ -167,7 +167,7 @@ export const generateHookTestPayload = (hookId: string, event: HookEvent): HookE
     ['Identifier.Lockout', 'Message.RateLimited', 'Grant.LimitExceeded'].includes(event);
 
   const basicPayload = {
-    id: generateStandardId(),
+    deliveryId: generateStandardId(),
     hookId,
     createdAt: now.toISOString(),
     userAgent: 'fake-user-agent',
