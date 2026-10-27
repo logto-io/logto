@@ -1,4 +1,5 @@
 import { SsoProviderName } from '@logto/schemas';
+import { noop } from '@silverhand/essentials';
 import { act, waitFor } from '@testing-library/react';
 
 import {
@@ -12,6 +13,7 @@ import {
   paidConnectors,
   paidSession,
   renderCreation,
+  renderCreationWithSwr,
   toastResponseError,
 } from './use-connector-creation.test-helpers';
 
@@ -27,6 +29,25 @@ it('automatically uses personal billing only after server billing reads finish',
   expect(result.current.billing.funding).toBe('personal');
   expect(mockApi.get).not.toHaveBeenCalledWith('/api/me/console-sso/checkout-preview');
   expect(mockApi.post).not.toHaveBeenCalled();
+});
+
+it('keeps the resolved personal funding while coverage revalidates', async () => {
+  const { result } = renderCreationWithSwr();
+  await waitFor(() => {
+    expect(result.current.creation.billing.isBillingReady).toBe(true);
+  });
+  expect(result.current.creation.billing.isFundingResolved).toBe(true);
+  expect(result.current.creation.billing.funding).toBe('personal');
+  // Hold the coverage request in flight so the hook stays revalidating.
+  mockApi.get.mockImplementation(async () => new Promise(noop));
+  act(() => {
+    void result.current.swr.mutate(['console-sso-coverage', 'alice']);
+  });
+  await waitFor(() => {
+    expect(result.current.creation.billing.isBillingReady).toBe(false);
+  });
+  expect(result.current.creation.billing.isFundingResolved).toBe(true);
+  expect(result.current.creation.billing.funding).toBe('personal');
 });
 
 it('automatically uses Enterprise allowance before an existing personal subscription', async () => {

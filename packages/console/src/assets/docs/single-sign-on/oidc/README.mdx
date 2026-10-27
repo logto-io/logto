@@ -1,4 +1,5 @@
 import OidcCallbackUri from '@/mdx-components/OidcCallbackUri';
+import SsoEmailDomainsStep from '@/mdx-components/SsoEmailDomainsStep';
 import Step from '@/mdx-components/Step';
 
 <Step index={0} title="Create an OIDC application on your IdP">
@@ -49,10 +50,10 @@ If you want to access the Identity Provider's APIs and perform actions with user
 3. For **standard** OIDC identity providers, the `offline_access` scope must be included to obtain a refresh token, preventing repeated user consent prompts.
 </Step>
 
-<Step index={4} title="Set email domains and enable the SSO connector">
+<SsoEmailDomainsStep index={4} title="Set email domains and enable the SSO connector">
 
 Provide the email `domains` of your organization on the connector `experience` tab. This will enabled the SSO connector as an authentication method for those users.
 
 Users with email addresses in the specified domains will be exclusively limited to use your SSO connector as their only authentication method.
 
-</Step>
+</SsoEmailDomainsStep>
