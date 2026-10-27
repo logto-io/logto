@@ -34,10 +34,18 @@ describe('assertNoAuthorizationError()', () => {
     }
   });
 
-  it('should throw on a bare `error` as well', () => {
+  it('should throw on a bare `access_denied` as well', () => {
     expect(() => {
-      assertNoAuthorizationError({ error: 'server_error', app_id: 'app-id' });
+      assertNoAuthorizationError({ error: 'access_denied', app_id: 'app-id' });
     }).toThrow(ConnectorError);
+  });
+
+  it('should leave the other error codes to the connector', () => {
+    for (const error of ['server_error', 'redirect_uri_mismatch', 'invalid_scope']) {
+      expect(() => {
+        assertNoAuthorizationError({ error, error_description: 'details' });
+      }).not.toThrow();
+    }
   });
 
   it('should let an authorization result through', () => {
