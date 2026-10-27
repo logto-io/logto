@@ -138,6 +138,7 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
         ? sql``
         : sql`and ${fields.createdAt} > to_timestamp(${after}::double precision / 1000)`;
 
+    // Tenant isolation is enforced by RLS through the tenant-scoped pool.
     const rows = await pool.any<{ createdAt: number }>(sql`
       delete from ${table}
       where ${fields.id} in (
@@ -155,16 +156,23 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
       return { deletedCount: 0 };
     }
 
-    // `timestamptz` may arrive as a number, a `Date`, or a numeric string depending on the
-    // driver's parser configuration; `Number` normalizes all three to unix milliseconds.
-    const timestamps = rows.map(({ createdAt }) => Number(createdAt));
+    // This repo's pools use slonik's default `createTypeParserPreset`, whose `timestamptz`
+    // parser is `Date.parse(value)`, so the column arrives as a unix-millisecond number.
+    const timestamps = rows.map(({ createdAt }) => createdAt);
+
+    // Fold instead of spreading into `Math.min` / `Math.max`: the spread is limited by the
+    // engine's maximum argument count, which `maxDeleteLimit` could exceed if it is raised.
+    const deletedRange = timestamps.reduce(
+      (range, timestamp) => ({
+        oldest: Math.min(range.oldest, timestamp),
+        newest: Math.max(range.newest, timestamp),
+      }),
+      { oldest: Number.POSITIVE_INFINITY, newest: Number.NEGATIVE_INFINITY }
+    );
 
     return {
       deletedCount: timestamps.length,
-      deletedRange: {
-        oldest: Math.min(...timestamps),
-        newest: Math.max(...timestamps),
-      },
+      deletedRange,
     };
   };
 

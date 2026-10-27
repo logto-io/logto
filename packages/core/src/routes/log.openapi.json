@@ -67,7 +67,7 @@
       },
       "delete": {
         "summary": "Delete logs",
-        "description": "Delete audit logs in bounded batches. The deleted set is `after < createdAt < before`, with both bounds exclusive.\n\n`before` is required, so a bare `DELETE /api/logs` never means \"delete everything\". `before` must not be in the future; a boundary in the future is rejected with `400` because it is almost always a unit mistake (seconds instead of milliseconds) or a miscomputed timezone offset.\n\nEach call deletes at most `limit` rows in a single statement and reports `hasMore`. Keep both bounds fixed across calls and repeat while `hasMore` is `true`; a boundary that is recomputed between calls would advance past rows that were never exported.\n\n### Performance\n\n`DELETE` marks rows dead and leaves index cleanup to autovacuum, so cost is dominated by heap writes and WAL. On a typical self-hosted instance with warm cache, expect roughly 20-200 ms per call at `limit=1000` and 0.2-2 s at `limit=10000`; a cold range can be several times slower. These are typical values, not guarantees — measure with `EXPLAIN (ANALYZE, BUFFERS)` on your own instance.\n\nFreed space is reused by later inserts but the table file does not shrink, so disk usage will not drop immediately after a purge.",
+        "description": "Delete audit logs in bounded batches. The deleted set is `after < createdAt < before`, with both bounds exclusive.\n\n`before` is required, so a bare `DELETE /api/logs` never means \"delete everything\". `before` must not be in the future and is rejected with `400` otherwise. A common cause is passing microseconds or nanoseconds instead of milliseconds, or a miscomputed timezone offset; passing seconds instead yields a boundary in the past, which silently deletes nothing rather than being rejected.\n\nThis operation is irreversible and reachable by any Management API token. Each call deletes at most `limit` rows in a single statement and reports `hasMore`. Keep both bounds fixed across calls and repeat while `hasMore` is `true`; a boundary that is recomputed between calls would advance past rows that were never exported. Run one cleanup at a time: a concurrent purge can make `hasMore` under-report.\n\n### Performance\n\n`DELETE` marks rows dead and leaves index cleanup to autovacuum, so cost is dominated by heap writes and WAL. On a typical self-hosted instance with warm cache, expect roughly 20-200 ms per call at `limit=1000` and 0.2-2 s at `limit=10000`; a cold range can be several times slower. These are typical values, not guarantees — measure with `EXPLAIN (ANALYZE, BUFFERS)` on your own instance.\n\nFreed space is reused by later inserts but the table file does not shrink, so disk usage will not drop immediately after a purge.",
         "parameters": [
           {
             "name": "before",
@@ -88,10 +88,10 @@
         ],
         "responses": {
           "200": {
-            "description": "Summary of the rows deleted by this call. `hasMore` is `true` when `deletedCount` equals `limit`, meaning the caller should repeat the request with the same bounds."
+            "description": "Summary of the rows deleted by this call. `deletedCount` is the number of rows deleted, and `deletedRange` is an optional `{ oldest, newest }` object holding the unix-millisecond timestamps of the deleted rows; it is omitted when nothing was deleted. `hasMore` is `true` when `deletedCount` equals `limit`, meaning this batch was full rather than that more rows definitely exist, so the caller should repeat the request with the same bounds."
           },
           "400": {
-            "description": "Returned when `before` is missing or malformed, when `before` is in the future, when `after` is not strictly earlier than `before`, or when `limit` is outside `1..10000`."
+            "description": "Returned when `before` is missing or malformed, when `after` is malformed, when `before` is in the future, when `after` is not strictly earlier than `before`, or when `limit` is outside `1..10000`."
           }
         }
       }

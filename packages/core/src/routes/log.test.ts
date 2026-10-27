@@ -11,6 +11,8 @@ import {
 import type { Log, LogResponse } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
+import koaErrorHandler from '#src/middleware/koa-error-handler.js';
+import koaI18next from '#src/middleware/koa-i18next.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -41,6 +43,8 @@ const logRoutes = await pickDefault(import('./log.js'));
 
 describe('logRoutes', () => {
   const logRequest = createRequester({
+    // The error handler and i18n middleware expose `RequestError` codes in the response body.
+    middlewares: [koaI18next(), koaErrorHandler()],
     authedRoutes: logRoutes,
     tenantContext: new MockTenant(undefined, { logs }),
   });
@@ -220,10 +224,32 @@ describe('logRoutes', () => {
     });
 
     it('defaults limit to 1000 and passes after as undefined when omitted', async () => {
-      await logRequest.delete('/logs?before=5000');
+      const response = await logRequest.delete('/logs?before=5000');
 
+      expect(response.status).toEqual(200);
       expect(deleteLogsBefore).toHaveBeenCalledWith({
         before: 5000,
+        after: undefined,
+        limit: 1000,
+      });
+    });
+
+    it.each([
+      ['minimum', '1', 1],
+      ['maximum', '10000', 10_000],
+    ])('accepts the %s limit of %s', async (_name, rawLimit, limit) => {
+      const response = await logRequest.delete(`/logs?before=5000&limit=${rawLimit}`);
+
+      expect(response.status).toEqual(200);
+      expect(deleteLogsBefore).toHaveBeenCalledWith(expect.objectContaining({ limit }));
+    });
+
+    it('accepts before=0 (the unix epoch) rather than rejecting it as absent', async () => {
+      const response = await logRequest.delete('/logs?before=0');
+
+      expect(response.status).toEqual(200);
+      expect(deleteLogsBefore).toHaveBeenCalledWith({
+        before: 0,
         after: undefined,
         limit: 1000,
       });
@@ -255,15 +281,18 @@ describe('logRoutes', () => {
       const response = await logRequest.delete(`/logs?before=${Date.now() + 3_600_000}`);
 
       expect(response.status).toEqual(400);
+      expect(response.body.code).toBe('log.cleanup_boundary_in_future');
       expect(deleteLogsBefore).not.toHaveBeenCalled();
     });
 
     it('returns 400 when after is not earlier than before', async () => {
       const sameBound = await logRequest.delete('/logs?before=5000&after=5000');
       expect(sameBound.status).toEqual(400);
+      expect(sameBound.body.code).toBe('log.cleanup_invalid_bounds');
 
       const inverted = await logRequest.delete('/logs?before=5000&after=6000');
       expect(inverted.status).toEqual(400);
+      expect(inverted.body.code).toBe('log.cleanup_invalid_bounds');
       expect(deleteLogsBefore).not.toHaveBeenCalled();
     });
 
@@ -283,6 +312,14 @@ describe('logRoutes', () => {
       const response = await logRequest.delete('/logs?before=abc');
 
       expect(response.status).toEqual(400);
+      expect(deleteLogsBefore).not.toHaveBeenCalled();
+    });
+
+    it('returns 400 when after is not a finite number', async () => {
+      const response = await logRequest.delete('/logs?before=5000&after=abc');
+
+      expect(response.status).toEqual(400);
+      expect(response.body.code).toBe('guard.invalid_input');
       expect(deleteLogsBefore).not.toHaveBeenCalled();
     });
   });

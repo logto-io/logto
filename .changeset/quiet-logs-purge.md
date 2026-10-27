@@ -1,5 +1,6 @@
 ---
 "@logto/core": minor
+"@logto/phrases": patch
 ---
 
 delete audit logs older than a given timestamp through the Management API
