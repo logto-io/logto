@@ -272,7 +272,7 @@ describe('triggerTestHook', () => {
     expect(sendWebhookRequest).toHaveBeenCalledWith({
       hookConfig: hook.config,
       // The delivery id is generated per call
-      payload: { ...triggerTestHookPayload, id: expect.any(String) },
+      payload: { ...triggerTestHookPayload, id: expect.any(String) as string },
       signingKey: hook.signingKey,
     });
 
