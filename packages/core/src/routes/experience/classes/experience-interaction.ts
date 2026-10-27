@@ -1113,10 +1113,25 @@ export default class ExperienceInteraction {
     // A requested `mfa` is enforced as a no-skip mandatory policy of its own, which the SSO
     // exemption of the tenant's policy does not cover: the relying party asked for the class and
     // an upstream assertion never reaches it.
-    const isRequestedMfaUnmet = await this.isRequestedMfaUnmet();
+    const pursued = await this.getPursuedRequestedAcr();
+    const isRequestedMfaUnmet = pursued?.acr === LogtoAcr.Mfa;
+    // A registration drives no verification or establishment: the only way it reaches the class
+    // it pursues is by binding a factor the eligibility says reaches it. Require that binding
+    // non-skippably, and offer only those factors, so a skippable suggestion or a factor that
+    // cannot complete the class does not fall through to the defense-in-depth assert below.
+    const requestedEnrollmentFactors =
+      this.interactionEvent === InteractionEvent.Register
+        ? (pursued?.decision?.enrollableFactors ?? [])
+        : [];
+    const requiresRequestedEnrollment = requestedEnrollmentFactors.length > 0;
 
-    if (!this.hasVerifiedSsoIdentity || isRequestedMfaUnmet) {
-      await this.mfa.assertMfaFulfilled({ asNoSkipMandatoryPolicy: isRequestedMfaUnmet });
+    if (!this.hasVerifiedSsoIdentity || isRequestedMfaUnmet || requiresRequestedEnrollment) {
+      await this.mfa.assertMfaFulfilled({
+        asNoSkipMandatoryPolicy: isRequestedMfaUnmet || requiresRequestedEnrollment,
+        ...conditional(
+          requiresRequestedEnrollment && { enrollmentFactors: requestedEnrollmentFactors }
+        ),
+      });
     }
 
     await this.trustedDevice.assertOptInDecision({

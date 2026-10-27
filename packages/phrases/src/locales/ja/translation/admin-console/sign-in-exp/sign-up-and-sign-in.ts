@@ -100,6 +100,9 @@ const sign_up_and_sign_in = {
       link: '"企業向けSSO"',
       suffix: 'セクションをご覧ください。',
     },
+    show_sso_branding_before_email_match: 'メールドメインの一致前に SSO コネクタの名前とロゴを表示',
+    show_sso_branding_before_email_match_description:
+      'オンの場合、メールドメインが一致する前に SSO コネクタの名前とロゴが公開サインイン設定に含まれます。オフの場合、一致後にのみ表示されます。',
     enable_user_registration: 'ユーザー登録を有効にする',
     enable_user_registration_description:
       'ユーザー登録を有効または無効にできます。無効にすると、ユーザーは管理コンソールで追加できますが、サインイン画面でアカウントを作成することはできません。',

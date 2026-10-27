@@ -115,8 +115,8 @@
 
       .action {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
+        flex-direction: column;
+        gap: _.unit(2);
       }
     }
 

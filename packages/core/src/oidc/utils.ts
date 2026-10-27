@@ -307,7 +307,7 @@ export const appendSharedExperienceSearchParams = (
 /**
  * The Experience SSR middleware reads `_logto` before the client bootstraps. Reusing the same
  * cookie payload for the shared app / organization / locale params keeps device pages aligned
- * with login pages without broadening the cookie to route-specific prompt parameters.
+ * with login pages; login-only hints are added by the login prompt handler in `init.ts`.
  */
 export const buildSharedExperienceCookie = ({
   appId,
@@ -328,8 +328,11 @@ export const buildSharedExperienceCookie = ({
  * provider's untyped prompt payload, so anything that does not parse is a regular sign-in. The mode
  * and a non-empty requested list are the only markers: the class the step-up pursues is derived by
  * Experience, never pinned in the details.
+ *
+ * Used to route the initial prompt to the step-up tree and to write the entry guard's UX hint
+ * into the flow cookie.
  */
-const isStepUpPrompt = (promptDetails: unknown): boolean => {
+export const isStepUpPrompt = (promptDetails: unknown): boolean => {
   const result = loginPromptAuthenticationContextDetailsGuard.safeParse(promptDetails ?? {});
 
   return (

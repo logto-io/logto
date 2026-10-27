@@ -41,6 +41,7 @@ import {
   buildConsentPromptUrl,
   buildLoginPromptUrl,
   isOriginAllowed,
+  isStepUpPrompt,
   readOptionalQueryString,
   readOptionalTheme,
   validateCustomClientMetadata,
@@ -295,12 +296,23 @@ export default function initOidc(
           ? { ...sharedParams, appId: undefined }
           : sharedParams;
 
-        // Cookies are required to apply the correct server-side rendering
-        ctx.cookies.set(logtoCookieKey, JSON.stringify(buildSharedExperienceCookie(cookieParams)), {
-          sameSite: 'lax',
-          overwrite: true,
-          httpOnly: false,
-        });
+        const isLoginPrompt = prompt.name === 'login';
+
+        // Cookies are required to apply the correct server-side rendering. The login prompt also
+        // writes the entry guard's step-up hint here, before the SPA loads, so a normal entry page
+        // does not need a second interaction read. Core still enforces the route allow-list.
+        ctx.cookies.set(
+          logtoCookieKey,
+          JSON.stringify({
+            ...buildSharedExperienceCookie(cookieParams),
+            ...(isLoginPrompt && { isStepUp: isStepUpPrompt(prompt.details) }),
+          }),
+          {
+            sameSite: 'lax',
+            overwrite: true,
+            httpOnly: false,
+          }
+        );
 
         if (params[ExtraParamsKey.GoogleOneTapCredential]) {
           ctx.cookies.set(

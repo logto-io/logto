@@ -1,7 +1,14 @@
 /* eslint-disable max-lines -- provider init tests share one harness; splitting fragments the shared mock setup. */
 import assert from 'node:assert';
 
-import { defaultTenantId, GrantType, logtoCookieKey, type Scope } from '@logto/schemas';
+import {
+  AuthenticationContextMode,
+  defaultTenantId,
+  GrantType,
+  LogtoAcr,
+  logtoCookieKey,
+  type Scope,
+} from '@logto/schemas';
 import { errors, type KoaContextWithOIDC } from 'oidc-provider';
 
 import { mockResource, mockUser } from '#src/__mocks__/index.js';
@@ -625,12 +632,16 @@ describe('getResourceServerInfo for CIMD clients', () => {
   });
 });
 
-const runInteractionUrl = (provider: ReturnType<typeof createProvider>, promptClientId: string) => {
+const runInteractionUrl = (
+  provider: ReturnType<typeof createProvider>,
+  promptClientId: string,
+  prompt?: Record<string, unknown>
+) => {
   const configuration = getProviderConfiguration(provider);
   const ctx = createOidcContext({ provider });
   const interaction = {
     params: { client_id: promptClientId },
-    prompt: { name: 'consent', reasons: [], details: {} },
+    prompt: prompt ?? { name: 'consent', reasons: [], details: {} },
   } as unknown as Parameters<typeof configuration.interactions.url>[1];
 
   return { ctx, url: configuration.interactions.url(ctx, interaction) };
@@ -672,6 +683,44 @@ describe('experience cookie for CIMD prompts', () => {
     expect(ctx.cookies.set).toHaveBeenCalledWith(
       logtoCookieKey,
       JSON.stringify({ appId: cimdClientId }),
+      expect.anything()
+    );
+  });
+});
+
+describe('experience cookie for login prompts', () => {
+  it('should mark a normal login prompt as not step-up', async () => {
+    const provider = createProvider(new MockTenant());
+
+    const { ctx } = runInteractionUrl(provider, clientId, {
+      name: 'login',
+      details: { authenticationContext: { requestedAcrValues: [LogtoAcr.Mfa] } },
+    });
+
+    expect(ctx.cookies.set).toHaveBeenCalledWith(
+      logtoCookieKey,
+      JSON.stringify({ appId: clientId, isStepUp: false }),
+      expect.anything()
+    );
+  });
+
+  it('should mark a step-up login prompt', async () => {
+    const provider = createProvider(new MockTenant());
+
+    const { ctx } = runInteractionUrl(provider, clientId, {
+      name: 'login',
+      details: {
+        authenticationContext: {
+          requestedAcrValues: [LogtoAcr.Mfa],
+          selectedAcr: LogtoAcr.Mfa,
+          mode: AuthenticationContextMode.StepUp,
+        },
+      },
+    });
+
+    expect(ctx.cookies.set).toHaveBeenCalledWith(
+      logtoCookieKey,
+      JSON.stringify({ appId: clientId, isStepUp: true }),
       expect.anything()
     );
   });

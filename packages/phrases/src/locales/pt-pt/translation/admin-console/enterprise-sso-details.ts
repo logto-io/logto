@@ -13,6 +13,10 @@ const enterprise_sso_details = {
   custom_branding_title: 'Exibição',
   custom_branding_description:
     'Personalize o nome e o logótipo exibidos no fluxo de Início de Sessão Única dos utilizadores finais. Quando vazio, são usados os predefinidos.',
+  custom_branding_visibility_notice:
+    'O nome e o logótipo são visíveis para qualquer pessoa que abrir a sua página de início de sessão, a menos que "Mostrar nomes e logótipos dos conectores SSO antes da correspondência do domínio de email" esteja desativado na experiência de início de sessão. Não inclua informações confidenciais.',
+  custom_branding_console_sso_visibility_notice:
+    'O nome e o logótipo podem estar visíveis na página de início de sessão do Console antes de um domínio de email corresponder. Não inclua informações confidenciais.',
   email_domain_field_name: 'Domínio de email empresarial',
   email_domain_field_description:
     'Utilizadores com este domínio de email podem usar SSO para autenticação. Por favor, verifique se o domínio pertence à empresa.',

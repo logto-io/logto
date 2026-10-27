@@ -12,6 +12,10 @@ const enterprise_sso_details = {
   custom_branding_title: '表示',
   custom_branding_description:
     'エンドユーザーのシングルサインオンプロセスで表示される名前とロゴをカスタマイズします。空白の場合、デフォルト値が使用されます。',
+  custom_branding_visibility_notice:
+    'サインイン体験で「メールドメインの一致前に SSO コネクタの名前とロゴを表示」をオフにしない限り、サインインページを開いたすべての人に表示名とロゴが表示されます。機密情報を含めないでください。',
+  custom_branding_console_sso_visibility_notice:
+    'メールドメインが一致する前に、表示名とロゴが Console のサインインページに表示される場合があります。機密情報を含めないでください。',
   email_domain_field_name: '企業メールドメイン',
   email_domain_field_description:
     'このメールドメインを使用するユーザーは、SSOで認証できます。このドメインが企業のものであることを確認してください。',

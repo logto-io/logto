@@ -1779,12 +1779,7 @@ describe('POST /experience/submit', () => {
 });
 
 describe('POST /experience/abort', () => {
-  afterEach(() => {
-    resetDevFeaturesEnabled();
-  });
-
   it('should finish the interaction with access_denied and return the redirect URL', async () => {
-    setDevFeaturesEnabled(true);
     const { requester, provider } = createRequesterWithMocks();
 
     const response = await requester.post('/experience/abort').send({});
@@ -1800,7 +1795,6 @@ describe('POST /experience/abort', () => {
   });
 
   it('should forward the reason as error_description', async () => {
-    setDevFeaturesEnabled(true);
     const { requester, provider } = createRequesterWithMocks();
     const reason = 'Denied by user: [test] ~!#';
 
@@ -1816,7 +1810,6 @@ describe('POST /experience/abort', () => {
   });
 
   it('should reject a reason outside the RFC 6749 error_description charset', async () => {
-    setDevFeaturesEnabled(true);
     const { requester, provider } = createRequesterWithMocks();
 
     for (const reason of ['"', '\\', '\u007F', 'é', '\n']) {
@@ -1831,7 +1824,6 @@ describe('POST /experience/abort', () => {
   });
 
   it('should accept a 256-character reason and reject a longer one', async () => {
-    setDevFeaturesEnabled(true);
     const { requester } = createRequesterWithMocks();
 
     const accepted = await requester.post('/experience/abort').send({ reason: 'a'.repeat(256) });
@@ -1843,7 +1835,6 @@ describe('POST /experience/abort', () => {
   });
 
   it('should abort an interaction that is at the consent step', async () => {
-    setDevFeaturesEnabled(true);
     const { requester, provider } = createRequesterWithMocks({
       interactionDetailsOverrides: {
         prompt: { name: 'consent', reasons: ['consent_required'], details: {} },
@@ -1879,7 +1870,6 @@ describe('POST /experience/abort', () => {
   ])(
     'should abort even when the interaction storage cannot be restored ($name)',
     async ({ result }) => {
-      setDevFeaturesEnabled(true);
       const { requester, provider } = createRequesterWithMocks({
         interactionDetailsOverrides: { result },
       });
@@ -1891,25 +1881,10 @@ describe('POST /experience/abort', () => {
       expect(provider.interactionResult).toHaveBeenCalled();
     }
   );
-
-  it('should not be registered when dev features are disabled', async () => {
-    setDevFeaturesEnabled(false);
-    const { requester, provider } = createRequesterWithMocks();
-
-    const response = await requester.post('/experience/abort').send({});
-
-    expect(response.status).toBe(404);
-    expect(provider.interactionResult).not.toHaveBeenCalled();
-  });
 });
 
 describe('GET /experience/interaction/direct-sign-in', () => {
-  afterEach(() => {
-    resetDevFeaturesEnabled();
-  });
-
   it('should return the direct sign-in target from the interaction params', async () => {
-    setDevFeaturesEnabled(true);
     const { requester } = createRequesterWithMocks({
       interactionDetailsOverrides: {
         params: { client_id: 'client_id', direct_sign_in: 'social:google' },
@@ -1924,7 +1899,6 @@ describe('GET /experience/interaction/direct-sign-in', () => {
   });
 
   it('should return an empty object for a hosted sign-in interaction', async () => {
-    setDevFeaturesEnabled(true);
     const { requester } = createRequesterWithMocks();
 
     const response = await requester.get('/experience/interaction/direct-sign-in');
@@ -1934,7 +1908,6 @@ describe('GET /experience/interaction/direct-sign-in', () => {
   });
 
   it('should work before the experience interaction storage is initialized', async () => {
-    setDevFeaturesEnabled(true);
     const { requester } = createRequesterWithMocks({
       interactionDetailsOverrides: {
         // The regular experience middleware would reject this with `session.interaction_not_found`.
@@ -1950,7 +1923,6 @@ describe('GET /experience/interaction/direct-sign-in', () => {
   });
 
   it('should ignore a malformed direct sign-in parameter', async () => {
-    setDevFeaturesEnabled(true);
     const { requester } = createRequesterWithMocks({
       interactionDetailsOverrides: {
         params: { client_id: 'client_id', direct_sign_in: ['social:google'] },
@@ -1961,15 +1933,6 @@ describe('GET /experience/interaction/direct-sign-in', () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({});
-  });
-
-  it('should not be registered when dev features are disabled', async () => {
-    setDevFeaturesEnabled(false);
-    const { requester } = createRequesterWithMocks();
-
-    const response = await requester.get('/experience/interaction/direct-sign-in');
-
-    expect(response.status).toBe(404);
   });
 });
 /* eslint-enable max-lines */
