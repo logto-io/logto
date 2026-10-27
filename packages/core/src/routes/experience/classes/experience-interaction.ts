@@ -409,14 +409,10 @@ export default class ExperienceInteraction {
    * - any authentication proof will be cleared, so that a proof recorded for an abandoned attempt
    *   at one event can never inflate the context of another
    *
-   * Only an unidentified interaction may switch: the identified account stays bound to the event
-   * it was proved for.
-   *
    * @throws RequestError with 403 if the interaction event is not allowed by the `SignInExperienceValidator`
    * @throws RequestError with 400 if a pure step-up switches away from `SignIn`
    * @throws RequestError with 400 if the interaction event is `ForgotPassword` and the current interaction event is not `ForgotPassword`
    * @throws RequestError with 400 if the interaction event is not `ForgotPassword` and the current interaction event is `ForgotPassword`
-   * @throws RequestError with 400 if the interaction is already identified and the event changes
    */
   public async setInteractionEvent(interactionEvent: InteractionEvent) {
     // A pure step-up is a `SignIn` from creation to completion: switching the event would walk
@@ -440,14 +436,6 @@ export default class ExperienceInteraction {
     );
 
     if (this.#interactionEvent !== interactionEvent) {
-      // An identified interaction is bound to one account: switching the event would hand the new
-      // event's exemptions (registration skips the MFA gates) to an interaction that already
-      // proved an account, so a switch is only allowed before identification.
-      assertThat(
-        !this.userId,
-        new RequestError({ code: 'session.invalid_interaction_type', status: 400 })
-      );
-
       this.profile.cleanUp();
       this.authenticationProofs.clear();
     }

@@ -535,8 +535,6 @@ describe('ExperienceInteraction class', () => {
     it('clears the proofs when the interaction event changes, like the profile', async () => {
       const { experienceInteraction } = createSignInInteraction({
         interactionResult: {
-          // Only an unidentified interaction may switch events.
-          userId: undefined,
           authenticationProofs: [passwordProof(AuthenticationProofRole.Identify)],
         },
       });
