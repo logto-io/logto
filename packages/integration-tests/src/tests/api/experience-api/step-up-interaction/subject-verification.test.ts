@@ -4,23 +4,39 @@ import {
   AdditionalIdentifier,
   ConnectorType,
   InteractionEvent,
+  MfaPolicy,
   SignInIdentifier,
+  SignInMode,
   VerificationType,
   type SignInExperience,
 } from '@logto/schemas';
-import { maskEmail } from '@logto/shared';
+import { generateStandardId, maskEmail } from '@logto/shared';
 import { type Optional } from '@silverhand/essentials';
 
+import { getUser, getUsers } from '#src/api/admin-user.js';
 import { getSignInExperience, updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { type ExperienceClient } from '#src/client/experience/index.js';
 import { initExperienceClient, logoutClient, processSession } from '#src/helpers/client.js';
-import { clearConnectorsByTypes, setEmailConnector } from '#src/helpers/connector.js';
+import {
+  clearConnectorsByTypes,
+  setEmailConnector,
+  setSocialConnector,
+} from '#src/helpers/connector.js';
 import { authorizeWithSession } from '#src/helpers/experience/authorization.js';
 import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
+import {
+  finishSignIn,
+  identifyWithSocial,
+  linkSocialIdentity,
+} from '#src/helpers/experience/sign-in-with-acr.js';
+import {
+  successfullyCreateSocialVerification,
+  successfullyVerifySocialAuthorization,
+} from '#src/helpers/experience/social-verification.js';
 import { expectRejects, readConnectorMessage } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
+import { devFeatureTest, generatePassword, generateUsername } from '#src/utils.js';
 
 const firstFactorAcr = 'urn:logto:acr:1fa';
 
@@ -267,6 +283,128 @@ devFeatureTest.describe('step-up subject-bound verification', () => {
       );
 
       await logoutClient(client);
+    });
+  });
+});
+
+devFeatureTest.describe('step-up social subject proof', () => {
+  const userApi = new UserApiTest();
+  // eslint-disable-next-line @silverhand/fp/no-let -- Assigned by the fixture.
+  let connectorId: string;
+  // eslint-disable-next-line @silverhand/fp/no-let -- Assigned by the fixture.
+  let userId: string;
+  // eslint-disable-next-line @silverhand/fp/no-let -- Assigned by the fixture.
+  let socialUserId: string;
+  // eslint-disable-next-line @silverhand/fp/no-let -- Assigned by the fixture.
+  let client: ExperienceClient;
+
+  beforeAll(async () => {
+    await enableAllPasswordSignInMethods();
+    await updateSignInExperience({
+      signInMode: SignInMode.SignIn,
+      socialSignInConnectorTargets: ['mock-social'],
+      mfa: { factors: [], policy: MfaPolicy.UserControlled },
+    });
+    await clearConnectorsByTypes([ConnectorType.Social]);
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    ({ id: connectorId } = await setSocialConnector());
+
+    // A username keeps the shared sign-up configuration from prompting for one; it is not a
+    // verification method, so the user still has nothing to satisfy the step-up with.
+    const user = await userApi.create({ username: generateUsername() });
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    userId = user.id;
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    socialUserId = await linkSocialIdentity(userId, connectorId);
+
+    // Sign in with the linked identity to establish the session the step-up pins.
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    client = await initExperienceClient();
+    await identifyWithSocial(client, connectorId, socialUserId);
+    await finishSignIn(client);
+    await startStepUp(client);
+  });
+
+  afterAll(async () => {
+    await logoutClient(client);
+    await updateSignInExperience({ socialSignInConnectorTargets: [] });
+    await clearConnectorsByTypes([ConnectorType.Social]);
+    await enableAllPasswordSignInMethods();
+    await userApi.cleanUp();
+  });
+
+  it('rejects another upstream account as a recoverable mismatch without creating or linking', async () => {
+    const before = await getUser(userId);
+    const usersBefore = await getUsers(new URLSearchParams({ page: '1', page_size: '100' }));
+    const interactionBefore = await client.getInteractionData();
+    expect(interactionBefore.authenticationContext).toMatchObject({
+      subjectProofConnectors: [{ type: 'social', connectorId }],
+    });
+
+    const wrongSocialUserId = generateStandardId();
+    const wrongState = 'wrong-state';
+    const redirectUri = 'http://localhost:3000';
+    const { verificationId } = await successfullyCreateSocialVerification(client, connectorId, {
+      redirectUri,
+      state: wrongState,
+    });
+    await successfullyVerifySocialAuthorization(client, connectorId, {
+      verificationId,
+      connectorData: {
+        state: wrongState,
+        redirectUri,
+        code: 'fake_code',
+        userId: wrongSocialUserId,
+      },
+    });
+    await expectRejects(client.identifyUser({ verificationId }), {
+      code: 'session.step_up.subject_mismatch',
+      status: 403,
+    });
+
+    // The interaction still pins the subject and offers the connector: the user can retry.
+    const after = await client.getInteractionData();
+    expect(after.userId).toBeUndefined();
+    expect(after.authenticationContext).toMatchObject({
+      subjectProofConnectors: [{ type: 'social', connectorId }],
+    });
+
+    // Nothing was created or linked.
+    expect(await getUser(userId)).toEqual(before);
+    const usersAfter = await getUsers(new URLSearchParams({ page: '1', page_size: '100' }));
+    expect(usersAfter).toHaveLength(usersBefore.length);
+    expect(
+      usersAfter.some((user) => user.identities['mock-social']?.userId === wrongSocialUserId)
+    ).toBe(false);
+
+    // Retrying with the account linked to the subject completes the step-up.
+    const correctState = 'correct-state';
+    const { verificationId: correctVerificationId } = await successfullyCreateSocialVerification(
+      client,
+      connectorId,
+      { redirectUri, state: correctState }
+    );
+    await successfullyVerifySocialAuthorization(client, connectorId, {
+      verificationId: correctVerificationId,
+      connectorData: {
+        state: correctState,
+        redirectUri,
+        code: 'fake_code',
+        userId: socialUserId,
+      },
+    });
+    await client.identifyUser({ verificationId: correctVerificationId });
+    const identified = await client.getInteractionData();
+    expect(identified.userId).toBe(userId);
+
+    const password = generatePassword();
+    await client.updateProfile({ type: 'password', value: password });
+    const { redirectTo } = await client.submitInteraction();
+    await client.resumeAuthorization(redirectTo);
+    expect(await client.getIdTokenClaims()).toMatchObject({
+      sub: userId,
+      acr: firstFactorAcr,
+      amr: ['fed', 'pwd'],
     });
   });
 });

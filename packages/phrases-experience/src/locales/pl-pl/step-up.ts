@@ -8,6 +8,9 @@ const step_up = {
   enter_verification_code_description: 'Wprowadź kod weryfikacyjny wysłany na {{identifier}}.',
   subject_proof_description:
     'Aby kontynuować, potwierdź swoją tożsamość za pomocą konta powiązanego z Twoim. Następnie możesz skonfigurować metodę weryfikacji.',
+  subject_mismatch: 'Konto nie zgadza się',
+  subject_mismatch_description:
+    'Konto, którego użyto, nie jest kontem, na którym jesteś zalogowany. Aby kontynuować, użyj konta, na którym się zalogowałeś.',
   no_method_available: 'Brak dostępnej metody weryfikacji',
   no_method_available_description:
     'Twoje konto nie ma metody, która mogłaby ukończyć tę weryfikację. Skontaktuj się z administratorem, aby uzyskać pomoc.',

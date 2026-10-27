@@ -60,6 +60,9 @@ describe('useStepUpErrorHandler', () => {
   it.each<LogtoErrorCode>([
     'session.verification_blocked_too_many_attempts',
     'session.mfa.require_mfa_verification',
+    // A wrong upstream account is recoverable; the subject-proof callback handles it with its own
+    // page instead of the invalid-session page.
+    'session.step_up.subject_mismatch',
   ])('leaves %s to its existing handling', (code) => {
     const { result } = renderHook(() => useStepUpErrorHandler());
 

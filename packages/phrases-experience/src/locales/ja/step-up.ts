@@ -7,6 +7,9 @@ const step_up = {
   enter_verification_code_description: '{{identifier}} に送信された確認コードを入力してください。',
   subject_proof_description:
     '続行するには、あなたのアカウントにリンクされたアカウントで本人確認を行ってください。その後、認証方法を設定できます。',
+  subject_mismatch: 'アカウントが一致しません',
+  subject_mismatch_description:
+    '使用したアカウントは、サインインしているアカウントではありません。サインインしたアカウントを使用して続行してください。',
   no_method_available: '利用可能な認証方法がありません',
   no_method_available_description:
     'お使いのアカウントには、この認証を完了できる方法がありません。管理者にお問い合わせください。',

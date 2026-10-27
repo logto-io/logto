@@ -7,6 +7,9 @@ const step_up = {
   enter_verification_code_description: 'Enter the verification code sent to {{identifier}}.',
   subject_proof_description:
     'To continue, confirm it’s you through an account linked to yours. You can then set up a verification method.',
+  subject_mismatch: 'Account doesn’t match',
+  subject_mismatch_description:
+    'The account you used isn’t the account you’re signed in as. Use the account you signed in with to continue.',
   no_method_available: 'No verification method available',
   no_method_available_description:
     'Your account has no method that can complete this verification. Please contact your administrator for assistance.',
