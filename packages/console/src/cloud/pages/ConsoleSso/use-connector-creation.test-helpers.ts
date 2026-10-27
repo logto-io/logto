@@ -1,7 +1,7 @@
 import { SsoProviderName } from '@logto/schemas';
 import { renderHook } from '@testing-library/react';
 import { createElement, type ReactNode } from 'react';
-import { SWRConfig } from 'swr';
+import { SWRConfig, useSWRConfig } from 'swr';
 
 import { useConnectorCreation } from './use-connector-creation';
 
@@ -59,14 +59,22 @@ export const paidConnectors = [
     providerName: SsoProviderName.OIDC,
   },
 ];
+const createSwrWrapper =
+  (cache = new Map()) =>
+  ({ children }: { readonly children: ReactNode }) =>
+    createElement(
+      SWRConfig,
+      { value: { provider: () => cache, dedupingInterval: 0, shouldRetryOnError: false } },
+      children
+    );
 export const renderCreation = (cache = new Map()) =>
   renderHook(() => useConnectorCreation('alice', onCreated), {
-    wrapper: ({ children }: { children: ReactNode }) =>
-      createElement(
-        SWRConfig,
-        { value: { provider: () => cache, dedupingInterval: 0, shouldRetryOnError: false } },
-        children
-      ),
+    wrapper: createSwrWrapper(cache),
+  });
+/** Also exposes the SWR config, so a test can revalidate the coverage request. */
+export const renderCreationWithSwr = () =>
+  renderHook(() => ({ creation: useConnectorCreation('alice', onCreated), swr: useSWRConfig() }), {
+    wrapper: createSwrWrapper(),
   });
 
 beforeEach(() => {

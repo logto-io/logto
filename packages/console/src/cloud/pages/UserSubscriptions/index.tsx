@@ -4,7 +4,6 @@ import { useSubscriptionEntry } from '@/cloud/hooks/use-user-subscriptions';
 import PageMeta from '@/components/PageMeta';
 import Topbar from '@/components/Topbar';
 import { EnterpriseSubscriptionTabs } from '@/consts';
-import { contactEmailLink } from '@/consts/external-links';
 import AppBoundary from '@/containers/AppBoundary';
 import { GlobalRoute } from '@/contexts/TenantsProvider';
 import CardTitle from '@/ds-components/CardTitle';
@@ -12,7 +11,6 @@ import DynamicT from '@/ds-components/DynamicT';
 import InlineNotification from '@/ds-components/InlineNotification';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
-import TextLink from '@/ds-components/TextLink';
 
 import layout from '../EnterpriseSubscription/index.module.scss';
 
@@ -77,9 +75,6 @@ function UserSubscriptions() {
                   } satisfies UserSubscriptionsOutletContext
                 }
               />
-              <TextLink href={contactEmailLink}>
-                <DynamicT forKey="general.contact_us_action" />
-              </TextLink>
             </div>
           </div>
         </OverlayScrollbar>
