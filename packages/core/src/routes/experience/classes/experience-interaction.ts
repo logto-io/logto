@@ -687,11 +687,15 @@ export default class ExperienceInteraction {
     const pursued = await this.getPursuedRequestedAcr();
     const isRequestedMfaUnmet = pursued?.acr === LogtoAcr.Mfa;
 
+    // Read the user before the exemptions: `verifiedInteractionGuard` relies on this guard to
+    // reject an interaction that identified nobody, and an exemption must never answer for an
+    // account that was never identified.
+    const user = await this.getIdentifiedUser();
+
     if (!isRequestedMfaUnmet && this.isMfaGateFulfilled()) {
       return;
     }
 
-    const user = await this.getIdentifiedUser();
     const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
     const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(log);
 
@@ -1686,11 +1690,14 @@ export default class ExperienceInteraction {
     const pursued = await this.getPursuedRequestedAcr();
     const isRequestedMfaUnmet = pursued?.acr === LogtoAcr.Mfa;
 
+    // Mirrors `guardMfaVerificationStatus`: an unidentified interaction fails before any
+    // exemption can answer for it.
+    const user = await this.getIdentifiedUser();
+
     if (!isRequestedMfaUnmet && this.isMfaGateFulfilled()) {
       return;
     }
 
-    const user = await this.getIdentifiedUser();
     const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
     const mfaValidator = new MfaValidator(mfaSettings, user);
     const userFactors = mfaValidator.availableUserMfaVerificationTypes;
@@ -2160,7 +2167,14 @@ export default class ExperienceInteraction {
 
   private get hasVerifiedSocialIdentity() {
     const socialVerificationRecord = this.verificationRecords.get(VerificationType.Social);
-    return Boolean(socialVerificationRecord?.isVerified);
+
+    return Boolean(
+      socialVerificationRecord?.isVerified &&
+        this.hasAuthenticationProof(socialVerificationRecord.id, [
+          AuthenticationProofRole.Identify,
+          AuthenticationProofRole.Create,
+        ])
+    );
   }
 
   private get hasVerifiedSignInPasskey() {

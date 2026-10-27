@@ -3306,6 +3306,107 @@ describe('ExperienceInteraction class', () => {
     });
   });
 
+  describe('completion guards with unconsumed verification records', () => {
+    const ssoRecord = {
+      id: 'sso-verification-id',
+      type: VerificationType.EnterpriseSso,
+      connectorId: 'sso-connector-id',
+      enterpriseSsoUserInfo: { id: 'sso-user-id' },
+      issuer: 'issuer',
+    };
+
+    it('does not let an unconsumed verified social record skip the mandatory profile', async () => {
+      const { experienceInteraction, signInTenant, provider } = createSignInInteraction({
+        user: { ...mockUser, username: null },
+        signInExperienceOverrides: {
+          signUp: { identifiers: [SignInIdentifier.Username], password: false, verify: false },
+          socialSignIn: { skipRequiredIdentifiers: true },
+        },
+        interactionResult: { userId: undefined },
+      });
+      const victimPassword = new PasswordVerification(
+        signInTenant.libraries,
+        signInTenant.queries,
+        {
+          id: 'victim-password',
+          type: VerificationType.Password,
+          identifier: {
+            type: AdditionalIdentifier.UserId,
+            value: mockUser.id,
+          },
+          verified: true,
+        }
+      );
+
+      // The attacker's own social record is verified and left unconsumed, then the victim is
+      // identified by password.
+      experienceInteraction.setVerificationRecord(
+        new SocialVerification(libraries, queries, {
+          id: 'social-verification-id',
+          type: VerificationType.Social,
+          connectorId: 'github-connector',
+          socialUserInfo: { id: 'social-user-id' },
+        })
+      );
+      experienceInteraction.setVerificationRecord(victimPassword);
+      await experienceInteraction.identifyUser(victimPassword.id);
+
+      await expect(experienceInteraction.submit()).rejects.toMatchObject({
+        code: 'user.missing_profile',
+        status: 422,
+      });
+      expect(provider.interactionResult).not.toHaveBeenCalled();
+    });
+
+    it('does not let an unconsumed verified SSO record skip the passkey suggestion', async () => {
+      const { experienceInteraction, provider } = createSignInInteraction({
+        signInExperienceOverrides: {
+          passkeySignIn: { enabled: true, showPasskeyButton: true, allowAutofill: true },
+          mfa: { policy: MfaPolicy.NoPrompt, factors: [] },
+        },
+        interactionResult: {
+          authenticationProofs: [passwordProof(AuthenticationProofRole.Identify)],
+          verificationRecords: [ssoRecord],
+        },
+      });
+
+      await expect(experienceInteraction.submit()).rejects.toMatchObject({
+        code: 'user.passkey_preferred',
+        status: 422,
+      });
+      expect(provider.interactionResult).not.toHaveBeenCalled();
+    });
+
+    it('does not let an unconsumed verified SSO record skip the mandatory MFA enrollment', async () => {
+      jest.mocked(userLibraries.insertUser).mockResolvedValueOnce([
+        {
+          ...mockUser,
+          id: 'uid',
+          primaryEmail: mockEmail,
+          mfaVerifications: [],
+          logtoConfig: { mfa: { enabled: false } },
+        },
+      ]);
+      const { experienceInteraction, signInUserQueries } = createSignInInteraction({
+        interactionEvent: InteractionEvent.Register,
+        signInExperienceOverrides: {
+          signUp: { identifiers: [SignInIdentifier.Email], password: false, verify: true },
+          mfa: { policy: MfaPolicy.Mandatory, factors: [MfaFactor.TOTP] },
+        },
+        interactionResult: { userId: undefined, verificationRecords: [ssoRecord] },
+      });
+      experienceInteraction.setVerificationRecord(emailVerificationRecord);
+      await experienceInteraction.createUser(emailVerificationRecord.id);
+
+      await expect(experienceInteraction.submit()).rejects.toMatchObject({
+        code: 'user.missing_mfa',
+        status: 422,
+        data: { availableFactors: [MfaFactor.TOTP] },
+      });
+      expect(signInUserQueries.updateUserById).not.toHaveBeenCalled();
+    });
+  });
+
   describe('guardMfaVerificationStatus', () => {
     it('skips MFA verification check when sign-in passkey is already verified', async () => {
       const { libraries, queries } = tenant;
@@ -3358,6 +3459,38 @@ describe('ExperienceInteraction class', () => {
       });
 
       await expect(experienceInteraction.guardMfaVerificationStatus()).resolves.toBeUndefined();
+    });
+
+    it('rejects an interaction that identified nobody even when a passkey is verified', async () => {
+      const interactionDetails = {
+        result: {
+          interactionEvent: InteractionEvent.SignIn,
+          authenticationProofs: [
+            {
+              ...passkeyProof(AuthenticationProofRole.Identify),
+              id: 'ownerless-passkey-verification-id',
+            },
+          ],
+        },
+      } as unknown as Interaction;
+      const experienceInteraction = new ExperienceInteraction(ctx, tenant, interactionDetails);
+      experienceInteraction.setVerificationRecord(
+        new SignInPasskeyVerification(libraries, queries, {
+          id: 'ownerless-passkey-verification-id',
+          type: VerificationType.SignInPasskey,
+          verified: true,
+        })
+      );
+
+      // A gate that is fulfilled without an identified user must still fail the identified check.
+      await expect(experienceInteraction.guardMfaVerificationStatus()).rejects.toMatchObject({
+        code: 'session.identifier_not_found',
+        status: 404,
+      });
+      await expect(experienceInteraction.guardMfaBinding()).rejects.toMatchObject({
+        code: 'session.identifier_not_found',
+        status: 404,
+      });
     });
   });
 });
