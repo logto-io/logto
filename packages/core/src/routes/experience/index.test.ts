@@ -796,6 +796,7 @@ describe('POST /experience/profile/mfa', () => {
             identifier: { type: SignInIdentifier.Email, value: user.primaryEmail },
             templateType: TemplateType.MfaVerification,
             verified: true,
+            userId: user.id,
           },
           totpBindRecord(user.id),
         ],
