@@ -231,16 +231,33 @@ export const useConnectorCreation = (userId: string, onClose: (id?: string) => v
     if (busy.current || !billing.isBillingReady || billing.billingError) {
       return;
     }
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Serialize coverage validation with creation.
+    busy.current = true;
+    setIsSubmitting(true);
     try {
+      const funding = await billing.resolveFunding();
+      if (!isMounted()) {
+        return;
+      }
       const current = selectCreationFunding(
         userId,
         getOrCreatePendingConnectorCreation(userId, providerName),
-        { funding: billing.funding, enterpriseId: billing.enterpriseId }
+        funding
       );
       setOperation(current);
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- Transfer the lock to run synchronously.
+      busy.current = false;
       await run(current, true);
     } catch (error) {
-      await toastResponseError(error);
+      if (isMounted()) {
+        await toastResponseError(error);
+      }
+    } finally {
+      if (isMounted()) {
+        setIsSubmitting(false);
+      }
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- Release validation on failure or unmount.
+      busy.current = false;
     }
   };
   const startOver = async () => {

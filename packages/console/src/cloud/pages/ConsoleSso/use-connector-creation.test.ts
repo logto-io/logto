@@ -59,12 +59,15 @@ it('keeps the resolved personal funding while coverage revalidates', async () =>
   expect(result.current.creation.billing.funding).toBe('personal');
   // Hold the coverage request in flight so the hook stays revalidating.
   mockApi.get.mockImplementation(async () => new Promise(noop));
+  mockApi.get.mockClear();
   act(() => {
     void result.current.swr.mutate(['console-sso-coverage', 'alice']);
   });
   await waitFor(() => {
-    expect(result.current.creation.billing.isBillingReady).toBe(false);
+    expect(mockApi.get).toHaveBeenCalledWith('/api/me/logto-enterprises');
   });
+  expect(result.current.creation.billing.isBillingReady).toBe(true);
+  expect(result.current.creation.isSubmitting).toBe(false);
   expect(result.current.creation.billing.isFundingResolved).toBe(true);
   expect(result.current.creation.billing.funding).toBe('personal');
 });

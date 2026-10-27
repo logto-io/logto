@@ -237,7 +237,12 @@ it.each([null, 'another-purchase'])(
   async (replacementKey) => {
     savePendingConnectorCreation('alice', operation);
     const response = deferred<typeof paidSession>();
-    mockApi.get.mockReturnValue(response.promise);
+    mockApi.get.mockImplementation(async (path: string) => {
+      if (path === '/api/me/console-sso/checkout-session/:sessionId') {
+        return response.promise;
+      }
+      return path === '/api/me/logto-enterprises' ? { logtoEnterprises: [] } : [];
+    });
     jest.useFakeTimers();
     renderCreation();
     await act(async () => {
@@ -311,20 +316,18 @@ it('waits for fresh allowance instead of choosing personal billing from cached c
     };
   });
   const { result } = renderCreation(cache);
-  expect(result.current.billing.isBillingReady).toBe(false);
+  expect(result.current.billing.isBillingReady).toBe(true);
   await act(async () => {
-    await result.current.create(SsoProviderName.OIDC);
+    void result.current.create(SsoProviderName.OIDC);
   });
+  expect(result.current.isSubmitting).toBe(true);
   expect(mockApi.post).not.toHaveBeenCalled();
+  expect(readPendingConnectorCreation('alice')).toBeUndefined();
   await act(async () => {
     coverage.resolve({ logtoEnterprises: [{ id: 'enterprise-one' }] });
   });
   await waitFor(() => {
-    expect(result.current.billing.isBillingReady).toBe(true);
-  });
-  expect(result.current.billing.funding).toBe('included');
-  await act(async () => {
-    await result.current.create(SsoProviderName.OIDC);
+    expect(onCreated).toHaveBeenCalledWith('connector-one');
   });
   expect(mockApi.post.mock.calls).toEqual([
     [
