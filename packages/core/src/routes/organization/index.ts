@@ -7,10 +7,12 @@ import {
 import { yes } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import { koaQuotaGuard, koaReportSubscriptionUpdates } from '#src/middleware/koa-quota-guard.js';
 import SchemaRouter from '#src/utils/SchemaRouter.js';
+import assertThat from '#src/utils/assert-that.js';
 import { parseSearchOptions } from '#src/utils/search.js';
 
 import { captureEvent } from '../../utils/posthog.js';
@@ -74,7 +76,11 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
     '/',
     koaPagination(),
     koaGuard({
-      query: z.object({ q: z.string().optional(), showFeatured: z.string().optional() }),
+      query: z.object({
+        q: z.string().optional(),
+        showFeatured: z.string().optional(),
+        jitEmailDomain: z.string().min(1).optional(),
+      }),
       response: (
         organizationResponseGuard.merge(
           // For `showFeatured` query
@@ -86,13 +92,27 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
             .partial()
         ) satisfies z.ZodType<OrganizationWithFeatured>
       ).array(),
-      status: [200],
+      status: [200, 400],
     }),
     async (ctx, next) => {
       const { query } = ctx.guard;
-      const search = parseSearchOptions(['id', 'name'], query);
       const { limit, offset } = ctx.pagination;
-      const [count, entities] = await organizations.findAll(limit, offset, search);
+
+      assertThat(
+        !(query.jitEmailDomain && query.q),
+        new RequestError({
+          code: 'request.invalid_input',
+          status: 400,
+          details: '`jitEmailDomain` cannot be combined with `q`.',
+        })
+      );
+
+      const [count, entities] = query.jitEmailDomain
+        ? await organizations.jit.emailDomains.findOrganizations(query.jitEmailDomain, {
+            limit,
+            offset,
+          })
+        : await organizations.findAll(limit, offset, parseSearchOptions(['id', 'name'], query));
 
       ctx.pagination.totalCount = count;
       ctx.body = yes(query.showFeatured)

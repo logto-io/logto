@@ -3,6 +3,8 @@ import {
   OrganizationJitEmailDomains,
   type CreateOrganizationJitEmailDomain,
   OrganizationJitRoles,
+  type Organization,
+  Organizations,
 } from '@logto/schemas';
 import { type CommonQueryMethods, sql } from '@silverhand/slonik';
 
@@ -83,6 +85,41 @@ export class EmailDomainQueries {
       where ${fields.emailDomain} = ${emailDomain}
       group by ${fields.organizationId}
     `);
+  }
+
+  /**
+   * Find the organizations that have the given email domain for just-in-time provisioning, with
+   * pagination. The domain is matched exactly, as in {@link getJitOrganizations}, so the result is
+   * the set of organizations a user with this email domain would be provisioned into.
+   */
+  async findOrganizations(
+    emailDomain: string,
+    { limit, offset }: { limit: number; offset: number }
+  ): Promise<[number, readonly Organization[]]> {
+    const organizations = convertToIdentifiers(Organizations, true);
+    const { fields } = convertToIdentifiers(OrganizationJitEmailDomains, true);
+    const mainSql = sql`
+      from ${organizations.table}
+      join ${table}
+        on ${fields.organizationId} = ${organizations.fields.id}
+      where ${fields.emailDomain} = ${emailDomain}
+    `;
+
+    const [{ count }, rows] = await Promise.all([
+      this.pool.one<{ count: string }>(sql`
+        select count(*)
+        ${mainSql}
+      `),
+      this.pool.any<Organization>(sql`
+        select ${sql.join(Object.values(organizations.fields), sql`, `)}
+        ${mainSql}
+        order by ${organizations.fields.createdAt} desc, ${organizations.fields.id}
+        limit ${limit}
+        offset ${offset}
+      `),
+    ]);
+
+    return [Number(count), rows];
   }
 
   async insert(organizationId: string, emailDomain: string): Promise<OrganizationJitEmailDomain> {

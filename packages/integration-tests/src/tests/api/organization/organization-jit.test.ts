@@ -1,5 +1,6 @@
 import { type SsoConnector } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
+import { HTTPError } from 'ky';
 
 import { providerNames } from '#src/__mocks__/sso-connectors-mock.js';
 import {
@@ -72,6 +73,67 @@ describe('organization just-in-time provisioning', () => {
           emailDomains.map((emailDomain) => expect.objectContaining({ emailDomain }))
         )
       );
+    });
+
+    it('should list the organizations that have an email domain', async () => {
+      const emailDomain = `${randomId()}.com`;
+      const [organization1, organization2, other] = await Promise.all([
+        organizationApi.create({ name: 'foo' }),
+        organizationApi.create({ name: 'bar' }),
+        organizationApi.create({ name: 'baz' }),
+      ]);
+      await Promise.all([
+        organizationApi.jit.replaceEmailDomains(organization1.id, [emailDomain]),
+        organizationApi.jit.replaceEmailDomains(organization2.id, [
+          emailDomain,
+          `${randomId()}.com`,
+        ]),
+        organizationApi.jit.replaceEmailDomains(other.id, [`${randomId()}.com`]),
+      ]);
+
+      const organizations = await organizationApi.getList(
+        new URLSearchParams({ jitEmailDomain: emailDomain })
+      );
+      expect(organizations.map(({ id }) => id)).toHaveLength(2);
+      expect(organizations.map(({ id }) => id)).toEqual(
+        expect.arrayContaining([organization1.id, organization2.id])
+      );
+      expect(organizations).toContainEqual(organization1);
+
+      await expect(
+        organizationApi.getList(new URLSearchParams({ jitEmailDomain: `${randomId()}.com` }))
+      ).resolves.toEqual([]);
+    });
+
+    it('should paginate the organizations that have an email domain', async () => {
+      const emailDomain = `${randomId()}.com`;
+      const organizations = await Promise.all(
+        Array.from({ length: 3 }, async () => organizationApi.create({ name: 'foo' }))
+      );
+      await Promise.all(
+        organizations.map(async ({ id }) => organizationApi.jit.addEmailDomain(id, emailDomain))
+      );
+
+      const page1 = await organizationApi.getList(
+        new URLSearchParams({ jitEmailDomain: emailDomain, page: '1', page_size: '2' })
+      );
+      const page2 = await organizationApi.getList(
+        new URLSearchParams({ jitEmailDomain: emailDomain, page: '2', page_size: '2' })
+      );
+
+      expect(page1).toHaveLength(2);
+      expect(page2).toHaveLength(1);
+      expect(page1.concat(page2).map(({ id }) => id)).toEqual(
+        expect.arrayContaining(organizations.map(({ id }) => id))
+      );
+    });
+
+    it('should return 400 when filtering by email domain and `q` at the same time', async () => {
+      const response = await organizationApi
+        .getList(new URLSearchParams({ jitEmailDomain: `${randomId()}.com`, q: 'foo' }))
+        .catch((error: unknown) => error);
+
+      expect(response instanceof HTTPError && response.response.status).toBe(400);
     });
 
     it('should return 404 when deleting a non-existent email domain', async () => {
