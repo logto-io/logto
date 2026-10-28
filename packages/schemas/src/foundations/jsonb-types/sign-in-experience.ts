@@ -294,6 +294,19 @@ export const customUiAssetsGuard = z.object({
 
 export type CustomUiAssets = z.infer<typeof customUiAssetsGuard>;
 
+/** The `Cross-Origin-Opener-Policy` values a tenant can set for its custom sign-in UI. */
+export enum CrossOriginOpenerPolicy {
+  /**
+   * Sends no header, so a sign-in page opened as a popup from a cross-origin app keeps its
+   * `window.opener`.
+   */
+  UnsafeNone = 'unsafe-none',
+  SameOriginAllowPopups = 'same-origin-allow-popups',
+  SameOrigin = 'same-origin',
+}
+
+export const crossOriginOpenerPolicyGuard = z.nativeEnum(CrossOriginOpenerPolicy);
+
 export const captchaPolicyGuard = z.object({
   enabled: z.boolean().optional(),
 });

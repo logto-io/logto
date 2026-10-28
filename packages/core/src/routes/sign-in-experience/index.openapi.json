@@ -66,6 +66,10 @@
                         }
                       }
                     },
+                    "crossOriginOpenerPolicy": {
+                      "description": "The `Cross-Origin-Opener-Policy` header sent with the hosted sign-in page while Custom UI assets are configured. `unsafe-none` (the default) sends no header.",
+                      "x-logto-dev-feature": true
+                    },
                     "passwordPolicy": {
                       "description": "Password policies to adjust the password strength requirements."
                     },
@@ -186,6 +190,10 @@
                       }
                     }
                   },
+                  "crossOriginOpenerPolicy": {
+                    "description": "The `Cross-Origin-Opener-Policy` header to send with the hosted sign-in page while Custom UI assets are configured. `unsafe-none` (the default) sends no header; other values require Bring your UI. Any other value cuts off apps that open the sign-in page in a cross-origin popup and rely on `window.opener`, and `same-origin` also cuts off cross-origin popups the Custom UI opens itself (for example, social sign-in windows), so `same-origin-allow-popups` is recommended.",
+                    "x-logto-dev-feature": true
+                  },
                   "passwordPolicy": {
                     "description": "Password policies to adjust the password strength requirements."
                   },
@@ -242,7 +250,19 @@
         },
         "responses": {
           "200": {
-            "description": "Updated default sign-in experience settings."
+            "description": "Updated default sign-in experience settings.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "crossOriginOpenerPolicy": {
+                      "description": "The `Cross-Origin-Opener-Policy` header sent with the hosted sign-in page while Custom UI assets are configured. `unsafe-none` (the default) sends no header.",
+                      "x-logto-dev-feature": true
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad request. Invalid data provided."

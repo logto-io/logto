@@ -103,6 +103,7 @@ const getPublicSignInExperience = (signInExperience: SignInExperience) => {
     emailBlocklistPolicy: _emailBlocklistPolicy,
     forgotPasswordMethods: _forgotPasswordMethods,
     ssoBrandingBeforeEmailMatch: _ssoBrandingBeforeEmailMatch,
+    crossOriginOpenerPolicy: _crossOriginOpenerPolicy,
     ...publicSignInExperience
   } = signInExperience;
 

@@ -350,6 +350,7 @@ export const createSignInExperienceLibrary = (
       emailBlocklistPolicy: _emailBlocklistPolicy,
       forgotPasswordMethods: _forgotPasswordMethods,
       ssoBrandingBeforeEmailMatch: _ssoBrandingBeforeEmailMatch,
+      crossOriginOpenerPolicy: _crossOriginOpenerPolicy,
       ...publicSignInExperience
     } = deepmerge<SignInExperience, SignInExperienceOverride>(
       deepmerge<SignInExperience, SignInExperienceOverride>(signInExperience, appSignInExperience),
