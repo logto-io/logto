@@ -15,19 +15,27 @@ import {
   renamePersonalAccessToken,
   revokePersonalAccessToken,
 } from '@ac/apis/personal-access-tokens';
-import { securityRoute, verifiedActionRoute } from '@ac/constants/routes';
+import { securityRoute } from '@ac/constants/routes';
 import { setupI18nForTesting } from '@ac/jest.setup';
-import { sessionStorage } from '@ac/utils/session-storage';
 
 import PersonalAccessTokensSection from '.';
 
 const mockGetAccessToken = jest.fn().mockResolvedValue('access-token');
+const mockGetIdTokenClaims = jest.fn();
+const mockSignIn = jest.fn();
 
 jest.mock('@logto/react', () => ({
   useLogto: () => ({
     getAccessToken: mockGetAccessToken,
+    getIdTokenClaims: mockGetIdTokenClaims,
+    signIn: mockSignIn,
   }),
 }));
+
+const createIdTokenClaims = () => ({
+  acr: 'urn:logto:acr:1fa',
+  auth_time: Math.floor(Date.now() / 1000) - 60,
+});
 
 jest.mock('@ac/apis/personal-access-tokens', () => ({
   getPersonalAccessTokens: jest.fn(),
@@ -70,19 +78,14 @@ const legacyNeverExpiringToken = {
 const renderSection = (
   options: {
     control?: AccountCenterControlValue;
-    verificationId?: string;
     setToast?: jest.Mock;
   } = {}
 ) => {
   const { control = AccountCenterControlValue.Edit, setToast = jest.fn() } = options;
-  const verificationId = Object.hasOwn(options, 'verificationId')
-    ? options.verificationId
-    : 'verification-id';
 
   return renderWithPageContext(
     <Routes>
       <Route path={securityRoute} element={<PersonalAccessTokensSection />} />
-      <Route path={verifiedActionRoute} element={<div>verified action page</div>} />
     </Routes>,
     {
       initialEntries: [securityRoute],
@@ -90,7 +93,6 @@ const renderSection = (
     },
     {
       pageContext: {
-        verificationId,
         setToast,
         accountCenterSettings: {
           ...mockAccountCenterSettings,
@@ -163,6 +165,7 @@ describe('<PersonalAccessTokensSection />', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockGetAccessToken.mockResolvedValue('access-token');
+    mockGetIdTokenClaims.mockResolvedValue(createIdTokenClaims());
     mockGetPersonalAccessTokens.mockResolvedValue([
       activeToken,
       expiredToken,
@@ -246,7 +249,6 @@ describe('<PersonalAccessTokensSection />', () => {
     await waitFor(() => {
       expect(mockCreatePersonalAccessToken).toHaveBeenCalledWith(
         'access-token',
-        'verification-id',
         expect.objectContaining({ name: 'deploy-bot' })
       );
     });
@@ -275,75 +277,6 @@ describe('<PersonalAccessTokensSection />', () => {
     });
   });
 
-  it('navigates to verified action when creating or revoking without verificationId and resumes on return', async () => {
-    const view = renderSection({ verificationId: undefined });
-
-    await waitFor(() => {
-      expect(view.getByText('ci-runner')).toBeTruthy();
-    });
-
-    fireEvent.click(view.getByRole('button', { name: 'Create new token' }));
-    fireEvent.change(view.getByPlaceholderText('My token'), { target: { value: 'deploy-bot' } });
-    fireEvent.click(view.getByText('Create'));
-
-    await waitFor(() => {
-      expect(view.getByText('verified action page')).toBeTruthy();
-    });
-    expect(sessionStorage.getPendingVerifiedAction()).toBe('create-personal-access-token');
-    expect(sessionStorage.getPendingPersonalAccessTokenCreate()).toEqual({
-      name: 'deploy-bot',
-      expiryDays: 90,
-    });
-    view.unmount();
-
-    const resumedCreateView = renderSection({ verificationId: 'verified-id' });
-    await waitFor(() => {
-      expect(mockCreatePersonalAccessToken).toHaveBeenCalledWith(
-        'access-token',
-        'verified-id',
-        expect.objectContaining({ name: 'deploy-bot' })
-      );
-    });
-    expect(resumedCreateView.getByText('pat_secret_123')).toBeTruthy();
-    expect(sessionStorage.getPendingVerifiedAction()).toBeUndefined();
-    resumedCreateView.unmount();
-  });
-
-  it('navigates to verified action when renaming without verificationId and resumes on return', async () => {
-    const view = renderSection({ verificationId: undefined });
-
-    await waitFor(() => {
-      expect(view.getByText('ci-runner')).toBeTruthy();
-    });
-
-    fireEvent.click(view.getAllByRole('button', { name: 'Rename' })[0]!);
-    fireEvent.change(view.getByDisplayValue('ci-runner'), {
-      target: { value: 'ci-runner-renamed' },
-    });
-    fireEvent.click(view.getByText('Save'));
-
-    await waitFor(() => {
-      expect(view.getByText('verified action page')).toBeTruthy();
-    });
-    expect(mockRenamePersonalAccessToken).not.toHaveBeenCalled();
-    expect(sessionStorage.getPendingVerifiedAction()).toBe('rename-personal-access-token');
-    expect(sessionStorage.getPendingPersonalAccessTokenRename()).toEqual({
-      currentName: 'ci-runner',
-      name: 'ci-runner-renamed',
-    });
-    view.unmount();
-
-    renderSection({ verificationId: 'verified-id' });
-    await waitFor(() => {
-      expect(mockRenamePersonalAccessToken).toHaveBeenCalledWith('access-token', 'verified-id', {
-        currentName: 'ci-runner',
-        name: 'ci-runner-renamed',
-      });
-    });
-    expect(sessionStorage.getPendingVerifiedAction()).toBeUndefined();
-    expect(sessionStorage.getPendingPersonalAccessTokenRename()).toBeUndefined();
-  });
-
   it('renames and revokes a token', async () => {
     const setToast = jest.fn();
     const { getAllByRole, getAllByText, getByDisplayValue, getByText, queryByText } = renderSection(
@@ -363,14 +296,10 @@ describe('<PersonalAccessTokensSection />', () => {
     fireEvent.click(getByText('Save'));
 
     await waitFor(() => {
-      expect(mockRenamePersonalAccessToken).toHaveBeenCalledWith(
-        'access-token',
-        'verification-id',
-        {
-          currentName: 'ci-runner',
-          name: 'ci-runner-renamed',
-        }
-      );
+      expect(mockRenamePersonalAccessToken).toHaveBeenCalledWith('access-token', {
+        currentName: 'ci-runner',
+        name: 'ci-runner-renamed',
+      });
     });
     expect(setToast).toHaveBeenCalledWith('Personal access token renamed successfully.');
 
@@ -381,11 +310,7 @@ describe('<PersonalAccessTokensSection />', () => {
     fireEvent.click(revokeButtons.at(-1)!);
 
     await waitFor(() => {
-      expect(mockRevokePersonalAccessToken).toHaveBeenCalledWith(
-        'access-token',
-        'verification-id',
-        'ci-runner'
-      );
+      expect(mockRevokePersonalAccessToken).toHaveBeenCalledWith('access-token', 'ci-runner');
     });
     expect(queryByText('ci-runner')).toBeNull();
     expect(setToast).toHaveBeenCalledWith('Personal access token revoked successfully.');

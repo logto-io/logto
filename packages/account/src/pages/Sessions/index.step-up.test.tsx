@@ -5,7 +5,7 @@ import { Route, Routes } from 'react-router-dom';
 
 import renderWithPageContext from '@ac/__mocks__/RenderWithPageContext';
 import { getGrants, getSessions, revokeGrant, revokeSession } from '@ac/apis/sessions';
-import { sessionsRoute, verifiedActionRoute } from '@ac/constants/routes';
+import { sessionsRoute } from '@ac/constants/routes';
 import { setupI18nForTesting } from '@ac/jest.setup';
 import { accountStorage } from '@ac/utils/session-storage';
 import {
@@ -21,11 +21,6 @@ import type { AccountSession, AccountGrant } from './utils';
 const mockGetAccessToken = jest.fn().mockResolvedValue('access-token');
 const mockGetIdTokenClaims = jest.fn();
 const mockSignIn = jest.fn();
-
-jest.mock('@ac/constants/env', () => ({
-  __esModule: true,
-  isDevFeaturesEnabled: true,
-}));
 
 jest.mock('@logto/react', () => ({
   useLogto: () => ({
@@ -133,7 +128,6 @@ const renderSessions = () =>
   renderWithPageContext(
     <Routes>
       <Route path={sessionsRoute} element={<Sessions />} />
-      <Route path={verifiedActionRoute} element={<div>verified action page</div>} />
     </Routes>,
     {
       initialEntries: [sessionsRoute],
@@ -176,8 +170,8 @@ describe('<Sessions /> OIDC step-up', () => {
     const { queryByRole } = renderSessions();
 
     await waitFor(() => {
-      expect(mockGetSessions).toHaveBeenCalledWith('access-token', undefined);
-      expect(mockGetGrants).toHaveBeenCalledWith('access-token', undefined);
+      expect(mockGetSessions).toHaveBeenCalledWith('access-token');
+      expect(mockGetGrants).toHaveBeenCalledWith('access-token');
     });
     expect(queryByRole('button', { name: 'Manage' })).toBeNull();
     expect(mockSignIn).not.toHaveBeenCalled();
@@ -226,7 +220,7 @@ describe('<Sessions /> OIDC step-up', () => {
     await waitFor(() => {
       expect(mockSignIn).toHaveBeenCalledTimes(1);
     });
-    expect(mockRevokeSession).toHaveBeenCalledWith('access-token', undefined, 'other-session');
+    expect(mockRevokeSession).toHaveBeenCalledWith('access-token', 'other-session');
     expect(accountStorage.pendingStepUp.get()).toMatchObject({
       action: { type: 'revoke-session', sessionId: 'other-session' },
       phase: 'authorizing',
@@ -240,8 +234,8 @@ describe('<Sessions /> OIDC step-up', () => {
     const { unmount } = renderSessions();
 
     await waitFor(() => {
-      expect(mockRevokeSession).toHaveBeenCalledWith('access-token', undefined, 'other-session');
-      expect(mockGetSessions).toHaveBeenCalledWith('access-token', undefined);
+      expect(mockRevokeSession).toHaveBeenCalledWith('access-token', 'other-session');
+      expect(mockGetSessions).toHaveBeenCalledWith('access-token');
     });
 
     // A second mount, as after a refresh of the restored route, does not run it again.
@@ -270,8 +264,8 @@ describe('<Sessions /> OIDC step-up', () => {
     await waitFor(() => {
       expect(mockSignIn).toHaveBeenCalledTimes(1);
     });
-    expect(mockRevokeGrant).toHaveBeenCalledWith('access-token', undefined, 'grant-1');
-    expect(mockRevokeGrant).toHaveBeenCalledWith('access-token', undefined, 'grant-2');
+    expect(mockRevokeGrant).toHaveBeenCalledWith('access-token', 'grant-1');
+    expect(mockRevokeGrant).toHaveBeenCalledWith('access-token', 'grant-2');
     expect(accountStorage.pendingStepUp.get()).toMatchObject({
       action: { type: 'revoke-grant', applicationId: 'app-id', grantIds: ['grant-1', 'grant-2'] },
       phase: 'authorizing',
@@ -289,7 +283,7 @@ describe('<Sessions /> OIDC step-up', () => {
 
     await waitFor(() => {
       expect(mockRevokeGrant).toHaveBeenCalledTimes(2);
-      expect(mockGetGrants).toHaveBeenCalledWith('access-token', undefined);
+      expect(mockGetGrants).toHaveBeenCalledWith('access-token');
     });
 
     unmount();
@@ -315,7 +309,7 @@ describe('<Sessions /> OIDC step-up', () => {
 
     expect(mockRevokeSession).toHaveBeenCalledTimes(1);
     // The resumed action owns the load; its failure still reloads the list.
-    expect(mockGetSessions).toHaveBeenCalledWith('access-token', undefined);
+    expect(mockGetSessions).toHaveBeenCalledWith('access-token');
     expect(mockGetSessions).toHaveBeenCalledTimes(1);
     expect(mockSignIn).not.toHaveBeenCalled();
   });
@@ -336,7 +330,7 @@ describe('<Sessions /> OIDC step-up', () => {
     });
 
     expect(mockRevokeGrant).toHaveBeenCalledTimes(2);
-    expect(mockGetGrants).toHaveBeenCalledWith('access-token', undefined);
+    expect(mockGetGrants).toHaveBeenCalledWith('access-token');
     expect(mockGetGrants).toHaveBeenCalledTimes(1);
     expect(mockSignIn).not.toHaveBeenCalled();
   });

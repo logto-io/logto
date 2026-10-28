@@ -346,6 +346,7 @@ describe('pending step-up', () => {
     expect(pageLoad('/account', '?error=unmet_authentication_requirements&state=state')).toEqual({
       error: 'unmet_authentication_requirements',
       route: securityPath,
+      action: { type: 'disable-mfa' },
     });
     expect(accountSessionStorage.getRouteRestore()).toBeUndefined();
 
@@ -370,6 +371,7 @@ describe('pending step-up', () => {
     expect(pageLoad('/account', '?error=access_denied')).toEqual({
       error: 'access_denied',
       route: '/account',
+      action: { type: 'disable-mfa' },
     });
   });
 

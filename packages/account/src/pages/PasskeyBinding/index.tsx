@@ -17,15 +17,12 @@ import {
 } from '@ac/apis/mfa';
 import ErrorPage from '@ac/components/ErrorPage';
 import StepUpEntryFallback from '@ac/components/StepUpEntryFallback';
-import VerificationMethodList from '@ac/components/VerificationMethodList';
-import { isDevFeaturesEnabled } from '@ac/constants/env';
 import { passkeySuccessRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import useStepUp, { useStepUpEntry } from '@ac/hooks/use-step-up';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
 import { isWebAuthnConfigurable } from '@ac/utils/security-page';
-import { sessionStorage } from '@ac/utils/session-storage';
 
 import styles from './index.module.scss';
 
@@ -33,8 +30,7 @@ const PasskeyBinding = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { loading } = useContext(LoadingContext);
-  const { accountCenterSettings, experienceSettings, setVerificationId, setToast } =
-    useContext(PageContext);
+  const { accountCenterSettings, experienceSettings, setToast } = useContext(PageContext);
   const createRegistrationRequest = useApi(createWebAuthnRegistration, { silent: true });
   const verifyRegistrationRequest = useApi(verifyWebAuthnRegistration);
   const addWebAuthnRequest = useApi(addWebAuthnMfa);
@@ -56,7 +52,7 @@ const PasskeyBinding = () => {
     (accountCenterSettings?.fields.passkey ?? accountCenterSettings?.fields.mfa) ===
       AccountCenterControlValue.Edit &&
     isWebAuthnConfigurable(experienceSettings);
-  const { isReady, hasFailed, verificationId } = useStepUpEntry({
+  const { isReady, hasFailed } = useStepUpEntry({
     // Do not start a step-up for a browser that cannot complete the WebAuthn ceremony.
     enabled: isPageEnabled && isWebAuthnSupported === true,
   });
@@ -97,12 +93,6 @@ const PasskeyBinding = () => {
 
     void fetchRegistrationOptions();
   }, [isReady, createRegistrationRequest]);
-
-  useEffect(() => {
-    if (verificationId && isWebAuthnSupported !== false) {
-      sessionStorage.clearRouteRestore();
-    }
-  }, [isWebAuthnSupported, verificationId]);
 
   const handleAddPasskey = useCallback(async () => {
     if (!isReady || loading || !registrationData) {
@@ -184,7 +174,7 @@ const PasskeyBinding = () => {
     }
 
     // Add WebAuthn MFA to user with the custom name
-    const [addError] = await addWebAuthnRequest(verificationId, {
+    const [addError] = await addWebAuthnRequest({
       newIdentifierVerificationRecordId: webAuthnVerificationRecordId,
       name: passkeyName.trim() || undefined,
     });
@@ -194,12 +184,7 @@ const PasskeyBinding = () => {
         return;
       }
 
-      await handleError(addError, {
-        'verification_record.permission_denied': async () => {
-          setVerificationId(undefined);
-          setToast(t('account_center.verification.verification_required'));
-        },
-      });
+      await handleError(addError);
       return;
     }
 
@@ -213,9 +198,7 @@ const PasskeyBinding = () => {
     passkeyName,
     requestStepUp,
     setToast,
-    setVerificationId,
     t,
-    verificationId,
     webAuthnVerificationRecordId,
   ]);
 
@@ -245,11 +228,7 @@ const PasskeyBinding = () => {
   }
 
   if (!isReady) {
-    return isDevFeaturesEnabled ? (
-      <StepUpEntryFallback hasFailed={hasFailed} />
-    ) : (
-      <VerificationMethodList />
-    );
+    return <StepUpEntryFallback hasFailed={hasFailed} />;
   }
 
   // Show naming step after WebAuthn registration is verified

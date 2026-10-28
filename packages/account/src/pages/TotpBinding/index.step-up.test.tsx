@@ -17,11 +17,6 @@ const mockGetAccessToken = jest.fn().mockResolvedValue('access-token');
 const mockGetIdTokenClaims = jest.fn();
 const mockSignIn = jest.fn();
 
-jest.mock('@ac/constants/env', () => ({
-  __esModule: true,
-  isDevFeaturesEnabled: true,
-}));
-
 jest.mock('@logto/react', () => ({
   __esModule: true,
   useLogto: () => ({
