@@ -230,14 +230,15 @@ it.each([
 );
 
 it.each([
-  [socialConnectors[0]!.id, VerificationType.Social],
-  [mockSsoConnectors[0]!.id, VerificationType.EnterpriseSso],
+  ['social', socialConnectors[0]!.id, VerificationType.Social],
+  ['sso', mockSsoConnectors[0]!.id, VerificationType.EnterpriseSso],
 ] as const)(
-  'rejects a mismatched subject from %s without registering or linking',
-  async (connectorId, verificationType) => {
+  'rejects a mismatched %s subject without registering or linking',
+  async (type, connectorId, verificationType) => {
     storeState('callback-state', connectorId);
     const { result } = renderHook(() => useSessionStorage());
     result.current.set(StorageKeys.verificationIds, { [verificationType]: 'proof' });
+    setContext({ ...context, subjectProofConnectors: [{ type, connectorId }] });
     jest.mocked(api.post).mockImplementation((path) => {
       if (path === '/api/experience/identification') {
         throw new HTTPError(
@@ -263,8 +264,9 @@ it.each([
     expect(api.put).not.toHaveBeenCalled();
 
     fireEvent.click(screen.getByText('action.use_another_account'));
-    // Back on the step-up landing, which re-reads the context and offers a retry.
-    expect(await screen.findByText('step_up.no_method_available')).not.toBeNull();
+    // Back on the step-up landing, which re-reads the context and offers the connector again.
+    expect(await screen.findByText('action.sign_in_with')).not.toBeNull();
+    expect(screen.queryByText('step_up.no_method_available')).toBeNull();
   }
 );
 
