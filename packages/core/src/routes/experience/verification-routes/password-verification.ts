@@ -18,7 +18,6 @@ import { conditional, deduplicate, type Nullable } from '@silverhand/essentials'
 import type Router from 'koa-router';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { getClientIdentifierPayload } from '#src/oidc/cimd/index.js';
@@ -262,11 +261,12 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
 ) {
   const dependencies: VerificationDependencies = { libraries, queries, sentinel };
 
-  // The subject-bound variant is part of the unreleased step-up feature: outside it the request
-  // contract keeps requiring an identifier, and the OpenAPI document omits the variant.
-  const bodyGuard = EnvSet.values.isDevFeaturesEnabled
-    ? z.union([passwordVerificationPayloadGuard, subjectPasswordVerificationPayloadGuard])
-    : passwordVerificationPayloadGuard;
+  // The subject-bound variant verifies the password against the subject the interaction carries,
+  // without a raw identifier. The union keeps the identifier required for a plain sign-in.
+  const bodyGuard = z.union([
+    passwordVerificationPayloadGuard,
+    subjectPasswordVerificationPayloadGuard,
+  ]);
 
   router.post(
     `${experienceRoutes.verification}/password`,
@@ -274,9 +274,7 @@ export default function passwordVerificationRoutes<T extends ExperienceInteracti
       body: bodyGuard,
       // 403: a pure step-up supplied a raw identifier
       // 404: no identifier given and the interaction carries no subject
-      status: EnvSet.values.isDevFeaturesEnabled
-        ? [200, 400, 401, 403, 404, 409, 422]
-        : [200, 400, 401, 409, 422],
+      status: [200, 400, 401, 403, 404, 409, 422],
       response: z.object({
         verificationId: z.string(),
       }),

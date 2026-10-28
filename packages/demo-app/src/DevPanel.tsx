@@ -5,7 +5,7 @@ import { useCallback, useState, type FormEventHandler } from 'react';
 
 import styles from './App.module.scss';
 import StepUpForm from './StepUpForm';
-import { getLocalData, isDevFeaturesEnabled, setLocalData } from './utils';
+import { getLocalData, setLocalData } from './utils';
 
 const safeDecodeJwt = (token: string) => {
   try {
@@ -64,8 +64,8 @@ const DevPanel = () => {
   return (
     <div className={[styles.card, styles.devPanel].join(' ')}>
       {/* Step-up testing tools. */}
-      {isDevFeaturesEnabled && error && <div role="alert">Last SDK error: {error.message}</div>}
-      {isDevFeaturesEnabled && <StepUpForm />}
+      {error && <div role="alert">Last SDK error: {error.message}</div>}
+      <StepUpForm />
       <form onSubmit={submitConfig}>
         <div className={styles.title}>Logto config</div>
         <div className={styles.item}>

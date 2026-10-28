@@ -32,7 +32,6 @@ import { maskEmail, maskPhone } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { buildUserPasswordPayload } from '#src/libraries/user.utils.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
@@ -294,10 +293,6 @@ export default class ExperienceInteraction {
       this.profile = new Profile(libraries, queries, {}, interactionContext);
       this.mfa = new Mfa(libraries, queries, {}, interactionContext);
       this.trustedDevice = new TrustedDevice(ctx, tenant, {});
-
-      if (!EnvSet.values.isDevFeaturesEnabled) {
-        return;
-      }
 
       this.authenticationContext = readLoginPromptAuthenticationContext(ctx.interactionDetails);
 
@@ -1105,8 +1100,7 @@ export default class ExperienceInteraction {
     // `amr` / `auth_time`; an interaction without a proof seeds nothing and the provider stamps
     // `auth_time` itself.
     const authenticationContext = conditional(
-      EnvSet.values.isDevFeaturesEnabled &&
-        aggregateAuthenticationContext(this.countedAuthenticationProofs)
+      aggregateAuthenticationContext(this.countedAuthenticationProofs)
     );
 
     // Revalidate the new profile data if any

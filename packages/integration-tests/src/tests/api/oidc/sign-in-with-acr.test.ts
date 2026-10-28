@@ -58,7 +58,7 @@ import {
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest, generatePassword, waitFor } from '#src/utils.js';
+import { generatePassword, waitFor } from '#src/utils.js';
 
 import WebhookMockServer from '../hook/WebhookMockServer.js';
 
@@ -81,7 +81,7 @@ const countPostSignInHooks = async (hookId: string, userId: string) => {
   return logs.filter(({ payload }) => JSON.stringify(payload).includes(userId)).length;
 };
 
-devFeatureTest.describe('sign-in with requested ACR', () => {
+describe('sign-in with requested ACR', () => {
   const userApi = new UserApiTest();
   // eslint-disable-next-line @silverhand/fp/no-let -- Initialized in `beforeAll`.
   let pool: DatabasePool;

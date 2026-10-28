@@ -12,7 +12,6 @@ import { Provider } from 'oidc-provider';
 import Sinon from 'sinon';
 
 import { mockApplication } from '#src/__mocks__/index.js';
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import { type Partial2 } from '#src/test-utils/tenant.js';
@@ -113,8 +112,6 @@ const runMiddleware = async (
 };
 
 describe('koaOidcAuth middleware with an OIDC authentication context', () => {
-  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-
   beforeEach(() => {
     ctx.auth = {
       type: 'user',
@@ -122,15 +119,10 @@ describe('koaOidcAuth middleware with an OIDC authentication context', () => {
       scopes: new Set(),
     };
     ctx.request = baseCtx.request;
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
   });
 
   afterEach(() => {
     Sinon.restore();
-  });
-
-  afterAll(() => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
   });
 
   it.each([LogtoAcr.FirstFactor, LogtoAcr.Mfa])(
@@ -245,17 +237,5 @@ describe('koaOidcAuth middleware with an OIDC authentication context', () => {
     );
 
     expect(auth).toMatchObject({ identityVerified: true });
-  });
-
-  it('should not set identityVerified when dev features are disabled', async () => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
-
-    const auth = await runMiddleware(
-      createTenantWithApplication({ isThirdParty: false }),
-      buildAccessToken({ acr: LogtoAcr.Mfa, auth_time: nowInSeconds() })
-    );
-
-    expect(auth).toMatchObject({ identityVerified: false });
-    expect(auth.isFirstPartyClient).toBeUndefined();
   });
 });

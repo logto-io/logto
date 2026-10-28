@@ -20,7 +20,6 @@ import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.
 import { expectRejects, readConnectorMessage } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
 
 const firstFactorAcr = 'urn:logto:acr:1fa';
 
@@ -55,7 +54,7 @@ const signInWithPassword = async ({
   return client;
 };
 
-devFeatureTest.describe('step-up subject-bound verification', () => {
+describe('step-up subject-bound verification', () => {
   const userApi = new UserApiTest();
   const user = generateNewUserProfile({ username: true, password: true, primaryEmail: true });
   // eslint-disable-next-line @silverhand/fp/no-let -- Assigned once the fixture is created.

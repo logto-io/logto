@@ -3,7 +3,6 @@ import { appInsights } from '@logto/app-insights/node';
 import { InteractionEvent, type TrustedDevice as TrustedDeviceModel } from '@logto/schemas';
 
 import { createMockTrustedDevice } from '#src/__mocks__/trusted-device.js';
-import { EnvSet } from '#src/env-set/index.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
@@ -89,18 +88,11 @@ const createSubject = ({
 };
 
 describe('Experience trusted-device lifecycle events', () => {
-  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-
   beforeEach(() => {
     jest.clearAllMocks();
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Verify trusted-device flows with dev features disabled.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = false;
   });
 
   afterEach(() => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore the process-wide test environment.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
-      originalIsDevFeaturesEnabled;
     jest.restoreAllMocks();
   });
 

@@ -23,7 +23,6 @@ import {
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
 
 const firstFactorAcr = 'urn:logto:acr:1fa';
 const mfaAcr = 'urn:logto:acr:mfa';
@@ -47,7 +46,7 @@ const expectAuthorizationCode = (location: string) => {
   expect(new URL(location).searchParams.has('error')).toBe(false);
 };
 
-devFeatureTest.describe('acr_values and max_age interaction policy', () => {
+describe('acr_values and max_age interaction policy', () => {
   const userApi = new UserApiTest();
   const { username, password } = generateNewUserProfile({ username: true, password: true });
   // eslint-disable-next-line @silverhand/fp/no-let -- The user id and database connection are shared by the fixtures and assertions.

@@ -14,7 +14,6 @@ import { generateStandardId } from '@logto/shared';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { generateWebAuthnAuthenticationOptions } from '#src/libraries/verification-helpers/webauthn.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -209,8 +208,8 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
       response: z.object({
         verificationId: z.string(),
       }),
-      // 403: identity conflict in a pure step-up, a dev-only mode
-      status: EnvSet.values.isDevFeaturesEnabled ? [200, 400, 403, 404] : [200, 400, 404],
+      // 403: identity conflict in a pure step-up
+      status: [200, 400, 403, 404],
     }),
     koaExperienceVerificationsAuditLog({
       type: VerificationType.WebAuthn,
@@ -385,8 +384,8 @@ export default function webAuthnVerificationRoute<T extends ExperienceInteractio
       response: z.object({
         verificationId: z.string(),
       }),
-      // 403: identity conflict in a pure step-up, a dev-only mode
-      status: EnvSet.values.isDevFeaturesEnabled ? [200, 400, 403, 404, 409] : [200, 400, 404, 409],
+      // 403: identity conflict in a pure step-up
+      status: [200, 400, 403, 404, 409],
     }),
     koaExperienceVerificationsAuditLog({
       type: VerificationType.SignInPasskey,

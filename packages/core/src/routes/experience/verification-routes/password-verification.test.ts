@@ -11,7 +11,6 @@ import {
 import { createMockUtils } from '@logto/shared/esm';
 
 import { mockUser } from '#src/__mocks__/user.js';
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 
 const { jest } = import.meta;
@@ -706,34 +705,4 @@ describe('password verification route subject-bound variant', () => {
   });
 });
 
-describe('password verification route dev feature gate', () => {
-  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-
-  afterEach(() => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore the process-wide flag.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
-      originalIsDevFeaturesEnabled;
-  });
-
-  it('rejects the identifier-less payload and omits the 404 status when dev features are disabled', () => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Exercise the released contract.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = false;
-    registerRoute();
-
-    const config = getLastGuardConfig();
-    expect(config?.body.safeParse({ password }).success).toBe(false);
-    expect(config?.body.safeParse({ identifier, password }).success).toBe(true);
-    expect(config?.status).not.toContain(404);
-  });
-
-  it('accepts the identifier-less payload and declares the 404 status when dev features are enabled', () => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Exercise the dev-only contract.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
-    registerRoute();
-
-    const config = getLastGuardConfig();
-    expect(config?.body.safeParse({ password }).success).toBe(true);
-    expect(config?.status).toContain(404);
-  });
-});
 /* eslint-enable max-lines */

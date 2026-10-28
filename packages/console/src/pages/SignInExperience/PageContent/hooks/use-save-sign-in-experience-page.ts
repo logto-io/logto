@@ -4,7 +4,6 @@ import type { UseFormReturn } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
 import useApi from '@/hooks/use-api';
 import useConfigs from '@/hooks/use-configs';
 
@@ -82,12 +81,11 @@ export const useSaveSignInExperiencePage = ({
             deleteAccountUrl,
             customCss: accountCenter.customCss?.length ? accountCenter.customCss : null,
             profileFields: accountCenter.profileFields,
-            ...(isDevFeaturesEnabled &&
-              isMaximumAuthenticationAgeDirty && {
-                maximumAuthenticationAgeInSeconds: Math.floor(
-                  accountCenter.maximumAuthenticationAgeInMinutes * 60
-                ),
-              }),
+            ...(isMaximumAuthenticationAgeDirty && {
+              maximumAuthenticationAgeInSeconds: Math.floor(
+                accountCenter.maximumAuthenticationAgeInMinutes * 60
+              ),
+            }),
           },
         })
         .json<AccountCenterConfig>();

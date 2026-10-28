@@ -1,7 +1,6 @@
 import { MfaFactor, experience } from '@logto/schemas';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 
-import { isDevFeaturesEnabled } from '@/constants/env';
 import { handleSearchParametersData } from '@/shared/utils/search-parameters';
 
 import AppLayout from './Layout/AppLayout';
@@ -82,14 +81,14 @@ const App = () => {
                   <Route element={<LoadingLayerProvider />}>
                     <Route path="callback/:connectorId" element={<Callback />} />
                     {/* Step-up callbacks recover the mode before consuming upstream proofs. */}
-                    <Route element={isDevFeaturesEnabled ? <StepUpRecoveryGuard /> : undefined}>
+                    <Route element={<StepUpRecoveryGuard />}>
                       <Route
                         path="callback/social/:connectorId"
                         element={<SocialSignInWebCallback />}
                       />
                     </Route>
                     {/* Normal sign-in entries are blocked while a step-up pins the subject. */}
-                    <Route element={isDevFeaturesEnabled ? <StepUpEntryGuard /> : undefined}>
+                    <Route element={<StepUpEntryGuard />}>
                       <Route path="direct/:method/:target?" element={<DirectSignIn />} />
                       <Route path={experience.routes.oneTimeToken} element={<OneTimeToken />} />
                     </Route>
@@ -124,7 +123,7 @@ const App = () => {
                        * renders. Core enforces the same restriction; the guard only prevents a
                        * form that can never complete.
                        */}
-                      <Route element={isDevFeaturesEnabled ? <StepUpEntryGuard /> : undefined}>
+                      <Route element={<StepUpEntryGuard />}>
                         <Route path={experience.routes.switchAccount} element={<SwitchAccount />} />
 
                         {/* Sign-in */}
@@ -193,7 +192,7 @@ const App = () => {
                       <Route path={experience.routes.trustedDevice} element={<TrustedDevice />} />
 
                       {/* Step-up establishment and enrollment reuse the existing pages. */}
-                      <Route element={isDevFeaturesEnabled ? <StepUpRecoveryGuard /> : undefined}>
+                      <Route element={<StepUpRecoveryGuard />}>
                         {/* Passwordless verification code */}
                         <Route path=":flow/verification-code" element={<VerificationCode />} />
 
@@ -227,7 +226,7 @@ const App = () => {
                       <Route
                         path={UserMfaFlow.MfaVerification}
                         // Step-up MFA pages recover their state from the interaction.
-                        element={isDevFeaturesEnabled ? <MfaVerificationGuard /> : undefined}
+                        element={<MfaVerificationGuard />}
                       >
                         <Route index element={<MfaVerification />} />
                         <Route path={MfaFactor.TOTP} element={<TotpVerification />} />
@@ -246,19 +245,16 @@ const App = () => {
                       {/*
                        * Step-up: an authenticated session proves the missing assurance. The guard
                        * loads the server-driven context, the landing dispatches on it, and the
-                       * pinned-user first-factor pages verify the pinned subject. Dev-only
-                       * feature: remove the flag when the flow is released.
+                       * pinned-user first-factor pages verify the pinned subject.
                        */}
-                      {isDevFeaturesEnabled && (
-                        <Route path={experience.routes.stepUp} element={<StepUpGuard />}>
-                          <Route index element={<StepUp />} />
-                          <Route path="password" element={<StepUpPassword />} />
-                          <Route
-                            path="verification-code/:type"
-                            element={<StepUpVerificationCode />}
-                          />
-                        </Route>
-                      )}
+                      <Route path={experience.routes.stepUp} element={<StepUpGuard />}>
+                        <Route index element={<StepUp />} />
+                        <Route path="password" element={<StepUpPassword />} />
+                        <Route
+                          path="verification-code/:type"
+                          element={<StepUpVerificationCode />}
+                        />
+                      </Route>
 
                       {/* Social sign-in pages */}
                       <Route path="social">

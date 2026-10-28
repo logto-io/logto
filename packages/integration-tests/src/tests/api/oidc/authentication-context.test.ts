@@ -38,7 +38,6 @@ import {
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
 
 const firstFactorAcr = 'urn:logto:acr:1fa';
 const mfaAcr = 'urn:logto:acr:mfa';
@@ -87,7 +86,7 @@ const refreshIdToken = async (client: ExperienceClient) => {
   return decodeIdToken(json.id_token);
 };
 
-devFeatureTest.describe('authentication context claims on sign-in', () => {
+describe('authentication context claims on sign-in', () => {
   const userApi = new UserApiTest();
 
   beforeAll(async () => {

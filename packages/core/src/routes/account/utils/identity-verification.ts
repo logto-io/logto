@@ -1,7 +1,6 @@
 import type { User } from '@logto/schemas';
 import type { ExtendableContext } from 'koa';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { buildInsufficientUserAuthenticationChallenge } from '#src/middleware/koa-auth/authentication-context.js';
 import type { WithAuthContext } from '#src/middleware/koa-auth/types.js';
@@ -22,11 +21,7 @@ type IdentityVerificationContext = WithAuthContext & ExtendableContext;
  * sent through a reauthentication it cannot complete.
  */
 export const assertIdentityVerified = (ctx: IdentityVerificationContext) => {
-  if (
-    EnvSet.values.isDevFeaturesEnabled &&
-    !ctx.auth.identityVerified &&
-    ctx.auth.isFirstPartyClient
-  ) {
+  if (!ctx.auth.identityVerified && ctx.auth.isFirstPartyClient) {
     // Advertise the same tenant window the request was evaluated against, so the client starts a
     // step-up that actually satisfies the policy.
     ctx.set(
