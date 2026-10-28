@@ -10,7 +10,7 @@ const step_up = {
     'Para continuar, confirme que é você através de uma conta associada à sua. Depois, poderá configurar um método de verificação.',
   subject_mismatch: 'A conta não corresponde',
   subject_mismatch_description:
-    'A conta que utilizou não é a conta com a qual iniciou sessão. Utilize a conta com a qual iniciou sessão para continuar.',
+    'A conta que utilizou não está associada à sua conta. Utilize uma conta associada e, se necessário, mude de conta no fornecedor.',
   no_method_available: 'Nenhum método de verificação disponível',
   no_method_available_description:
     'A sua conta não tem nenhum método que possa concluir esta verificação. Contacte o seu administrador para obter assistência.',

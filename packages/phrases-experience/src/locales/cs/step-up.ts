@@ -9,7 +9,7 @@ const step_up = {
     'Pro pokračování potvrď, že jsi to ty, pomocí účtu propojeného s tím tvým. Poté si můžeš nastavit metodu ověření.',
   subject_mismatch: 'Účet nesouhlasí',
   subject_mismatch_description:
-    'Účet, který jsi použil, není účet, do kterého jsi přihlášen. Pro pokračování použij účet, kterým ses přihlásil.',
+    'Účet, který jsi použil, není propojen s tvým účtem. Použij propojený účet a v případě potřeby přepni účet u poskytovatele.',
   no_method_available: 'Není k dispozici žádná metoda ověření',
   no_method_available_description:
     'Tvůj účet nemá žádnou metodu, kterou by šlo toto ověření dokončit. Požádej prosím o pomoc svého administrátora.',

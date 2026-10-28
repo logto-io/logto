@@ -10,7 +10,7 @@ const step_up = {
     'Per continuare, conferma la tua identità tramite un account collegato al tuo. Potrai poi configurare un metodo di verifica.',
   subject_mismatch: "L'account non corrisponde",
   subject_mismatch_description:
-    "L'account che hai usato non è quello con cui hai effettuato l'accesso. Usa l'account con cui hai effettuato l'accesso per continuare.",
+    "L'account che hai usato non è collegato al tuo account. Usa un account collegato e, se necessario, cambia account presso il provider.",
   no_method_available: 'Nessun metodo di verifica disponibile',
   no_method_available_description:
     'Il tuo account non dispone di alcun metodo in grado di completare questa verifica. Contatta il tuo amministratore per ricevere assistenza.',

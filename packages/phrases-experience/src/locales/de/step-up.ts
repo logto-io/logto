@@ -11,7 +11,7 @@ const step_up = {
     'Um fortzufahren, bestätige über ein mit deinem Konto verknüpftes Konto, dass du es bist. Anschließend kannst du eine Verifizierungsmethode einrichten.',
   subject_mismatch: 'Konto stimmt nicht überein',
   subject_mismatch_description:
-    'Das verwendete Konto ist nicht das Konto, bei dem du angemeldet bist. Verwende zum Fortfahren das Konto, bei dem du angemeldet bist.',
+    'Das verwendete Konto ist nicht mit deinem Konto verknüpft. Verwende ein verknüpftes Konto und wechsle bei Bedarf beim Anbieter das Konto.',
   no_method_available: 'Keine Verifizierungsmethode verfügbar',
   no_method_available_description:
     'Dein Konto hat keine Methode, mit der diese Verifizierung abgeschlossen werden kann. Bitte wende dich an deinen Administrator, um Hilfe zu erhalten.',

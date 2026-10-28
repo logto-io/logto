@@ -10,7 +10,7 @@ const step_up = {
     'Devam etmek için hesabınıza bağlı bir hesap üzerinden siz olduğunuzu doğrulayın. Ardından bir doğrulama yöntemi ayarlayabilirsiniz.',
   subject_mismatch: 'Hesap eşleşmiyor',
   subject_mismatch_description:
-    'Kullandığınız hesap, oturum açtığınız hesap değil. Devam etmek için oturum açtığınız hesabı kullanın.',
+    'Kullandığınız hesap, hesabınıza bağlı değil. Bağlı bir hesap kullanın ve gerekirse sağlayıcıda hesap değiştirin.',
   no_method_available: 'Kullanılabilir doğrulama yöntemi yok',
   no_method_available_description:
     'Hesabınızda bu doğrulamayı tamamlayabilecek bir yöntem yok. Yardım için lütfen yöneticinizle iletişime geçin.',

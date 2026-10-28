@@ -8,7 +8,8 @@ const step_up = {
   subject_proof_description:
     '请通过与你账户关联的账户确认是你本人，以继续操作。之后你可以设置一种验证方式。',
   subject_mismatch: '账号不匹配',
-  subject_mismatch_description: '你使用的账号不是当前登录的账号。请使用登录时的账号继续。',
+  subject_mismatch_description:
+    '你使用的账号未关联到你的账户。请使用已关联的账号；如有需要，请先在第三方服务商处切换账号。',
   no_method_available: '没有可用的验证方式',
   no_method_available_description: '你的账户没有可完成此验证的方式。请联系管理员获取帮助。',
 };
