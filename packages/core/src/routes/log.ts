@@ -20,6 +20,12 @@ import { parseTimestampParam, validateTimeWindow } from '#src/utils/time-window.
 
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
+// `limit` bounds how many rows one call deletes. Each call is a single `delete ... where id in
+// (select ... limit N)` statement, so the bound is what keeps a call short: it stays clear of the
+// pool's `statement_timeout`, holds few row locks at a time, and avoids producing a burst of dead
+// tuples and WAL that would compete with normal request traffic. 1000 is a safe default for both
+// interactive and scripted callers; 10000 is the ceiling for callers that would trade a longer
+// call for fewer round trips.
 const defaultDeleteLimit = 1000;
 const maxDeleteLimit = 10_000;
 
@@ -148,8 +154,10 @@ export default function logRoutes<T extends ManagementApiRouter>(
         new RequestError({ code: 'guard.invalid_input', type: 'limit' })
       );
 
-      // A boundary in the future is almost always a unit or timezone mistake, and would turn a
-      // bounded delete into an unbounded one. See the design spec §4.2.
+      // A boundary in the future is almost always a unit mistake — microseconds or nanoseconds
+      // passed where milliseconds are expected — or a miscomputed timezone offset, and either
+      // would turn a bounded delete into an unbounded one. (Passing seconds yields a boundary in
+      // the past, which deletes nothing rather than too much.)
       assertThat(
         before <= Date.now(),
         new RequestError({ code: 'log.cleanup_boundary_in_future', status: 400 })

@@ -4,6 +4,7 @@ import { assertEnv } from '@silverhand/essentials';
 import { createInterceptorsPreset, createPool, sql, type DatabasePool } from '@silverhand/slonik';
 
 import { authedAdminApi } from '#src/api/api.js';
+import { getAuditLogs } from '#src/api/logs.js';
 
 type CleanupResponse = {
   deletedCount: number;
@@ -74,6 +75,21 @@ describe('DELETE /logs cleanup', () => {
   });
 
   it('deletes only the rows strictly between the exclusive bounds', async () => {
+    // Read the seeded rows back through the public API first, so the test proves the list and
+    // delete endpoints agree on what exists, rather than only trusting the seeder.
+    const beforeDelete = await getAuditLogs(new URLSearchParams({ logKey }));
+    expect(
+      beforeDelete
+        .map(({ id }) => id)
+        .slice()
+        .sort()
+    ).toEqual(
+      seededRows
+        .map(({ id }) => id)
+        .slice()
+        .sort()
+    );
+
     const response = await authedAdminApi.delete('logs', {
       searchParams: { before: String(upperBound), after: String(lowerBound) },
     });
@@ -86,12 +102,11 @@ describe('DELETE /logs cleanup', () => {
       deletedRange: { oldest: lowerBound + 1, newest: upperBound - 1 },
     });
 
-    const remainingRows = await pool.any<{ id: string }>(sql`
-      select id from logs
-      where tenant_id = ${defaultTenantId} and key = ${logKey}
-    `);
+    // And read the survivors back through the API: only the two rows sitting exactly on the
+    // exclusive bounds may remain.
+    const afterDelete = await getAuditLogs(new URLSearchParams({ logKey }));
     expect(
-      remainingRows
+      afterDelete
         .map(({ id }) => id)
         .slice()
         .sort()
