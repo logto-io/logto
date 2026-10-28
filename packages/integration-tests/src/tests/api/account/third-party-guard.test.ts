@@ -5,11 +5,14 @@ import { authedAdminApi, baseApi } from '#src/api/api.js';
 import { deleteApplication } from '#src/api/application.js';
 import {
   getBackupCodes,
+  getEnterpriseSsoAccessToken,
   getMyAccountGrants,
   getSessions,
+  getSocialAccessToken,
   getTrustedDevicesResponse,
   getUserInfo,
   updatePassword,
+  updateSocialAccessToken,
   updateUser,
 } from '#src/api/my-account.js';
 import { createVerificationRecordByPassword } from '#src/api/verification-record.js';
@@ -168,6 +171,52 @@ describe('account API third-party guard', () => {
       });
       // Reauthentication cannot help a third-party caller, so no challenge is offered.
       expect(response.headers.get('WWW-Authenticate')).toBeNull();
+    } finally {
+      await Promise.all([deleteApplication(app.id), deleteDefaultTenantUser(user.id)]);
+    }
+  });
+  it('should reject stored provider token retrieval from a third-party application', async () => {
+    const { user, username, password } = await createDefaultTenantUserWithPassword();
+    const { app, api } = await buildAccountApi(true, username, password, [
+      UserScope.Profile,
+      UserScope.Identities,
+    ]);
+
+    try {
+      // No provider token is stored for this user, so without the guard these would answer
+      // `404 token_not_found`. The 403 is what proves the guard runs before the lookup.
+      await expectRejects(getSocialAccessToken(api, 'google'), {
+        code: 'auth.third_party_application_forbidden',
+        status: 403,
+      });
+      await expectRejects(getEnterpriseSsoAccessToken(api, 'sso-connector-id'), {
+        code: 'auth.third_party_application_forbidden',
+        status: 403,
+      });
+      // Likewise the record id never has to resolve: the guard precedes the verification work.
+      await expectRejects(updateSocialAccessToken(api, 'google', 'unresolvable-record-id'), {
+        code: 'auth.third_party_application_forbidden',
+        status: 403,
+      });
+    } finally {
+      await Promise.all([deleteApplication(app.id), deleteDefaultTenantUser(user.id)]);
+    }
+  });
+
+  it('should keep stored provider token retrieval available to a first-party application', async () => {
+    const { user, username, password } = await createDefaultTenantUserWithPassword();
+    const { app, api } = await buildAccountApi(false, username, password, [
+      UserScope.Profile,
+      UserScope.Identities,
+    ]);
+
+    try {
+      // Reaching `token_not_found` is the point: the request passes both the scope gate and the
+      // first-party gate, and stops only because this user has no stored Google token.
+      await expectRejects(getSocialAccessToken(api, 'google'), {
+        code: 'secrets.third_party_token_set.token_not_found',
+        status: 404,
+      });
     } finally {
       await Promise.all([deleteApplication(app.id), deleteDefaultTenantUser(user.id)]);
     }

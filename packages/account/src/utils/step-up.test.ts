@@ -9,8 +9,8 @@ import {
   getProactiveStepUpChallenge,
   getStepUpChallenge,
   handlePendingStepUpOnPageLoad,
-  hasFreshAuthenticationContext,
   hasFreshFirstFactorAuthentication,
+  hasFreshSubpageAuthenticationContext,
   parseStepUpChallenge,
   startPendingStepUp,
 } from './step-up';
@@ -215,43 +215,42 @@ describe('hasFreshFirstFactorAuthentication', () => {
   });
 });
 
-describe('hasFreshAuthenticationContext', () => {
+describe('hasFreshSubpageAuthenticationContext', () => {
   const now = 1_800_000_000_000;
   const authTimeOfAge = (ageSeconds: number) => now / 1000 - ageSeconds;
 
   it.each([
-    [300, 60, 300, true],
-    [300, 60, 301, false],
-    [300, 60, -60, true],
-    [300, 60, -61, false],
-    [15, 15, 15, true],
-    [15, 15, 16, false],
-    [15, 15, -15, true],
-    [15, 15, -16, false],
-    [6900, 60, 6900, true],
-    [6900, 60, 6901, false],
-  ])(
-    'checks a %p-second cutoff and a %p-second skew against an age of %p seconds',
-    (cutoff, skew, age, expected) => {
-      expect(
-        hasFreshAuthenticationContext(
-          { acr: LogtoAcr.FirstFactor, auth_time: authTimeOfAge(age) },
-          cutoff,
-          skew,
-          now
-        )
-      ).toBe(expected);
-    }
-  );
+    [600, 300, true],
+    [600, 301, false],
+    [600, -60, true],
+    [600, -61, false],
+    // A one-minute window keeps the tenant's 15-second clock-skew margin, not a quarter of the
+    // 15-second entry cutoff, so a freshly issued token from a browser clock that is behind is
+    // still accepted.
+    [60, 15, true],
+    [60, 16, false],
+    [60, -5, true],
+    [60, -15, true],
+    [60, -16, false],
+    [7200, 6900, true],
+    [7200, 6901, false],
+  ])('checks a %p-second tenant window at an auth age of %p seconds', (window, age, expected) => {
+    expect(
+      hasFreshSubpageAuthenticationContext(
+        { acr: LogtoAcr.FirstFactor, auth_time: authTimeOfAge(age) },
+        window,
+        now
+      )
+    ).toBe(expected);
+  });
 
-  it('does not subtract the tenant freshness margin from the cutoff', () => {
+  it('accepts a context that fits the entry cutoff without subtracting the margin again', () => {
     const claims = { acr: LogtoAcr.FirstFactor, auth_time: authTimeOfAge(270) };
 
-    // Passing the already-derived 300-second entry cutoff to the inline helper subtracts the
-    // 60-second margin again, so 270 seconds is rejected.
+    // The entry cutoff is already final; 270 seconds fits the 300-second cutoff of a ten-minute
+    // window even though the inline helper would subtract another 60-second margin.
     expect(hasFreshFirstFactorAuthentication(claims, 300, now)).toBe(false);
-    // The entry cutoff is already final; 270 seconds fits the 300-second cutoff.
-    expect(hasFreshAuthenticationContext(claims, 300, 60, now)).toBe(true);
+    expect(hasFreshSubpageAuthenticationContext(claims, 600, now)).toBe(true);
   });
 });
 

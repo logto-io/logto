@@ -37,14 +37,13 @@ const enterprise_subscription = {
     description:
       'Przeglądaj subskrypcje osobiste i umowny zakres Enterprise niezależnie od wybranego tenanta.',
     personal_title: 'Subskrypcje osobiste',
-    personal_description: 'Subskrypcje rozliczane na Twoim koncie, w tym wcześniejsze subskrypcje.',
+    personal_description:
+      'Aktywne subskrypcje rozliczane na Twoim koncie. Wcześniejsze subskrypcje pozostają w historii rozliczeń.',
     price: 'Cena',
-    billing_period: 'Okres rozliczeniowy',
-    list_price_note:
-      'Ceny nie obejmują podatków ani rabatów. Zmiany są rozliczane proporcjonalnie na następnej fakturze.',
+    next_charge: 'Następna płatność',
+    ends_on: 'Kończy się {{date}}',
     overdue_note:
       'Płatność jest zaległa. Jeśli pozostanie nieopłacona, subskrypcja może zostać wstrzymana, a jej płatne funkcje usunięte.',
-    cancel_on: 'Anulowanie zaplanowane na {{date}}',
     other_product: 'Inna subskrypcja',
     enterprise_invoices_description:
       'Faktury za Twoją umowę Enterprise. Wybierz fakturę, aby ją wyświetlić i pobrać fakturę lub potwierdzenie płatności.',

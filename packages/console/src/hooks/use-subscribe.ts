@@ -32,7 +32,7 @@ const useSubscribe = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const cloudApi = useCloudApi({ hideErrorToast: true });
   const { updateTenant } = useContext(TenantsContext);
-  const { mutateSubscriptionQuotaAndUsages, onCurrentSubscriptionUpdated } =
+  const { currentSubscription, mutateSubscriptionQuotaAndUsages, onCurrentSubscriptionUpdated } =
     useContext(SubscriptionDataContext);
 
   const { getUrl } = useTenantPathname();
@@ -64,7 +64,9 @@ const useSubscribe = () => {
     ).href;
 
     try {
-      const customerChoice = await chooseBillingCustomer(tenantId);
+      const customerChoice = await chooseBillingCustomer(
+        tenantId ? currentSubscription : undefined
+      );
 
       if (!customerChoice) {
         return false;

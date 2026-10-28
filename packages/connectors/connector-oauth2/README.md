@@ -106,6 +106,7 @@ Each social identity provider could have their own variant on OAuth standard pro
 | scope                     | string                 | false    |
 | customConfig              | Record<string, string> | false    |
 | profileMap                | ProfileMap             | false    |
+| disableEmailSync          | boolean                | false    |
 
 | ProfileMap fields | Type   | Required | Default value |
 |-------------------|--------|----------|---------------|
@@ -114,6 +115,14 @@ Each social identity provider could have their own variant on OAuth standard pro
 | avatar            | string | false    | avatar        |
 | email             | string | false    | email         |
 | phone             | string | false    | phone         |
+
+### Disable email sync
+
+The OAuth 2.0 standard carries no verification state for an email address, so whatever the user info endpoint maps to `email` is taken at face value — it is only as trustworthy as the provider returning it.
+
+Logto syncs that address to the user profile, where it serves as a user identifier. This switch stops it from doing so. It is off by default. Turn it on to leave the raw value in `rawData` only and source the email elsewhere.
+
+Consider turning it on when the provider does not verify email ownership, or when users can change their email address at the provider without re-verifying it.
 
 ## General settings
 

@@ -17,6 +17,7 @@ import {
   verifySocialVerification,
 } from '@/apis/experience';
 import useSessionStorage, { StorageKeys } from '@/hooks/use-session-storages';
+import useToast from '@/hooks/use-toast';
 import { generateState, storeState } from '@/utils/social-connectors';
 import { storeRedirectContext } from '@/utils/social-redirect-fallback-context';
 
@@ -71,6 +72,8 @@ const verificationIdsMap = {
   [VerificationType.Social]: 'foo',
   [VerificationType.EnterpriseSso]: 'bar',
 };
+
+const ToastProbe = () => <div>{useToast().toast}</div>;
 
 const createRequestError = (body: RequestErrorBody) => {
   const response = {
@@ -246,10 +249,9 @@ describe('SocialCallbackPage — social sign-in', () => {
   describe('direct sign-in abort', () => {
     const connectorId = socialConnectors[0]!.id;
 
-    it('should abort back to the client when the social callback fails', async () => {
+    const renderFailedCallback = () => {
       const state = generateState();
       storeState(state, connectorId);
-      mockedGetDirectSignIn.mockResolvedValueOnce({ directSignIn: 'social:mock-social' });
       mockedVerifySocialVerification.mockRejectedValueOnce(
         createRequestError({
           code: 'connector.general',
@@ -263,21 +265,38 @@ describe('SocialCallbackPage — social sign-in', () => {
         jest.fn(),
       ]);
 
-      renderWithPageContext(
+      return renderWithPageContext(
         <SettingsProvider>
           <UserInteractionContextProvider>
+            <ToastProbe />
             <Routes>
               <Route path="/callback/social/:connectorId" element={<SocialCallback />} />
+              <Route path="/sign-in" element={<div>Sign in page</div>} />
             </Routes>
           </UserInteractionContextProvider>
         </SettingsProvider>,
         { initialEntries: [`/callback/social/${connectorId}`] }
       );
+    };
+
+    it('should abort back to the client without a toast when the social callback fails', async () => {
+      mockedGetDirectSignIn.mockResolvedValueOnce({ directSignIn: 'social:mock-social' });
+
+      const { queryByText } = renderFailedCallback();
 
       await waitFor(() => {
         expect(mockedAbortInteraction).toHaveBeenCalledWith('connector.general');
         expect(mockRedirectTo).toHaveBeenCalledWith('/client-callback');
       });
+      expect(queryByText('Connector error.')).toBeNull();
+    });
+
+    it('should show the toast on the hosted sign-in page when not a direct sign-in', async () => {
+      const { findByText } = renderFailedCallback();
+
+      expect(await findByText('Sign in page')).not.toBeNull();
+      expect(await findByText('Connector error.')).not.toBeNull();
+      expect(mockedAbortInteraction).not.toHaveBeenCalled();
     });
   });
 

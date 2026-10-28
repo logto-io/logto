@@ -39,9 +39,13 @@ const buildConfig = (mode: string): UserConfig => ({
     },
   },
   build: {
-    // Use the same browserslist configuration as in README.md.
+    // Keep explicit iOS and Safari floors: "last 2 versions" moves with caniuse-lite data, which
+    // previously raised the target past Safari 16.4 and emitted syntax that blanks the sign-in
+    // page on older iOS devices (e.g. class static blocks).
     // Consider using the esbuild target directly in the future.
-    target: browserslistToEsbuild('> 0.5%, last 2 versions, Firefox ESR, not dead'),
+    target: browserslistToEsbuild(
+      '> 0.5%, last 2 versions, Firefox ESR, not dead, iOS >= 15, Safari >= 15'
+    ),
     rollupOptions: {
       output: {
         // Tip: You can use `pnpx vite-bundle-visualizer` to analyze the bundle size

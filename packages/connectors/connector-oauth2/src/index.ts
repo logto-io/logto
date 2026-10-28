@@ -62,8 +62,16 @@ const _getUserInfo = async (
     });
 
     const rawData = parseJsonObject(await httpResponse.text());
+    const { email, ...userProfile } = userProfileMapping(rawData, config.profileMap);
 
-    return { ...userProfileMapping(rawData, config.profileMap), rawData };
+    return {
+      ...userProfile,
+      // Spread rather than assign: `userProfileMapping` omits the key when the provider returned
+      // nothing, and an explicit `email: undefined` would overwrite that absence for consumers
+      // that merge this profile.
+      ...conditional(!config.disableEmailSync && email && { email }),
+      rawData,
+    };
   } catch (error: unknown) {
     if (error instanceof HTTPError) {
       throw new ConnectorError(ConnectorErrorCodes.General, await error.response.text());

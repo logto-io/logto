@@ -15,6 +15,7 @@ import {
   signInWithSso,
 } from '@/apis/experience';
 import useSessionStorage, { StorageKeys } from '@/hooks/use-session-storages';
+import useToast from '@/hooks/use-toast';
 import { type SignInExperienceResponse } from '@/types';
 import { generateState, storeState } from '@/utils/social-connectors';
 import { storeRedirectContext } from '@/utils/social-redirect-fallback-context';
@@ -69,6 +70,8 @@ const sieSettings: SignInExperienceResponse = {
   ...mockSignInExperienceSettings,
   ssoConnectors: mockSsoConnectors,
 };
+
+const ToastProbe = () => <div>{useToast().toast}</div>;
 
 const createRequestError = (body: RequestErrorBody) => {
   const response = {
@@ -199,7 +202,7 @@ describe('SocialCallbackPage — single sign-on', () => {
       });
     });
 
-    it('should abort back to the client when the SSO callback fails', async () => {
+    it('should abort back to the client without a toast when the SSO callback fails', async () => {
       const state = generateState();
       storeState(state, connectorId);
       mockedGetDirectSignIn.mockResolvedValueOnce({ directSignIn: `sso:${connectorId}` });
@@ -216,9 +219,10 @@ describe('SocialCallbackPage — single sign-on', () => {
         jest.fn(),
       ]);
 
-      renderWithPageContext(
+      const { queryByText } = renderWithPageContext(
         <SettingsProvider settings={sieSettings}>
           <UserInteractionContextProvider>
+            <ToastProbe />
             <Routes>
               <Route path="/callback/social/:connectorId" element={<SocialCallback />} />
             </Routes>
@@ -231,6 +235,7 @@ describe('SocialCallbackPage — single sign-on', () => {
         expect(mockedAbortInteraction).toHaveBeenCalledWith('connector.general');
         expect(mockRedirectTo).toHaveBeenCalledWith('/client-callback');
       });
+      expect(queryByText('Connector error.')).toBeNull();
     });
   });
 

@@ -142,6 +142,8 @@ const sign_in_exp = {
           title: 'セキュリティ検証',
           description:
             'セキュリティ設定を変更する前に、ユーザーは本人確認を行い、有効期限 10 分の検証レコード ID を取得する必要があります。検証方法（メール、電話、パスワード）を有効にするには、下記の Account API 権限を<strong>閲覧のみ</strong>（最低限）または<strong>編集</strong>に設定し、ユーザーが設定済みかどうかをシステムが検出できるようにしてください。<a>詳細</a>',
+          description_step_up:
+            'セキュリティ設定を変更する前に、組み込みの Account Center では最近のサインインが必要です。現在のサインインが設定された最近の認証期間より古い場合、Account Center は OIDC step-up を開始し、ユーザーに本人確認を求めます。ユーザーが Account Center で確認方法（メール、電話、パスワード）を表示または管理できるようにするには、下記の対応する Account API 権限を<strong>閲覧のみ</strong>または<strong>編集</strong>に設定してください。これらの機密性の高い操作では、Account API を直接呼び出すアプリは引き続き検証レコード ID を使用できます。<a>詳細</a>',
         },
         groups: {
           identifiers: {

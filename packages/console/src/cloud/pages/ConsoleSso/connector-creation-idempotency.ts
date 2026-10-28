@@ -8,6 +8,16 @@ const pendingConnectorCreationGuard = z.object({
   enterpriseId: z.string().min(1).optional(),
   subscriptionId: z.string().optional(),
   checkoutKey: z.string().optional(),
+  /**
+   * The billing Customer choice sent with every Checkout request for `checkoutKey`; `{}` means the
+   * default Customer. Saved before the first request, so a retry never asks again or sends another.
+   */
+  customerChoice: z
+    .object({
+      customerId: z.string().min(1).optional(),
+      newCustomer: z.literal(true).optional(),
+    })
+    .optional(),
   sessionId: z.string().optional(),
 });
 export type PendingConnectorCreation = z.infer<typeof pendingConnectorCreationGuard>;
@@ -36,6 +46,16 @@ export const readPendingConnectorCreation = (userId: string) => {
   } catch {}
 };
 
+const isSameCustomerChoice = (
+  left: PendingConnectorCreation['customerChoice'],
+  right: PendingConnectorCreation['customerChoice']
+) =>
+  left === right ||
+  (left !== undefined &&
+    right !== undefined &&
+    left.customerId === right.customerId &&
+    left.newCustomer === right.newCustomer);
+
 /** Ignore results from an operation or payment attempt replaced in another tab. */
 export const isPendingConnectorCreationCurrent = (
   userId: string,
@@ -48,6 +68,7 @@ export const isPendingConnectorCreationCurrent = (
     current.funding === operation.funding &&
     current.enterpriseId === operation.enterpriseId &&
     current.checkoutKey === operation.checkoutKey &&
+    isSameCustomerChoice(current.customerChoice, operation.customerChoice) &&
     current.sessionId === operation.sessionId &&
     current.subscriptionId === operation.subscriptionId
   );

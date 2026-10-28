@@ -48,9 +48,7 @@ const maximumAuthenticationFreshnessMarginSeconds = 60;
  * and allows a future `auth_time` this far ahead when the client clock runs behind the
  * authorization server. Always leaves room to reuse a context.
  */
-export const getAuthenticationFreshnessMarginSeconds = (
-  maximumAuthenticationAgeInSeconds: number
-) =>
+const getAuthenticationFreshnessMarginSeconds = (maximumAuthenticationAgeInSeconds: number) =>
   Math.max(
     1,
     Math.min(
@@ -84,6 +82,9 @@ const subpageFormGraceSeconds = 300;
  * form grace inside the tenant window, while never accepting a context older than the inline
  * freshness threshold. The margin is kept as a floor so the shortest tenant window still reuses
  * the context it has just obtained.
+ *
+ * This is the age the entry guard accepts; the step-up it starts requests a stricter `max_age`,
+ * see {@link getSubpageStepUpMaxAgeSeconds}.
  */
 export const getSubpageAuthenticationMaxAgeSeconds = (
   maximumAuthenticationAgeInSeconds: number
@@ -96,12 +97,26 @@ export const getSubpageAuthenticationMaxAgeSeconds = (
     )
   );
 
-/** The proactive step-up of a standalone subpage; `max_age` matches its entry threshold. */
+/**
+ * The `max_age` to request for a subpage entry step-up. It stays one clock-skew margin below the
+ * entry cutoff: a browser clock that runs ahead of the authorization server makes Account Center
+ * consider a context stale while the server still considers it fresh, and a request that matches
+ * the cutoff would then be answered by silently reusing the very context the restored page
+ * rejects.
+ */
+export const getSubpageStepUpMaxAgeSeconds = (maximumAuthenticationAgeInSeconds: number): number =>
+  Math.max(
+    0,
+    getSubpageAuthenticationMaxAgeSeconds(maximumAuthenticationAgeInSeconds) -
+      getAuthenticationFreshnessMarginSeconds(maximumAuthenticationAgeInSeconds)
+  );
+
+/** The proactive step-up of a standalone subpage; `max_age` is stricter than its entry cutoff. */
 export const getSubpageStepUpChallenge = (
   maximumAuthenticationAgeInSeconds: number
 ): StepUpChallenge => ({
   acrValues: LogtoAcr.FirstFactor,
-  maxAge: String(getSubpageAuthenticationMaxAgeSeconds(maximumAuthenticationAgeInSeconds)),
+  maxAge: String(getSubpageStepUpMaxAgeSeconds(maximumAuthenticationAgeInSeconds)),
 });
 
 /**
@@ -177,19 +192,18 @@ export const hasFreshFirstFactorAuthentication = (
 };
 
 /**
- * Whether the ID token carries a first-factor authentication context no older than
- * `maxAgeSeconds`.
+ * Whether the ID token carries a first-factor authentication context no older than the entry
+ * cutoff of a standalone subpage.
  *
- * `maxAgeSeconds` is already the final cutoff, such as a subpage entry threshold; it is not a
- * tenant policy window with its own freshness margin. `clockSkewSeconds` is the tenant window's
- * allowance for a client clock that runs behind the authorization server, so a token a step-up has
- * just issued is not rejected for an `auth_time` a few seconds in the future. It is passed
- * separately because deriving it from the cutoff leaves the shortest window a few seconds only.
+ * The cutoff is the final age limit, so it is compared directly. Only the future side uses the
+ * tenant window's clock-skew margin: `auth_time` comes from the authorization server while `now`
+ * comes from the browser, and deriving that margin from the already-derived cutoff would shrink
+ * the allowance to a few seconds at the shortest tenant window, rejecting the token a completed
+ * step-up has just issued.
  */
-export const hasFreshAuthenticationContext = (
+export const hasFreshSubpageAuthenticationContext = (
   claims: Record<string, unknown> | undefined,
-  maxAgeSeconds: number,
-  clockSkewSeconds: number,
+  maximumAuthenticationAgeInSeconds: number,
   now = Date.now()
 ): boolean => {
   const ageSeconds = getAuthenticationAgeSeconds(claims, now);
@@ -198,7 +212,12 @@ export const hasFreshAuthenticationContext = (
     return false;
   }
 
-  return ageSeconds >= -clockSkewSeconds && ageSeconds <= maxAgeSeconds;
+  const marginSeconds = getAuthenticationFreshnessMarginSeconds(maximumAuthenticationAgeInSeconds);
+
+  return (
+    ageSeconds >= -marginSeconds &&
+    ageSeconds <= getSubpageAuthenticationMaxAgeSeconds(maximumAuthenticationAgeInSeconds)
+  );
 };
 
 const authParameterPattern =

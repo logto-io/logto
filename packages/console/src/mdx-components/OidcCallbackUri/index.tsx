@@ -1,5 +1,7 @@
+import { type SsoConnectorWithProviderConfig } from '@logto/schemas';
 import { useContext } from 'react';
 
+import { type ConsoleSsoConnector } from '@/cloud/types/router';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import { SsoConnectorContext } from '@/contexts/SsoConnectorContextProvider';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
@@ -9,14 +11,13 @@ import { applyDomain } from '@/utils/url';
 
 import styles from './index.module.scss';
 
-function OidcCallbackUri() {
-  const { ssoConnector } = useContext(SsoConnectorContext);
+function TenantOidcCallbackUri({
+  ssoConnector,
+}: {
+  readonly ssoConnector: SsoConnectorWithProviderConfig;
+}) {
   const { tenantEndpoint } = useContext(AppDataContext);
   const availableDomains = useAvailableDomains();
-
-  if (!ssoConnector) {
-    return null;
-  }
 
   const { id } = ssoConnector;
 
@@ -37,6 +38,42 @@ function OidcCallbackUri() {
       </div>
     </FormField>
   );
+}
+
+/** Console SSO connectors use the fixed redirect URI provided by Logto Cloud. */
+function ConsoleSsoOidcCallbackUri({
+  consoleSsoConnector,
+}: {
+  readonly consoleSsoConnector: ConsoleSsoConnector;
+}) {
+  return (
+    <FormField
+      title="enterprise_sso.basic_info.oidc.redirect_uri_field_name"
+      className={styles.inputField}
+    >
+      {consoleSsoConnector.redirectUri && (
+        <CopyToClipboard
+          displayType="block"
+          variant="border"
+          value={consoleSsoConnector.redirectUri}
+        />
+      )}
+    </FormField>
+  );
+}
+
+function OidcCallbackUri() {
+  const { ssoConnector, consoleSsoConnector } = useContext(SsoConnectorContext);
+
+  if (consoleSsoConnector) {
+    return <ConsoleSsoOidcCallbackUri consoleSsoConnector={consoleSsoConnector} />;
+  }
+
+  if (!ssoConnector) {
+    return null;
+  }
+
+  return <TenantOidcCallbackUri ssoConnector={ssoConnector} />;
 }
 
 export default OidcCallbackUri;

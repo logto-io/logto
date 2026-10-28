@@ -122,7 +122,7 @@ describe('<Password /> OIDC step-up', () => {
       clearTokens: false,
       extraParams: {
         acr_values: LogtoAcr.FirstFactor,
-        max_age: '300',
+        max_age: '240',
       },
     });
     expect(queryByText('account_center.password.title')).toBeNull();
@@ -165,7 +165,7 @@ describe('<Password /> OIDC step-up', () => {
       expect.objectContaining({
         extraParams: {
           acr_values: LogtoAcr.FirstFactor,
-          max_age: '300',
+          max_age: '240',
         },
       })
     );

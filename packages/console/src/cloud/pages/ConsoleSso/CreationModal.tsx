@@ -2,13 +2,17 @@ import { type consoleSsoRouter } from '@logto/cloud/routes';
 import { SsoProviderName } from '@logto/schemas';
 import { type GuardedResponse, type ResponseError, type RouterRoutes } from '@withtyped/client';
 import { useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import useSWR from 'swr';
 import { z } from 'zod';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
+import AddOnNoticeFooter from '@/components/AddOnNoticeFooter';
+import ContactUsPhraseLink from '@/components/ContactUsPhraseLink';
 import Skeleton from '@/components/CreateConnectorForm/Skeleton';
 import { getConnectorRadioGroupSize } from '@/components/CreateConnectorForm/utils';
+import { consoleSsoConnectorUnitPrice } from '@/consts/subscriptions';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -28,13 +32,14 @@ type Props = {
 };
 
 function CreationModal({ onClose, userId }: Props) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { show } = useConfirmModal();
   const api = useCloudApi<typeof consoleSsoRouter>({ hideErrorToast: true });
   const { operation, status, isSubmitting, create, startOver, billing } = useConnectorCreation(
     userId,
     onClose
   );
-  const { billingError, isBillingReady } = billing;
+  const { billingError, isBillingReady, funding, isFundingResolved } = billing;
   const {
     data: providers,
     error,
@@ -63,6 +68,14 @@ function CreationModal({ onClose, userId }: Props) {
   };
   const isProviderDisabled = (providerName: string) =>
     isSubmitting || Boolean(operation && operation.providerName !== providerName);
+  const isCreateButtonDisabled =
+    !providers?.some(({ providerName }) => providerName === selected) ||
+    Boolean(error) ||
+    Boolean(billingError) ||
+    !isBillingReady ||
+    status === 'payment_pending';
+  const isCreateButtonLoading =
+    isSubmitting || (!isBillingReady && !billingError) || status === 'payment_pending';
   const confirmStartOver = async () => {
     const [confirmed] = await show({
       title: 'cloud.console_sso.start_over',
@@ -90,21 +103,35 @@ function CreationModal({ onClose, userId }: Props) {
         title="cloud.console_sso.create"
         size="xlarge"
         footer={
-          <Button
-            title="enterprise_sso.create_modal.create_button_text"
-            type="primary"
-            disabled={
-              !providers?.some(({ providerName }) => providerName === selected) ||
-              Boolean(error) ||
-              Boolean(billingError) ||
-              !isBillingReady ||
-              status === 'payment_pending'
-            }
-            isLoading={
-              isSubmitting || (!isBillingReady && !billingError) || status === 'payment_pending'
-            }
-            onClick={submit}
-          />
+          // Connectors not covered by an Enterprise plan are charged to the user personally. Keep
+          // the notice while a known coverage revalidates (e.g., on window focus) to avoid flashing.
+          isFundingResolved && funding === 'personal' ? (
+            <AddOnNoticeFooter
+              buttonTitle="enterprise_sso.create_modal.create_button_text"
+              isCreateButtonDisabled={isCreateButtonDisabled}
+              isLoading={isCreateButtonLoading}
+              onClick={submit}
+            >
+              <Trans
+                components={{
+                  span: <span className={creationStyles.strong} />,
+                  a: <ContactUsPhraseLink />,
+                }}
+              >
+                {t('cloud.console_sso.creation_charge_notice', {
+                  price: consoleSsoConnectorUnitPrice,
+                })}
+              </Trans>
+            </AddOnNoticeFooter>
+          ) : (
+            <Button
+              title="enterprise_sso.create_modal.create_button_text"
+              type="primary"
+              disabled={isCreateButtonDisabled}
+              isLoading={isCreateButtonLoading}
+              onClick={submit}
+            />
+          )
         }
         onClose={() => {
           if (!isSubmitting) {

@@ -10,13 +10,13 @@
       "put": {
         "operationId": "InitInteraction",
         "summary": "Init new interaction",
-        "description": "Init a new experience interaction with the given interaction type. Any existing interaction data will be cleared. When the login prompt carries a step-up authentication context (an authenticated session that does not satisfy the requested `acr_values`), the interaction pins the session subject; if the pinned user has no method that can reach the selected authentication context class, the interaction is finished with `unmet_authentication_requirements` and a redirect URL is returned instead.",
+        "description": "Init a new experience interaction with the given interaction type. Any existing interaction data will be cleared. When the login prompt carries a step-up authentication context (an authenticated session that does not satisfy the requested `acr_values`), the interaction pins the session subject. If the session already satisfies the class the step-up pursues and the request forces no fresh authentication, the interaction is finished with the session's context untouched and a redirect URL is returned. If the pinned user has no method that can reach that class, the interaction is finished with `unmet_authentication_requirements` and a redirect URL is returned instead.",
         "responses": {
           "204": {
             "description": "A new experience interaction has been successfully initiated."
           },
           "200": {
-            "description": "The step-up interaction was finished with `unmet_authentication_requirements` because the pinned user has no method that can reach the requested authentication context; follow `redirectTo` to return to the application."
+            "description": "The step-up interaction was finished without UI and a redirect URL is returned. Either the session already satisfies the class the step-up pursues, so `acr`, `amr`, and `auth_time` stay as recorded, or the pinned user has no method that can reach it and the request is answered with `unmet_authentication_requirements`; follow `redirectTo` to return to the application."
           },
           "400": {
             "description": "A step-up interaction was requested with a non-sign-in event, or the session has no subject to pin."
@@ -34,7 +34,7 @@
       "put": {
         "operationId": "UpdateInteractionEvent",
         "summary": "Update interaction event",
-        "description": "Update the current experience interaction event to the given event type. This API is used to switch the interaction event between `SignIn` and `Register`, while keeping all the verification records data.",
+        "description": "Update the current experience interaction event to the given event type. This API is used to switch the interaction event between `SignIn` and `Register`. The verification records are kept, but any user already identified in this interaction is discarded, along with everything staged against that identification: the pending profile data, any MFA factor bound in this interaction, and the trusted-device opt-in. Identify the user again before submitting. A verification record answers only for the account it was made against, so it cannot identify a different user after the switch.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -136,7 +136,6 @@
         "operationId": "AbortInteraction",
         "summary": "Abort interaction",
         "description": "Finish the current interaction with an `access_denied` OAuth error and return the URL that resumes the OIDC flow. Following it redirects the user agent back to the client's redirect URI with the error, preserving the authorization request's `state` and `iss`. The endpoint works at any interaction step, including consent, and is intended for flows where the client application owns the user-facing UI, so an abort surfaces there instead of on the hosted experience.",
-        "tags": ["Dev feature"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -167,7 +166,6 @@
         "operationId": "GetDirectSignIn",
         "summary": "Get the direct sign-in target of the current interaction",
         "description": "Return the `direct_sign_in` value carried by the current interaction's authorization request, or an empty object when the interaction did not start from direct sign-in. The value is read from the interaction's OIDC parameters, so it is scoped to this interaction and remains available even before the experience interaction is initialized. Used by the hosted experience to return a failed direct sign-in to the client application instead of falling back to the hosted sign-in page.",
-        "tags": ["Dev feature"],
         "responses": {
           "200": {
             "description": "The direct sign-in target has been retrieved, if any."

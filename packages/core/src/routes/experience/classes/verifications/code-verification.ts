@@ -353,6 +353,10 @@ export const createSubjectCodeVerificationRecord = (
 
 /**
  * Factory method to create a new `MfaEmailCodeVerification` / `MfaPhoneCodeVerification` record using the given identifier.
+ *
+ * @param userId The user the identifier was resolved from. An MFA challenge is created for one
+ * account and answers for that account only, so the record names its owner and `MfaValidator`
+ * counts it for no other. The other MFA record types already require one.
  */
 export const createNewMfaCodeVerificationRecord = (
   libraries: Libraries,
@@ -360,7 +364,7 @@ export const createNewMfaCodeVerificationRecord = (
   identifier:
     | VerificationCodeIdentifier<SignInIdentifier.Email>
     | VerificationCodeIdentifier<SignInIdentifier.Phone>,
-  verified = false
+  { userId, verified = false }: { userId?: string; verified?: boolean }
 ): MfaEmailCodeVerification | MfaPhoneCodeVerification => {
   const { type } = identifier;
 
@@ -372,6 +376,7 @@ export const createNewMfaCodeVerificationRecord = (
         identifier,
         templateType: TemplateType.MfaVerification,
         verified,
+        ...conditional(userId && { userId }),
       });
     }
     case SignInIdentifier.Phone: {
@@ -381,6 +386,7 @@ export const createNewMfaCodeVerificationRecord = (
         identifier,
         templateType: TemplateType.MfaVerification,
         verified,
+        ...conditional(userId && { userId }),
       });
     }
   }

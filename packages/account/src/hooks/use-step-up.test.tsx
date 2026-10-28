@@ -114,7 +114,7 @@ describe('useStepUpEntry', () => {
     expect(mockSignIn).not.toHaveBeenCalled();
   });
 
-  it('starts an entry step-up with the subpage max_age when the context is stale', async () => {
+  it('steps up stricter than the entry cutoff when the context is stale', async () => {
     mockGetIdTokenClaims.mockResolvedValue(createClaims(now - 301));
 
     const { result } = renderHook(() => useStepUpEntry({ enabled: true }), {
@@ -129,7 +129,7 @@ describe('useStepUpEntry', () => {
       clearTokens: false,
       extraParams: {
         acr_values: LogtoAcr.FirstFactor,
-        max_age: '300',
+        max_age: '240',
       },
     });
     expect(accountStorage.pendingStepUp.get()).toMatchObject({
@@ -153,7 +153,9 @@ describe('useStepUpEntry', () => {
       expect.objectContaining({
         extraParams: {
           acr_values: LogtoAcr.FirstFactor,
-          max_age: '15',
+          // The entry cutoff is 15 seconds and the skew margin is 15 seconds, so the step-up
+          // always prompts instead of letting the provider reuse a context the page rejects.
+          max_age: '0',
         },
       })
     );
@@ -229,18 +231,39 @@ describe('useStepUpEntry', () => {
     expect(result.current.isResumed).toBe(true);
     expect(mockSignIn).not.toHaveBeenCalled();
   });
+
+  it('accepts a completed step-up at the shortest window when the clock is behind', async () => {
+    prepareResumableStepUp();
+    // A token issued five seconds in the future: `auth_time` comes from the authorization server,
+    // and the browser clock that compares it may run behind.
+    mockGetIdTokenClaims.mockResolvedValue(createClaims(Math.floor(Date.now() / 1000) + 5));
+
+    const { result } = renderHook(() => useStepUpEntry({ enabled: true }), {
+      wrapper: createWrapper(60),
+    });
+
+    await waitFor(() => {
+      expect(result.current.isReady).toBe(true);
+    });
+    expect(result.current.hasFailed).toBe(false);
+    expect(result.current.isResumed).toBe(true);
+    expect(mockSignIn).not.toHaveBeenCalled();
+  });
 });
 
 describe('subpage entry challenge', () => {
   it.each([
-    [60, 15],
-    [600, 300],
-    [7200, 6900],
-  ])('derives the entry max age for a %p second window', (window, expected) => {
-    expect(getSubpageAuthenticationMaxAgeSeconds(window)).toBe(expected);
-    expect(getSubpageStepUpChallenge(window)).toEqual({
-      acrValues: LogtoAcr.FirstFactor,
-      maxAge: String(expected),
-    });
-  });
+    [60, 15, 0],
+    [600, 300, 240],
+    [7200, 6900, 6840],
+  ])(
+    'derives the entry cutoff and the stricter step-up max_age for a %p second window',
+    (window, cutoff, maxAge) => {
+      expect(getSubpageAuthenticationMaxAgeSeconds(window)).toBe(cutoff);
+      expect(getSubpageStepUpChallenge(window)).toEqual({
+        acrValues: LogtoAcr.FirstFactor,
+        maxAge: String(maxAge),
+      });
+    }
+  );
 });

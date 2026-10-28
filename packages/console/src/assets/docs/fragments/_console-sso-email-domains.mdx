@@ -1,0 +1,14 @@
+import Step from '@/mdx-components/Step';
+
+<Step index={props.index} title="Verify email domains and bind them to the SSO connector">
+
+Provide the email `domains` of your organization on the connector `SSO Experience` tab. Unlike tenant-level enterprise SSO, each domain must pass an ownership check before it can be used for Console SSO:
+
+1. Make sure the `Connection` settings are completed and saved. A domain can't be bound until the connector is configured.
+2. Enter your email domain (e.g. `yourcompany.com`) and click `Add domain`. Logto generates a DNS `TXT` record for the domain.
+3. Add the `TXT` record to the DNS provider of your domain. Logto checks the record automatically, and DNS changes may take some time to take effect.
+4. Once the domain ownership is verified, Logto binds the domain to the SSO connector automatically and its status changes to `Bound`.
+
+After the domain is bound, users signing in to Logto Console with email addresses in that domain will be guided to your identity provider for single sign-on.
+
+</Step>

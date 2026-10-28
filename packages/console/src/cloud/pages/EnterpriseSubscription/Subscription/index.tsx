@@ -10,6 +10,7 @@ import FormCard from '@/components/FormCard';
 import PageMeta from '@/components/PageMeta';
 import CardTitle from '@/ds-components/CardTitle';
 import FormField from '@/ds-components/FormField';
+import { getUpcomingBillAmount } from '@/utils/upcoming-invoice';
 
 import AddOnTable from './AddOnTable';
 import BillInfo from './BillInfo';
@@ -47,9 +48,10 @@ function Subscription(props: Props) {
     }
   );
 
-  const upcomingBill = useMemo(() => {
-    return data?.subscription?.upcomingInvoice?.subtotal ?? 0;
-  }, [data?.subscription?.upcomingInvoice?.subtotal]);
+  const upcomingBill = useMemo(
+    () => getUpcomingBillAmount(data?.subscription?.upcomingInvoice) ?? 0,
+    [data?.subscription?.upcomingInvoice]
+  );
 
   return (
     <div className={styles.container}>

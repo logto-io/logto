@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSWRConfig } from 'swr';
 
 import { toastResponseError, useCloudApi } from '@/cloud/hooks/use-cloud-api';
+import { useBillingCustomerChoice } from '@/hooks/use-billing-customer-choice';
 
 import {
   clearPendingConnectorCreation,
@@ -17,6 +18,7 @@ import {
 import {
   abandonConnectorCreation,
   continueConnectorCreation,
+  discardCanceledConnectorCreation,
   selectCreationFunding,
 } from './creation-billing';
 import { useConsoleSsoConnectors } from './use-console-sso';
@@ -30,6 +32,7 @@ export const useConnectorCreation = (userId: string, onClose: (id?: string) => v
   const { mutate } = useConsoleSsoConnectors();
   const [operation, setOperation] = useState(() => readPendingConnectorCreation(userId));
   const billing = useCreationBilling(operation);
+  const { chooseBillingCustomer } = useBillingCustomerChoice();
   const { mutate: mutateCache } = useSWRConfig();
   const [status, setStatus] = useState<
     'open' | 'expired' | 'payment_pending' | 'payment_received' | 'error'
@@ -122,6 +125,7 @@ export const useConnectorCreation = (userId: string, onClose: (id?: string) => v
           continueConnectorCreation(userId, current, getApi, {
             restartExpired: redirect,
             signal: controller.signal,
+            chooseBillingCustomer,
           }),
           new Promise<never>((_resolve, reject) => {
             controller.signal.addEventListener(
@@ -139,6 +143,12 @@ export const useConnectorCreation = (userId: string, onClose: (id?: string) => v
         if (!isPendingConnectorCreationCurrent(userId, result.operation)) {
           setStatus('error');
           onClose();
+          return;
+        }
+        if (result.status === 'canceled') {
+          discardCanceledConnectorCreation(userId, result.operation);
+          // A restarted expired session set `payment_pending`, but no payment is pending now.
+          setStatus(undefined);
           return;
         }
         if (result.status === 'created') {
@@ -176,7 +186,7 @@ export const useConnectorCreation = (userId: string, onClose: (id?: string) => v
         activeCheck.current = undefined;
       }
     },
-    [getApi, isMounted, onClose, refresh, syncOperation, userId]
+    [chooseBillingCustomer, getApi, isMounted, onClose, refresh, syncOperation, userId]
   );
 
   useEffect(() => {

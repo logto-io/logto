@@ -66,22 +66,27 @@ export enum AuthenticationContextMode {
  * The authentication context the OIDC interaction policy writes into the login prompt details
  * when the authorization request carries supported `acr_values`. Experience reads it at
  * interaction creation; `interactions.url` routes on {@link RequestedAuthenticationContext.mode}.
+ *
+ * The list is an ordered preference, never a pinned value: the class the interaction pursues is
+ * derived on every read from the requested list and the subject's reachable methods, so nothing
+ * here records a selection.
  */
 export type RequestedAuthenticationContext = {
   /** The supported classes from `acr_values`, in the caller's order. */
   requestedAcrValues: LogtoAcr[];
   /**
-   * The first requested class, the minimum the interaction must reach. Present only in step-up
-   * mode; a sign-in without a session applies the same selection rule once the user is identified.
+   * Whether the request itself forces a fresh authentication event: `prompt=login`, which the
+   * provider also sets for `max_age=0`, or a `max_age` the session does not meet. The context the
+   * session already carries then never finishes the interaction on its own.
    */
-  selectedAcr?: LogtoAcr;
+  reauthenticationRequired?: boolean;
   /** Present only when an authenticated session pins the subject. */
   mode?: AuthenticationContextMode;
 };
 
 export const requestedAuthenticationContextGuard = z.object({
   requestedAcrValues: z.nativeEnum(LogtoAcr).array(),
-  selectedAcr: z.nativeEnum(LogtoAcr).optional(),
+  reauthenticationRequired: z.boolean().optional(),
   mode: z.nativeEnum(AuthenticationContextMode).optional(),
 }) satisfies ToZodObject<RequestedAuthenticationContext>;
 

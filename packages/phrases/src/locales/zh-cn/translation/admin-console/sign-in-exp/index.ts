@@ -138,6 +138,8 @@ const sign_in_exp = {
           title: '安全验证',
           description:
             '在更改安全设置之前，用户必须验证身份以获取有效期 10 分钟的验证记录 ID。要启用验证方式（邮箱、手机、密码），请将下方的 Account API 权限设置为<strong>只读</strong>（最低要求）或<strong>编辑</strong>，以便系统检测用户是否已配置。<a>了解更多</a>',
+          description_step_up:
+            '更改安全设置前，内置 Account Center 要求用户最近登录过。如果当前登录时间早于配置的最近身份验证时间窗口，Account Center 会发起 OIDC step-up，并要求用户验证身份。要允许用户在 Account Center 中查看或管理验证方式（邮箱、手机或密码），请将下方对应的 Account API 权限设置为<strong>只读</strong>或<strong>可编辑</strong>。对于这些敏感操作，直接调用 Account API 的应用仍可使用验证记录 ID。<a>了解更多</a>',
         },
         groups: {
           identifiers: {

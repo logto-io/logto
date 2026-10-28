@@ -25,6 +25,9 @@ export const rbacEnabledAddOnUnitPrice = 32;
 export const customDomainAddOnUnitPrice = 48;
 /* === Add-on unit price (in USD) === */
 
+/** Unit price (in USD) of a personally billed Console SSO connector. */
+export const consoleSsoConnectorUnitPrice = 128;
+
 /**
  * The order of plans in the plan selection content component.
  * Unlike the `featuredPlanIds`, include both grandfathered plans and public visible featured plans.

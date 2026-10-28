@@ -8,7 +8,11 @@ concurrency: ${{ github.workflow }}
 
 jobs:
   report-coverage:
-    runs-on: ubuntu-latest
+    # Same Playwright incompatibility as `main-test` in `main.yml`: there is no browser build
+    # for the `ubuntu-26.04` image that `ubuntu-latest` now resolves to, so
+    # `playwright install --with-deps` fails before any test runs. Pin the image until
+    # Playwright ships support.
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v4

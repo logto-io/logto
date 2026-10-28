@@ -1,29 +1,36 @@
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 
+import Tip from '@/assets/icons/tip.svg?react';
 import { useUserSubscriptions } from '@/cloud/hooks/use-user-subscriptions';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import FormCard from '@/components/FormCard';
-import ItemPreview from '@/components/ItemPreview';
 import DynamicT from '@/ds-components/DynamicT';
+import IconButton from '@/ds-components/IconButton';
 import InlineNotification from '@/ds-components/InlineNotification';
 import Table from '@/ds-components/Table';
 import Tag from '@/ds-components/Tag';
-import { formatPeriod } from '@/utils/subscription';
+import { ToggleTip } from '@/ds-components/Tip';
 
+import ManagePaymentButton from './ManagePaymentButton';
 import styles from './index.module.scss';
 import {
+  formatCurrencyAmount,
   formatPriceInterval,
   formatUnitPrice,
+  getNextCharge,
   getProductTitleKey,
-  getScheduledCancellation,
-  statusTagMap,
+  isCurrentSubscription,
+  isPaymentOverdue,
 } from './utils';
+
+const formatDate = (date: Date) => dayjs(date).format('MMM D, YYYY');
 
 function PersonalSubscriptions() {
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error, isLoading, mutate } = useUserSubscriptions();
-  const isOverdue = data?.some(({ status }) => status === 'past_due' || status === 'unpaid');
+  const subscriptions = data?.filter((subscription) => isCurrentSubscription(subscription));
+  const isOverdue = subscriptions?.some((subscription) => isPaymentOverdue(subscription));
 
   return (
     <FormCard
@@ -33,7 +40,7 @@ function PersonalSubscriptions() {
       <Table
         hasBorder
         isRowHoverEffectDisabled
-        rowGroups={[{ key: 'subscriptions', data }]}
+        rowGroups={[{ key: 'subscriptions', data: subscriptions }]}
         rowIndexKey="id"
         isLoading={isLoading}
         errorMessage={error?.message}
@@ -42,11 +49,14 @@ function PersonalSubscriptions() {
           {
             title: t('enterprise_subscription.subscription.basic_plan_column_title.product'),
             dataIndex: 'id',
-            render: ({ product }) => <ItemPreview title={t(getProductTitleKey(product))} />,
+            colSpan: 6,
+            // Plain text wraps; long localized product names must not be truncated.
+            render: ({ product }) => t(getProductTitleKey(product)),
           },
           {
             title: t('enterprise_subscription.user_subscriptions.price'),
             dataIndex: 'items',
+            colSpan: 5,
             render: ({ items }) =>
               items.length === 0
                 ? '—'
@@ -63,19 +73,40 @@ function PersonalSubscriptions() {
                   }),
           },
           {
-            title: t('subscription.billing_history.status_column'),
-            dataIndex: 'status',
+            title: (
+              <span className={styles.columnTitle}>
+                {t('enterprise_subscription.user_subscriptions.next_charge')}
+                <ToggleTip content={<DynamicT forKey="subscription.next_bill_tip" />}>
+                  <IconButton size="small" aria-label={t('general.learn_more')}>
+                    <Tip />
+                  </IconButton>
+                </ToggleTip>
+              </span>
+            ),
+            dataIndex: 'upcomingInvoice',
+            colSpan: 6,
             render: (subscription) => {
-              const scheduled = getScheduledCancellation(subscription);
+              const { amount, currency, chargeDate, endsAt } = getNextCharge(subscription);
               return (
                 <>
-                  <Tag type="state" status={statusTagMap[subscription.status]}>
-                    {t(`enterprise_subscription.user_subscriptions.status.${subscription.status}`)}
-                  </Tag>
-                  {scheduled && (
+                  <div className={styles.charge}>
+                    {amount === undefined
+                      ? '—'
+                      : formatCurrencyAmount(amount, currency, i18n.language)}
+                    {/* Only payment problems need a tag; an ending subscription already says so. */}
+                    {isPaymentOverdue(subscription) && (
+                      <Tag type="state" status="error">
+                        {t(
+                          `enterprise_subscription.user_subscriptions.status.${subscription.status}`
+                        )}
+                      </Tag>
+                    )}
+                  </div>
+                  {chargeDate && <div className={styles.note}>{formatDate(chargeDate)}</div>}
+                  {endsAt && (
                     <div className={styles.note}>
-                      {t('enterprise_subscription.user_subscriptions.cancel_on', {
-                        date: dayjs(scheduled).format('MMM D, YYYY'),
+                      {t('enterprise_subscription.user_subscriptions.ends_on', {
+                        date: formatDate(endsAt),
                       })}
                     </div>
                   )}
@@ -84,23 +115,20 @@ function PersonalSubscriptions() {
             },
           },
           {
-            title: t('enterprise_subscription.user_subscriptions.billing_period'),
-            dataIndex: 'currentPeriodEnd',
-            render: ({ currentPeriodStart, currentPeriodEnd }) =>
-              formatPeriod({
-                periodStart: currentPeriodStart,
-                periodEnd: currentPeriodEnd,
-                displayYear: true,
-              }),
+            title: null,
+            dataIndex: 'action',
+            colSpan: 4,
+            render: ({ id }) => (
+              <div className={styles.action}>
+                <ManagePaymentButton subscriptionId={id} />
+              </div>
+            ),
           },
         ]}
         onRetry={() => {
           void mutate();
         }}
       />
-      <p className={styles.note}>
-        <DynamicT forKey="enterprise_subscription.user_subscriptions.list_price_note" />
-      </p>
       {isOverdue && (
         <InlineNotification className={styles.alert} severity="alert">
           <DynamicT forKey="enterprise_subscription.user_subscriptions.overdue_note" />

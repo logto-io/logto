@@ -64,6 +64,8 @@ const cloud = {
       'Recomeçar pode eliminar a sua configuração de SSO incompleta. Pretende continuar?',
     resume_creation:
       'Foi encontrada uma criação incompleta. Continue com o mesmo fornecedor para recuperar este conector.',
+    creation_charge_notice:
+      'Cada conector de SSO da consola custa <span>US${{price, number}} por mês</span>. Para qualquer ajuda, não hesite em <a>contactar-nos</a>.',
   },
   general: {
     onboarding: 'Introdução',

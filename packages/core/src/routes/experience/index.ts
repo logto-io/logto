@@ -20,7 +20,6 @@ import { conditional, trySafe } from '@silverhand/essentials';
 import type Router from 'koa-router';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { assignInteractionResults } from '#src/libraries/session/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -81,8 +80,10 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
           redirectTo: z.string(),
         })
         .optional(),
-      // 200 is returned when a pure step-up cannot proceed and the interaction was finished with
-      // `unmet_authentication_requirements`; 400 is returned if a pure step-up cannot be created;
+      // 200 is returned when a pure step-up needs no UI and the interaction was finished here:
+      // either the session already satisfies the class it pursues (the client returns to the
+      // application with the session's context untouched), or the pinned user cannot reach it
+      // (`unmet_authentication_requirements`); 400 is returned if a pure step-up cannot be created;
       // 404 is returned if the pinned subject of a pure step-up no longer exists; 422 is returned
       // if the captcha verification fails
       status: [200, 204, 400, 404, 422],
@@ -105,19 +106,21 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
 
       ctx.experienceInteraction = experienceInteraction;
 
-      // A pure step-up whose pinned user has no method that can reach the selected class is
-      // finished here, and the client is sent back to the application with the OIDC error.
-      const redirectTo = await experienceInteraction.finishUnreachableStepUp();
+      // A pure step-up that needs no UI is finished here, before anything is rendered: either the
+      // session's context already satisfies the class it pursues, or the pinned user cannot reach
+      // that class at all. The latter is returned to the client as the OIDC error
+      // `unmet_authentication_requirements`.
+      const finished = await experienceInteraction.finishStepUpAtCreation();
 
-      if (redirectTo) {
+      if (finished) {
         log.append({
           interaction: experienceInteraction.toJson(),
           // The subject is pinned but unverified, so `identifiedUserId` is unset here.
           userId: experienceInteraction.subjectUserId,
-          error: 'unmet_authentication_requirements',
+          ...conditional(finished.unmet && { error: 'unmet_authentication_requirements' }),
         });
 
-        ctx.body = { redirectTo };
+        ctx.body = { redirectTo: finished.redirectTo };
         ctx.status = 200;
 
         return next();
@@ -240,71 +243,65 @@ export default function experienceApiRoutes<T extends AnonymousRouter>(
     }
   );
 
-  // DEV: Experience interaction abort.
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    experienceRouter.post(
-      experienceRoutes.abort,
-      koaGuard({
-        body: z.object({
-          // RFC 6749 §4.1.2.1 allows only %x20-21 / %x23-5B / %x5D-7E in `error_description`:
-          // printable ASCII without `"` (0x22) and `\` (0x5c). The explicit code point ranges
-          // keep the set unambiguous.
-          reason: z
-            .string()
-            .max(256)
-            .regex(/^[ !\u0023-\u005B\u005D-\u007E]*$/)
-            .optional(),
-        }),
-        response: z.object({
-          redirectTo: z.string(),
-        }),
-        status: [200, 400],
+  experienceRouter.post(
+    experienceRoutes.abort,
+    koaGuard({
+      body: z.object({
+        // RFC 6749 §4.1.2.1 allows only %x20-21 / %x23-5B / %x5D-7E in `error_description`:
+        // printable ASCII without `"` (0x22) and `\` (0x5c). The explicit code point ranges
+        // keep the set unambiguous.
+        reason: z
+          .string()
+          .max(256)
+          .regex(/^[ !\u0023-\u005B\u005D-\u007E]*$/)
+          .optional(),
       }),
-      async (ctx, next) => {
-        const { reason } = ctx.guard.body;
-
-        // Finish the interaction with a standard OAuth error, so the user agent returns to the
-        // client's redirect URI with the error, the original `state`, and `iss`. This only needs
-        // the provider interaction record, so it works at any step, including consent.
-        await assignInteractionResults(ctx, provider, {
-          error: 'access_denied',
-          ...conditional(reason && { error_description: reason }),
-        });
-
-        ctx.status = 200;
-
-        return next();
-      }
-    );
-  }
-
-  // DEV: Direct sign-in abort support.
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    experienceRouter.get(
-      experienceRoutes.directSignIn,
-      koaGuard({
-        status: [200],
-        response: z.object({
-          directSignIn: z.string().optional(),
-        }),
+      response: z.object({
+        redirectTo: z.string(),
       }),
-      async (ctx, next) => {
-        const params =
-          trySafe(() => extraParamsObjectGuard.parse(ctx.interactionDetails.params)) ?? {};
-        const directSignIn = params[ExtraParamsKey.DirectSignIn];
+      status: [200, 400],
+    }),
+    async (ctx, next) => {
+      const { reason } = ctx.guard.body;
 
-        // Read the OIDC request parameter directly instead of the experience interaction storage.
-        // The lookup must work before the interaction is initialized: a direct sign-in can fail
-        // while requesting the authorization URL, which is exactly when the experience storage
-        // does not exist yet.
-        ctx.set('Cache-Control', 'no-store');
-        ctx.body = { ...conditional(directSignIn && { directSignIn }) };
-        ctx.status = 200;
+      // Finish the interaction with a standard OAuth error, so the user agent returns to the
+      // client's redirect URI with the error, the original `state`, and `iss`. This only needs
+      // the provider interaction record, so it works at any step, including consent.
+      await assignInteractionResults(ctx, provider, {
+        error: 'access_denied',
+        ...conditional(reason && { error_description: reason }),
+      });
 
-        return next();
-      }
-    );
-  }
+      ctx.status = 200;
+
+      return next();
+    }
+  );
+
+  experienceRouter.get(
+    experienceRoutes.directSignIn,
+    koaGuard({
+      status: [200],
+      response: z.object({
+        directSignIn: z.string().optional(),
+      }),
+    }),
+    async (ctx, next) => {
+      const params =
+        trySafe(() => extraParamsObjectGuard.parse(ctx.interactionDetails.params)) ?? {};
+      const directSignIn = params[ExtraParamsKey.DirectSignIn];
+
+      // Read the OIDC request parameter directly instead of the experience interaction storage.
+      // The lookup must work before the interaction is initialized: a direct sign-in can fail
+      // while requesting the authorization URL, which is exactly when the experience storage
+      // does not exist yet.
+      ctx.set('Cache-Control', 'no-store');
+      ctx.body = { ...conditional(directSignIn && { directSignIn }) };
+      ctx.status = 200;
+
+      return next();
+    }
+  );
 
   experienceRouter.get(
     `${experienceRoutes.interaction}`,

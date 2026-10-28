@@ -94,6 +94,56 @@ describe('getUserInfo', () => {
     expect(userInfo).toStrictEqual({ id: userId, rawData: { sub: userId, foo: 'bar' } });
   });
 
+  it('should sync the mapped email by default', async () => {
+    const userId = 'userId';
+    const tokenEndpointUrl = new URL(mockConfig.tokenEndpoint);
+    nock(tokenEndpointUrl.origin)
+      .post(tokenEndpointUrl.pathname)
+      .query(true)
+      .reply(200, JSON.stringify({ access_token: 'access_token', token_type: 'bearer' }));
+    const userInfoEndpointUrl = new URL(mockConfig.userInfoEndpoint);
+    nock(userInfoEndpointUrl.origin)
+      .get(userInfoEndpointUrl.pathname)
+      .query(true)
+      .reply(200, { sub: userId, email: 'foo@example.com' });
+
+    const connector = await createConnector({ getConfig });
+    const userInfo = await connector.getUserInfo({ code: 'code' }, async () => ({
+      redirectUri: 'http://localhost:3001/callback',
+    }));
+
+    expect(userInfo).toStrictEqual({
+      id: userId,
+      email: 'foo@example.com',
+      rawData: { sub: userId, email: 'foo@example.com' },
+    });
+  });
+
+  it('should not return the email when email sync is disabled', async () => {
+    const userId = 'userId';
+    const tokenEndpointUrl = new URL(mockConfig.tokenEndpoint);
+    nock(tokenEndpointUrl.origin)
+      .post(tokenEndpointUrl.pathname)
+      .query(true)
+      .reply(200, JSON.stringify({ access_token: 'access_token', token_type: 'bearer' }));
+    const userInfoEndpointUrl = new URL(mockConfig.userInfoEndpoint);
+    nock(userInfoEndpointUrl.origin)
+      .get(userInfoEndpointUrl.pathname)
+      .query(true)
+      .reply(200, { sub: userId, email: 'foo@example.com' });
+
+    const connector = await createConnector({
+      getConfig: vi.fn().mockResolvedValue({ ...mockConfig, disableEmailSync: true }),
+    });
+    const userInfo = await connector.getUserInfo({ code: 'code' }, async () => ({
+      redirectUri: 'http://localhost:3001/callback',
+    }));
+
+    expect(userInfo.email).toBeUndefined();
+    // The address stays in `rawData` so an admin can still see what the provider returned.
+    expect(userInfo.rawData).toStrictEqual({ sub: userId, email: 'foo@example.com' });
+  });
+
   it('should accept a token response with an array `scope`', async () => {
     const userId = 'userId';
     const tokenEndpointUrl = new URL(mockConfig.tokenEndpoint);

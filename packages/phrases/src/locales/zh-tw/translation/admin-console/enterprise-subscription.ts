@@ -35,12 +35,11 @@ const enterprise_subscription = {
   user_subscriptions: {
     description: '檢視你的個人訂閱與 Enterprise 合約額度，不受目前所選租戶影響。',
     personal_title: '個人訂閱',
-    personal_description: '由你的帳戶支付的訂閱，包括歷史訂閱。',
+    personal_description: '由你的帳戶支付的有效訂閱。歷史訂閱保留在賬單歷史中。',
     price: '價格',
-    billing_period: '帳期',
-    list_price_note: '價格不含稅費和折扣。變更將按比例計入你的下一張帳單。',
+    next_charge: '下次扣款',
+    ends_on: '於 {{date}} 結束',
     overdue_note: '付款已逾期。如仍未付款，訂閱可能會被暫停，其付費功能可能會被移除。',
-    cancel_on: '預定於 {{date}} 取消',
     other_product: '其他訂閱',
     enterprise_invoices_description:
       '你的 Enterprise 合約的發票。選擇一張發票即可查看，並下載發票或收據。',

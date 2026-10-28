@@ -26,7 +26,6 @@ import useRedirectCallbackValidation from '@/hooks/use-redirect-callback-validat
 import { useSieMethods } from '@/hooks/use-sie';
 import useSocialRegister from '@/hooks/use-social-register';
 import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
-import useToast from '@/hooks/use-toast';
 import { SearchParameters } from '@/types';
 import { socialAccountNotExistErrorDataGuard } from '@/types/guard';
 import { parseQueryParameters } from '@/utils';
@@ -36,7 +35,6 @@ import { normalizeExternalWebsiteGoogleOneTapConnectorData } from './utils';
 
 const useSocialSignInListener = (connectorId: string) => {
   const [loading, setLoading] = useState(true);
-  const { setToast } = useToast();
   const { signInMode, socialSignInSettings } = useSieMethods();
   const { t } = useTranslation();
   const [isConsumed, setIsConsumed] = useState(false);
@@ -71,8 +69,7 @@ const useSocialSignInListener = (connectorId: string) => {
 
       // Redirect to sign-in page if the verificationId is not set properly
       if (!verificationId) {
-        setToast(t('error.invalid_session'));
-        navigateToSignIn('invalid_session');
+        navigateToSignIn('invalid_session', { toast: t('error.invalid_session') });
         return;
       }
 
@@ -91,8 +88,7 @@ const useSocialSignInListener = (connectorId: string) => {
 
       // Should not let user register new social account under sign-in only mode
       if (signInMode === SignInMode.SignIn) {
-        setToast(error.message);
-        navigateToSignIn(error.code);
+        navigateToSignIn(error.code, { toast: error.message });
         return;
       }
 
@@ -105,7 +101,6 @@ const useSocialSignInListener = (connectorId: string) => {
       navigate,
       navigateToSignIn,
       registerWithSocial,
-      setToast,
       signInMode,
       socialSignInSettings.automaticAccountLinking,
       t,
@@ -115,10 +110,9 @@ const useSocialSignInListener = (connectorId: string) => {
 
   const globalErrorHandler = useCallback(
     async (error: RequestErrorBody) => {
-      setToast(error.message);
-      navigateToSignIn(error.code);
+      navigateToSignIn(error.code, { toast: error.message });
     },
-    [navigateToSignIn, setToast]
+    [navigateToSignIn]
   );
 
   const preSignInErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.SignIn, {
@@ -235,8 +229,7 @@ const useSocialSignInListener = (connectorId: string) => {
       const verificationId = verificationIdRef.current;
 
       if (!verificationId) {
-        setToast(t('error.invalid_session'));
-        navigateToSignIn();
+        navigateToSignIn(undefined, { toast: t('error.invalid_session') });
         return;
       }
 
@@ -254,9 +247,8 @@ const useSocialSignInListener = (connectorId: string) => {
       });
 
       if (!result.valid) {
-        setToast(t(`error.${result.error}`));
         // Push the sign-in page to keep the current page in the history.
-        navigateToSignIn(result.error, { replace: false });
+        navigateToSignIn(result.error, { replace: false, toast: t(`error.${result.error}`) });
         return;
       }
     } else {
@@ -264,8 +256,7 @@ const useSocialSignInListener = (connectorId: string) => {
       const result = validateAndRestore(state);
 
       if (!result.valid) {
-        setToast(t(`error.${result.error}`));
-        navigateToSignIn(result.error, { replace: false });
+        navigateToSignIn(result.error, { replace: false, toast: t(`error.${result.error}`) });
         return;
       }
     }
@@ -279,7 +270,6 @@ const useSocialSignInListener = (connectorId: string) => {
     navigateToSignIn,
     searchParameters,
     setSearchParameters,
-    setToast,
     signInWithSocialHandler,
     t,
     validateAndRestore,
