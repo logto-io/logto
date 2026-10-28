@@ -49,6 +49,14 @@ create index oidc_model_instances__model_name_payload_account_id_expires_at
   on oidc_model_instances (tenant_id, model_name, payload_account_id, expires_at)
   where payload_account_id is not null;
 
+create index oidc_model_instances__model_name_payload_uid
+  on oidc_model_instances (tenant_id, model_name, payload_uid)
+  where payload_uid is not null;
+
+create index oidc_model_instances__model_name_payload_user_code
+  on oidc_model_instances (tenant_id, model_name, payload_user_code)
+  where payload_user_code is not null;
+
 /** Copies the payload keys used for lookups into their `payload_*` columns. */
 create function oidc_model_instances__set_payload_keys() returns trigger as
 $$ begin
