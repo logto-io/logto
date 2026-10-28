@@ -715,6 +715,9 @@
           },
           "403": {
             "description": "Permission denied, the access token does not include the identities scope, or the application is a third-party application. Stored third-party provider tokens are only available to first-party applications."
+          },
+          "502": {
+            "description": "The access token is expired and the social provider could not be reached to refresh it."
           }
         }
       },

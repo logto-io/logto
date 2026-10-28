@@ -269,7 +269,7 @@ export default function verificationRoutes<T extends UserRouter>(
       response: z.object({
         verificationRecordId: z.string(),
       }),
-      status: [200, 400, 401, 404, 422],
+      status: [200, 400, 401, 404, 422, 502],
     }),
     async (ctx, next) => {
       const { connectorData, verificationRecordId } = ctx.guard.body;
