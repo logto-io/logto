@@ -1,5 +1,12 @@
 import type { SignInExperience } from '@logto/schemas';
-import { SignInMode, SignInIdentifier, MfaFactor, MfaPolicy, ConnectorType } from '@logto/schemas';
+import {
+  SignInMode,
+  SignInIdentifier,
+  MfaFactor,
+  MfaPolicy,
+  ConnectorType,
+  defaultUsernamePolicy,
+} from '@logto/schemas';
 
 import { updateSignInExperience } from '#src/api/index.js';
 
@@ -23,6 +30,43 @@ export const defaultSignInSignUpConfigs = {
     ],
   },
 };
+
+/**
+ * The sign-in experience settings every API test suite starts from, matching a freshly bootstrapped
+ * tenant. `jest.setup.api.js` applies them before each suite file runs, since suites change the
+ * sign-in experience freely and most of them do not restore it.
+ *
+ * Listed here are the settings a suite can leave changed; the ones whose only mutators capture and
+ * restore them (`languageInfo`, `ssoBrandingBeforeEmailMatch`, the custom UI assets and CSP) and the
+ * presentational ones are left out. Add a setting as soon as a suite leaves it changed, otherwise it
+ * decides whether the next suite passes.
+ *
+ * JSONB policies are reset to `{}`, their database default. `passwordExpiration` is the exception,
+ * because the API merges a partial policy into the stored one instead of replacing it, so it has to
+ * disable the policy explicitly.
+ */
+export const defaultSignInExperienceSettings = {
+  ...defaultSignInSignUpConfigs,
+  socialSignIn: {},
+  socialSignInConnectorTargets: [],
+  singleSignOnEnabled: false,
+  // `PromptAtSignInAndSignUp` replaces the deprecated `UserControlled` the seed still writes.
+  mfa: { factors: [], policy: MfaPolicy.PromptAtSignInAndSignUp },
+  adaptiveMfa: {},
+  passkeySignIn: {},
+  trustedDevice: {},
+  passwordPolicy: {},
+  passwordExpiration: { enabled: false },
+  usernamePolicy: defaultUsernamePolicy,
+  forgotPasswordMethods: [],
+  sentinelPolicy: {},
+  captchaPolicy: {},
+  emailBlocklistPolicy: {},
+} satisfies Partial<SignInExperience>;
+
+/** Restore the sign-in experience to {@link defaultSignInExperienceSettings}. */
+export const resetSignInExperience = async () =>
+  updateSignInExperience(defaultSignInExperienceSettings);
 
 export const defaultSignUpMethod = {
   identifiers: [],
