@@ -75,7 +75,7 @@ function RuleSelectorModals({
         subtitle="application_details.access_control.rule_organizations_description"
         fieldTitle="application_details.access_control.rule_organizations"
         selectedEntities={ruleEntities.organizations}
-        searchProps={{ pathname: 'api/organizations' }}
+        searchProps={{ pathname: 'api/organizations', searchParameterName: 'q' }}
         emptyPlaceholder="errors.empty"
         isLoading={isSubmitting || ruleEntities.isLoading.organizations}
         renderEntity={({ name }) => <Breakable>{name}</Breakable>}

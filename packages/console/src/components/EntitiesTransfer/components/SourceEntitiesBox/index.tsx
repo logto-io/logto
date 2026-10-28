@@ -25,6 +25,7 @@ import styles from './index.module.scss';
 type SearchProps = {
   pathname: string;
   parameters?: Record<string, string>;
+  searchParameterName?: string;
 };
 
 export type Props<T> = {
@@ -38,7 +39,7 @@ export type Props<T> = {
 const pageSize = defaultPageSize;
 
 function SourceEntitiesBox<T extends Identifiable>({
-  searchProps: { pathname, parameters },
+  searchProps: { pathname, parameters, searchParameterName = 'search' },
   selectedEntities,
   onChange,
   emptyPlaceholder,
@@ -52,7 +53,7 @@ function SourceEntitiesBox<T extends Identifiable>({
   const commonSearchParams = {
     page: String(page),
     page_size: String(pageSize),
-    ...conditional(keyword && { search: formatSearchKeyword(keyword) }),
+    ...conditional(keyword && { [searchParameterName]: formatSearchKeyword(keyword) }),
   };
 
   const { data, error } = useSWR<[T[], number], RequestError>(
