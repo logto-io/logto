@@ -14,10 +14,10 @@ import {
   getAccountApiStepUpChallenge,
   getProactiveStepUpChallenge,
   getStepUpChallenge,
-  getSubpageAuthenticationMaxAgeSeconds,
   getSubpageStepUpChallenge,
-  hasFreshAuthenticationContext,
+  getSubpageStepUpMaxAgeSeconds,
   hasFreshFirstFactorAuthentication,
+  hasFreshSubpageAuthenticationContext,
   startPendingStepUp,
   type PendingStepUpAction,
   type StepUpChallenge,
@@ -199,8 +199,8 @@ const useStepUp = (): StepUpController => {
       }
 
       // A reactive entry step-up restores a page whose entry guard uses the shorter subpage
-      // threshold. Capping the requested age keeps the provider and the restored page aligned;
-      // a stricter server requirement is preserved by the minimum.
+      // threshold. Requesting the entry step-up's stricter age keeps the provider and the restored
+      // page aligned; a stricter server requirement is preserved by the minimum.
       const effectiveChallenge =
         action.type === 'enter-subpage'
           ? {
@@ -208,7 +208,7 @@ const useStepUp = (): StepUpController => {
               maxAge: String(
                 Math.min(
                   Number(challenge.maxAge),
-                  getSubpageAuthenticationMaxAgeSeconds(maximumAuthenticationAgeInSeconds)
+                  getSubpageStepUpMaxAgeSeconds(maximumAuthenticationAgeInSeconds)
                 )
               ),
             }
@@ -323,9 +323,9 @@ export const useStepUpEntry = ({ enabled, skip = false }: StepUpEntryOptions): S
 
       try {
         const claims = await getIdTokenClaims();
-        const ready = hasFreshAuthenticationContext(
+        const ready = hasFreshSubpageAuthenticationContext(
           claims,
-          getSubpageAuthenticationMaxAgeSeconds(maximumAuthenticationAgeInSeconds)
+          maximumAuthenticationAgeInSeconds
         );
 
         if (isCancelled) {
