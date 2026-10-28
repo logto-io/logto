@@ -96,8 +96,9 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
   };
 
   /**
-   * This function is designed to query by indexed JSONB fields (e.g. `uid` and `userCode`)
-   *  to leverage the expression index for better performance.
+   * Finds an instance by its `uid` or `userCode` payload key. Under row-level security the jsonb
+   * comparison is a filter on the `(tenant_id, model_name)` index prefix; `payload_uid` and
+   * `payload_user_code` hold the same values for an index seek.
    *
    * @see findPayloadByUid
    * @see findPayloadByUserCode
@@ -144,10 +145,9 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
 
   /**
    * @deprecated
-   * This dynamic JSONB key query shape may prevent expression-index
-   *  usage with prepared generic plans. Keep it as a backup/reference path only.
+   * Keep it as a backup/reference path only.
    *
-   * Use `findPayloadByUid` or `findPayloadByUserCode` instead for indexed queries.
+   * Use `findPayloadByUid` or `findPayloadByUserCode` instead.
    */
   const findPayloadByPayloadField = async <
     T extends ValueExpression,
