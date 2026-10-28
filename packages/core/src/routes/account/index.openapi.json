@@ -23,11 +23,11 @@
                     },
                     "hasPrimaryEmail": {
                       "type": "boolean",
-                      "description": "Whether the user has a primary email. Returned even when the Account Center email field is not readable; the email address itself remains filtered."
+                      "description": "Whether the user has a primary email. Requires the `email` scope. Returned even when the Account Center email field is not readable; the email address itself remains filtered."
                     },
                     "hasPrimaryPhone": {
                       "type": "boolean",
-                      "description": "Whether the user has a primary phone. Returned even when the Account Center phone field is not readable; the phone number itself remains filtered."
+                      "description": "Whether the user has a primary phone. Requires the `phone` scope. Returned even when the Account Center phone field is not readable; the phone number itself remains filtered."
                     }
                   }
                 }
@@ -75,11 +75,11 @@
                     },
                     "hasPrimaryEmail": {
                       "type": "boolean",
-                      "description": "Whether the user has a primary email. Returned even when the Account Center email field is not readable; the email address itself remains filtered."
+                      "description": "Whether the user has a primary email. Requires the `email` scope. Returned even when the Account Center email field is not readable; the email address itself remains filtered."
                     },
                     "hasPrimaryPhone": {
                       "type": "boolean",
-                      "description": "Whether the user has a primary phone. Returned even when the Account Center phone field is not readable; the phone number itself remains filtered."
+                      "description": "Whether the user has a primary phone. Requires the `phone` scope. Returned even when the Account Center phone field is not readable; the phone number itself remains filtered."
                     }
                   }
                 }

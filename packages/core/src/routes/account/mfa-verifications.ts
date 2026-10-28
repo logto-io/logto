@@ -369,9 +369,14 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
       );
 
       const user = await findUserById(userId);
-      const backupCodeVerification = user.mfaVerifications.find(
+      const backupCodeVerifications = user.mfaVerifications.filter(
         (verification) => verification.type === MfaFactor.BackupCode
       );
+      // Legacy data can contain an exhausted record followed by a usable one. Prefer the usable
+      // record so the management flow shows the codes that can actually be used.
+      const backupCodeVerification =
+        backupCodeVerifications.find(({ codes }) => codes.some(({ usedAt }) => !usedAt)) ??
+        backupCodeVerifications[0];
 
       assertThat(
         backupCodeVerification,

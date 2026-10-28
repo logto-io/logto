@@ -62,7 +62,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
     async (ctx, next) => {
       const { id: userId, scopes } = ctx.auth;
       const { profile, user } = await getScopedProfile(queries, libraries, scopes, userId);
-      ctx.body = getAccountCenterFilteredProfile(profile, ctx.accountCenter, user);
+      ctx.body = getAccountCenterFilteredProfile(profile, ctx.accountCenter, scopes, user);
       return next();
     }
   );
@@ -137,7 +137,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
       ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
 
       const { profile } = await getScopedProfile(queries, libraries, scopes, userId);
-      ctx.body = getAccountCenterFilteredProfile(profile, ctx.accountCenter, updatedUser);
+      ctx.body = getAccountCenterFilteredProfile(profile, ctx.accountCenter, scopes, updatedUser);
 
       return next();
     }

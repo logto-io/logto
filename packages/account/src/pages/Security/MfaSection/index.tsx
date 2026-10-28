@@ -173,15 +173,15 @@ const MfaSection = () => {
     !mandatoryMfaPolicies.has(mfaPolicy) &&
     hasEnabledSecondFactor(experienceSettings);
 
-  // `enabled` is the persisted MFA enablement flag. `undefined` predates the flag and is treated
-  // as enabled when the user has usable factors; an explicit `false` disables MFA verification
-  // regardless of `skipMfaOnSignIn`.
-  const isTwoStepPreferred = skipMfaOnSignIn === false && isMfaEnabled !== false;
   const hasConfiguredMfa = hasConfiguredSecondFactor(
     mfaVerifications,
     experienceSettings,
     userInfo
   );
+  // `enabled` is the persisted MFA enablement flag. `undefined` predates the flag, so mirror the
+  // backend: the preference only takes effect when the user has a usable factor. An explicit
+  // `false` disables MFA verification regardless of `skipMfaOnSignIn`.
+  const isTwoStepPreferred = skipMfaOnSignIn === false && (isMfaEnabled ?? hasConfiguredMfa);
   const hasMfaLoadError = hasMfaVerificationsError || (showToggle && hasMfaSettingsError);
   const twoStepState: TwoStepVerificationState = hasMfaLoadError
     ? 'unknown'

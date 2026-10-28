@@ -62,8 +62,11 @@ const useMfaRows = (
     const totpVerification = mfaVerifications?.find(
       (verification) => verification.type === MfaFactor.TOTP
     );
+    // Legacy data can contain both an exhausted and a usable backup-code record. Pick the usable
+    // one so the row reflects the codes that can actually be used.
     const backupCodeVerification = mfaVerifications?.find(
-      (verification) => verification.type === MfaFactor.BackupCode
+      (verification) =>
+        verification.type === MfaFactor.BackupCode && (verification.remainCodes ?? 0) > 0
     );
 
     const buildWebAuthnRow = (): SecurityRowData[] => {

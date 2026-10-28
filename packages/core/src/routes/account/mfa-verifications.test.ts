@@ -239,6 +239,33 @@ describe('account mfa verification routes', () => {
     });
   });
 
+  describe('GET /api/my-account/mfa-verifications/backup-codes', () => {
+    it('returns the usable backup code record when an exhausted record also exists', async () => {
+      const exhaustedBackupCode = {
+        id: 'exhausted-backup-code',
+        createdAt: '2024-01-01T00:00:00.000Z',
+        type: MfaFactor.BackupCode as const,
+        codes: [{ code: '0123456789', usedAt: '2024-01-02T00:00:00.000Z' }],
+      };
+      const usableBackupCode = {
+        id: 'usable-backup-code',
+        createdAt: '2024-02-01T00:00:00.000Z',
+        type: MfaFactor.BackupCode as const,
+        codes: [{ code: '0123456789' }, { code: '9876543210', usedAt: '2024-02-02T00:00:00.000Z' }],
+      };
+
+      findUserById.mockResolvedValueOnce({
+        ...mockUser,
+        mfaVerifications: [exhaustedBackupCode, usableBackupCode],
+      });
+
+      const response = await accountRequest.get('/my-account/mfa-verifications/backup-codes');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({ codes: usableBackupCode.codes });
+    });
+  });
+
   describe('POST /api/my-account/mfa-verifications passkey permission and binding', () => {
     it('should allow WebAuthn binding when passkeySignIn.enabled is true (without MFA factor)', async () => {
       findDefaultSignInExperience.mockResolvedValueOnce({

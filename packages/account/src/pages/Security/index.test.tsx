@@ -492,7 +492,7 @@ describe('<Security />', () => {
   });
 
   it('shows setup incomplete when 2-step verification is preferred without a configured factor', async () => {
-    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
+    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false, enabled: true });
 
     const { getByLabelText, queryByText } = renderSecurity({
       accountCenterSettings: {
@@ -525,6 +525,42 @@ describe('<Security />', () => {
     expect(
       queryByText('account_center.security.turn_on_2_step_verification_description')
     ).toBeNull();
+  });
+
+  it('shows the off state for legacy users without the enabled flag and no configured factor', async () => {
+    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
+
+    const { getByLabelText, queryByText } = renderSecurity({
+      accountCenterSettings: {
+        fields: {
+          username: AccountCenterControlValue.Off,
+          email: AccountCenterControlValue.Off,
+          phone: AccountCenterControlValue.Off,
+          password: AccountCenterControlValue.Off,
+          social: AccountCenterControlValue.Off,
+          mfa: AccountCenterControlValue.Edit,
+        },
+      },
+      experienceSettings: {
+        mfa: {
+          factors: [MfaFactor.TOTP],
+          policy: MfaPolicy.NoPrompt,
+        },
+      },
+    });
+
+    await waitFor(() => {
+      expect(getByLabelText('Toggle switch')).not.toBeNull();
+    });
+
+    expect((getByLabelText('Toggle switch') as HTMLInputElement).checked).toBe(false);
+    expect(
+      queryByText('account_center.security.two_step_verification_off_description')
+    ).not.toBeNull();
+    expect(
+      queryByText('account_center.security.two_step_verification_incomplete_description')
+    ).toBeNull();
+    expect(queryByText('account_center.security.no_verification_method_warning')).toBeNull();
   });
 
   it('describes 2-step verification as active when a factor is configured', async () => {
@@ -717,7 +753,7 @@ describe('<Security />', () => {
   });
 
   it('does not mark an exhausted backup code as configured', async () => {
-    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
+    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false, enabled: true });
     mockGetMfaVerifications.mockResolvedValue([
       {
         id: 'backup-code-verification-id',
@@ -756,6 +792,52 @@ describe('<Security />', () => {
     expect(queryByText('account_center.security.no_verification_method_warning')).not.toBeNull();
   });
 
+  it('uses the usable backup code record when an exhausted record also exists', async () => {
+    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
+    mockGetMfaVerifications.mockResolvedValue([
+      {
+        id: 'exhausted-backup-code-verification-id',
+        createdAt: '2026-05-13T00:00:00.000Z',
+        type: MfaFactor.BackupCode,
+        remainCodes: 0,
+      },
+      {
+        id: 'usable-backup-code-verification-id',
+        createdAt: '2026-05-14T00:00:00.000Z',
+        type: MfaFactor.BackupCode,
+        remainCodes: 8,
+      },
+    ]);
+
+    const { getByLabelText, queryByText, queryAllByText } = renderSecurity({
+      accountCenterSettings: {
+        fields: {
+          username: AccountCenterControlValue.Off,
+          email: AccountCenterControlValue.Off,
+          phone: AccountCenterControlValue.Off,
+          password: AccountCenterControlValue.Off,
+          social: AccountCenterControlValue.Off,
+          mfa: AccountCenterControlValue.Edit,
+        },
+      },
+      experienceSettings: {
+        mfa: {
+          factors: [MfaFactor.BackupCode],
+          policy: MfaPolicy.NoPrompt,
+        },
+      },
+    });
+
+    await waitFor(() => {
+      expect(getByLabelText('Toggle switch')).not.toBeNull();
+    });
+
+    expect(queryByText('account_center.security.backup_codes_count')).not.toBeNull();
+    expect(queryByText('account_center.security.manage')).not.toBeNull();
+    expect(queryAllByText('account_center.security.not_configured')).toHaveLength(0);
+    expect(queryByText('account_center.security.no_verification_method_warning')).toBeNull();
+  });
+
   it('shows a load error instead of a state when MFA settings fail', async () => {
     mockGetMfaSettings.mockRejectedValueOnce(new Error('failed'));
     mockGetMfaVerifications.mockResolvedValue([]);
@@ -789,7 +871,7 @@ describe('<Security />', () => {
       queryByText('account_center.security.two_step_verification_incomplete_description')
     ).toBeNull();
 
-    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
+    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false, enabled: true });
     fireEvent.click(getByText('account_center.security.two_step_verification_retry'));
 
     await waitFor(() => {
@@ -944,7 +1026,7 @@ describe('<Security />', () => {
   });
 
   it('navigates to verified action after confirming disable without verification ID', async () => {
-    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
+    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false, enabled: true });
 
     const { getByLabelText, getByText } = renderSecurity({
       accountCenterSettings: {
@@ -984,7 +1066,7 @@ describe('<Security />', () => {
   });
 
   it('updates MFA settings and UI state after confirming disable', async () => {
-    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
+    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false, enabled: true });
     mockUpdateMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true });
 
     const { getByLabelText, getByText } = renderSecurity({
