@@ -1,4 +1,5 @@
 import { ReservedPlanId } from '@logto/schemas';
+import { trySafe } from '@silverhand/essentials';
 import { useContext, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
@@ -126,8 +127,12 @@ function SwitchPlanActionBar({ onSubscriptionUpdated, currentSkuId, logtoSkus }:
         );
 
         const feedbackStorageKey = getCancelFeedbackStorageKey(currentTenantId);
-        const hasSubmittedFeedback = Boolean(sessionStorage.getItem(feedbackStorageKey));
-        sessionStorage.removeItem(feedbackStorageKey);
+        const hasSubmittedFeedback = Boolean(
+          trySafe(() => sessionStorage.getItem(feedbackStorageKey))
+        );
+        trySafe(() => {
+          sessionStorage.removeItem(feedbackStorageKey);
+        });
 
         if (!hasSubmittedFeedback) {
           setCanceledSkuId(currentSku.id);
@@ -186,7 +191,7 @@ function SwitchPlanActionBar({ onSubscriptionUpdated, currentSkuId, logtoSkus }:
 
     if (
       targetSkuId === ReservedPlanId.Free &&
-      !sessionStorage.getItem(getCancelFeedbackStorageKey(currentTenantId))
+      !trySafe(() => sessionStorage.getItem(getCancelFeedbackStorageKey(currentTenantId)))
     ) {
       setPreCancelTargetSku(targetSku);
       return;
@@ -233,7 +238,9 @@ function SwitchPlanActionBar({ onSubscriptionUpdated, currentSkuId, logtoSkus }:
           }}
           onSubmit={(hasFeedback) => {
             if (hasFeedback) {
-              sessionStorage.setItem(getCancelFeedbackStorageKey(currentTenantId), 'true');
+              trySafe(() => {
+                sessionStorage.setItem(getCancelFeedbackStorageKey(currentTenantId), 'true');
+              });
             }
             setPreCancelTargetSku(undefined);
             void switchSku(preCancelTargetSku, true);
