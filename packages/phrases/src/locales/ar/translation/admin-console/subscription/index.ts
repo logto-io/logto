@@ -48,6 +48,8 @@ const subscription = {
   cancel_feedback_modal: {
     title: 'نأسف لرحيلك',
     description: 'تم إلغاء اشتراكك. ملاحظاتك تساعدنا في جعل Logto أفضل. نقرأ كل رد.',
+    before_cancel_title: 'قبل أن تلغي',
+    before_cancel_description: 'ملاحظاتك تساعدنا في جعل Logto أفضل. نقرأ كل رد.',
     what_made_you_cancel: 'ما الذي دفعك إلى الإلغاء؟',
     how_to_reconsider: 'ما الذي يمكننا فعله لتعيد النظر؟',
   },

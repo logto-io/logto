@@ -52,6 +52,9 @@ const subscription = {
     title: 'Désolé de vous voir partir',
     description:
       'Votre abonnement a été annulé. Vos retours nous aident à améliorer Logto. Nous lisons chaque réponse.',
+    before_cancel_title: "Avant d'annuler",
+    before_cancel_description:
+      'Vos retours nous aident à améliorer Logto. Nous lisons chaque réponse.',
     what_made_you_cancel: "Qu'est-ce qui vous a poussé à annuler?",
     how_to_reconsider: "Que pourrions-nous faire pour vous faire changer d'avis?",
   },

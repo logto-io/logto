@@ -11,36 +11,50 @@ import modalStyles from '@/scss/modal.module.scss';
 
 type Props = {
   readonly isOpen: boolean;
-  /** The SKU the tenant was subscribed to before the cancellation. */
+  /** The SKU the tenant is subscribed to, or was subscribed to before the cancellation. */
   readonly fromSkuId: string;
+  /**
+   * Before the cancellation, the user can continue without giving feedback, and closing the modal
+   * aborts the cancellation.
+   */
+  readonly stage: 'before_cancel' | 'after_cancel';
   readonly onClose: () => void;
+  readonly onSubmit: (hasFeedback: boolean) => void;
 };
 
-function CancelFeedbackModal({ isOpen, fromSkuId, onClose }: Props) {
+function CancelFeedbackModal({ isOpen, fromSkuId, stage, onClose, onSubmit }: Props) {
   const postHog = usePostHog();
   const [whatMadeYouCancel, setWhatMadeYouCancel] = useState('');
   const [howToReconsider, setHowToReconsider] = useState('');
 
   const cancelReason = whatMadeYouCancel.trim();
   const reconsiderSuggestion = howToReconsider.trim();
+  const hasFeedback = Boolean(cancelReason || reconsiderSuggestion);
+  const isBeforeCancel = stage === 'before_cancel';
 
-  const captureAndClose = (properties: Record<string, unknown>) => {
+  const capture = (properties: Record<string, unknown>) => {
     postHog.capture('console:subscription_cancel_feedback', {
       from_sku_id: fromSkuId,
+      stage,
       ...properties,
     });
-    onClose();
   };
 
   const skip = () => {
-    captureAndClose({ skipped: true });
+    capture({ skipped: true });
+    onClose();
   };
 
   const submit = () => {
-    captureAndClose({
-      ...conditional(cancelReason && { cancel_reason: cancelReason }),
-      ...conditional(reconsiderSuggestion && { reconsider_suggestion: reconsiderSuggestion }),
-    });
+    capture(
+      hasFeedback
+        ? {
+            ...conditional(cancelReason && { cancel_reason: cancelReason }),
+            ...conditional(reconsiderSuggestion && { reconsider_suggestion: reconsiderSuggestion }),
+          }
+        : { skipped: true }
+    );
+    onSubmit(hasFeedback);
   };
 
   return (
@@ -51,14 +65,22 @@ function CancelFeedbackModal({ isOpen, fromSkuId, onClose }: Props) {
       onRequestClose={skip}
     >
       <ModalLayout
-        title="subscription.cancel_feedback_modal.title"
-        subtitle="subscription.cancel_feedback_modal.description"
+        title={
+          isBeforeCancel
+            ? 'subscription.cancel_feedback_modal.before_cancel_title'
+            : 'subscription.cancel_feedback_modal.title'
+        }
+        subtitle={
+          isBeforeCancel
+            ? 'subscription.cancel_feedback_modal.before_cancel_description'
+            : 'subscription.cancel_feedback_modal.description'
+        }
         footer={
           <Button
             size="large"
             type="primary"
-            title="general.submit"
-            disabled={!cancelReason && !reconsiderSuggestion}
+            title={isBeforeCancel ? 'general.continue' : 'general.submit'}
+            disabled={!isBeforeCancel && !hasFeedback}
             onClick={submit}
           />
         }

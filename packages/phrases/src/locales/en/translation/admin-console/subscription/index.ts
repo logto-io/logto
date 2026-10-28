@@ -50,7 +50,9 @@ const subscription = {
     title: 'Sorry to see you go',
     description:
       'Your subscription has been canceled. Your feedback helps us make Logto better. We read every response.',
-    what_made_you_cancel: 'What made you cancel?',
+    before_cancel_title: 'Before you cancel',
+    before_cancel_description: 'Your feedback helps us make Logto better. We read every response.',
+    what_made_you_cancel: 'What made you decide to cancel?',
     how_to_reconsider: 'What could we do to make you reconsider?',
   },
   downgrade_modal: {

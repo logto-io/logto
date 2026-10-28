@@ -51,6 +51,9 @@ const subscription = {
     title: 'Lamentamos que se vaya',
     description:
       'Su suscripción ha sido cancelada. Sus comentarios nos ayudan a mejorar Logto. Leemos todas las respuestas.',
+    before_cancel_title: 'Antes de cancelar',
+    before_cancel_description:
+      'Sus comentarios nos ayudan a mejorar Logto. Leemos todas las respuestas.',
     what_made_you_cancel: '¿Qué le llevó a cancelar?',
     how_to_reconsider: '¿Qué podríamos hacer para que lo reconsidere?',
   },
