@@ -1,6 +1,6 @@
 import { useLogto } from '@logto/react';
 import { ExtraParamsKey, defaultMaximumAuthenticationAgeInSeconds } from '@logto/schemas';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { isDevFeaturesEnabled } from '@ac/constants/env';
@@ -10,10 +10,14 @@ import {
   setRouteRestore,
 } from '@ac/utils/account-center-route';
 import {
+  consumePendingStepUpAction,
   getAccountApiStepUpChallenge,
   getProactiveStepUpChallenge,
   getStepUpChallenge,
+  getSubpageStepUpChallenge,
+  getSubpageStepUpMaxAgeSeconds,
   hasFreshFirstFactorAuthentication,
+  hasFreshSubpageAuthenticationContext,
   startPendingStepUp,
   type PendingStepUpAction,
   type StepUpChallenge,
@@ -28,6 +32,11 @@ type RequestStepUpOptions = {
    * still does not meet cannot loop through the authorization endpoint.
    */
   isResumed?: boolean;
+  /**
+   * The Account Center route to return to, when it differs from the current page. A callback page
+   * returns to the subpage that started the flow, for example.
+   */
+  route?: string;
 };
 
 export type IdentityProof = {
@@ -127,7 +136,7 @@ type StepUpController = {
    * Start a step-up before a sensitive request, because the local ID token does not carry a fresh
    * first-factor context. Resolves to whether it did.
    */
-  startStepUp: (action: PendingStepUpAction) => Promise<boolean>;
+  startStepUp: (action: PendingStepUpAction, challenge?: StepUpChallenge) => Promise<boolean>;
 };
 
 /**
@@ -141,8 +150,12 @@ const useStepUp = (): StepUpController => {
   const maximumAuthenticationAgeInSeconds = useMaximumAuthenticationAgeInSeconds();
 
   const beginStepUp = useCallback(
-    async (action: PendingStepUpAction, { acrValues, maxAge }: StepUpChallenge) => {
-      const route = window.location.pathname;
+    async (
+      action: PendingStepUpAction,
+      { acrValues, maxAge }: StepUpChallenge,
+      routeOverride?: string
+    ) => {
+      const route = routeOverride ?? window.location.pathname;
       const uiLocales = getUiLocales();
 
       startPendingStepUp(action, route);
@@ -168,7 +181,7 @@ const useStepUp = (): StepUpController => {
     async (
       error: unknown,
       action: PendingStepUpAction,
-      { isResumed = false }: RequestStepUpOptions = {}
+      { isResumed = false, route }: RequestStepUpOptions = {}
     ) => {
       // DEV: OIDC step-up authentication in Account Center
       if (!isDevFeaturesEnabled || isResumed) {
@@ -185,7 +198,23 @@ const useStepUp = (): StepUpController => {
         return false;
       }
 
-      await beginStepUp(action, challenge);
+      // A reactive entry step-up restores a page whose entry guard uses the shorter subpage
+      // threshold. Requesting the entry step-up's stricter age keeps the provider and the restored
+      // page aligned; a stricter server requirement is preserved by the minimum.
+      const effectiveChallenge =
+        action.type === 'enter-subpage'
+          ? {
+              ...challenge,
+              maxAge: String(
+                Math.min(
+                  Number(challenge.maxAge),
+                  getSubpageStepUpMaxAgeSeconds(maximumAuthenticationAgeInSeconds)
+                )
+              ),
+            }
+          : challenge;
+
+      await beginStepUp(action, effectiveChallenge, route);
 
       return true;
     },
@@ -193,13 +222,16 @@ const useStepUp = (): StepUpController => {
   );
 
   const startStepUp = useCallback(
-    async (action: PendingStepUpAction) => {
+    async (
+      action: PendingStepUpAction,
+      challenge: StepUpChallenge = getProactiveStepUpChallenge(maximumAuthenticationAgeInSeconds)
+    ) => {
       // DEV: OIDC step-up authentication in Account Center
       if (!isDevFeaturesEnabled) {
         return false;
       }
 
-      await beginStepUp(action, getProactiveStepUpChallenge(maximumAuthenticationAgeInSeconds));
+      await beginStepUp(action, challenge);
 
       return true;
     },
@@ -207,6 +239,155 @@ const useStepUp = (): StepUpController => {
   );
 
   return { requestStepUp, startStepUp };
+};
+
+export type StepUpEntryState = {
+  /** Whether the page may render its form and run its Account API calls. */
+  isReady: boolean;
+  /** Whether the local ID token is still being inspected. */
+  isChecking: boolean;
+  /**
+   * Whether a step-up just completed but the new context is still not fresh enough. Retrying
+   * would loop through the authorization endpoint, so the page reports the failure instead.
+   */
+  hasFailed: boolean;
+  /**
+   * Whether this page load is the first load after a completed entry step-up. Automatic requests
+   * pass this to `requestStepUp` so a repeated challenge reports an error instead of redirecting
+   * through the authorization endpoint again.
+   */
+  isResumed: boolean;
+  /** The legacy verification record. Only present when OIDC step-up is disabled. */
+  verificationId?: string;
+};
+
+type StepUpEntryOptions = {
+  /** Whether the page is enabled for this user; a disabled page must not start a step-up. */
+  enabled: boolean;
+  /** Skip the entry check for a flow that is allowed without verification. */
+  skip?: boolean;
+};
+
+/**
+ * Guard the entry of a standalone Account Center subpage. Sensitive multi-step flows must not let
+ * the user fill a form, receive an OTP, scan a TOTP QR code, register a WebAuthn credential, or
+ * finish an upstream OAuth only to have the final write rejected.
+ *
+ * With OIDC step-up enabled, a stale context renders through `isChecking` and starts a step-up
+ * whose `max_age` matches the entry threshold. Without it, the hook reports the legacy
+ * verification record so the page keeps its existing behavior.
+ */
+export const useStepUpEntry = ({ enabled, skip = false }: StepUpEntryOptions): StepUpEntryState => {
+  const { verificationId } = useContext(PageContext);
+  const { getIdTokenClaims } = useLogto();
+  const maximumAuthenticationAgeInSeconds = useMaximumAuthenticationAgeInSeconds();
+  const { startStepUp } = useStepUp();
+  const [state, setState] = useState<StepUpEntryState>(() => ({
+    isReady: skip,
+    isChecking: enabled && !skip,
+    hasFailed: false,
+    isResumed: false,
+  }));
+  const hasStartedRef = useRef(false);
+
+  useEffect(() => {
+    if (!isDevFeaturesEnabled) {
+      return;
+    }
+
+    if (!enabled) {
+      setState({ isReady: false, isChecking: false, hasFailed: false, isResumed: false });
+      return;
+    }
+
+    if (skip) {
+      setState({ isReady: true, isChecking: false, hasFailed: false, isResumed: false });
+      return;
+    }
+
+    if (hasStartedRef.current) {
+      return;
+    }
+
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    hasStartedRef.current = true;
+    // eslint-disable-next-line @silverhand/fp/no-let -- the effect cleanup flips this flag
+    let isCancelled = false;
+
+    const check = async () => {
+      setState((current) => ({ ...current, isChecking: true }));
+
+      // Consume an entry step-up on the page it restored, so a later subpage cannot mistake it
+      // for a step-up of its own. It only matters when the new context is still not fresh.
+      const justSteppedUp = Boolean(consumePendingStepUpAction(['enter-subpage']));
+
+      try {
+        const claims = await getIdTokenClaims();
+        const ready = hasFreshSubpageAuthenticationContext(
+          claims,
+          maximumAuthenticationAgeInSeconds
+        );
+
+        if (isCancelled) {
+          return;
+        }
+
+        if (ready) {
+          setState({
+            isReady: true,
+            isChecking: false,
+            hasFailed: false,
+            isResumed: justSteppedUp,
+          });
+          return;
+        }
+
+        // A step-up that just completed on this route did not refresh the context far enough.
+        // Starting another one would loop through the authorization endpoint.
+        if (justSteppedUp) {
+          setState({ isReady: false, isChecking: false, hasFailed: true, isResumed: true });
+          return;
+        }
+
+        await startStepUp(
+          { type: 'enter-subpage' },
+          getSubpageStepUpChallenge(maximumAuthenticationAgeInSeconds)
+        );
+      } catch {
+        if (!isCancelled) {
+          setState({
+            isReady: false,
+            isChecking: false,
+            hasFailed: true,
+            isResumed: justSteppedUp,
+          });
+        }
+      }
+    };
+
+    void check();
+
+    return () => {
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      isCancelled = true;
+      // Allow a rerun when a dependency changes while the check is in flight. Without this, the
+      // cancelled check would leave the page loading forever.
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      hasStartedRef.current = false;
+    };
+  }, [enabled, getIdTokenClaims, maximumAuthenticationAgeInSeconds, skip, startStepUp]);
+
+  if (!isDevFeaturesEnabled) {
+    return {
+      isReady: Boolean(verificationId) || skip,
+      isChecking: false,
+      hasFailed: false,
+      isResumed: false,
+      verificationId,
+    };
+  }
+
+  return state;
 };
 
 export default useStepUp;
