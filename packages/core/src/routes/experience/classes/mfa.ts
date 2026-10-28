@@ -186,6 +186,21 @@ export class Mfa {
   }
 
   /**
+   * Discard everything staged here. Every value is a decision made for the user identified at the
+   * time, from a bound factor's secret to a skip, so none may outlive that identification and be
+   * written to another account. The counterpart of `Profile.cleanUp()`.
+   */
+  cleanUp() {
+    this.#mfaEnabled = undefined;
+    this.#mfaSkipped = undefined;
+    this.#additionalBindingSuggestionSkipped = undefined;
+    this.#passkeySkipped = undefined;
+    this.#totp = undefined;
+    this.#webAuthn = undefined;
+    this.#backupCode = undefined;
+  }
+
+  /**
    * Format the MFA verifications data to be updated in the user account
    */
   toUserMfaVerifications(): UserMfaVerificationsData {

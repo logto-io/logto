@@ -118,6 +118,22 @@ describe('my-account (mfa-settings)', () => {
       await deleteDefaultTenantUser(user.id);
     });
 
+    it('should update MFA enablement successfully', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
+      const updateResponse = await updateMfaSettings(api, verificationRecordId, false, true);
+      expect(updateResponse).toEqual({ skipMfaOnSignIn: false, enabled: true });
+
+      const mfaSettings = await getMfaSettings(api);
+      expect(mfaSettings).toEqual({ skipMfaOnSignIn: false, enabled: true });
+
+      await deleteDefaultTenantUser(user.id);
+    });
+
     it('should throw error if user does not have Identities scope', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInAndGetUserApi(username, password, {

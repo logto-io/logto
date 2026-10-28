@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/promise-function-async -- Ky mocks must retain their synchronous .json() accessor, which async would strip. */
+/* eslint-disable max-lines -- the shared router fixture covers the callback, continue, MFA, and subject-mismatch recovery paths; splitting it would duplicate the setup */
 import {
   AuthenticationContextMode,
   type InteractionAuthenticationContext,
@@ -31,6 +32,7 @@ import WebAuthnBinding from '@/pages/MfaBinding/WebAuthnBinding';
 import MfaOnboarding from '@/pages/MfaOnboarding';
 import SocialCallback from '@/pages/SocialSignInWebCallback';
 import StepUp from '@/pages/StepUp';
+import SubjectMismatch from '@/pages/StepUp/SubjectMismatch';
 import { UserMfaFlow } from '@/types';
 import { storeState } from '@/utils/social-connectors';
 
@@ -87,6 +89,7 @@ const renderPage = (path: string, state?: unknown) =>
           </Route>
           <Route path="/step-up" element={<StepUpGuard />}>
             <Route index element={<StepUp />} />
+            <Route path="subject-mismatch" element={<SubjectMismatch />} />
           </Route>
           <Route path="/unknown-session" element={<div>Invalid session</div>} />
           <Route path="/sign-in" element={<div>Sign in</div>} />
@@ -227,19 +230,23 @@ it.each([
 );
 
 it.each([
-  [socialConnectors[0]!.id, VerificationType.Social],
-  [mockSsoConnectors[0]!.id, VerificationType.EnterpriseSso],
+  ['social', socialConnectors[0]!.id, VerificationType.Social],
+  ['sso', mockSsoConnectors[0]!.id, VerificationType.EnterpriseSso],
 ] as const)(
-  'rejects a mismatched subject from %s without registering or linking',
-  async (connectorId, verificationType) => {
+  'rejects a mismatched %s subject without registering or linking',
+  async (type, connectorId, verificationType) => {
     storeState('callback-state', connectorId);
     const { result } = renderHook(() => useSessionStorage());
     result.current.set(StorageKeys.verificationIds, { [verificationType]: 'proof' });
+    setContext({ ...context, subjectProofConnectors: [{ type, connectorId }] });
     jest.mocked(api.post).mockImplementation((path) => {
       if (path === '/api/experience/identification') {
         throw new HTTPError(
           {
-            json: async () => ({ code: 'session.identity_conflict', message: 'Wrong subject' }),
+            json: async () => ({
+              code: 'session.step_up.subject_mismatch',
+              message: 'Wrong subject',
+            }),
           } as Response,
           {} as Request,
           {} as never
@@ -248,10 +255,18 @@ it.each([
       return response({ verificationId: 'proof' });
     });
     renderPage(`/callback/social/${connectorId}?state=callback-state&code=upstream-code`);
-    expect(await screen.findByText('Invalid session')).not.toBeNull();
+
+    // The interaction is still valid: the mismatch is recoverable, not an invalid session.
+    expect(await screen.findByText('step_up.subject_mismatch')).not.toBeNull();
+    expect(screen.queryByText('Invalid session')).toBeNull();
     expect(screen.queryByText('Sign in')).toBeNull();
     expect(screen.queryByText('Link account')).toBeNull();
     expect(api.put).not.toHaveBeenCalled();
+
+    fireEvent.click(screen.getByText('action.use_another_account'));
+    // Back on the step-up landing, which re-reads the context and offers the connector again.
+    expect(await screen.findByText('action.sign_in_with')).not.toBeNull();
+    expect(screen.queryByText('step_up.no_method_available')).toBeNull();
   }
 );
 
@@ -417,3 +432,4 @@ it('enrolls a passkey in step-up rather than authenticating with an existing cre
   expect(api.put).not.toHaveBeenCalled();
 });
 /* eslint-enable @typescript-eslint/promise-function-async */
+/* eslint-enable max-lines */

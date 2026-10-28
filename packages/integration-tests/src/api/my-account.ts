@@ -161,19 +161,20 @@ export const deleteMfaVerification = async (
   });
 
 export const getMfaSettings = async (api: KyInstance) =>
-  api.get('api/my-account/mfa-settings').json<{ skipMfaOnSignIn: boolean }>();
+  api.get('api/my-account/mfa-settings').json<{ skipMfaOnSignIn: boolean; enabled?: boolean }>();
 
 export const updateMfaSettings = async (
   api: KyInstance,
   verificationRecordId: string,
-  skipMfaOnSignIn: boolean
+  skipMfaOnSignIn: boolean,
+  enabled?: boolean
 ) =>
   api
     .patch('api/my-account/mfa-settings', {
-      json: { skipMfaOnSignIn },
+      json: { skipMfaOnSignIn, ...(enabled === undefined ? {} : { enabled }) },
       headers: { [verificationRecordIdHeader]: verificationRecordId },
     })
-    .json<{ skipMfaOnSignIn: boolean }>();
+    .json<{ skipMfaOnSignIn: boolean; enabled?: boolean }>();
 
 export const getMyLogtoConfig = async (api: KyInstance) =>
   api.get('api/my-account/logto-configs').json<{

@@ -37,7 +37,7 @@ const jwt_claims = {
   data_source_tab: 'Data source',
   error_handling_tab: 'Error handling',
   test_tab: 'Test context',
-  jwt_claims_description: 'Default claims are auto-included in the  and cannot be overridden.',
+  jwt_claims_description: 'Default claims are auto-included in the token and cannot be overridden.',
   reserved_claims_description:
     '`acr`, `amr`, and `auth_time` are reserved on user access tokens: Logto always derives them and ignores custom claims that use these keys.',
   user_data: {

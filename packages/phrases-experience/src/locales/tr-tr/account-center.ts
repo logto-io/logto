@@ -101,12 +101,19 @@ const account_center = {
     manage: 'Yönet',
     turn_on_2_step_verification_description:
       'Ekstra bir güvenlik katmanı ekleyin. Oturum açarken ikinci bir doğrulama adımı istenecektir.',
+    two_step_verification_incomplete_description:
+      '2 adımlı doğrulama açık, ancak henüz etkin değil.',
+    two_step_verification_off_description:
+      '2 adımlı doğrulama tercihiniz kapalı. Güvenlik politikaları ek doğrulama gerektirmeye devam edebilir.',
     turn_off_2_step_verification: '2 adımlı doğrulamayı kapat',
     turn_off_2_step_verification_description:
       '2 adımlı doğrulamayı devre dışı bırakmak, oturum açarken hesabınızdaki ek koruma katmanını kaldıracaktır. Devam etmek istediğinizden emin misiniz?',
     disable_2_step_verification: 'Devre dışı bırak',
     no_verification_method_warning:
-      'İkinci bir doğrulama yöntemi eklemediniz. Oturum açarken 2 adımlı doğrulamayı etkinleştirmek için en az bir tane ekleyin.',
+      'Kurulum tamamlanmadı. 2 adımlı doğrulama kurulumunu tamamlamak için aşağıdan bir doğrulama yöntemi ekleyin.',
+    two_step_verification_load_failed:
+      '2 adımlı doğrulama ayarları yüklenemedi. Lütfen tekrar deneyin.',
+    two_step_verification_retry: 'Tekrar dene',
     passkey_sign_in_prompt: 'Passkey kurulumu için sor',
     passkey_sign_in_prompt_description:
       'Açık olduğunda, daha hızlı ve daha güvenli oturum açma için bir passkey kurmanız istenir.',

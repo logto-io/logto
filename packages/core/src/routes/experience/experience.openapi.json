@@ -34,7 +34,7 @@
       "put": {
         "operationId": "UpdateInteractionEvent",
         "summary": "Update interaction event",
-        "description": "Update the current experience interaction event to the given event type. This API is used to switch the interaction event between `SignIn` and `Register`, while keeping all the verification records data.",
+        "description": "Update the current experience interaction event to the given event type. This API is used to switch the interaction event between `SignIn` and `Register`. The verification records are kept, but any user already identified in this interaction is discarded, along with everything staged against that identification: the pending profile data, any MFA factor bound in this interaction, and the trusted-device opt-in. Identify the user again before submitting. A verification record answers only for the account it was made against, so it cannot identify a different user after the switch.",
         "requestBody": {
           "content": {
             "application/json": {

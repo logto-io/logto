@@ -84,6 +84,7 @@ const eligibleTrustedDeviceVerificationCases: Array<{
       identifier: { type: SignInIdentifier.Email, value: mockUser.primaryEmail },
       templateType: TemplateType.MfaVerification,
       verified: true,
+      userId: mockUser.id,
     },
   },
   {
@@ -95,6 +96,7 @@ const eligibleTrustedDeviceVerificationCases: Array<{
       identifier: { type: SignInIdentifier.Phone, value: mockUser.primaryPhone },
       templateType: TemplateType.MfaVerification,
       verified: true,
+      userId: mockUser.id,
     },
   },
 ];
@@ -1416,7 +1418,9 @@ describe('POST /experience/submit', () => {
       | undefined;
     const firstSubmitResult = interactionResultCalls[2]?.[2] as Record<string, unknown> | undefined;
     expect(firstOptInResult?.trustedDeviceOptIn).toEqual(repeatedOptInResult?.trustedDeviceOptIn);
-    expect(firstSubmitResult).not.toHaveProperty('trustedDeviceOptIn');
+    // Reported as cleared rather than left out, so that the merge in `save()` overwrites the
+    // decision already persisted instead of preserving it.
+    expect(firstSubmitResult?.trustedDeviceOptIn).toBeUndefined();
     expect(createCredential).toHaveBeenCalledTimes(1);
     expect(createCredential).toHaveBeenCalledWith(expect.objectContaining({ userId: user.id }));
     const creationPayload = createCredential.mock.calls[0]?.[0] as

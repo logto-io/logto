@@ -101,12 +101,19 @@ const account_center = {
     manage: 'Zarządzaj',
     turn_on_2_step_verification_description:
       'Dodaj dodatkową warstwę bezpieczeństwa. Podczas logowania zostaniesz poproszony o drugi krok weryfikacji.',
+    two_step_verification_incomplete_description:
+      'Weryfikacja dwuetapowa jest włączona, ale jeszcze nie działa.',
+    two_step_verification_off_description:
+      'Preferencja weryfikacji dwuetapowej jest wyłączona. Zasady bezpieczeństwa mogą nadal wymagać dodatkowej weryfikacji.',
     turn_off_2_step_verification: 'Wyłącz weryfikację dwuetapową',
     turn_off_2_step_verification_description:
       'Wyłączenie weryfikacji dwuetapowej usunie dodatkową warstwę ochrony z Twojego konta podczas logowania. Czy na pewno chcesz kontynuować?',
     disable_2_step_verification: 'Wyłącz',
     no_verification_method_warning:
-      'Nie dodałeś drugiej metody weryfikacji. Dodaj co najmniej jedną, aby włączyć weryfikację dwuetapową podczas logowania.',
+      'Konfiguracja nie została ukończona. Dodaj poniżej metodę weryfikacji, aby dokończyć konfigurację weryfikacji dwuetapowej.',
+    two_step_verification_load_failed:
+      'Nie udało się załadować ustawień weryfikacji dwuetapowej. Spróbuj ponownie.',
+    two_step_verification_retry: 'Spróbuj ponownie',
     passkey_sign_in_prompt: 'Monituj o skonfigurowanie passkey',
     passkey_sign_in_prompt_description:
       'Gdy włączone, zostaniesz poproszony o skonfigurowanie passkey w celu szybszego i bezpieczniejszego logowania.',

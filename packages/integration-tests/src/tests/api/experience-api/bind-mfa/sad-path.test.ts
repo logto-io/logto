@@ -76,6 +76,18 @@ describe('Bind MFA APIs sad path', () => {
       });
     });
 
+    // A `Register` reaches the profile routes before identification creates the account, so the
+    // MFA routes guard the subject themselves. The guard runs before the factor is read, so it
+    // covers every factor type, including the email and phone ones that resolve their identifier
+    // from the subject.
+    it('should throw identifier_not_found error on a Register interaction that has not identified', async () => {
+      const client = await initExperienceClient({ interactionEvent: InteractionEvent.Register });
+      await expectRejects(client.bindMfa(MfaFactor.TOTP, 'dummy_verification_id'), {
+        code: 'session.identifier_not_found',
+        status: 404,
+      });
+    });
+
     it('should throw mfa_factor_not_enabled error when trying to bind backup code', async () => {
       const { username, password } = generateNewUserProfile({ username: true, password: true });
       await userApi.create({ username, password });

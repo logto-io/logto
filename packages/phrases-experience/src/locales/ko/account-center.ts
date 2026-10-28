@@ -99,12 +99,18 @@ const account_center = {
     manage: '관리',
     turn_on_2_step_verification_description:
       '추가 보안 계층을 추가합니다. 로그인 시 두 번째 인증 단계가 요청됩니다.',
+    two_step_verification_incomplete_description:
+      '2단계 인증이 켜져 있지만 아직 적용되지 않았습니다.',
+    two_step_verification_off_description:
+      '2단계 인증 환경설정이 꺼져 있습니다. 보안 정책에 따라 추가 인증이 필요할 수 있습니다.',
     turn_off_2_step_verification: '2단계 인증 끄기',
     turn_off_2_step_verification_description:
       '2단계 인증을 비활성화하면 로그인 시 추가 보호 계층이 제거됩니다. 계속하시겠습니까?',
     disable_2_step_verification: '비활성화',
     no_verification_method_warning:
-      '두 번째 인증 방법을 추가하지 않았습니다. 로그인 시 2단계 인증을 활성화하려면 최소 하나를 추가하세요.',
+      '설정이 완료되지 않았습니다. 아래에서 인증 방법을 추가하여 2단계 인증 설정을 완료하세요.',
+    two_step_verification_load_failed: '2단계 인증 설정을 불러오지 못했습니다. 다시 시도하세요.',
+    two_step_verification_retry: '다시 시도',
     passkey_sign_in_prompt: '패스키 설정 안내 표시',
     passkey_sign_in_prompt_description:
       '켜면 더 빠르고 안전한 로그인을 위해 패스키를 설정하라는 안내를 받게 됩니다.',

@@ -16,10 +16,13 @@ import {
 } from '@ac/apis/social';
 import ErrorPage from '@ac/components/ErrorPage';
 import GlobalLoading from '@ac/components/GlobalLoading';
+import StepUpEntryFallback from '@ac/components/StepUpEntryFallback';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
+import { isDevFeaturesEnabled } from '@ac/constants/env';
 import { securityRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
+import useStepUp, { useStepUpEntry } from '@ac/hooks/use-step-up';
 import { canManageSocialIdentitiesWithoutVerification } from '@ac/utils/security-page';
 import { accountStorage, sessionStorage } from '@ac/utils/session-storage';
 import { getLocalizedConnectorName } from '@ac/utils/social-connector';
@@ -32,6 +35,7 @@ type Props = {
 const generateState = () =>
   `${accountCenterSocialStatePrefix}${crypto.randomUUID().replaceAll('-', '')}`;
 
+// eslint-disable-next-line complexity -- the social add/change/remove flows share one component
 const SocialFlow = ({ mode }: Props) => {
   const {
     t,
@@ -46,7 +50,6 @@ const SocialFlow = ({ mode }: Props) => {
     setToast,
     userInfo,
     isLoadingUserInfo,
-    verificationId,
     setVerificationId,
   } = useContext(PageContext);
   const createSocialVerificationRequest = useApi(createSocialVerification);
@@ -54,6 +57,7 @@ const SocialFlow = ({ mode }: Props) => {
   const linkSocialIdentityRequest = useApi(linkSocialIdentity);
   const replaceSocialIdentityRequest = useApi(replaceSocialIdentity);
   const handleError = useErrorHandler();
+  const { requestStepUp } = useStepUp();
   const [startedFlowKey, setStartedFlowKey] = useState<string>();
 
   const connector = useMemo(
@@ -66,12 +70,21 @@ const SocialFlow = ({ mode }: Props) => {
   const connectorName = connector ? getLocalizedConnectorName(connector, language) : undefined;
   const storedSocialFlow = connectorId ? accountStorage.socialFlow.get(connectorId) : undefined;
   const canSkipVerification = canManageSocialIdentitiesWithoutVerification(userInfo);
-  const needsLegacyIdentityVerification = userInfo?.hasSecurityVerificationMethod === true;
-  const isIdentityVerificationReady = Boolean(verificationId) || canSkipVerification;
-  const flowKey =
-    isIdentityVerificationReady && connectorId
-      ? `${mode}:${connectorId}:${verificationId ?? 'skip'}`
-      : undefined;
+  const isPageEnabled =
+    Boolean(accountCenterSettings?.enabled) &&
+    accountCenterSettings?.fields.social === AccountCenterControlValue.Edit;
+  const isStepUpEntryEnabled =
+    isPageEnabled &&
+    Boolean(experienceSettings) &&
+    Boolean(connectorId) &&
+    Boolean(connector) &&
+    Boolean(userInfo);
+  const { isReady, hasFailed, isResumed, verificationId } = useStepUpEntry({
+    enabled: isStepUpEntryEnabled,
+    skip: canSkipVerification,
+  });
+  const isIdentityVerificationReady = isReady;
+  const flowKey = isIdentityVerificationReady && connectorId ? `${mode}:${connectorId}` : undefined;
 
   const resetVerification = useCallback(async () => {
     await refreshUserInfo();
@@ -82,10 +95,16 @@ const SocialFlow = ({ mode }: Props) => {
 
   const handleFlowError = useCallback(
     async (error: unknown) => {
+      if (await requestStepUp(error, { type: 'enter-subpage' }, { isResumed })) {
+        return;
+      }
+
       await handleError(error, {
-        'verification_record.permission_denied': async () => {
-          await resetVerification();
-        },
+        // A permission denial after a step-up is terminal in the OIDC path. Only the legacy
+        // verification flow resets and retries; retrying here would loop the automatic request.
+        'verification_record.permission_denied': isDevFeaturesEnabled
+          ? undefined
+          : resetVerification,
         'user.social_account_exists_in_profile': async (requestError) => {
           finalizeSocialFlowFailure({
             connectorId,
@@ -106,7 +125,7 @@ const SocialFlow = ({ mode }: Props) => {
         },
       });
     },
-    [connectorId, handleError, navigate, resetVerification, setToast]
+    [connectorId, handleError, isResumed, navigate, requestStepUp, resetVerification, setToast]
   );
 
   const handleLinkSuccess = useCallback(async () => {
@@ -300,16 +319,11 @@ const SocialFlow = ({ mode }: Props) => {
     return <GlobalLoading />;
   }
 
-  if (!verificationId && needsLegacyIdentityVerification) {
-    return <VerificationMethodList />;
-  }
-
-  if (!verificationId && !canSkipVerification) {
-    return (
-      <ErrorPage
-        titleKey="account_center.verification.no_available_methods_title"
-        messageKey="account_center.verification.no_available_methods_description"
-      />
+  if (!isReady) {
+    return isDevFeaturesEnabled ? (
+      <StepUpEntryFallback hasFailed={hasFailed} />
+    ) : (
+      <VerificationMethodList />
     );
   }
 

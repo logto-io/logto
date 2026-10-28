@@ -68,6 +68,54 @@ export const getAuthenticationFreshnessMaxAgeSeconds = (
   );
 
 /**
+ * The part of the tenant window a standalone subpage reserves for the user to finish a
+ * multi-step form, OTP, QR scan, WebAuthn registration, or upstream OAuth.
+ */
+const subpageFormGraceSeconds = 300;
+
+/**
+ * The maximum authentication age for entering a standalone multi-step subpage. It leaves the
+ * form grace inside the tenant window, while never accepting a context older than the inline
+ * freshness threshold. The margin is kept as a floor so the shortest tenant window still reuses
+ * the context it has just obtained.
+ *
+ * This is the age the entry guard accepts; the step-up it starts requests a stricter `max_age`,
+ * see {@link getSubpageStepUpMaxAgeSeconds}.
+ */
+export const getSubpageAuthenticationMaxAgeSeconds = (
+  maximumAuthenticationAgeInSeconds: number
+): number =>
+  Math.max(
+    getAuthenticationFreshnessMarginSeconds(maximumAuthenticationAgeInSeconds),
+    Math.min(
+      getAuthenticationFreshnessMaxAgeSeconds(maximumAuthenticationAgeInSeconds),
+      maximumAuthenticationAgeInSeconds - subpageFormGraceSeconds
+    )
+  );
+
+/**
+ * The `max_age` to request for a subpage entry step-up. It stays one clock-skew margin below the
+ * entry cutoff: a browser clock that runs ahead of the authorization server makes Account Center
+ * consider a context stale while the server still considers it fresh, and a request that matches
+ * the cutoff would then be answered by silently reusing the very context the restored page
+ * rejects.
+ */
+export const getSubpageStepUpMaxAgeSeconds = (maximumAuthenticationAgeInSeconds: number): number =>
+  Math.max(
+    0,
+    getSubpageAuthenticationMaxAgeSeconds(maximumAuthenticationAgeInSeconds) -
+      getAuthenticationFreshnessMarginSeconds(maximumAuthenticationAgeInSeconds)
+  );
+
+/** The proactive step-up of a standalone subpage; `max_age` is stricter than its entry cutoff. */
+export const getSubpageStepUpChallenge = (
+  maximumAuthenticationAgeInSeconds: number
+): StepUpChallenge => ({
+  acrValues: LogtoAcr.FirstFactor,
+  maxAge: String(getSubpageStepUpMaxAgeSeconds(maximumAuthenticationAgeInSeconds)),
+});
+
+/**
  * The Account API policy. Used when the challenge omits a parameter, which RFC 9470 allows; the
  * Account API sends both.
  */
@@ -91,6 +139,29 @@ export const getProactiveStepUpChallenge = (
 });
 
 /**
+ * The authentication age in whole seconds, or `undefined` when the claims do not carry a
+ * first-factor context. `auth_time` is whole seconds, so compare whole seconds too: a context
+ * obtained a moment ago must count as fresh even at the shortest tenant window, where the
+ * threshold leaves no room for a fractional age.
+ */
+const getAuthenticationAgeSeconds = (
+  claims: Record<string, unknown> | undefined,
+  now: number
+): number | undefined => {
+  if (!claims || !acrSatisfies(claims.acr, LogtoAcr.FirstFactor)) {
+    return;
+  }
+
+  const { auth_time: authTime } = claims;
+
+  if (typeof authTime !== 'number' || !Number.isFinite(authTime)) {
+    return;
+  }
+
+  return Math.floor(now / 1000) - authTime;
+};
+
+/**
  * Whether the ID token carries a first-factor authentication context recent enough for the Account
  * API. The access token stays opaque; the ID token is the client's local source for coordinating
  * the UX before a sensitive request. The window is the tenant's Account Center setting, read
@@ -102,25 +173,46 @@ export const hasFreshFirstFactorAuthentication = (
   maximumAuthenticationAgeInSeconds = defaultMaximumAuthenticationAgeInSeconds,
   now = Date.now()
 ): boolean => {
-  if (!claims || !acrSatisfies(claims.acr, LogtoAcr.FirstFactor)) {
+  const ageSeconds = getAuthenticationAgeSeconds(claims, now);
+
+  if (ageSeconds === undefined) {
     return false;
   }
 
-  const { auth_time: authTime } = claims;
-
-  if (typeof authTime !== 'number' || !Number.isFinite(authTime)) {
-    return false;
-  }
-
-  // `auth_time` is whole seconds, so compare whole seconds too: a context obtained a moment ago
-  // must count as fresh even at the shortest tenant window, where the threshold leaves no room for
-  // a fractional age.
-  const ageSeconds = Math.floor(now / 1000) - authTime;
   const marginSeconds = getAuthenticationFreshnessMarginSeconds(maximumAuthenticationAgeInSeconds);
 
   return (
     ageSeconds >= -marginSeconds &&
     ageSeconds <= getAuthenticationFreshnessMaxAgeSeconds(maximumAuthenticationAgeInSeconds)
+  );
+};
+
+/**
+ * Whether the ID token carries a first-factor authentication context no older than the entry
+ * cutoff of a standalone subpage.
+ *
+ * The cutoff is the final age limit, so it is compared directly. Only the future side uses the
+ * tenant window's clock-skew margin: `auth_time` comes from the authorization server while `now`
+ * comes from the browser, and deriving that margin from the already-derived cutoff would shrink
+ * the allowance to a few seconds at the shortest tenant window, rejecting the token a completed
+ * step-up has just issued.
+ */
+export const hasFreshSubpageAuthenticationContext = (
+  claims: Record<string, unknown> | undefined,
+  maximumAuthenticationAgeInSeconds: number,
+  now = Date.now()
+): boolean => {
+  const ageSeconds = getAuthenticationAgeSeconds(claims, now);
+
+  if (ageSeconds === undefined) {
+    return false;
+  }
+
+  const marginSeconds = getAuthenticationFreshnessMarginSeconds(maximumAuthenticationAgeInSeconds);
+
+  return (
+    ageSeconds >= -marginSeconds &&
+    ageSeconds <= getSubpageAuthenticationMaxAgeSeconds(maximumAuthenticationAgeInSeconds)
   );
 };
 

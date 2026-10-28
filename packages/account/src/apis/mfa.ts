@@ -48,11 +48,11 @@ export const generateBackupCodes = async (accessToken: string): Promise<BackupCo
 
 export const getBackupCodesList = async (
   accessToken: string,
-  verificationRecordId: string
+  verificationRecordId: string | undefined
 ): Promise<BackupCodesListResponse> => {
   return createAuthenticatedKy(accessToken)
     .get('/api/my-account/mfa-verifications/backup-codes', {
-      headers: { [verificationRecordIdHeader]: verificationRecordId },
+      headers: getVerificationRecordHeaders(verificationRecordId),
     })
     .json<BackupCodesListResponse>();
 };
@@ -70,23 +70,23 @@ export const addTotpMfa = async (
 
 export const createOrReplaceTotpMfa = async (
   accessToken: string,
-  verificationRecordId: string,
+  verificationRecordId: string | undefined,
   payload: { secret: string; code: string }
 ) => {
   await createAuthenticatedKy(accessToken).put('/api/my-account/mfa-verifications/totp', {
     json: payload,
-    headers: { [verificationRecordIdHeader]: verificationRecordId },
+    headers: getVerificationRecordHeaders(verificationRecordId),
   });
 };
 
 export const addBackupCodeMfa = async (
   accessToken: string,
-  verificationRecordId: string,
+  verificationRecordId: string | undefined,
   payload: { codes: string[] }
 ) => {
   await createAuthenticatedKy(accessToken).post('/api/my-account/mfa-verifications', {
     json: { type: MfaFactor.BackupCode, ...payload },
-    headers: { [verificationRecordIdHeader]: verificationRecordId },
+    headers: getVerificationRecordHeaders(verificationRecordId),
   });
 };
 
@@ -131,12 +131,12 @@ export const verifyWebAuthnRegistration = async (
 
 export const addWebAuthnMfa = async (
   accessToken: string,
-  verificationRecordId: string,
+  verificationRecordId: string | undefined,
   payload: { newIdentifierVerificationRecordId: string; name?: string }
 ) => {
   await createAuthenticatedKy(accessToken).post('/api/my-account/mfa-verifications', {
     json: { type: MfaFactor.WebAuthn, ...payload },
-    headers: { [verificationRecordIdHeader]: verificationRecordId },
+    headers: getVerificationRecordHeaders(verificationRecordId),
   });
 };
 
@@ -164,7 +164,7 @@ export const getMfaSettings = async (accessToken: string): Promise<UserMfaSettin
 export const updateMfaSettings = async (
   accessToken: string,
   verificationRecordId: string | undefined,
-  payload: { skipMfaOnSignIn: boolean }
+  payload: { skipMfaOnSignIn: boolean; enabled?: boolean }
 ): Promise<UserMfaSettingsResponse> => {
   return createAuthenticatedKy(accessToken)
     .patch('/api/my-account/mfa-settings', {

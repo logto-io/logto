@@ -142,6 +142,8 @@ const sign_in_exp = {
           title: 'Sicherheitsüberprüfung',
           description:
             'Bevor Sicherheitseinstellungen geändert werden, müssen Benutzer ihre Identität verifizieren und eine 10 Minuten gültige Verifizierungs-ID erhalten. Um eine Verifizierungsmethode (E-Mail, Telefon, Passwort) zu aktivieren, setzen Sie die Account-API-Berechtigung unten auf <strong>Nur lesen</strong> (Minimum) oder <strong>Bearbeiten</strong>, damit das System erkennen kann, ob der Benutzer sie konfiguriert hat. <a>Mehr erfahren</a>',
+          description_step_up:
+            'Bevor Sicherheitseinstellungen geändert werden, erfordert das integrierte Account Center eine kürzliche Anmeldung. Ist die aktuelle Anmeldung älter als das konfigurierte Zeitfenster für kürzliche Authentifizierung, startet Account Center einen OIDC-Step-up und fordert den Benutzer auf, seine Identität zu bestätigen. Damit Benutzer eine Verifizierungsmethode (E-Mail, Telefon oder Passwort) im Account Center anzeigen oder verwalten können, setzen Sie die entsprechende Account-API-Berechtigung unten auf <strong>Nur lesen</strong> oder <strong>Bearbeiten</strong>. Für diese sensiblen Vorgänge können Apps, die die Account API direkt aufrufen, stattdessen weiterhin eine Verifizierungs-ID verwenden. <a>Mehr erfahren</a>',
         },
         groups: {
           identifiers: {

@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { getAccountCenterSettings } from '@ac/apis/account-center';
 import { getSignInExperienceSettings } from '@ac/apis/sign-in-experience';
 import { getUserInfo } from '@ac/apis/user';
+import { isDevFeaturesEnabled } from '@ac/constants/env';
 import useApi from '@ac/hooks/use-api';
 import { changeLanguage, getPreferredLanguage } from '@ac/i18n/utils';
 import { getUiLocales, isAuthCallbackUrl } from '@ac/utils/account-center-route';
@@ -98,6 +99,13 @@ const PageContextProvider = ({ children }: Props) => {
   }, [loadUserInfo]);
 
   useEffect(() => {
+    // The OIDC step-up path carries the proof in the access token. Do not restore a permission
+    // record left by the legacy flow: the dev path must not send `logto-verification-id`.
+    if (isDevFeaturesEnabled) {
+      clearVerificationRecord();
+      return;
+    }
+
     const storedVerificationId = getStoredVerificationId();
 
     if (storedVerificationId) {
@@ -106,6 +114,12 @@ const PageContextProvider = ({ children }: Props) => {
   }, []);
 
   const setVerificationIdCallback = useCallback((id?: string, expiresAt?: string) => {
+    if (isDevFeaturesEnabled) {
+      setVerificationId(undefined);
+      clearVerificationRecord();
+      return;
+    }
+
     setVerificationId(id);
 
     if (!id || !expiresAt) {

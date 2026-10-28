@@ -84,9 +84,31 @@ const isFieldReadable = (field?: AccountCenterControlValue): boolean => {
   return field === AccountCenterControlValue.ReadOnly || field === AccountCenterControlValue.Edit;
 };
 
+/**
+ * Expose whether the user has primary identifiers without revealing the identifiers themselves.
+ * The identifiers require the `email` / `phone` scope, so gate the availability flags the same way.
+ * Account Center requests both scopes and may only hide the fields.
+ */
+const getPrimaryIdentifierAvailability = (
+  user: Pick<User, 'primaryEmail' | 'primaryPhone'>,
+  scopes: Set<string>
+): Partial<UserProfileResponse> => ({
+  ...conditional(
+    scopes.has(UserScope.Email) && {
+      hasPrimaryEmail: Boolean(user.primaryEmail),
+    }
+  ),
+  ...conditional(
+    scopes.has(UserScope.Phone) && {
+      hasPrimaryPhone: Boolean(user.primaryPhone),
+    }
+  ),
+});
+
 export const getAccountCenterFilteredProfile = (
   user: Partial<UserProfileResponse>,
   accountCenter: AccountCenter,
+  scopes: Set<string>,
   securityVerificationUser?: Pick<User, 'passwordEncrypted' | 'primaryEmail' | 'primaryPhone'>
 ): Partial<UserProfileResponse> => {
   const {
@@ -118,6 +140,7 @@ export const getAccountCenterFilteredProfile = (
     ...conditional(
       securityVerificationUser && {
         hasSecurityVerificationMethod: hasSecurityVerificationMethod(securityVerificationUser),
+        ...getPrimaryIdentifierAvailability(securityVerificationUser, scopes),
       }
     ),
   };

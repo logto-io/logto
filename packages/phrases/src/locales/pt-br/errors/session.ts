@@ -54,6 +54,8 @@ const session = {
       'A autenticação step-up está disponível apenas para interações de login.',
     subject_not_found:
       'Nenhuma sessão autenticada foi encontrada para a autenticação step-up. Faça login novamente.',
+    subject_mismatch:
+      'A conta que você usou não corresponde à conta com a qual você fez login. Tente novamente com a conta com a qual você entrou.',
     forbidden_route: 'Esta rota não é permitida durante a autenticação step-up.',
     forbidden_identifier:
       'Um identificador não é permitido durante a autenticação step-up. Tente novamente sem o campo identificador.',

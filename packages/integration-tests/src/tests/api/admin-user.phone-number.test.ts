@@ -119,6 +119,7 @@ describe('admin console user phone number handling', () => {
 
     await Promise.all(updatePromises);
 
+    await deleteUser(user.id);
     await deleteUser(anotherUser.id);
   });
 

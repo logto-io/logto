@@ -100,12 +100,19 @@ const account_center = {
     manage: 'Spravovat',
     turn_on_2_step_verification_description:
       'Přidejte další vrstvu zabezpečení. Při přihlášení budete vyzváni k druhému ověřovacímu kroku.',
+    two_step_verification_incomplete_description:
+      'Dvoufázové ověření je zapnuté, ale zatím není aktivní.',
+    two_step_verification_off_description:
+      'Vaše preference dvoufázového ověření je vypnutá. Další ověření může být stále vyžadováno bezpečnostními zásadami.',
     turn_off_2_step_verification: 'Vypnout dvoufázové ověření',
     turn_off_2_step_verification_description:
       'Vypnutí dvoufázového ověření odstraní další vrstvu ochrany vašeho účtu při přihlášení. Opravdu chcete pokračovat?',
     disable_2_step_verification: 'Vypnout',
     no_verification_method_warning:
-      'Nepřidali jste druhou ověřovací metodu. Přidejte alespoň jednu pro povolení dvoufázového ověření při přihlášení.',
+      'Nastavení není dokončeno. Přidejte níže ověřovací metodu a dokončete nastavení dvoufázového ověření.',
+    two_step_verification_load_failed:
+      'Nepodařilo se načíst nastavení dvoufázového ověření. Zkuste to prosím znovu.',
+    two_step_verification_retry: 'Zkusit znovu',
     passkey_sign_in_prompt: 'Vyzvat k nastavení přístupového klíče',
     passkey_sign_in_prompt_description:
       'Když je zapnuto, budete vyzváni k nastavení přístupového klíče pro rychlejší a bezpečnější přihlášení.',

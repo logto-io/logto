@@ -142,6 +142,8 @@ const sign_in_exp = {
           title: 'Güvenlik doğrulaması',
           description:
             'Güvenlik ayarlarını değiştirmeden önce kullanıcıların kimliğini doğrulayıp 10 dakika geçerli bir doğrulama kayıt kimliği almaları gerekir. Bir doğrulama yöntemini (e-posta, telefon, şifre) etkinleştirmek için aşağıdaki Account API iznini <strong>Yalnızca okuma</strong> (minimum) veya <strong>Düzenle</strong> olarak ayarlayın, böylece sistem kullanıcının yapılandırıp yapılandırmadığını algılayabilir. <a>Daha fazla bilgi</a>',
+          description_step_up:
+            "Güvenlik ayarlarını değiştirmeden önce yerleşik Account Center yakın zamanda oturum açmayı gerektirir. Mevcut oturum açma, yapılandırılmış son kimlik doğrulama penceresinden daha eskiyse Account Center bir OIDC step-up başlatır ve kullanıcıdan kimliğini doğrulamasını ister. Kullanıcıların Account Center'da bir doğrulama yöntemini (e-posta, telefon veya parola) görüntülemesine veya yönetmesine izin vermek için aşağıdaki ilgili Account API iznini <strong>Yalnızca okuma</strong> veya <strong>Düzenle</strong> olarak ayarlayın. Bu hassas işlemler için Account API'yi doğrudan çağıran uygulamalar bunun yerine bir doğrulama kayıt kimliği kullanmaya devam edebilir. <a>Daha fazla bilgi</a>",
         },
         groups: {
           identifiers: {

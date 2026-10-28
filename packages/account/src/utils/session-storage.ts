@@ -39,6 +39,7 @@ export type StoredPendingPersonalAccessTokenRename = {
 };
 
 const pendingStepUpActionsWithoutInput = Object.freeze([
+  'enter-subpage',
   'enable-mfa',
   'disable-mfa',
   'enable-passkey-prompt',

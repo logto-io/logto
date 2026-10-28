@@ -143,6 +143,7 @@ describe('<Security /> OIDC step-up', () => {
     });
     expect(mockUpdateMfaSettings).toHaveBeenCalledWith('access-token', undefined, {
       skipMfaOnSignIn: false,
+      enabled: true,
     });
     expect(mockSignIn).toHaveBeenCalledWith({
       redirectUri: 'http://localhost/account',
@@ -168,6 +169,7 @@ describe('<Security /> OIDC step-up', () => {
     await waitFor(() => {
       expect(mockUpdateMfaSettings).toHaveBeenCalledWith('access-token', undefined, {
         skipMfaOnSignIn: false,
+        enabled: true,
       });
     });
     expect(mockSignIn).not.toHaveBeenCalled();
@@ -239,6 +241,7 @@ describe('<Security /> OIDC step-up', () => {
     await waitFor(() => {
       expect(mockUpdateMfaSettings).toHaveBeenCalledWith('access-token', undefined, {
         skipMfaOnSignIn: false,
+        enabled: true,
       });
     });
     expect(mockSignIn).not.toHaveBeenCalled();
