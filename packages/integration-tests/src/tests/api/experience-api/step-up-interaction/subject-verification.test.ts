@@ -301,7 +301,7 @@ devFeatureTest.describe('step-up social subject proof', () => {
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
     await clearConnectorsByTypes([ConnectorType.Social]);
-    // eslint-disable-next-line @silverhand/fp/no-mutation
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Assigned by the fixture.
     ({ id: connectorId } = await setSocialConnector());
     // Install the connector first: the sign-in experience PATCH drops targets without an
     // installed connector, and deleting a social connector removes its target.
@@ -314,13 +314,13 @@ devFeatureTest.describe('step-up social subject proof', () => {
     // A username keeps the shared sign-up configuration from prompting for one; it is not a
     // verification method, so the user still has nothing to satisfy the step-up with.
     const user = await userApi.create({ username: generateUsername() });
-    // eslint-disable-next-line @silverhand/fp/no-mutation
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Assigned by the fixture.
     userId = user.id;
-    // eslint-disable-next-line @silverhand/fp/no-mutation
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Assigned by the fixture.
     socialUserId = await linkSocialIdentity(userId, connectorId);
 
     // Sign in with the linked identity to establish the session the step-up pins.
-    // eslint-disable-next-line @silverhand/fp/no-mutation
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Assigned by the fixture.
     client = await initExperienceClient();
     await identifyWithSocial(client, connectorId, socialUserId);
     await finishSignIn(client);
