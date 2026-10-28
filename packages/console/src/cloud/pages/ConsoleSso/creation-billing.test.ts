@@ -67,6 +67,7 @@ beforeEach(() => {
   localStorage.clear();
   jest.resetAllMocks();
   getApi.mockReturnValue(api as unknown as Client<typeof consoleSsoRouter>);
+  api.get.mockResolvedValue({ status: 'checkout_required' });
   api.post.mockResolvedValue({ id: 'connector-one' });
   chooseBillingCustomer.mockResolvedValue({});
   savePendingConnectorCreation('alice', operation);

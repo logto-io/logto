@@ -90,6 +90,9 @@ beforeEach(() => {
     if (path === '/api/me/console-sso/connectors') {
       return paidConnectors;
     }
+    if (path === '/api/me/console-sso/checkout-preview') {
+      return { status: 'checkout_required' };
+    }
     return [];
   });
   mockApi.post.mockResolvedValue({ id: 'connector-one' });
