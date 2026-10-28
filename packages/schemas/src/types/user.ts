@@ -39,6 +39,10 @@ export type UserInfo = z.infer<typeof userInfoGuard>;
 export const userProfileResponseGuard = userInfoGuard.extend({
   hasPassword: z.boolean().optional(),
   hasSecurityVerificationMethod: z.boolean().optional(),
+  /** Whether the user has a primary email, independent of the Account Center field visibility. Requires the `email` scope. */
+  hasPrimaryEmail: z.boolean().optional(),
+  /** Whether the user has a primary phone, independent of the Account Center field visibility. Requires the `phone` scope. */
+  hasPrimaryPhone: z.boolean().optional(),
   ssoIdentities: z.array(UserSsoIdentities.guard).optional(),
 });
 

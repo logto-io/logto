@@ -99,12 +99,19 @@ const account_center = {
     manage: '管理',
     turn_on_2_step_verification_description:
       'セキュリティを強化します。サインイン時に2段階目の認証が求められます。',
+    two_step_verification_incomplete_description:
+      '2段階認証はオンですが、まだ有効になっていません。',
+    two_step_verification_off_description:
+      '2段階認証の設定はオフです。セキュリティポリシーにより、追加の認証が求められる場合があります。',
     turn_off_2_step_verification: '2段階認証を無効にする',
     turn_off_2_step_verification_description:
       '2段階認証を無効にすると、サインイン時の追加の保護レイヤーが削除されます。続行してもよろしいですか？',
     disable_2_step_verification: '無効にする',
     no_verification_method_warning:
-      '2つ目の認証方法が追加されていません。サインイン時の2段階認証を有効にするには、少なくとも1つ追加してください。',
+      '設定が完了していません。下の認証方法を追加して、2段階認証の設定を完了してください。',
+    two_step_verification_load_failed:
+      '2段階認証の設定を読み込めませんでした。もう一度お試しください。',
+    two_step_verification_retry: '再試行',
     passkey_sign_in_prompt: 'パスキーの設定を促す',
     passkey_sign_in_prompt_description:
       'オンにすると、より速く安全なサインインのためにパスキーの設定を求められます。',

@@ -81,21 +81,49 @@ export const hasVisiblePasskeySection = (
 ): boolean => isVisibleField(passkeyControl) && isPasskeySignInEnabled(experienceSettings);
 
 /**
- * Whether the user has configured a verification method that counts as a real second factor.
- * When passkey sign-in is enabled, a WebAuthn credential acts as a sign-in passkey rather than a
- * dedicated second factor, so it is excluded here. This mirrors the backend's additional-MFA
- * suggestion logic, which does not treat WebAuthn as a standalone MFA factor while passkey sign-in
- * is on.
+ * Whether the user has a usable verification method that counts as a real second factor.
+ *
+ * Mirrors the backend's enabled-factor resolution: only factors enabled in the sign-in experience
+ * count, implicit email / phone factors count when the user has the corresponding primary
+ * identifier, and backup codes count only while unused codes remain. When passkey sign-in is
+ * enabled, a WebAuthn credential acts as a sign-in passkey rather than a dedicated second factor,
+ * so it is excluded here.
  */
 export const hasConfiguredSecondFactor = (
   mfaVerifications: UserMfaVerificationResponse | undefined,
-  experienceSettings?: SecurityPageExperienceSettings
+  experienceSettings?: SecurityPageExperienceSettings,
+  userInfo?: Partial<UserProfileResponse>
 ): boolean => {
-  const verifications = mfaVerifications ?? [];
-  if (isPasskeySignInEnabled(experienceSettings)) {
-    return verifications.some((verification) => verification.type !== MfaFactor.WebAuthn);
+  const enabledFactors = experienceSettings?.mfa.factors ?? [];
+  const isPasskeySignInOn = isPasskeySignInEnabled(experienceSettings);
+
+  const hasStoredFactor = (mfaVerifications ?? []).some((verification) => {
+    if (!enabledFactors.includes(verification.type)) {
+      return false;
+    }
+
+    if (isPasskeySignInOn && verification.type === MfaFactor.WebAuthn) {
+      return false;
+    }
+
+    if (verification.type === MfaFactor.BackupCode) {
+      return (verification.remainCodes ?? 0) > 0;
+    }
+
+    return true;
+  });
+
+  if (hasStoredFactor) {
+    return true;
   }
-  return verifications.length > 0;
+
+  const hasPrimaryEmail = userInfo?.hasPrimaryEmail ?? Boolean(userInfo?.primaryEmail);
+  const hasPrimaryPhone = userInfo?.hasPrimaryPhone ?? Boolean(userInfo?.primaryPhone);
+
+  return (
+    (enabledFactors.includes(MfaFactor.EmailVerificationCode) && hasPrimaryEmail) ||
+    (enabledFactors.includes(MfaFactor.PhoneVerificationCode) && hasPrimaryPhone)
+  );
 };
 
 export const hasVisibleSecuritySection = (

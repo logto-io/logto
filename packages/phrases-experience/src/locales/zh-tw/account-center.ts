@@ -97,12 +97,17 @@ const account_center = {
     view: '檢視',
     manage: '管理',
     turn_on_2_step_verification_description: '增加額外的安全保護。登入時將要求進行第二步驟驗證。',
+    two_step_verification_incomplete_description: '兩步驟驗證已開啟，但尚未生效。',
+    two_step_verification_off_description:
+      '你的兩步驟驗證偏好已關閉。安全策略仍可能要求進行額外驗證。',
     turn_off_2_step_verification: '關閉兩步驟驗證',
     turn_off_2_step_verification_description:
       '關閉兩步驟驗證將移除登入時帳戶的額外保護層。確定要繼續嗎？',
     disable_2_step_verification: '關閉',
     no_verification_method_warning:
-      '你尚未新增第二種驗證方式。請至少新增一種以在登入時啟用兩步驟驗證。',
+      '設定未完成。請在下方新增一種驗證方式，以完成兩步驟驗證的設定。',
+    two_step_verification_load_failed: '無法載入兩步驟驗證設定，請重試。',
+    two_step_verification_retry: '重試',
     passkey_sign_in_prompt: '提示設定通行密鑰',
     passkey_sign_in_prompt_description:
       '開啟後，系統會提示你設定通行密鑰，以實現更快速、更安全的登入。',

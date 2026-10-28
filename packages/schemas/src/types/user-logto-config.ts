@@ -63,9 +63,14 @@ export type UserPasskeySignInData = z.infer<typeof userPasskeySignInDataGuard>;
 
 /**
  * Schema for the MFA settings API response (GET/PATCH /api/my-account/mfa-settings)
+ *
+ * `enabled` is the persisted MFA enablement flag. It is optional because `undefined` indicates the
+ * user predates the flag, which the backend treats as enabled when the user has usable factors.
+ * An explicit `false` disables MFA verification regardless of `skipMfaOnSignIn`.
  */
 export const userMfaSettingsResponseGuard = z.object({
   skipMfaOnSignIn: z.boolean(),
+  enabled: z.boolean().optional(),
 });
 
 export type UserMfaSettingsResponse = z.infer<typeof userMfaSettingsResponseGuard>;
