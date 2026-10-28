@@ -164,7 +164,7 @@ export const getMfaSettings = async (accessToken: string): Promise<UserMfaSettin
 export const updateMfaSettings = async (
   accessToken: string,
   verificationRecordId: string | undefined,
-  payload: { skipMfaOnSignIn: boolean }
+  payload: { skipMfaOnSignIn: boolean; enabled?: boolean }
 ): Promise<UserMfaSettingsResponse> => {
   return createAuthenticatedKy(accessToken)
     .patch('/api/my-account/mfa-settings', {

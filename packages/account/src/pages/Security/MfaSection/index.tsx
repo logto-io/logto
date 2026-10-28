@@ -153,6 +153,7 @@ const MfaSection = () => {
     retry: retryMfaVerifications,
   } = useMfaVerifications();
   const [skipMfaOnSignIn, setSkipMfaOnSignIn] = useState<boolean>();
+  const [isMfaEnabled, setIsMfaEnabled] = useState<boolean>();
   const [hasLoadedMfaSettings, setHasLoadedMfaSettings] = useState(false);
   const [isLoadingMfaSettings, setIsLoadingMfaSettings] = useState(false);
   const [hasMfaSettingsError, setHasMfaSettingsError] = useState(false);
@@ -172,7 +173,10 @@ const MfaSection = () => {
     !mandatoryMfaPolicies.has(mfaPolicy) &&
     hasEnabledSecondFactor(experienceSettings);
 
-  const isTwoStepPreferred = skipMfaOnSignIn === false;
+  // `enabled` is the persisted MFA enablement flag. `undefined` predates the flag and is treated
+  // as enabled when the user has usable factors; an explicit `false` disables MFA verification
+  // regardless of `skipMfaOnSignIn`.
+  const isTwoStepPreferred = skipMfaOnSignIn === false && isMfaEnabled !== false;
   const hasConfiguredMfa = hasConfiguredSecondFactor(
     mfaVerifications,
     experienceSettings,
@@ -194,6 +198,7 @@ const MfaSection = () => {
     setHasMfaSettingsError(Boolean(error));
     if (!error && result) {
       setSkipMfaOnSignIn(result.skipMfaOnSignIn);
+      setIsMfaEnabled(result.enabled);
     }
     setHasLoadedMfaSettings(true);
     setIsLoadingMfaSettings(false);
@@ -225,7 +230,12 @@ const MfaSection = () => {
 
   const updateSkipMfaOnSignIn = useCallback(
     async (verifiedId: string | undefined, skipMfaOnSignIn: boolean, isResumed = false) => {
-      const [error] = await updateMfaSettingsApi(verifiedId, { skipMfaOnSignIn });
+      const [error] = await updateMfaSettingsApi(verifiedId, {
+        skipMfaOnSignIn,
+        // Turning verification on must also clear an explicit MFA disablement; otherwise the
+        // backend keeps skipping MFA even though the switch is on.
+        ...(skipMfaOnSignIn ? {} : { enabled: true }),
+      });
 
       if (error) {
         const action = skipMfaOnSignIn ? 'disable-mfa' : 'enable-mfa';
@@ -244,6 +254,10 @@ const MfaSection = () => {
       }
 
       setSkipMfaOnSignIn(skipMfaOnSignIn);
+
+      if (!skipMfaOnSignIn) {
+        setIsMfaEnabled(true);
+      }
     },
     [handleError, requestStepUp, setToast, setVerificationId, t, updateMfaSettingsApi]
   );

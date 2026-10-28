@@ -188,7 +188,7 @@
       "get": {
         "operationId": "GetMfaSettings",
         "summary": "Get MFA settings",
-        "description": "Get MFA settings for the user. This endpoint requires the Identities scope. Returns current MFA configuration preferences.",
+        "description": "Get MFA settings for the user. This endpoint requires the Identities scope. Returns whether the user has enabled MFA and whether MFA verification is skipped at sign-in. `enabled` is omitted for users who predate the flag, which is treated as enabled when the user has usable factors.",
         "responses": {
           "200": {
             "description": "The MFA settings were retrieved successfully."
@@ -201,7 +201,23 @@
       "patch": {
         "operationId": "UpdateMfaSettings",
         "summary": "Update MFA settings",
-        "description": "Update MFA settings for the user. This endpoint requires identity verification and the Identities scope. Controls whether MFA verification is required during sign-in when the user has MFA configured.",
+        "description": "Update MFA settings for the user. This endpoint requires identity verification and the Identities scope. Controls whether MFA verification is required during sign-in when the user has MFA configured. Set `enabled` to `true` when turning verification on so an explicit MFA disablement no longer overrides the preference; omit it to keep the stored value.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "skipMfaOnSignIn": {
+                    "description": "Set whether the user has opted to skip MFA verification on sign-in. This is ignored when the MFA policy is mandatory."
+                  },
+                  "enabled": {
+                    "description": "Set whether MFA is enabled for the user. Omit to keep the stored value; `undefined` for legacy users is treated as enabled when the user has usable factors."
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "The MFA settings were updated successfully."
