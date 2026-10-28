@@ -128,9 +128,9 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
 
       const identifier = identifierPayload;
 
-      // Require captcha if the user is not identified.
+      // Require captcha if the user is not identified, bound to the first recipient it sends to.
       if (!ctx.experienceInteraction.identifiedUserId) {
-        await ctx.experienceInteraction.guardCaptcha();
+        await ctx.experienceInteraction.guardCaptchaForVerificationCode(identifier);
       }
 
       // Check if email/phone is in sign up identifiers, to determine if it's binding email/phone for MFA

@@ -3221,6 +3221,107 @@ describe('ExperienceInteraction class', () => {
     });
   });
 
+  const createWithCaptcha = (captcha: { verified: boolean; skipped: boolean }) =>
+    new ExperienceInteraction(ctx, tenant, {
+      result: { interactionEvent: InteractionEvent.Register, captcha },
+    } as unknown as Interaction);
+
+  describe('guardCaptchaForVerificationCode', () => {
+    const captchaRequired = new RequestError({ code: 'session.captcha_required', status: 422 });
+    const phone = (suffix: number) =>
+      ({ type: SignInIdentifier.Phone, value: `861380013800${suffix}` }) as const;
+    const email = { type: SignInIdentifier.Email, value: mockEmail } as const;
+
+    it('covers a limited number of unverified recipients per solved captcha', async () => {
+      const experienceInteraction = createWithCaptcha({ verified: true, skipped: false });
+
+      await expect(
+        experienceInteraction.guardCaptchaForVerificationCode(phone(0))
+      ).resolves.toBeUndefined();
+      // Resending to a covered recipient, in another format, keeps working.
+      await expect(
+        experienceInteraction.guardCaptchaForVerificationCode({
+          type: SignInIdentifier.Phone,
+          value: '+86 138 0013 8000',
+        })
+      ).resolves.toBeUndefined();
+      // A mistyped recipient can be corrected once.
+      await expect(
+        experienceInteraction.guardCaptchaForVerificationCode(phone(1))
+      ).resolves.toBeUndefined();
+      await expect(
+        experienceInteraction.guardCaptchaForVerificationCode(phone(2))
+      ).rejects.toMatchError(captchaRequired);
+      await expect(
+        experienceInteraction.guardCaptchaForVerificationCode(email)
+      ).rejects.toMatchError(captchaRequired);
+      await expect(
+        experienceInteraction.guardCaptchaForVerificationCode(phone(1))
+      ).resolves.toBeUndefined();
+    });
+
+    it('does not count recipients whose code has been verified', async () => {
+      const experienceInteraction = createWithCaptcha({ verified: true, skipped: false });
+
+      await experienceInteraction.guardCaptchaForVerificationCode({
+        ...email,
+        value: mockEmail.toUpperCase(),
+      });
+      experienceInteraction.setVerificationRecord(emailVerificationRecord);
+
+      await expect(
+        experienceInteraction.guardCaptchaForVerificationCode(phone(0))
+      ).resolves.toBeUndefined();
+      await expect(
+        experienceInteraction.guardCaptchaForVerificationCode(phone(1))
+      ).resolves.toBeUndefined();
+      await expect(
+        experienceInteraction.guardCaptchaForVerificationCode(phone(2))
+      ).rejects.toMatchError(captchaRequired);
+    });
+
+    it('persists the recipients across requests but hides them from the client', async () => {
+      const experienceInteraction = createWithCaptcha({ verified: true, skipped: false });
+      await experienceInteraction.guardCaptchaForVerificationCode(phone(0));
+      await experienceInteraction.guardCaptchaForVerificationCode(phone(1));
+
+      const storage = experienceInteraction.toJson();
+      expect(storage.captcha).toEqual({
+        verified: true,
+        skipped: false,
+        codeRecipients: [`phone:${phone(0).value}`, `phone:${phone(1).value}`],
+      });
+      const sanitized = await experienceInteraction.toSanitizedJson();
+      expect(sanitized.captcha).toEqual({
+        verified: true,
+        skipped: false,
+      });
+
+      const restored = new ExperienceInteraction(ctx, tenant, {
+        result: storage,
+      } as unknown as Interaction);
+      await expect(restored.guardCaptchaForVerificationCode(phone(1))).resolves.toBeUndefined();
+      await expect(restored.guardCaptchaForVerificationCode(phone(2))).rejects.toMatchError(
+        captchaRequired
+      );
+    });
+
+    it('does not track recipients when no captcha was solved', async () => {
+      const skipped = createWithCaptcha({ verified: false, skipped: true });
+      await Promise.all(
+        [0, 1, 2].map(async (suffix) => skipped.guardCaptchaForVerificationCode(phone(suffix)))
+      );
+      expect(skipped.toJson().captcha).toEqual({ verified: false, skipped: true });
+
+      // Captcha policy disabled (the default mock sign-in experience).
+      const disabled = createWithCaptcha({ verified: false, skipped: false });
+      await Promise.all(
+        [0, 1, 2].map(async (suffix) => disabled.guardCaptchaForVerificationCode(phone(suffix)))
+      );
+      expect(disabled.toJson().captcha).toEqual({ verified: false, skipped: false });
+    });
+  });
+
   describe('guardMfaVerificationStatus', () => {
     it('skips MFA verification check when sign-in passkey is already verified', async () => {
       const { libraries, queries } = tenant;

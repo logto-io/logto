@@ -237,6 +237,11 @@ export type InteractionStorage = {
   captcha?: {
     verified: boolean;
     skipped: boolean;
+    /**
+     * The recipients (`<type>:<normalized value>`) verification codes were sent to under the solved
+     * captcha. Only a limited number of them may be unverified before a new captcha is required.
+     */
+    codeRecipients?: string[];
   };
 };
 
@@ -262,6 +267,7 @@ export const interactionStorageGuard = z.object({
     .object({
       verified: z.boolean(),
       skipped: z.boolean(),
+      codeRecipients: z.string().array().optional(),
     })
     .optional(),
 }) satisfies ToZodObject<InteractionStorage>;
