@@ -1,8 +1,7 @@
-import { type Nullable } from '@silverhand/essentials';
-import { type ComponentProps } from 'react';
+import { conditional, type Nullable } from '@silverhand/essentials';
 
 import { type UserSubscription } from '@/cloud/types/router';
-import type Tag from '@/ds-components/Tag';
+import { getUpcomingBillAmount } from '@/utils/upcoming-invoice';
 
 /**
  * Format an amount in currency minor units. Invoices stored before Cloud persisted their currency
@@ -64,23 +63,40 @@ export const formatPriceInterval = (
     .trim();
 };
 
-/** Highlight states that need payment attention; ended or paused states stay neutral. */
-export const statusTagMap: Record<
-  UserSubscription['status'],
-  NonNullable<ComponentProps<typeof Tag>['status']>
-> = {
-  active: 'success',
-  trialing: 'success',
-  past_due: 'error',
-  unpaid: 'error',
-  incomplete: 'alert',
-  incomplete_expired: 'info',
-  canceled: 'info',
-  paused: 'info',
-};
+/** Ended subscriptions bill nothing more; they stay in Billing history only. */
+export const isCurrentSubscription = ({ status }: UserSubscription) =>
+  status !== 'canceled' && status !== 'incomplete_expired';
+
+/** Only payment problems need a status tag; every other current state is business as usual. */
+export const isPaymentOverdue = ({ status }: UserSubscription) =>
+  status === 'past_due' || status === 'unpaid';
 
 /** Stripe's canceledAt is a request timestamp, not the effective scheduled cancellation date. */
 export const getScheduledCancellation = (subscription: UserSubscription) =>
   subscription.status !== 'canceled' &&
   (subscription.cancelAt ??
     (subscription.cancelAtPeriodEnd ? subscription.currentPeriodEnd : null));
+
+/**
+ * The next invoice of one subscription, dated at its own period end, and when the subscription
+ * ends. A subscription that cancels by its period end has no next charge; a later cancellation
+ * still renews at period end.
+ */
+export const getNextCharge = (
+  subscription: UserSubscription
+): { amount?: number; currency: Nullable<string>; chargeDate?: Date; endsAt?: Date } => {
+  const scheduled = conditional(getScheduledCancellation(subscription));
+  if (
+    scheduled &&
+    new Date(scheduled).getTime() <= new Date(subscription.currentPeriodEnd).getTime()
+  ) {
+    return { currency: null, endsAt: scheduled };
+  }
+  return {
+    amount: getUpcomingBillAmount(subscription.upcomingInvoice),
+    // Upcoming invoices carry no currency; a subscription's prices share the invoice currency.
+    currency: subscription.items[0]?.price.currency ?? null,
+    chargeDate: subscription.currentPeriodEnd,
+    endsAt: scheduled,
+  };
+};

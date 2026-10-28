@@ -41,6 +41,7 @@ const session = {
   step_up: {
     invalid_interaction_event: '升级认证仅适用于登录交互。',
     subject_not_found: '未找到用于升级认证的已认证会话。请重新登录。',
+    subject_mismatch: '你使用的账号与当前登录的账号不匹配。请使用登录时的账号重试。',
     forbidden_route: '升级认证期间不允许访问此路由。',
     forbidden_identifier: '升级认证期间不允许提供标识符。请移除 identifier 字段后重试。',
     acr_not_satisfied: '已完成的验证不满足请求的认证上下文，请验证其他方式。',

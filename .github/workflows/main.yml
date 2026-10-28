@@ -89,7 +89,10 @@ jobs:
         run: pnpm ci:stylelint
 
   main-test:
-    runs-on: ubuntu-latest
+    # Playwright has no browser build for the `ubuntu-26.04` image that `ubuntu-latest` now
+    # resolves to, so `playwright install --with-deps` fails before any test runs. Pin the image
+    # until Playwright ships support, as `integration-test.yml` already does for Puppeteer.
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v4

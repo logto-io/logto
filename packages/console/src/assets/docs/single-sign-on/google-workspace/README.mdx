@@ -1,4 +1,5 @@
 import OidcCallbackUri from '@/mdx-components/OidcCallbackUri';
+import SsoEmailDomainsStep from '@/mdx-components/SsoEmailDomainsStep';
 import Step from '@/mdx-components/Step';
 
 import clientCredentials from './assets/client_credentials.webp';
@@ -126,12 +127,12 @@ If you want to access [Google APIs](https://console.cloud.google.com/apis/librar
 
 </Step>
 
-<Step index={6} title="Set email domains and enable the SSO connector">
+<SsoEmailDomainsStep index={6} title="Set email domains and enable the SSO connector">
 
 Provide the email `domains` of your organization on the connector `experience` tab. This will enabled the SSO connector as an authentication method for those users.
 
 Users with email addresses in the specified domains will be exclusively limited to use your SSO connector as their only authentication method.
 
-</Step>
+</SsoEmailDomainsStep>
 
 For more information about Google Workspace SSO connector, please check [Google OpenID Connector](https://developers.google.com/identity/openid-connect/openid-connect).

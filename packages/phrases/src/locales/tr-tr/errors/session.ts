@@ -52,6 +52,8 @@ const session = {
       'Yükseltilmiş kimlik doğrulama yalnızca oturum açma etkileşimleri için kullanılabilir.',
     subject_not_found:
       'Yükseltilmiş kimlik doğrulama için kimliği doğrulanmış bir oturum bulunamadı. Lütfen tekrar oturum açın.',
+    subject_mismatch:
+      'Kullandığınız hesap, oturum açtığınız hesapla eşleşmiyor. Oturum açtığınız hesapla tekrar deneyin.',
     forbidden_route: 'Bu yol, yükseltilmiş kimlik doğrulama sırasında izin verilmez.',
     forbidden_identifier:
       'Yükseltilmiş kimlik doğrulama sırasında tanımlayıcı kullanılamaz. Tanımlayıcı alanı olmadan tekrar deneyin.',

@@ -8,7 +8,6 @@ import { consent, getConsentInfo } from '@/apis/consent';
 import { abortInteraction } from '@/apis/experience';
 import TermsLinks from '@/components/TermsLinks';
 import TextLink from '@/components/TextLink';
-import { isDevFeaturesEnabled } from '@/constants/env';
 import useApi from '@/hooks/use-api';
 import useErrorHandler, { type ErrorHandlers } from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
@@ -107,12 +106,6 @@ const Consent = () => {
    */
   const cancelHandler = useCallback(
     async (redirectUri: string) => {
-      // DEV: Experience interaction abort.
-      if (!isDevFeaturesEnabled) {
-        window.location.replace(redirectUri);
-        return;
-      }
-
       const [error, result] = await asyncAbort();
 
       // Fall back to the previous behavior when aborting fails, e.g. the interaction has already

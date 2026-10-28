@@ -3,6 +3,7 @@ import { act, fireEvent, waitFor } from '@testing-library/react';
 import { HTTPError, type NormalizedOptions } from 'ky';
 import { Route, Routes } from 'react-router-dom';
 
+import LoadingContextProvider from '@ac/Providers/LoadingContextProvider';
 import type { PageContextType } from '@ac/Providers/PageContextProvider/PageContext';
 import renderWithPageContext, {
   mockAccountCenterSettings,
@@ -14,11 +15,19 @@ import { emailRoute, emailSuccessRoute } from '@ac/constants/routes';
 import Email from '.';
 
 const mockGetAccessToken = jest.fn().mockResolvedValue('access-token');
+const mockUseStepUpEntry = jest.fn();
+const mockRequestStepUp = jest.fn();
 
 jest.mock('@logto/react', () => ({
   useLogto: () => ({
     getAccessToken: mockGetAccessToken,
   }),
+}));
+
+jest.mock('@ac/hooks/use-step-up', () => ({
+  __esModule: true,
+  default: () => ({ requestStepUp: mockRequestStepUp, startStepUp: jest.fn() }),
+  useStepUpEntry: () => mockUseStepUpEntry(),
 }));
 
 jest.mock('@ac/apis/account', () => ({
@@ -62,10 +71,12 @@ type EmailRenderOptions = {
 
 const renderEmail = ({ pageContext, initialEntries = [emailRoute] }: EmailRenderOptions = {}) =>
   renderWithPageContext(
-    <Routes>
-      <Route path={emailRoute} element={<Email />} />
-      <Route path={emailSuccessRoute} element={<div>Email success page</div>} />
-    </Routes>,
+    <LoadingContextProvider>
+      <Routes>
+        <Route path={emailRoute} element={<Email />} />
+        <Route path={emailSuccessRoute} element={<div>Email success page</div>} />
+      </Routes>
+    </LoadingContextProvider>,
     {
       initialEntries,
       future: {
@@ -129,6 +140,14 @@ describe('<Email />', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     mockGetAccessToken.mockResolvedValue('access-token');
+    mockUseStepUpEntry.mockReturnValue({
+      isReady: true,
+      isChecking: false,
+      hasFailed: false,
+      isResumed: false,
+      verificationId: 'identity-verification-record-id',
+    });
+    mockRequestStepUp.mockResolvedValue(false);
     jest.mocked(sendEmailVerificationCode).mockResolvedValue(mockSendCodeResult);
     jest.mocked(verifyEmailVerificationCode).mockResolvedValue(mockVerifyCodeResult);
     jest.mocked(updatePrimaryEmail).mockResolvedValue(undefined);
@@ -149,6 +168,14 @@ describe('<Email />', () => {
   });
 
   it('shows verification methods when identity is not verified', () => {
+    mockUseStepUpEntry.mockReturnValueOnce({
+      isReady: false,
+      isChecking: false,
+      hasFailed: false,
+      isResumed: false,
+      verificationId: undefined,
+    });
+
     const { getByText } = renderEmail({
       pageContext: {
         verificationId: undefined,
@@ -231,6 +258,29 @@ describe('<Email />', () => {
 
     await waitFor(() => {
       expect(getByText('Email success page')).toBeTruthy();
+    });
+  });
+
+  it('binds without a legacy permission record when the entry guard has none', async () => {
+    mockUseStepUpEntry.mockReturnValue({
+      isReady: true,
+      isChecking: false,
+      hasFailed: false,
+      isResumed: false,
+      verificationId: undefined,
+    });
+
+    const { getByText, container } = renderEmail();
+    const newEmail = 'new.user@example.com';
+
+    await advanceToVerifyStep(container, getByText, newEmail);
+    fillVerificationCode(container, '123456');
+
+    await waitFor(() => {
+      expect(updatePrimaryEmail).toHaveBeenCalledWith('access-token', undefined, {
+        email: newEmail,
+        newIdentifierVerificationRecordId: mockVerifyCodeResult.verificationRecordId,
+      });
     });
   });
 
@@ -327,5 +377,28 @@ describe('<Email />', () => {
       expect(setVerificationId).toHaveBeenCalledWith(undefined);
       expect(setToast).toHaveBeenCalledWith('account_center.verification.verification_required');
     });
+  });
+
+  it('verifies the code once when the binding starts a step-up', async () => {
+    mockRequestStepUp.mockResolvedValue(true);
+    jest.mocked(updatePrimaryEmail).mockImplementation(async () => {
+      // Let the loading state render before the challenge, as a real request does.
+      await new Promise((resolve) => {
+        setTimeout(resolve, 0);
+      });
+      throw createHttpError('verification_record.permission_denied', 401);
+    });
+
+    const { getByText, container } = renderEmail();
+
+    await advanceToVerifyStep(container, getByText);
+    fillVerificationCode(container, '123456');
+
+    await waitFor(() => {
+      expect(mockRequestStepUp).toHaveBeenCalledTimes(1);
+    });
+
+    expect(verifyEmailVerificationCode).toHaveBeenCalledTimes(1);
+    expect(updatePrimaryEmail).toHaveBeenCalledTimes(1);
   });
 });

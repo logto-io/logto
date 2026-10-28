@@ -312,21 +312,56 @@ devFeatureTest.describe('sign-in with requested ACR', () => {
     await logoutClient(client);
   });
 
-  it('completes a password sign-in requesting [mfa, 1fa] immediately', async () => {
-    // The enrolled TOTP is never consulted to select the class: `1fa` is already satisfied.
+  it('pursues the first reachable mfa for a password sign-in requesting [mfa, 1fa]', async () => {
+    // The tenant configures TOTP and the user has it enrolled, so `mfa` is reachable: the
+    // password reaching `1fa` never ends the pursuit at the weaker listed class.
     const user = await createTotpUser();
     const issuedAt = nowInSeconds();
 
     const client = await initSignInWithAcr(`${mfaAcr} ${firstFactorAcr}`);
     await identifyUserWithUsernamePassword(client, user.username, user.password);
 
+    await expectRejects(client.submitInteraction(), {
+      code: 'session.mfa.require_mfa_verification',
+      status: 403,
+      expectData: (data: { availableFactors: MfaFactor[] }) => {
+        expect(data.availableFactors).toEqual([MfaFactor.TOTP]);
+      },
+    });
+    await successfullyVerifyTotp(client, { code: authenticator.generate(user.secret) });
+
     expectAuthenticationContext(
       await finishSignIn(client),
-      { sub: user.id, acr: firstFactorAcr, amr: ['pwd'] },
+      { sub: user.id, acr: mfaAcr, amr: ['pwd', 'otp', 'mfa'] },
       issuedAt
     );
 
     await logoutClient(client);
+  });
+
+  it('falls back to 1fa for a password sign-in requesting [mfa, 1fa] when mfa is unreachable', async () => {
+    // No MFA factor configured, so `mfa` is out of reach even through enrollment and the request
+    // falls back to the next listed class the password already reached.
+    await updateSignInExperience({ mfa: { factors: [], policy: MfaPolicy.NoPrompt } });
+
+    try {
+      const profile = generateNewUserProfile({ username: true, password: true });
+      const { id } = await userApi.create(profile);
+      const issuedAt = nowInSeconds();
+
+      const client = await initSignInWithAcr(`${mfaAcr} ${firstFactorAcr}`);
+      await identifyUserWithUsernamePassword(client, profile.username, profile.password);
+
+      expectAuthenticationContext(
+        await finishSignIn(client),
+        { sub: id, acr: firstFactorAcr, amr: ['pwd'] },
+        issuedAt
+      );
+
+      await logoutClient(client);
+    } finally {
+      await updateSignInExperience({ mfa: userControlledMfa });
+    }
   });
 
   it('shares one TOTP verification between the tenant MFA policy and the requested mfa', async () => {

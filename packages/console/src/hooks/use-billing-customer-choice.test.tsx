@@ -1,14 +1,12 @@
 import { render, renderHook } from '@testing-library/react';
-import type * as React from 'react';
 
-import { type BillingCustomer } from '@/cloud/types/router';
+import { type BillingCustomer, type Subscription } from '@/cloud/types/router';
 
 import { useBillingCustomerChoice } from './use-billing-customer-choice';
 
 const mockGet = jest.fn();
 const mockShow = jest.fn();
 const mockPicker = jest.fn();
-const mockSubscription = { hasBillingCustomer: undefined as boolean | undefined };
 
 jest.mock('@/cloud/hooks/use-cloud-api', () => ({
   useCloudApi: () => ({ get: mockGet }),
@@ -17,19 +15,6 @@ jest.mock('@/cloud/hooks/use-cloud-api', () => ({
 jest.mock('./use-confirm-modal', () => ({
   useConfirmModal: () => ({ show: mockShow }),
 }));
-
-jest.mock('@/contexts/SubscriptionDataProvider', () => {
-  const { createContext } = jest.requireActual<typeof React>('react');
-
-  return {
-    // A getter: the factory runs while the hook module loads, before `mockSubscription` initializes.
-    SubscriptionDataContext: createContext({
-      get currentSubscription() {
-        return mockSubscription;
-      },
-    }),
-  };
-});
 
 jest.mock('@/components/BillingCustomerPicker', () => ({
   __esModule: true,
@@ -45,16 +30,14 @@ const customer = (customerId: string, isDefault: boolean): BillingCustomer => ({
   createdAt: new Date(0),
 });
 
-const choose = async (tenantId?: string) => {
+const choose = async (tenantSubscription?: Pick<Subscription, 'hasBillingCustomer'>) => {
   const { result } = renderHook(() => useBillingCustomerChoice());
-  return result.current.chooseBillingCustomer(tenantId);
+  return result.current.chooseBillingCustomer(tenantSubscription);
 };
 
 describe('useBillingCustomerChoice', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- test state
-    mockSubscription.hasBillingCustomer = undefined;
     mockGet.mockResolvedValue([customer('cus_default', true)]);
     mockShow.mockResolvedValue([true]);
   });
@@ -62,10 +45,7 @@ describe('useBillingCustomerChoice', () => {
   it.each([true, undefined])(
     'sends nothing for a tenant whose billing Customer flag is %s',
     async (hasBillingCustomer) => {
-      // eslint-disable-next-line @silverhand/fp/no-mutation -- test state
-      mockSubscription.hasBillingCustomer = hasBillingCustomer;
-
-      await expect(choose('tenant-1')).resolves.toEqual({});
+      await expect(choose({ hasBillingCustomer })).resolves.toEqual({});
       expect(mockGet).not.toHaveBeenCalled();
       expect(mockShow).not.toHaveBeenCalled();
     }
@@ -85,11 +65,9 @@ describe('useBillingCustomerChoice', () => {
     expect(mockShow).not.toHaveBeenCalled();
   });
 
-  it('asks for a new tenant even when the current tenant bills', async () => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- test state
-    mockSubscription.hasBillingCustomer = true;
-
+  it('asks for a purchase without a tenant', async () => {
     await expect(choose()).resolves.toEqual({});
+    expect(mockGet).toHaveBeenCalledWith('/api/me/stripe-customers');
     expect(mockShow).toHaveBeenCalledTimes(1);
   });
 
@@ -106,10 +84,7 @@ describe('useBillingCustomerChoice', () => {
   });
 
   it('asks for a tenant that has never billed', async () => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- test state
-    mockSubscription.hasBillingCustomer = false;
-
-    await expect(choose('tenant-1')).resolves.toEqual({});
+    await expect(choose({ hasBillingCustomer: false })).resolves.toEqual({});
     expect(mockShow).toHaveBeenCalledTimes(1);
   });
 

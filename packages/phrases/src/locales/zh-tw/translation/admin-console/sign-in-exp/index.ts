@@ -138,6 +138,8 @@ const sign_in_exp = {
           title: '安全驗證',
           description:
             '在變更安全設定之前，使用者必須驗證身分以取得有效期 10 分鐘的驗證紀錄 ID。要啟用驗證方式（電子郵件、手機、密碼），請將下方的 Account API 權限設定為<strong>唯讀</strong>（最低要求）或<strong>可編輯</strong>，以便系統偵測使用者是否已設定。<a>了解更多</a>',
+          description_step_up:
+            '變更安全設定前，內建 Account Center 要求使用者最近登入過。如果目前登入時間早於設定的最近一次身分驗證時間視窗，Account Center 會發起 OIDC step-up，並要求使用者驗證身分。要允許使用者在 Account Center 中檢視或管理驗證方式（電子郵件、手機或密碼），請將下方對應的 Account API 權限設定為<strong>唯讀</strong>或<strong>可編輯</strong>。對於這些敏感操作，直接呼叫 Account API 的應用程式仍可使用驗證紀錄 ID。<a>了解更多</a>',
         },
         groups: {
           identifiers: {

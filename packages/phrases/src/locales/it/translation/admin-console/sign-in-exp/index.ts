@@ -142,6 +142,8 @@ const sign_in_exp = {
           title: 'Verifica di sicurezza',
           description:
             "Prima di modificare le impostazioni di sicurezza, gli utenti devono verificare la propria identità per ottenere un ID di registrazione della verifica valido per 10 minuti. Per abilitare un metodo di verifica (email, telefono, password), imposta il permesso dell'Account API qui sotto su <strong>Sola lettura</strong> (minimo) o <strong>Modifica</strong> in modo che il sistema possa rilevare se l'utente lo ha configurato. <a>Scopri di più</a>",
+          description_step_up:
+            "Prima di modificare le impostazioni di sicurezza, l'Account Center integrato richiede un accesso recente. Se l'accesso corrente è più vecchio della finestra di autenticazione recente configurata, Account Center avvia un OIDC step-up e chiede all'utente di verificare la propria identità. Per consentire agli utenti di visualizzare o gestire un metodo di verifica (email, telefono o password) in Account Center, imposta l'autorizzazione Account API corrispondente qui sotto su <strong>Sola lettura</strong> o <strong>Modifica</strong>. Per queste operazioni sensibili, le app che chiamano direttamente l'Account API possono comunque usare un ID di registrazione della verifica. <a>Scopri di più</a>",
         },
         groups: {
           identifiers: {

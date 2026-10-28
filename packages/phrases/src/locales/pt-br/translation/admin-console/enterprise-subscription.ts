@@ -37,14 +37,13 @@ const enterprise_subscription = {
     description:
       'Veja suas assinaturas pessoais e a cobertura Enterprise contratada, independentemente do tenant selecionado.',
     personal_title: 'Assinaturas pessoais',
-    personal_description: 'Assinaturas cobradas da sua conta, incluindo assinaturas anteriores.',
+    personal_description:
+      'Assinaturas ativas cobradas da sua conta. As assinaturas anteriores continuam no histórico de cobranças.',
     price: 'Preço',
-    billing_period: 'Período de cobrança',
-    list_price_note:
-      'Os preços não incluem impostos nem descontos. As alterações são proporcionais na sua próxima fatura.',
+    next_charge: 'Próxima cobrança',
+    ends_on: 'Termina em {{date}}',
     overdue_note:
       'O pagamento está atrasado. Se continuar sem pagamento, a assinatura pode ser pausada e seus recursos pagos removidos.',
-    cancel_on: 'Cancelamento agendado para {{date}}',
     other_product: 'Outra assinatura',
     enterprise_invoices_description:
       'Faturas do seu contrato Enterprise. Selecione uma fatura para visualizá-la e baixar a fatura ou o recibo.',

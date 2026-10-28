@@ -42,17 +42,20 @@ const getAcrUnmetCheck = () => {
 
 /**
  * Build an authorization context. `session` is a signed-in session with the given `acr` and
- * authentication age in seconds, or `undefined` for a request without a session.
+ * authentication age in seconds, or `undefined` for a request without a session. `route` is the
+ * matched provider route, e.g. `resume` for the pass after an interaction was submitted.
  */
 const buildContext = ({
   session,
   params = {},
   result,
+  route = '',
   pendingPrompts = [],
 }: {
   session?: { acr?: string; age?: number };
   params?: KoaContextWithOIDC['oidc']['params'];
   result?: KoaContextWithOIDC['oidc']['result'];
+  route?: string;
   pendingPrompts?: string[];
 }) => {
   const providerSession = new provider.Session();
@@ -70,6 +73,7 @@ const buildContext = ({
     session: providerSession,
     params,
     result,
+    route,
     promptPending: jest.fn((name: string) => pendingPrompts.includes(name)),
   });
 };
@@ -152,12 +156,13 @@ describe('buildInteractionPolicy', () => {
       [LogtoAcr.Mfa, LogtoAcr.Mfa],
       // `mfa` satisfies the weaker class.
       [LogtoAcr.Mfa, LogtoAcr.FirstFactor],
-      // Any listed class is enough; the enrolled factors are never consulted.
-      [LogtoAcr.FirstFactor, `${LogtoAcr.Mfa} ${LogtoAcr.FirstFactor}`],
+      // The first listed class is the one that must be satisfied: a `1fa` session still gets a
+      // step-up for `mfa` first, because `mfa` may be reachable.
+      [LogtoAcr.Mfa, `${LogtoAcr.Mfa} ${LogtoAcr.FirstFactor}`],
       // Unsupported values are ignored rather than failing the request.
       [LogtoAcr.FirstFactor, `urn:logto:acr:2fa ${LogtoAcr.FirstFactor}`],
     ])(
-      'does not prompt when the session acr %s satisfies acr_values %j',
+      'does not prompt when the session acr %s satisfies the first listed acr_values %j',
       async (acr, acrValues) => {
         await expect(
           check.check(buildContext({ session: { acr }, params: { acr_values: acrValues } }))
@@ -167,12 +172,51 @@ describe('buildInteractionPolicy', () => {
 
     it.each([
       [LogtoAcr.FirstFactor, LogtoAcr.Mfa],
+      // A session that satisfies a later class still starts a step-up: the first reachable class is
+      // decided inside the interaction, never by the policy.
+      [LogtoAcr.FirstFactor, `${LogtoAcr.Mfa} ${LogtoAcr.FirstFactor}`],
       // A social or SSO session records no acr.
       [undefined, LogtoAcr.FirstFactor],
       ['urn:logto:acr:2fa', LogtoAcr.FirstFactor],
     ])('prompts when the session acr %s does not satisfy acr_values %s', async (acr, acrValues) => {
       await expect(
         check.check(buildContext({ session: { acr }, params: { acr_values: acrValues } }))
+      ).resolves.toBe(true);
+    });
+
+    it('accepts any listed class for prompt=none, which has no UI to pursue a preference', async () => {
+      await expect(
+        check.check(
+          buildContext({
+            session: { acr: LogtoAcr.FirstFactor },
+            params: { acr_values: `${LogtoAcr.Mfa} ${LogtoAcr.FirstFactor}`, prompt: 'none' },
+            pendingPrompts: ['none'],
+          })
+        )
+      ).resolves.toBe(false);
+
+      await expect(
+        check.check(
+          buildContext({
+            session: { acr: LogtoAcr.FirstFactor },
+            params: { acr_values: LogtoAcr.Mfa, prompt: 'none' },
+            pendingPrompts: ['none'],
+          })
+        )
+      ).resolves.toBe(true);
+    });
+
+    it('does not let prompt=none skip a freshness requirement', async () => {
+      // The provider rewrites `max_age=0` into `prompt=login` and clears `max_age`, so the request
+      // still forces a fresh authentication even though the session satisfies the class.
+      await expect(
+        check.check(
+          buildContext({
+            session: { acr: LogtoAcr.FirstFactor },
+            params: { acr_values: LogtoAcr.FirstFactor, prompt: 'none login' },
+            pendingPrompts: ['none', 'login'],
+          })
+        )
       ).resolves.toBe(true);
     });
 
@@ -199,7 +243,7 @@ describe('buildInteractionPolicy', () => {
       ).resolves.toBe(true);
     });
 
-    it('writes the step-up context with the first requested class as the selected one', async () => {
+    it('writes the step-up context with the whole requested list and no selection', async () => {
       // A social or SSO session records no acr, so neither listed class is satisfied.
       const ctx = buildContext({
         session: {},
@@ -210,14 +254,64 @@ describe('buildInteractionPolicy', () => {
       await expect(check.details(ctx)).resolves.toEqual({
         authenticationContext: {
           requestedAcrValues: [LogtoAcr.Mfa, LogtoAcr.FirstFactor],
-          selectedAcr: LogtoAcr.Mfa,
           mode: AuthenticationContextMode.StepUp,
+          reauthenticationRequired: false,
         },
       });
     });
 
+    it('marks the step-up as forced when the request requires a fresh authentication', async () => {
+      const loginCtx = buildContext({
+        session: { acr: LogtoAcr.FirstFactor },
+        params: { acr_values: LogtoAcr.FirstFactor, prompt: 'login' },
+        pendingPrompts: ['login'],
+      });
+      const staleCtx = buildContext({
+        session: { acr: LogtoAcr.FirstFactor, age: 1000 },
+        params: { acr_values: LogtoAcr.FirstFactor, max_age: '600' },
+      });
+
+      await expect(check.details(loginCtx)).resolves.toMatchObject({
+        authenticationContext: { reauthenticationRequired: true },
+      });
+      await expect(check.details(staleCtx)).resolves.toMatchObject({
+        authenticationContext: { reauthenticationRequired: true },
+      });
+    });
+
+    it('ignores the application access control result a first pass already carries', async () => {
+      // `loadGrant` runs before the interaction policy on the first pass and records application
+      // access control in `oidc.result` whenever the session already has a grant for a registered
+      // client. That must not read as a resumed interaction: `mfa` is listed first and may be
+      // reachable, and a social session still has to reach `1fa`.
+      const appLevelAccessControl = {
+        appLevelAccessControl: { checked: true, applicationId: 'app_id', userId: accountId },
+      };
+
+      await expect(
+        check.check(
+          buildContext({
+            session: { acr: LogtoAcr.FirstFactor },
+            params: { acr_values: `${LogtoAcr.Mfa} ${LogtoAcr.FirstFactor}` },
+            result: appLevelAccessControl,
+          })
+        )
+      ).resolves.toBe(true);
+
+      await expect(
+        check.check(
+          buildContext({
+            session: {},
+            params: { acr_values: LogtoAcr.FirstFactor },
+            result: appLevelAccessControl,
+          })
+        )
+      ).resolves.toBe(true);
+    });
+
     describe('after the interaction resumed', () => {
       const result = { login: { accountId } };
+      const route = 'resume';
 
       it('does not prompt when the achieved context satisfies the request', async () => {
         await expect(
@@ -226,9 +320,56 @@ describe('buildInteractionPolicy', () => {
               session: { acr: LogtoAcr.Mfa },
               params: { acr_values: LogtoAcr.Mfa, max_age: '600', prompt: 'login' },
               result,
+              route,
             })
           )
         ).resolves.toBe(false);
+      });
+
+      it('does not prompt when a step-up the session already satisfied submitted no login', async () => {
+        // A `[mfa, 1fa]` step-up on a `1fa` session whose `mfa` is unreachable finishes without a
+        // `login` result, leaving the session's `1fa` in place. Any listed class is enough here.
+        await expect(
+          check.check(
+            buildContext({
+              session: { acr: LogtoAcr.FirstFactor },
+              params: { acr_values: `${LogtoAcr.Mfa} ${LogtoAcr.FirstFactor}` },
+              result: { interactionEvent: 'SignIn', stepUpSatisfiedBySession: true },
+              route,
+            })
+          )
+        ).resolves.toBe(false);
+      });
+
+      it('prompts again when the resumed route carries no submission', async () => {
+        // Revisiting the authorization URL while the step-up is pending lands on `resume` without
+        // going through Experience, so a `1fa` session must not satisfy `[mfa, 1fa]` by itself.
+        await expect(
+          check.check(
+            buildContext({
+              session: { acr: LogtoAcr.FirstFactor },
+              params: { acr_values: `${LogtoAcr.Mfa} ${LogtoAcr.FirstFactor}` },
+              result: { interactionEvent: 'SignIn' },
+              route,
+            })
+          )
+        ).resolves.toBe(true);
+      });
+
+      it('prompts for a fresh authentication when a step-up that verified nothing aged out', async () => {
+        // The session satisfied the pursued class at creation, then crossed `max_age` before the
+        // resume pass. The next prompt carries `reauthenticationRequired`, so asking again does not
+        // loop, while failing would strand the client with an OIDC error.
+        await expect(
+          check.check(
+            buildContext({
+              session: { acr: LogtoAcr.FirstFactor, age: 1000 },
+              params: { acr_values: `${LogtoAcr.Mfa} ${LogtoAcr.FirstFactor}`, max_age: '600' },
+              result: { stepUpSatisfiedBySession: true },
+              route,
+            })
+          )
+        ).resolves.toBe(true);
       });
 
       it('fails instead of prompting again when the achieved acr is still unmet', async () => {
@@ -238,6 +379,7 @@ describe('buildInteractionPolicy', () => {
               session: { acr: LogtoAcr.FirstFactor },
               params: { acr_values: LogtoAcr.Mfa },
               result,
+              route,
             })
           )
         ).rejects.toThrow(errors.UnmetAuthenticationRequirements);
@@ -250,6 +392,7 @@ describe('buildInteractionPolicy', () => {
               session: { acr: LogtoAcr.Mfa, age: 1000 },
               params: { acr_values: LogtoAcr.Mfa, max_age: '600' },
               result,
+              route,
             })
           )
         ).rejects.toThrow(errors.UnmetAuthenticationRequirements);

@@ -69,10 +69,13 @@ export class TrustedDevice {
     this.#optIn = data.trustedDeviceOptIn;
   }
 
+  /**
+   * The key is always present, even with no decision to report. The interaction's `save()`
+   * merges this over the result already persisted, so a key left out would leave the previous
+   * decision in storage and restore it on the next request.
+   */
   get data(): TrustedDeviceData {
-    return {
-      ...conditional(this.#optIn && { trustedDeviceOptIn: this.#optIn }),
-    };
+    return { trustedDeviceOptIn: this.#optIn };
   }
 
   async assertOptInDecision({
@@ -153,6 +156,17 @@ export class TrustedDevice {
       trusted: true,
       deviceId: this.#optIn?.trusted ? this.#optIn.deviceId : generateStandardId(),
     };
+  }
+
+  /**
+   * Discard the opt-in decision, which was made for the user identified at the time. {@link data}
+   * reports the cleared field, so the discard reaches storage rather than being merged away.
+   *
+   * The request-local fields need no clearing: `#validatedDeviceId` is reset on every
+   * {@link tryVerifyMfa}, and `#effectivePolicy` is keyed by the user it was resolved for.
+   */
+  cleanUp() {
+    this.#optIn = undefined;
   }
 
   consumeOptInDecision() {

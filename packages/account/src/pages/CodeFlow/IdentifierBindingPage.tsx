@@ -8,9 +8,12 @@ import { useNavigate } from 'react-router-dom';
 import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import ErrorPage from '@ac/components/ErrorPage';
+import StepUpEntryFallback from '@ac/components/StepUpEntryFallback';
 import VerificationMethodList from '@ac/components/VerificationMethodList';
+import { isDevFeaturesEnabled } from '@ac/constants/env';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
+import useStepUp, { useStepUpEntry } from '@ac/hooks/use-step-up';
 import { sessionStorage } from '@ac/utils/session-storage';
 
 import IdentifierSendStep, { type IdentifierLabelKey } from './IdentifierSendStep';
@@ -54,7 +57,7 @@ type IdentifierBindingPageProps<VerifyPayload, BindPayload> = {
   }>;
   readonly bindIdentifier: (
     accessToken: string,
-    verificationRecordId: string,
+    verificationRecordId: string | undefined,
     payload: BindPayload
   ) => Promise<unknown>;
   readonly buildVerifyPayload: (
@@ -84,7 +87,7 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { loading } = useContext(LoadingContext);
-  const { accountCenterSettings, refreshUserInfo, verificationId, setToast, setVerificationId } =
+  const { accountCenterSettings, refreshUserInfo, setToast, setVerificationId } =
     useContext(PageContext);
   const [identifier, setIdentifier] = useState(initialValue);
   const [pendingIdentifier, setPendingIdentifier] = useState<string>();
@@ -94,6 +97,11 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
   const verifyCodeRequest = useApi(verifyCode);
   const bindIdentifierRequest = useApi(bindIdentifier);
   const handleError = useErrorHandler();
+  const { requestStepUp } = useStepUp();
+  const isEnabled =
+    Boolean(accountCenterSettings?.enabled) &&
+    accountCenterSettings?.fields[accountField] === AccountCenterControlValue.Edit;
+  const { isReady, hasFailed, verificationId } = useStepUpEntry({ enabled: isEnabled });
 
   const clearSendError = useCallback(() => {
     setErrorState((current) => ({ ...current, sendError: undefined }));
@@ -170,7 +178,7 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
 
   const handleVerifyAndBind = useCallback(
     async (code: string) => {
-      if (!pendingIdentifier || !pendingVerificationRecordId || loading || !verificationId) {
+      if (!pendingIdentifier || !pendingVerificationRecordId || loading || !isReady) {
         return;
       }
 
@@ -191,6 +199,10 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
       );
 
       if (bindError) {
+        if (await requestStepUp(bindError, { type: 'enter-subpage' })) {
+          return;
+        }
+
         await handleError(bindError, {
           // This is a global error (session expired) that requires re-verification, so we use toast
           'verification_record.permission_denied': async () => {
@@ -212,11 +224,13 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
       clearVerifyError,
       handleError,
       handleVerifyError,
+      isReady,
       refreshUserInfo,
       loading,
       navigate,
       pendingIdentifier,
       pendingVerificationRecordId,
+      requestStepUp,
       resetFlow,
       setToast,
       setVerificationId,
@@ -227,17 +241,18 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
     ]
   );
 
-  if (
-    !accountCenterSettings?.enabled ||
-    accountCenterSettings.fields[accountField] !== AccountCenterControlValue.Edit
-  ) {
+  if (!isEnabled) {
     return (
       <ErrorPage titleKey="error.something_went_wrong" messageKey="error.feature_not_enabled" />
     );
   }
 
-  if (!verificationId) {
-    return <VerificationMethodList />;
+  if (!isReady) {
+    return isDevFeaturesEnabled ? (
+      <StepUpEntryFallback hasFailed={hasFailed} />
+    ) : (
+      <VerificationMethodList />
+    );
   }
 
   return !pendingIdentifier || !pendingVerificationRecordId ? (

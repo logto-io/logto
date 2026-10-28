@@ -1,4 +1,5 @@
 import OidcCallbackUri from '@/mdx-components/OidcCallbackUri';
+import SsoEmailDomainsStep from '@/mdx-components/SsoEmailDomainsStep';
 import Step from '@/mdx-components/Step';
 
 import createApplication from './assets/create_application.webp';
@@ -100,12 +101,12 @@ If you want to access [Okta scopes](https://developer.okta.com/docs/guides/reque
 
 </Step>
 
-<Step index={6} title="Set email domains and enable the SSO connector">
+<SsoEmailDomainsStep index={6} title="Set email domains and enable the SSO connector">
 
 Provide the email `domains` of your organization on the connector `experience` tab. This will enable the SSO connector as an authentication method for those users.
 
 Users with email addresses in the specified domains will be exclusively limited to use your SSO connector as their only authentication method.
 
-</Step>
+</SsoEmailDomainsStep>
 
 For more details about create OIDC integration with Okta, please check [Create OIDC App Integrations](https://help.okta.com/oie/en-us/content/topics/apps/apps_app_integration_wizard_oidc.htm).

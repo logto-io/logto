@@ -38,8 +38,12 @@ const buildPendingAvatarUploadObjectKeyPrefix = (tenantId: string, jti: string) 
 /**
  * This middleware is guards the current interaction status is MFA verified (if MFA is enabled)
  *
+ * Only a `SignIn` reaches the MFA gate, and only that gate requires an identified user. A
+ * `Register` passes with none, since it identifies by creating the account, so a route behind
+ * this middleware cannot assume the interaction's `subjectUserId` is set.
+ *
  * @throws {RequestError} with status 400 if current interaction is ForgotPassword
- * @throws {RequestError} with status 404 if current interaction is not identified
+ * @throws {RequestError} with status 404 if a `SignIn` interaction is not identified
  * @throws {RequestError} with status 403 if MFA verification status is not verified
  */
 function verifiedInteractionGuard<
@@ -71,6 +75,23 @@ function verifiedInteractionGuard<
     return next();
   };
 }
+
+/**
+ * Guard that the interaction is about an account, for the routes that write an MFA factor to one.
+ *
+ * {@link verifiedInteractionGuard} cannot carry this: a `Register` reaches the profile routes
+ * before `POST /experience/identification` creates the user, which the profile data itself
+ * depends on. An MFA factor has nowhere to go until the account exists. A pure step-up carries
+ * its subject from the session rather than an identification, so read it through `subjectUserId`.
+ *
+ * @throws {RequestError} with status 404 if the interaction is about no account yet
+ */
+const assertMfaSubject = ({ subjectUserId }: { subjectUserId?: string }) => {
+  assertThat(
+    subjectUserId,
+    new RequestError({ code: 'session.identifier_not_found', status: 404 })
+  );
+};
 
 export default function interactionProfileRoutes<T extends ExperienceInteractionRouterContext>(
   router: Router<unknown, T>,
@@ -356,6 +377,8 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
       const { experienceInteraction, guard } = ctx;
       const { verificationId } = guard.body;
 
+      assertMfaSubject(experienceInteraction);
+
       const log = ctx.createLog(
         `Interaction.${experienceInteraction.interactionEvent}.SignInPasskey.Submit`
       );
@@ -387,6 +410,8 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
     async (ctx, next) => {
       const { experienceInteraction, guard } = ctx;
       const { type, verificationId } = guard.body;
+
+      assertMfaSubject(experienceInteraction);
 
       const log = ctx.createLog(
         `Interaction.${experienceInteraction.interactionEvent}.BindMfa.${type}.Submit`
@@ -444,7 +469,7 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
                 type: SignInIdentifier.Email,
                 value: primaryEmail,
               },
-              true
+              { userId: experienceInteraction.subjectUserId, verified: true }
             );
             experienceInteraction.setVerificationRecord(codeVerification);
             // The email is now an MFA factor of the account: record that `bind` proof next to
@@ -473,7 +498,7 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
                 type: SignInIdentifier.Phone,
                 value: primaryPhone,
               },
-              true
+              { userId: experienceInteraction.subjectUserId, verified: true }
             );
             experienceInteraction.setVerificationRecord(codeVerification);
             experienceInteraction.consumeForBindByType(

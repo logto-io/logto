@@ -41,6 +41,7 @@ const session = {
   step_up: {
     invalid_interaction_event: '升級驗證僅適用於登入互動。',
     subject_not_found: '找不到用於升級驗證的已驗證工作階段。請重新登入。',
+    subject_mismatch: '你使用的帳號與目前登入的帳號不相符。請使用登入時的帳號重試。',
     forbidden_route: '升級驗證期間不允許存取此路由。',
     forbidden_identifier: '升級驗證期間不允許提供識別碼。請移除 identifier 欄位後重試。',
     acr_not_satisfied: '已完成的驗證不符合要求的驗證情境，請驗證其他方式。',

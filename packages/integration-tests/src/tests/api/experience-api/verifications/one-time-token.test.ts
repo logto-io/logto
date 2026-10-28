@@ -1,6 +1,6 @@
 import { SignInIdentifier } from '@logto/schemas';
 
-import { createOneTimeToken } from '#src/api/one-time-token.js';
+import { createOneTimeToken, deleteOneTimeTokenById } from '#src/api/one-time-token.js';
 import { initExperienceClient } from '#src/helpers/client.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { waitFor } from '#src/utils.js';
@@ -22,6 +22,8 @@ describe('One-time token verification APIs', () => {
     });
 
     expect(verificationId).toBeTruthy();
+
+    await deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should throw token_consumed error when token is already consumed', async () => {
@@ -52,6 +54,8 @@ describe('One-time token verification APIs', () => {
         status: 400,
       }
     );
+
+    await deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should throw token_expired error when token is expired', async () => {
@@ -77,6 +81,8 @@ describe('One-time token verification APIs', () => {
         status: 400,
       }
     );
+
+    await deleteOneTimeTokenById(oneTimeToken.id);
   });
 
   it('should throw token_not_found error when token is not found', async () => {
@@ -117,5 +123,7 @@ describe('One-time token verification APIs', () => {
         status: 400,
       }
     );
+
+    await deleteOneTimeTokenById(oneTimeToken.id);
   });
 });

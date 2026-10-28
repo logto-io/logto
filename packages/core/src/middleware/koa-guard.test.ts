@@ -66,6 +66,75 @@ describe('koaGuardMiddleware', () => {
       await expect(koaGuard({ body: FooGuard })(ctx, next)).rejects.toThrow();
     });
 
+    it('should report every issue when under the cap', async () => {
+      const guard = z.object({ foo: z.string().min(3), bar: z.number().min(3) }).strict();
+      const body = { foo: 'a', bar: 1, baz: true };
+      const ctx = {
+        ...baseCtx,
+        request: { ...baseCtx.request, body },
+        params: {},
+        guard: { ...defaultGuard, body: { foo: '1', bar: 3 } },
+      };
+
+      await expect(koaGuard({ body: guard })(ctx, next)).rejects.toMatchObject({
+        code: 'guard.invalid_input',
+        data: { issues: guard.safeParse(body).error?.issues },
+      });
+    });
+
+    it('should stop parsing after the first 100 issues', async () => {
+      const isValidId = jest.fn(() => false);
+      const guard = z.object({ ids: z.unknown().refine(isValidId, 'invalid id').array() });
+      const body = { ids: Array.from({ length: 10_000 }, () => 1) };
+      const expectedIssues = guard.safeParse(body).error?.issues.slice(0, 100);
+      isValidId.mockClear();
+      const ctx = {
+        ...baseCtx,
+        request: { ...baseCtx.request, body },
+        params: {},
+        guard: { ...defaultGuard, body: { ids: [] } },
+      };
+
+      await expect(koaGuard({ body: guard })(ctx, next)).rejects.toMatchObject({
+        code: 'guard.invalid_input',
+        data: { issues: expectedIssues },
+      });
+      expect(isValidId).toHaveBeenCalledTimes(101);
+    });
+
+    it('should count every issue a union branch reports at once', async () => {
+      const guard = z.object({
+        foo: z.string(),
+        values: z.union([z.string().min(5).email(), z.number()]).array(),
+      });
+      const body = { foo: 1, values: Array.from({ length: 60 }, () => 'ab') };
+      const ctx = {
+        ...baseCtx,
+        request: { ...baseCtx.request, body },
+        params: {},
+        guard: { ...defaultGuard, body: { foo: '1', values: [] } },
+      };
+
+      await expect(koaGuard({ body: guard })(ctx, next)).rejects.toMatchObject({
+        code: 'guard.invalid_input',
+        data: { issues: guard.safeParse(body).error?.issues.slice(0, 100) },
+      });
+    });
+
+    it('should not count failed union branches toward the cap', async () => {
+      const guard = z.object({ values: z.union([z.string(), z.number()]).array() });
+      const body = { values: Array.from({ length: 1000 }, (_, index) => index) };
+      const ctx = {
+        ...baseCtx,
+        request: { ...baseCtx.request, body },
+        params: {},
+        guard: { ...defaultGuard, body: { values: [] } },
+      };
+
+      await koaGuard({ body: guard })(ctx, next);
+      expect(ctx.guard.body).toEqual(body);
+    });
+
     it('should throw when query type is invalid', async () => {
       const ctx = {
         ...baseCtx,

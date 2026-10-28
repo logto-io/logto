@@ -14,23 +14,23 @@ export const getVerificationRecordHeaders = (verificationRecordId: string | unde
 
 export const updatePrimaryEmail = async (
   accessToken: string,
-  verificationRecordId: string,
+  verificationRecordId: string | undefined,
   payload: { email: string; newIdentifierVerificationRecordId: string }
 ) => {
   await createAuthenticatedKy(accessToken).post('/api/my-account/primary-email', {
     json: payload,
-    headers: { [verificationRecordIdHeader]: verificationRecordId },
+    headers: getVerificationRecordHeaders(verificationRecordId),
   });
 };
 
 export const updatePrimaryPhone = async (
   accessToken: string,
-  verificationRecordId: string,
+  verificationRecordId: string | undefined,
   payload: { phone: string; newIdentifierVerificationRecordId: string }
 ) => {
   await createAuthenticatedKy(accessToken).post('/api/my-account/primary-phone', {
     json: payload,
-    headers: { [verificationRecordIdHeader]: verificationRecordId },
+    headers: getVerificationRecordHeaders(verificationRecordId),
   });
 };
 

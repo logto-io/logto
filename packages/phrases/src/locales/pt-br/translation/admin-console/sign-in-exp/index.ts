@@ -142,6 +142,8 @@ const sign_in_exp = {
           title: 'Verificação de segurança',
           description:
             'Antes de alterar as configurações de segurança, os usuários devem verificar sua identidade para obter um ID de registro de verificação válido por 10 minutos. Para habilitar um método de verificação (e-mail, telefone, senha), defina a permissão da Account API abaixo como <strong>Somente leitura</strong> (mínimo) ou <strong>Editar</strong> para que o sistema possa detectar se o usuário o configurou. <a>Saiba mais</a>',
+          description_step_up:
+            'Antes de alterar as configurações de segurança, o Account Center integrado exige um login recente. Se o login atual for mais antigo que a janela de autenticação recente configurada, o Account Center inicia um OIDC step-up e solicita que o usuário verifique sua identidade. Para permitir que os usuários visualizem ou gerenciem um método de verificação (e-mail, telefone ou senha) no Account Center, defina a permissão correspondente da Account API abaixo como <strong>Somente leitura</strong> ou <strong>Editar</strong>. Para essas operações sensíveis, os aplicativos que chamam a Account API diretamente ainda podem usar um ID de registro de verificação. <a>Saiba mais</a>',
         },
         groups: {
           identifiers: {

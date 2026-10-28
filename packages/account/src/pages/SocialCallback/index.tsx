@@ -11,9 +11,12 @@ import {
 } from '@ac/apis/social';
 import ErrorPage from '@ac/components/ErrorPage';
 import GlobalLoading from '@ac/components/GlobalLoading';
+import { isDevFeaturesEnabled } from '@ac/constants/env';
 import { getSocialAddRoute, getSocialChangeRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
+import useStepUp from '@ac/hooks/use-step-up';
+import { accountCenterBasePath } from '@ac/utils/account-center-route';
 import { canManageSocialIdentitiesWithoutVerification } from '@ac/utils/security-page';
 import { accountStorage } from '@ac/utils/session-storage';
 import { getLocalizedConnectorName } from '@ac/utils/social-connector';
@@ -42,6 +45,7 @@ const SocialCallback = () => {
   const linkSocialIdentityRequest = useApi(linkSocialIdentity);
   const replaceSocialIdentityRequest = useApi(replaceSocialIdentity);
   const handleError = useErrorHandler();
+  const { requestStepUp } = useStepUp();
   const [startedConnectorId, setStartedConnectorId] = useState<string>();
 
   const connector = useMemo(
@@ -94,7 +98,9 @@ const SocialCallback = () => {
       return;
     }
 
-    if (!verificationId && !canSkipVerification) {
+    // Keep the legacy guard when OIDC step-up is disabled. The social subpage already
+    // established the proof before sending the user to the upstream provider.
+    if (!isDevFeaturesEnabled && !verificationId && !canSkipVerification) {
       return;
     }
 
@@ -123,6 +129,15 @@ const SocialCallback = () => {
     }
 
     const handleCallbackError = async (error: unknown, clearPendingVerification = true) => {
+      const route =
+        storedSocialFlow.mode === 'change'
+          ? `${accountCenterBasePath}${getSocialChangeRoute(connectorId)}`
+          : `${accountCenterBasePath}${getSocialAddRoute(connectorId)}`;
+
+      if (await requestStepUp(error, { type: 'enter-subpage' }, { route })) {
+        return;
+      }
+
       await handleError(error, {
         'verification_record.permission_denied': redirectToReverify,
         'user.social_account_exists_in_profile': async (requestError) => {
@@ -206,6 +221,7 @@ const SocialCallback = () => {
     setToast,
     startedConnectorId,
     storedSocialFlow,
+    requestStepUp,
     canSkipVerification,
     verificationId,
     verifySocialVerificationRequest,

@@ -215,6 +215,11 @@ export const updateSocialAccessToken = async (
     })
     .json<GetThirdPartyAccessTokenResponse>();
 
+export const getEnterpriseSsoAccessToken = async (api: KyInstance, connectorId: string) =>
+  api
+    .get(`api/my-account/sso-identities/${connectorId}/access-token`)
+    .json<GetThirdPartyAccessTokenResponse>();
+
 export const getSessions = async (api: KyInstance, verificationRecordId: string) =>
   api
     .get('api/my-account/sessions', {

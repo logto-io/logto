@@ -67,6 +67,11 @@ const useSubjectProofCallback = (connectorId: string, type: 'social' | 'sso') =>
       } catch (error) {
         await handleError(error, {
           ...stepUpErrorHandlers,
+          // The upstream identity resolved to another account or to none. The interaction and its
+          // pinned subject are still valid, so offer another account instead of ending the flow.
+          'session.step_up.subject_mismatch': () => {
+            navigate(stepUpRoutes.subjectMismatch, { replace: true });
+          },
           // No account creation or linking fallback is valid for a pinned subject.
           global: () => {
             navigate(unknownSessionRoute, { replace: true });
