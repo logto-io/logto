@@ -154,6 +154,16 @@ const mockJwtCustomizerUserContext: JwtCustomizerUserContext = {
 };
 
 const ExperienceInteraction = await pickDefault(import('./experience-interaction.js'));
+const { default: passwordEncryptionWorker } = await import(
+  '#src/workers/password-encryption-worker.js'
+);
+
+// Hash in-process instead of through the worker thread, which is slow enough on a loaded CI
+// runner to intermittently exceed the default Jest timeout. These flows only need a digest.
+jest.spyOn(passwordEncryptionWorker, 'run').mockResolvedValue('argon2:xxx');
+// The pool starts its workers on import; stop them so their bootstrap does not compete with
+// the tests that never use them.
+await passwordEncryptionWorker.destroy();
 
 const createSignInInteraction = ({
   headers,
