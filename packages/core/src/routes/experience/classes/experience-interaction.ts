@@ -401,9 +401,11 @@ export default class ExperienceInteraction {
   /**
    * Switch the interaction event for the current interaction sign-in <> register
    *
-   * - any pending profile data will be cleared
-   * - any authentication proof will be cleared, so that a proof recorded for an abandoned attempt
-   *   at one event can never inflate the context of another
+   * Everything scoped to the user this interaction identified is discarded, so that nothing
+   * recorded for an abandoned attempt at one event carries into another: the identified user and
+   * their cache, the pending profile, the staged MFA data, the trusted-device opt-in and the
+   * authentication proofs. See {@link clearIdentityScopedState}. The verification records are
+   * kept.
    *
    * @throws RequestError with 403 if the interaction event is not allowed by the `SignInExperienceValidator`
    * @throws RequestError with 400 if a pure step-up switches away from `SignIn`
@@ -432,8 +434,7 @@ export default class ExperienceInteraction {
     );
 
     if (this.#interactionEvent !== interactionEvent) {
-      this.profile.cleanUp();
-      this.authenticationProofs.clear();
+      this.clearIdentityScopedState();
     }
 
     this.#interactionEvent = interactionEvent;
@@ -633,11 +634,11 @@ export default class ExperienceInteraction {
    * is never a challenge; its proof is the `bind` one recorded when the factor is added.
    *
    * In a pure step-up the answered challenge is what proves the pinned subject, so it promotes
-   * {@link subjectUserId} into `userId`. Every challenge record is created for the subject, so no
-   * conflict check is needed here.
+   * {@link subjectUserId} into `userId`.
    *
    * @throws {RequestError} with 404 if the verification record is not found
-   * @throws {RequestError} with 400 if the record is not a verified MFA challenge
+   * @throws {RequestError} with 400 if the record is not a verified MFA challenge, or names a user
+   * other than the one this interaction is about
    */
   public consumeForMfa<K extends keyof VerificationRecordMap>(
     type: K,
@@ -646,7 +647,15 @@ export default class ExperienceInteraction {
     const record = this.getVerificationRecordByTypeAndId(type, verificationId);
 
     assertThat(
-      isMfaVerificationRecord(record) && record.isVerified && !record.isNewBindMfaVerification,
+      isMfaVerificationRecord(record) &&
+        record.isVerified &&
+        !record.isNewBindMfaVerification &&
+        // A challenge proves the account it was created for, so it may never prove another: an
+        // event change replaces the subject while the records stay, and the email and phone
+        // routes read the record by the id the client sends. A record naming nobody proves
+        // nobody, so it only has to not belong to someone else; `MfaValidator` is the gate that
+        // grants, and it requires an affirmative owner.
+        (record.userId === undefined || record.userId === this.subjectUserId),
       new RequestError({ code: 'session.verification_failed', status: 400 })
     );
 
@@ -1448,6 +1457,32 @@ export default class ExperienceInteraction {
       mfa: this.mfa.sanitizedData,
       verificationRecords: this.verificationRecordsArray.map((record) => record.toSanitizedJson()),
     };
+  }
+
+  /**
+   * Drop everything scoped to the user this interaction identified.
+   *
+   * An identification is verified for the event it was made under, so it cannot outlive a switch
+   * away from that event, and neither can anything staged against it: a pending profile, a bound
+   * MFA factor, a recorded proof, or the decision to trust this device. Registration establishes
+   * its own user through `createUser`, and the clients switch the event before identifying, never
+   * after, so no legitimate flow loses state here.
+   *
+   * `userCache` goes with `userId`: `getIdentifiedUser` answers from the cache before it reads
+   * `userId`, so leaving one behind would keep resolving the user the other just dropped.
+   *
+   * State that is meaningful only relative to the identified user belongs here. State scoped to
+   * the interaction as a whole does not: the captcha result and the requested authentication
+   * context outlive an event change, and the verification records are kept deliberately, since
+   * a registration that follows a failed sign-in creates the account from the same record.
+   */
+  private clearIdentityScopedState() {
+    this.profile.cleanUp();
+    this.mfa.cleanUp();
+    this.trustedDevice.cleanUp();
+    this.authenticationProofs.clear();
+    this.userId = undefined;
+    this.userCache = undefined;
   }
 
   /**

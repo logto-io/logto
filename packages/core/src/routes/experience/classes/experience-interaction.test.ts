@@ -163,6 +163,7 @@ const createSignInInteraction = ({
   interactionResult = {},
   signInExperienceOverrides = {},
   connectors = [],
+  withPersistedResult = false,
 }: {
   headers?: Record<string, string>;
   interactionEvent?: InteractionEvent;
@@ -171,6 +172,12 @@ const createSignInInteraction = ({
   interactionResult?: Record<string, unknown>;
   signInExperienceOverrides?: Partial<SignInExperience>;
   connectors?: Array<{ type: ConnectorType }>;
+  /**
+   * Resolve `provider.interactionDetails()` to the seeded details, so that `save()` merges over a
+   * previously persisted result the way a real second request does. Off by default, since the
+   * default mock reports no previous result at all.
+   */
+  withPersistedResult?: boolean;
 } = {}) => {
   const userGeoLocations = {
     upsertUserGeoLocation: jest.fn().mockResolvedValue(null),
@@ -211,7 +218,10 @@ const createSignInInteraction = ({
     }
   );
   const getUserContext = jest.fn().mockResolvedValue(mockJwtCustomizerUserContext);
-  const provider = createMockProvider();
+  const interactionDetailsMock = jest.fn();
+  const provider = withPersistedResult
+    ? createMockProvider(interactionDetailsMock)
+    : createMockProvider();
   const signInTenant = new MockTenant(
     provider,
     {
@@ -251,6 +261,9 @@ const createSignInInteraction = ({
       ...interactionResult,
     },
   } as unknown as Interaction;
+
+  interactionDetailsMock.mockResolvedValue(interactionDetails);
+
   const signInContext: WithHooksAndLogsContext = {
     assignReleaseOnSuccessInteractionHookResult: jest.fn(),
     assignReleaseAnywayInteractionHookResult: jest.fn(),
@@ -544,6 +557,65 @@ describe('ExperienceInteraction class', () => {
 
       await experienceInteraction.setInteractionEvent(InteractionEvent.Register);
       expect(experienceInteraction.toJson().authenticationProofs).toEqual([]);
+    });
+
+    it('clears the identified user when the interaction event changes, like the profile', async () => {
+      const { experienceInteraction } = createSignInInteraction({
+        interactionResult: { userId: mockUser.id },
+      });
+
+      await experienceInteraction.setInteractionEvent(InteractionEvent.SignIn);
+      expect(experienceInteraction.toJson().userId).toBe(mockUser.id);
+
+      await experienceInteraction.setInteractionEvent(InteractionEvent.Register);
+      expect(experienceInteraction.toJson().userId).toBeUndefined();
+    });
+
+    it('clears the state staged against the identified user when the event changes', async () => {
+      const { experienceInteraction } = createSignInInteraction({
+        interactionResult: {
+          userId: mockUser.id,
+          mfa: { totp: { type: MfaFactor.TOTP, secret: 'totp-secret' } },
+          trustedDeviceOptIn: { trusted: true, deviceId: 'device-id' },
+        },
+      });
+
+      await experienceInteraction.setInteractionEvent(InteractionEvent.SignIn);
+      expect(experienceInteraction.toJson()).toMatchObject({
+        mfa: { totp: { type: MfaFactor.TOTP, secret: 'totp-secret' } },
+        trustedDeviceOptIn: { trusted: true, deviceId: 'device-id' },
+      });
+
+      // A factor bound, or a device trusted, while one user was identified would otherwise carry
+      // to whichever user the interaction ends with.
+      await experienceInteraction.setInteractionEvent(InteractionEvent.Register);
+      expect(experienceInteraction.toJson().mfa).toEqual({});
+      expect(experienceInteraction.toJson().trustedDeviceOptIn).toBeUndefined();
+    });
+
+    it('drops the trusted-device decision from the result it persists', async () => {
+      const { experienceInteraction, provider } = createSignInInteraction({
+        withPersistedResult: true,
+        interactionResult: {
+          userId: mockUser.id,
+          trustedDeviceOptIn: { trusted: true, deviceId: 'device-id' },
+        },
+      });
+
+      await experienceInteraction.setInteractionEvent(InteractionEvent.Register);
+      await experienceInteraction.save();
+
+      // `save()` merges over the result already persisted, so a decision the interaction leaves
+      // out of its own JSON would survive the merge and come back on the next request. Asserting
+      // on `toJson()` alone cannot see that, since an absent key reads as `undefined` either way.
+      expect(provider.interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.not.objectContaining({
+          trustedDeviceOptIn: { trusted: true, deviceId: 'device-id' },
+        }),
+        expect.anything()
+      );
     });
 
     it('does not let the proofs outlive the interaction', async () => {
@@ -1080,6 +1152,32 @@ describe('ExperienceInteraction class', () => {
 
       expect(experienceInteraction.identifiedUserId).toBe(mockUserWithMfaVerifications.id);
       expect(experienceInteraction.toJson().authenticationProofs).toHaveLength(1);
+    });
+
+    it('refuses an MFA challenge that names a user other than the subject', () => {
+      const { experienceInteraction, stepUpTenant } = createInteraction({
+        details: { authenticationContext: stepUpContext },
+      });
+      const { libraries, queries } = stepUpTenant;
+
+      experienceInteraction.setVerificationRecord(
+        new MfaEmailCodeVerification(libraries, queries, {
+          id: 'mfa-email-verification-id',
+          type: VerificationType.MfaEmailVerificationCode,
+          identifier: { type: SignInIdentifier.Email, value: 'foo@example.com' },
+          templateType: TemplateType.MfaVerification,
+          verified: true,
+          userId: 'someone-else',
+        })
+      );
+
+      expect(() =>
+        experienceInteraction.consumeForMfa(
+          VerificationType.MfaEmailVerificationCode,
+          'mfa-email-verification-id'
+        )
+      ).toThrow(new RequestError({ code: 'session.verification_failed', status: 400 }));
+      expect(experienceInteraction.toJson().authenticationProofs).toHaveLength(0);
     });
 
     it('forbids identifying another user than the subject', async () => {
@@ -2766,6 +2864,7 @@ describe('ExperienceInteraction class', () => {
             identifier: { type: SignInIdentifier.Email, value: mockUser.primaryEmail },
             templateType: TemplateType.MfaVerification,
             verified: true,
+            userId: mockUser.id,
           },
         ]
       );

@@ -234,7 +234,9 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
       ctx.body = await sendCode({
         identifier,
         createVerificationRecord: () =>
-          createNewMfaCodeVerificationRecord(libraries, queries, identifier),
+          createNewMfaCodeVerificationRecord(libraries, queries, identifier, {
+            userId: experienceInteraction.subjectUserId,
+          }),
         libraries,
         queries,
         ctx,

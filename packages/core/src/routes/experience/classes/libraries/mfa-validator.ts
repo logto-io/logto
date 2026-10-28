@@ -165,6 +165,10 @@ export class MfaValidator {
         verification.isVerified &&
         // New bind MFA verification can not be used for verification
         !verification.isNewBindMfaVerification &&
+        // An MFA challenge is created for one account and answers for that account only, so a
+        // record counts only for the user it names. Every type names its owner at creation, so a
+        // record without one was not created for any user and counts for nobody.
+        verification.userId === this.user.id &&
         // Check if the verification type is enabled in the user's MFA settings
         userEnabledMfaVerifications.includes(mfaVerificationTypeToMfaFactorMap[verification.type])
     );
