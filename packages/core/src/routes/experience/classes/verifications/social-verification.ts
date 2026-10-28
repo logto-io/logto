@@ -35,7 +35,6 @@ import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
-import { assertNoAuthorizationError } from '#src/utils/connectors/authorization-error.js';
 import { type LogtoConnector } from '#src/utils/connectors/types.js';
 
 import type { InteractionProfile } from '../../types.js';
@@ -431,8 +430,6 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     { provider }: TenantContext,
     connectorSessionType: SocialAuthorizationSessionStorageType
   ) {
-    assertNoAuthorizationError(connectorData);
-
     const connector = await this.getConnectorData();
 
     // Verify the CSRF token if it's a Google connector and has credential (a Google One Tap verification)

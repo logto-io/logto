@@ -80,7 +80,7 @@ export default function adminUserSocialRoutes<T extends ManagementApiRouter>(
         connectorData: record(string(), unknown()),
       }),
       response: identitiesGuard,
-      status: [200, 404, 422],
+      status: [200, 401, 404, 422],
     }),
     async (ctx, next) => {
       const {

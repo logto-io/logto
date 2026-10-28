@@ -90,7 +90,7 @@ export default function socialVerificationRoutes<T extends ExperienceInteraction
       response: z.object({
         verificationId: z.string(),
       }),
-      status: [200, 400, 404],
+      status: [200, 400, 401, 404],
     }),
     koaExperienceVerificationsAuditLog({
       type: VerificationType.Social,

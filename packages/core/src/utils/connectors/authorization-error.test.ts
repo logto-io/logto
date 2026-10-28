@@ -40,6 +40,14 @@ describe('assertNoAuthorizationError()', () => {
     }).toThrow(ConnectorError);
   });
 
+  it('should throw on the cancellation codes of Sign in with Apple and LinkedIn', () => {
+    for (const error of ['user_cancelled_authorize', 'user_cancelled_login']) {
+      expect(() => {
+        assertNoAuthorizationError({ error, state: 'state' });
+      }).toThrow(new ConnectorError(ConnectorErrorCodes.AuthorizationFailed, { error }));
+    }
+  });
+
   it('should leave the other error codes to the connector', () => {
     for (const error of ['server_error', 'redirect_uri_mismatch', 'invalid_scope']) {
       expect(() => {

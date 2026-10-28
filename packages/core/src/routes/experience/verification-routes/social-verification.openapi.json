@@ -87,6 +87,9 @@
           "400": {
             "description": "The social authorization response is invalid or cannot be verified."
           },
+          "401": {
+            "description": "The user declined the authorization or cancelled at the social provider (`connector.authorization_failed`, with the provider's `error` and `error_description`)."
+          },
           "404": {
             "description": "The social connector is not found."
           },
