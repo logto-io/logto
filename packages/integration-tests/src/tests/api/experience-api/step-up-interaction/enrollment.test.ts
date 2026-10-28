@@ -294,7 +294,7 @@ devFeatureTest.describe('establishing and enrolling inside pure step-up', () => 
           connectorId,
           target === 'another account' ? otherSocialId : generateTestName()
         ),
-        { code: 'session.identity_conflict', status: 403 }
+        { code: 'session.step_up.subject_mismatch', status: 403 }
       );
       const rejected = await client.getInteractionData();
       expect(rejected.authenticationContext).toMatchObject({
@@ -314,6 +314,33 @@ devFeatureTest.describe('establishing and enrolling inside pure step-up', () => 
       expect(usersAfter.headers.get('total-number')).toBe(userCount);
     }
   );
+
+  it('retries a rejected subject proof with the linked account and completes the step-up', async () => {
+    const { client, id, socialUserId } = await signInWithSocial();
+    const other = await userApi.create({});
+    const otherSocialId = await linkSocialIdentity(other.id, connectorId);
+    await startStepUp(client, firstFactorAcr);
+
+    await expectRejects(identifyWithSocial(client, connectorId, otherSocialId), {
+      code: 'session.step_up.subject_mismatch',
+      status: 403,
+    });
+
+    // The mismatch leaves the interaction pinned to the subject, so the linked account can retry.
+    await identifyWithSocial(client, connectorId, socialUserId);
+    const identified = await client.getInteractionData();
+    expect(identified.userId).toBe(id);
+
+    const password = generatePassword();
+    await client.updateProfile({ type: 'password', value: password });
+    const submittedAt = nowInSeconds();
+    expectAuthenticationContext(
+      await submitStepUp(client),
+      { sub: id, acr: firstFactorAcr, amr: ['fed', 'pwd'] },
+      submittedAt
+    );
+    await verifyUserPassword(id, password);
+  });
 
   it('redirects with unmet_authentication_requirements at creation when nothing is establishable', async () => {
     const { client, id } = await signInWithSocial();

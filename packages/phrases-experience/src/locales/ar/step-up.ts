@@ -7,6 +7,9 @@ const step_up = {
   enter_verification_code_description: 'أدخل رمز التحقق المُرسل إلى {{identifier}}.',
   subject_proof_description:
     'للمتابعة، أكّد أنك أنت من خلال حساب مرتبط بحسابك. يمكنك بعد ذلك إعداد طريقة تحقق.',
+  subject_mismatch: 'الحساب غير متطابق',
+  subject_mismatch_description:
+    'الحساب الذي استخدمته ليس مرتبطًا بحسابك. استخدم حسابًا مرتبطًا، وبدّل الحساب لدى المزوّد إذا لزم الأمر.',
   no_method_available: 'لا توجد طريقة تحقق متاحة',
   no_method_available_description:
     'لا يحتوي حسابك على أي طريقة يمكنها إكمال هذا التحقق. يرجى التواصل مع المسؤول للحصول على المساعدة.',

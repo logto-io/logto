@@ -7,6 +7,9 @@ const step_up = {
   enter_verification_code_description: '輸入發送至 {{identifier}} 的驗證碼。',
   subject_proof_description:
     '請透過與你帳戶關聯的另一個帳戶確認是你本人，以繼續操作。之後你可以設定驗證方式。',
+  subject_mismatch: '帳戶不相符',
+  subject_mismatch_description:
+    '你使用的帳戶未連結到你的帳戶。請使用已連結的帳戶；如有需要，請先在第三方服務商處切換帳戶。',
   no_method_available: '沒有可用的驗證方式',
   no_method_available_description: '你的帳戶沒有可完成此驗證的方式。請聯絡你的管理員以尋求協助。',
 };

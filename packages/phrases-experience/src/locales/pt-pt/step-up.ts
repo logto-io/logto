@@ -8,6 +8,9 @@ const step_up = {
     'Introduza o código de verificação enviado para {{identifier}}.',
   subject_proof_description:
     'Para continuar, confirme que é você através de uma conta associada à sua. Depois, poderá configurar um método de verificação.',
+  subject_mismatch: 'A conta não corresponde',
+  subject_mismatch_description:
+    'A conta que utilizou não está associada à sua conta. Utilize uma conta associada e, se necessário, mude de conta no fornecedor.',
   no_method_available: 'Nenhum método de verificação disponível',
   no_method_available_description:
     'A sua conta não tem nenhum método que possa concluir esta verificação. Contacte o seu administrador para obter assistência.',

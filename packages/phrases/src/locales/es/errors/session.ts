@@ -56,6 +56,8 @@ const session = {
       'La autenticación reforzada solo está disponible para interacciones de inicio de sesión.',
     subject_not_found:
       'No se encontró una sesión autenticada para la autenticación reforzada. Inicia sesión de nuevo.',
+    subject_mismatch:
+      'La cuenta que usaste no coincide con la cuenta con la que iniciaste sesión. Inténtalo de nuevo con la cuenta con la que iniciaste sesión.',
     forbidden_route: 'Esta ruta no está permitida durante la autenticación reforzada.',
     forbidden_identifier:
       'No se permite un identificador durante la autenticación reforzada. Vuelve a intentarlo sin el campo de identificador.',

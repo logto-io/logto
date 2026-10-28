@@ -50,6 +50,8 @@ const session = {
     invalid_interaction_event: 'Step-up authentication is only available for sign-in interactions.',
     subject_not_found:
       'No authenticated session was found for step-up authentication. Please sign in again.',
+    subject_mismatch:
+      'The account you used does not match the account you are signed in as. Try again with the account you signed in with.',
     forbidden_route: 'This route is not allowed during step-up authentication.',
     forbidden_identifier:
       'An identifier is not allowed during step-up authentication. Retry without the identifier field.',
