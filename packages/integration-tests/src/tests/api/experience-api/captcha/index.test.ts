@@ -3,7 +3,7 @@ import { generateStandardId } from '@logto/shared';
 
 import { mockSocialConnectorId } from '#src/__mocks__/connectors-mock.js';
 import { deleteUser } from '#src/api/admin-user.js';
-import { createOneTimeToken } from '#src/api/one-time-token.js';
+import { createOneTimeToken, deleteOneTimeTokenById } from '#src/api/one-time-token.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { SsoConnectorApi } from '#src/api/sso-connector.js';
 import { setAlwaysFailCaptcha, setAlwaysPassCaptcha } from '#src/helpers/captcha.js';
@@ -272,6 +272,7 @@ describe('captcha', () => {
       const { redirectTo } = await client.submitInteraction();
       const userId = await processSession(client, redirectTo);
       await deleteUser(userId);
+      await deleteOneTimeTokenById(oneTimeToken.id);
     });
   });
 
