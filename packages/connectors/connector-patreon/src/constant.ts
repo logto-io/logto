@@ -5,7 +5,16 @@ import { clientIdFormItem, clientSecretFormItem, scopeFormItem } from '@logto/co
 export const authorizationEndpoint = 'https://www.patreon.com/oauth2/authorize';
 export const scope = 'identity identity[email]';
 export const tokenEndpoint = 'https://www.patreon.com/api/oauth2/token';
-export const userInfoEndpoint = 'https://www.patreon.com/api/oauth2/api/current_user';
+export const userInfoEndpoint = 'https://www.patreon.com/api/oauth2/v2/identity';
+// Patreon API v2 returns no attributes unless they are explicitly requested.
+export const userInfoFields = [
+  'email',
+  'full_name',
+  'image_url',
+  'is_email_verified',
+  'url',
+  'vanity',
+];
 
 export const defaultMetadata: ConnectorMetadata = {
   id: 'patreon-universal',

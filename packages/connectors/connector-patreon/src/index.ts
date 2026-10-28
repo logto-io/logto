@@ -26,6 +26,7 @@ import {
   authorizationEndpoint,
   scope as defaultScope,
   userInfoEndpoint,
+  userInfoFields,
   defaultMetadata,
   defaultTimeout,
   tokenEndpoint,
@@ -115,6 +116,9 @@ const getUserInfo =
 
     try {
       const userInfoResponse = await ky.get(userInfoEndpoint, {
+        searchParams: {
+          'fields[user]': userInfoFields.join(','),
+        },
         headers: {
           authorization: `${tokenType} ${accessToken}`,
         },
