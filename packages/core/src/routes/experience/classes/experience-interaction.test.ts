@@ -2676,7 +2676,10 @@ describe('ExperienceInteraction class', () => {
             }),
           ]);
         }
-      }
+      },
+      // These flows do more work than the rest of the file, and a loaded CI runner can pause
+      // them long enough to exceed the default 5s budget.
+      30_000
     );
 
     it('does not count an enrolled passkey as its own fresh first factor', async () => {
