@@ -1,5 +1,6 @@
 /* eslint-disable max-lines */
 import { TemplateType } from '@logto/connector-kit';
+import { PasswordPolicyChecker } from '@logto/core-kit';
 import {
   AdditionalIdentifier,
   adminConsoleApplicationId,
@@ -154,16 +155,11 @@ const mockJwtCustomizerUserContext: JwtCustomizerUserContext = {
 };
 
 const ExperienceInteraction = await pickDefault(import('./experience-interaction.js'));
-const { default: passwordEncryptionWorker } = await import(
-  '#src/workers/password-encryption-worker.js'
-);
 
-// Hash in-process instead of through the worker thread, which is slow enough on a loaded CI
-// runner to intermittently exceed the default Jest timeout. These flows only need a digest.
-jest.spyOn(passwordEncryptionWorker, 'run').mockResolvedValue('argon2:xxx');
-// The pool starts its workers on import; stop them so their bootstrap does not compete with
-// the tests that never use them.
-await passwordEncryptionWorker.destroy();
+// `setPasswordDigestWithValidation` runs the password policy, whose pwned check fetches
+// `https://api.pwnedpasswords.com`. Keep this unit test offline; `password-policy.test.ts`
+// covers the pwned behavior.
+jest.spyOn(PasswordPolicyChecker.prototype, 'hasBeenPwned').mockResolvedValue(false);
 
 const createSignInInteraction = ({
   headers,
@@ -2676,10 +2672,7 @@ describe('ExperienceInteraction class', () => {
             }),
           ]);
         }
-      },
-      // These flows do more work than the rest of the file, and a loaded CI runner can pause
-      // them long enough to exceed the default 5s budget.
-      30_000
+      }
     );
 
     it('does not count an enrolled passkey as its own fresh first factor', async () => {
