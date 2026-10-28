@@ -166,7 +166,7 @@ describe('<Security /> with passkey sign-in enabled', () => {
   });
 
   it('warns to add a second verification method when only a passkey is configured', async () => {
-    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
+    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false, enabled: true });
     const { queryByText } = renderSecurity({
       factors: [MfaFactor.TOTP, MfaFactor.WebAuthn],
       mfaVerifications: [
