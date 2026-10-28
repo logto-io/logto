@@ -12,9 +12,23 @@ type CleanupResponse = {
   deletedRange?: { oldest: number; newest: number };
 };
 
-// Integration coverage for `DELETE /api/logs`. The endpoint accepts no log filter, so the
-// window is deliberately far in the past where no other test writes rows; the unique log key
-// then keeps this test's fixtures distinguishable for seeding and verification.
+// Integration coverage for `DELETE /api/logs`.
+//
+// The rows are inserted directly with SQL rather than produced through the API, matching the
+// approach already used in this directory by `time-window.test.ts`, `log-payload-keys.test.ts`
+// and `trusted-device.test.ts`. Three reasons:
+//
+// 1. `created_at` is always `now()` for logs the application writes, while this endpoint's
+//    contract is about *exclusive* boundaries: the fixture needs rows sitting exactly on each
+//    bound and 1 ms inside it, which no API call can place.
+// 2. The Management API does not write audit logs at all — `koaAuditLog` is mounted on the
+//    experience router only — so driving this suite's API cannot produce the needed rows.
+// 3. The delete filters by time alone and has no log-key filter, so borrowing rows produced by
+//    other tests would delete shared state and make this test depend on execution order.
+//
+// The window is deliberately far in the past where no other test writes rows, and the unique log
+// key keeps this test's fixtures distinguishable. The assertions still read back through the API
+// (GET before and after), so the seeded rows are never trusted blindly.
 describe('DELETE /logs cleanup', () => {
   // 2020-09-13T12:26:40.000Z, one minute wide.
   const lowerBound = 1_600_000_000_000;
