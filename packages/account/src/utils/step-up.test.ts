@@ -234,18 +234,15 @@ describe('hasFreshSubpageAuthenticationContext', () => {
     [60, -16, false],
     [7200, 6900, true],
     [7200, 6901, false],
-  ])(
-    'checks a %p-second tenant window at an auth age of %p seconds',
-    (window, age, expected) => {
-      expect(
-        hasFreshSubpageAuthenticationContext(
-          { acr: LogtoAcr.FirstFactor, auth_time: authTimeOfAge(age) },
-          window,
-          now
-        )
-      ).toBe(expected);
-    }
-  );
+  ])('checks a %p-second tenant window at an auth age of %p seconds', (window, age, expected) => {
+    expect(
+      hasFreshSubpageAuthenticationContext(
+        { acr: LogtoAcr.FirstFactor, auth_time: authTimeOfAge(age) },
+        window,
+        now
+      )
+    ).toBe(expected);
+  });
 
   it('accepts a context that fits the entry cutoff without subtracting the margin again', () => {
     const claims = { acr: LogtoAcr.FirstFactor, auth_time: authTimeOfAge(270) };

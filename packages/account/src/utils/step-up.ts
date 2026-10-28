@@ -100,9 +100,7 @@ export const getSubpageAuthenticationMaxAgeSeconds = (
  * the cutoff would then be answered by silently reusing the very context the restored page
  * rejects.
  */
-export const getSubpageStepUpMaxAgeSeconds = (
-  maximumAuthenticationAgeInSeconds: number
-): number =>
+export const getSubpageStepUpMaxAgeSeconds = (maximumAuthenticationAgeInSeconds: number): number =>
   Math.max(
     0,
     getSubpageAuthenticationMaxAgeSeconds(maximumAuthenticationAgeInSeconds) -
