@@ -166,12 +166,8 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
     // Fold instead of spreading into `Math.min` / `Math.max`: the spread is limited by the
     // engine's maximum argument count, which `maxDeleteLimit` could exceed if it is raised.
     //
-    // The seeds are the identity elements of min/max — the largest and smallest representable
-    // numbers — not timestamps. Seeding `oldest` with `0` would be wrong, because no real
-    // timestamp is below the epoch, so `0` would win every `min`; seeding `newest` with a
-    // "never expires"-style sentinel (for example `9999-12-31T23:59:59Z`) would be wrong for the
-    // same reason in the other direction. `rows` is non-empty here, so both seeds are always
-    // replaced by real values before this object is returned.
+    // The seeds are the identity elements for min/max. `rows` is non-empty here (the empty case
+    // returned above), so both are always replaced by real timestamps before this is returned.
     const deletedRange = timestamps.reduce(
       (range, timestamp) => ({
         oldest: Math.min(range.oldest, timestamp),
