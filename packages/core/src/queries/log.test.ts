@@ -30,13 +30,13 @@ describe('deleteLogsBefore()', () => {
         query,
         sql`
           delete from ${table}
-          where ${fields.id} in (
-            select ${fields.id}
+          where ctid = any(array(
+            select ctid
             from ${table}
             where ${fields.createdAt} < to_timestamp($1::double precision / 1000)
             order by ${fields.createdAt}, ${fields.id}
             limit $2
-          )
+          ))
           returning ${fields.createdAt}
         `.sql
       );
@@ -59,14 +59,14 @@ describe('deleteLogsBefore()', () => {
         query,
         sql`
           delete from ${table}
-          where ${fields.id} in (
-            select ${fields.id}
+          where ctid = any(array(
+            select ctid
             from ${table}
             where ${fields.createdAt} < to_timestamp($1::double precision / 1000)
               and ${fields.createdAt} > to_timestamp($2::double precision / 1000)
             order by ${fields.createdAt}, ${fields.id}
             limit $3
-          )
+          ))
           returning ${fields.createdAt}
         `.sql
       );
@@ -87,14 +87,14 @@ describe('deleteLogsBefore()', () => {
         query,
         sql`
           delete from ${table}
-          where ${fields.id} in (
-            select ${fields.id}
+          where ctid = any(array(
+            select ctid
             from ${table}
             where ${fields.createdAt} < to_timestamp($1::double precision / 1000)
               and ${fields.createdAt} > to_timestamp($2::double precision / 1000)
             order by ${fields.createdAt}, ${fields.id}
             limit $3
-          )
+          ))
           returning ${fields.createdAt}
         `.sql
       );

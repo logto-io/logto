@@ -138,17 +138,23 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
         ? sql``
         : sql`and ${fields.createdAt} > to_timestamp(${after}::double precision / 1000)`;
 
+    // Match on `ctid`, not `id`. `id in (select id ... limit n)` is planned as a semi-join whose
+    // outer side carries no qual, so Postgres scans the whole table and joins to the bounded set
+    // afterwards — a full seq scan that grows with the tenant. `ctid = any(array(select ...))`
+    // makes the inner select an InitPlan and the outer a Tid Scan, so the statement touches only
+    // the `limit` rows it deletes. `ctid` is stable for this table because audit logs are
+    // append-only; a row updated between the InitPlan and the scan would simply not be deleted.
     // Tenant isolation is enforced by RLS through the tenant-scoped pool.
     const rows = await pool.any<{ createdAt: number }>(sql`
       delete from ${table}
-      where ${fields.id} in (
-        select ${fields.id}
+      where ctid = any(array(
+        select ctid
         from ${table}
         where ${fields.createdAt} < to_timestamp(${before}::double precision / 1000)
         ${afterCondition}
         order by ${fields.createdAt}, ${fields.id}
         limit ${limit}
-      )
+      ))
       returning ${fields.createdAt}
     `);
 
