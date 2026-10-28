@@ -53,6 +53,23 @@ describe('checkNodeVersion', () => {
       warning: 'Logto is tested under NodeJS ^22.23.4 || ^26.12.1, but version 24.0.0 found.',
     });
   });
+
+  it('should handle comparator, tilde and wildcard ranges', () => {
+    expect(checkNodeVersion('>=22.14.0', 'v26.12.1')).toEqual({});
+    expect(checkNodeVersion('>=26.0.0', 'v22.14.0')).toEqual({
+      fatalError: 'Logto requires NodeJS >=26.0.0, but 22.14.0 found.',
+    });
+    expect(checkNodeVersion('~22.23.4', 'v26.12.1')).toEqual({
+      warning: 'Logto is tested under NodeJS ~22.23.4, but version 26.12.1 found.',
+    });
+    expect(checkNodeVersion('22.x', 'v24.0.0')).toEqual({
+      warning: 'Logto is tested under NodeJS 22.x, but version 24.0.0 found.',
+    });
+  });
+
+  it('should do nothing for an unparsable range', () => {
+    expect(checkNodeVersion('not-a-range', 'v26.12.1')).toEqual({});
+  });
 });
 
 describe('validateServerNodeVersion', () => {

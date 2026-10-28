@@ -42,22 +42,27 @@ export const checkNodeVersion = (
   currentVersion: string,
   subject = 'Logto'
 ): NodeVersionCheck => {
-  const requiredRange = new semver.Range(requiredVersionString);
-  const required = requiredVersionString
-    .split('||')
-    .map((version) => new semver.SemVer(version.trim().replace(/^\^/, '')));
+  const required = semver.validRange(requiredVersionString)
+    ? semver.minVersion(requiredVersionString)
+    : null;
   const current = new semver.SemVer(currentVersion);
+
+  // An unparsable range carries no requirement to validate, matching how a missing or invalid
+  // release manifest is handled.
+  if (!required) {
+    return {};
+  }
 
   // Exit if the major version is lower than the required version since there may be changes that
   // break the compatibility.
-  if (required.every((version) => version.major > current.major)) {
+  if (required.major > current.major) {
     return {
       fatalError: `${subject} requires NodeJS ${requiredVersionString}, but ${current.version} found.`,
     };
   }
 
   // Only warn for incompatible minor/patch versions or higher major versions.
-  if (!requiredRange.test(current.version)) {
+  if (!semver.satisfies(current.version, requiredVersionString)) {
     return {
       warning: `${subject} is tested under NodeJS ${requiredVersionString}, but version ${current.version} found.`,
     };
