@@ -216,7 +216,7 @@ export const validateSwaggerDocument = (document: OpenAPIV3.Document) => {
     }
 
     for (const method of Object.values(OpenAPIV3.HttpMethods)) {
-      const operation = operations[method];
+      const operation: OpenAPIV3.PathItemObject[OpenAPIV3.HttpMethods] = operations[method];
 
       if (!operation) {
         continue;

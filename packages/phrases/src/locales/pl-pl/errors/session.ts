@@ -53,6 +53,8 @@ const session = {
       'Uwierzytelnianie step-up jest dostępne tylko dla interakcji logowania.',
     subject_not_found:
       'Nie znaleziono uwierzytelnionej sesji dla uwierzytelniania step-up. Zaloguj się ponownie.',
+    subject_mismatch:
+      'Konto, którego użyto, nie odpowiada kontu, na którym jesteś zalogowany. Spróbuj ponownie z kontem, na którym się zalogowałeś.',
     forbidden_route: 'Ta trasa nie jest dozwolona podczas uwierzytelniania step-up.',
     forbidden_identifier:
       'Identyfikator nie jest dozwolony podczas uwierzytelniania step-up. Spróbuj ponownie bez pola identyfikatora.',

@@ -139,6 +139,13 @@ describe('security-page utils with passkey sign-in enabled', () => {
   });
 
   it('hasConfiguredSecondFactor does not count WebAuthn while passkey sign-in is enabled', () => {
+    const secondFactorSettings = {
+      ...experienceSettings,
+      mfa: {
+        factors: [MfaFactor.TOTP, MfaFactor.WebAuthn],
+        policy: MfaPolicy.UserControlled,
+      },
+    };
     const webAuthnOnly = [
       { id: 'webauthn', createdAt: '2026-05-13T00:00:00.000Z', type: MfaFactor.WebAuthn },
     ] satisfies UserMfaVerificationResponse;
@@ -148,13 +155,91 @@ describe('security-page utils with passkey sign-in enabled', () => {
     ] satisfies UserMfaVerificationResponse;
 
     // Passkey sign-in on: a lone WebAuthn credential is a sign-in passkey, not a second factor.
-    expect(hasConfiguredSecondFactor(webAuthnOnly, experienceSettings)).toBe(false);
-    expect(hasConfiguredSecondFactor(webAuthnAndTotp, experienceSettings)).toBe(true);
-    expect(hasConfiguredSecondFactor([], experienceSettings)).toBe(false);
-    expect(hasConfiguredSecondFactor(undefined, experienceSettings)).toBe(false);
+    expect(hasConfiguredSecondFactor(webAuthnOnly, secondFactorSettings)).toBe(false);
+    expect(hasConfiguredSecondFactor(webAuthnAndTotp, secondFactorSettings)).toBe(true);
+    expect(hasConfiguredSecondFactor([], secondFactorSettings)).toBe(false);
+    expect(hasConfiguredSecondFactor(undefined, secondFactorSettings)).toBe(false);
 
     // Passkey sign-in off: WebAuthn counts as a configured second factor as before.
-    const passkeySignInOff = { ...experienceSettings, passkeySignIn: { enabled: false } };
+    const passkeySignInOff = { ...secondFactorSettings, passkeySignIn: { enabled: false } };
     expect(hasConfiguredSecondFactor(webAuthnOnly, passkeySignInOff)).toBe(true);
+  });
+});
+
+describe('hasConfiguredSecondFactor', () => {
+  const getSettings = (factors: MfaFactor[]) => ({
+    socialConnectors: [],
+    mfa: { factors, policy: MfaPolicy.UserControlled },
+    passkeySignIn: { enabled: false },
+  });
+
+  const totp = {
+    id: 'totp',
+    createdAt: '2026-05-13T00:00:00.000Z',
+    type: MfaFactor.TOTP,
+  } satisfies UserMfaVerificationResponse[number];
+
+  it('counts only factors enabled in the sign-in experience', () => {
+    expect(hasConfiguredSecondFactor([totp], getSettings([]))).toBe(false);
+    expect(hasConfiguredSecondFactor([totp], getSettings([MfaFactor.WebAuthn]))).toBe(false);
+    expect(hasConfiguredSecondFactor([totp], getSettings([MfaFactor.TOTP]))).toBe(true);
+  });
+
+  it('counts implicit email and phone factors when the primary identifier exists', () => {
+    expect(
+      hasConfiguredSecondFactor([], getSettings([MfaFactor.EmailVerificationCode]), {
+        primaryEmail: 'alex@example.com',
+      })
+    ).toBe(true);
+    expect(
+      hasConfiguredSecondFactor([], getSettings([MfaFactor.EmailVerificationCode]), {
+        primaryEmail: null,
+      })
+    ).toBe(false);
+    expect(
+      hasConfiguredSecondFactor([], getSettings([MfaFactor.PhoneVerificationCode]), {
+        primaryPhone: '+14155550100',
+      })
+    ).toBe(true);
+    expect(
+      hasConfiguredSecondFactor([], getSettings([MfaFactor.PhoneVerificationCode]), {
+        primaryPhone: null,
+      })
+    ).toBe(false);
+    expect(hasConfiguredSecondFactor([], getSettings([MfaFactor.EmailVerificationCode]))).toBe(
+      false
+    );
+
+    // The Account Center can hide the email / phone fields, so the profile exposes
+    // privacy-safe availability flags independently of the identifiers.
+    expect(
+      hasConfiguredSecondFactor([], getSettings([MfaFactor.EmailVerificationCode]), {
+        hasPrimaryEmail: true,
+      })
+    ).toBe(true);
+    expect(
+      hasConfiguredSecondFactor([], getSettings([MfaFactor.PhoneVerificationCode]), {
+        hasPrimaryPhone: true,
+      })
+    ).toBe(true);
+  });
+
+  it('counts backup codes only while unused codes remain', () => {
+    const backupCode = {
+      id: 'backup-code',
+      createdAt: '2026-05-13T00:00:00.000Z',
+      type: MfaFactor.BackupCode,
+      remainCodes: 0,
+    } satisfies UserMfaVerificationResponse[number];
+
+    expect(hasConfiguredSecondFactor([backupCode], getSettings([MfaFactor.BackupCode]))).toBe(
+      false
+    );
+    expect(
+      hasConfiguredSecondFactor(
+        [{ ...backupCode, remainCodes: 1 }],
+        getSettings([MfaFactor.BackupCode])
+      )
+    ).toBe(true);
   });
 });

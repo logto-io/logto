@@ -7,12 +7,15 @@ import { type VerificationCodeIdentifier } from '@/types';
  * The pages of the `/step-up` route tree. The landing runs the server-driven dispatch, and the
  * pinned-user first-factor pages verify the pinned subject's password or primary email / phone
  * code. A sign-in with requested ACR reaches the same pages through the landing, which
- * `session.step_up.require_verification` navigates to.
+ * `session.step_up.require_verification` navigates to. The subject-mismatch page is the
+ * recoverable exit of a subject proof that resolved to another account: the interaction is still
+ * valid, so it returns to the landing instead of the invalid-session page.
  */
 export const stepUpRoutes = Object.freeze({
   landing: `/${experience.routes.stepUp}`,
   password: `/${experience.routes.stepUp}/password`,
   verificationCode: `/${experience.routes.stepUp}/verification-code`,
+  subjectMismatch: `/${experience.routes.stepUp}/subject-mismatch`,
 });
 
 /**

@@ -62,7 +62,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
     async (ctx, next) => {
       const { id: userId, scopes } = ctx.auth;
       const { profile, user } = await getScopedProfile(queries, libraries, scopes, userId);
-      ctx.body = getAccountCenterFilteredProfile(profile, ctx.accountCenter, user);
+      ctx.body = getAccountCenterFilteredProfile(profile, ctx.accountCenter, scopes, user);
       return next();
     }
   );
@@ -137,7 +137,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
       ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
 
       const { profile } = await getScopedProfile(queries, libraries, scopes, userId);
-      ctx.body = getAccountCenterFilteredProfile(profile, ctx.accountCenter, updatedUser);
+      ctx.body = getAccountCenterFilteredProfile(profile, ctx.accountCenter, scopes, updatedUser);
 
       return next();
     }
@@ -241,8 +241,9 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
       const user = await findUserById(userId);
       const mfaData = userMfaDataGuard.safeParse(user.logtoConfig[userMfaDataKey]);
       const skipMfaOnSignIn = mfaData.success ? (mfaData.data.skipMfaOnSignIn ?? false) : false;
+      const enabled = mfaData.success ? mfaData.data.enabled : undefined;
 
-      ctx.body = { skipMfaOnSignIn };
+      ctx.body = { skipMfaOnSignIn, enabled };
 
       return next();
     }
@@ -253,6 +254,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
     koaGuard({
       body: z.object({
         skipMfaOnSignIn: z.boolean(),
+        enabled: z.boolean().optional(),
       }),
       response: userMfaSettingsResponseGuard,
       status: [200, 400, 401, 403],
@@ -267,7 +269,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
       );
       await assertFirstPartyClient(queries, clientId);
 
-      const { skipMfaOnSignIn } = ctx.guard.body;
+      const { skipMfaOnSignIn, enabled } = ctx.guard.body;
       const { fields } = ctx.accountCenter;
       assertThat(
         fields.mfa === AccountCenterControlValue.Edit,
@@ -283,13 +285,19 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
           [userMfaDataKey]: {
             ...(existingMfaData.success ? existingMfaData.data : {}),
             skipMfaOnSignIn,
+            ...(enabled === undefined ? {} : { enabled }),
           },
         },
       });
 
       ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
 
-      ctx.body = { skipMfaOnSignIn };
+      const updatedMfaData = userMfaDataGuard.safeParse(updatedUser.logtoConfig[userMfaDataKey]);
+
+      ctx.body = {
+        skipMfaOnSignIn,
+        enabled: updatedMfaData.success ? updatedMfaData.data.enabled : undefined,
+      };
 
       return next();
     }

@@ -7,6 +7,7 @@ import { disableAdminPwnedPasswordCheckDescription } from '../database/seed/opti
 
 import {
   validateNodeVersion,
+  validateServerNodeVersion,
   inquireInstallPath,
   validateDatabase,
   downloadRelease,
@@ -44,6 +45,10 @@ const installLogto = async ({
   const tarPath =
     !downloadUrl || isUrl(downloadUrl) ? await downloadRelease(downloadUrl) : downloadUrl;
   await decompress(installPath, tarPath);
+
+  // The CLI supports older Node.js versions for standalone commands, but the downloaded server
+  // release may require a newer one.
+  await validateServerNodeVersion(installPath);
 
   // Seed database
   if (skipSeed) {

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Account MFA route scenarios are kept together. */
 import { UserScope } from '@logto/core-kit';
 import { AccountCenterControlValue, MfaFactor, type User } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
@@ -193,6 +194,75 @@ describe('account mfa verification routes', () => {
       expect(response.status).toBe(400);
       expect(mockValidateTotpToken).toHaveBeenCalledWith('new_totp_secret', 'bad-code');
       expect(updateUserById).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('POST /api/my-account/mfa-verifications backup codes', () => {
+    it('replaces an exhausted backup code record when generating new codes', async () => {
+      const exhaustedBackupCode = {
+        id: 'exhausted-backup-code',
+        createdAt: '2024-01-01T00:00:00.000Z',
+        type: MfaFactor.BackupCode as const,
+        codes: [{ code: '0123456789', usedAt: '2024-01-02T00:00:00.000Z' }],
+      };
+
+      findUserById.mockResolvedValueOnce({
+        ...mockUser,
+        mfaVerifications: [mockUserTotpMfaVerification, exhaustedBackupCode],
+      });
+      findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        mfa: { ...mockSignInExperience.mfa, factors: [MfaFactor.BackupCode] },
+      });
+
+      const codes = Array.from({ length: 10 }, (_, index) => index.toString(16).padStart(10, '0'));
+      const response = await accountRequest.post('/my-account/mfa-verifications').send({
+        type: MfaFactor.BackupCode,
+        codes,
+      });
+
+      expect(response.status).toBe(204);
+
+      const updatedMfaVerifications = getLastUpdatePayload()?.mfaVerifications ?? [];
+      expect(updatedMfaVerifications).toHaveLength(2);
+      expect(updatedMfaVerifications.some(({ id }) => id === exhaustedBackupCode.id)).toBe(false);
+      expect(updatedMfaVerifications).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ type: MfaFactor.TOTP }),
+          expect.objectContaining({
+            type: MfaFactor.BackupCode,
+            codes: codes.map((code) => expect.objectContaining({ code })),
+          }),
+        ])
+      );
+      expectUpdatedMfaEnabled(true);
+    });
+  });
+
+  describe('GET /api/my-account/mfa-verifications/backup-codes', () => {
+    it('returns the usable backup code record when an exhausted record also exists', async () => {
+      const exhaustedBackupCode = {
+        id: 'exhausted-backup-code',
+        createdAt: '2024-01-01T00:00:00.000Z',
+        type: MfaFactor.BackupCode as const,
+        codes: [{ code: '0123456789', usedAt: '2024-01-02T00:00:00.000Z' }],
+      };
+      const usableBackupCode = {
+        id: 'usable-backup-code',
+        createdAt: '2024-02-01T00:00:00.000Z',
+        type: MfaFactor.BackupCode as const,
+        codes: [{ code: '0123456789' }, { code: '9876543210', usedAt: '2024-02-02T00:00:00.000Z' }],
+      };
+
+      findUserById.mockResolvedValueOnce({
+        ...mockUser,
+        mfaVerifications: [exhaustedBackupCode, usableBackupCode],
+      });
+
+      const response = await accountRequest.get('/my-account/mfa-verifications/backup-codes');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({ codes: usableBackupCode.codes });
     });
   });
 
@@ -461,3 +531,4 @@ describe('account mfa verification routes', () => {
     });
   });
 });
+/* eslint-enable max-lines */

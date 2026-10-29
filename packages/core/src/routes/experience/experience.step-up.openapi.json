@@ -20,7 +20,7 @@
       "post": {
         "responses": {
           "403": {
-            "description": "The `SignIn` or `Register` interaction is disabled in the experience settings. <br/>- In a step-up authentication, the verification resolves to an account other than the pinned subject, or a social or enterprise SSO verification resolves to no account or asks to link the identity (`session.identity_conflict`); a step-up never registers or links an account."
+            "description": "The `SignIn` or `Register` interaction is disabled in the experience settings. <br/>- In a step-up authentication, a social or enterprise SSO verification resolves to another account or to no account (`session.step_up.subject_mismatch`); the interaction and its pinned subject remain valid, so the user can retry with another account. <br/>- A step-up identification asks to link the identity, or resolves to a different account than the interaction already identified (`session.identity_conflict`); a step-up never registers or links an account."
           }
         }
       }

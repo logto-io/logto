@@ -8,6 +8,9 @@ const step_up = {
   enter_verification_code_description: 'Inserisci il codice di verifica inviato a {{identifier}}.',
   subject_proof_description:
     'Per continuare, conferma la tua identità tramite un account collegato al tuo. Potrai poi configurare un metodo di verifica.',
+  subject_mismatch: "L'account non corrisponde",
+  subject_mismatch_description:
+    "L'account che hai usato non è collegato al tuo account. Usa un account collegato e, se necessario, cambia account presso il provider.",
   no_method_available: 'Nessun metodo di verifica disponibile',
   no_method_available_description:
     'Il tuo account non dispone di alcun metodo in grado di completare questa verifica. Contatta il tuo amministratore per ricevere assistenza.',

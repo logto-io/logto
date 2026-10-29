@@ -107,12 +107,19 @@ const account_center = {
     manage: 'Verwalten',
     turn_on_2_step_verification_description:
       'Fügen Sie eine zusätzliche Sicherheitsebene hinzu. Sie werden bei der Anmeldung zu einem zweiten Verifizierungsschritt aufgefordert.',
+    two_step_verification_incomplete_description:
+      'Die 2-Faktor-Verifizierung ist aktiviert, aber noch nicht wirksam.',
+    two_step_verification_off_description:
+      'Ihre Präferenz für die 2-Faktor-Verifizierung ist deaktiviert. Zusätzliche Verifizierung kann durch Sicherheitsrichtlinien weiterhin erforderlich sein.',
     turn_off_2_step_verification: '2-Faktor-Verifizierung deaktivieren',
     turn_off_2_step_verification_description:
       'Das Deaktivieren der 2-Faktor-Verifizierung entfernt die zusätzliche Schutzebene für Ihr Konto bei der Anmeldung. Möchten Sie wirklich fortfahren?',
     disable_2_step_verification: 'Deaktivieren',
     no_verification_method_warning:
-      'Sie haben keine zweite Verifizierungsmethode hinzugefügt. Fügen Sie mindestens eine hinzu, um die 2-Faktor-Verifizierung bei der Anmeldung zu aktivieren.',
+      'Einrichtung unvollständig. Fügen Sie unten eine Verifizierungsmethode hinzu, um die Einrichtung der 2-Faktor-Verifizierung abzuschließen.',
+    two_step_verification_load_failed:
+      'Die Einstellungen für die 2-Faktor-Verifizierung konnten nicht geladen werden. Bitte versuchen Sie es erneut.',
+    two_step_verification_retry: 'Erneut versuchen',
     passkey_sign_in_prompt: 'Zur Einrichtung eines Passkeys auffordern',
     passkey_sign_in_prompt_description:
       'Wenn aktiviert, werden Sie aufgefordert, einen Passkey für eine schnellere und sicherere Anmeldung einzurichten.',

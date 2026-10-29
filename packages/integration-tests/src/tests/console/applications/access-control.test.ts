@@ -142,7 +142,7 @@ const expectAccessControlTableDetails = async ({
 const clickRemoveRuleByText = async (text: string) =>
   page.evaluate((targetText) => {
     const row = [...document.querySelectorAll('table tbody tr')].find((element) =>
-      element.textContent?.includes(targetText)
+      element.textContent.includes(targetText)
     );
     const button = row?.querySelector<HTMLButtonElement>('button[aria-label=Remove]');
 
@@ -157,7 +157,7 @@ const expectRuleNotInTable = async (text: string) =>
   page.waitForFunction(
     (targetText) =>
       [...document.querySelectorAll('table tbody tr')].every(
-        (element) => !element.textContent?.includes(targetText)
+        (element) => !element.textContent.includes(targetText)
       ),
     {},
     text
@@ -193,7 +193,7 @@ devFeatureTest.describe('application access control Console', () => {
 
       const machineToMachineRulesTabCount = await page.$$eval(
         'nav a',
-        (links) => links.filter((link) => link.textContent?.trim() === 'Rules').length
+        (links) => links.filter((link) => link.textContent.trim() === 'Rules').length
       );
       expect(machineToMachineRulesTabCount).toBe(0);
 

@@ -99,12 +99,17 @@ const account_center = {
     manage: 'إدارة',
     turn_on_2_step_verification_description:
       'أضف طبقة أمان إضافية. ستتم مطالبتك بخطوة تحقق ثانية عند تسجيل الدخول.',
+    two_step_verification_incomplete_description: 'التحقق بخطوتين مفعّل، لكنه غير نشط بعد.',
+    two_step_verification_off_description:
+      'تفضيلك للتحقق بخطوتين متوقف. قد يظل مطلوبًا إجراء تحقق إضافي وفقًا لسياسات الأمان.',
     turn_off_2_step_verification: 'إيقاف التحقق بخطوتين',
     turn_off_2_step_verification_description:
       'سيؤدي تعطيل التحقق بخطوتين إلى إزالة طبقة الحماية الإضافية من حسابك عند تسجيل الدخول. هل أنت متأكد أنك تريد المتابعة؟',
     disable_2_step_verification: 'تعطيل',
     no_verification_method_warning:
-      'لم تقم بإضافة طريقة تحقق ثانية. أضف طريقة واحدة على الأقل لتفعيل التحقق بخطوتين عند تسجيل الدخول.',
+      'الإعداد غير مكتمل. أضف طريقة تحقق أدناه لإكمال إعداد التحقق بخطوتين.',
+    two_step_verification_load_failed: 'تعذر تحميل إعدادات التحقق بخطوتين. حاول مرة أخرى.',
+    two_step_verification_retry: 'إعادة المحاولة',
     passkey_sign_in_prompt: 'مطالبة بإعداد مفتاح مرور',
     passkey_sign_in_prompt_description:
       'عند التفعيل، سيُطلب منك إعداد مفتاح مرور لتسجيل دخول أسرع وأكثر أمانًا.',

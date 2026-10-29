@@ -2024,8 +2024,9 @@ export default class ExperienceInteraction {
   /**
    * Resolve the pinned subject of a pure step-up from a verified social or enterprise SSO record.
    *
-   * @throws {RequestError} with 403 if the upstream identity resolves to another account or to no
-   * account, or if the request asks to link the identity
+   * @throws {RequestError} with 403 `session.step_up.subject_mismatch` if the upstream identity
+   * resolves to another account or to no account; with `session.identity_conflict` if the request
+   * asks to link the identity
    */
   private async identifyStepUpSubjectByFederatedRecord(
     verificationRecord: VerificationRecordMap[
@@ -2033,24 +2034,28 @@ export default class ExperienceInteraction {
       | VerificationType.EnterpriseSso],
     linkSocialIdentity?: boolean
   ): Promise<User> {
+    // A request that asks to link the identity is malformed, not a wrong account: keep the generic
+    // conflict. A verified upstream identity that resolves to another account or to none is the
+    // recoverable case the subject-proof callback shows as a mismatch.
     const conflict = new RequestError({ code: 'session.identity_conflict', status: 403 });
+    const mismatch = new RequestError({ code: 'session.step_up.subject_mismatch', status: 403 });
 
     assertThat(!linkSocialIdentity, conflict);
 
-    // Only an upstream identity linked to no account is a conflict; anything else, such as a
+    // Only an upstream identity linked to no account is a mismatch; anything else, such as a
     // database error, keeps its own error.
     const user = await verificationRecord.identifyUser().catch((error: unknown) => {
       if (
         error instanceof RequestError &&
         (error.code === 'user.identity_not_exist' || error.code === 'user.sso_identity_not_exist')
       ) {
-        throw conflict;
+        throw mismatch;
       }
 
       throw error;
     });
 
-    assertThat(user.id === this.subjectUserId, conflict);
+    assertThat(user.id === this.subjectUserId, mismatch);
 
     return user;
   }

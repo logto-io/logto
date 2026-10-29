@@ -57,6 +57,7 @@ import SocialLinkAccount from './pages/SocialLinkAccount';
 import SocialSignInWebCallback from './pages/SocialSignInWebCallback';
 import StepUp from './pages/StepUp';
 import StepUpPassword from './pages/StepUp/Password';
+import SubjectMismatch from './pages/StepUp/SubjectMismatch';
 import StepUpVerificationCode from './pages/StepUp/VerificationCode';
 import SwitchAccount from './pages/SwitchAccount';
 import TrustedDevice from './pages/TrustedDevice';
@@ -254,6 +255,7 @@ const App = () => {
                           path="verification-code/:type"
                           element={<StepUpVerificationCode />}
                         />
+                        <Route path="subject-mismatch" element={<SubjectMismatch />} />
                       </Route>
 
                       {/* Social sign-in pages */}

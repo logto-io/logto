@@ -15,12 +15,18 @@ type MfaVerificationsContextType = {
   mfaVerifications?: UserMfaVerificationResponse;
   isLoading: boolean;
   hasLoaded: boolean;
+  hasError: boolean;
+  retry: () => Promise<void>;
 };
+
+const noopAsync = async (): Promise<void> => undefined;
 
 const MfaVerificationsContext = createContext<MfaVerificationsContextType>({
   mfaVerifications: undefined,
   isLoading: false,
   hasLoaded: false,
+  hasError: false,
+  retry: noopAsync,
 });
 
 export const useMfaVerifications = () => useContext(MfaVerificationsContext);
@@ -39,6 +45,7 @@ const MfaVerificationsProvider = ({ children }: Props) => {
   const [mfaVerifications, setMfaVerifications] = useState<UserMfaVerificationResponse>();
   const [hasLoaded, setHasLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   const passkeyControl = getPasskeyFieldControl(
     accountCenterSettings?.fields.passkey,
@@ -53,6 +60,7 @@ const MfaVerificationsProvider = ({ children }: Props) => {
   const fetchMfaVerifications = useCallback(async () => {
     setIsLoading(true);
     const [error, result] = await getMfaVerificationsRequest();
+    setHasError(Boolean(error));
     if (!error && result) {
       setMfaVerifications(result);
     }
@@ -67,8 +75,8 @@ const MfaVerificationsProvider = ({ children }: Props) => {
   }, [shouldLoad, fetchMfaVerifications]);
 
   const value = useMemo<MfaVerificationsContextType>(
-    () => ({ mfaVerifications, isLoading, hasLoaded }),
-    [mfaVerifications, isLoading, hasLoaded]
+    () => ({ mfaVerifications, isLoading, hasLoaded, hasError, retry: fetchMfaVerifications }),
+    [mfaVerifications, isLoading, hasLoaded, hasError, fetchMfaVerifications]
   );
 
   return (

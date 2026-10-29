@@ -101,12 +101,18 @@ const account_center = {
     manage: 'Manage',
     turn_on_2_step_verification_description:
       "Add an extra layer of security. You'll be prompted for a second verification step at sign-in.",
+    two_step_verification_incomplete_description: '2-step verification is on, but not active yet.',
+    two_step_verification_off_description:
+      'Your preference for 2-step verification is off. Additional verification may still be required by security policies.',
     turn_off_2_step_verification: 'Turn off 2-step verification',
     turn_off_2_step_verification_description:
       'Disabling 2-step verification will remove the extra layer of protection from your account at sign-in. Are you sure you want to continue?',
     disable_2_step_verification: 'Disable',
     no_verification_method_warning:
-      "You haven't added a second verification method. Add at least one to enable 2-step verification at sign-in.",
+      'Setup incomplete. Add a verification method below to finish setting up 2-step verification.',
+    two_step_verification_load_failed:
+      'Failed to load 2-step verification settings. Please try again.',
+    two_step_verification_retry: 'Try again',
     passkey_sign_in_prompt: 'Prompt to set up a passkey',
     passkey_sign_in_prompt_description:
       "When on, you'll be asked to set up a passkey for faster, more secure sign-in.",

@@ -57,6 +57,8 @@ const session = {
       "L'authentification renforcée n'est disponible que pour les interactions de connexion.",
     subject_not_found:
       "Aucune session authentifiée n'a été trouvée pour l'authentification renforcée. Veuillez vous reconnecter.",
+    subject_mismatch:
+      'Le compte que vous avez utilisé ne correspond pas au compte avec lequel vous êtes connecté. Réessayez avec le compte avec lequel vous vous êtes connecté.',
     forbidden_route: "Cette route n'est pas autorisée pendant l'authentification renforcée.",
     forbidden_identifier:
       "Un identifiant n'est pas autorisé pendant l'authentification renforcée. Réessayez sans le champ identifiant.",

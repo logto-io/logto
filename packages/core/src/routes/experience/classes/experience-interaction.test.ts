@@ -1927,18 +1927,25 @@ describe('ExperienceInteraction class', () => {
     it.each([
       { name: 'another account', resolvedUser: { ...mockUser, id: 'someone-else' } },
       { name: 'no account', resolvedUser: undefined },
-    ])('rejects a subject proof that resolves to $name with 403', async ({ resolvedUser }) => {
-      const { experienceInteraction, stepUpTenant, provider } = createSocialOnlyStepUp();
+    ])(
+      'rejects a subject proof that resolves to $name with a recoverable mismatch',
+      async ({ resolvedUser }) => {
+        const { experienceInteraction, stepUpTenant, provider } = createSocialOnlyStepUp();
 
-      // Never a registration or an account link: the request fails before anything is saved,
-      // so the staged proof evaporates with it.
-      await expect(
-        proveSubjectWithSocial(experienceInteraction, stepUpTenant, resolvedUser)
-      ).rejects.toMatchError(new RequestError({ code: 'session.identity_conflict', status: 403 }));
-      expect(experienceInteraction.identifiedUserId).toBeUndefined();
-      expect(provider.interactionResult).not.toHaveBeenCalled();
-      expect(userLibraries.insertUser).not.toHaveBeenCalled();
-    });
+        // Never a registration or an account link: the request fails before anything is saved,
+        // so the staged proof evaporates with it. The code is distinct from the generic
+        // `session.identity_conflict` so the SPA can offer another account instead of ending the
+        // interaction as an invalid session.
+        await expect(
+          proveSubjectWithSocial(experienceInteraction, stepUpTenant, resolvedUser)
+        ).rejects.toMatchError(
+          new RequestError({ code: 'session.step_up.subject_mismatch', status: 403 })
+        );
+        expect(experienceInteraction.identifiedUserId).toBeUndefined();
+        expect(provider.interactionResult).not.toHaveBeenCalled();
+        expect(userLibraries.insertUser).not.toHaveBeenCalled();
+      }
+    );
 
     it('keeps an unexpected error of a subject proof instead of reporting a conflict', async () => {
       const { experienceInteraction, stepUpTenant } = createSocialOnlyStepUp();
