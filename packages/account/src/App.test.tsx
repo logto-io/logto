@@ -6,6 +6,7 @@ import { Main } from './App';
 import renderWithPageContext, {
   mockAccountCenterSettings,
 } from './__mocks__/RenderWithPageContext';
+import { setLoginHint } from './utils/account-center-route';
 
 jest.mock('@ac/constants/env', () => ({
   __esModule: true,
@@ -81,6 +82,7 @@ const setupUseLogto = (overrides: Partial<UseLogtoReturn> = {}): UseLogtoReturn 
 describe('Account Center <Main /> auth-redirect effects', () => {
   afterEach(() => {
     jest.clearAllMocks();
+    sessionStorage.clear();
   });
 
   describe('userInfoError while authenticated', () => {
@@ -170,6 +172,18 @@ describe('Account Center <Main /> auth-redirect effects', () => {
         expect.objectContaining({ redirectUri: expect.any(String) })
       );
       expect(signIn.mock.calls[0]?.[0]?.prompt).toBeUndefined();
+    });
+
+    it('forwards the stored login hint to sign-in', () => {
+      setLoginHint('foo@example.com');
+      setLocation('/account/profile');
+      const { signIn } = setupUseLogto({ isAuthenticated: false });
+
+      renderWithPageContext(<Main />, { initialEntries: ['/profile'] }, { pageContext: {} });
+
+      expect(signIn).toHaveBeenCalledWith(
+        expect.objectContaining({ loginHint: 'foo@example.com' })
+      );
     });
   });
 

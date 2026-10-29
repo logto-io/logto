@@ -243,9 +243,9 @@ const sign_in_exp = {
       flows_title: 'すぐに使えるセキュリティ設定フローを統合',
       single_task_flows_title: 'すぐに使える単一タスクフローを統合',
       flows_description:
-        'ドメインとルートを組み合わせてアカウント設定 URL を形成します（例: https://auth.foo.com/account/email）。オプションで `redirect=` を追加して更新成功後にユーザーをアプリに戻したり、`show_success=true` で成功ページを表示し続けたり、`ui_locales=` でデフォルト言語を上書きしたり、`identifier=` で識別子入力フィールドを事前入力したりできます。',
+        'ドメインとルートを組み合わせてアカウント設定 URL を形成します（例: https://auth.foo.com/account/email）。オプションで `redirect=` を追加して更新成功後にユーザーをアプリに戻したり、`show_success=true` で成功ページを表示し続けたり、`ui_locales=` でデフォルト言語を上書きしたり、`identifier=` でメール・電話番号・ユーザー名のルートで新しい値を事前入力したりできます。',
       single_task_flows_description:
-        'ユーザーを特定のフロー（例: メール連携）に直接ルーティングします。オプションで、成功した更新後にユーザーをアプリに戻すための `redirect=`、成功ページを表示し続けるための `show_success=true`、デフォルト言語を上書きするための `ui_locales=`、または識別子入力フィールドを事前入力するための `identifier=` を追加できます。',
+        'ユーザーを特定のフロー（例: メール連携）に直接ルーティングします。オプションで、成功した更新後にユーザーをアプリに戻すための `redirect=`、成功ページを表示し続けるための `show_success=true`、デフォルト言語を上書きするための `ui_locales=`、またはメール・電話番号・ユーザー名のルートで新しい値を事前入力するための `identifier=` を追加できます。',
       tooltips: {
         email: 'プライマリメールアドレスを更新',
         phone: 'プライマリ電話番号を更新',

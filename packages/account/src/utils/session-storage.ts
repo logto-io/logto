@@ -12,6 +12,7 @@ const storageKeys = Object.freeze({
   showSuccess: `${storagePrefix}show-success`,
   uiLocales: `${storagePrefix}ui-locales`,
   identifier: `${storagePrefix}identifier`,
+  loginHint: `${storagePrefix}login-hint`,
   verificationRecord: `${storagePrefix}verification-record`,
   socialFlow: `${storagePrefix}social-verification`,
   pendingReturn: `${storagePrefix}pending-return`,
@@ -494,6 +495,13 @@ export const sessionStorage = Object.freeze({
   },
   clearIdentifier: () => {
     removeItem(storageKeys.identifier, 'session');
+  },
+  getLoginHint: () => getString(storageKeys.loginHint, 'session'),
+  setLoginHint: (value: string) => {
+    setString(storageKeys.loginHint, value, 'session');
+  },
+  clearLoginHint: () => {
+    removeItem(storageKeys.loginHint, 'session');
   },
 });
 /* eslint-enable max-lines */

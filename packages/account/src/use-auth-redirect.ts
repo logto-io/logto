@@ -3,7 +3,12 @@ import { ExtraParamsKey } from '@logto/schemas';
 import { useContext, useEffect, useRef } from 'react';
 
 import PageContext from './Providers/PageContextProvider/PageContext';
-import { accountCenterBasePath, getUiLocales, setRouteRestore } from './utils/account-center-route';
+import {
+  accountCenterBasePath,
+  getLoginHint,
+  getUiLocales,
+  setRouteRestore,
+} from './utils/account-center-route';
 
 const redirectUri = `${window.location.origin}${accountCenterBasePath}`;
 
@@ -33,6 +38,7 @@ export const useAuthRedirect = ({
   isSilentAuthFailed,
 }: UseAuthRedirectProps): void => {
   const uiLocales = getUiLocales();
+  const loginHint = getLoginHint();
   const { isAuthenticated, isLoading, signIn } = useLogto();
   const { accountCenterSettings, isLoadingExperience, isLoadingUserInfo, userInfoError } =
     useContext(PageContext);
@@ -48,10 +54,10 @@ export const useAuthRedirect = ({
 
     if (isSilentAuthFailed && accountCenterSettings?.enabled) {
       // Prompt=none failed (no valid OIDC session); fall back to an explicit login.
-      void signIn({ redirectUri, prompt: Prompt.Login, extraParams });
+      void signIn({ redirectUri, prompt: Prompt.Login, loginHint, extraParams });
     } else if (!isAuthenticated && accountCenterSettings?.enabled) {
       setRouteRestore(window.location.pathname);
-      void signIn({ redirectUri, extraParams });
+      void signIn({ redirectUri, loginHint, extraParams });
     }
   }, [
     isAuthenticated,
@@ -62,6 +68,7 @@ export const useAuthRedirect = ({
     accountCenterSettings,
     signIn,
     uiLocales,
+    loginHint,
   ]);
 
   useEffect(() => {

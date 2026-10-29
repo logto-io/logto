@@ -244,9 +244,9 @@ const sign_in_exp = {
       flows_title: 'Integrar fluxos de definição de segurança prontos para uso',
       single_task_flows_title: 'Integrar um fluxo de tarefa única pronto a usar',
       flows_description:
-        'Combine o seu domínio com a rota para formar o seu URL de definição de conta (por exemplo, https://auth.foo.com/account/email). Opcionalmente, adicione `redirect=` para retornar utilizadores à sua aplicação após uma atualização bem-sucedida, `show_success=true` para manter a página de sucesso visível, `ui_locales=` para substituir o idioma predefinido, ou `identifier=` para preencher previamente o campo de entrada do identificador.',
+        'Combine o seu domínio com a rota para formar o seu URL de definição de conta (por exemplo, https://auth.foo.com/account/email). Opcionalmente, adicione `redirect=` para retornar utilizadores à sua aplicação após uma atualização bem-sucedida, `show_success=true` para manter a página de sucesso visível, `ui_locales=` para substituir o idioma predefinido, ou `identifier=` para preencher previamente o novo valor na rota de email, telefone ou nome de utilizador.',
       single_task_flows_description:
-        'Direcione os utilizadores diretamente para um fluxo específico (por exemplo, ligação de email). Opcionalmente, adicione `redirect=` para retornar utilizadores à sua aplicação após uma atualização bem-sucedida, `show_success=true` para manter a página de sucesso visível, `ui_locales=` para substituir o idioma predefinido, ou `identifier=` para preencher previamente o campo de entrada do identificador.',
+        'Direcione os utilizadores diretamente para um fluxo específico (por exemplo, ligação de email). Opcionalmente, adicione `redirect=` para retornar utilizadores à sua aplicação após uma atualização bem-sucedida, `show_success=true` para manter a página de sucesso visível, `ui_locales=` para substituir o idioma predefinido, ou `identifier=` para preencher previamente o novo valor na rota de email, telefone ou nome de utilizador.',
       tooltips: {
         email: 'Atualize o seu endereço de email principal',
         phone: 'Atualize o seu número de telefone principal',

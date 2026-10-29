@@ -2,8 +2,15 @@ import {
   handleAccountCenterRoute,
   setRouteRestore,
   getPendingReturn,
+  getLoginHint,
+  setLoginHint,
 } from './account-center-route';
 import { accountStorage } from './session-storage';
+
+jest.mock('@ac/constants/env', () => ({
+  __esModule: true,
+  isDevFeaturesEnabled: true,
+}));
 
 const setLocation = (pathname: string, search = '', origin = 'http://localhost') => {
   // eslint-disable-next-line @silverhand/fp/no-mutating-methods
@@ -116,6 +123,34 @@ describe('account-center-route', () => {
       handleAccountCenterRoute();
 
       expect(getPendingReturn()).toBeUndefined();
+    });
+  });
+
+  describe('handleAccountCenterRoute – login hint', () => {
+    it('stores the login_hint query parameter on any route', () => {
+      setLocation('/account/security', '?login_hint=foo%40example.com');
+
+      handleAccountCenterRoute();
+
+      expect(getLoginHint()).toBe('foo@example.com');
+    });
+
+    it('clears a stored login hint when the URL has none', () => {
+      setLoginHint('foo@example.com');
+      setLocation('/account/security');
+
+      handleAccountCenterRoute();
+
+      expect(getLoginHint()).toBeUndefined();
+    });
+
+    it('keeps the stored login hint on the auth callback', () => {
+      setLoginHint('foo@example.com');
+      setLocation('/account', '?code=abc123');
+
+      handleAccountCenterRoute();
+
+      expect(getLoginHint()).toBe('foo@example.com');
     });
   });
 

@@ -245,9 +245,9 @@ const sign_in_exp = {
       flows_title: "Intégrer des flux de paramètres de sécurité prêts à l'emploi",
       single_task_flows_title: "Intégrer un flux de tâche unique prêt à l'emploi",
       flows_description:
-        'Combinez votre domaine avec le chemin pour former votre URL de paramètres de compte (par exemple, https://auth.foo.com/account/email). Ajoutez éventuellement `redirect=` pour renvoyer les utilisateurs à votre application après une mise à jour réussie, `show_success=true` pour garder la page de succès visible, `ui_locales=` pour remplacer la langue par défaut, ou `identifier=` pour pré-remplir le champ de saisie de l’identifiant.',
+        'Combinez votre domaine avec le chemin pour former votre URL de paramètres de compte (par exemple, https://auth.foo.com/account/email). Ajoutez éventuellement `redirect=` pour renvoyer les utilisateurs à votre application après une mise à jour réussie, `show_success=true` pour garder la page de succès visible, `ui_locales=` pour remplacer la langue par défaut, ou `identifier=` pour pré-remplir la nouvelle valeur sur la route d’e-mail, de téléphone ou de nom d’utilisateur.',
       single_task_flows_description:
-        "Dirigez les utilisateurs directement vers un flux spécifique (par exemple, la liaison d'email). Vous pouvez éventuellement ajouter `redirect=` pour renvoyer les utilisateurs à votre application après une mise à jour réussie, `show_success=true` pour garder la page de succès visible, `ui_locales=` pour remplacer la langue par défaut, ou `identifier=` pour pré-remplir le champ de saisie de l'identifiant.",
+        "Dirigez les utilisateurs directement vers un flux spécifique (par exemple, la liaison d'email). Vous pouvez éventuellement ajouter `redirect=` pour renvoyer les utilisateurs à votre application après une mise à jour réussie, `show_success=true` pour garder la page de succès visible, `ui_locales=` pour remplacer la langue par défaut, ou `identifier=` pour pré-remplir la nouvelle valeur sur la route d'e-mail, de téléphone ou de nom d'utilisateur.",
       tooltips: {
         email: 'Mettre à jour votre adresse e-mail principale',
         phone: 'Mettre à jour votre numéro de téléphone principal',
