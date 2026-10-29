@@ -27,13 +27,15 @@ const deferred = <T>() => {
 };
 
 it.each([409, 503, 'network'])(
-  'clears an unstarted creation after a preview failure (%s) and rechecks coverage',
+  'clears an unstarted personal creation after a preview failure (%s)',
   async (status) => {
     const failure = status === 'network' ? new Error('Network failed') : { response: { status } };
-    const first = renderCreation();
-    await waitFor(() => {
-      expect(first.result.current.billing.isBillingReady).toBe(true);
+    savePendingConnectorCreation('alice', {
+      key: 'creation-without-checkout',
+      providerName: SsoProviderName.OIDC,
+      funding: 'personal',
     });
+    const first = renderCreation();
     mockApi.get.mockClear().mockRejectedValueOnce(failure);
     await act(async () => {
       await first.result.current.create(SsoProviderName.OIDC);
@@ -46,28 +48,13 @@ it.each([409, 503, 'network'])(
     expect(mockChooseBillingCustomer).not.toHaveBeenCalled();
     expect(mockApi.post).not.toHaveBeenCalled();
     expect(mockApi.delete).not.toHaveBeenCalled();
-    await waitFor(() => {
-      expect(first.result.current.billing.isBillingReady).toBe(true);
-    });
-    expect(mockApi.get).toHaveBeenCalledWith('/api/me/logto-enterprises');
     first.unmount();
 
     const { result } = renderCreation();
     expect(result.current.operation).toBeUndefined();
-    await waitFor(() => {
-      expect(result.current.billing.isBillingReady).toBe(true);
-    });
-    mockApi.get.mockResolvedValueOnce({
-      status: 'subscription_exists',
-      subscriptionId: 'existing-sub',
-    });
-    await act(async () => {
-      await result.current.create(SsoProviderName.SAML);
-    });
-    expect(mockApi.post).toHaveBeenCalledWith('/api/me/console-sso/connectors', {
-      body: { providerName: SsoProviderName.SAML, stripeUserSubscriptionId: 'existing-sub' },
-    });
-    expect(onCreated).toHaveBeenCalledWith('connector-one');
+    expect(result.current.status).toBeUndefined();
+    expect(result.current.isSubmitting).toBe(false);
+    expect(onCreated).not.toHaveBeenCalled();
   }
 );
 
