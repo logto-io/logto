@@ -94,11 +94,14 @@ export const organizationWithOrganizationRolesGuard: ToZodObject<OrganizationWit
 export type UserWithOrganizationRoles = UserInfo & {
   /** The roles of the user in the organization. */
   organizationRoles: OrganizationRoleEntity[];
+  /** Whether the user has a password set. */
+  hasPassword: boolean;
 };
 
 export const userWithOrganizationRolesGuard: ToZodObject<UserWithOrganizationRoles> =
   userInfoGuard.extend({
     organizationRoles: organizationRoleEntityGuard.array(),
+    hasPassword: z.boolean(),
   });
 
 /**
