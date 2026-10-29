@@ -333,6 +333,11 @@ const application_details = {
     col_sp_claims: 'Название значения вашего приложения',
     add_button: 'Добавить еще',
   },
+  step_up_authentication: {
+    title: 'Повышение уровня аутентификации',
+    description:
+      'Передайте <code>acr_values</code> (например, <code>urn:logto:acr:mfa</code>) и <code>max_age</code> в запросе авторизации, чтобы потребовать недавнюю аутентификацию пользователя или MFA перед чувствительными операциями, и проверяйте <code>acr</code> и <code>auth_time</code> на сервере ресурсов. <a>Подробнее</a>',
+  },
   concurrent_device_limit,
 };
 

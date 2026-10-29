@@ -332,6 +332,11 @@ const application_details = {
     col_sp_claims: 'アプリケーションの値名',
     add_button: '別のものを追加',
   },
+  step_up_authentication: {
+    title: 'ステップアップ認証',
+    description:
+      '認可リクエストで <code>acr_values</code>（例：<code>urn:logto:acr:mfa</code>）と <code>max_age</code> を渡すことで、機密性の高い操作の前に最近のユーザー認証または MFA を要求し、リソースサーバーで <code>acr</code> と <code>auth_time</code> を検証できます。<a>詳細</a>',
+  },
   concurrent_device_limit,
 };
 

@@ -325,6 +325,11 @@ const application_details = {
     col_sp_claims: 'اسم القيمة في تطبيقك',
     add_button: 'أضف آخر.',
   },
+  step_up_authentication: {
+    title: 'المصادقة المعززة',
+    description:
+      'مرّر <code>acr_values</code> (مثل <code>urn:logto:acr:mfa</code>) و <code>max_age</code> في طلب التفويض لطلب مصادقة مستخدم حديثة أو MFA قبل العمليات الحساسة، وتحقق من <code>acr</code> و <code>auth_time</code> على خادم الموارد لديك. <a>معرفة المزيد</a>',
+  },
   concurrent_device_limit,
 };
 

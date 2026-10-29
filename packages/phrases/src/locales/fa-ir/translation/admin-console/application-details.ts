@@ -328,6 +328,11 @@ const application_details = {
     col_sp_claims: 'نام مقدار برنامه شما',
     add_button: 'افزودن مورد دیگر',
   },
+  step_up_authentication: {
+    title: 'احراز هویت تقویتی',
+    description:
+      'در درخواست مجوزدهی، <code>acr_values</code> (مانند <code>urn:logto:acr:mfa</code>) و <code>max_age</code> را ارسال کنید تا پیش از عملیات حساس، احراز هویت اخیر کاربر یا MFA الزامی شود و سپس <code>acr</code> و <code>auth_time</code> را در سرور منابع خود اعتبارسنجی کنید. <a>بیشتر بدانید</a>',
+  },
   concurrent_device_limit,
 };
 

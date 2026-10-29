@@ -324,6 +324,11 @@ const application_details = {
     col_sp_claims: 'ชื่อค่าของแอปของคุณ',
     add_button: 'เพิ่มอีกหนึ่งรายการ',
   },
+  step_up_authentication: {
+    title: 'การยืนยันตัวตนแบบยกระดับ',
+    description:
+      'ส่ง <code>acr_values</code> (เช่น <code>urn:logto:acr:mfa</code>) และ <code>max_age</code> ในคำขอการอนุญาตเพื่อกำหนดให้มีการยืนยันตัวตนล่าสุดของผู้ใช้หรือ MFA ก่อนดำเนินการที่ละเอียดอ่อน และตรวจสอบ <code>acr</code> กับ <code>auth_time</code> บนเซิร์ฟเวอร์ทรัพยากรของคุณ <a>เรียนรู้เพิ่มเติม</a>',
+  },
   concurrent_device_limit,
 };
 
