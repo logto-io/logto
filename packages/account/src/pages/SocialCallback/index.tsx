@@ -64,7 +64,7 @@ const SocialCallback = () => {
         : getSocialAddRoute(connectorId),
       { replace: true }
     );
-  }, [connectorId, navigate, refreshUserInfo, storedSocialFlow?.mode, t]);
+  }, [connectorId, navigate, refreshUserInfo, storedSocialFlow?.mode]);
 
   const finishLinkFlow = useCallback(async () => {
     if (!connectorId || !connectorName) {
@@ -189,8 +189,10 @@ const SocialCallback = () => {
 
     void completeCallback();
   }, [
+    accountCenterSettings,
     connector,
     connectorId,
+    experienceSettings,
     finishLinkFlow,
     handleError,
     linkSocialIdentityRequest,
