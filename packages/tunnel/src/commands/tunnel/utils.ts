@@ -85,19 +85,32 @@ export const getSafeStaticFilePath = async (staticPath: string, requestUrl: stri
 const readFile = async (requestPath: string, start?: number, end?: number) => {
   const fileHandle = await fs.open(requestPath, 'r');
   const { size } = await fileHandle.stat();
+  const lastByte = Math.max(size - 1, 0);
   const readStart = start ?? 0;
-  const readEnd = end ?? Math.max(size - 1, 0);
+  // Clamp the requested range to the file size
+  const readEnd = Math.min(end ?? lastByte, lastByte);
+
+  if (start !== undefined && (start >= size || start > readEnd)) {
+    await fileHandle.close();
+    throw new Error('Range not satisfiable.');
+  }
+
   const buffer = Buffer.alloc(readEnd - readStart + 1);
   await fileHandle.read(buffer, 0, buffer.length, readStart);
   await fileHandle.close();
-  return { buffer, totalFileSize: size };
+  return { buffer, totalFileSize: size, readStart, readEnd };
 };
 
-const setRangeHeaders = (response: http.ServerResponse, range: string, totalFileSize: number) => {
+const setRangeHeaders = (
+  response: http.ServerResponse,
+  range: string,
+  {
+    readStart,
+    readEnd,
+    totalFileSize,
+  }: { readStart: number; readEnd: number; totalFileSize: number }
+) => {
   if (range) {
-    const { start, end } = parseRange(range);
-    const readStart = start ?? 0;
-    const readEnd = end ?? totalFileSize - 1;
     response.setHeader('Accept-Ranges', 'bytes');
     response.setHeader('Content-Range', `bytes ${readStart}-${readEnd}/${totalFileSize}`);
   }
@@ -136,10 +149,10 @@ export const createStaticFileProxy =
 
     try {
       const { start, end } = parseRange(range);
-      const { buffer, totalFileSize } = await readFile(requestPath, start, end);
+      const { buffer, totalFileSize, readStart, readEnd } = await readFile(requestPath, start, end);
       response.setHeader('cache-control', fallBackToIndex ? noCache : maxAgeSevenDays);
       response.setHeader('content-type', getMimeType(request.url));
-      setRangeHeaders(response, range, totalFileSize);
+      setRangeHeaders(response, range, { readStart, readEnd, totalFileSize });
 
       response.setHeader('content-length', String(buffer.length));
       response.writeHead(range ? 206 : 200);
