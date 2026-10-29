@@ -11,7 +11,8 @@ export type StorageType =
   | 'is_dev_features_enabled'
   | 'oss_sidebar_cloud_upsell_dismissed_until'
   | 'license_usage_banner_dismissed_until'
-  | 'manage_account_self_reconsent_attempted';
+  | 'manage_account_self_reconsent_attempted'
+  | 'subscription_cancel_feedback_submitted';
 
 export const getStorageKey = <T extends StorageType>(forType: T) =>
   `logto:admin_console:${forType}` as const;
@@ -31,4 +32,6 @@ export const storageKeys = Object.freeze({
   licenseUsageBannerDismissedUntil: getStorageKey('license_usage_banner_dismissed_until'),
   /** Whether this tab session has already re-consented for `CloudScope.ManageAccountSelf`. */
   manageAccountSelfReconsentAttempted: getStorageKey('manage_account_self_reconsent_attempted'),
+  /** Whether this tab session has submitted cancellation feedback for a tenant, suffixed with the tenant ID. */
+  subscriptionCancelFeedbackSubmitted: getStorageKey('subscription_cancel_feedback_submitted'),
 } satisfies Record<CamelCase<StorageType>, string>);

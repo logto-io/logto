@@ -50,6 +50,9 @@ const subscription = {
     title: 'از رفتن شما متأسفیم',
     description:
       'اشتراک شما لغو شد. بازخورد شما به ما کمک می‌کند Logto را بهتر کنیم. همه پاسخ‌ها را می‌خوانیم.',
+    before_cancel_title: 'پیش از لغو',
+    before_cancel_description:
+      'بازخورد شما به ما کمک می‌کند Logto را بهتر کنیم. همه پاسخ‌ها را می‌خوانیم.',
     what_made_you_cancel: 'چه چیزی باعث شد لغو کنید؟',
     how_to_reconsider: 'چه کاری می‌توانیم انجام دهیم تا تجدیدنظر کنید؟',
   },

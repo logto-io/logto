@@ -51,6 +51,9 @@ const subscription = {
     title: 'Gittiğinizi görmek üzücü',
     description:
       "Aboneliğiniz iptal edildi. Geri bildiriminiz Logto'yu daha iyi hale getirmemize yardımcı oluyor. Her yanıtı okuyoruz.",
+    before_cancel_title: 'İptal etmeden önce',
+    before_cancel_description:
+      "Geri bildiriminiz Logto'yu daha iyi hale getirmemize yardımcı oluyor. Her yanıtı okuyoruz.",
     what_made_you_cancel: 'İptal etmenize ne sebep oldu?',
     how_to_reconsider: 'Yeniden düşünmeniz için ne yapabiliriz?',
   },

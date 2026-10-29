@@ -49,6 +49,8 @@ const subscription = {
     title: '很遺憾你要離開',
     description:
       '你的訂閱已取消。你的回饋將幫助我們把 Logto 做得更好。每一則回覆我們都會認真閱讀。',
+    before_cancel_title: '取消之前',
+    before_cancel_description: '你的回饋將幫助我們把 Logto 做得更好。每一則回覆我們都會認真閱讀。',
     what_made_you_cancel: '是什麼讓你決定取消？',
     how_to_reconsider: '我們做些什麼能讓你重新考慮？',
   },

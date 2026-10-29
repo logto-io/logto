@@ -51,6 +51,8 @@ const subscription = {
     title: 'Szkoda, że odchodzisz',
     description:
       'Twoja subskrypcja została anulowana. Twoja opinia pomaga nam ulepszać Logto. Czytamy każdą odpowiedź.',
+    before_cancel_title: 'Zanim anulujesz',
+    before_cancel_description: 'Twoja opinia pomaga nam ulepszać Logto. Czytamy każdą odpowiedź.',
     what_made_you_cancel: 'Co skłoniło Cię do anulowania?',
     how_to_reconsider: 'Co moglibyśmy zrobić, abyś ponownie rozważył(a) decyzję?',
   },

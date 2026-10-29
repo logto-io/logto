@@ -51,6 +51,9 @@ const subscription = {
     title: 'Schade, dass Sie gehen',
     description:
       'Ihr Abonnement wurde gekündigt. Ihr Feedback hilft uns, Logto besser zu machen. Wir lesen jede Antwort.',
+    before_cancel_title: 'Bevor Sie kündigen',
+    before_cancel_description:
+      'Ihr Feedback hilft uns, Logto besser zu machen. Wir lesen jede Antwort.',
     what_made_you_cancel: 'Was hat Sie zur Kündigung bewogen?',
     how_to_reconsider: 'Was könnten wir tun, damit Sie es sich noch einmal überlegen?',
   },

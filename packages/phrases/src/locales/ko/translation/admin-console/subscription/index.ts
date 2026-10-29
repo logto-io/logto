@@ -50,7 +50,10 @@ const subscription = {
     title: '떠나신다니 아쉽습니다',
     description:
       '구독이 취소되었습니다. 보내주신 의견은 Logto를 개선하는 데 도움이 됩니다. 모든 답변을 빠짐없이 읽고 있습니다.',
-    what_made_you_cancel: '취소하신 이유는 무엇인가요?',
+    before_cancel_title: '취소하기 전에',
+    before_cancel_description:
+      '보내주신 의견은 Logto를 개선하는 데 도움이 됩니다. 모든 답변을 빠짐없이 읽고 있습니다.',
+    what_made_you_cancel: '취소를 결정하신 이유는 무엇인가요?',
     how_to_reconsider: '다시 고려하시려면 저희가 무엇을 해야 할까요?',
   },
   downgrade_modal: {

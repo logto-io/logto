@@ -51,6 +51,9 @@ const subscription = {
     title: 'Lamentamos vê-lo partir',
     description:
       'A sua subscrição foi cancelada. O seu feedback ajuda-nos a melhorar o Logto. Lemos todas as respostas.',
+    before_cancel_title: 'Antes de cancelar',
+    before_cancel_description:
+      'O seu feedback ajuda-nos a melhorar o Logto. Lemos todas as respostas.',
     what_made_you_cancel: 'O que o levou a cancelar?',
     how_to_reconsider: 'O que poderíamos fazer para que reconsidere?',
   },

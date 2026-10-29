@@ -1,4 +1,5 @@
 import { ReservedPlanId } from '@logto/schemas';
+import { trySafe } from '@silverhand/essentials';
 import { useContext, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { Trans, useTranslation } from 'react-i18next';
@@ -6,7 +7,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { toastResponseError } from '@/cloud/hooks/use-cloud-api';
 import { type LogtoSkuResponse } from '@/cloud/types/router';
 import SkuName from '@/components/SkuName';
-import { contactEmailLink } from '@/consts';
+import { contactEmailLink, storageKeys } from '@/consts';
 import { subscriptionPage } from '@/consts/pages';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
@@ -24,6 +25,9 @@ import CancelFeedbackModal from '../CancelFeedbackModal';
 import DowngradeConfirmModalContent from '../DowngradeConfirmModalContent';
 
 import styles from './index.module.scss';
+
+const getCancelFeedbackStorageKey = (tenantId: string) =>
+  `${storageKeys.subscriptionCancelFeedbackSubmitted}:${tenantId}`;
 
 type SkuButtonProps = {
   readonly targetSkuId: string;
@@ -90,18 +94,11 @@ function SwitchPlanActionBar({ onSubscriptionUpdated, currentSkuId, logtoSkus }:
   const { subscribe, cancelSubscription } = useSubscribe();
   const { show } = useConfirmModal();
   const [currentLoadingSkuId, setCurrentLoadingSkuId] = useState<string>();
+  const [preCancelTargetSku, setPreCancelTargetSku] = useState<LogtoSkuResponse>();
   const [canceledSkuId, setCanceledSkuId] = useState<string>();
 
-  const handleSubscribe = async (targetSkuId: string, isDowngrade: boolean) => {
-    if (currentLoadingSkuId) {
-      return;
-    }
-
-    const targetSku = logtoSkus.find(({ id }) => id === targetSkuId);
-
-    if (!targetSku) {
-      return;
-    }
+  const switchSku = async (targetSku: LogtoSkuResponse, isDowngrade: boolean) => {
+    const { id: targetSkuId } = targetSku;
 
     if (isDowngrade) {
       const [result] = await show({
@@ -128,7 +125,18 @@ function SwitchPlanActionBar({ onSubscriptionUpdated, currentSkuId, logtoSkus }:
             {t('downgrade_success')}
           </Trans>
         );
-        setCanceledSkuId(currentSku.id);
+
+        const feedbackStorageKey = getCancelFeedbackStorageKey(currentTenantId);
+        const hasSubmittedFeedback = Boolean(
+          trySafe(() => sessionStorage.getItem(feedbackStorageKey))
+        );
+        trySafe(() => {
+          sessionStorage.removeItem(feedbackStorageKey);
+        });
+
+        if (!hasSubmittedFeedback) {
+          setCanceledSkuId(currentSku.id);
+        }
 
         return;
       }
@@ -170,6 +178,28 @@ function SwitchPlanActionBar({ onSubscriptionUpdated, currentSkuId, logtoSkus }:
     }
   };
 
+  const handleSubscribe = async (targetSkuId: string, isDowngrade: boolean) => {
+    if (currentLoadingSkuId) {
+      return;
+    }
+
+    const targetSku = logtoSkus.find(({ id }) => id === targetSkuId);
+
+    if (!targetSku) {
+      return;
+    }
+
+    if (
+      targetSkuId === ReservedPlanId.Free &&
+      !trySafe(() => sessionStorage.getItem(getCancelFeedbackStorageKey(currentTenantId)))
+    ) {
+      setPreCancelTargetSku(targetSku);
+      return;
+    }
+
+    await switchSku(targetSku, isDowngrade);
+  };
+
   return (
     <>
       <div className={styles.container}>
@@ -198,11 +228,34 @@ function SwitchPlanActionBar({ onSubscriptionUpdated, currentSkuId, logtoSkus }:
           </a>
         </div>
       </div>
+      {preCancelTargetSku && (
+        <CancelFeedbackModal
+          isOpen
+          fromSkuId={currentSku.id}
+          stage="before_cancel"
+          onClose={() => {
+            setPreCancelTargetSku(undefined);
+          }}
+          onSubmit={(hasFeedback) => {
+            if (hasFeedback) {
+              trySafe(() => {
+                sessionStorage.setItem(getCancelFeedbackStorageKey(currentTenantId), 'true');
+              });
+            }
+            setPreCancelTargetSku(undefined);
+            void switchSku(preCancelTargetSku, true);
+          }}
+        />
+      )}
       {canceledSkuId && (
         <CancelFeedbackModal
           isOpen
           fromSkuId={canceledSkuId}
+          stage="after_cancel"
           onClose={() => {
+            setCanceledSkuId(undefined);
+          }}
+          onSubmit={() => {
             setCanceledSkuId(undefined);
           }}
         />

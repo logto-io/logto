@@ -51,7 +51,10 @@ const subscription = {
     title: 'ご利用ありがとうございました',
     description:
       'サブスクリプションはキャンセルされました。いただいたフィードバックは Logto の改善に役立てます。すべての回答に目を通しています。',
-    what_made_you_cancel: 'キャンセルの理由は何でしたか？',
+    before_cancel_title: 'キャンセルの前に',
+    before_cancel_description:
+      'いただいたフィードバックは Logto の改善に役立てます。すべての回答に目を通しています。',
+    what_made_you_cancel: 'キャンセルを決めた理由は何ですか？',
     how_to_reconsider: '再検討いただくために、私たちに何ができますか？',
   },
   downgrade_modal: {
