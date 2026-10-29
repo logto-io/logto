@@ -52,7 +52,7 @@ import {
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest, generatePassword, generateTestName } from '#src/utils.js';
+import { generatePassword, generateTestName } from '#src/utils.js';
 
 const startStepUp = async (client: ExperienceClient, acrValues: string) => {
   const { status, location } = await authorizeWithSession(client, {
@@ -71,7 +71,7 @@ const submitStepUp = async (client: ExperienceClient) => {
   return client.getIdTokenClaims();
 };
 
-devFeatureTest.describe('establishing and enrolling inside pure step-up', () => {
+describe('establishing and enrolling inside pure step-up', () => {
   const userApi = new UserApiTest();
   // eslint-disable-next-line @silverhand/fp/no-let -- Initialized by the connector fixture.
   let connectorId: string;

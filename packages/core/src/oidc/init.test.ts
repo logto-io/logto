@@ -832,14 +832,7 @@ describe('findAccount', () => {
   });
 });
 describe('authentication context provider metadata', () => {
-  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-
-  afterEach(() => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
-  });
-
-  it('should advertise the Logto ACR values and the acr / amr / auth_time claims when dev features are enabled', () => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+  it('should advertise the Logto ACR values and the acr / amr / auth_time claims', () => {
     const configuration = getProviderConfiguration(createProvider(new MockTenant()));
     // `claimsSupported` is derived by the provider at construction and is not part of its typings.
     const claimsSupported: unknown = Reflect.get(configuration, 'claimsSupported');
@@ -850,136 +843,102 @@ describe('authentication context provider metadata', () => {
     expect(claimsSupported).toContain('auth_time');
   });
 
-  it('should keep the provider metadata unchanged when dev features are disabled', () => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
-    const configuration = getProviderConfiguration(createProvider(new MockTenant()));
-    const claimsSupported: unknown = Reflect.get(configuration, 'claimsSupported');
-
-    expect([...configuration.acrValues]).toEqual([]);
-    expect(claimsSupported).not.toContain('acr');
-    expect(claimsSupported).not.toContain('amr');
-    expect(claimsSupported).toContain('auth_time');
-  });
-
-  it('should evaluate acr_values first in the login prompt when dev features are enabled', () => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+  it('should evaluate acr_values first in the login prompt', () => {
     const { interactions } = getProviderConfiguration(createProvider(new MockTenant()));
     const loginPrompt = interactions.policy.find(({ name }) => name === 'login');
 
     expect(loginPrompt?.checks[0]?.reason).toBe('acr_unmet');
   });
-
-  it('should keep the default interaction policy when dev features are disabled', () => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
-    const { interactions } = getProviderConfiguration(createProvider(new MockTenant()));
-    const loginPrompt = interactions.policy.find(({ name }) => name === 'login');
-
-    expect(loginPrompt?.checks[0]?.reason).toBe('login_prompt');
-  });
 });
 describe('authentication context extra token claims', () => {
-  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
   const originalIsCloud = EnvSet.values.isCloud;
 
   afterEach(() => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
     Reflect.set(EnvSet.values, 'isCloud', originalIsCloud);
     jest.restoreAllMocks();
   });
 
-  it.each([true, false])(
-    'should preserve organization claims, reserve the authentication context against the customizer, and keep it last for other claims with dev features %s',
-    async (isDevFeaturesEnabled) => {
-      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', isDevFeaturesEnabled);
-      Reflect.set(EnvSet.values, 'isCloud', false);
-      const customizedClaims = {
-        acr: 'custom-acr',
-        amr: ['custom-amr'],
-        auth_time: 3000,
-        custom_claim: true,
-      };
-      const runScriptLocally = jest
-        .spyOn(JwtCustomizerLibrary, 'runScriptLocally')
-        .mockResolvedValueOnce({})
-        .mockResolvedValueOnce(customizedClaims);
-      const getJwtCustomizer = jest.fn().mockResolvedValue({ script: 'return {}' });
-      const tenant = new MockTenant(
-        undefined,
-        undefined,
-        undefined,
-        {
-          jwtCustomizers: {
-            getUserContext: jest.fn().mockResolvedValue({ id: accountId }),
-            getApplicationContext: jest.fn(),
-            getOrganizationContext: jest.fn(),
-          },
+  it('should preserve organization claims, reserve the authentication context against the customizer, and keep it last for other claims', async () => {
+    Reflect.set(EnvSet.values, 'isCloud', false);
+    const customizedClaims = {
+      acr: 'custom-acr',
+      amr: ['custom-amr'],
+      auth_time: 3000,
+      custom_claim: true,
+    };
+    const runScriptLocally = jest
+      .spyOn(JwtCustomizerLibrary, 'runScriptLocally')
+      .mockResolvedValueOnce({})
+      .mockResolvedValueOnce(customizedClaims);
+    const getJwtCustomizer = jest.fn().mockResolvedValue({ script: 'return {}' });
+    const tenant = new MockTenant(
+      undefined,
+      undefined,
+      undefined,
+      {
+        jwtCustomizers: {
+          getUserContext: jest.fn().mockResolvedValue({ id: accountId }),
+          getApplicationContext: jest.fn(),
+          getOrganizationContext: jest.fn(),
         },
-        { getJwtCustomizer }
-      );
-      const provider = createProvider(tenant);
-      const configuration = getProviderConfiguration(provider);
-      const client = createTestClient();
-      assert(client);
-      const tokenProperties = {
-        client,
-        accountId,
-        scope: 'openid',
-        grantId: 'grant-id',
-        gty: GrantType.AuthorizationCode,
-      };
-      const ctx = createOidcContext({
-        provider,
-        client,
-        params: {
-          grant_type: GrantType.AuthorizationCode,
-          resource: indicator,
-          organization_id: 'org-id',
-        },
-        entities: {
-          AuthorizationCode: new provider.AuthorizationCode({
-            ...tokenProperties,
-            acr: 'urn:logto:acr:mfa',
-            amr: ['pwd', 'otp', 'mfa'],
-            authTime: 1000,
-          }),
-        },
-      });
-      Reflect.set(ctx, 'createLog', jest.fn().mockReturnValue({ append: jest.fn() }));
-      Reflect.set(ctx, 'prependAllLogEntries', jest.fn());
-      const token = new provider.AccessToken(tokenProperties);
-      const builtInClaims = {
+      },
+      { getJwtCustomizer }
+    );
+    const provider = createProvider(tenant);
+    const configuration = getProviderConfiguration(provider);
+    const client = createTestClient();
+    assert(client);
+    const tokenProperties = {
+      client,
+      accountId,
+      scope: 'openid',
+      grantId: 'grant-id',
+      gty: GrantType.AuthorizationCode,
+    };
+    const ctx = createOidcContext({
+      provider,
+      client,
+      params: {
+        grant_type: GrantType.AuthorizationCode,
+        resource: indicator,
         organization_id: 'org-id',
-        ...(isDevFeaturesEnabled && {
+      },
+      entities: {
+        AuthorizationCode: new provider.AuthorizationCode({
+          ...tokenProperties,
           acr: 'urn:logto:acr:mfa',
           amr: ['pwd', 'otp', 'mfa'],
-          auth_time: 1000,
+          authTime: 1000,
         }),
-      };
+      },
+    });
+    Reflect.set(ctx, 'createLog', jest.fn().mockReturnValue({ append: jest.fn() }));
+    Reflect.set(ctx, 'prependAllLogEntries', jest.fn());
+    const token = new provider.AccessToken(tokenProperties);
+    const builtInClaims = {
+      organization_id: 'org-id',
+      acr: 'urn:logto:acr:mfa',
+      amr: ['pwd', 'otp', 'mfa'],
+      auth_time: 1000,
+    };
 
-      const expectedMergedClaims = isDevFeaturesEnabled
-        ? // The reserved authentication context claims only survive as Logto's own values.
-          { ...builtInClaims, custom_claim: true }
-        : // Without the feature the released merge order stands, customizer output included.
-          { ...builtInClaims, ...customizedClaims };
+    // The reserved authentication context claims only survive as Logto's own values.
+    const expectedMergedClaims = { ...builtInClaims, custom_claim: true };
 
-      await expect(configuration.extraTokenClaims(ctx, token)).resolves.toEqual(builtInClaims);
-      await expect(configuration.extraTokenClaims(ctx, token)).resolves.toEqual(
-        expectedMergedClaims
-      );
+    await expect(configuration.extraTokenClaims(ctx, token)).resolves.toEqual(builtInClaims);
+    await expect(configuration.extraTokenClaims(ctx, token)).resolves.toEqual(expectedMergedClaims);
 
-      // Authentication context must also work when no other extra claims are configured.
-      getJwtCustomizer.mockRejectedValueOnce(new Error('Customizer is not configured'));
-      Reflect.set(ctx.oidc, 'params', { grant_type: GrantType.AuthorizationCode });
-      const { organization_id, ...authenticationContextClaims } = builtInClaims;
-      await expect(configuration.extraTokenClaims(ctx, token)).resolves.toEqual(
-        isDevFeaturesEnabled ? authenticationContextClaims : undefined
-      );
-      expect(runScriptLocally).toHaveBeenCalledTimes(2);
-    }
-  );
+    // Authentication context must also work when no other extra claims are configured.
+    getJwtCustomizer.mockRejectedValueOnce(new Error('Customizer is not configured'));
+    Reflect.set(ctx.oidc, 'params', { grant_type: GrantType.AuthorizationCode });
+    const { organization_id, ...authenticationContextClaims } = builtInClaims;
+    await expect(configuration.extraTokenClaims(ctx, token)).resolves.toEqual(
+      authenticationContextClaims
+    );
+    expect(runScriptLocally).toHaveBeenCalledTimes(2);
+  });
 
   it('should preserve token exchange actor claims without adding authentication context', async () => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
     const tenant = new MockTenant(undefined, undefined, undefined, undefined, {
       getJwtCustomizer: jest.fn().mockRejectedValue(new Error('Customizer is not configured')),
     });
@@ -1003,7 +962,6 @@ describe('authentication context extra token claims', () => {
   });
 
   it('should drop the reserved authentication context claims a token exchange customizer returns', async () => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
     Reflect.set(EnvSet.values, 'isCloud', false);
     jest.spyOn(JwtCustomizerLibrary, 'runScriptLocally').mockResolvedValue({
       acr: 'custom-acr',
@@ -1051,7 +1009,6 @@ describe('authentication context extra token claims', () => {
   });
 
   it('should keep the reserved authentication context claims a client credentials customizer returns', async () => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
     Reflect.set(EnvSet.values, 'isCloud', false);
     const customizedClaims = {
       acr: 'custom-acr',

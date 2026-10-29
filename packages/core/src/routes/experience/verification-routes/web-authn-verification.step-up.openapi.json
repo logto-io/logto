@@ -1,9 +1,4 @@
 {
-  "tags": [
-    {
-      "name": "Dev feature"
-    }
-  ],
   "paths": {
     "/api/experience/verification/web-authn/authentication/verify": {
       "post": {

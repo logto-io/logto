@@ -3,7 +3,6 @@ import { AccountCenterControlValue, type TrustedDevice } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
 import { createMockTrustedDevice, mockUser } from '#src/__mocks__/index.js';
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
@@ -249,12 +248,6 @@ describe('account trusted device routes', () => {
   });
 
   describe('reauthentication challenge', () => {
-    const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-
-    afterEach(() => {
-      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
-    });
-
     it('asks a first-party caller that needs recent authentication to step up', async () => {
       const response = await buildRequester({
         identityVerified: false,
@@ -289,18 +282,6 @@ describe('account trusted device routes', () => {
       );
 
       expect(response.status).toBe(200);
-      expect(response.headers['www-authenticate']).toBeUndefined();
-    });
-
-    it('does not challenge when OIDC step-up authentication is off', async () => {
-      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
-
-      const response = await buildRequester({
-        identityVerified: false,
-        isFirstPartyClient: true,
-      }).get('/my-account/trusted-devices');
-
-      expect(response.status).toBe(401);
       expect(response.headers['www-authenticate']).toBeUndefined();
     });
   });

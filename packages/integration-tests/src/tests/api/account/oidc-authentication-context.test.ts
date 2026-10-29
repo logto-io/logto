@@ -48,7 +48,7 @@ import {
   enableUserControlledMfaWithNoPrompt,
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
-import { devFeatureTest, generateEmail, generateTestName } from '#src/utils.js';
+import { generateEmail, generateTestName } from '#src/utils.js';
 
 /**
  * Read the trusted devices, keeping the response so a `401` challenge can be inspected. An empty
@@ -112,81 +112,75 @@ describe('account API authentication context', () => {
     await enableAllAccountCenterFields(authedAdminApi);
   });
 
-  devFeatureTest.it(
-    'accepts a fresh first-party sign-in without a verification record',
-    async () => {
-      const { user, username, password } = await createDefaultTenantUserWithPassword();
-      const api = await signInAndGetUserApi(username, password, {
+  it('accepts a fresh first-party sign-in without a verification record', async () => {
+    const { user, username, password } = await createDefaultTenantUserWithPassword();
+    const api = await signInAndGetUserApi(username, password, {
+      scopes: [
+        UserScope.Profile,
+        UserScope.Identities,
+        UserScope.Sessions,
+        UserScope.TrustedDevices,
+      ],
+    });
+
+    try {
+      // A mutation that needs recent authentication.
+      await expect(updateMyLogtoConfig(api, { mfa: { skipped: true } })).resolves.toMatchObject({
+        mfa: { skipped: true },
+      });
+
+      // Reads that need it as well.
+      await expect(getSessions(api, '')).resolves.toBeDefined();
+      const response = await getTrustedDevicesResponse(api);
+      expect(response.status).toBe(200);
+    } finally {
+      await deleteDefaultTenantUser(user.id);
+    }
+  });
+
+  it('accepts the opaque Account Center access token through normal token authentication', async () => {
+    const { user, username, password } = await createDefaultTenantUserWithPassword();
+    // The built-in Account Center signs in as its own application, so the access token it sends
+    // to the Account API is the one the OIDC context has to reach through the token itself.
+    // The scopes are a subset of the ones the built-in Account Center requests; the reserved
+    // scopes come from the client's default `includeReservedScopes`.
+    const client = await initExperienceClient({
+      config: {
+        appId: accountCenterApplicationId,
         scopes: [
           UserScope.Profile,
           UserScope.Identities,
           UserScope.Sessions,
           UserScope.TrustedDevices,
         ],
+      },
+      redirectUri: `${logtoUrl}/account`,
+    });
+    const { verificationId } = await client.verifyPassword({
+      identifier: { type: SignInIdentifier.Username, value: username },
+      password,
+    });
+    await client.identifyUser({ verificationId });
+    const { redirectTo } = await client.submitInteraction();
+    await processSession(client, redirectTo);
+
+    const accessToken = await client.getAccessToken();
+    // The Account Center reads the context from its ID token and treats the access token as
+    // opaque; a JWT here would mean the test proves the wrong token shape.
+    expect(accessToken.split('.')).toHaveLength(1);
+
+    const api = baseApi.extend({ headers: { Authorization: `Bearer ${accessToken}` } });
+
+    try {
+      await expect(getSessions(api, '')).resolves.toBeDefined();
+      await expect(getTrustedDevicesResponse(api)).resolves.toHaveProperty('status', 200);
+      await expect(updateMyLogtoConfig(api, { mfa: { skipped: true } })).resolves.toMatchObject({
+        mfa: { skipped: true },
       });
-
-      try {
-        // A mutation that needs recent authentication.
-        await expect(updateMyLogtoConfig(api, { mfa: { skipped: true } })).resolves.toMatchObject({
-          mfa: { skipped: true },
-        });
-
-        // Reads that need it as well.
-        await expect(getSessions(api, '')).resolves.toBeDefined();
-        const response = await getTrustedDevicesResponse(api);
-        expect(response.status).toBe(200);
-      } finally {
-        await deleteDefaultTenantUser(user.id);
-      }
+    } finally {
+      await deleteDefaultTenantUser(user.id);
     }
-  );
-
-  devFeatureTest.it(
-    'accepts the opaque Account Center access token through normal token authentication',
-    async () => {
-      const { user, username, password } = await createDefaultTenantUserWithPassword();
-      // The built-in Account Center signs in as its own application, so the access token it sends
-      // to the Account API is the one the OIDC context has to reach through the token itself.
-      // The scopes are a subset of the ones the built-in Account Center requests; the reserved
-      // scopes come from the client's default `includeReservedScopes`.
-      const client = await initExperienceClient({
-        config: {
-          appId: accountCenterApplicationId,
-          scopes: [
-            UserScope.Profile,
-            UserScope.Identities,
-            UserScope.Sessions,
-            UserScope.TrustedDevices,
-          ],
-        },
-        redirectUri: `${logtoUrl}/account`,
-      });
-      const { verificationId } = await client.verifyPassword({
-        identifier: { type: SignInIdentifier.Username, value: username },
-        password,
-      });
-      await client.identifyUser({ verificationId });
-      const { redirectTo } = await client.submitInteraction();
-      await processSession(client, redirectTo);
-
-      const accessToken = await client.getAccessToken();
-      // The Account Center reads the context from its ID token and treats the access token as
-      // opaque; a JWT here would mean the test proves the wrong token shape.
-      expect(accessToken.split('.')).toHaveLength(1);
-
-      const api = baseApi.extend({ headers: { Authorization: `Bearer ${accessToken}` } });
-
-      try {
-        await expect(getSessions(api, '')).resolves.toBeDefined();
-        await expect(getTrustedDevicesResponse(api)).resolves.toHaveProperty('status', 200);
-        await expect(updateMyLogtoConfig(api, { mfa: { skipped: true } })).resolves.toMatchObject({
-          mfa: { skipped: true },
-        });
-      } finally {
-        await deleteDefaultTenantUser(user.id);
-      }
-    }
-  );
+  });
 
   it('still accepts a verification record when the token carries no authentication context', async () => {
     const { user, password } = await createDefaultTenantUserWithPassword();
@@ -205,21 +199,18 @@ describe('account API authentication context', () => {
     }
   });
 
-  devFeatureTest.it(
-    'answers a first-party caller without recent authentication with the RFC 9470 challenge',
-    async () => {
-      const { user } = await createDefaultTenantUserWithPassword();
-      const api = await signInWithSocialAndGetUserApi(user.id, {
-        scopes: [UserScope.Profile, UserScope.TrustedDevices],
-      });
+  it('answers a first-party caller without recent authentication with the RFC 9470 challenge', async () => {
+    const { user } = await createDefaultTenantUserWithPassword();
+    const api = await signInWithSocialAndGetUserApi(user.id, {
+      scopes: [UserScope.Profile, UserScope.TrustedDevices],
+    });
 
-      try {
-        await expectPermissionDeniedWithChallenge(await getTrustedDevicesResponse(api));
-      } finally {
-        await deleteDefaultTenantUser(user.id);
-      }
+    try {
+      await expectPermissionDeniedWithChallenge(await getTrustedDevicesResponse(api));
+    } finally {
+      await deleteDefaultTenantUser(user.id);
     }
-  );
+  });
 
   describe('with an enrolled MFA factor', () => {
     beforeAll(async () => {
@@ -230,7 +221,7 @@ describe('account API authentication context', () => {
       await resetMfaSettings();
     });
 
-    devFeatureTest.it('accepts an elevated mfa token without a verification record', async () => {
+    it('accepts an elevated mfa token without a verification record', async () => {
       const { user, username, password } = await createDefaultTenantUserWithPassword();
       const totp = await createUserMfaVerification(user.id, MfaFactor.TOTP);
 
@@ -332,7 +323,7 @@ describe('account API authentication context', () => {
       }
     });
 
-    devFeatureTest.it('rejects a verification record that does not exist', async () => {
+    it('rejects a verification record that does not exist', async () => {
       const { user } = await createDefaultTenantUserWithPassword();
       const api = await signInWithoutContext(user.id);
 
@@ -345,7 +336,7 @@ describe('account API authentication context', () => {
       }
     });
 
-    devFeatureTest.it("rejects another user's verification record", async () => {
+    it("rejects another user's verification record", async () => {
       const { user } = await createDefaultTenantUserWithPassword();
       const { user: otherUser, username, password } = await createDefaultTenantUserWithPassword();
       const api = await signInWithoutContext(user.id);
@@ -368,7 +359,7 @@ describe('account API authentication context', () => {
       }
     });
 
-    devFeatureTest.it('rejects a binding verification record that has no owner', async () => {
+    it('rejects a binding verification record that has no owner', async () => {
       const { user } = await createDefaultTenantUserWithPassword();
       const api = await signInWithoutContext(user.id);
 
@@ -398,77 +389,66 @@ describe('account API authentication context', () => {
       await clearConnectorsByTypes([ConnectorType.Email]);
     });
 
-    devFeatureTest.it(
-      'keeps using the Verification API record to bind a new identifier',
-      async () => {
-        const { user, username, password } = await createDefaultTenantUserWithPassword();
-        const api = await signInAndGetUserApi(username, password, {
-          scopes: [UserScope.Profile, UserScope.Email],
-        });
-        const newEmail = generateEmail();
-
-        try {
-          const bindingVerificationRecordId = await createAndVerifyVerificationCode(api, {
-            type: SignInIdentifier.Email,
-            value: newEmail,
-          });
-
-          // The fresh `1fa` context replaces the permission record, not the identifier binding one:
-          // the record still comes from the Verification API and is still required.
-          await expect(
-            updatePrimaryEmail(api, newEmail, '', bindingVerificationRecordId)
-          ).resolves.toBeDefined();
-          await expect(getUserInfo(api)).resolves.toHaveProperty('primaryEmail', newEmail);
-        } finally {
-          await deleteDefaultTenantUser(user.id);
-        }
-      }
-    );
-  });
-
-  devFeatureTest.it(
-    'advertises the tenant maximum authentication age in the challenge',
-    async () => {
-      const { user } = await createDefaultTenantUserWithPassword();
-      const api = await signInWithSocialAndGetUserApi(user.id, {
-        scopes: [UserScope.Profile, UserScope.TrustedDevices],
+    it('keeps using the Verification API record to bind a new identifier', async () => {
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Email],
       });
-      const originalAccountCenter = await getAccountCenter();
+      const newEmail = generateEmail();
 
       try {
-        await updateAccountCenter({ maximumAuthenticationAgeInSeconds: 7200 });
+        const bindingVerificationRecordId = await createAndVerifyVerificationCode(api, {
+          type: SignInIdentifier.Email,
+          value: newEmail,
+        });
 
-        const response = await getTrustedDevicesResponse(api);
-        expect(response.status).toBe(401);
-        expect(getChallengeMaxAge(response)).toBe('7200');
-        // The challenge and the Account Center setting that the client reads carry the same value.
-        await expect(getAccountCenter()).resolves.toMatchObject({
-          maximumAuthenticationAgeInSeconds: 7200,
-        });
+        // The fresh `1fa` context replaces the permission record, not the identifier binding one:
+        // the record still comes from the Verification API and is still required.
+        await expect(
+          updatePrimaryEmail(api, newEmail, '', bindingVerificationRecordId)
+        ).resolves.toBeDefined();
+        await expect(getUserInfo(api)).resolves.toHaveProperty('primaryEmail', newEmail);
       } finally {
-        await updateAccountCenter({
-          maximumAuthenticationAgeInSeconds:
-            originalAccountCenter.maximumAuthenticationAgeInSeconds,
-        });
         await deleteDefaultTenantUser(user.id);
       }
-    }
-  );
+    });
+  });
 
-  devFeatureTest.it(
-    'accepts a fresh first-party sign-in at both ends of the configurable range',
-    async () => {
-      const originalAccountCenter = await getAccountCenter();
+  it('advertises the tenant maximum authentication age in the challenge', async () => {
+    const { user } = await createDefaultTenantUserWithPassword();
+    const api = await signInWithSocialAndGetUserApi(user.id, {
+      scopes: [UserScope.Profile, UserScope.TrustedDevices],
+    });
+    const originalAccountCenter = await getAccountCenter();
 
-      try {
-        await expectFreshSignInAccepted(60);
-        await expectFreshSignInAccepted(7200);
-      } finally {
-        await updateAccountCenter({
-          maximumAuthenticationAgeInSeconds:
-            originalAccountCenter.maximumAuthenticationAgeInSeconds,
-        });
-      }
+    try {
+      await updateAccountCenter({ maximumAuthenticationAgeInSeconds: 7200 });
+
+      const response = await getTrustedDevicesResponse(api);
+      expect(response.status).toBe(401);
+      expect(getChallengeMaxAge(response)).toBe('7200');
+      // The challenge and the Account Center setting that the client reads carry the same value.
+      await expect(getAccountCenter()).resolves.toMatchObject({
+        maximumAuthenticationAgeInSeconds: 7200,
+      });
+    } finally {
+      await updateAccountCenter({
+        maximumAuthenticationAgeInSeconds: originalAccountCenter.maximumAuthenticationAgeInSeconds,
+      });
+      await deleteDefaultTenantUser(user.id);
     }
-  );
+  });
+
+  it('accepts a fresh first-party sign-in at both ends of the configurable range', async () => {
+    const originalAccountCenter = await getAccountCenter();
+
+    try {
+      await expectFreshSignInAccepted(60);
+      await expectFreshSignInAccepted(7200);
+    } finally {
+      await updateAccountCenter({
+        maximumAuthenticationAgeInSeconds: originalAccountCenter.maximumAuthenticationAgeInSeconds,
+      });
+    }
+  });
 });

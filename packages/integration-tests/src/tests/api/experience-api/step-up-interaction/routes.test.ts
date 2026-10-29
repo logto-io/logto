@@ -10,7 +10,6 @@ import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.
 import { expectRejects } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
 
 const firstFactorAcr = 'urn:logto:acr:1fa';
 
@@ -30,7 +29,7 @@ const startStepUp = async (client: ExperienceClient) => {
   await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
 };
 
-devFeatureTest.describe('step-up route allow-list', () => {
+describe('step-up route allow-list', () => {
   const userApi = new UserApiTest();
   const user = generateNewUserProfile({ username: true, password: true, primaryEmail: true });
   const newPassword = generateNewUserProfile({ password: true }).password;

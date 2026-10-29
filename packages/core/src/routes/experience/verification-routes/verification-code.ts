@@ -11,7 +11,6 @@ import {
 import type Router from 'koa-router';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -69,9 +68,8 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
   router: Router<unknown, T>,
   { libraries, queries, sentinel }: TenantContext
 ) {
-  // The subject-bound variant is part of the unreleased step-up feature: outside it the request
-  // contract keeps requiring an identifier with a value, and the OpenAPI document omits the
-  // variant.
+  // The subject-bound variant verifies a code for the subject the interaction carries, without a
+  // raw identifier. The union keeps the identifier required for a plain sign-in.
   const stableBodyGuard = z.object({
     identifier: verificationCodeIdentifierGuard,
     interactionEvent: z.nativeEnum(InteractionEvent),
@@ -80,12 +78,8 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
     identifier: subjectVerificationCodeIdentifierGuard,
     interactionEvent: z.literal(InteractionEvent.SignIn),
   });
-  const bodyGuard = EnvSet.values.isDevFeaturesEnabled
-    ? z.union([stableBodyGuard, subjectBodyGuard])
-    : stableBodyGuard;
-  const verifyIdentifierGuard = EnvSet.values.isDevFeaturesEnabled
-    ? verificationCodeIdentifierPayloadGuard
-    : verificationCodeIdentifierGuard;
+  const bodyGuard = z.union([stableBodyGuard, subjectBodyGuard]);
+  const verifyIdentifierGuard = verificationCodeIdentifierPayloadGuard;
 
   router.post(
     `${experienceRoutes.verification}/verification-code`,

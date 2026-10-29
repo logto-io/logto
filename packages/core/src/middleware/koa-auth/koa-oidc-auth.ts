@@ -3,7 +3,6 @@ import { VerificationType } from '@logto/schemas';
 import type { MiddlewareType } from 'koa';
 import type { IRouterParamContext } from 'koa-router';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import {
   verificationRecordDataGuard,
@@ -149,15 +148,13 @@ export default function koaOidcAuth<StateT, ContextT extends IRouterParamContext
 
     // OIDC step-up authentication: a token minted by a recent qualifying authentication lets a
     // first-party application operate on the account without a separate verification record.
-    const oidcVerification = EnvSet.values.isDevFeaturesEnabled
-      ? await getOidcIdentityVerification({
-          extra: accessToken.extra,
-          queries: tenant.queries,
-          clientId,
-        })
-      : undefined;
+    const oidcVerification = await getOidcIdentityVerification({
+      extra: accessToken.extra,
+      queries: tenant.queries,
+      clientId,
+    });
 
-    const oidcIdentityVerified = oidcVerification?.identityVerified ?? false;
+    const oidcIdentityVerified = oidcVerification.identityVerified;
 
     ctx.auth = {
       type: 'user',
@@ -166,8 +163,8 @@ export default function koaOidcAuth<StateT, ContextT extends IRouterParamContext
       clientId,
       identityVerified: oidcIdentityVerified || legacyIdentityVerified,
       sessionUid,
-      isFirstPartyClient: oidcVerification?.isFirstPartyClient,
-      maximumAuthenticationAgeInSeconds: oidcVerification?.maximumAuthenticationAgeInSeconds,
+      isFirstPartyClient: oidcVerification.isFirstPartyClient,
+      maximumAuthenticationAgeInSeconds: oidcVerification.maximumAuthenticationAgeInSeconds,
     };
 
     return next();

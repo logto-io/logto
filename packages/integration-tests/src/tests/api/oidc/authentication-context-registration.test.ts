@@ -37,7 +37,6 @@ import {
   resetPasswordPolicy,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
 
 const firstFactorAcr = 'urn:logto:acr:1fa';
 const mfaAcr = 'urn:logto:acr:mfa';
@@ -78,7 +77,7 @@ const finishRegistration = async (client: ExperienceClient) => {
  * A registration creates the account from the interaction's records, so every credential it
  * establishes is a proof of that account and the ID token carries it like a sign-in would.
  */
-devFeatureTest.describe('authentication context claims on registration', () => {
+describe('authentication context claims on registration', () => {
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
     await updateSignInExperience({ adaptiveMfa: { enabled: false } });

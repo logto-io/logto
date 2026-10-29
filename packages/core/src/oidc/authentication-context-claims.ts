@@ -2,8 +2,6 @@ import { GrantType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { type KoaContextWithOIDC, type UnknownObject } from 'oidc-provider';
 
-import { EnvSet } from '#src/env-set/index.js';
-
 /** Claims only Logto may set; JWT customizer output is stripped of them before merging. */
 const reservedAuthenticationContextClaimKeys = new Set(['acr', 'amr', 'auth_time']);
 
@@ -31,8 +29,7 @@ export const getExtraTokenClaimsForAuthenticationContext = (
   ctx: KoaContextWithOIDC,
   token: unknown
 ): UnknownObject | undefined => {
-  // OIDC step-up authentication context is only available with dev features enabled.
-  if (!EnvSet.values.isDevFeaturesEnabled || !(token instanceof ctx.oidc.provider.AccessToken)) {
+  if (!(token instanceof ctx.oidc.provider.AccessToken)) {
     return;
   }
 

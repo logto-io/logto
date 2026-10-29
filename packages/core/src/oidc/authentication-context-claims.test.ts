@@ -1,7 +1,6 @@
 import { GrantType } from '@logto/schemas';
 import { type AuthorizationCode, type Client } from 'oidc-provider';
 
-import { EnvSet } from '#src/env-set/index.js';
 import { createOidcContext } from '#src/test-utils/oidc-provider.js';
 
 import { getExtraTokenClaimsForAuthenticationContext } from './authentication-context-claims.js';
@@ -91,16 +90,6 @@ const createAccessToken = () =>
   });
 
 describe('getExtraTokenClaimsForAuthenticationContext', () => {
-  const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-
-  beforeEach(() => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
-  });
-
-  afterEach(() => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
-  });
-
   it.each([
     [GrantType.AuthorizationCode, codeContext],
     [GrantType.RefreshToken, refreshContext],
@@ -153,17 +142,6 @@ describe('getExtraTokenClaimsForAuthenticationContext', () => {
       });
 
       expect(getExtraTokenClaimsForAuthenticationContext(ctx, createAccessToken())).toBeUndefined();
-    });
-
-    it('should not emit authentication context when dev features are disabled', () => {
-      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
-
-      expect(
-        getExtraTokenClaimsForAuthenticationContext(
-          buildSourceContext(codeContext),
-          createAccessToken()
-        )
-      ).toBeUndefined();
     });
   });
 

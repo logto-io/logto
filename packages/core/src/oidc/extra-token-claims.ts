@@ -352,10 +352,8 @@ export const getExtraTokenClaimsForJwtCustomization = async (
      * dropped before merging (the log entry above keeps the raw script result). Client credentials
      * tokens carry no authentication context, so their custom claims stay untouched.
      */
-    // OIDC step-up authentication context is only available with dev features enabled.
-    return !isClientCredentialsToken && EnvSet.values.isDevFeaturesEnabled
-      ? dropReservedAuthenticationContextClaims(result)
-      : result;
+    // OIDC step-up authentication context is reserved against the customizer on user tokens.
+    return isClientCredentialsToken ? result : dropReservedAuthenticationContextClaims(result);
   } catch (error: unknown) {
     void appInsights.trackException(error, buildAppInsightsTelemetry(ctx));
 

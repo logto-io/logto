@@ -34,9 +34,8 @@ import {
   resetPasskeySignInSettings,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
 
-devFeatureTest.describe('sign-in with requested ACR and passkeys', () => {
+describe('sign-in with requested ACR and passkeys', () => {
   const userApi = new UserApiTest();
   // eslint-disable-next-line @silverhand/fp/no-let -- Initialized in `beforeAll`.
   let pool: DatabasePool;

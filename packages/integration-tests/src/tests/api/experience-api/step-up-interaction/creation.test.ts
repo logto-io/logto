@@ -19,7 +19,6 @@ import {
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
 
 const firstFactorAcr = 'urn:logto:acr:1fa';
 const mfaAcr = 'urn:logto:acr:mfa';
@@ -46,7 +45,7 @@ const startStepUp = async (client: ExperienceClient, acrValues: string, prompt?:
   expect(location.startsWith('/step-up')).toBe(true);
 };
 
-devFeatureTest.describe('step-up interaction creation', () => {
+describe('step-up interaction creation', () => {
   const userApi = new UserApiTest();
   /** A password user with a primary email and an enrolled TOTP factor. */
   const totpUser = generateNewUserProfile({ username: true, password: true, primaryEmail: true });

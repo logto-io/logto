@@ -413,8 +413,7 @@ describe('ExperienceInteraction class', () => {
       );
     });
 
-    it('seeds the aggregated authentication context into the login result when dev features are enabled', async () => {
-      setDevFeaturesEnabled(true);
+    it('seeds the aggregated authentication context into the login result', async () => {
       const { experienceInteraction, provider } = createSignInInteraction({
         interactionResult: {
           authenticationProofs: [passwordProof(AuthenticationProofRole.Identify)],
@@ -453,8 +452,7 @@ describe('ExperienceInteraction class', () => {
       );
     });
 
-    it('seeds the context a registration established into the login result when dev features are enabled', async () => {
-      setDevFeaturesEnabled(true);
+    it('seeds the context a registration established into the login result', async () => {
       // An email + password registration: `createUser()` consumed the email code and the profile
       // established the password.
       const { experienceInteraction, provider } = createSignInInteraction({
@@ -653,8 +651,7 @@ describe('ExperienceInteraction class', () => {
       );
     });
 
-    it('finishes with the account id only when dev features are disabled', async () => {
-      setDevFeaturesEnabled(false);
+    it('finishes with the account id only when no proof was recorded', async () => {
       const { experienceInteraction, provider } = createSignInInteraction({
         interactionResult: {
           verificationRecords: [
@@ -1265,17 +1262,6 @@ describe('ExperienceInteraction class', () => {
       expect(experienceInteraction.identifiedUserId).toBeUndefined();
       expect(experienceInteraction.toJson()).toEqual(plain.toJson());
       expect(experienceInteraction.toJson()).not.toHaveProperty('authenticationContext');
-    });
-
-    it('ignores the prompt details when dev features are disabled', () => {
-      setDevFeaturesEnabled(false);
-
-      const { experienceInteraction } = createInteraction({
-        details: { authenticationContext: stepUpContext },
-      });
-
-      expect(experienceInteraction.isStepUp).toBe(false);
-      expect(experienceInteraction.identifiedUserId).toBeUndefined();
     });
 
     it('rejects a pure step-up with a non-sign-in event', () => {

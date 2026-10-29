@@ -1,9 +1,4 @@
 {
-  "tags": [
-    {
-      "name": "Dev feature"
-    }
-  ],
   "paths": {
     "/api/experience/verification/social/{connectorId}/authorization-uri": {
       "post": {

@@ -5,7 +5,6 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
 import PageMeta from '@/components/PageMeta';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -36,11 +35,8 @@ type Props = {
 
 function AccountCenter({ isActive, data }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  // DEV: OIDC step-up authentication. The built-in Account Center uses OIDC step-up only while the
-  // feature is in development; keep the legacy verification-record copy for the released behavior.
-  const securityVerificationDescriptionKey = isDevFeaturesEnabled
-    ? 'sign_in_exp.account_center.sections.account_security.security_verification.description_step_up'
-    : 'sign_in_exp.account_center.sections.account_security.security_verification.description';
+  const securityVerificationDescriptionKey =
+    'sign_in_exp.account_center.sections.account_security.security_verification.description_step_up';
   const {
     watch,
     setValue,
@@ -211,9 +207,7 @@ function AccountCenter({ isActive, data }: Props) {
           </div>
         </FormCard>
       ))}
-      {isDevFeaturesEnabled && (
-        <RecentAuthenticationFormCard isAccountApiEnabled={isAccountApiEnabled} />
-      )}
+      <RecentAuthenticationFormCard isAccountApiEnabled={isAccountApiEnabled} />
       <SecretVaultSection isAccountApiEnabled={isAccountApiEnabled} />
       <FormCard
         title="sign_in_exp.account_center.custom_css.title"
