@@ -7,11 +7,7 @@ import {
   savePendingConnectorCreation,
   type PendingConnectorCreation,
 } from './connector-creation-idempotency';
-import {
-  abandonConnectorCreation,
-  continueConnectorCreation,
-  selectCreationFunding,
-} from './creation-billing';
+import { abandonConnectorCreation, continueConnectorCreation } from './creation-billing';
 
 // Jest's CommonJS resolver needs a virtual module for the ESM-only client package.
 jest.mock('@withtyped/client', () => ({ ResponseError: class extends Error {} }), {
@@ -35,28 +31,23 @@ beforeEach(() => {
   savePendingConnectorCreation('alice', operation);
 });
 
-it('persists the funding Enterprise without changing it on a later selection', () => {
-  const unfunded = { key: 'creation-key', providerName: SsoProviderName.OIDC };
-  const saved = selectCreationFunding('alice', unfunded, {
-    funding: 'included',
-    enterpriseId: 'enterprise-one',
+it('creates a new intention with its persisted idempotency key', async () => {
+  const saved = savePendingConnectorCreation('alice', {
+    key: operation.key,
+    providerName: operation.providerName,
   });
-  expect(readPendingConnectorCreation('alice')).toEqual(saved);
-  expect(
-    selectCreationFunding('alice', saved, { funding: 'included', enterpriseId: 'enterprise-two' })
-  ).toEqual(saved);
-  expect(selectCreationFunding('alice', saved, { funding: 'personal' })).toEqual(saved);
-});
-
-it('requires an Enterprise selector before persisting a new included selection', () => {
-  expect(() =>
-    selectCreationFunding(
-      'alice',
-      { key: 'new-key', providerName: SsoProviderName.OIDC },
-      { funding: 'included' }
-    )
-  ).toThrow('Select an Enterprise');
-  expect(readPendingConnectorCreation('alice')).toEqual(operation);
+  await expect(
+    continueConnectorCreation('alice', saved, getApi, {
+      restartExpired: true,
+      chooseBillingCustomer,
+    })
+  ).resolves.toMatchObject({ status: 'created', id: 'connector-one' });
+  expect(getApi).toHaveBeenCalledTimes(1);
+  expect(getApi).toHaveBeenCalledWith(operation.key);
+  expect(api.post).toHaveBeenCalledWith('/api/me/console-sso/connectors', {
+    body: { providerName: operation.providerName },
+  });
+  expect(chooseBillingCustomer).not.toHaveBeenCalled();
 });
 
 it('keeps legacy included recovery for explicit cleanup instead of guessing its Enterprise', async () => {
@@ -66,11 +57,25 @@ it('keeps legacy included recovery for explicit cleanup instead of guessing its 
       restartExpired: true,
       chooseBillingCustomer,
     })
-  ).rejects.toThrow('Start over');
+  ).rejects.toThrow('Unable to resume this creation. Start over to continue.');
   expect(api.post).not.toHaveBeenCalled();
   expect(readPendingConnectorCreation('alice')).toEqual(saved);
   await abandonConnectorCreation('alice', saved, getApi);
   expect(readPendingConnectorCreation('alice')).toBeUndefined();
+});
+
+it('does not start a new Checkout when a saved personal subscription cannot create', async () => {
+  const saved = savePendingConnectorCreation('alice', { ...operation, subscriptionId: 'paid-sub' });
+  api.post.mockResolvedValueOnce({ status: 'checkout_required' });
+  await expect(
+    continueConnectorCreation('alice', saved, getApi, {
+      restartExpired: true,
+      chooseBillingCustomer,
+    })
+  ).rejects.toThrow('Unable to resume this creation. Start over to continue.');
+  expect(api.post).toHaveBeenCalledTimes(1);
+  expect(chooseBillingCustomer).not.toHaveBeenCalled();
+  expect(readPendingConnectorCreation('alice')).toEqual(saved);
 });
 
 it('replays a lost Enterprise creation response with the same funding and creation key', async () => {

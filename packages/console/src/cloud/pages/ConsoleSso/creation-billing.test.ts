@@ -3,20 +3,13 @@ import { SsoProviderName } from '@logto/schemas';
 import type Client from '@withtyped/client';
 import { type GuardedResponse, type RouterRoutes } from '@withtyped/client';
 
-import { type LogtoEnterpriseSubscriptionResponse } from '@/cloud/types/router';
-
 import {
   getOrCreatePendingConnectorCreation,
   readPendingConnectorCreation,
   savePendingConnectorCreation,
   type PendingConnectorCreation,
 } from './connector-creation-idempotency';
-import {
-  abandonConnectorCreation,
-  continueConnectorCreation,
-  getIncludedCapacity,
-  selectCreationFunding,
-} from './creation-billing';
+import { abandonConnectorCreation, continueConnectorCreation } from './creation-billing';
 
 // Jest's CommonJS resolver needs a virtual module for the ESM-only client package.
 jest.mock('@withtyped/client', () => ({ ResponseError: class extends Error {} }), {
@@ -48,21 +41,6 @@ const session = {
   subscriptionId: null,
   redirectUri: 'https://checkout.stripe.com/session-one',
 };
-const enterprise = (
-  limit: NonNullable<
-    LogtoEnterpriseSubscriptionResponse['quota']
-  >['basicQuota']['consoleSsoConnectorLimit'],
-  used: number,
-  status = 'active',
-  quotaScope = 'shared'
-) =>
-  ({
-    quotaScope,
-    quota: { basicQuota: { consoleSsoConnectorLimit: limit } },
-    usages: { consoleSsoConnectorLimit: used },
-    subscription: { status },
-  }) as unknown as LogtoEnterpriseSubscriptionResponse;
-
 beforeEach(() => {
   localStorage.clear();
   jest.resetAllMocks();
@@ -77,30 +55,11 @@ beforeEach(() => {
   });
 });
 
-it.each([
-  { limit: 1, used: 0, status: 'active', scope: 'shared', expected: true },
-  { limit: 1, used: 1, status: 'active', scope: 'shared', expected: false },
-  { limit: 0, used: 0, status: 'active', scope: 'shared', expected: false },
-  { limit: null, used: 10, status: 'trialing', scope: 'shared', expected: true },
-  { limit: 1, used: 0, status: 'canceled', scope: 'shared', expected: false },
-  { limit: 1, used: 0, status: 'active', scope: 'tenant', expected: false },
-])(
-  'checks contract allowance $limit, usage $used, status $status, scope $scope',
-  ({ limit, used, status, scope, expected }) => {
-    expect(getIncludedCapacity(enterprise(limit, used, status, scope)).isAvailable).toBe(expected);
-  }
-);
-
-it('does not infer included capacity from missing Enterprise data', () => {
-  expect(getIncludedCapacity().isAvailable).toBe(false);
-});
-
 it('preserves funding, provider and subscription when retrying the same intention', () => {
   const saved = savePendingConnectorCreation('alice', {
     ...operation,
     subscriptionId: 'original-sub',
   });
-  expect(selectCreationFunding('alice', saved, { funding: 'included' })).toEqual(saved);
   expect(getOrCreatePendingConnectorCreation('alice', SsoProviderName.SAML)).toEqual(saved);
 });
 

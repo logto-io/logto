@@ -58,7 +58,7 @@ const cloud = {
     resume_creation:
       '완료되지 않은 생성 작업이 있습니다. 동일한 공급자로 계속하여 이 커넥터를 복구하세요.',
     creation_charge_notice:
-      '콘솔 SSO 커넥터는 개당 <span>월 ${{price, number}}</span>입니다. 도움이 필요하면 언제든지 <a>문의하세요</a>.',
+      '표준 요금: <span>콘솔 SSO 커넥터당 월 ${{price, number}}</span>. 도움이 필요하면 언제든지 <a>문의하세요</a>.',
   },
   general: {
     onboarding: '온보딩',

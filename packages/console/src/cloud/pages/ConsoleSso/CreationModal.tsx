@@ -35,11 +35,10 @@ function CreationModal({ onClose, userId }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { show } = useConfirmModal();
   const api = useCloudApi<typeof consoleSsoRouter>({ hideErrorToast: true });
-  const { operation, status, isSubmitting, create, startOver, billing } = useConnectorCreation(
+  const { operation, status, isSubmitting, create, startOver } = useConnectorCreation(
     userId,
     onClose
   );
-  const { billingError, isBillingReady, funding, isFundingResolved } = billing;
   const {
     data: providers,
     error,
@@ -71,11 +70,8 @@ function CreationModal({ onClose, userId }: Props) {
   const isCreateButtonDisabled =
     !providers?.some(({ providerName }) => providerName === selected) ||
     Boolean(error) ||
-    Boolean(billingError) ||
-    !isBillingReady ||
     status === 'payment_pending';
-  const isCreateButtonLoading =
-    isSubmitting || (!isBillingReady && !billingError) || status === 'payment_pending';
+  const isCreateButtonLoading = isSubmitting || status === 'payment_pending';
   const confirmStartOver = async () => {
     const [confirmed] = await show({
       title: 'cloud.console_sso.start_over',
@@ -103,35 +99,23 @@ function CreationModal({ onClose, userId }: Props) {
         title="cloud.console_sso.create"
         size="xlarge"
         footer={
-          // Connectors not covered by an Enterprise plan are charged to the user personally. Keep
-          // the notice while a known coverage revalidates (e.g., on window focus) to avoid flashing.
-          isFundingResolved && funding === 'personal' ? (
-            <AddOnNoticeFooter
-              buttonTitle="enterprise_sso.create_modal.create_button_text"
-              isCreateButtonDisabled={isCreateButtonDisabled}
-              isLoading={isCreateButtonLoading}
-              onClick={submit}
+          <AddOnNoticeFooter
+            buttonTitle="enterprise_sso.create_modal.create_button_text"
+            isCreateButtonDisabled={isCreateButtonDisabled}
+            isLoading={isCreateButtonLoading}
+            onClick={submit}
+          >
+            <Trans
+              components={{
+                span: <span className={creationStyles.strong} />,
+                a: <ContactUsPhraseLink />,
+              }}
             >
-              <Trans
-                components={{
-                  span: <span className={creationStyles.strong} />,
-                  a: <ContactUsPhraseLink />,
-                }}
-              >
-                {t('cloud.console_sso.creation_charge_notice', {
-                  price: consoleSsoConnectorUnitPrice,
-                })}
-              </Trans>
-            </AddOnNoticeFooter>
-          ) : (
-            <Button
-              title="enterprise_sso.create_modal.create_button_text"
-              type="primary"
-              disabled={isCreateButtonDisabled}
-              isLoading={isCreateButtonLoading}
-              onClick={submit}
-            />
-          )
+              {t('cloud.console_sso.creation_charge_notice', {
+                price: consoleSsoConnectorUnitPrice,
+              })}
+            </Trans>
+          </AddOnNoticeFooter>
         }
         onClose={() => {
           if (!isSubmitting) {

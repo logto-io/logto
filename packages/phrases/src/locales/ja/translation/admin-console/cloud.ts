@@ -62,7 +62,7 @@ const cloud = {
     resume_creation:
       '未完了の作成操作が見つかりました。同じプロバイダーで続行して、このコネクターを復元してください。',
     creation_charge_notice:
-      'コンソール SSO コネクターは 1 つにつき <span>月額 ${{price, number}}</span> かかります。サポートが必要な場合は、お気軽に<a>お問い合わせ</a>ください。',
+      '標準料金：<span>コンソール SSO コネクター 1 つにつき月額 ${{price, number}}</span>。サポートが必要な場合は、お気軽に<a>お問い合わせ</a>ください。',
   },
   general: {
     onboarding: 'オンボーディング',

@@ -1,8 +1,8 @@
 import { type consoleSsoRouter } from '@logto/cloud/routes';
 import { type SsoProviderName } from '@logto/schemas';
+import { noop } from '@silverhand/essentials';
 import Client from '@withtyped/client';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useSWRConfig } from 'swr';
 
 import { toastResponseError, useCloudApi } from '@/cloud/hooks/use-cloud-api';
 import { useBillingCustomerChoice } from '@/hooks/use-billing-customer-choice';
@@ -19,10 +19,8 @@ import {
   abandonConnectorCreation,
   continueConnectorCreation,
   discardCanceledConnectorCreation,
-  selectCreationFunding,
 } from './creation-billing';
 import { useConsoleSsoConnectors } from './use-console-sso';
-import { useCreationBilling } from './use-creation-billing';
 
 const paymentCheckingInterval = 1000;
 const paymentCheckingTimeout = 60 * 1000;
@@ -31,9 +29,7 @@ export const useConnectorCreation = (userId: string, onClose: (id?: string) => v
   const api = useCloudApi<typeof consoleSsoRouter>({ hideErrorToast: true });
   const { mutate } = useConsoleSsoConnectors();
   const [operation, setOperation] = useState(() => readPendingConnectorCreation(userId));
-  const billing = useCreationBilling(operation);
   const { chooseBillingCustomer } = useBillingCustomerChoice();
-  const { mutate: mutateCache } = useSWRConfig();
   const [status, setStatus] = useState<
     'open' | 'expired' | 'payment_pending' | 'payment_received' | 'error'
   >();
@@ -95,11 +91,8 @@ export const useConnectorCreation = (userId: string, onClose: (id?: string) => v
     [api]
   );
   const refresh = useCallback(async () => {
-    await Promise.allSettled([
-      mutate(),
-      mutateCache(['console-sso-coverage', userId], undefined, true),
-    ]);
-  }, [mutate, mutateCache, userId]);
+    await mutate().catch(noop);
+  }, [mutate]);
   const run = useCallback(
     async (current: PendingConnectorCreation, redirect: boolean) => {
       if (
@@ -228,15 +221,11 @@ export const useConnectorCreation = (userId: string, onClose: (id?: string) => v
   }, [isCheckingPayment, operation?.key, operation?.sessionId]);
 
   const create = async (providerName: SsoProviderName) => {
-    if (busy.current || !billing.isBillingReady || billing.billingError) {
+    if (busy.current) {
       return;
     }
     try {
-      const current = selectCreationFunding(
-        userId,
-        getOrCreatePendingConnectorCreation(userId, providerName),
-        { funding: billing.funding, enterpriseId: billing.enterpriseId }
-      );
+      const current = getOrCreatePendingConnectorCreation(userId, providerName);
       setOperation(current);
       await run(current, true);
     } catch (error) {
@@ -279,5 +268,5 @@ export const useConnectorCreation = (userId: string, onClose: (id?: string) => v
       busy.current = false;
     }
   };
-  return { operation, status, isSubmitting, create, startOver, billing };
+  return { operation, status, isSubmitting, create, startOver };
 };

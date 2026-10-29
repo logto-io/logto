@@ -3,10 +3,7 @@ import type Client from '@withtyped/client';
 import { ResponseError } from '@withtyped/client';
 
 import { tryReadResponseErrorBody } from '@/cloud/hooks/use-cloud-api';
-import {
-  type CheckoutCustomerChoice,
-  type LogtoEnterpriseSubscriptionResponse,
-} from '@/cloud/types/router';
+import { type CheckoutCustomerChoice } from '@/cloud/types/router';
 
 import {
   clearPendingConnectorCreation,
@@ -15,50 +12,21 @@ import {
   savePendingConnectorCreation,
 } from './connector-creation-idempotency';
 
-/** Only an active or trialing shared Enterprise plan grants Console SSO coverage. */
-const isEnterpriseCoverageEligible = (enterprise?: LogtoEnterpriseSubscriptionResponse) =>
-  enterprise?.quotaScope === 'shared' &&
-  (enterprise.subscription?.status === 'active' || enterprise.subscription?.status === 'trialing');
-
-/** Match the contract's basic allowance; tenant plans and add-on totals do not grant coverage. */
-export const getIncludedCapacity = (enterprise?: LogtoEnterpriseSubscriptionResponse) => {
-  const limit = enterprise?.quota?.basicQuota.consoleSsoConnectorLimit;
-  const used = enterprise?.usages?.consoleSsoConnectorLimit;
-  return {
-    isAvailable: Boolean(
-      isEnterpriseCoverageEligible(enterprise) &&
-        typeof used === 'number' &&
-        (limit === null || (limit !== undefined && used < limit))
-    ),
-  };
-};
-
-type CreationFunding = {
-  funding: 'included' | 'personal';
-  subscriptionId?: string;
-  /** The Enterprise whose allowance funds an included connector. */
-  enterpriseId?: string;
-};
-
-/** Keep billing selection fixed once a creation request may have reached the server. */
-export const selectCreationFunding = (
-  userId: string,
-  operation: PendingConnectorCreation,
-  funding: CreationFunding
-) => {
-  if (operation.funding) {
-    return operation;
-  }
-  if (funding.funding === 'included' && !funding.enterpriseId) {
-    throw new Error('Select an Enterprise before creating a connector.');
-  }
-  return savePendingConnectorCreation(userId, { ...operation, ...funding });
-};
-
 const assertCurrentOperation = (userId: string, operation: PendingConnectorCreation) => {
   if (!isPendingConnectorCreationCurrent(userId, operation)) {
     throw new DOMException('Connector creation was replaced or cleared.', 'AbortError');
   }
+};
+
+const assertActiveOperation = (
+  userId: string,
+  operation: PendingConnectorCreation,
+  signal?: AbortSignal
+) => {
+  if (signal?.aborted) {
+    throw new DOMException('Connector creation check was canceled.', 'AbortError');
+  }
+  assertCurrentOperation(userId, operation);
 };
 
 const requestConnectorCreation = async (
@@ -69,7 +37,7 @@ const requestConnectorCreation = async (
   if (operation.funding === 'included') {
     // Older pending operations lack an Enterprise selector; keep them for explicit cleanup.
     if (!enterpriseId) {
-      throw new Error('Start over to select an Enterprise for this connector.');
+      throw new Error('Unable to resume this creation. Start over to continue.');
     }
     return api.post('/api/me/logto-enterprises/:id/console-sso/connectors', {
       params: { id: enterpriseId },
@@ -79,9 +47,13 @@ const requestConnectorCreation = async (
   if (!subscriptionId) {
     throw new Error('A personal subscription is required to create a connector.');
   }
-  return api.post('/api/me/console-sso/connectors', {
+  const connector = await api.post('/api/me/console-sso/connectors', {
     body: { providerName, stripeUserSubscriptionId: subscriptionId },
   });
+  if (!('id' in connector)) {
+    throw new Error('Unable to resume this creation. Start over to continue.');
+  }
+  return connector;
 };
 
 /** Checkout refused the chosen billing Customer, so no session exists for this Checkout key. */
@@ -112,27 +84,45 @@ const postCheckoutSession = async (
     body: { providerName: operation.providerName, ...operation.customerChoice },
   });
 
-/** Resume payment or fulfillment using the persisted intention, never a redirect's payment claim. */
+type ConnectorCreationOptions = {
+  restartExpired: boolean;
+  signal?: AbortSignal;
+  /** Resolves to `undefined` when the user cancels. */
+  chooseBillingCustomer: () => Promise<CheckoutCustomerChoice | undefined>;
+};
+
+/** Let Cloud select funding for new intentions; resume saved billing without selecting again. */
 export const continueConnectorCreation = async (
   userId: string,
   operation: PendingConnectorCreation,
   getApi: (key: string) => Client<typeof consoleSsoRouter>,
-  {
-    restartExpired,
-    signal,
-    chooseBillingCustomer,
-  }: {
-    restartExpired: boolean;
-    signal?: AbortSignal;
-    /** Resolves to `undefined` when the user cancels. */
-    chooseBillingCustomer: () => Promise<CheckoutCustomerChoice | undefined>;
+  options: ConnectorCreationOptions
+) => {
+  if (operation.funding) {
+    return continueFundedConnectorCreation(userId, operation, getApi, options);
   }
+  assertActiveOperation(userId, operation, options.signal);
+  const result = await getApi(operation.key).post('/api/me/console-sso/connectors', {
+    body: { providerName: operation.providerName },
+  });
+  assertActiveOperation(userId, operation, options.signal);
+  if ('id' in result) {
+    return { status: 'created' as const, id: result.id, operation };
+  }
+  // Save the server-selected continuation before any Checkout request can reach Stripe.
+  const current = savePendingConnectorCreation(userId, { ...operation, funding: 'personal' });
+  return continueFundedConnectorCreation(userId, current, getApi, options);
+};
+
+/** Resume payment or fulfillment using the persisted intention, never a redirect's payment claim. */
+const continueFundedConnectorCreation = async (
+  userId: string,
+  operation: PendingConnectorCreation,
+  getApi: (key: string) => Client<typeof consoleSsoRouter>,
+  { restartExpired, signal, chooseBillingCustomer }: ConnectorCreationOptions
 ) => {
   const assertCurrent = (current: PendingConnectorCreation) => {
-    if (signal?.aborted) {
-      throw new DOMException('Connector creation check was canceled.', 'AbortError');
-    }
-    assertCurrentOperation(userId, current);
+    assertActiveOperation(userId, current, signal);
   };
   assertCurrent(operation);
   /** Ask once per Checkout key, and save the choice before any request can send it. */
