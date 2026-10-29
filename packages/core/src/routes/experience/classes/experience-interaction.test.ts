@@ -1,5 +1,6 @@
 /* eslint-disable max-lines */
 import { TemplateType } from '@logto/connector-kit';
+import { PasswordPolicyChecker } from '@logto/core-kit';
 import {
   AdditionalIdentifier,
   adminConsoleApplicationId,
@@ -154,6 +155,11 @@ const mockJwtCustomizerUserContext: JwtCustomizerUserContext = {
 };
 
 const ExperienceInteraction = await pickDefault(import('./experience-interaction.js'));
+
+// `setPasswordDigestWithValidation` runs the password policy, whose pwned check fetches
+// `https://api.pwnedpasswords.com`. Keep this unit test offline; `password-policy.test.ts`
+// covers the pwned behavior.
+jest.spyOn(PasswordPolicyChecker.prototype, 'hasBeenPwned').mockResolvedValue(false);
 
 const createSignInInteraction = ({
   headers,
