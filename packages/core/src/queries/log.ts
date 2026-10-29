@@ -125,19 +125,20 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
 
   const findLogById = buildFindEntityByIdWithPool(pool)(Logs);
 
-  const deleteLogsBefore = async (condition: {
-    before: number;
-    after?: number;
+  const deleteLogsInRange = async (condition: {
+    endTime: number;
+    startTime?: number;
     limit: number;
+    includeKeyPrefix: AuditLogPrefix[];
   }): Promise<{ deletedCount: number; deletedRange?: { oldest: number; newest: number } }> => {
-    const { before, after, limit } = condition;
-    // Use `=== undefined` (not `conditionalSql`) so a legitimate `after: 0` still applies a
-    // lower bound; `conditionalSql` treats `0` as falsy and would silently drop the filter.
-    const afterCondition =
-      after === undefined
-        ? sql``
-        : sql`and ${fields.createdAt} > to_timestamp(${after}::double precision / 1000)`;
+    const { endTime, startTime, limit, includeKeyPrefix } = condition;
 
+    // Reuse `buildLogConditionSql`, the same builder `GET /logs` uses, so a time window means
+    // exactly the same thing on both endpoints: an inclusive `start_time`, and an `end_time` made
+    // inclusive at millisecond granularity by the `+ interval '1 millisecond'` inside the builder.
+    // Hand-writing the bounds here would let the two endpoints drift apart by one millisecond,
+    // and would let a delete reach rows the matching export never returned.
+    //
     // Match on `ctid`, not `id`. `id in (select id ... limit n)` is planned as a semi-join whose
     // outer side carries no qual, so Postgres scans the whole table and joins to the bounded set
     // afterwards — a full seq scan that grows with the tenant. `ctid = any(array(select ...))`
@@ -150,8 +151,7 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
       where ctid = any(array(
         select ctid
         from ${table}
-        where ${fields.createdAt} < to_timestamp(${before}::double precision / 1000)
-        ${afterCondition}
+        ${buildLogConditionSql({ startTime, endTime, includeKeyPrefix })}
         order by ${fields.createdAt}, ${fields.id}
         limit ${limit}
       ))
@@ -205,7 +205,7 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
     countLogs,
     findLogs,
     findLogById,
-    deleteLogsBefore,
+    deleteLogsInRange,
     getHookExecutionStatsByHookId,
   };
 };

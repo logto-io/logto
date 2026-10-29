@@ -36,9 +36,9 @@ const logs = {
   }),
   findLogs: jest.fn().mockResolvedValue(mockLogs.map((log) => toRow(log))),
   findLogById: jest.fn().mockResolvedValue(toRow(mockLog)),
-  deleteLogsBefore: jest.fn().mockResolvedValue({ deletedCount: 0 }),
+  deleteLogsInRange: jest.fn().mockResolvedValue({ deletedCount: 0 }),
 };
-const { countLogs, findLogs, findLogById, deleteLogsBefore } = logs;
+const { countLogs, findLogs, findLogById, deleteLogsInRange } = logs;
 const logRoutes = await pickDefault(import('./log.js'));
 
 describe('logRoutes', () => {
@@ -206,16 +206,18 @@ describe('logRoutes', () => {
   });
 
   describe('DELETE /logs', () => {
-    it('deletes with parsed bounds and returns the summary', async () => {
-      deleteLogsBefore.mockResolvedValueOnce({
+    it('deletes within the window and returns the summary', async () => {
+      deleteLogsInRange.mockResolvedValueOnce({
         deletedCount: 2,
         deletedRange: { oldest: 1000, newest: 2000 },
       });
 
-      const response = await logRequest.delete('/logs?before=5000&after=500&limit=10');
+      const response = await logRequest.delete('/logs?end_time=5000&start_time=500&limit=10');
 
       expect(response.status).toEqual(200);
-      expect(deleteLogsBefore).toHaveBeenCalledWith({ before: 5000, after: 500, limit: 10 });
+      expect(deleteLogsInRange).toHaveBeenCalledWith(
+        expect.objectContaining({ endTime: 5000, startTime: 500, limit: 10 })
+      );
       expect(response.body).toEqual({
         deletedCount: 2,
         hasMore: false,
@@ -223,77 +225,102 @@ describe('logRoutes', () => {
       });
     });
 
-    it('defaults limit to 1000 and passes after as undefined when omitted', async () => {
-      const response = await logRequest.delete('/logs?before=5000');
+    it('scopes the delete to audit log keys, leaving webhook delivery logs alone', async () => {
+      await logRequest.delete('/logs?end_time=5000');
+
+      const [condition] = deleteLogsInRange.mock.calls[0] as [{ includeKeyPrefix: string[] }];
+
+      expect(condition.includeKeyPrefix).toEqual(expect.arrayContaining(['Interaction', 'Action']));
+      expect(condition.includeKeyPrefix).not.toContain('TriggerHook');
+    });
+
+    it('defaults limit to 1000 and passes startTime as undefined when omitted', async () => {
+      const response = await logRequest.delete('/logs?end_time=5000');
 
       expect(response.status).toEqual(200);
-      expect(deleteLogsBefore).toHaveBeenCalledWith({
-        before: 5000,
-        after: undefined,
-        limit: 1000,
-      });
+      expect(deleteLogsInRange).toHaveBeenCalledWith(
+        expect.objectContaining({ endTime: 5000, startTime: undefined, limit: 1000 })
+      );
     });
 
     it.each([
       ['minimum', '1', 1],
       ['maximum', '10000', 10_000],
     ])('accepts the %s limit of %s', async (_name, rawLimit, limit) => {
-      const response = await logRequest.delete(`/logs?before=5000&limit=${rawLimit}`);
+      const response = await logRequest.delete(`/logs?end_time=5000&limit=${rawLimit}`);
 
       expect(response.status).toEqual(200);
-      expect(deleteLogsBefore).toHaveBeenCalledWith(expect.objectContaining({ limit }));
+      expect(deleteLogsInRange).toHaveBeenCalledWith(expect.objectContaining({ limit }));
     });
 
-    it('accepts before=0 (the unix epoch) rather than rejecting it as absent', async () => {
-      const response = await logRequest.delete('/logs?before=0');
+    it('accepts end_time=0 (the unix epoch) rather than treating it as absent', async () => {
+      const response = await logRequest.delete('/logs?end_time=0');
 
       expect(response.status).toEqual(200);
-      expect(deleteLogsBefore).toHaveBeenCalledWith({
-        before: 0,
-        after: undefined,
-        limit: 1000,
-      });
+      expect(deleteLogsInRange).toHaveBeenCalledWith(expect.objectContaining({ endTime: 0 }));
+    });
+
+    it('accepts start_time=0 rather than dropping the lower bound', async () => {
+      const response = await logRequest.delete('/logs?end_time=5000&start_time=0');
+
+      expect(response.status).toEqual(200);
+      expect(deleteLogsInRange).toHaveBeenCalledWith(
+        expect.objectContaining({ endTime: 5000, startTime: 0 })
+      );
     });
 
     it('reports hasMore=true when the batch was full', async () => {
-      deleteLogsBefore.mockResolvedValueOnce({ deletedCount: 10 });
+      deleteLogsInRange.mockResolvedValueOnce({ deletedCount: 10 });
 
-      const response = await logRequest.delete('/logs?before=5000&limit=10');
+      const response = await logRequest.delete('/logs?end_time=5000&limit=10');
 
       expect(response.body).toEqual({ deletedCount: 10, hasMore: true });
     });
 
     it('omits deletedRange when nothing was deleted', async () => {
-      const response = await logRequest.delete('/logs?before=5000');
+      const response = await logRequest.delete('/logs?end_time=5000');
 
       expect(response.status).toEqual(200);
       expect(response.body).toEqual({ deletedCount: 0, hasMore: false });
     });
 
-    it('returns 400 when before is missing', async () => {
+    it('returns 400 when end_time is missing', async () => {
       const response = await logRequest.delete('/logs');
 
       expect(response.status).toEqual(400);
-      expect(deleteLogsBefore).not.toHaveBeenCalled();
+      expect(deleteLogsInRange).not.toHaveBeenCalled();
     });
 
-    it('returns 400 when before is in the future', async () => {
-      const response = await logRequest.delete(`/logs?before=${Date.now() + 3_600_000}`);
+    it('returns 400 when end_time is in the future', async () => {
+      const response = await logRequest.delete(`/logs?end_time=${Date.now() + 3_600_000}`);
 
       expect(response.status).toEqual(400);
       expect(response.body.code).toBe('log.cleanup_boundary_in_future');
-      expect(deleteLogsBefore).not.toHaveBeenCalled();
+      expect(deleteLogsInRange).not.toHaveBeenCalled();
     });
 
-    it('returns 400 when after is not earlier than before', async () => {
-      const sameBound = await logRequest.delete('/logs?before=5000&after=5000');
-      expect(sameBound.status).toEqual(400);
-      expect(sameBound.body.code).toBe('log.cleanup_invalid_bounds');
+    it('returns 400 when start_time is after end_time', async () => {
+      const inverted = await logRequest.delete('/logs?end_time=5000&start_time=6000');
 
-      const inverted = await logRequest.delete('/logs?before=5000&after=6000');
       expect(inverted.status).toEqual(400);
-      expect(inverted.body.code).toBe('log.cleanup_invalid_bounds');
-      expect(deleteLogsBefore).not.toHaveBeenCalled();
+      expect(inverted.body.code).toBe('log.invalid_time_window');
+      expect(deleteLogsInRange).not.toHaveBeenCalled();
+    });
+
+    it.each([
+      ['empty end_time', 'end_time='],
+      ['whitespace end_time', 'end_time=%20%20'],
+      ['empty start_time', 'end_time=5000&start_time='],
+      ['negative end_time', 'end_time=-1'],
+      ['end_time beyond the safe integer range', 'end_time=1e16'],
+      ['non-finite end_time', 'end_time=abc'],
+      ['non-finite start_time', 'end_time=5000&start_time=abc'],
+    ])('returns 400 for %s instead of coercing it', async (_name, queryString) => {
+      const response = await logRequest.delete(`/logs?${queryString}`);
+
+      expect(response.status).toEqual(400);
+      expect(response.body.code).toBe('guard.invalid_input');
+      expect(deleteLogsInRange).not.toHaveBeenCalled();
     });
 
     it.each([
@@ -302,25 +329,10 @@ describe('logRoutes', () => {
       ['fractional', '1.5'],
       ['not a number', 'abc'],
     ])('returns 400 when limit is %s', async (_name, limit) => {
-      const response = await logRequest.delete(`/logs?before=5000&limit=${limit}`);
+      const response = await logRequest.delete(`/logs?end_time=5000&limit=${limit}`);
 
       expect(response.status).toEqual(400);
-      expect(deleteLogsBefore).not.toHaveBeenCalled();
-    });
-
-    it('returns 400 when before is not a finite number', async () => {
-      const response = await logRequest.delete('/logs?before=abc');
-
-      expect(response.status).toEqual(400);
-      expect(deleteLogsBefore).not.toHaveBeenCalled();
-    });
-
-    it('returns 400 when after is not a finite number', async () => {
-      const response = await logRequest.delete('/logs?before=5000&after=abc');
-
-      expect(response.status).toEqual(400);
-      expect(response.body.code).toBe('guard.invalid_input');
-      expect(deleteLogsBefore).not.toHaveBeenCalled();
+      expect(deleteLogsInRange).not.toHaveBeenCalled();
     });
   });
 });

@@ -1,8 +1,7 @@
-import { Logs } from '@logto/schemas';
-import { createMockPool, createMockQueryResult, sql } from '@silverhand/slonik';
+import { interaction, type AuditLogPrefix } from '@logto/schemas';
+import { createMockPool, createMockQueryResult } from '@silverhand/slonik';
 
-import { convertToIdentifiers } from '#src/utils/sql.js';
-import { expectSqlAssert, type QueryType } from '#src/utils/test-utils.js';
+import type { QueryType } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
 
@@ -12,107 +11,89 @@ const pool = createMockPool({
 });
 
 const { createLogQueries } = await import('./log.js');
-const { deleteLogsBefore } = createLogQueries(pool);
+const { deleteLogsInRange } = createLogQueries(pool);
 
-const { table, fields } = convertToIdentifiers(Logs);
+const auditPrefix = interaction.prefix;
+const includeKeyPrefix: AuditLogPrefix[] = [auditPrefix];
 
-describe('deleteLogsBefore()', () => {
+describe('deleteLogsInRange()', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockQuery.mockReset();
   });
 
-  it('deletes with only an exclusive upper bound and no tenant predicate', async () => {
-    // The `RETURNING` rows are deliberately out of order so that a first/last read instead of
-    // a min/max fold would produce the wrong range.
+  it('deletes by ctid within the window and returns the affected range', async () => {
     mockQuery.mockImplementationOnce(async (query, values) => {
-      expectSqlAssert(
-        query,
-        sql`
-          delete from ${table}
-          where ctid = any(array(
-            select ctid
-            from ${table}
-            where ${fields.createdAt} < to_timestamp($1::double precision / 1000)
-            order by ${fields.createdAt}, ${fields.id}
-            limit $2
-          ))
-          returning ${fields.createdAt}
-        `.sql
-      );
-      // Tenant isolation is enforced by RLS; the statement must not carry a tenant predicate.
-      expect(query).not.toContain('tenant_id');
-      expect(values).toEqual([5000, 100]);
+      const statement = String(query);
 
+      // Keep the delete a bounded Tid Scan instead of a semi-join that scans the whole table.
+      expect(statement).toContain('ctid = any(array(');
+      expect(statement).toContain('order by');
+      expect(statement).toContain('limit');
+
+      // The window must be the one `GET /logs` applies: inclusive lower bound, and an upper bound
+      // made inclusive at millisecond granularity.
+      expect(statement).toContain('"created_at" >= to_timestamp($2::double precision / 1000)');
+      expect(statement).toContain(
+        `"created_at" < to_timestamp($3::double precision / 1000) + interval '1 millisecond'`
+      );
+
+      // Only the requested key prefixes are in scope, so webhook delivery logs are left alone.
+      expect(statement).toContain('"key" like $1');
+
+      // Tenant isolation is enforced by RLS; the statement must carry no tenant predicate.
+      expect(statement).not.toContain('tenant_id');
+
+      expect(values).toEqual([`${auditPrefix}%`, 1000, 5000, 100]);
+
+      // Out-of-order fixtures: a first/last read instead of a min/max fold would be wrong.
       return createMockQueryResult([{ createdAt: 3000 }, { createdAt: 1000 }]);
     });
 
-    await expect(deleteLogsBefore({ before: 5000, limit: 100 })).resolves.toEqual({
+    await expect(
+      deleteLogsInRange({ endTime: 5000, startTime: 1000, limit: 100, includeKeyPrefix })
+    ).resolves.toEqual({
       deletedCount: 2,
       deletedRange: { oldest: 1000, newest: 3000 },
     });
   });
 
-  it('adds an exclusive lower bound when `after` is provided', async () => {
+  it('omits the lower bound when no start time is given', async () => {
     mockQuery.mockImplementationOnce(async (query, values) => {
-      expectSqlAssert(
-        query,
-        sql`
-          delete from ${table}
-          where ctid = any(array(
-            select ctid
-            from ${table}
-            where ${fields.createdAt} < to_timestamp($1::double precision / 1000)
-              and ${fields.createdAt} > to_timestamp($2::double precision / 1000)
-            order by ${fields.createdAt}, ${fields.id}
-            limit $3
-          ))
-          returning ${fields.createdAt}
-        `.sql
+      const statement = String(query);
+
+      expect(statement).not.toContain('>= to_timestamp');
+      expect(statement).toContain(
+        `"created_at" < to_timestamp($2::double precision / 1000) + interval '1 millisecond'`
       );
-      expect(values).toEqual([5000, 1500, 10]);
+      expect(values).toEqual([`${auditPrefix}%`, 5000, 10]);
 
-      return createMockQueryResult([{ createdAt: 2000 }, { createdAt: 1600 }]);
+      return createMockQueryResult([{ createdAt: 2000 }]);
     });
 
-    await expect(deleteLogsBefore({ before: 5000, after: 1500, limit: 10 })).resolves.toEqual({
-      deletedCount: 2,
-      deletedRange: { oldest: 1600, newest: 2000 },
-    });
+    await expect(
+      deleteLogsInRange({ endTime: 5000, limit: 10, includeKeyPrefix })
+    ).resolves.toEqual({ deletedCount: 1, deletedRange: { oldest: 2000, newest: 2000 } });
   });
 
-  it('treats `after: 0` as a real bound rather than "absent"', async () => {
+  it('applies a start time of `0` as a real bound', async () => {
     mockQuery.mockImplementationOnce(async (query, values) => {
-      expectSqlAssert(
-        query,
-        sql`
-          delete from ${table}
-          where ctid = any(array(
-            select ctid
-            from ${table}
-            where ${fields.createdAt} < to_timestamp($1::double precision / 1000)
-              and ${fields.createdAt} > to_timestamp($2::double precision / 1000)
-            order by ${fields.createdAt}, ${fields.id}
-            limit $3
-          ))
-          returning ${fields.createdAt}
-        `.sql
-      );
-      expect(values).toEqual([5000, 0, 10]);
+      expect(String(query)).toContain('"created_at" >= to_timestamp($2::double precision / 1000)');
+      expect(values).toEqual([`${auditPrefix}%`, 0, 5000, 10]);
 
       return createMockQueryResult([]);
     });
 
-    await expect(deleteLogsBefore({ before: 5000, after: 0, limit: 10 })).resolves.toEqual({
-      deletedCount: 0,
-    });
+    await expect(
+      deleteLogsInRange({ endTime: 5000, startTime: 0, limit: 10, includeKeyPrefix })
+    ).resolves.toEqual({ deletedCount: 0 });
   });
 
   it('omits the range when nothing was deleted', async () => {
     mockQuery.mockResolvedValueOnce(createMockQueryResult([]));
 
-    await expect(deleteLogsBefore({ before: 5000, limit: 10 })).resolves.toEqual({
-      deletedCount: 0,
-    });
+    await expect(
+      deleteLogsInRange({ endTime: 5000, limit: 10, includeKeyPrefix })
+    ).resolves.toEqual({ deletedCount: 0 });
   });
 });
