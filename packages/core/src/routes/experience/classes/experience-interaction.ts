@@ -27,6 +27,7 @@ import {
   requestedAuthenticationContextGuard,
   VerificationType,
   type User,
+  type VerificationCodeIdentifier,
 } from '@logto/schemas';
 import { maskEmail, maskPhone } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
@@ -38,6 +39,7 @@ import { buildUserPasswordPayload } from '#src/libraries/user.utils.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 import { getClientIdentifierPayload } from '#src/oidc/cimd/index.js';
 import { stepUpSatisfiedBySessionKey } from '#src/oidc/interaction-policy.js';
+import { normalizeRecipient } from '#src/sentinel/message-rate-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
@@ -191,6 +193,16 @@ const isEnrolledFactorProof = ({ class: factorClass, role }: AuthenticationProof
   (factorClass === AuthenticationFactorClass.Mfa || factorClass === AuthenticationFactorClass.Both);
 
 /**
+ * How many recipients whose verification code has not been verified yet a solved captcha covers.
+ * Two leaves room to correct a mistyped email or phone number without solving another captcha.
+ */
+const maxUnverifiedCodeRecipientsPerCaptcha = 2;
+
+/** The normalized `<type>:<value>` key of a verification code recipient. */
+const toCodeRecipient = ({ type, value }: VerificationCodeIdentifier) =>
+  `${type}:${normalizeRecipient(value)}`;
+
+/**
  * Interaction is a short-lived session session that is initiated when a user starts an interaction flow with the Logto platform.
  * This class is used to manage all the interaction data and status.
  *
@@ -231,7 +243,7 @@ export default class ExperienceInteraction {
   private readonly adaptiveMfaValidator: AdaptiveMfaValidator;
 
   /** The captcha verification status for the current interaction. */
-  private readonly captcha = {
+  private readonly captcha: NonNullable<InteractionStorage['captcha']> = {
     verified: false,
     skipped: false,
   };
@@ -933,6 +945,8 @@ export default class ExperienceInteraction {
     assertThat(isVerified, new RequestError({ code: 'session.captcha_failed', status: 422 }));
 
     this.captcha.verified = true;
+    // A new captcha covers new verification code recipients.
+    this.captcha.codeRecipients = undefined;
   }
 
   /**
@@ -1412,6 +1426,55 @@ export default class ExperienceInteraction {
     await this.signInExperienceValidator.guardCaptcha();
   }
 
+  /**
+   * Guard sending a verification code to `identifier` before a user is identified.
+   *
+   * On top of {@link guardCaptcha}, a solved captcha only covers a limited number of recipients
+   * whose code has not been verified yet ({@link maxUnverifiedCodeRecipientsPerCaptcha}). Resending
+   * to a covered recipient keeps working (the per-recipient message rate guard caps it), and a
+   * recipient stops counting once its code is verified, so flows that verify several identifiers
+   * (e.g. an email and then a phone number) are unaffected. Otherwise one solved captcha lets a
+   * script send codes to any number of recipients from the same interaction (SMS pumping).
+   *
+   * The recipient is staged here and persisted by the {@link save} that follows a successful send.
+   *
+   * @throws {RequestError} with 422 `session.captcha_required` if a (new) captcha is required
+   */
+  async guardCaptchaForVerificationCode(identifier: VerificationCodeIdentifier) {
+    await this.guardCaptcha();
+
+    // No captcha was solved for this interaction: pure step-up, a skipped captcha, or the captcha
+    // policy is disabled.
+    if (this.isStepUp || this.captcha.skipped || !this.captcha.verified) {
+      return;
+    }
+
+    const recipient = toCodeRecipient(identifier);
+    const { codeRecipients = [] } = this.captcha;
+
+    if (codeRecipients.includes(recipient)) {
+      return;
+    }
+
+    const verifiedRecipients = new Set(
+      this.verificationRecordsArray.flatMap((record) =>
+        (record.type === VerificationType.EmailVerificationCode ||
+          record.type === VerificationType.PhoneVerificationCode) &&
+        record.isVerified
+          ? [toCodeRecipient(record.identifier)]
+          : []
+      )
+    );
+
+    assertThat(
+      codeRecipients.filter((value) => !verifiedRecipients.has(value)).length <
+        maxUnverifiedCodeRecipientsPerCaptcha,
+      new RequestError({ code: 'session.captcha_required', status: 422 })
+    );
+
+    this.captcha.codeRecipients = [...codeRecipients, recipient];
+  }
+
   /** Convert the current interaction to JSON, so that it can be stored as the OIDC provider interaction result */
   public toJson(): InteractionStorage {
     const { interactionEvent, userId, captcha, authenticationContext } = this;
@@ -1443,11 +1506,16 @@ export default class ExperienceInteraction {
       trustedDeviceOptIn: _,
       authenticationProofs: __,
       authenticationContext,
+      captcha,
       ...interactionStorage
     } = this.toJson();
 
     return {
       ...interactionStorage,
+      // The captcha-bound code recipient is internal abuse-prevention state.
+      ...conditional(
+        captcha && { captcha: { verified: captcha.verified, skipped: captcha.skipped } }
+      ),
       ...conditional(
         authenticationContext && {
           authenticationContext: await this.toSanitizedAuthenticationContext(authenticationContext),

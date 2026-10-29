@@ -30,7 +30,7 @@ type LogtoConfigQueries = ReturnType<typeof createLogtoConfigQueries>;
  * and reduced to its E.164 digits (the form Logto stores), falling back to the trimmed input when
  * it is not a valid number.
  */
-const normalizeRecipient = (recipient: string): string => {
+export const normalizeRecipient = (recipient: string): string => {
   const trimmed = recipient.trim();
   // Email is the only messaging recipient that contains `@`; anything else is a phone number.
   return trimmed.includes('@') ? trimmed.toLowerCase() : parsePhoneNumber(trimmed);
