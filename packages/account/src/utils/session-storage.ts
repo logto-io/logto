@@ -1,4 +1,3 @@
-/* eslint-disable max-lines -- Account Center session and local storage helpers share the same schema guards. */
 import * as s from 'superstruct';
 
 const storagePrefix = 'logto:account-center:';
@@ -56,7 +55,6 @@ export type PendingStepUpAction =
   | { type: 'revoke-session'; sessionId: string }
   | { type: 'revoke-grant'; applicationId: string; grantIds: string[] }
   | { type: 'remove-trusted-device'; trustedDeviceId: string }
-  | { type: 'update-username'; username: string }
   | { type: 'rename-passkey'; id: string; name: string }
   | { type: 'delete-passkey'; id: string };
 
@@ -152,7 +150,6 @@ const pendingStepUpActionGuard = s.union([
     grantIds: s.array(s.string()),
   }),
   s.object({ type: s.literal('remove-trusted-device'), trustedDeviceId: s.string() }),
-  s.object({ type: s.literal('update-username'), username: s.string() }),
   s.object({ type: s.literal('rename-passkey'), id: s.string(), name: s.string() }),
   s.object({ type: s.literal('delete-passkey'), id: s.string() }),
 ]);
@@ -354,5 +351,3 @@ export const sessionStorage = Object.freeze({
     removeItem(storageKeys.identifier, 'session');
   },
 });
-
-/* eslint-enable max-lines */

@@ -91,13 +91,7 @@ const submitUsername = (
   fireEvent.click(getByText('action.save'));
 };
 
-/** The state the restored route sees after a successful step-up callback. */
-const prepareResumableStepUp = (username: string) => {
-  startPendingStepUp({ type: 'update-username', username }, '/account/username');
-  handlePendingStepUpOnPageLoad({ pathname: '/account', search: '?code=code&state=state' });
-  completePendingStepUp();
-  handlePendingStepUpOnPageLoad({ pathname: '/account', search: '' });
-};
+const now = Math.floor(Date.now() / 1000);
 
 describe('<Username /> OIDC step-up', () => {
   beforeEach(() => {
@@ -108,9 +102,33 @@ describe('<Username /> OIDC step-up', () => {
     mockUpdateUsername.mockResolvedValue(undefined);
   });
 
+  it('starts an entry step-up before rendering the form when the context is stale', async () => {
+    mockGetIdTokenClaims.mockResolvedValue(createIdTokenClaims(now - 301));
+
+    const { queryByText } = renderUsername();
+
+    await waitFor(() => {
+      expect(mockSignIn).toHaveBeenCalledTimes(1);
+    });
+    expect(mockSignIn).toHaveBeenCalledWith({
+      redirectUri: 'http://localhost/account',
+      clearTokens: false,
+      extraParams: { acr_values: LogtoAcr.FirstFactor, max_age: '240' },
+    });
+    expect(accountStorage.pendingStepUp.get()).toMatchObject({
+      action: { type: 'enter-subpage' },
+      phase: 'authorizing',
+    });
+    expect(queryByText('account_center.username.title')).toBeNull();
+    expect(mockUpdateUsername).not.toHaveBeenCalled();
+  });
+
   it('updates the username directly when the ID token has a fresh 1fa context', async () => {
     const { container, getByText } = renderUsername();
 
+    await waitFor(() => {
+      expect(getByText('account_center.username.title')).toBeTruthy();
+    });
     submitUsername(container, getByText, 'new_username');
 
     await waitFor(() => {
@@ -124,83 +142,59 @@ describe('<Username /> OIDC step-up', () => {
     });
   });
 
-  it('starts a step-up with the submitted username when the context is stale', async () => {
-    mockGetIdTokenClaims.mockResolvedValue(
-      createIdTokenClaims(Math.floor(Date.now() / 1000) - 600)
-    );
+  it('shows the form without writing after a completed entry step-up', async () => {
+    startPendingStepUp({ type: 'enter-subpage' }, '/account/username');
+    handlePendingStepUpOnPageLoad({ pathname: '/account', search: '?code=code&state=state' });
+    completePendingStepUp();
+    handlePendingStepUpOnPageLoad({ pathname: '/account', search: '' });
+
+    const { getByText } = renderUsername();
+
+    await waitFor(() => {
+      expect(getByText('account_center.username.title')).toBeTruthy();
+    });
+    expect(mockUpdateUsername).not.toHaveBeenCalled();
+    expect(mockSignIn).not.toHaveBeenCalled();
+    expect(accountStorage.pendingStepUp.get()).toBeUndefined();
+  });
+
+  it('starts an entry step-up when the final write is challenged', async () => {
+    mockUpdateUsername.mockRejectedValueOnce(createChallengeError());
 
     const { container, getByText } = renderUsername();
 
+    await waitFor(() => {
+      expect(getByText('account_center.username.title')).toBeTruthy();
+    });
     submitUsername(container, getByText, 'new_username');
 
     await waitFor(() => {
       expect(mockSignIn).toHaveBeenCalledTimes(1);
     });
-    expect(mockUpdateUsername).not.toHaveBeenCalled();
-    expect(mockSignIn).toHaveBeenCalledWith({
-      redirectUri: 'http://localhost/account',
-      clearTokens: false,
-      extraParams: { acr_values: 'urn:logto:acr:1fa', max_age: '540' },
-    });
+    expect(mockSignIn).toHaveBeenCalledWith(
+      expect.objectContaining({
+        extraParams: { acr_values: LogtoAcr.FirstFactor, max_age: '240' },
+      })
+    );
     expect(accountStorage.pendingStepUp.get()).toMatchObject({
-      action: { type: 'update-username', username: 'new_username' },
-      phase: 'authorizing',
+      action: { type: 'enter-subpage' },
     });
+    expect(mockSetToast).not.toHaveBeenCalled();
   });
 
-  it('runs the resumed update once and navigates to the success page', async () => {
-    prepareResumableStepUp('resumed_username');
+  it('shows a toast when the update fails for another reason', async () => {
+    mockUpdateUsername.mockRejectedValueOnce(createHttpError('user.username_already_in_use', 422));
 
-    const { getByText, unmount } = renderUsername();
-
-    await waitFor(() => {
-      expect(mockUpdateUsername).toHaveBeenCalledWith('access-token', {
-        username: 'resumed_username',
-      });
-    });
-    await waitFor(() => {
-      expect(getByText('Success page')).toBeTruthy();
-    });
-
-    // A second mount, as after a refresh of the restored route, does not run it again.
-    unmount();
-    renderUsername();
-    await waitFor(() => {
-      expect(mockGetIdTokenClaims).toHaveBeenCalledTimes(2);
-    });
-
-    expect(mockUpdateUsername).toHaveBeenCalledTimes(1);
-    expect(mockSignIn).not.toHaveBeenCalled();
-  });
-
-  it('reports a challenge on the resumed update instead of stepping up again', async () => {
-    prepareResumableStepUp('resumed_username');
-    mockUpdateUsername.mockRejectedValue(createChallengeError());
-
-    renderUsername();
+    const { container, getByText } = renderUsername();
 
     await waitFor(() => {
-      expect(mockSetToast).toHaveBeenCalled();
+      expect(getByText('account_center.username.title')).toBeTruthy();
     });
-
-    expect(mockUpdateUsername).toHaveBeenCalledTimes(1);
-    expect(mockSignIn).not.toHaveBeenCalled();
-    expect(accountStorage.pendingStepUp.get()).toBeUndefined();
-  });
-
-  it('keeps the resumed username in the form when the update fails', async () => {
-    prepareResumableStepUp('resumed_username');
-    mockUpdateUsername.mockRejectedValue(createHttpError('user.username_already_in_use', 422));
-
-    renderUsername();
+    submitUsername(container, getByText, 'taken_username');
 
     await waitFor(() => {
       expect(mockSetToast).toHaveBeenCalledWith('error.username_exists');
     });
-
-    const usernameInput = document.querySelector<HTMLInputElement>('input[name="username"]');
-
-    expect(usernameInput?.value).toBe('resumed_username');
-    expect(mockUpdateUsername).toHaveBeenCalledTimes(1);
+    expect(mockSignIn).not.toHaveBeenCalled();
   });
 });
