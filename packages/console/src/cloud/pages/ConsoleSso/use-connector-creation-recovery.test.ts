@@ -25,6 +25,38 @@ const deferred = <T>() => {
   return { promise, resolve: resolveResponse };
 };
 
+it.each([409, 503, 'network'])(
+  'clears an unstarted personal creation after a preview failure (%s)',
+  async (status) => {
+    const failure = status === 'network' ? new Error('Network failed') : { response: { status } };
+    savePendingConnectorCreation('alice', {
+      key: 'creation-without-checkout',
+      providerName: SsoProviderName.OIDC,
+      funding: 'personal',
+    });
+    const first = renderCreation();
+    mockApi.get.mockClear().mockRejectedValueOnce(failure);
+    await act(async () => {
+      await first.result.current.create(SsoProviderName.OIDC);
+    });
+    expect(toastResponseError).toHaveBeenCalledWith(failure);
+    expect(first.result.current.status).toBe('error');
+    expect(first.result.current.isSubmitting).toBe(false);
+    expect(first.result.current.operation).toBeUndefined();
+    expect(readPendingConnectorCreation('alice')).toBeUndefined();
+    expect(mockChooseBillingCustomer).not.toHaveBeenCalled();
+    expect(mockApi.post).not.toHaveBeenCalled();
+    expect(mockApi.delete).not.toHaveBeenCalled();
+    first.unmount();
+
+    const { result } = renderCreation();
+    expect(result.current.operation).toBeUndefined();
+    expect(result.current.status).toBeUndefined();
+    expect(result.current.isSubmitting).toBe(false);
+    expect(onCreated).not.toHaveBeenCalled();
+  }
+);
+
 it.each(['open', 'expired'])(
   'checks a recovered %s session immediately without continued polling',
   async (status) => {

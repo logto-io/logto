@@ -54,6 +54,7 @@ beforeEach(() => {
   localStorage.clear();
   jest.resetAllMocks();
   getApi.mockReturnValue(api as unknown as Client<typeof consoleSsoRouter>);
+  api.get.mockResolvedValue({ status: 'checkout_required' });
   chooseBillingCustomer.mockResolvedValue({});
   savePendingConnectorCreation('alice', operation);
   // eslint-disable-next-line @silverhand/fp/no-mutating-methods -- Supply the browser UUID API in jsdom.
@@ -80,6 +81,69 @@ it('saves the chosen billing account before sending it with Checkout', async () 
   ]);
 });
 
+it('adds to an existing subscription without asking for a billing account', async () => {
+  api.get.mockResolvedValue({ status: 'subscription_exists', subscriptionId: 'existing-sub' });
+  api.post.mockResolvedValue({ id: 'connector-two' });
+  await expect(
+    continueConnectorCreation('alice', operation, getApi, options(true))
+  ).resolves.toMatchObject({ status: 'created', id: 'connector-two' });
+  expect(chooseBillingCustomer).not.toHaveBeenCalled();
+  expect(api.get).toHaveBeenCalledWith('/api/me/console-sso/checkout-preview');
+  expect(api.post.mock.calls).toEqual([
+    [
+      '/api/me/console-sso/connectors',
+      {
+        body: { providerName: operation.providerName, stripeUserSubscriptionId: 'existing-sub' },
+      },
+    ],
+  ]);
+  expect(readPendingConnectorCreation('alice')).toEqual({
+    ...operation,
+    subscriptionId: 'existing-sub',
+  });
+});
+
+it('does not preview again once a billing account was chosen for this Checkout', async () => {
+  const saved = savePendingConnectorCreation('alice', {
+    ...operation,
+    customerChoice: { customerId: 'cus_other' },
+  });
+  api.post.mockResolvedValue(session);
+  await continueConnectorCreation('alice', saved, getApi, options(true));
+  expect(api.get).not.toHaveBeenCalled();
+  expect(chooseBillingCustomer).not.toHaveBeenCalled();
+});
+
+it('preserves a restarted Checkout when its preview fails', async () => {
+  const saved = savePendingConnectorCreation('alice', {
+    ...operation,
+    checkoutKey: 'retry-key',
+  });
+  const failure = new Error('Preview failed');
+  api.get.mockRejectedValueOnce(failure);
+  await expect(continueConnectorCreation('alice', saved, getApi, options(true))).rejects.toBe(
+    failure
+  );
+  expect(readPendingConnectorCreation('alice')).toEqual(saved);
+  expect(chooseBillingCustomer).not.toHaveBeenCalled();
+  expect(api.post).not.toHaveBeenCalled();
+});
+
+it('preserves a newer operation when an old preview fails', async () => {
+  const replacement = { ...operation, key: 'another-creation' };
+  const failure = new Error('Preview failed');
+  api.get.mockImplementationOnce(async () => {
+    savePendingConnectorCreation('alice', replacement);
+    throw failure;
+  });
+  await expect(continueConnectorCreation('alice', operation, getApi, options(true))).rejects.toBe(
+    failure
+  );
+  expect(readPendingConnectorCreation('alice')).toEqual(replacement);
+  expect(chooseBillingCustomer).not.toHaveBeenCalled();
+  expect(api.post).not.toHaveBeenCalled();
+});
+
 it('does not start Checkout when the billing account dialog is canceled', async () => {
   // eslint-disable-next-line unicorn/no-useless-undefined -- The dialog resolves to nothing on cancel.
   chooseBillingCustomer.mockResolvedValue(undefined);
@@ -100,7 +164,8 @@ it('replays a lost Checkout response with the same key, provider and billing acc
   expect(saved).toEqual({ ...operation, customerChoice: { newCustomer: true } });
   await continueConnectorCreation('alice', saved ?? operation, getApi, options(true));
   expect(chooseBillingCustomer).toHaveBeenCalledTimes(1);
-  expect(getApi.mock.calls).toEqual([[operation.key], [operation.key]]);
+  // The preview read before the only choice, then both Checkout requests, use the creation key.
+  expect(getApi.mock.calls).toEqual([[operation.key], [operation.key], [operation.key]]);
   expect(api.post.mock.calls[0]).toEqual(api.post.mock.calls[1]);
   expect(api.post.mock.calls[1]).toEqual([
     '/api/me/console-sso/checkout-session',
@@ -120,7 +185,13 @@ it.each(['customer_not_found', 'customer_unavailable'])(
     expect(saved).toEqual({ ...operation, checkoutKey: 'new-key' });
     await continueConnectorCreation('alice', saved ?? operation, getApi, options(true));
     expect(chooseBillingCustomer).toHaveBeenCalledTimes(2);
-    expect(getApi.mock.calls).toEqual([[operation.key], ['new-key']]);
+    // Each choice follows a preview read; only the second Checkout uses the new payment key.
+    expect(getApi.mock.calls).toEqual([
+      [operation.key],
+      [operation.key],
+      [operation.key],
+      ['new-key'],
+    ]);
     expect(api.post).toHaveBeenLastCalledWith('/api/me/console-sso/checkout-session', {
       body: { providerName: operation.providerName },
     });
