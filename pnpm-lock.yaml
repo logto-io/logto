@@ -1966,8 +1966,8 @@ importers:
         version: 3.24.3
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-b2b27b2
-        version: 0.2.5-b2b27b2(zod@3.24.3)
+        specifier: 0.2.5-d64933f
+        version: 0.2.5-d64933f(zod@3.24.3)
       '@silverhand/eslint-config':
         specifier: ^6.1.0
         version: 6.1.0(eslint@8.57.0)(prettier@3.5.3)(typescript@5.9.3)
@@ -3836,8 +3836,8 @@ importers:
         specifier: ^29.5.0
         version: 29.6.3
       '@logto/cloud':
-        specifier: 0.2.5-b2b27b2
-        version: 0.2.5-b2b27b2(zod@3.24.3)
+        specifier: 0.2.5-d64933f
+        version: 0.2.5-d64933f(zod@3.24.3)
       '@logto/connector-kit':
         specifier: workspace:^
         version: link:../toolkit/connector-kit
@@ -4374,8 +4374,8 @@ importers:
         version: 3.24.3
     devDependencies:
       '@logto/cloud':
-        specifier: 0.2.5-b2b27b2
-        version: 0.2.5-b2b27b2(zod@3.24.3)
+        specifier: 0.2.5-d64933f
+        version: 0.2.5-d64933f(zod@3.24.3)
       '@silverhand/eslint-config':
         specifier: ^6.1.0
         version: 6.1.0(eslint@8.57.0)(prettier@3.5.3)(typescript@5.9.3)
@@ -6649,8 +6649,8 @@ packages:
   '@logto/client@3.2.2':
     resolution: {integrity: sha512-2AVM2c09AbjikFqPtmOm3p8nOcGblwa5mexVdg1jRtENoVDi5GVi/ytsvkI10Cd1wEh4uUyrJLMv2Fig3w83Aw==}
 
-  '@logto/cloud@0.2.5-b2b27b2':
-    resolution: {integrity: sha512-h0LMrD/dl6e+dfJq6bx5VFhE3o9+Q9vytYfaaOr9+cfs/rPTbTXv5d0/fbo/MlLS3S+/rtadrYZgMTEyYpIzvA==}
+  '@logto/cloud@0.2.5-d64933f':
+    resolution: {integrity: sha512-DZoe3iv/Exdn8QWEogABR0ICjpbV7V6DlS0aNsWinK+D8vYu5FvVI+2muYVCWiObmWdzeM+UdSWY/ALRVVfm/g==}
     engines: {node: ^22.14.0}
 
   '@logto/js@5.1.0':
@@ -13328,7 +13328,7 @@ packages:
     resolution: {integrity: sha512-uTqF9MuPraAQ+IsnPf366RG4cP9RtUi7MLO1N3KEc+wb0a6yKpeL0lmk2IB1jY5KHPAlTc6T/JRdC/YqxHNwkQ==}
 
   oidc-provider@https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/513c523c0e68ee6112da8c871cce86204a136163:
-    resolution: {gitHosted: true, integrity: sha512-KaUwCyEEDSZILL2ua2f9SsQ2oSrgq04JAmkQzq2gj7VJyREH3zQS14G7MhfDYxEKjAhO4JZ6bUGzZjW/0Q5pEg==, tarball: https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/513c523c0e68ee6112da8c871cce86204a136163}
+    resolution: {gitHosted: true, tarball: https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/513c523c0e68ee6112da8c871cce86204a136163}
     version: 9.11.3
 
   on-finished@2.4.1:
@@ -17766,7 +17766,7 @@ snapshots:
       camelcase-keys: 9.1.3
       jose: 5.9.6
 
-  '@logto/cloud@0.2.5-b2b27b2(zod@3.24.3)':
+  '@logto/cloud@0.2.5-d64933f(zod@3.24.3)':
     dependencies:
       '@silverhand/essentials': 2.9.3
       '@withtyped/server': 0.14.0(zod@3.24.3)
