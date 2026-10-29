@@ -40,8 +40,8 @@ function CancelFeedbackModal({ isOpen, fromSkuId, stage, onClose, onSubmit }: Pr
     });
   };
 
-  const skip = () => {
-    capture({ skipped: true });
+  const dismiss = () => {
+    capture({ skipped: true, dismissed: true });
     onClose();
   };
 
@@ -62,7 +62,7 @@ function CancelFeedbackModal({ isOpen, fromSkuId, stage, onClose, onSubmit }: Pr
       isOpen={isOpen}
       className={modalStyles.content}
       overlayClassName={modalStyles.overlay}
-      onRequestClose={skip}
+      onRequestClose={dismiss}
     >
       <ModalLayout
         title={
@@ -84,7 +84,7 @@ function CancelFeedbackModal({ isOpen, fromSkuId, stage, onClose, onSubmit }: Pr
             onClick={submit}
           />
         }
-        onClose={skip}
+        onClose={dismiss}
       >
         <FormField title="subscription.cancel_feedback_modal.what_made_you_cancel">
           <Textarea
