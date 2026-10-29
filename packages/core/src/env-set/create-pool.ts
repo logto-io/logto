@@ -17,6 +17,11 @@ const transientConnectionErrorCodes = new Set([
   'ECONNRESET',
   'EHOSTUNREACH',
   'EPIPE',
+  // DNS resolution of the database host failed (`getaddrinfo`). In a container platform the
+  // resolver is often not ready yet when the process starts, and a transient outage of the
+  // resolver answers `ENOTFOUND` as well as `EAI_AGAIN`: the host exists, retry.
+  'ENOTFOUND',
+  'EAI_AGAIN',
 ]);
 
 type PoolLike = Pick<DatabasePool, 'query' | 'end'>;

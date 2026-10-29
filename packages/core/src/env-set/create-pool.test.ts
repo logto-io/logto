@@ -35,6 +35,16 @@ const createTestPool = (options?: {
   return { query, end };
 };
 
+/** What Node throws when the database host name cannot be resolved. */
+class DnsError extends Error {
+  code = 'ENOTFOUND';
+  syscall = 'getaddrinfo';
+
+  constructor(public hostname: string) {
+    super(`getaddrinfo ENOTFOUND ${hostname}`);
+  }
+}
+
 describe('create-pool', () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -61,6 +71,17 @@ describe('create-pool', () => {
     expect(factory).toBeCalledTimes(2);
     expect(failedPool.end).toBeCalledTimes(1);
     expect(readyPool.end).not.toBeCalled();
+  });
+
+  it('should retry a failed DNS resolution of the database host', async () => {
+    const readyPool = createTestPool();
+    const factory = jest
+      .fn()
+      .mockRejectedValueOnce(new DnsError('db.example.com'))
+      .mockResolvedValueOnce(readyPool);
+
+    await expect(createPoolWithRetry(factory, 1)).resolves.toBe(readyPool);
+    expect(factory).toBeCalledTimes(2);
   });
 
   it('should not retry non-transient connection errors', async () => {
@@ -112,6 +133,8 @@ describe('create-pool', () => {
 
   it('should identify transient connection errors by code or timeout message', () => {
     expect(isTransientConnectionError({ code: 'ECONNREFUSED' })).toBe(true);
+    expect(isTransientConnectionError({ code: 'ENOTFOUND' })).toBe(true);
+    expect(isTransientConnectionError({ code: 'EAI_AGAIN' })).toBe(true);
     expect(isTransientConnectionError(new Error('timeout expired'))).toBe(true);
     expect(isTransientConnectionError({ code: 500, message: 123 })).toBe(false);
     expect(isTransientConnectionError(new Error('password authentication failed'))).toBe(false);
