@@ -315,6 +315,8 @@ export type StepUpFailure = {
   error: string;
   /** The Account Center pathname, including the base path, the step-up started from. */
   route: string;
+  /** The action the step-up was going to run. */
+  action: PendingStepUpAction;
 };
 
 /**
@@ -355,6 +357,7 @@ export const handlePendingStepUpOnPageLoad = ({
       route: record.route.startsWith(`${accountCenterBasePath}/`)
         ? record.route
         : accountCenterBasePath,
+      action: record.action,
     };
   }
 

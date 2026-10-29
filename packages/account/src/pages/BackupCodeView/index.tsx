@@ -9,8 +9,6 @@ import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { type BackupCodeItem, getBackupCodesList } from '@ac/apis/mfa';
 import ErrorPage from '@ac/components/ErrorPage';
 import StepUpEntryFallback from '@ac/components/StepUpEntryFallback';
-import VerificationMethodList from '@ac/components/VerificationMethodList';
-import { isDevFeaturesEnabled } from '@ac/constants/env';
 import { backupCodesRegenerateRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useStepUp, { useStepUpEntry } from '@ac/hooks/use-step-up';
@@ -33,7 +31,7 @@ const BackupCodeView = () => {
     Boolean(accountCenterSettings?.enabled) &&
     accountCenterSettings?.fields.mfa === AccountCenterControlValue.Edit &&
     isBackupCodeEnabled(experienceSettings?.mfa);
-  const { isReady, hasFailed, isResumed, verificationId } = useStepUpEntry({
+  const { isReady, hasFailed, isResumed } = useStepUpEntry({
     enabled: isPageEnabled,
   });
 
@@ -44,7 +42,7 @@ const BackupCodeView = () => {
     }
 
     const fetchData = async () => {
-      const [codesError, codesResult] = await getBackupCodesRequest(verificationId);
+      const [codesError, codesResult] = await getBackupCodesRequest();
       if (codesError || !codesResult) {
         if (await requestStepUp(codesError, { type: 'enter-subpage' }, { isResumed })) {
           return;
@@ -57,7 +55,7 @@ const BackupCodeView = () => {
     };
 
     void fetchData();
-  }, [getBackupCodesRequest, isReady, isResumed, requestStepUp, verificationId]);
+  }, [getBackupCodesRequest, isReady, isResumed, requestStepUp]);
 
   const copyText = useCallback(
     async (text: string, successMessage: string) => {
@@ -96,11 +94,7 @@ const BackupCodeView = () => {
   }
 
   if (!isReady) {
-    return isDevFeaturesEnabled ? (
-      <StepUpEntryFallback hasFailed={hasFailed} />
-    ) : (
-      <VerificationMethodList />
-    );
+    return <StepUpEntryFallback hasFailed={hasFailed} />;
   }
 
   if (hasError) {

@@ -17,8 +17,6 @@ import {
 import ErrorPage from '@ac/components/ErrorPage';
 import GlobalLoading from '@ac/components/GlobalLoading';
 import StepUpEntryFallback from '@ac/components/StepUpEntryFallback';
-import VerificationMethodList from '@ac/components/VerificationMethodList';
-import { isDevFeaturesEnabled } from '@ac/constants/env';
 import { securityRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
@@ -35,7 +33,6 @@ type Props = {
 const generateState = () =>
   `${accountCenterSocialStatePrefix}${crypto.randomUUID().replaceAll('-', '')}`;
 
-// eslint-disable-next-line complexity -- the social add/change/remove flows share one component
 const SocialFlow = ({ mode }: Props) => {
   const {
     t,
@@ -50,7 +47,6 @@ const SocialFlow = ({ mode }: Props) => {
     setToast,
     userInfo,
     isLoadingUserInfo,
-    setVerificationId,
   } = useContext(PageContext);
   const createSocialVerificationRequest = useApi(createSocialVerification);
   const deleteSocialIdentityRequest = useApi(deleteSocialIdentity);
@@ -79,19 +75,12 @@ const SocialFlow = ({ mode }: Props) => {
     Boolean(connectorId) &&
     Boolean(connector) &&
     Boolean(userInfo);
-  const { isReady, hasFailed, isResumed, verificationId } = useStepUpEntry({
+  const { isReady, hasFailed, isResumed } = useStepUpEntry({
     enabled: isStepUpEntryEnabled,
     skip: canSkipVerification,
   });
   const isIdentityVerificationReady = isReady;
   const flowKey = isIdentityVerificationReady && connectorId ? `${mode}:${connectorId}` : undefined;
-
-  const resetVerification = useCallback(async () => {
-    await refreshUserInfo();
-    setStartedFlowKey(undefined);
-    setVerificationId(undefined);
-    setToast(t('account_center.verification.verification_required'));
-  }, [refreshUserInfo, setToast, setVerificationId, t]);
 
   const handleFlowError = useCallback(
     async (error: unknown) => {
@@ -100,11 +89,6 @@ const SocialFlow = ({ mode }: Props) => {
       }
 
       await handleError(error, {
-        // A permission denial after a step-up is terminal in the OIDC path. Only the legacy
-        // verification flow resets and retries; retrying here would loop the automatic request.
-        'verification_record.permission_denied': isDevFeaturesEnabled
-          ? undefined
-          : resetVerification,
         'user.social_account_exists_in_profile': async (requestError) => {
           finalizeSocialFlowFailure({
             connectorId,
@@ -125,7 +109,7 @@ const SocialFlow = ({ mode }: Props) => {
         },
       });
     },
-    [connectorId, handleError, isResumed, navigate, requestStepUp, resetVerification, setToast]
+    [connectorId, handleError, isResumed, navigate, requestStepUp, setToast]
   );
 
   const handleLinkSuccess = useCallback(async () => {
@@ -177,10 +161,7 @@ const SocialFlow = ({ mode }: Props) => {
 
     const startAddFlow = async () => {
       if (storedSocialFlow?.status === 'verified') {
-        const [error] = await linkSocialIdentityRequest(
-          verificationId,
-          storedSocialFlow.verificationRecordId
-        );
+        const [error] = await linkSocialIdentityRequest(storedSocialFlow.verificationRecordId);
 
         if (error) {
           await handleFlowError(error);
@@ -216,7 +197,7 @@ const SocialFlow = ({ mode }: Props) => {
     };
 
     const startRemoveFlow = async () => {
-      const [error] = await deleteSocialIdentityRequest(verificationId, connector.target);
+      const [error] = await deleteSocialIdentityRequest(connector.target);
 
       if (error) {
         await handleFlowError(error);
@@ -229,10 +210,7 @@ const SocialFlow = ({ mode }: Props) => {
     const startChangeFlow = async () => {
       // Post-callback phase: replace the social identity
       if (storedSocialFlow?.status === 'verified') {
-        const [error] = await replaceSocialIdentityRequest(
-          verificationId,
-          storedSocialFlow.verificationRecordId
-        );
+        const [error] = await replaceSocialIdentityRequest(storedSocialFlow.verificationRecordId);
 
         if (error) {
           await handleFlowError(error);
@@ -290,7 +268,6 @@ const SocialFlow = ({ mode }: Props) => {
     startedFlowKey,
     isIdentityVerificationReady,
     storedSocialFlow,
-    verificationId,
   ]);
 
   if (
@@ -320,11 +297,7 @@ const SocialFlow = ({ mode }: Props) => {
   }
 
   if (!isReady) {
-    return isDevFeaturesEnabled ? (
-      <StepUpEntryFallback hasFailed={hasFailed} />
-    ) : (
-      <VerificationMethodList />
-    );
+    return <StepUpEntryFallback hasFailed={hasFailed} />;
   }
 
   if (mode === 'add' && hasLinkedConnector) {

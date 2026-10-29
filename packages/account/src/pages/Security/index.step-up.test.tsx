@@ -24,11 +24,6 @@ const mockGetIdTokenClaims = jest.fn();
 const mockSignIn = jest.fn();
 const mockSetToast = jest.fn();
 
-jest.mock('@ac/constants/env', () => ({
-  __esModule: true,
-  isDevFeaturesEnabled: true,
-}));
-
 jest.mock('@logto/react', () => ({
   useLogto: () => ({
     getAccessToken: mockGetAccessToken,
@@ -103,8 +98,6 @@ const renderMfaSection = (
             policy: MfaPolicy.PromptAtSignInAndSignUp,
           },
         },
-        // A record the legacy flow cached; the step-up path must not send it.
-        verificationId: 'legacy-verification-record-id',
         setToast: mockSetToast,
       },
     }
@@ -141,7 +134,7 @@ describe('<Security /> OIDC step-up', () => {
     await waitFor(() => {
       expect(mockSignIn).toHaveBeenCalledTimes(1);
     });
-    expect(mockUpdateMfaSettings).toHaveBeenCalledWith('access-token', undefined, {
+    expect(mockUpdateMfaSettings).toHaveBeenCalledWith('access-token', {
       skipMfaOnSignIn: false,
       enabled: true,
     });
@@ -167,7 +160,7 @@ describe('<Security /> OIDC step-up', () => {
     fireEvent.click(getByLabelText('Toggle switch'));
 
     await waitFor(() => {
-      expect(mockUpdateMfaSettings).toHaveBeenCalledWith('access-token', undefined, {
+      expect(mockUpdateMfaSettings).toHaveBeenCalledWith('access-token', {
         skipMfaOnSignIn: false,
         enabled: true,
       });
@@ -239,7 +232,7 @@ describe('<Security /> OIDC step-up', () => {
     fireEvent.click(getByLabelText('Toggle switch'));
 
     await waitFor(() => {
-      expect(mockUpdateMfaSettings).toHaveBeenCalledWith('access-token', undefined, {
+      expect(mockUpdateMfaSettings).toHaveBeenCalledWith('access-token', {
         skipMfaOnSignIn: false,
         enabled: true,
       });
@@ -253,7 +246,7 @@ describe('<Security /> OIDC step-up', () => {
     const { getByLabelText, unmount } = renderMfaSection();
 
     await waitFor(() => {
-      expect(mockUpdateMfaSettings).toHaveBeenCalledWith('access-token', undefined, {
+      expect(mockUpdateMfaSettings).toHaveBeenCalledWith('access-token', {
         skipMfaOnSignIn: true,
       });
     });

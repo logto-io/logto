@@ -22,7 +22,6 @@ import {
   profileRoute,
   securityRoute,
   sessionsRoute,
-  verifiedActionRoute,
   socialRoutePrefix,
 } from '@ac/constants/routes';
 
@@ -59,7 +58,6 @@ const knownRoutePrefixes: readonly string[] = [
   passkeyAddRoute,
   passkeyManageRoute,
   passkeySuccessRoute,
-  verifiedActionRoute,
   sessionsRoute,
   socialRoutePrefix,
 ];
@@ -78,20 +76,35 @@ const taskFlowRoutes = new Set([
   passkeyManageRoute,
 ]);
 
-const isKnownRoute = (pathname?: string): pathname is string =>
-  pathname !== undefined &&
-  knownRoutePrefixes.some((prefix) =>
-    pathname.replace(accountCenterBasePath, '').startsWith(prefix)
-  );
+const getInternalPathname = (pathname: string): string | undefined => {
+  if (pathname === accountCenterBasePath) {
+    return '/';
+  }
 
-const getInternalPathname = (pathname: string) =>
-  pathname.replace(accountCenterBasePath, '') || '/';
+  return pathname.startsWith(`${accountCenterBasePath}/`)
+    ? pathname.slice(accountCenterBasePath.length)
+    : undefined;
+};
+
+const isKnownRoute = (pathname?: string): pathname is string => {
+  if (!pathname) {
+    return false;
+  }
+
+  const internalPathname = getInternalPathname(pathname);
+
+  return (
+    internalPathname !== undefined &&
+    knownRoutePrefixes.some((prefix) => internalPathname.startsWith(prefix))
+  );
+};
 
 const isTaskFlowRoute = (pathname: string): boolean => {
   const internalPathname = getInternalPathname(pathname);
 
   return (
-    taskFlowRoutes.has(internalPathname) || internalPathname.startsWith(`${socialRoutePrefix}/`)
+    internalPathname !== undefined &&
+    (taskFlowRoutes.has(internalPathname) || internalPathname.startsWith(`${socialRoutePrefix}/`))
   );
 };
 

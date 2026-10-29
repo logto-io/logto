@@ -16,11 +16,6 @@ const mockGetAccessToken = jest.fn().mockResolvedValue('access-token');
 const mockGetIdTokenClaims = jest.fn();
 const mockSignIn = jest.fn();
 
-jest.mock('@ac/constants/env', () => ({
-  __esModule: true,
-  isDevFeaturesEnabled: true,
-}));
-
 jest.mock('@logto/react', () => ({
   __esModule: true,
   useLogto: () => ({
@@ -140,7 +135,7 @@ describe('<Password /> OIDC step-up', () => {
     submitPassword(container, getByText);
 
     await waitFor(() => {
-      expect(updatePassword).toHaveBeenCalledWith('access-token', undefined, {
+      expect(updatePassword).toHaveBeenCalledWith('access-token', {
         password: 'password123',
       });
     });
@@ -169,7 +164,7 @@ describe('<Password /> OIDC step-up', () => {
         },
       })
     );
-    expect(updatePassword).toHaveBeenCalledWith('access-token', undefined, {
+    expect(updatePassword).toHaveBeenCalledWith('access-token', {
       password: 'password123',
     });
   });

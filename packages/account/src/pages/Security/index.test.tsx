@@ -17,8 +17,7 @@ import renderWithPageContext, {
   mockSignInExperienceSettings,
   mockUserInfo,
 } from '@ac/__mocks__/RenderWithPageContext';
-import { securityRoute, verifiedActionRoute } from '@ac/constants/routes';
-import { sessionStorage } from '@ac/utils/session-storage';
+import { securityRoute } from '@ac/constants/routes';
 
 import { getMfaSettings, getMfaVerifications, updateMfaSettings } from '../../apis/mfa';
 import { getTrustedDevices, removeTrustedDevice } from '../../apis/trusted-devices';
@@ -26,12 +25,21 @@ import { getTrustedDevices, removeTrustedDevice } from '../../apis/trusted-devic
 import Security from '.';
 
 const mockGetAccessToken = jest.fn().mockResolvedValue('access-token');
+const mockGetIdTokenClaims = jest.fn();
+const mockSignIn = jest.fn();
 
 jest.mock('@logto/react', () => ({
   useLogto: () => ({
     getAccessToken: mockGetAccessToken,
+    getIdTokenClaims: mockGetIdTokenClaims,
+    signIn: mockSignIn,
   }),
 }));
+
+const createIdTokenClaims = (authTime = Math.floor(Date.now() / 1000) - 60) => ({
+  acr: 'urn:logto:acr:1fa',
+  auth_time: authTime,
+});
 
 jest.mock('../../apis/mfa', () => ({
   getMfaSettings: jest.fn(),
@@ -52,7 +60,6 @@ type SecurityRenderOptions = {
     readonly mfa?: Partial<SignInExperienceResponse['mfa']>;
   };
   readonly userInfo?: Partial<UserProfileResponse>;
-  readonly verificationId?: string;
 };
 
 const googleWebConnector = {
@@ -103,7 +110,6 @@ const renderSecurity = ({
   accountCenterSettings,
   experienceSettings,
   userInfo,
-  verificationId,
 }: SecurityRenderOptions = {}) => {
   const { fields, ...accountCenterSettingsOverrides } = accountCenterSettings ?? {};
   const { mfa, ...experienceSettingsOverrides } = experienceSettings ?? {};
@@ -111,7 +117,6 @@ const renderSecurity = ({
   return renderWithPageContext(
     <Routes>
       <Route path={securityRoute} element={<Security />} />
-      <Route path={verifiedActionRoute} element={<div>verified action page</div>} />
     </Routes>,
     {
       initialEntries: [securityRoute],
@@ -149,7 +154,6 @@ const renderSecurity = ({
           ...mockUserInfo,
           ...userInfo,
         },
-        verificationId,
       },
     }
   );
@@ -159,6 +163,7 @@ describe('<Security />', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     mockGetAccessToken.mockResolvedValue('access-token');
+    mockGetIdTokenClaims.mockResolvedValue(createIdTokenClaims());
     mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true });
     mockGetMfaVerifications.mockResolvedValue([]);
     mockUpdateMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true });
@@ -266,7 +271,6 @@ describe('<Security />', () => {
           factors: [MfaFactor.TOTP],
         },
       },
-      verificationId: 'verification-record-id',
     });
 
     await waitFor(() => {
@@ -658,7 +662,6 @@ describe('<Security />', () => {
           policy: MfaPolicy.NoPrompt,
         },
       },
-      verificationId: 'verification-record-id',
     });
 
     await waitFor(() => {
@@ -668,7 +671,7 @@ describe('<Security />', () => {
     fireEvent.click(getByLabelText('Toggle switch'));
 
     await waitFor(() => {
-      expect(mockUpdateMfaSettings).toHaveBeenCalledWith('access-token', 'verification-record-id', {
+      expect(mockUpdateMfaSettings).toHaveBeenCalledWith('access-token', {
         skipMfaOnSignIn: false,
         enabled: true,
       });
@@ -954,7 +957,7 @@ describe('<Security />', () => {
     expect(mockGetMfaSettings).not.toHaveBeenCalled();
   });
 
-  it('navigates to verified action when enabling MFA without verification ID', async () => {
+  it('starts a step-up when enabling MFA with a stale authentication context', async () => {
     const { getByLabelText, getByText } = renderSecurity({
       accountCenterSettings: {
         fields: {
@@ -978,16 +981,23 @@ describe('<Security />', () => {
       expect(getByLabelText('Toggle switch')).not.toBeNull();
     });
 
+    mockGetIdTokenClaims.mockResolvedValue(
+      createIdTokenClaims(Math.floor(Date.now() / 1000) - 600)
+    );
     fireEvent.click(getByLabelText('Toggle switch'));
 
     await waitFor(() => {
-      expect(getByText('verified action page')).not.toBeNull();
+      expect(mockSignIn).toHaveBeenCalledTimes(1);
     });
-    expect(sessionStorage.getPendingVerifiedAction()).toBe('enable-mfa');
+    expect(mockSignIn).toHaveBeenCalledWith({
+      redirectUri: 'http://localhost/account',
+      clearTokens: false,
+      extraParams: { acr_values: 'urn:logto:acr:1fa', max_age: '540' },
+    });
     expect(mockUpdateMfaSettings).not.toHaveBeenCalled();
   });
 
-  it('updates MFA settings when enabling MFA with verification ID', async () => {
+  it('updates MFA settings when the authentication context is fresh', async () => {
     mockUpdateMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
 
     const { getByLabelText } = renderSecurity({
@@ -1007,7 +1017,6 @@ describe('<Security />', () => {
           policy: MfaPolicy.PromptAtSignInAndSignUp,
         },
       },
-      verificationId: 'verification-record-id',
     });
 
     await waitFor(() => {
@@ -1017,7 +1026,7 @@ describe('<Security />', () => {
     fireEvent.click(getByLabelText('Toggle switch'));
 
     await waitFor(() => {
-      expect(mockUpdateMfaSettings).toHaveBeenCalledWith('access-token', 'verification-record-id', {
+      expect(mockUpdateMfaSettings).toHaveBeenCalledWith('access-token', {
         skipMfaOnSignIn: false,
         enabled: true,
       });
@@ -1025,7 +1034,7 @@ describe('<Security />', () => {
     expect((getByLabelText('Toggle switch') as HTMLInputElement).checked).toBe(true);
   });
 
-  it('navigates to verified action after confirming disable without verification ID', async () => {
+  it('starts a step-up after confirming disable with a stale authentication context', async () => {
     mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false, enabled: true });
 
     const { getByLabelText, getByText } = renderSecurity({
@@ -1051,6 +1060,9 @@ describe('<Security />', () => {
       expect((getByLabelText('Toggle switch') as HTMLInputElement).checked).toBe(true);
     });
 
+    mockGetIdTokenClaims.mockResolvedValue(
+      createIdTokenClaims(Math.floor(Date.now() / 1000) - 600)
+    );
     fireEvent.click(getByLabelText('Toggle switch'));
 
     expect(getByText('account_center.security.turn_off_2_step_verification')).not.toBeNull();
@@ -1059,9 +1071,8 @@ describe('<Security />', () => {
     fireEvent.click(getByText('account_center.security.disable_2_step_verification'));
 
     await waitFor(() => {
-      expect(getByText('verified action page')).not.toBeNull();
+      expect(mockSignIn).toHaveBeenCalledTimes(1);
     });
-    expect(sessionStorage.getPendingVerifiedAction()).toBe('disable-mfa');
     expect(mockUpdateMfaSettings).not.toHaveBeenCalled();
   });
 
@@ -1086,7 +1097,6 @@ describe('<Security />', () => {
           policy: MfaPolicy.PromptAtSignInAndSignUp,
         },
       },
-      verificationId: 'verification-record-id',
     });
 
     await waitFor(() => {
@@ -1097,7 +1107,7 @@ describe('<Security />', () => {
     fireEvent.click(getByText('account_center.security.disable_2_step_verification'));
 
     await waitFor(() => {
-      expect(mockUpdateMfaSettings).toHaveBeenCalledWith('access-token', 'verification-record-id', {
+      expect(mockUpdateMfaSettings).toHaveBeenCalledWith('access-token', {
         skipMfaOnSignIn: true,
       });
     });

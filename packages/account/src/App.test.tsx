@@ -7,11 +7,6 @@ import renderWithPageContext, {
   mockAccountCenterSettings,
 } from './__mocks__/RenderWithPageContext';
 
-jest.mock('@ac/constants/env', () => ({
-  __esModule: true,
-  isDevFeaturesEnabled: false,
-}));
-
 // Note: jest.requireActual('@logto/react') can't be used here, as it pulls in
 // @logto/client → @logto/js, which fails to resolve under the monorepo's
 // pnpm/jest module layout. Prompt/ReservedScope/UserScope are OIDC/OAuth

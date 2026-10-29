@@ -1,4 +1,3 @@
-/* eslint-disable max-lines -- Keep the MFA state model, content, and verification flows together. */
 import { InlineNotification } from '@experience/components/Notification';
 import { AccountCenterControlValue, MfaPolicy } from '@logto/schemas';
 import { useCallback, useContext, useEffect, useState } from 'react';
@@ -8,14 +7,12 @@ import { useNavigate } from 'react-router-dom';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import ConfirmModal from '@ac/components/ConfirmModal';
 import ToggleSwitch from '@ac/components/ToggleSwitch';
-import { verifiedActionRoute } from '@ac/constants/routes';
 import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
 import {
   hasConfiguredSecondFactor,
   hasEnabledSecondFactor,
   hasVisibleMfaSection,
 } from '@ac/utils/security-page';
-import { sessionStorage } from '@ac/utils/session-storage';
 import { consumePendingStepUpAction } from '@ac/utils/step-up';
 
 import { getMfaSettings, updateMfaSettings } from '../../../apis/mfa';
@@ -141,9 +138,8 @@ const MfaContent = ({
 const MfaSection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { accountCenterSettings, experienceSettings, userInfo, setVerificationId, setToast } =
-    useContext(PageContext);
-  const { verificationId, checkIdentityProof } = useIdentityProof();
+  const { accountCenterSettings, experienceSettings, userInfo } = useContext(PageContext);
+  const { checkIdentityProof } = useIdentityProof();
   const { requestStepUp, startStepUp } = useStepUp();
   const {
     mfaVerifications,
@@ -229,8 +225,8 @@ const MfaSection = () => {
   const shouldShowMfaCard = showToggle || rows.length > 0;
 
   const updateSkipMfaOnSignIn = useCallback(
-    async (verifiedId: string | undefined, skipMfaOnSignIn: boolean, isResumed = false) => {
-      const [error] = await updateMfaSettingsApi(verifiedId, {
+    async (skipMfaOnSignIn: boolean, isResumed = false) => {
+      const [error] = await updateMfaSettingsApi({
         skipMfaOnSignIn,
         // Turning verification on must also clear an explicit MFA disablement; otherwise the
         // backend keeps skipping MFA even though the switch is on.
@@ -244,12 +240,7 @@ const MfaSection = () => {
           return;
         }
 
-        await handleError(error, {
-          'verification_record.permission_denied': async () => {
-            setVerificationId(undefined);
-            setToast(t('account_center.verification.verification_required'));
-          },
-        });
+        await handleError(error);
         return;
       }
 
@@ -259,7 +250,7 @@ const MfaSection = () => {
         setIsMfaEnabled(true);
       }
     },
-    [handleError, requestStepUp, setToast, setVerificationId, t, updateMfaSettingsApi]
+    [handleError, requestStepUp, updateMfaSettingsApi]
   );
 
   const handleToggleChange = useCallback(
@@ -272,58 +263,33 @@ const MfaSection = () => {
       }
 
       if (await checkIdentityProof()) {
-        await updateSkipMfaOnSignIn(verificationId, skipMfa);
+        await updateSkipMfaOnSignIn(skipMfa);
         return;
       }
 
-      if (await startStepUp({ type: 'enable-mfa' })) {
-        return;
-      }
-
-      sessionStorage.setPendingVerifiedAction('enable-mfa');
-      navigateTo(verifiedActionRoute);
+      await startStepUp({ type: 'enable-mfa' });
     },
-    [checkIdentityProof, navigateTo, startStepUp, updateSkipMfaOnSignIn, verificationId]
+    [checkIdentityProof, startStepUp, updateSkipMfaOnSignIn]
   );
 
   const handleConfirmDisable = useCallback(async () => {
     setIsConfirmModalOpen(false);
 
     if (await checkIdentityProof()) {
-      await updateSkipMfaOnSignIn(verificationId, true);
+      await updateSkipMfaOnSignIn(true);
       return;
     }
 
-    if (await startStepUp({ type: 'disable-mfa' })) {
-      return;
-    }
-
-    sessionStorage.setPendingVerifiedAction('disable-mfa');
-    navigateTo(verifiedActionRoute);
-  }, [checkIdentityProof, navigateTo, startStepUp, updateSkipMfaOnSignIn, verificationId]);
+    await startStepUp({ type: 'disable-mfa' });
+  }, [checkIdentityProof, startStepUp, updateSkipMfaOnSignIn]);
 
   useEffect(() => {
     const action = consumePendingStepUpAction(['enable-mfa', 'disable-mfa']);
 
     if (action) {
-      void updateSkipMfaOnSignIn(undefined, action.type === 'disable-mfa', true);
+      void updateSkipMfaOnSignIn(action.type === 'disable-mfa', true);
     }
   }, [updateSkipMfaOnSignIn]);
-
-  useEffect(() => {
-    if (!verificationId) {
-      return;
-    }
-
-    const pendingAction = sessionStorage.getPendingVerifiedAction();
-
-    if (pendingAction !== 'enable-mfa' && pendingAction !== 'disable-mfa') {
-      return;
-    }
-
-    sessionStorage.clearPendingVerifiedAction();
-    void updateSkipMfaOnSignIn(verificationId, pendingAction === 'disable-mfa');
-  }, [updateSkipMfaOnSignIn, verificationId]);
 
   if (!shouldShowMfaCard) {
     return null;
@@ -371,4 +337,3 @@ const MfaSection = () => {
 };
 
 export default MfaSection;
-/* eslint-enable max-lines */

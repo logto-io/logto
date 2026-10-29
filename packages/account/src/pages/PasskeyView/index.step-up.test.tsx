@@ -20,11 +20,6 @@ const mockGetAccessToken = jest.fn().mockResolvedValue('access-token');
 const mockGetIdTokenClaims = jest.fn();
 const mockSignIn = jest.fn();
 
-jest.mock('@ac/constants/env', () => ({
-  __esModule: true,
-  isDevFeaturesEnabled: true,
-}));
-
 jest.mock('@logto/react', () => ({
   useLogto: () => ({
     getAccessToken: mockGetAccessToken,
@@ -130,7 +125,7 @@ describe('<PasskeyView /> OIDC step-up', () => {
     await waitFor(() => {
       expect(mockSignIn).toHaveBeenCalledTimes(1);
     });
-    expect(mockDeleteMfaVerification).toHaveBeenCalledWith('access-token', undefined, 'passkey-1');
+    expect(mockDeleteMfaVerification).toHaveBeenCalledWith('access-token', 'passkey-1');
     expect(accountStorage.pendingStepUp.get()).toMatchObject({
       action: { type: 'delete-passkey', id: 'passkey-1' },
       phase: 'authorizing',
@@ -161,7 +156,6 @@ describe('<PasskeyView /> OIDC step-up', () => {
     });
     expect(mockUpdateWebAuthnName).toHaveBeenCalledWith(
       'access-token',
-      undefined,
       'passkey-1',
       'Renamed passkey'
     );
@@ -177,11 +171,7 @@ describe('<PasskeyView /> OIDC step-up', () => {
     renderPasskeyView();
 
     await waitFor(() => {
-      expect(mockDeleteMfaVerification).toHaveBeenCalledWith(
-        'access-token',
-        undefined,
-        'passkey-1'
-      );
+      expect(mockDeleteMfaVerification).toHaveBeenCalledWith('access-token', 'passkey-1');
       // The mount fetch is skipped; only the resumed action reloads the list.
       expect(mockGetMfaVerifications).toHaveBeenCalledTimes(1);
     });
@@ -197,7 +187,6 @@ describe('<PasskeyView /> OIDC step-up', () => {
     await waitFor(() => {
       expect(mockUpdateWebAuthnName).toHaveBeenCalledWith(
         'access-token',
-        undefined,
         'passkey-1',
         'Renamed passkey'
       );

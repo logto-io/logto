@@ -1,13 +1,11 @@
 import { useHandleSignInCallback } from '@logto/react';
 import { useEffect } from 'react';
 
-import { clearVerificationRecord } from './Providers/PageContextProvider/verification-storage';
 import GlobalLoading from './components/GlobalLoading';
 import { completePendingStepUp, discardPendingStepUp } from './utils/step-up';
 
 const Callback = () => {
   const { error } = useHandleSignInCallback(() => {
-    clearVerificationRecord();
     completePendingStepUp();
     window.location.replace('/account');
   });

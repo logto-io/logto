@@ -15,8 +15,8 @@ import { emailRoute, emailSuccessRoute } from '@ac/constants/routes';
 import Email from '.';
 
 const mockGetAccessToken = jest.fn().mockResolvedValue('access-token');
-const mockUseStepUpEntry = jest.fn();
 const mockRequestStepUp = jest.fn();
+const mockStartStepUp = jest.fn();
 
 jest.mock('@logto/react', () => ({
   useLogto: () => ({
@@ -26,8 +26,8 @@ jest.mock('@logto/react', () => ({
 
 jest.mock('@ac/hooks/use-step-up', () => ({
   __esModule: true,
-  default: () => ({ requestStepUp: mockRequestStepUp, startStepUp: jest.fn() }),
-  useStepUpEntry: () => mockUseStepUpEntry(),
+  default: () => ({ requestStepUp: mockRequestStepUp, startStepUp: mockStartStepUp }),
+  useStepUpEntry: () => ({ isReady: true, isChecking: false, hasFailed: false }),
 }));
 
 jest.mock('@ac/apis/account', () => ({
@@ -39,17 +39,26 @@ jest.mock('@ac/apis/verification', () => ({
   verifyEmailVerificationCode: jest.fn(),
 }));
 
-jest.mock('@ac/components/VerificationMethodList', () => () => <div>Verification methods</div>);
-
-const createHttpError = (code: string, status: number, message = code) =>
+const createHttpError = (
+  code: string,
+  status: number,
+  message = code,
+  headers: Record<string, string> = {}
+) =>
   new HTTPError(
     {
       status,
+      headers: {
+        get: (name: string) => headers[name.toLowerCase()] ?? null,
+      },
       json: async () => ({ code, message }),
-    } as Response,
+    } as unknown as Response,
     {} as Request,
     {} as NormalizedOptions
   );
+
+const challenge =
+  'Bearer error="insufficient_user_authentication", acr_values="urn:logto:acr:1fa", max_age="600"';
 
 const mockSendCodeResult = {
   verificationRecordId: 'send-verification-record-id',
@@ -95,10 +104,6 @@ const renderEmail = ({ pageContext, initialEntries = [emailRoute] }: EmailRender
             ...pageContext?.accountCenterSettings?.fields,
           },
         },
-        verificationId:
-          pageContext && 'verificationId' in pageContext
-            ? pageContext.verificationId
-            : 'identity-verification-record-id',
       },
     }
   );
@@ -140,13 +145,6 @@ describe('<Email />', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     mockGetAccessToken.mockResolvedValue('access-token');
-    mockUseStepUpEntry.mockReturnValue({
-      isReady: true,
-      isChecking: false,
-      hasFailed: false,
-      isResumed: false,
-      verificationId: 'identity-verification-record-id',
-    });
     mockRequestStepUp.mockResolvedValue(false);
     jest.mocked(sendEmailVerificationCode).mockResolvedValue(mockSendCodeResult);
     jest.mocked(verifyEmailVerificationCode).mockResolvedValue(mockVerifyCodeResult);
@@ -165,24 +163,6 @@ describe('<Email />', () => {
     });
 
     expect(getByText('error.feature_not_enabled')).toBeTruthy();
-  });
-
-  it('shows verification methods when identity is not verified', () => {
-    mockUseStepUpEntry.mockReturnValueOnce({
-      isReady: false,
-      isChecking: false,
-      hasFailed: false,
-      isResumed: false,
-      verificationId: undefined,
-    });
-
-    const { getByText } = renderEmail({
-      pageContext: {
-        verificationId: undefined,
-      },
-    });
-
-    expect(getByText('Verification methods')).toBeTruthy();
   });
 
   it('shows a validation error when email is empty', async () => {
@@ -245,42 +225,15 @@ describe('<Email />', () => {
     });
 
     await waitFor(() => {
-      expect(updatePrimaryEmail).toHaveBeenCalledWith(
-        'access-token',
-        'identity-verification-record-id',
-        {
-          email: newEmail,
-          newIdentifierVerificationRecordId: mockVerifyCodeResult.verificationRecordId,
-        }
-      );
+      expect(updatePrimaryEmail).toHaveBeenCalledWith('access-token', {
+        email: newEmail,
+        newIdentifierVerificationRecordId: mockVerifyCodeResult.verificationRecordId,
+      });
     });
     expect(refreshUserInfo).toHaveBeenCalledTimes(1);
 
     await waitFor(() => {
       expect(getByText('Email success page')).toBeTruthy();
-    });
-  });
-
-  it('binds without a legacy permission record when the entry guard has none', async () => {
-    mockUseStepUpEntry.mockReturnValue({
-      isReady: true,
-      isChecking: false,
-      hasFailed: false,
-      isResumed: false,
-      verificationId: undefined,
-    });
-
-    const { getByText, container } = renderEmail();
-    const newEmail = 'new.user@example.com';
-
-    await advanceToVerifyStep(container, getByText, newEmail);
-    fillVerificationCode(container, '123456');
-
-    await waitFor(() => {
-      expect(updatePrimaryEmail).toHaveBeenCalledWith('access-token', undefined, {
-        email: newEmail,
-        newIdentifierVerificationRecordId: mockVerifyCodeResult.verificationRecordId,
-      });
     });
   });
 
@@ -356,37 +309,16 @@ describe('<Email />', () => {
     expect(updatePrimaryEmail).not.toHaveBeenCalled();
   });
 
-  it('clears verification and prompts re-verification when binding permission is denied', async () => {
-    const setVerificationId = jest.fn();
-    const setToast = jest.fn();
-    jest
-      .mocked(updatePrimaryEmail)
-      .mockRejectedValue(createHttpError('verification_record.permission_denied', 401));
-
-    const { getByText, container } = renderEmail({
-      pageContext: {
-        setVerificationId,
-        setToast,
-      },
-    });
-
-    await advanceToVerifyStep(container, getByText);
-    fillVerificationCode(container, '123456');
-
-    await waitFor(() => {
-      expect(setVerificationId).toHaveBeenCalledWith(undefined);
-      expect(setToast).toHaveBeenCalledWith('account_center.verification.verification_required');
-    });
-  });
-
-  it('verifies the code once when the binding starts a step-up', async () => {
+  it('starts a step-up on the RFC 9470 challenge of the binding request', async () => {
     mockRequestStepUp.mockResolvedValue(true);
     jest.mocked(updatePrimaryEmail).mockImplementation(async () => {
       // Let the loading state render before the challenge, as a real request does.
       await new Promise((resolve) => {
         setTimeout(resolve, 0);
       });
-      throw createHttpError('verification_record.permission_denied', 401);
+      throw createHttpError('verification_record.permission_denied', 401, undefined, {
+        'www-authenticate': challenge,
+      });
     });
 
     const { getByText, container } = renderEmail();
@@ -395,9 +327,12 @@ describe('<Email />', () => {
     fillVerificationCode(container, '123456');
 
     await waitFor(() => {
-      expect(mockRequestStepUp).toHaveBeenCalledTimes(1);
+      expect(mockRequestStepUp).toHaveBeenCalledWith(expect.any(HTTPError), {
+        type: 'enter-subpage',
+      });
     });
 
+    expect(mockRequestStepUp).toHaveBeenCalledTimes(1);
     expect(verifyEmailVerificationCode).toHaveBeenCalledTimes(1);
     expect(updatePrimaryEmail).toHaveBeenCalledTimes(1);
   });

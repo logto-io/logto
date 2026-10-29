@@ -19,11 +19,6 @@ const mockGetIdTokenClaims = jest.fn();
 const mockSignIn = jest.fn();
 const mockSetToast = jest.fn();
 
-jest.mock('@ac/constants/env', () => ({
-  __esModule: true,
-  isDevFeaturesEnabled: true,
-}));
-
 jest.mock('@logto/react', () => ({
   useLogto: () => ({
     getAccessToken: mockGetAccessToken,
@@ -119,7 +114,7 @@ describe('<Username /> OIDC step-up', () => {
     submitUsername(container, getByText, 'new_username');
 
     await waitFor(() => {
-      expect(mockUpdateUsername).toHaveBeenCalledWith('access-token', undefined, {
+      expect(mockUpdateUsername).toHaveBeenCalledWith('access-token', {
         username: 'new_username',
       });
     });
@@ -159,7 +154,7 @@ describe('<Username /> OIDC step-up', () => {
     const { getByText, unmount } = renderUsername();
 
     await waitFor(() => {
-      expect(mockUpdateUsername).toHaveBeenCalledWith('access-token', undefined, {
+      expect(mockUpdateUsername).toHaveBeenCalledWith('access-token', {
         username: 'resumed_username',
       });
     });

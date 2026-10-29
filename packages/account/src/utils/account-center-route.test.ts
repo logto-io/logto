@@ -140,6 +140,16 @@ describe('account-center-route', () => {
       expect(accountStorage.routeRestore.get()).toBe('/account/sessions');
     });
 
+    it('stores a social subpage route only with the account center base path', () => {
+      setRouteRestore('/account/social/google');
+      expect(accountStorage.routeRestore.get()).toBe('/account/social/google');
+    });
+
+    it('does not store a route whose known prefix sits outside the base path', () => {
+      setRouteRestore('/social/google');
+      expect(accountStorage.routeRestore.get()).toBeUndefined();
+    });
+
     it('does not store unknown routes', () => {
       setRouteRestore('/account/unknown-page');
       expect(accountStorage.routeRestore.get()).toBeUndefined();

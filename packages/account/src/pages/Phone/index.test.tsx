@@ -14,11 +14,19 @@ import { phoneRoute, phoneSuccessRoute } from '@ac/constants/routes';
 import Phone from '.';
 
 const mockGetAccessToken = jest.fn().mockResolvedValue('access-token');
+const mockRequestStepUp = jest.fn();
+const mockStartStepUp = jest.fn();
 
 jest.mock('@logto/react', () => ({
   useLogto: () => ({
     getAccessToken: mockGetAccessToken,
   }),
+}));
+
+jest.mock('@ac/hooks/use-step-up', () => ({
+  __esModule: true,
+  default: () => ({ requestStepUp: mockRequestStepUp, startStepUp: mockStartStepUp }),
+  useStepUpEntry: () => ({ isReady: true, isChecking: false, hasFailed: false }),
 }));
 
 jest.mock('@ac/apis/account', () => ({
@@ -30,17 +38,26 @@ jest.mock('@ac/apis/verification', () => ({
   verifyPhoneVerificationCode: jest.fn(),
 }));
 
-jest.mock('@ac/components/VerificationMethodList', () => () => <div>Verification methods</div>);
-
-const createHttpError = (code: string, status: number, message = code) =>
+const createHttpError = (
+  code: string,
+  status: number,
+  message = code,
+  headers: Record<string, string> = {}
+) =>
   new HTTPError(
     {
       status,
+      headers: {
+        get: (name: string) => headers[name.toLowerCase()] ?? null,
+      },
       json: async () => ({ code, message }),
-    } as Response,
+    } as unknown as Response,
     {} as Request,
     {} as NormalizedOptions
   );
+
+const challenge =
+  'Bearer error="insufficient_user_authentication", acr_values="urn:logto:acr:1fa", max_age="600"';
 
 const mockSendCodeResult = {
   verificationRecordId: 'send-verification-record-id',
@@ -88,10 +105,6 @@ const renderPhone = ({ pageContext, initialEntries = [phoneRoute] }: PhoneRender
             ...pageContext?.accountCenterSettings?.fields,
           },
         },
-        verificationId:
-          pageContext && 'verificationId' in pageContext
-            ? pageContext.verificationId
-            : 'identity-verification-record-id',
       },
     }
   );
@@ -135,6 +148,7 @@ describe('<Phone />', () => {
     mockGetAccessToken.mockResolvedValue('access-token');
     jest.mocked(sendPhoneVerificationCode).mockResolvedValue(mockSendCodeResult);
     jest.mocked(verifyPhoneVerificationCode).mockResolvedValue(mockVerifyCodeResult);
+    mockRequestStepUp.mockResolvedValue(false);
     jest.mocked(updatePrimaryPhone).mockResolvedValue(undefined);
   });
 
@@ -150,16 +164,6 @@ describe('<Phone />', () => {
     });
 
     expect(getByText('error.feature_not_enabled')).toBeTruthy();
-  });
-
-  it('shows verification methods when identity is not verified', () => {
-    const { getByText } = renderPhone({
-      pageContext: {
-        verificationId: undefined,
-      },
-    });
-
-    expect(getByText('Verification methods')).toBeTruthy();
   });
 
   it('shows a validation error when phone is empty', async () => {
@@ -207,14 +211,10 @@ describe('<Phone />', () => {
     });
 
     await waitFor(() => {
-      expect(updatePrimaryPhone).toHaveBeenCalledWith(
-        'access-token',
-        'identity-verification-record-id',
-        {
-          phone: newPhone,
-          newIdentifierVerificationRecordId: mockVerifyCodeResult.verificationRecordId,
-        }
-      );
+      expect(updatePrimaryPhone).toHaveBeenCalledWith('access-token', {
+        phone: newPhone,
+        newIdentifierVerificationRecordId: mockVerifyCodeResult.verificationRecordId,
+      });
     });
     expect(refreshUserInfo).toHaveBeenCalledTimes(1);
 
@@ -295,26 +295,23 @@ describe('<Phone />', () => {
     expect(updatePrimaryPhone).not.toHaveBeenCalled();
   });
 
-  it('clears verification and prompts re-verification when binding permission is denied', async () => {
-    const setVerificationId = jest.fn();
-    const setToast = jest.fn();
-    jest
-      .mocked(updatePrimaryPhone)
-      .mockRejectedValue(createHttpError('verification_record.permission_denied', 401));
+  it('starts a step-up on the RFC 9470 challenge of the binding request', async () => {
+    mockRequestStepUp.mockResolvedValue(true);
+    jest.mocked(updatePrimaryPhone).mockRejectedValue(
+      createHttpError('verification_record.permission_denied', 401, undefined, {
+        'www-authenticate': challenge,
+      })
+    );
 
-    const { getByText, container } = renderPhone({
-      pageContext: {
-        setVerificationId,
-        setToast,
-      },
-    });
+    const { getByText, container } = renderPhone();
 
     await advanceToVerifyStep(container, getByText);
     fillVerificationCode(container, '123456');
 
     await waitFor(() => {
-      expect(setVerificationId).toHaveBeenCalledWith(undefined);
-      expect(setToast).toHaveBeenCalledWith('account_center.verification.verification_required');
+      expect(mockRequestStepUp).toHaveBeenCalledWith(expect.any(HTTPError), {
+        type: 'enter-subpage',
+      });
     });
   });
 });
