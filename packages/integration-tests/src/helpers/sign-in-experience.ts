@@ -37,9 +37,9 @@ export const defaultSignInSignUpConfigs = {
  * sign-in experience freely and most of them do not restore it.
  *
  * Listed here are the settings a suite can leave changed; the ones whose only mutators capture and
- * restore them (`languageInfo`, `ssoBrandingBeforeEmailMatch`, the custom UI assets and CSP) and the
- * presentational ones are left out. Add a setting as soon as a suite leaves it changed, otherwise it
- * decides whether the next suite passes.
+ * restore them (`languageInfo`, `ssoBrandingBeforeEmailMatch`, the custom UI assets, CSP and
+ * Cross-Origin-Opener-Policy) and the presentational ones are left out. Add a setting as soon as a
+ * suite leaves it changed, otherwise it decides whether the next suite passes.
  *
  * JSONB policies are reset to `{}`, their database default. `passwordExpiration` is the exception,
  * because the API merges a partial policy into the stored one instead of replacing it, so it has to

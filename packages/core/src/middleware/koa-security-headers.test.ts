@@ -1,4 +1,4 @@
-import { CaptchaType } from '@logto/schemas';
+import { CaptchaType, CrossOriginOpenerPolicy } from '@logto/schemas';
 import { GlobalValues } from '@logto/shared';
 import { createMockUtils } from '@logto/shared/esm';
 import { noop } from '@silverhand/essentials';
@@ -10,12 +10,11 @@ import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-contex
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
 
+// One shared instance, so a test can toggle the dev-feature flag.
+const envValues = new GlobalValues();
+
 await mockEsmWithActual('#src/env-set/index.js', () => ({
-  EnvSet: {
-    get values() {
-      return new GlobalValues();
-    },
-  },
+  EnvSet: { values: envValues },
   AdminApps: { Console: 'console', Welcome: 'welcome' },
   UserApps: { AccountCenter: 'account' },
   getTenantEndpoint: () => new URL('https://tenant.example.com'),
@@ -23,6 +22,9 @@ await mockEsmWithActual('#src/env-set/index.js', () => ({
 
 const { default: koaSecurityHeaders, koaExperienceSecurityHeaders } = await import(
   './koa-security-headers.js'
+);
+const { setDevFeaturesEnabled, resetDevFeaturesEnabled } = await import(
+  '#src/test-utils/dev-features.js'
 );
 
 const koaNoop = noop as unknown as Koa.Next;
@@ -33,6 +35,7 @@ const customUiAssets = Object.freeze({ id: 'custom_ui_assets_id', createdAt: 1 }
 type CustomUiSettings = {
   readonly customUiAssets?: { readonly id: string; readonly createdAt: number };
   readonly customUiCsp?: Record<string, string[]>;
+  readonly crossOriginOpenerPolicy?: CrossOriginOpenerPolicy;
   readonly capEndpoint?: string;
   readonly captchaProviderType?: CaptchaType;
   readonly isCaptchaEnabled?: boolean;
@@ -41,6 +44,7 @@ type CustomUiSettings = {
 const createQueries = ({
   customUiAssets,
   customUiCsp = {},
+  crossOriginOpenerPolicy = CrossOriginOpenerPolicy.UnsafeNone,
   capEndpoint,
   captchaProviderType,
   isCaptchaEnabled = true,
@@ -50,6 +54,7 @@ const createQueries = ({
       findDefaultSignInExperience: jest.fn(async () => ({
         customUiAssets: customUiAssets ?? null,
         customUiCsp,
+        crossOriginOpenerPolicy,
         captchaPolicy: { enabled: isCaptchaEnabled },
       })),
     },
@@ -69,6 +74,15 @@ const getCspDirective = (ctx: Koa.Context, directiveName: string): string | unde
     .split(';')
     .map((directive) => directive.trim())
     .find((directive) => directive.startsWith(`${directiveName} `));
+
+const getCrossOriginOpenerPolicy = async (settings: CustomUiSettings) => {
+  const run = koaExperienceSecurityHeaders('default', createQueries(settings));
+  const ctx = createMockContext({ method: 'GET', url: '/sign-in' });
+
+  await run(ctx, koaNoop);
+
+  return ctx.res.getHeader('Cross-Origin-Opener-Policy');
+};
 
 describe('koaSecurityHeaders() middleware — experience CSP', () => {
   it('adds Custom UI CSP sources to the matching experience directives', async () => {
@@ -331,5 +345,53 @@ describe('koaSecurityHeaders() middleware — experience CSP', () => {
     expect(scriptSource).toContain('https://cdn.jsdelivr.net/');
     expect(scriptSource).not.toContain(customScriptSource);
     expect(queries.signInExperiences.findDefaultSignInExperience).not.toHaveBeenCalled();
+  });
+});
+
+describe('koaExperienceSecurityHeaders() middleware — Cross-Origin-Opener-Policy', () => {
+  afterEach(() => {
+    resetDevFeaturesEnabled();
+  });
+
+  it.each([CrossOriginOpenerPolicy.SameOriginAllowPopups, CrossOriginOpenerPolicy.SameOrigin])(
+    'sends %s while Custom UI assets are served',
+    async (crossOriginOpenerPolicy) => {
+      await expect(
+        getCrossOriginOpenerPolicy({ customUiAssets, crossOriginOpenerPolicy })
+      ).resolves.toBe(crossOriginOpenerPolicy);
+    }
+  );
+
+  it('sends no header for unsafe-none', async () => {
+    await expect(
+      getCrossOriginOpenerPolicy({
+        customUiAssets,
+        crossOriginOpenerPolicy: CrossOriginOpenerPolicy.UnsafeNone,
+      })
+    ).resolves.toBeUndefined();
+  });
+
+  it.each([
+    {},
+    { capEndpoint: 'https://cap.example.com' },
+    { captchaProviderType: CaptchaType.Geetest },
+  ])('sends no header without Custom UI assets (%o)', async (settings) => {
+    await expect(
+      getCrossOriginOpenerPolicy({
+        ...settings,
+        crossOriginOpenerPolicy: CrossOriginOpenerPolicy.SameOrigin,
+      })
+    ).resolves.toBeUndefined();
+  });
+
+  it('sends no header when dev features are disabled', async () => {
+    setDevFeaturesEnabled(false);
+
+    await expect(
+      getCrossOriginOpenerPolicy({
+        customUiAssets,
+        crossOriginOpenerPolicy: CrossOriginOpenerPolicy.SameOrigin,
+      })
+    ).resolves.toBeUndefined();
   });
 });
