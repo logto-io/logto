@@ -4726,8 +4726,8 @@ importers:
   packages/experience:
     devDependencies:
       '@cap.js/wasm':
-        specifier: 0.0.7
-        version: 0.0.7
+        specifier: 0.0.8
+        version: 0.0.8
       '@jest/types':
         specifier: ^29.5.0
         version: 29.6.3
@@ -6056,8 +6056,8 @@ packages:
   '@braintree/sanitize-url@6.0.4':
     resolution: {integrity: sha512-s3jaWicZd0pkP0jf5ysyHUI/RE7MHos6qlToFcGWXVp+ykHOy77OUMrfbgJ9it2C5bow7OIQwYYaHjk9XlBQ2A==}
 
-  '@cap.js/wasm@0.0.7':
-    resolution: {integrity: sha512-IgUjrPOUBaOjTp+BkrhfEBBeQ4An7fQiSWWezDy9Uvd+OdTYm4+h3AJU0j/CpHYayp7FltZU+UePC6p28oGQaw==}
+  '@cap.js/wasm@0.0.8':
+    resolution: {integrity: sha512-rX+4/v2sz4GKLnygXHOS89O7c4GM2qNQcDJP6Y2cyGwoKjg83bsfWHt1TWr9GBzHpFADvju5fvLWYds21nS8sA==}
 
   '@changesets/apply-release-plan@7.1.1':
     resolution: {integrity: sha512-9qPCm/rLx/xoOFXIHGB229+4GOL76S4MC+7tyOuTsR6+1jYlfFDQORdvwR5hDA6y4FL2BPt3qpbcQIS+dW85LA==}
@@ -16920,7 +16920,7 @@ snapshots:
 
   '@braintree/sanitize-url@6.0.4': {}
 
-  '@cap.js/wasm@0.0.7': {}
+  '@cap.js/wasm@0.0.8': {}
 
   '@changesets/apply-release-plan@7.1.1':
     dependencies:
