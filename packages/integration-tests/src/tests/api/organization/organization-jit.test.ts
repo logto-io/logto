@@ -1,6 +1,5 @@
 import { type SsoConnector } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { HTTPError } from 'ky';
 
 import { providerNames } from '#src/__mocks__/sso-connectors-mock.js';
 import {
@@ -128,12 +127,25 @@ describe('organization just-in-time provisioning', () => {
       );
     });
 
-    it('should return 400 when filtering by email domain and `q` at the same time', async () => {
-      const response = await organizationApi
-        .getList(new URLSearchParams({ jitEmailDomain: `${randomId()}.com`, q: 'foo' }))
-        .catch((error: unknown) => error);
+    it('should search by name within the organizations that have an email domain', async () => {
+      const emailDomain = `${randomId()}.com`;
+      const name = `jit-${randomId()}`;
+      const [matching, otherName, otherDomain] = await Promise.all([
+        organizationApi.create({ name }),
+        organizationApi.create({ name: 'foo' }),
+        organizationApi.create({ name }),
+      ]);
+      await Promise.all([
+        organizationApi.jit.addEmailDomain(matching.id, emailDomain),
+        organizationApi.jit.addEmailDomain(otherName.id, emailDomain),
+        organizationApi.jit.addEmailDomain(otherDomain.id, `${randomId()}.com`),
+      ]);
 
-      expect(response instanceof HTTPError && response.response.status).toBe(400);
+      const organizations = await organizationApi.getList(
+        new URLSearchParams({ jitEmailDomain: emailDomain, q: name })
+      );
+
+      expect(organizations.map(({ id }) => id)).toEqual([matching.id]);
     });
 
     it('should return 404 when deleting a non-existent email domain', async () => {

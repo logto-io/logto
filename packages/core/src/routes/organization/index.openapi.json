@@ -49,15 +49,12 @@
           {
             "name": "jitEmailDomain",
             "in": "query",
-            "description": "Only return the organizations that have this email domain for just-in-time provisioning (e.g. `example.com`), that is the organizations a user with this email domain would be provisioned into. The domain is matched exactly.\n\nCannot be combined with `q`."
+            "description": "Only return the organizations that have this email domain for just-in-time provisioning (e.g. `example.com`), that is the organizations a user with this email domain would be provisioned into. The domain is matched exactly, and `q` still searches by id or name within the result."
           }
         ],
         "responses": {
           "200": {
             "description": "A list of organizations."
-          },
-          "400": {
-            "description": "`jitEmailDomain` and `q` were both provided."
           }
         }
       }

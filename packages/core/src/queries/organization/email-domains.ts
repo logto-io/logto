@@ -9,6 +9,7 @@ import {
 import { type CommonQueryMethods, sql } from '@silverhand/slonik';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
+import { type SearchOptions, buildSearchSql } from '#src/database/utils.js';
 import { DeletionError } from '#src/errors/SlonikError/index.js';
 import { type GetEntitiesOptions } from '#src/utils/RelationQueries.js';
 import { type OmitAutoSetFields, conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
@@ -90,11 +91,13 @@ export class EmailDomainQueries {
   /**
    * Find the organizations that have the given email domain for just-in-time provisioning, with
    * pagination. The domain is matched exactly, as in {@link getJitOrganizations}, so the result is
-   * the set of organizations a user with this email domain would be provisioned into.
+   * the set of organizations a user with this email domain would be provisioned into. The optional
+   * `search` narrows it further by organization id or name, as `q` does on the other lists.
    */
   async findOrganizations(
     emailDomain: string,
-    { limit, offset }: { limit: number; offset: number }
+    { limit, offset }: { limit: number; offset: number },
+    search?: SearchOptions<'id' | 'name'>
   ): Promise<[number, readonly Organization[]]> {
     const organizations = convertToIdentifiers(Organizations, true);
     const { fields } = convertToIdentifiers(OrganizationJitEmailDomains, true);
@@ -103,6 +106,7 @@ export class EmailDomainQueries {
       join ${table}
         on ${fields.organizationId} = ${organizations.fields.id}
       where ${fields.emailDomain} = ${emailDomain}
+      ${buildSearchSql(Organizations, search, sql`and `)}
     `;
 
     const [{ count }, rows] = await Promise.all([
