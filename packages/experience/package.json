@@ -20,7 +20,7 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@cap.js/wasm": "0.0.7",
+    "@cap.js/wasm": "0.0.8",
     "@jest/types": "^29.5.0",
     "@logto/connector-kit": "workspace:^",
     "@logto/core-kit": "workspace:^",
