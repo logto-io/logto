@@ -8,6 +8,7 @@ import {
   type HookEventPayload,
   type ManagementApiContext,
 } from '@logto/schemas';
+import { generateStandardId } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
 import { type Context } from 'koa';
 import { type IRouterParamContext } from 'koa-router';
@@ -166,6 +167,7 @@ export const generateHookTestPayload = (hookId: string, event: HookEvent): HookE
     ['Identifier.Lockout', 'Message.RateLimited', 'Grant.LimitExceeded'].includes(event);
 
   const basicPayload = {
+    deliveryId: generateStandardId(),
     hookId,
     createdAt: now.toISOString(),
     userAgent: 'fake-user-agent',
