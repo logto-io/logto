@@ -1,6 +1,6 @@
 import { webcrypto } from 'node:crypto';
 // eslint-disable-next-line n/prefer-global/text-encoder, n/prefer-global/text-decoder -- JSDOM needs explicit Node globals.
-import { TextEncoder, TextDecoder } from 'node:util';
+import { TextEncoder, TextDecoder, transferableAbortController } from 'node:util';
 
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
@@ -33,6 +33,12 @@ Object.defineProperty(window, 'matchMedia', {
 // @ts-expect-error monkey-patch for `crypto`
 crypto.subtle = webcrypto.subtle;
 global.TextEncoder = TextEncoder;
-// @ts-expect-error monkey-patch for `TextEncoder`/`TextDecoder`
 global.TextDecoder = TextDecoder;
+// Node 26's `Request` only accepts its own `AbortSignal`, while jsdom provides a separate
+// implementation. Use Node's constructors so requests created by the router pass validation.
+const nodeAbortController = transferableAbortController();
+// @ts-expect-error -- Node's constructors are compatible with the jsdom globals at runtime
+global.AbortController = nodeAbortController.constructor;
+// @ts-expect-error -- Node's constructors are compatible with the jsdom globals at runtime
+global.AbortSignal = nodeAbortController.signal.constructor;
 /* eslint-enable @silverhand/fp/no-mutation */

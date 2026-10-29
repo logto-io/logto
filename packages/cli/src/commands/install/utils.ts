@@ -10,6 +10,7 @@ import { got, RequestError } from 'got';
 import inquirer from 'inquirer';
 import * as semver from 'semver';
 import { extract } from 'tar';
+import { z } from 'zod';
 
 import { defaultPath } from '../../constants.js';
 import { createPoolAndDatabaseIfNeeded } from '../../database.js';
@@ -27,27 +28,100 @@ import { seedByPool } from '../database/seed/index.js';
 
 const pgRequired = new semver.SemVer('14.0.0');
 
-export const validateNodeVersion = () => {
-  const requiredVersionString = packageJson.engines.node;
-  const requiredRange = new semver.Range(requiredVersionString);
-  const required = requiredVersionString
-    .split('||')
-    .map((version) => new semver.SemVer(version.trim().replace(/^\^/, '')));
-  const current = new semver.SemVer(execSync('node -v', { encoding: 'utf8', stdio: 'pipe' }));
+const serverPackageJsonGuard = z.object({
+  engines: z.object({ node: z.string() }).optional(),
+});
+
+type NodeVersionCheck = {
+  fatalError?: string;
+  warning?: string;
+};
+
+export const checkNodeVersion = (
+  requiredVersionString: string,
+  currentVersion: string,
+  subject = 'Logto'
+): NodeVersionCheck => {
+  const required = semver.validRange(requiredVersionString)
+    ? semver.minVersion(requiredVersionString)
+    : null;
+  const current = new semver.SemVer(currentVersion);
+
+  // An unparsable range carries no requirement to validate, matching how a missing or invalid
+  // release manifest is handled.
+  if (!required) {
+    return {};
+  }
 
   // Exit if the major version is lower than the required version since there may be changes that
   // break the compatibility.
-  if (required.every((version) => version.major > current.major)) {
-    consoleLog.fatal(
-      `Logto requires NodeJS ${requiredVersionString}, but ${current.version} found.`
-    );
+  if (required.major > current.major) {
+    return {
+      fatalError: `${subject} requires NodeJS ${requiredVersionString}, but ${current.version} found.`,
+    };
   }
 
   // Only warn for incompatible minor/patch versions or higher major versions.
-  if (!requiredRange.test(current.version)) {
-    consoleLog.warn(
-      `Logto is tested under NodeJS ${requiredVersionString}, but version ${current.version} found.`
+  if (!semver.satisfies(current.version, requiredVersionString)) {
+    return {
+      warning: `${subject} is tested under NodeJS ${requiredVersionString}, but version ${current.version} found.`,
+    };
+  }
+
+  return {};
+};
+
+const getCurrentNodeVersion = () => execSync('node -v', { encoding: 'utf8', stdio: 'pipe' });
+
+export const validateNodeVersion = (requiredVersionString = packageJson.engines.node) => {
+  const { fatalError, warning } = checkNodeVersion(requiredVersionString, getCurrentNodeVersion());
+
+  if (fatalError) {
+    consoleLog.fatal(fatalError);
+  }
+
+  if (warning) {
+    consoleLog.warn(warning);
+  }
+};
+
+const readServerNodeRequirement = async (installPath: string) => {
+  try {
+    const { engines } = serverPackageJsonGuard.parse(
+      JSON.parse(await fs.readFile(path.join(installPath, 'package.json'), 'utf8'))
     );
+
+    return engines?.node;
+  } catch {
+    // A custom `--download-url` tarball may not follow the release layout. Without a readable
+    // manifest there is no requirement to validate, so continue the installation as before.
+  }
+};
+
+export const validateServerNodeVersion = async (installPath: string) => {
+  const requiredVersionString = await readServerNodeRequirement(installPath);
+
+  if (!requiredVersionString) {
+    return;
+  }
+
+  const { fatalError, warning } = checkNodeVersion(
+    requiredVersionString,
+    getCurrentNodeVersion(),
+    'The downloaded Logto release'
+  );
+
+  if (fatalError) {
+    // The release cannot run on the current Node.js version; remove the partial installation so
+    // the path can be reused.
+    await oraPromise(fs.rm(installPath, { force: true, recursive: true }), {
+      text: 'Clean up',
+    });
+    consoleLog.fatal(fatalError);
+  }
+
+  if (warning) {
+    consoleLog.warn(warning);
   }
 };
 

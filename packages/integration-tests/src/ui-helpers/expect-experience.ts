@@ -388,7 +388,7 @@ export default class ExpectExperience extends ExpectPage {
       text: 'User ID: ',
     });
     const userIdSpan = await expect(userIdDiv).toMatchElement('span');
-    return (await userIdSpan.evaluate((element) => element.textContent)) ?? '';
+    return userIdSpan.evaluate((element) => element.textContent);
   }
 
   async findFaviconUrls() {

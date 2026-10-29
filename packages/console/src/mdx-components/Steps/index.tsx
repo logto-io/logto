@@ -1,6 +1,14 @@
 import { type Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
-import React, { useRef, type ReactElement, useEffect, useState, useMemo, useContext } from 'react';
+import React, {
+  useRef,
+  type ReactElement,
+  useEffect,
+  useState,
+  useMemo,
+  useContext,
+  type RefAttributes,
+} from 'react';
 
 import { GuideContext } from '@/components/Guide';
 import useScroll from '@/hooks/use-scroll';
@@ -13,10 +21,10 @@ import Step from '../Step';
 import FurtherReadings from './FurtherReadings';
 import styles from './index.module.scss';
 
+type StepElement = ReactElement<StepProps & RefAttributes<HTMLDivElement>, typeof Step>;
+
 type Props = {
-  readonly children:
-    | Array<ReactElement<StepProps, typeof Step>>
-    | ReactElement<StepProps, typeof Step>;
+  readonly children: StepElement[] | StepElement;
 };
 
 /** Find the first scrollable element in the parent chain. */
@@ -52,7 +60,7 @@ export default function Steps({ children: reactChildren }: Props) {
     ),
     [metadata.fullGuide, metadata.furtherReadings]
   );
-  const children: Array<ReactElement<StepProps, typeof Step>> = useMemo(() => {
+  const children: StepElement[] = useMemo(() => {
     const steps = (Array.isArray(reactChildren) ? reactChildren : [reactChildren]).filter(
       (child) => child.type === Step
     );

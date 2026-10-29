@@ -22,10 +22,10 @@
   "devDependencies": {
     "@logto/core-kit": "workspace:^",
     "@logto/schemas": "workspace:^",
-    "@silverhand/eslint-config": "6.0.1",
-    "@silverhand/eslint-config-react": "6.0.2",
-    "@silverhand/ts-config": "6.0.0",
-    "@silverhand/ts-config-react": "6.0.0",
+    "@silverhand/eslint-config": "^6.1.0",
+    "@silverhand/eslint-config-react": "^6.1.0",
+    "@silverhand/ts-config": "^6.1.0",
+    "@silverhand/ts-config-react": "^6.1.0",
     "@types/qrcode": "^1.5.5",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
@@ -38,12 +38,12 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "stylelint": "^15.0.0",
-    "typescript": "^5.5.3",
+    "typescript": "^5.9.3",
     "vite": "^6.2.7",
     "vite-plugin-compression": "^0.5.1"
   },
   "engines": {
-    "node": "^22.14.0"
+    "node": "^26.12.1"
   },
   "eslintConfig": {
     "extends": "@silverhand/react"

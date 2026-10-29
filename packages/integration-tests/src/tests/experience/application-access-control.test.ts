@@ -115,7 +115,7 @@ devFeatureTest.describe('application access control experience', () => {
       await signInFromExperience(experience, deniedUser.username, deniedUser.password);
 
       await experience.page.waitForFunction(() =>
-        document.body.textContent?.toLowerCase().includes('access denied')
+        document.body.textContent.toLowerCase().includes('access denied')
       );
       await experience.toMatchElement('body', { text: /sign out/i });
     } finally {

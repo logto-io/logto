@@ -197,7 +197,7 @@ describe('BlocklistForm', () => {
   it('renders the custom allowlist section from the form data', () => {
     renderBlocklistForm();
 
-    const content = document.body.textContent ?? '';
+    const content = document.body.textContent;
 
     expect(screen.getByText('allowed@example.com')).toBeTruthy();
     expect(screen.getByText('security.blocklist.custom_email_allowlist.title')).toBeTruthy();

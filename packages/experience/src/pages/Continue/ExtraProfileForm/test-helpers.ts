@@ -60,7 +60,7 @@ export const openAndSetDate = async (
 
 export const collectErrorTexts = (root: HTMLElement | Document): string[] => {
   const elements = Array.from(root.querySelectorAll('[role="alert"], .errorMessage, .error'));
-  return elements.map((element) => element.textContent?.trim() ?? '').filter(Boolean);
+  return elements.map((element) => element.textContent.trim()).filter(Boolean);
 };
 
 export const queryInput = (root: ParentNode, selector: string) => {

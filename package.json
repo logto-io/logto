@@ -35,11 +35,11 @@
     "husky": "^9.0.0",
     "pg": "^8.8.0",
     "tsup": "^8.5.1",
-    "typescript": "^5.0.0",
+    "typescript": "^5.9.3",
     "vite": "^6.2.7"
   },
   "engines": {
-    "node": "^22.14.0",
+    "node": "^22.23.4 || ^24.22.1 || ^26.12.1",
     "pnpm": "^9.0.0 || ^10.0.0"
   },
   "pnpm": {
@@ -92,6 +92,8 @@
       "path-to-regexp@>=8.0.0 <8.4.0": "^8.4.0",
       "picomatch@<2.3.2": "^2.3.2",
       "picomatch@>=4.0.0 <4.0.4": "^4.0.4",
+      "playwright": "1.64.1",
+      "playwright-core": "1.64.1",
       "playwright@<1.55.1": "^1.55.1",
       "postcss@<8.5.18": "^8.5.18",
       "postcss-selector-parser@<7.1.6": "^7.1.6",
