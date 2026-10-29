@@ -13,7 +13,6 @@ import { type TenantResponse } from '@/cloud/types/router';
 import AppLoading from '@/components/AppLoading';
 import PageMeta from '@/components/PageMeta';
 import Topbar from '@/components/Topbar';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
@@ -52,8 +51,8 @@ export default function DeleteAccount() {
     data: consoleSsoConnectors,
     error: consoleSsoError,
     mutate: mutateConsoleSsoConnectors,
-  } = useConsoleSsoConnectors(isDevFeaturesEnabled);
-  const hasConsoleSsoConnectors = isDevFeaturesEnabled && Boolean(consoleSsoConnectors?.length);
+  } = useConsoleSsoConnectors();
+  const hasConsoleSsoConnectors = Boolean(consoleSsoConnectors?.length);
 
   const [claims, setClaims] = useState<IdTokenClaims>();
   const [isDeleting, setIsDeleting] = useState(false);
@@ -105,7 +104,7 @@ export default function DeleteAccount() {
     void fetchClaims();
   }, [getIdTokenClaims, t]);
 
-  if (!claims || (isDevFeaturesEnabled && !consoleSsoConnectors && !consoleSsoError)) {
+  if (!claims || (!consoleSsoConnectors && !consoleSsoError)) {
     return <AppLoading />;
   }
 
@@ -138,7 +137,7 @@ export default function DeleteAccount() {
 
     try {
       // Recheck right before the irreversible tenant operations below.
-      if (isDevFeaturesEnabled && (await hasFreshConsoleSsoConnectors())) {
+      if (await hasFreshConsoleSsoConnectors()) {
         return;
       }
       for (const tenant of tenantsToDelete) {
@@ -169,7 +168,6 @@ export default function DeleteAccount() {
     } catch (error) {
       // The server refuses with 422 if connectors were created after the recheck.
       if (
-        isDevFeaturesEnabled &&
         error instanceof ResponseError &&
         error.response.status === 422 &&
         (await trySafe(hasFreshConsoleSsoConnectors()))

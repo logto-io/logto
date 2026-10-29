@@ -8,7 +8,6 @@ import {
   type UserSubscription,
   type UserSubscriptionInvoicesResponse,
 } from '@/cloud/types/router';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import useCurrentUser from '@/hooks/use-current-user';
 
 import { useCloudApi } from './use-cloud-api';
@@ -23,9 +22,8 @@ export const useSubscriptionEntry = () => {
     async () => api.get('/api/me/logto-enterprises'),
     { keepPreviousData: false }
   );
-  // Console SSO billing: retain the existing Enterprise entry until this feature is released.
   const summary = useSWR<{ hasSubscriptions: boolean }, ResponseError>(
-    isDevFeaturesEnabled && user && !userError && ['/api/me/user-subscriptions/summary', user.id],
+    user && !userError && ['/api/me/user-subscriptions/summary', user.id],
     async () => subscriptionsApi.get('/api/me/user-subscriptions/summary'),
     { keepPreviousData: false }
   );
@@ -35,11 +33,7 @@ export const useSubscriptionEntry = () => {
       data: (userError ?? enterprises.error) ? undefined : enterprises.data?.logtoEnterprises,
       error: userError ?? enterprises.error,
     },
-    hasSubscriptions:
-      isDevFeaturesEnabled &&
-      !userError &&
-      !summary.error &&
-      Boolean(summary.data?.hasSubscriptions),
+    hasSubscriptions: !userError && !summary.error && Boolean(summary.data?.hasSubscriptions),
   };
 };
 
