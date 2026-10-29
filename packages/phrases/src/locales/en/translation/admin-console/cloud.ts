@@ -64,7 +64,7 @@ const cloud = {
     resume_creation:
       'An unfinished creation was found. Continue with the same provider to recover this connector.',
     creation_charge_notice:
-      'Each Console SSO connector costs <span>${{price, number}} per mo</span>. For any assistance, feel free to <a>contact us</a>.',
+      'Standard pricing: <span>${{price, number}}/month per Console SSO connector</span>. For any assistance, feel free to <a>contact us</a>.',
   },
   general: {
     onboarding: 'Onboarding',

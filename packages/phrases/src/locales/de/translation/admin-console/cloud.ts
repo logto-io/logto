@@ -68,7 +68,7 @@ const cloud = {
     resume_creation:
       'Eine unvollständige Erstellung wurde gefunden. Fahre mit demselben Anbieter fort, um diesen Konnektor wiederherzustellen.',
     creation_charge_notice:
-      'Jeder Konsolen-SSO-Connector kostet <span>${{price, number}} pro Monat</span>. Wenn Sie Hilfe benötigen, können Sie uns gerne <a>kontaktieren</a>.',
+      'Standardpreis: <span>${{price, number}} pro Monat und Konsolen-SSO-Connector</span>. Wenn Sie Hilfe benötigen, können Sie uns gerne <a>kontaktieren</a>.',
   },
   general: {
     onboarding: 'Einführung',

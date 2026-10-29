@@ -1,7 +1,7 @@
 import { SsoProviderName } from '@logto/schemas';
 import { renderHook } from '@testing-library/react';
 import { createElement, type ReactNode } from 'react';
-import { SWRConfig, useSWRConfig } from 'swr';
+import { SWRConfig } from 'swr';
 
 import { useConnectorCreation } from './use-connector-creation';
 
@@ -71,19 +71,10 @@ export const renderCreation = (cache = new Map()) =>
   renderHook(() => useConnectorCreation('alice', onCreated), {
     wrapper: createSwrWrapper(cache),
   });
-/** Also exposes the SWR config, so a test can revalidate the coverage request. */
-export const renderCreationWithSwr = () =>
-  renderHook(() => ({ creation: useConnectorCreation('alice', onCreated), swr: useSWRConfig() }), {
-    wrapper: createSwrWrapper(),
-  });
-
 beforeEach(() => {
   localStorage.clear();
   jest.clearAllMocks();
   mockApi.get.mockImplementation(async (path: string) => {
-    if (path === '/api/me/logto-enterprises') {
-      return { logtoEnterprises: [] };
-    }
     if (path === '/api/me/console-sso/checkout-session/:sessionId') {
       return paidSession;
     }

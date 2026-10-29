@@ -63,7 +63,7 @@ const cloud = {
     resume_creation:
       'Tamamlanmamış bir oluşturma işlemi bulundu. Bu bağlayıcıyı kurtarmak için aynı sağlayıcıyla devam edin.',
     creation_charge_notice:
-      "Her Konsol SSO bağlayıcısının ücreti <span>aylık ${{price, number}}</span>'dır. Herhangi bir yardım için bizimle <a>iletişime geçebilirsiniz</a>.",
+      'Standart fiyat: <span>Konsol SSO bağlayıcısı başına aylık ${{price, number}}</span>. Herhangi bir yardım için bizimle <a>iletişime geçebilirsiniz</a>.',
   },
   general: {
     onboarding: 'Başlatma',
