@@ -111,6 +111,12 @@ const sign_in_exp = {
     csp_source_invalid_error:
       'Wprowadź prawidłowe wyrażenie źródła. Użyj adresów URL https://; connect-src obsługuje także wss://. Słowa kluczowe CSP i średniki nie są obsługiwane.',
     csp_source_duplicate_error: 'To wyrażenie źródła jest już na liście.',
+    coop_tip:
+      'Odizoluj własny interfejs logowania od okien z innych źródeł. Stosowane tylko wtedy, gdy serwowane są niestandardowe zasoby UI.',
+    coop_unsafe_none: 'Nie ustawiono (domyślnie)',
+    coop_same_origin_allow_popups: 'same-origin-allow-popups (zalecane)',
+    coop_warning:
+      'Aplikacje, które otwierają stronę logowania w wyskakującym oknie z innego źródła i korzystają z window.opener, przestaną działać. same-origin odcina też wyskakujące okna otwierane przez sam niestandardowy interfejs, np. okna logowania społecznościowego.',
   },
   account_center: {
     recent_authentication: {

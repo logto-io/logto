@@ -111,6 +111,12 @@ const sign_in_exp = {
     csp_source_invalid_error:
       'Enter a valid source expression. Use https:// URLs; connect-src also supports wss://. CSP keywords and semicolons are not supported.',
     csp_source_duplicate_error: 'This source expression is already listed.',
+    coop_tip:
+      'Isolate your custom sign-in UI from cross-origin windows. Applied only when custom UI assets are served.',
+    coop_unsafe_none: 'Not set (default)',
+    coop_same_origin_allow_popups: 'same-origin-allow-popups (recommended)',
+    coop_warning:
+      'Apps that open the sign-in page in a cross-origin popup and rely on window.opener will stop working. same-origin also cuts off popups your custom UI opens itself, such as social sign-in windows.',
   },
   account_center: {
     recent_authentication: {

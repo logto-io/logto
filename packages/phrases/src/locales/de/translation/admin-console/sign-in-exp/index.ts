@@ -111,6 +111,12 @@ const sign_in_exp = {
     csp_source_invalid_error:
       'Geben Sie einen gültigen Quellausdruck ein. Verwenden Sie https://-URLs; connect-src unterstützt auch wss://. CSP-Schlüsselwörter und Semikolons werden nicht unterstützt.',
     csp_source_duplicate_error: 'Dieser Quellausdruck ist bereits aufgeführt.',
+    coop_tip:
+      'Isolieren Sie Ihre benutzerdefinierte Anmeldeoberfläche von ursprungsübergreifenden Fenstern. Wird nur angewendet, wenn benutzerdefinierte UI-Assets bereitgestellt werden.',
+    coop_unsafe_none: 'Nicht festgelegt (Standard)',
+    coop_same_origin_allow_popups: 'same-origin-allow-popups (empfohlen)',
+    coop_warning:
+      'Apps, die die Anmeldeseite in einem ursprungsübergreifenden Popup öffnen und window.opener verwenden, funktionieren nicht mehr. same-origin trennt außerdem Popups, die Ihre benutzerdefinierte Oberfläche selbst öffnet, etwa Fenster für die Social-Anmeldung.',
   },
   account_center: {
     recent_authentication: {

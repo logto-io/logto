@@ -108,6 +108,12 @@ const sign_in_exp = {
     csp_source_invalid_error:
       '유효한 소스 표현식을 입력하세요. https:// URL을 사용하세요. connect-src는 wss://도 지원합니다. CSP 키워드와 세미콜론은 지원되지 않습니다.',
     csp_source_duplicate_error: '이 소스 표현식은 이미 목록에 있습니다.',
+    coop_tip:
+      '커스텀 로그인 UI를 교차 출처 창으로부터 격리하세요. 커스텀 UI 자산이 제공될 때만 적용됩니다.',
+    coop_unsafe_none: '설정 안 함 (기본값)',
+    coop_same_origin_allow_popups: 'same-origin-allow-popups (권장)',
+    coop_warning:
+      '로그인 페이지를 교차 출처 팝업으로 열고 window.opener에 의존하는 앱은 더 이상 작동하지 않습니다. same-origin은 소셜 로그인 창처럼 커스텀 UI가 직접 여는 팝업도 끊습니다.',
   },
   account_center: {
     recent_authentication: {

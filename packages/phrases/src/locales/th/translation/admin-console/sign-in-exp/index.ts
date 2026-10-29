@@ -110,6 +110,12 @@ const sign_in_exp = {
     csp_source_invalid_error:
       'ป้อน source expression ที่ถูกต้อง ใช้ URL แบบ https://; connect-src รองรับ wss:// ด้วย ไม่รองรับคีย์เวิร์ด CSP และเครื่องหมายอัฒภาค',
     csp_source_duplicate_error: 'source expression นี้อยู่ในรายการแล้ว',
+    coop_tip:
+      'แยก UI เข้าสู่ระบบแบบกำหนดเองของคุณออกจากหน้าต่างที่มาจากต้นทางอื่น ใช้เฉพาะเมื่อมีการให้บริการไฟล์ UI แบบกำหนดเองเท่านั้น',
+    coop_unsafe_none: 'ไม่ได้ตั้งค่า (ค่าเริ่มต้น)',
+    coop_same_origin_allow_popups: 'same-origin-allow-popups (แนะนำ)',
+    coop_warning:
+      'แอปที่เปิดหน้าเข้าสู่ระบบในป๊อปอัปจากต้นทางอื่นและใช้ window.opener จะใช้งานไม่ได้อีกต่อไป same-origin ยังตัดการเชื่อมต่อป๊อปอัปที่ UI แบบกำหนดเองเปิดเอง เช่น หน้าต่างเข้าสู่ระบบด้วยโซเชียล',
   },
   account_center: {
     recent_authentication: {

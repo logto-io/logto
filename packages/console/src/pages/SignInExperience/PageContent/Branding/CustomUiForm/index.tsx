@@ -6,7 +6,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import CloudUploadIcon from '@/assets/icons/cloud-upload.svg?react';
 import CustomCssEditorField from '@/components/CustomCssEditorField';
 import { CloudTag } from '@/components/FeatureTag';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Card from '@/ds-components/Card';
@@ -20,6 +20,7 @@ import useBrandingEntitlements from '../../../hooks/use-branding-entitlements';
 import type { SignInExperienceForm } from '../../../types';
 import FormSectionTitle from '../../components/FormSectionTitle';
 
+import CrossOriginOpenerPolicyField from './CrossOriginOpenerPolicyField';
 import CustomUiCspForm from './CustomUiCspForm';
 import styles from './index.module.scss';
 import { getOssBringYourUiCardContent } from './utils';
@@ -129,6 +130,10 @@ function CustomUiForm() {
           </FormField>
         )}
         {shouldShowCustomUiCspForm && <CustomUiCspForm isDisabled={!isCustomUiCspEnabled} />}
+        {/* Dev feature: Bring your UI COOP header */}
+        {isDevFeaturesEnabled && shouldShowCustomUiCspForm && (
+          <CrossOriginOpenerPolicyField isDisabled={!isCustomUiCspEnabled} />
+        )}
         {shouldShowOssBringYourUi && <OssBringYourUiCard />}
       </Card>
     </>

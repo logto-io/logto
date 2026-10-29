@@ -215,6 +215,7 @@ export const sieFormDataParser = {
       signUp,
       customCss,
       customUiCsp,
+      crossOriginOpenerPolicy,
       hasConfiguredSignUpProfileFields,
       socialSignIn,
       hideLogtoBranding,
@@ -235,6 +236,7 @@ export const sieFormDataParser = {
       ...conditional(
         isCustomUiCspEnabled && {
           customUiCsp: normalizeCustomUiCspForSubmit(customUiCsp),
+          crossOriginOpenerPolicy,
         }
       ),
       ...conditional(isHideLogtoBrandingAvailable && { hideLogtoBranding }),
@@ -274,6 +276,7 @@ export const signInExperienceToUpdatedDataParser = (
   const {
     signUp,
     customUiCsp,
+    crossOriginOpenerPolicy,
     // Start: Remove the omitted fields from the data
     mfa,
     adaptiveMfa,
@@ -298,6 +301,7 @@ export const signInExperienceToUpdatedDataParser = (
     ...conditional(
       isCustomUiCspEnabled && {
         customUiCsp: normalizeCustomUiCspForSubmit(normalizeCustomUiCspForForm(customUiCsp)),
+        crossOriginOpenerPolicy,
       }
     ),
     ...conditional(isHideLogtoBrandingAvailable && { hideLogtoBranding }),
