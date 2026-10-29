@@ -135,6 +135,22 @@ const continueFundedConnectorCreation = async (
     return customerChoice && savePendingConnectorCreation(userId, { ...current, customerChoice });
   };
   const enroll = async (pending: PendingConnectorCreation) => {
+    // An add-on to an existing subscription bills that subscription's Customer, so skip asking.
+    if (!pending.customerChoice) {
+      const preview = await getApi(pending.key)
+        .get('/api/me/console-sso/checkout-preview')
+        .catch((error: unknown) => {
+          // A first attempt has only read the preview, so there is no server state to recover.
+          if (!pending.checkoutKey && isPendingConnectorCreationCurrent(userId, pending)) {
+            clearPendingConnectorCreation(userId);
+          }
+          throw error;
+        });
+      assertCurrent(pending);
+      if (preview.status === 'subscription_exists') {
+        return { enrollment: preview, current: pending };
+      }
+    }
     const current = await withCustomerChoice(pending);
     if (!current) {
       return { enrollment: undefined, current: pending };

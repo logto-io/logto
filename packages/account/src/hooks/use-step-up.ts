@@ -3,7 +3,6 @@ import { ExtraParamsKey, defaultMaximumAuthenticationAgeInSeconds } from '@logto
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
-import { isDevFeaturesEnabled } from '@ac/constants/env';
 import {
   accountCenterBasePath,
   getUiLocales,
@@ -44,8 +43,6 @@ export type IdentityProof = {
   isReady: boolean;
   /** Whether the local ID token is still being inspected for its authentication context. */
   isChecking: boolean;
-  /** The legacy verification record. Only present when OIDC step-up is disabled. */
-  verificationId?: string;
   /**
    * Re-read the ID token at action time. The page may have stayed open long enough for the
    * context to age out, so the state captured at mount is not enough to decide.
@@ -71,26 +68,17 @@ const useMaximumAuthenticationAgeInSeconds = (): number => {
 /**
  * The proof of a recent authentication that a sensitive Account API request carries.
  *
- * With OIDC step-up the access token is the only proof: the request is sent without a legacy
- * verification record, and the local ID token's `acr` and `auth_time` tell Account Center whether
- * to call the Account API directly or to start a step-up first. Otherwise the request waits for
- * the verification record the legacy verification flow created.
+ * The access token is the only proof: the request is sent without a legacy verification record,
+ * and the local ID token's `acr` and `auth_time` tell Account Center whether to call the Account
+ * API directly or to start a step-up first.
  */
 export const useIdentityProof = (): IdentityProof => {
-  const { verificationId } = useContext(PageContext);
   const { getIdTokenClaims } = useLogto();
   const maximumAuthenticationAgeInSeconds = useMaximumAuthenticationAgeInSeconds();
   const [isReady, setIsReady] = useState(false);
-  const [isChecking, setIsChecking] = useState(isDevFeaturesEnabled);
+  const [isChecking, setIsChecking] = useState(true);
 
   const checkIdentityProof = useCallback(async () => {
-    if (!isDevFeaturesEnabled) {
-      const ready = Boolean(verificationId);
-      setIsReady(ready);
-      setIsChecking(false);
-      return ready;
-    }
-
     setIsChecking(true);
 
     try {
@@ -104,20 +92,11 @@ export const useIdentityProof = (): IdentityProof => {
     } finally {
       setIsChecking(false);
     }
-  }, [getIdTokenClaims, maximumAuthenticationAgeInSeconds, verificationId]);
+  }, [getIdTokenClaims, maximumAuthenticationAgeInSeconds]);
 
   useEffect(() => {
     void checkIdentityProof();
   }, [checkIdentityProof]);
-
-  if (!isDevFeaturesEnabled) {
-    return {
-      isReady: Boolean(verificationId),
-      isChecking: false,
-      verificationId,
-      checkIdentityProof,
-    };
-  }
 
   return { isReady, isChecking, checkIdentityProof };
 };
@@ -183,8 +162,7 @@ const useStepUp = (): StepUpController => {
       action: PendingStepUpAction,
       { isResumed = false, route }: RequestStepUpOptions = {}
     ) => {
-      // DEV: OIDC step-up authentication in Account Center
-      if (!isDevFeaturesEnabled || isResumed) {
+      if (isResumed) {
         return false;
       }
 
@@ -226,11 +204,6 @@ const useStepUp = (): StepUpController => {
       action: PendingStepUpAction,
       challenge: StepUpChallenge = getProactiveStepUpChallenge(maximumAuthenticationAgeInSeconds)
     ) => {
-      // DEV: OIDC step-up authentication in Account Center
-      if (!isDevFeaturesEnabled) {
-        return false;
-      }
-
       await beginStepUp(action, challenge);
 
       return true;
@@ -257,8 +230,6 @@ export type StepUpEntryState = {
    * through the authorization endpoint again.
    */
   isResumed: boolean;
-  /** The legacy verification record. Only present when OIDC step-up is disabled. */
-  verificationId?: string;
 };
 
 type StepUpEntryOptions = {
@@ -273,12 +244,10 @@ type StepUpEntryOptions = {
  * the user fill a form, receive an OTP, scan a TOTP QR code, register a WebAuthn credential, or
  * finish an upstream OAuth only to have the final write rejected.
  *
- * With OIDC step-up enabled, a stale context renders through `isChecking` and starts a step-up
- * whose `max_age` matches the entry threshold. Without it, the hook reports the legacy
- * verification record so the page keeps its existing behavior.
+ * A stale context renders through `isChecking` and starts a step-up whose `max_age` matches the
+ * entry threshold.
  */
 export const useStepUpEntry = ({ enabled, skip = false }: StepUpEntryOptions): StepUpEntryState => {
-  const { verificationId } = useContext(PageContext);
   const { getIdTokenClaims } = useLogto();
   const maximumAuthenticationAgeInSeconds = useMaximumAuthenticationAgeInSeconds();
   const { startStepUp } = useStepUp();
@@ -291,10 +260,6 @@ export const useStepUpEntry = ({ enabled, skip = false }: StepUpEntryOptions): S
   const hasStartedRef = useRef(false);
 
   useEffect(() => {
-    if (!isDevFeaturesEnabled) {
-      return;
-    }
-
     if (!enabled) {
       setState({ isReady: false, isChecking: false, hasFailed: false, isResumed: false });
       return;
@@ -376,16 +341,6 @@ export const useStepUpEntry = ({ enabled, skip = false }: StepUpEntryOptions): S
       hasStartedRef.current = false;
     };
   }, [enabled, getIdTokenClaims, maximumAuthenticationAgeInSeconds, skip, startStepUp]);
-
-  if (!isDevFeaturesEnabled) {
-    return {
-      isReady: Boolean(verificationId) || skip,
-      isChecking: false,
-      hasFailed: false,
-      isResumed: false,
-      verificationId,
-    };
-  }
 
   return state;
 };

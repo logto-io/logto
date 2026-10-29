@@ -16,8 +16,6 @@ import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { getMfaVerifications, deleteMfaVerification, updateWebAuthnName } from '@ac/apis/mfa';
 import ConfirmModal from '@ac/components/ConfirmModal';
 import ErrorPage from '@ac/components/ErrorPage';
-import VerificationMethodList from '@ac/components/VerificationMethodList';
-import { isDevFeaturesEnabled } from '@ac/constants/env';
 import { passkeyAddRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
@@ -44,9 +42,8 @@ const formatDate = (dateString: string, language: string): string =>
 const PasskeyView = () => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const { accountCenterSettings, experienceSettings, setVerificationId, setToast } =
-    useContext(PageContext);
-  const { verificationId, checkIdentityProof } = useIdentityProof();
+  const { accountCenterSettings, experienceSettings, setToast } = useContext(PageContext);
+  const { checkIdentityProof } = useIdentityProof();
   const { requestStepUp, startStepUp } = useStepUp();
   const getMfaRequest = useApi(getMfaVerifications);
   const deletePasskeyRequest = useApi(deleteMfaVerification);
@@ -85,19 +82,14 @@ const PasskeyView = () => {
 
   const deletePasskey = useCallback(
     async (id: string, isResumed = false) => {
-      const [error] = await deletePasskeyRequest(verificationId, id);
+      const [error] = await deletePasskeyRequest(id);
 
       if (error) {
         if (await requestStepUp(error, { type: 'delete-passkey', id }, { isResumed })) {
           return;
         }
 
-        await handleError(error, {
-          'verification_record.permission_denied': async () => {
-            setVerificationId(undefined);
-            setToast(t('account_center.verification.verification_required'));
-          },
-        });
+        await handleError(error);
         setShowDeleteConfirm(false);
 
         if (isResumed) {
@@ -120,33 +112,19 @@ const PasskeyView = () => {
 
       setToast(t('account_center.passkey.deleted'));
     },
-    [
-      deletePasskeyRequest,
-      fetchPasskeys,
-      handleError,
-      requestStepUp,
-      setToast,
-      setVerificationId,
-      t,
-      verificationId,
-    ]
+    [deletePasskeyRequest, fetchPasskeys, handleError, requestStepUp, setToast, t]
   );
 
   const renamePasskey = useCallback(
     async (id: string, name: string, isResumed = false) => {
-      const [error] = await updatePasskeyNameRequest(verificationId, id, name);
+      const [error] = await updatePasskeyNameRequest(id, name);
 
       if (error) {
         if (await requestStepUp(error, { type: 'rename-passkey', id, name }, { isResumed })) {
           return;
         }
 
-        await handleError(error, {
-          'verification_record.permission_denied': async () => {
-            setVerificationId(undefined);
-            setToast(t('account_center.verification.verification_required'));
-          },
-        });
+        await handleError(error);
         setShowEditModal(false);
 
         if (isResumed) {
@@ -171,16 +149,7 @@ const PasskeyView = () => {
 
       setToast(t('account_center.passkey.renamed'));
     },
-    [
-      fetchPasskeys,
-      handleError,
-      requestStepUp,
-      setToast,
-      setVerificationId,
-      t,
-      updatePasskeyNameRequest,
-      verificationId,
-    ]
+    [fetchPasskeys, handleError, requestStepUp, setToast, t, updatePasskeyNameRequest]
   );
 
   useEffect(() => {
@@ -208,13 +177,8 @@ const PasskeyView = () => {
       return;
     }
 
-    // DEV: OIDC step-up authentication in Account Center
-    if (!verificationId && !isDevFeaturesEnabled) {
-      return;
-    }
-
     void fetchPasskeys();
-  }, [fetchPasskeys, verificationId]);
+  }, [fetchPasskeys]);
 
   const handleDelete = useCallback(async () => {
     if (!selectedPasskey) {
@@ -265,11 +229,6 @@ const PasskeyView = () => {
         messageKey="account_center.mfa.passkey_not_enabled"
       />
     );
-  }
-
-  // DEV: OIDC step-up authentication in Account Center
-  if (!verificationId && !isDevFeaturesEnabled) {
-    return <VerificationMethodList />;
   }
 
   if (hasError) {

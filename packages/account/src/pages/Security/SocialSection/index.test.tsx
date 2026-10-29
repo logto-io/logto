@@ -8,18 +8,27 @@ import renderWithPageContext, {
   mockUserInfo,
 } from '@ac/__mocks__/RenderWithPageContext';
 import { deleteSocialIdentity } from '@ac/apis/social';
-import { securityRoute, verifiedActionRoute } from '@ac/constants/routes';
-import { sessionStorage } from '@ac/utils/session-storage';
+import { securityRoute } from '@ac/constants/routes';
+import { accountStorage } from '@ac/utils/session-storage';
 
 import SocialSection from '.';
 
 const mockGetAccessToken = jest.fn().mockResolvedValue('access-token');
+const mockGetIdTokenClaims = jest.fn();
+const mockSignIn = jest.fn();
 
 jest.mock('@logto/react', () => ({
   useLogto: () => ({
     getAccessToken: mockGetAccessToken,
+    getIdTokenClaims: mockGetIdTokenClaims,
+    signIn: mockSignIn,
   }),
 }));
+
+const createIdTokenClaims = (authTime = Math.floor(Date.now() / 1000) - 60) => ({
+  acr: 'urn:logto:acr:1fa',
+  auth_time: authTime,
+});
 
 jest.mock('@ac/apis/social', () => ({
   deleteSocialIdentity: jest.fn(),
@@ -51,6 +60,7 @@ const linkedUserInfo = {
 describe('SocialSection remove', () => {
   beforeEach(() => {
     window.sessionStorage.clear();
+    mockGetIdTokenClaims.mockResolvedValue(createIdTokenClaims());
     mockDeleteSocialIdentity.mockReset();
     mockDeleteSocialIdentity.mockResolvedValue(undefined);
   });
@@ -78,7 +88,6 @@ describe('SocialSection remove', () => {
             socialConnectors: [googleWebConnector],
           },
           userInfo: linkedUserInfo,
-          verificationId: 'verification-id',
           setToast,
           refreshUserInfo,
         },
@@ -91,22 +100,21 @@ describe('SocialSection remove', () => {
     fireEvent.click(confirmRemoveButton!);
 
     await waitFor(() => {
-      expect(mockDeleteSocialIdentity).toHaveBeenCalledWith(
-        'access-token',
-        'verification-id',
-        'google'
-      );
+      expect(mockDeleteSocialIdentity).toHaveBeenCalledWith('access-token', 'google');
     });
     expect(refreshUserInfo).toHaveBeenCalled();
     expect(setToast).toHaveBeenCalled();
     expect(queryByText('verified action page')).toBeNull();
   });
 
-  it('navigates to verified action when verification is required', async () => {
+  it('starts a step-up when the authentication context is stale', async () => {
+    mockGetIdTokenClaims.mockResolvedValue(
+      createIdTokenClaims(Math.floor(Date.now() / 1000) - 600)
+    );
+
     const { getAllByText, getByText } = renderWithPageContext(
       <Routes>
         <Route path={securityRoute} element={<SocialSection />} />
-        <Route path={verifiedActionRoute} element={<div>verified action page</div>} />
       </Routes>,
       { initialEntries: [securityRoute] },
       {
@@ -133,10 +141,17 @@ describe('SocialSection remove', () => {
     fireEvent.click(confirmRemoveButton!);
 
     await waitFor(() => {
-      expect(getByText('verified action page')).not.toBeNull();
+      expect(mockSignIn).toHaveBeenCalledTimes(1);
     });
-    expect(sessionStorage.getPendingVerifiedAction()).toBe('remove-social');
-    expect(sessionStorage.getPendingSocialRemoveConnectorId()).toBe('google-web');
+    expect(mockSignIn).toHaveBeenCalledWith({
+      redirectUri: 'http://localhost/account',
+      clearTokens: false,
+      extraParams: { acr_values: 'urn:logto:acr:1fa', max_age: '540' },
+    });
+    expect(accountStorage.pendingStepUp.get()).toMatchObject({
+      action: { type: 'remove-social', connectorId: 'google-web' },
+      phase: 'authorizing',
+    });
     expect(mockDeleteSocialIdentity).not.toHaveBeenCalled();
   });
 });

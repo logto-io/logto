@@ -20,11 +20,6 @@ const mockGetIdTokenClaims = jest.fn();
 const mockSignIn = jest.fn();
 const mockBrowserSupportsWebAuthn = jest.fn();
 
-jest.mock('@ac/constants/env', () => ({
-  __esModule: true,
-  isDevFeaturesEnabled: true,
-}));
-
 jest.mock('@logto/react', () => ({
   __esModule: true,
   useLogto: () => ({

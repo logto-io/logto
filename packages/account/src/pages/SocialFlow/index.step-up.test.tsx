@@ -18,11 +18,6 @@ const mockRequestStepUp = jest.fn();
 const mockRefreshUserInfo = jest.fn();
 const mockSetToast = jest.fn();
 
-jest.mock('@ac/constants/env', () => ({
-  __esModule: true,
-  isDevFeaturesEnabled: true,
-}));
-
 jest.mock('@logto/react', () => ({
   __esModule: true,
   useLogto: () => ({

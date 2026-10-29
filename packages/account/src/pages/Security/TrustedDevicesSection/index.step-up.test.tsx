@@ -11,7 +11,7 @@ import renderWithPageContext, {
   mockAccountCenterSettings,
 } from '@ac/__mocks__/RenderWithPageContext';
 import { getTrustedDevices, removeTrustedDevice } from '@ac/apis/trusted-devices';
-import { securityRoute, verifiedActionRoute } from '@ac/constants/routes';
+import { securityRoute } from '@ac/constants/routes';
 import { setupI18nForTesting } from '@ac/jest.setup';
 import { accountStorage } from '@ac/utils/session-storage';
 import {
@@ -26,11 +26,6 @@ import TrustedDevicesSection from '.';
 const mockGetAccessToken = jest.fn().mockResolvedValue('access-token');
 const mockGetIdTokenClaims = jest.fn();
 const mockSignIn = jest.fn();
-
-jest.mock('@ac/constants/env', () => ({
-  __esModule: true,
-  isDevFeaturesEnabled: true,
-}));
 
 jest.mock('@logto/react', () => ({
   useLogto: () => ({
@@ -105,7 +100,6 @@ const renderTrustedDevices = () =>
   renderWithPageContext(
     <Routes>
       <Route path={securityRoute} element={<TrustedDevicesSection />} />
-      <Route path={verifiedActionRoute} element={<div>verified action page</div>} />
     </Routes>,
     {
       initialEntries: [securityRoute],
@@ -166,7 +160,7 @@ describe('<TrustedDevicesSection /> OIDC step-up', () => {
     const { getByText, queryByRole } = renderTrustedDevices();
 
     await waitFor(() => {
-      expect(mockGetTrustedDevices).toHaveBeenCalledWith('access-token', undefined);
+      expect(mockGetTrustedDevices).toHaveBeenCalledWith('access-token');
     });
     expect(getByText('trusted-device-id')).not.toBeNull();
     expect(queryByRole('button', { name: 'Manage' })).toBeNull();
@@ -215,11 +209,7 @@ describe('<TrustedDevicesSection /> OIDC step-up', () => {
     await waitFor(() => {
       expect(mockSignIn).toHaveBeenCalledTimes(1);
     });
-    expect(mockRemoveTrustedDevice).toHaveBeenCalledWith(
-      'access-token',
-      undefined,
-      'trusted-device-id'
-    );
+    expect(mockRemoveTrustedDevice).toHaveBeenCalledWith('access-token', 'trusted-device-id');
 
     const confirmButton = getAllByText('Remove').at(-1)?.closest('button');
 
@@ -239,12 +229,8 @@ describe('<TrustedDevicesSection /> OIDC step-up', () => {
     const { unmount } = renderTrustedDevices();
 
     await waitFor(() => {
-      expect(mockRemoveTrustedDevice).toHaveBeenCalledWith(
-        'access-token',
-        undefined,
-        'trusted-device-id'
-      );
-      expect(mockGetTrustedDevices).toHaveBeenCalledWith('access-token', undefined);
+      expect(mockRemoveTrustedDevice).toHaveBeenCalledWith('access-token', 'trusted-device-id');
+      expect(mockGetTrustedDevices).toHaveBeenCalledWith('access-token');
     });
 
     // A second mount, as after a refresh of the restored route, does not run it again.

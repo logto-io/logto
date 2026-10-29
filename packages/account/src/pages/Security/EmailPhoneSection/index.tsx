@@ -11,12 +11,11 @@ import EmailIcon from '@ac/assets/icons/email.svg?react';
 import PhoneIcon from '@ac/assets/icons/phone.svg?react';
 import ConfirmModal from '@ac/components/ConfirmModal';
 import { layoutClassNames } from '@ac/constants/layout';
-import { emailRoute, phoneRoute, verifiedActionRoute } from '@ac/constants/routes';
+import { emailRoute, phoneRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import useStepUp, { useIdentityProof } from '@ac/hooks/use-step-up';
 import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
-import { sessionStorage } from '@ac/utils/session-storage';
 import { consumePendingStepUpAction } from '@ac/utils/step-up';
 
 import styles from './index.module.scss';
@@ -26,9 +25,8 @@ type RemoveType = 'email' | 'phone';
 const EmailPhoneSection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { userInfo, accountCenterSettings, setVerificationId, refreshUserInfo, setToast } =
-    useContext(PageContext);
-  const { verificationId, checkIdentityProof } = useIdentityProof();
+  const { userInfo, accountCenterSettings, refreshUserInfo, setToast } = useContext(PageContext);
+  const { checkIdentityProof } = useIdentityProof();
   const { requestStepUp, startStepUp } = useStepUp();
   const handleError = useErrorHandler();
   const deletePrimaryEmailApi = useApi(deletePrimaryEmail);
@@ -55,9 +53,9 @@ const EmailPhoneSection = () => {
   );
 
   const removeIdentifier = useCallback(
-    async (removeType: RemoveType, verifiedId: string | undefined, isResumed = false) => {
+    async (removeType: RemoveType, isResumed = false) => {
       const deleteApi = removeType === 'email' ? deletePrimaryEmailApi : deletePrimaryPhoneApi;
-      const [error] = await deleteApi(verifiedId);
+      const [error] = await deleteApi();
 
       if (error) {
         const action = removeType === 'email' ? 'remove-email' : 'remove-phone';
@@ -66,12 +64,7 @@ const EmailPhoneSection = () => {
           return;
         }
 
-        await handleError(error, {
-          'verification_record.permission_denied': async () => {
-            setVerificationId(undefined);
-            setToast(t('account_center.verification.verification_required'));
-          },
-        });
+        await handleError(error);
         return;
       }
 
@@ -91,7 +84,6 @@ const EmailPhoneSection = () => {
       refreshUserInfo,
       requestStepUp,
       setToast,
-      setVerificationId,
       t,
     ]
   );
@@ -104,55 +96,22 @@ const EmailPhoneSection = () => {
     setPendingRemoveType(undefined);
 
     if (await checkIdentityProof()) {
-      await removeIdentifier(pendingRemoveType, verificationId);
+      await removeIdentifier(pendingRemoveType);
       return;
     }
 
     const action = pendingRemoveType === 'email' ? 'remove-email' : 'remove-phone';
 
-    if (await startStepUp({ type: action })) {
-      return;
-    }
-
-    sessionStorage.setPendingVerifiedAction(action);
-    navigateTo(verifiedActionRoute);
-  }, [
-    checkIdentityProof,
-    navigateTo,
-    pendingRemoveType,
-    removeIdentifier,
-    startStepUp,
-    verificationId,
-  ]);
+    await startStepUp({ type: action });
+  }, [checkIdentityProof, pendingRemoveType, removeIdentifier, startStepUp]);
 
   useEffect(() => {
     const action = consumePendingStepUpAction(['remove-email', 'remove-phone']);
 
     if (action) {
-      void removeIdentifier(action.type === 'remove-email' ? 'email' : 'phone', undefined, true);
+      void removeIdentifier(action.type === 'remove-email' ? 'email' : 'phone', true);
     }
   }, [removeIdentifier]);
-
-  useEffect(() => {
-    if (!verificationId) {
-      return;
-    }
-
-    const pendingAction = sessionStorage.getPendingVerifiedAction();
-    const pendingActionRemoveType =
-      pendingAction === 'remove-email'
-        ? 'email'
-        : pendingAction === 'remove-phone'
-          ? 'phone'
-          : undefined;
-
-    if (!pendingActionRemoveType) {
-      return;
-    }
-
-    sessionStorage.clearPendingVerifiedAction();
-    void removeIdentifier(pendingActionRemoveType, verificationId);
-  }, [removeIdentifier, verificationId]);
 
   if (!showEmail && !showPhone) {
     return null;

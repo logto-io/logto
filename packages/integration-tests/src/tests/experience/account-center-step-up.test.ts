@@ -15,13 +15,7 @@ import { logtoUrl } from '#src/constants.js';
 import { clearConnectorsByTypes, setSocialConnector } from '#src/helpers/connector.js';
 import { createDefaultTenantUserWithPassword } from '#src/helpers/profile.js';
 import ExpectExperience from '#src/ui-helpers/expect-experience.js';
-import {
-  devFeatureTest,
-  generateEmail,
-  generatePassword,
-  generateUsername,
-  waitFor,
-} from '#src/utils.js';
+import { generateEmail, generatePassword, generateUsername, waitFor } from '#src/utils.js';
 
 const accountUrl = (pathname: string) => appendPath(new URL(logtoUrl), 'account', pathname);
 
@@ -154,7 +148,7 @@ const signInWithPassword = async (
  * so it starts a step-up before every sensitive operation instead of sending a request that is
  * known to be challenged. A fresh password sign-in can use the Account API directly.
  */
-devFeatureTest.describe('Account Center OIDC step-up', () => {
+describe('Account Center OIDC step-up', () => {
   // eslint-disable-next-line @silverhand/fp/no-let
   let socialConnectorId: string;
 

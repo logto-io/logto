@@ -6,7 +6,6 @@ import type { AccountPersonalAccessTokenResponse } from '@logto/schemas';
 import { AccountCenterControlValue } from '@logto/schemas';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import {
@@ -16,12 +15,9 @@ import {
   revokePersonalAccessToken,
 } from '@ac/apis/personal-access-tokens';
 import ConfirmModal from '@ac/components/ConfirmModal';
-import { verifiedActionRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import useStepUp, { useIdentityProof } from '@ac/hooks/use-step-up';
-import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
-import { sessionStorage } from '@ac/utils/session-storage';
 import { consumePendingStepUpAction } from '@ac/utils/step-up';
 
 import SecuritySection from '../components/SecuritySection';
@@ -40,9 +36,8 @@ const clockSkewMarginMs = 60 * 1000;
 
 const PersonalAccessTokensSection = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const { accountCenterSettings, setVerificationId, setToast } = useContext(PageContext);
-  const { verificationId, checkIdentityProof } = useIdentityProof();
+  const { accountCenterSettings, setToast } = useContext(PageContext);
+  const { checkIdentityProof } = useIdentityProof();
   const { requestStepUp, startStepUp } = useStepUp();
   const [tokens, setTokens] = useState<AccountPersonalAccessTokenResponse[]>();
   const [isLoading, setIsLoading] = useState(false);
@@ -82,11 +77,6 @@ const PersonalAccessTokensSection = () => {
     [t]
   );
 
-  const handlePermissionDenied = useCallback(() => {
-    setVerificationId(undefined);
-    setToast(t('account_center.verification.verification_required'));
-  }, [setToast, setVerificationId, t]);
-
   const fetchTokens = useCallback(async () => {
     if (!isVisible) {
       return;
@@ -116,10 +106,10 @@ const PersonalAccessTokensSection = () => {
   }, [fetchTokens]);
 
   const createToken = useCallback(
-    async (verifiedId: string | undefined, name: string, expiryDays: number, isResumed = false) => {
+    async (name: string, expiryDays: number, isResumed = false) => {
       setIsCreating(true);
       const expiresAt = Date.now() + expiryDays * dayInMs - clockSkewMarginMs;
-      const [error, result] = await createTokenApi(verifiedId, { name, expiresAt });
+      const [error, result] = await createTokenApi({ name, expiresAt });
 
       if (error) {
         if (
@@ -134,9 +124,7 @@ const PersonalAccessTokensSection = () => {
         }
 
         setIsCreating(false);
-        await handleError(error, {
-          'verification_record.permission_denied': handlePermissionDenied,
-        });
+        await handleError(error);
         return;
       }
 
@@ -147,18 +135,13 @@ const PersonalAccessTokensSection = () => {
       setCreatedToken(result?.value);
       await fetchTokens();
     },
-    [createTokenApi, fetchTokens, handleError, handlePermissionDenied, requestStepUp]
+    [createTokenApi, fetchTokens, handleError, requestStepUp]
   );
 
   const renameToken = useCallback(
-    async (
-      verifiedId: string | undefined,
-      currentName: string,
-      name: string,
-      isResumed = false
-    ) => {
+    async (currentName: string, name: string, isResumed = false) => {
       setIsRenaming(true);
-      const [error] = await renameTokenApi(verifiedId, { currentName, name });
+      const [error] = await renameTokenApi({ currentName, name });
 
       if (error) {
         if (
@@ -173,9 +156,7 @@ const PersonalAccessTokensSection = () => {
         }
 
         setIsRenaming(false);
-        await handleError(error, {
-          'verification_record.permission_denied': handlePermissionDenied,
-        });
+        await handleError(error);
         return;
       }
 
@@ -185,13 +166,13 @@ const PersonalAccessTokensSection = () => {
       setToast(t('account_center.security.personal_access_tokens.renamed'));
       await fetchTokens();
     },
-    [fetchTokens, handleError, handlePermissionDenied, renameTokenApi, requestStepUp, setToast, t]
+    [fetchTokens, handleError, renameTokenApi, requestStepUp, setToast, t]
   );
 
   const revokeToken = useCallback(
-    async (verifiedId: string | undefined, name: string, isResumed = false) => {
+    async (name: string, isResumed = false) => {
       setIsRevoking(true);
-      const [error] = await revokeTokenApi(verifiedId, name);
+      const [error] = await revokeTokenApi(name);
 
       if (error) {
         if (
@@ -202,9 +183,7 @@ const PersonalAccessTokensSection = () => {
         }
 
         setIsRevoking(false);
-        await handleError(error, {
-          'verification_record.permission_denied': handlePermissionDenied,
-        });
+        await handleError(error);
         return;
       }
 
@@ -213,50 +192,8 @@ const PersonalAccessTokensSection = () => {
       setRevokeTarget(undefined);
       setToast(t('account_center.security.personal_access_tokens.revoked'));
     },
-    [handleError, handlePermissionDenied, requestStepUp, revokeTokenApi, setToast, t]
+    [handleError, requestStepUp, revokeTokenApi, setToast, t]
   );
-
-  useEffect(() => {
-    if (!verificationId) {
-      return;
-    }
-
-    const pendingAction = sessionStorage.getPendingVerifiedAction();
-
-    if (pendingAction === 'create-personal-access-token') {
-      const pendingCreate = sessionStorage.getPendingPersonalAccessTokenCreate();
-      sessionStorage.clearPendingVerifiedAction();
-      sessionStorage.clearPendingPersonalAccessTokenCreate();
-
-      if (pendingCreate) {
-        void createToken(verificationId, pendingCreate.name, pendingCreate.expiryDays);
-      } else {
-        setIsCreateModalOpen(true);
-      }
-      return;
-    }
-
-    if (pendingAction === 'rename-personal-access-token') {
-      const pendingRename = sessionStorage.getPendingPersonalAccessTokenRename();
-      sessionStorage.clearPendingVerifiedAction();
-      sessionStorage.clearPendingPersonalAccessTokenRename();
-
-      if (pendingRename) {
-        void renameToken(verificationId, pendingRename.currentName, pendingRename.name);
-      }
-      return;
-    }
-
-    if (pendingAction === 'revoke-personal-access-token') {
-      const pendingRevokeName = sessionStorage.getPendingPersonalAccessTokenRevokeName();
-      sessionStorage.clearPendingVerifiedAction();
-      sessionStorage.clearPendingPersonalAccessTokenRevokeName();
-
-      if (pendingRevokeName) {
-        void revokeToken(verificationId, pendingRevokeName);
-      }
-    }
-  }, [createToken, renameToken, revokeToken, verificationId]);
 
   useEffect(() => {
     const action = consumePendingStepUpAction([
@@ -267,15 +204,15 @@ const PersonalAccessTokensSection = () => {
 
     switch (action?.type) {
       case 'create-personal-access-token': {
-        void createToken(undefined, action.name, action.expiryDays, true);
+        void createToken(action.name, action.expiryDays, true);
         break;
       }
       case 'rename-personal-access-token': {
-        void renameToken(undefined, action.currentName, action.name, true);
+        void renameToken(action.currentName, action.name, true);
         break;
       }
       case 'revoke-personal-access-token': {
-        void revokeToken(undefined, action.name, true);
+        void revokeToken(action.name, true);
         break;
       }
       default:
@@ -289,7 +226,7 @@ const PersonalAccessTokensSection = () => {
     }
 
     if (await checkIdentityProof()) {
-      await createToken(verificationId, trimmedName, newTokenExpiryDays);
+      await createToken(trimmedName, newTokenExpiryDays);
       return;
     }
 
@@ -299,27 +236,8 @@ const PersonalAccessTokensSection = () => {
       expiryDays: newTokenExpiryDays,
     };
 
-    if (await startStepUp(action)) {
-      return;
-    }
-
-    setIsCreateModalOpen(false);
-    sessionStorage.setPendingPersonalAccessTokenCreate({
-      name: trimmedName,
-      expiryDays: newTokenExpiryDays,
-    });
-    sessionStorage.setPendingVerifiedAction('create-personal-access-token');
-    setPendingReturn(getPendingReturn() ?? window.location.href);
-    navigate(verifiedActionRoute);
-  }, [
-    checkIdentityProof,
-    createToken,
-    navigate,
-    newTokenExpiryDays,
-    newTokenName,
-    startStepUp,
-    verificationId,
-  ]);
+    await startStepUp(action);
+  }, [checkIdentityProof, createToken, newTokenExpiryDays, newTokenName, startStepUp]);
 
   const handleRenameSubmit = useCallback(async () => {
     const trimmedName = renameValue.trim();
@@ -328,7 +246,7 @@ const PersonalAccessTokensSection = () => {
     }
 
     if (await checkIdentityProof()) {
-      await renameToken(verificationId, renameTarget.name, trimmedName);
+      await renameToken(renameTarget.name, trimmedName);
       return;
     }
 
@@ -338,27 +256,8 @@ const PersonalAccessTokensSection = () => {
       name: trimmedName,
     };
 
-    if (await startStepUp(action)) {
-      return;
-    }
-
-    setRenameTarget(undefined);
-    sessionStorage.setPendingPersonalAccessTokenRename({
-      currentName: renameTarget.name,
-      name: trimmedName,
-    });
-    sessionStorage.setPendingVerifiedAction('rename-personal-access-token');
-    setPendingReturn(getPendingReturn() ?? window.location.href);
-    navigate(verifiedActionRoute);
-  }, [
-    checkIdentityProof,
-    navigate,
-    renameTarget,
-    renameToken,
-    renameValue,
-    startStepUp,
-    verificationId,
-  ]);
+    await startStepUp(action);
+  }, [checkIdentityProof, renameTarget, renameToken, renameValue, startStepUp]);
 
   const handleConfirmRevoke = useCallback(async () => {
     if (!revokeTarget) {
@@ -368,20 +267,12 @@ const PersonalAccessTokensSection = () => {
     const targetName = revokeTarget.name;
 
     if (await checkIdentityProof()) {
-      await revokeToken(verificationId, targetName);
+      await revokeToken(targetName);
       return;
     }
 
-    if (await startStepUp({ type: 'revoke-personal-access-token', name: targetName })) {
-      return;
-    }
-
-    setRevokeTarget(undefined);
-    sessionStorage.setPendingPersonalAccessTokenRevokeName(targetName);
-    sessionStorage.setPendingVerifiedAction('revoke-personal-access-token');
-    setPendingReturn(getPendingReturn() ?? window.location.href);
-    navigate(verifiedActionRoute);
-  }, [checkIdentityProof, navigate, revokeTarget, revokeToken, startStepUp, verificationId]);
+    await startStepUp({ type: 'revoke-personal-access-token', name: targetName });
+  }, [checkIdentityProof, revokeTarget, revokeToken, startStepUp]);
 
   if (!isVisible || isScopeUnavailable) {
     return null;

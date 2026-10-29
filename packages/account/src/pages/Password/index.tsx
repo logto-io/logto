@@ -2,7 +2,7 @@ import usePasswordErrorMessage from '@experience/shared/hooks/use-password-error
 import { PasswordPolicyChecker, passwordPolicyGuard } from '@logto/core-kit';
 import { AccountCenterControlValue } from '@logto/schemas';
 import { condArray } from '@silverhand/essentials';
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,15 +12,12 @@ import { updatePassword } from '@ac/apis/account';
 import ErrorPage from '@ac/components/ErrorPage';
 import SetPassword from '@ac/components/SetPassword';
 import StepUpEntryFallback from '@ac/components/StepUpEntryFallback';
-import VerificationMethodList from '@ac/components/VerificationMethodList';
-import { isDevFeaturesEnabled } from '@ac/constants/env';
 import { passwordSuccessRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import useStepUp, { useStepUpEntry } from '@ac/hooks/use-step-up';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
 import { canSetInitialPasswordWithoutVerification } from '@ac/utils/security-page';
-import { sessionStorage } from '@ac/utils/session-storage';
 
 import styles from '../CodeFlow/index.module.scss';
 
@@ -28,14 +25,8 @@ const Password = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { loading } = useContext(LoadingContext);
-  const {
-    accountCenterSettings,
-    setVerificationId,
-    setToast,
-    experienceSettings,
-    userInfo,
-    refreshUserInfo,
-  } = useContext(PageContext);
+  const { accountCenterSettings, experienceSettings, userInfo, refreshUserInfo } =
+    useContext(PageContext);
   const updatePasswordRequest = useApi(updatePassword);
   const handleError = useErrorHandler();
   const { requestStepUp } = useStepUp();
@@ -75,16 +66,10 @@ const Password = () => {
     userInfo,
     accountCenterSettings?.fields
   );
-  const { isReady, hasFailed, verificationId } = useStepUpEntry({
+  const { isReady, hasFailed } = useStepUpEntry({
     enabled: isEnabled,
     skip: canSkipVerification,
   });
-
-  useEffect(() => {
-    if (verificationId) {
-      sessionStorage.clearRouteRestore();
-    }
-  }, [verificationId]);
 
   if (!isEnabled) {
     return (
@@ -93,11 +78,7 @@ const Password = () => {
   }
 
   if (!isReady) {
-    return isDevFeaturesEnabled ? (
-      <StepUpEntryFallback hasFailed={hasFailed} />
-    ) : (
-      <VerificationMethodList />
-    );
+    return <StepUpEntryFallback hasFailed={hasFailed} />;
   }
 
   const handleSubmit = async (password: string) => {
@@ -115,7 +96,7 @@ const Password = () => {
       return;
     }
 
-    const [error] = await updatePasswordRequest(verificationId, { password });
+    const [error] = await updatePasswordRequest({ password });
 
     if (error) {
       if (await requestStepUp(error, { type: 'enter-subpage' })) {
@@ -123,10 +104,6 @@ const Password = () => {
       }
 
       await handleError(error, {
-        'verification_record.permission_denied': async () => {
-          setVerificationId(undefined);
-          setToast(t('account_center.verification.verification_required'));
-        },
         'password.rejected': async (requestError) => {
           setErrorMessage(getErrorMessageFromBody(requestError) ?? requestError.message);
         },

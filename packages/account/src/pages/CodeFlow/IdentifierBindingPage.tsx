@@ -1,7 +1,7 @@
 import type { AccountCenter, SignInIdentifier } from '@logto/schemas';
 import { AccountCenterControlValue } from '@logto/schemas';
 import { type TFuncKey } from 'i18next';
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,12 +9,9 @@ import LoadingContext from '@ac/Providers/LoadingContextProvider/LoadingContext'
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import ErrorPage from '@ac/components/ErrorPage';
 import StepUpEntryFallback from '@ac/components/StepUpEntryFallback';
-import VerificationMethodList from '@ac/components/VerificationMethodList';
-import { isDevFeaturesEnabled } from '@ac/constants/env';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import useStepUp, { useStepUpEntry } from '@ac/hooks/use-step-up';
-import { sessionStorage } from '@ac/utils/session-storage';
 
 import IdentifierSendStep, { type IdentifierLabelKey } from './IdentifierSendStep';
 import IdentifierVerifyStep from './IdentifierVerifyStep';
@@ -55,11 +52,7 @@ type IdentifierBindingPageProps<VerifyPayload, BindPayload> = {
   ) => Promise<{
     verificationRecordId: string;
   }>;
-  readonly bindIdentifier: (
-    accessToken: string,
-    verificationRecordId: string | undefined,
-    payload: BindPayload
-  ) => Promise<unknown>;
+  readonly bindIdentifier: (accessToken: string, payload: BindPayload) => Promise<unknown>;
   readonly buildVerifyPayload: (
     identifier: string,
     verificationRecordId: string,
@@ -87,8 +80,7 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { loading } = useContext(LoadingContext);
-  const { accountCenterSettings, refreshUserInfo, setToast, setVerificationId } =
-    useContext(PageContext);
+  const { accountCenterSettings, refreshUserInfo, setToast } = useContext(PageContext);
   const [identifier, setIdentifier] = useState(initialValue);
   const [pendingIdentifier, setPendingIdentifier] = useState<string>();
   const [pendingVerificationRecordId, setPendingVerificationRecordId] = useState<string>();
@@ -101,7 +93,7 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
   const isEnabled =
     Boolean(accountCenterSettings?.enabled) &&
     accountCenterSettings?.fields[accountField] === AccountCenterControlValue.Edit;
-  const { isReady, hasFailed, verificationId } = useStepUpEntry({ enabled: isEnabled });
+  const { isReady, hasFailed } = useStepUpEntry({ enabled: isEnabled });
 
   const clearSendError = useCallback(() => {
     setErrorState((current) => ({ ...current, sendError: undefined }));
@@ -133,12 +125,6 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
   );
 
   const resetFlowErrorCodes = useMemo(() => ['verification_record.not_found'], []);
-
-  useEffect(() => {
-    if (verificationId) {
-      sessionStorage.clearRouteRestore();
-    }
-  }, [verificationId]);
 
   const handleVerifyError = useCallback(
     async (error: unknown) => {
@@ -194,7 +180,6 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
       }
 
       const [bindError] = await bindIdentifierRequest(
-        verificationId,
         buildBindPayload(pendingIdentifier, verifyResult.verificationRecordId)
       );
 
@@ -203,14 +188,7 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
           return;
         }
 
-        await handleError(bindError, {
-          // This is a global error (session expired) that requires re-verification, so we use toast
-          'verification_record.permission_denied': async () => {
-            setVerificationId(undefined);
-            resetFlow(true);
-            setToast(t('account_center.verification.verification_required'));
-          },
-        });
+        await handleError(bindError);
         return;
       }
 
@@ -233,10 +211,8 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
       requestStepUp,
       resetFlow,
       setToast,
-      setVerificationId,
       successRedirect,
       t,
-      verificationId,
       verifyCodeRequest,
     ]
   );
@@ -248,11 +224,7 @@ const IdentifierBindingPage = <VerifyPayload, BindPayload>({
   }
 
   if (!isReady) {
-    return isDevFeaturesEnabled ? (
-      <StepUpEntryFallback hasFailed={hasFailed} />
-    ) : (
-      <VerificationMethodList />
-    );
+    return <StepUpEntryFallback hasFailed={hasFailed} />;
   }
 
   return !pendingIdentifier || !pendingVerificationRecordId ? (

@@ -16,8 +16,6 @@ import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { getMfaVerifications, generateTotpSecret, createOrReplaceTotpMfa } from '@ac/apis/mfa';
 import ErrorPage from '@ac/components/ErrorPage';
 import StepUpEntryFallback from '@ac/components/StepUpEntryFallback';
-import VerificationMethodList from '@ac/components/VerificationMethodList';
-import { isDevFeaturesEnabled } from '@ac/constants/env';
 import {
   authenticatorAppSuccessRoute,
   authenticatorAppReplaceSuccessRoute,
@@ -26,7 +24,6 @@ import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
 import useStepUp, { useStepUpEntry } from '@ac/hooks/use-step-up';
 import SecondaryPageLayout from '@ac/layouts/SecondaryPageLayout';
-import { sessionStorage } from '@ac/utils/session-storage';
 
 import styles from './index.module.scss';
 
@@ -62,8 +59,7 @@ const TotpBinding = ({ isReplace }: Props) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { loading } = useContext(LoadingContext);
-  const { accountCenterSettings, experienceSettings, setVerificationId, setToast, userInfo } =
-    useContext(PageContext);
+  const { accountCenterSettings, experienceSettings, setToast, userInfo } = useContext(PageContext);
   const getMfaRequest = useApi(getMfaVerifications, { silent: true });
   const generateSecretRequest = useApi(generateTotpSecret, { silent: true });
   const createOrReplaceTotpRequest = useApi(createOrReplaceTotpMfa);
@@ -81,7 +77,7 @@ const TotpBinding = ({ isReplace }: Props) => {
     accountCenterSettings?.fields.mfa === AccountCenterControlValue.Edit &&
     isTotpEnabled(experienceSettings?.mfa);
   const isStepUpEntryEnabled = isPageEnabled && (Boolean(isReplace) || hasTotpAlready === false);
-  const { isReady, hasFailed, verificationId } = useStepUpEntry({
+  const { isReady, hasFailed } = useStepUpEntry({
     enabled: isStepUpEntryEnabled,
   });
   useEffect(() => {
@@ -126,11 +122,6 @@ const TotpBinding = ({ isReplace }: Props) => {
     };
     void generateSecret();
   }, [generateSecretRequest, handleError, hasTotpAlready, isReady, isReplace, secret, userInfo]);
-  useEffect(() => {
-    if (verificationId && hasTotpAlready === false) {
-      sessionStorage.clearRouteRestore();
-    }
-  }, [hasTotpAlready, verificationId]);
   const copySecret = useCallback(async () => {
     if (!secret) {
       return;
@@ -147,7 +138,7 @@ const TotpBinding = ({ isReplace }: Props) => {
       }
       setErrorMessage(undefined);
       const codeString = codeInput.join('');
-      const [error] = await createOrReplaceTotpRequest(verificationId, {
+      const [error] = await createOrReplaceTotpRequest({
         secret,
         code: codeString,
       });
@@ -158,10 +149,6 @@ const TotpBinding = ({ isReplace }: Props) => {
         }
 
         await handleError(error, {
-          'verification_record.permission_denied': async () => {
-            setVerificationId(undefined);
-            setToast(t('account_center.verification.verification_required'));
-          },
           'user.totp_already_in_use': async (requestError) => {
             setToast(requestError.message);
           },
@@ -191,9 +178,7 @@ const TotpBinding = ({ isReplace }: Props) => {
       requestStepUp,
       secret,
       setToast,
-      setVerificationId,
       t,
-      verificationId,
     ]
   );
 
@@ -226,11 +211,7 @@ const TotpBinding = ({ isReplace }: Props) => {
     return errorPage('account_center.mfa.totp_already_added');
   }
   if (!isReady) {
-    return isDevFeaturesEnabled ? (
-      <StepUpEntryFallback hasFailed={hasFailed} />
-    ) : (
-      <VerificationMethodList />
-    );
+    return <StepUpEntryFallback hasFailed={hasFailed} />;
   }
 
   return (

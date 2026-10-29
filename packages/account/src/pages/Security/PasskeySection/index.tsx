@@ -7,14 +7,13 @@ import { useNavigate } from 'react-router-dom';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import WebAuthnIcon from '@ac/assets/icons/factor-webauthn.svg?react';
 import ToggleSwitch from '@ac/components/ToggleSwitch';
-import { passkeyAddRoute, passkeyManageRoute, verifiedActionRoute } from '@ac/constants/routes';
+import { passkeyAddRoute, passkeyManageRoute } from '@ac/constants/routes';
 import { getPendingReturn, setPendingReturn } from '@ac/utils/account-center-route';
 import {
   getPasskeyFieldControl,
   hasVisiblePasskeySection,
   isEditableField,
 } from '@ac/utils/security-page';
-import { sessionStorage } from '@ac/utils/session-storage';
 import { consumePendingStepUpAction } from '@ac/utils/step-up';
 
 import { getLogtoConfig, updateLogtoConfig } from '../../../apis/logto-config';
@@ -31,9 +30,8 @@ import styles from './index.module.scss';
 const PasskeySection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { accountCenterSettings, experienceSettings, setVerificationId, setToast } =
-    useContext(PageContext);
-  const { verificationId, checkIdentityProof } = useIdentityProof();
+  const { accountCenterSettings, experienceSettings } = useContext(PageContext);
+  const { checkIdentityProof } = useIdentityProof();
   const { requestStepUp, startStepUp } = useStepUp();
   const { mfaVerifications, isLoading, hasLoaded } = useMfaVerifications();
   const handleError = useErrorHandler();
@@ -82,8 +80,8 @@ const PasskeySection = () => {
   );
 
   const updatePasskeySignInSkipped = useCallback(
-    async (verifiedId: string | undefined, skipped: boolean, isResumed = false) => {
-      const [error] = await updateLogtoConfigApi(verifiedId, { passkeySignIn: { skipped } });
+    async (skipped: boolean, isResumed = false) => {
+      const [error] = await updateLogtoConfigApi({ passkeySignIn: { skipped } });
 
       if (error) {
         const action = skipped ? 'disable-passkey-prompt' : 'enable-passkey-prompt';
@@ -92,18 +90,13 @@ const PasskeySection = () => {
           return;
         }
 
-        await handleError(error, {
-          'verification_record.permission_denied': async () => {
-            setVerificationId(undefined);
-            setToast(t('account_center.verification.verification_required'));
-          },
-        });
+        await handleError(error);
         return;
       }
 
       setPasskeySignInSkipped(skipped);
     },
-    [handleError, requestStepUp, setToast, setVerificationId, t, updateLogtoConfigApi]
+    [handleError, requestStepUp, updateLogtoConfigApi]
   );
 
   const handleToggleChange = useCallback(
@@ -111,44 +104,24 @@ const PasskeySection = () => {
       const skipped = !checked;
 
       if (await checkIdentityProof()) {
-        await updatePasskeySignInSkipped(verificationId, skipped);
+        await updatePasskeySignInSkipped(skipped);
         return;
       }
 
       const action = checked ? 'enable-passkey-prompt' : 'disable-passkey-prompt';
 
-      if (await startStepUp({ type: action })) {
-        return;
-      }
-
-      sessionStorage.setPendingVerifiedAction(action);
-      navigateTo(verifiedActionRoute);
+      await startStepUp({ type: action });
     },
-    [checkIdentityProof, navigateTo, startStepUp, updatePasskeySignInSkipped, verificationId]
+    [checkIdentityProof, startStepUp, updatePasskeySignInSkipped]
   );
 
   useEffect(() => {
     const action = consumePendingStepUpAction(['enable-passkey-prompt', 'disable-passkey-prompt']);
 
     if (action) {
-      void updatePasskeySignInSkipped(undefined, action.type === 'disable-passkey-prompt', true);
+      void updatePasskeySignInSkipped(action.type === 'disable-passkey-prompt', true);
     }
   }, [updatePasskeySignInSkipped]);
-
-  useEffect(() => {
-    if (!verificationId) {
-      return;
-    }
-
-    const pendingAction = sessionStorage.getPendingVerifiedAction();
-
-    if (pendingAction !== 'enable-passkey-prompt' && pendingAction !== 'disable-passkey-prompt') {
-      return;
-    }
-
-    sessionStorage.clearPendingVerifiedAction();
-    void updatePasskeySignInSkipped(verificationId, pendingAction === 'disable-passkey-prompt');
-  }, [updatePasskeySignInSkipped, verificationId]);
 
   if (!isSectionVisible) {
     return null;
