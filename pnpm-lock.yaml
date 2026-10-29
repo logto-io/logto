@@ -516,8 +516,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       iconv-lite:
-        specifier: ^0.6.3
-        version: 0.6.3
+        specifier: ^0.7.0
+        version: 0.7.3
       snakecase-keys:
         specifier: ^8.0.1
         version: 8.0.1
@@ -583,8 +583,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       iconv-lite:
-        specifier: ^0.6.3
-        version: 0.6.3
+        specifier: ^0.7.0
+        version: 0.7.3
       snakecase-keys:
         specifier: ^8.0.1
         version: 8.0.1
@@ -1074,8 +1074,8 @@ importers:
         specifier: ^14.0.0
         version: 14.0.0
       iconv-lite:
-        specifier: ^0.6.3
-        version: 0.6.3
+        specifier: ^0.7.0
+        version: 0.7.3
       snakecase-keys:
         specifier: ^8.0.1
         version: 8.0.1
@@ -4265,8 +4265,8 @@ importers:
         specifier: ^22.4.15
         version: 22.4.15
       iconv-lite:
-        specifier: 0.6.3
-        version: 0.6.3
+        specifier: 0.7.3
+        version: 0.7.3
       jose:
         specifier: ^6.2.3
         version: 6.2.3
@@ -13328,7 +13328,7 @@ packages:
     resolution: {integrity: sha512-uTqF9MuPraAQ+IsnPf366RG4cP9RtUi7MLO1N3KEc+wb0a6yKpeL0lmk2IB1jY5KHPAlTc6T/JRdC/YqxHNwkQ==}
 
   oidc-provider@https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/513c523c0e68ee6112da8c871cce86204a136163:
-    resolution: {gitHosted: true, integrity: sha512-KaUwCyEEDSZILL2ua2f9SsQ2oSrgq04JAmkQzq2gj7VJyREH3zQS14G7MhfDYxEKjAhO4JZ6bUGzZjW/0Q5pEg==, tarball: https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/513c523c0e68ee6112da8c871cce86204a136163}
+    resolution: {gitHosted: true, tarball: https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/513c523c0e68ee6112da8c871cce86204a136163}
     version: 9.11.3
 
   on-finished@2.4.1:
