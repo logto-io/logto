@@ -21,7 +21,7 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
       queries: {
         oneTimeTokens: {
           deleteOneTimeTokenById,
-          findTotalNumberOfOneTimeTokens,
+          countOneTimeTokens,
           insertOneTimeToken,
           updateExpiredOneTimeTokensStatusByEmail,
           getOneTimeTokens,
@@ -52,7 +52,7 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
       const { disabled: isPaginationDisabled } = pagination;
 
       const [{ count }, oneTimeTokens] = await Promise.all([
-        findTotalNumberOfOneTimeTokens(),
+        countOneTimeTokens({ email, status }),
         getOneTimeTokens({ email, status }, cond(!isPaginationDisabled && pagination)),
       ]);
 
