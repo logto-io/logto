@@ -419,7 +419,12 @@ export class Mfa {
         Boolean(this.data.webAuthn?.length) ||
         mfaVerifications.some((verification) => verification.type === MfaFactor.WebAuthn);
 
-      assertThat(hasPasskey, new RequestError({ code: 'user.passkey_preferred', status: 422 }));
+      // Do not prompt for a passkey the binding route would reject: a sign-in that skipped MFA
+      // verification may not enroll a factor until it proves an existing one.
+      assertThat(
+        hasPasskey || !(await this.interactionContext.canBindMfa()),
+        new RequestError({ code: 'user.passkey_preferred', status: 422 })
+      );
     }
   }
 
@@ -598,12 +603,24 @@ export class Mfa {
       );
     }
 
-    // Optional suggestion: Let Mfa decide whether to suggest additional binding during registration
-    await this.guardAdditionalBindingSuggestion(factorsInUser, configuredFactors, identifiedUser);
+    // The same predicate gates the optional suggestion and backup-code enrollment: a sign-in that
+    // may not bind a factor must not ask the user to bind one.
+    const canBindMfa = await this.interactionContext.canBindMfa();
 
+    // Optional suggestion: Let Mfa decide whether to suggest additional binding during registration
+    await this.guardAdditionalBindingSuggestion(
+      factorsInUser,
+      configuredFactors,
+      identifiedUser,
+      canBindMfa
+    );
+
+    // A sign-in that may not bind a factor must not require backup codes it cannot enroll.
     // Assert backup code
     assertThat(
-      !factors.includes(MfaFactor.BackupCode) || linkedFactors.includes(MfaFactor.BackupCode),
+      !factors.includes(MfaFactor.BackupCode) ||
+        linkedFactors.includes(MfaFactor.BackupCode) ||
+        !canBindMfa,
       new RequestError({
         code: 'session.mfa.backup_code_required',
         status: 422,
@@ -622,7 +639,8 @@ export class Mfa {
   private async guardAdditionalBindingSuggestion(
     factorsInUser: MfaFactor[],
     availableFactors: MfaFactor[],
-    identifiedUser: User
+    identifiedUser: User,
+    canBindMfa: boolean
   ) {
     // Respect user's choice to skip suggestion for this interaction.
     if (this.additionalBindingSuggestionSkipped) {
@@ -633,6 +651,13 @@ export class Mfa {
 
     // Respect user's persisted choice to skip additional MFA suggestion.
     if (isAdditionalBindingSuggestionSkipped(logtoConfig)) {
+      return;
+    }
+
+    // A sign-in that may not enroll a factor must not offer enrollment: with existing factors it
+    // would let a password-only visitor bind a new factor without proving one. A user with no
+    // factor yet is onboarding, and registration has just proven the first factor.
+    if (!canBindMfa) {
       return;
     }
 

@@ -35,12 +35,14 @@ const createMfa = ({
   },
   currentProfile = {},
   organizations = [],
+  canBindMfa = true,
 }: {
   mfaSettings?: MfaSettings;
   interactionEvent?: InteractionEvent;
   user?: Partial<User>;
   currentProfile?: Record<string, unknown>;
   organizations?: Readonly<OrganizationWithRoles[]>;
+  canBindMfa?: boolean;
 } = {}) => {
   const getIdentifiedUser = jest.fn(async () => user as User);
   const interactionContext: InteractionContext = {
@@ -56,6 +58,7 @@ const createMfa = ({
       throw new Error('should not be called');
     },
     getCurrentProfile: () => currentProfile,
+    canBindMfa: async () => canBindMfa,
   };
 
   const getOrganizationsByUserId = jest.fn(async () => organizations);
@@ -402,6 +405,121 @@ describe('Mfa.assertMfaFulfilled', () => {
 
     await expect(mfa.assertMfaFulfilled()).resolves.toBeUndefined();
   });
+
+  it('does not suggest additional MFA on sign-in when existing factors were not verified', async () => {
+    const { mfa } = createMfa({
+      mfaSettings: {
+        policy: MfaPolicy.Mandatory,
+        factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
+        organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+      },
+      interactionEvent: InteractionEvent.SignIn,
+      user: {
+        id: 'user-id',
+        logtoConfig: {},
+        primaryEmail: 'foo@example.com',
+        mfaVerifications: [],
+      },
+      canBindMfa: false,
+    });
+    const { signInExperienceValidator } = mfa as unknown as {
+      signInExperienceValidator: SignInExperienceValidator;
+    };
+    jest.spyOn(signInExperienceValidator, 'getSignInExperienceData').mockResolvedValue({
+      signUp: { identifiers: [SignInIdentifier.Email] },
+      passkeySignIn: { enabled: false },
+    } as never);
+
+    await expect(mfa.assertMfaFulfilled()).resolves.toBeUndefined();
+  });
+
+  it('suggests additional MFA on sign-in after an existing factor was verified', async () => {
+    const { mfa } = createMfa({
+      mfaSettings: {
+        policy: MfaPolicy.Mandatory,
+        factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
+        organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+      },
+      interactionEvent: InteractionEvent.SignIn,
+      user: {
+        id: 'user-id',
+        logtoConfig: {},
+        primaryEmail: 'foo@example.com',
+        mfaVerifications: [],
+      },
+      canBindMfa: true,
+    });
+    const { signInExperienceValidator } = mfa as unknown as {
+      signInExperienceValidator: SignInExperienceValidator;
+    };
+    jest.spyOn(signInExperienceValidator, 'getSignInExperienceData').mockResolvedValue({
+      signUp: { identifiers: [SignInIdentifier.Email] },
+      passkeySignIn: { enabled: false },
+    } as never);
+
+    await expect(mfa.assertMfaFulfilled()).rejects.toMatchObject({
+      code: 'session.mfa.suggest_additional_mfa',
+      status: 422,
+      data: {
+        availableFactors: [MfaFactor.TOTP, MfaFactor.EmailVerificationCode],
+      },
+    });
+  });
+
+  it('does not require backup codes on a sign-in that may not bind MFA', async () => {
+    const { mfa } = createMfa({
+      mfaSettings: {
+        policy: MfaPolicy.Mandatory,
+        factors: [MfaFactor.TOTP, MfaFactor.BackupCode],
+        organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+      },
+      interactionEvent: InteractionEvent.SignIn,
+      user: {
+        id: 'user-id',
+        logtoConfig: {},
+        mfaVerifications: [
+          {
+            id: 'totp-id',
+            type: MfaFactor.TOTP,
+            key: 'totp-secret',
+            createdAt: new Date(0).toISOString(),
+          },
+        ],
+      },
+      canBindMfa: false,
+    });
+
+    await expect(mfa.assertMfaFulfilled()).resolves.toBeUndefined();
+  });
+
+  it('requires backup codes when the sign-in may bind MFA', async () => {
+    const { mfa } = createMfa({
+      mfaSettings: {
+        policy: MfaPolicy.Mandatory,
+        factors: [MfaFactor.TOTP, MfaFactor.BackupCode],
+        organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+      },
+      interactionEvent: InteractionEvent.SignIn,
+      user: {
+        id: 'user-id',
+        logtoConfig: {},
+        mfaVerifications: [
+          {
+            id: 'totp-id',
+            type: MfaFactor.TOTP,
+            key: 'totp-secret',
+            createdAt: new Date(0).toISOString(),
+          },
+        ],
+      },
+      canBindMfa: true,
+    });
+
+    await expect(mfa.assertMfaFulfilled()).rejects.toMatchObject({
+      code: 'session.mfa.backup_code_required',
+      status: 422,
+    });
+  });
 });
 
 describe('Mfa.skip', () => {
@@ -462,6 +580,39 @@ describe('Mfa.skip', () => {
     });
 
     await expect(mfa.skip()).resolves.toBeUndefined();
+  });
+});
+
+const createPasskeyMfa = (canBindMfa: boolean) => {
+  const { mfa } = createMfa({
+    interactionEvent: InteractionEvent.SignIn,
+    user: {
+      id: 'user-id',
+      logtoConfig: {},
+      mfaVerifications: [],
+    },
+    canBindMfa,
+  });
+  const { signInExperienceValidator } = mfa as unknown as {
+    signInExperienceValidator: SignInExperienceValidator;
+  };
+  jest.spyOn(signInExperienceValidator, 'getSignInExperienceData').mockResolvedValue({
+    passkeySignIn: { enabled: true },
+  } as never);
+
+  return mfa;
+};
+
+describe('Mfa.assertPasskeySignInFulfilled', () => {
+  it('does not prompt when the sign-in may not bind MFA', async () => {
+    await expect(createPasskeyMfa(false).assertPasskeySignInFulfilled()).resolves.toBeUndefined();
+  });
+
+  it('prompts when the sign-in may bind MFA', async () => {
+    await expect(createPasskeyMfa(true).assertPasskeySignInFulfilled()).rejects.toMatchObject({
+      code: 'user.passkey_preferred',
+      status: 422,
+    });
   });
 });
 /* eslint-enable max-lines */

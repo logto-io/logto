@@ -248,6 +248,9 @@
           "400": {
             "description": "Invalid request. <br/>- `session.verification_failed:` The MFA verification record is invalid or not verified. <br/>- `session.mfa.mfa_factor_not_enabled:` The MFA factor is not enabled in the sign-in experience settings. <br/>- `session.mfa.pending_info_not_found:` The MFA verification record does not have the required information to bind the MFA verification."
           },
+          "403": {
+            "description": "Forbidden. <br/>- `session.mfa.require_mfa_verification:` The sign-in has existing MFA factors and must verify one before binding a new factor."
+          },
           "404": {
             "description": "Entity not found. <br/> - `session.identifier_not_found:` The user has not been identified yet. The MFA verification can only be added to a identified user. <br/>- `session.verification_session_not_found:` The MFA verification record is not found."
           },
@@ -299,6 +302,9 @@
           },
           "400": {
             "description": "Invalid request. <br/>- `session.verification_failed:` The WebAuthn verification record is invalid or not verified. <br/>- `session.mfa.pending_info_not_found:` The verification record does not have the required registration data."
+          },
+          "403": {
+            "description": "Forbidden. <br/>- `session.mfa.require_mfa_verification:` The sign-in has existing MFA factors and must verify one before binding a new factor."
           },
           "404": {
             "description": "Entity not found. <br/>- `session.identifier_not_found:` The user has not been identified yet. <br/>- `session.verification_session_not_found:` The WebAuthn verification record is not found."

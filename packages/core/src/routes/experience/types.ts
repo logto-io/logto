@@ -191,6 +191,8 @@ export type InteractionContext = {
   /** Record the proof for a password established through the profile, which has no record. */
   recordEstablishedPassword: () => void;
   getCurrentProfile: () => InteractionProfile;
+  /** Whether this interaction may enroll an MFA factor; see `ExperienceInteraction.canBindMfa`. */
+  canBindMfa: () => Promise<boolean>;
 };
 
 export type ExperienceInteractionRouterContext<ContextT extends WithLogContext = WithLogContext> =

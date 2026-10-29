@@ -181,6 +181,12 @@ const buildMfaMaskedIdentifiers = (
     : {}),
 });
 
+/** The factors a sign-in must verify before it may enroll another MFA factor. */
+type MfaBindingBlock = {
+  availableFactors: MfaFactor[];
+  maskedIdentifiers: Record<string, string>;
+};
+
 /**
  * Whether a proof records an MFA factor enrolled and bound in this interaction, as opposed to a
  * first factor established here (a `1fa`-class `bind`, e.g. a password set through the profile).
@@ -278,6 +284,7 @@ export default class ExperienceInteraction {
         this.authenticationProofs.stageEstablishedPassword();
       },
       getCurrentProfile: () => this.profile.data,
+      canBindMfa: async () => this.canBindMfa(),
     };
 
     this.adaptiveMfaValidator = new AdaptiveMfaValidator({
@@ -458,7 +465,7 @@ export default class ExperienceInteraction {
       new RequestError({ code: 'session.invalid_interaction_type', status: 400 })
     );
 
-    const verificationRecord = this.consumeForIdentify(verificationId);
+    const verificationRecord = this.getVerificationRecordById(verificationId);
 
     log?.append({
       verification: verificationRecord.toJson(),
@@ -495,6 +502,10 @@ export default class ExperienceInteraction {
       !this.subjectUserId || this.subjectUserId === id,
       new RequestError({ code: 'session.identity_conflict', status: this.isStepUp ? 403 : 409 })
     );
+
+    // Stage only after the record resolved to this interaction's user: a verified record for
+    // another account must not leave an identifying proof behind.
+    this.authenticationProofs.stage(verificationRecord, AuthenticationProofRole.Identify);
 
     if (this.userId) {
       return;
@@ -680,11 +691,15 @@ export default class ExperienceInteraction {
     const pursued = await this.getPursuedRequestedAcr();
     const isRequestedMfaUnmet = pursued?.acr === LogtoAcr.Mfa;
 
+    // Read the user before the exemptions: `verifiedInteractionGuard` relies on this guard to
+    // reject an interaction that identified nobody, and an exemption must never answer for an
+    // account that was never identified.
+    const user = await this.getIdentifiedUser();
+
     if (!isRequestedMfaUnmet && this.isMfaGateFulfilled()) {
       return;
     }
 
-    const user = await this.getIdentifiedUser();
     const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
     const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(log);
 
@@ -739,6 +754,39 @@ export default class ExperienceInteraction {
         maskedIdentifiers: buildMfaMaskedIdentifiers(availableFactors, user),
       }
     );
+  }
+
+  /**
+   * Whether this interaction may enroll an MFA factor.
+   *
+   * Registration and pure step-up always may. On sign-in, a user with no enabled factor yet may
+   * enroll (onboarding), and a verified MFA challenge, SSO identity or passkey sign-in opens
+   * enrollment. A password-only sign-in that skipped the MFA gate may not.
+   */
+  public async canBindMfa() {
+    return !(await this.getMfaBindingBlock());
+  }
+
+  /**
+   * Guard MFA factor enrollment during sign-in.
+   *
+   * A sign-in can pass {@link guardMfaVerificationStatus} without answering an MFA challenge:
+   * adaptive MFA may not trigger, a trusted device may satisfy the gate, or optional MFA may be
+   * skipped. In those cases a user who already has MFA factors must not bind a new one, or a
+   * password-only visitor could enroll their own authenticator on the account. A user with no
+   * factor yet may still enroll (onboarding), and a verified MFA challenge, SSO identity or
+   * passkey sign-in opens enrollment.
+   *
+   * @throws {RequestError} with 403 if the user has enabled MFA factors but did not verify one
+   */
+  public async guardMfaBinding() {
+    const block = await this.getMfaBindingBlock();
+
+    if (!block) {
+      return;
+    }
+
+    throw new RequestError({ code: 'session.mfa.require_mfa_verification', status: 403 }, block);
   }
 
   /**
@@ -1654,6 +1702,70 @@ export default class ExperienceInteraction {
   }
 
   /**
+   * The factors a sign-in must verify before it may enroll another MFA factor, or `undefined`
+   * when enrollment is allowed.
+   *
+   * Mirrors {@link guardMfaVerificationStatus}: a verified SSO identity or sign-in passkey
+   * satisfies the gate, and a requested `mfa` only accepts a factor pairable with the proven first
+   * factor that the eligibility can also deliver. Enrollment is the only way forward only when a
+   * first factor is proven and nothing can pair with it; without one, the enabled factors still
+   * have to be proven first.
+   */
+  private async getMfaBindingBlock(): Promise<MfaBindingBlock | undefined> {
+    if (this.interactionEvent !== InteractionEvent.SignIn || this.isStepUp) {
+      return;
+    }
+
+    const pursued = await this.getPursuedRequestedAcr();
+    const isRequestedMfaUnmet = pursued?.acr === LogtoAcr.Mfa;
+
+    // Mirrors `guardMfaVerificationStatus`: an unidentified interaction fails before any
+    // exemption can answer for it.
+    const user = await this.getIdentifiedUser();
+
+    if (!isRequestedMfaUnmet && this.isMfaGateFulfilled()) {
+      return;
+    }
+
+    const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
+    const mfaValidator = new MfaValidator(mfaSettings, user);
+    const userFactors = mfaValidator.availableUserMfaVerificationTypes;
+
+    // Without a fresh first factor the pairable list is empty because the pair has no first side
+    // yet, not because there is nothing to challenge: keep the full list so an account with
+    // factors must still prove one before it may enroll another. A factor the eligibility cannot
+    // deliver is dropped, exactly as the gate drops it.
+    const availableFactors =
+      isRequestedMfaUnmet && this.hasFreshFirstFactor
+        ? this.getPairableMfaFactors(userFactors).filter((factor) =>
+            (pursued.decision?.availableMethods ?? []).includes(mfaFactorToVerificationType[factor])
+          )
+        : userFactors;
+
+    // While a requested `mfa` is unmet, a verified record of a non-pairable factor does not lift
+    // the request: only a pairable factor counts, and verifying one would have cleared the
+    // request already. This mirrors `guardMfaVerificationStatus`.
+    const isMfaVerified =
+      !isRequestedMfaUnmet && mfaValidator.isMfaVerified(this.verificationRecordsArray);
+
+    // A factor enrolled in this interaction keeps enrollment open for the rest of it: the first
+    // enrollment was licensed by this guard, and backup codes or further factors belong to the
+    // same onboarding.
+    const hasEnrolledFactor = this.authenticationProofs.proofs.some((proof) =>
+      isEnrolledFactorProof(proof)
+    );
+
+    if (availableFactors.length === 0 || isMfaVerified || hasEnrolledFactor) {
+      return;
+    }
+
+    return {
+      availableFactors,
+      maskedIdentifiers: buildMfaMaskedIdentifiers(availableFactors, user),
+    };
+  }
+
+  /**
    * The factors that can fill the `mfa` side of a pair with the first factors this interaction has
    * proven: a factor is kept when one of those first factors is of a different kind, so the two
    * together reach `mfa`. A factor of the same kind as every proven first factor is dropped,
@@ -2068,28 +2180,47 @@ export default class ExperienceInteraction {
     return record;
   }
 
-  /** Fetch a verification record for identifying the user with it, recording the `identify` proof. */
-  private consumeForIdentify(verificationId: string) {
-    const record = this.getVerificationRecordById(verificationId);
-    this.authenticationProofs.stage(record, AuthenticationProofRole.Identify);
-
-    return record;
+  /** Whether the record was the one that created or identified the interaction's user. */
+  private hasAuthenticationProof(recordId: string, roles: readonly AuthenticationProofRole[]) {
+    return this.authenticationProofs.proofs.some(
+      ({ id, role }) => id === recordId && roles.includes(role)
+    );
   }
 
   private get hasVerifiedSsoIdentity() {
     const ssoVerificationRecord = this.verificationRecords.get(VerificationType.EnterpriseSso);
 
-    return Boolean(ssoVerificationRecord?.isVerified);
+    return Boolean(
+      ssoVerificationRecord?.isVerified &&
+        this.hasAuthenticationProof(ssoVerificationRecord.id, [
+          AuthenticationProofRole.Identify,
+          AuthenticationProofRole.Create,
+        ])
+    );
   }
 
   private get hasVerifiedSocialIdentity() {
     const socialVerificationRecord = this.verificationRecords.get(VerificationType.Social);
-    return Boolean(socialVerificationRecord?.isVerified);
+
+    return Boolean(
+      socialVerificationRecord?.isVerified &&
+        this.hasAuthenticationProof(socialVerificationRecord.id, [
+          AuthenticationProofRole.Identify,
+          AuthenticationProofRole.Create,
+        ])
+    );
   }
 
   private get hasVerifiedSignInPasskey() {
     const webAuthnVerificationRecord = this.verificationRecords.get(VerificationType.SignInPasskey);
-    return Boolean(webAuthnVerificationRecord?.isVerified);
+
+    return Boolean(
+      webAuthnVerificationRecord?.isVerified &&
+        webAuthnVerificationRecord.userId === this.subjectUserId &&
+        this.hasAuthenticationProof(webAuthnVerificationRecord.id, [
+          AuthenticationProofRole.Identify,
+        ])
+    );
   }
 
   /**
