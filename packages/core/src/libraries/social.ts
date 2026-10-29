@@ -13,6 +13,7 @@ import type { ConnectorLibrary } from '#src/libraries/connector.js';
 import { type WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
+import { assertNoAuthorizationError } from '#src/utils/connectors/authorization-error.js';
 import type { LogtoConnector } from '#src/utils/connectors/types.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 import {
@@ -81,6 +82,8 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
       })
     );
 
+    assertNoAuthorizationError(data);
+
     return connector.getUserInfo(data, getConnectorSession);
   };
 
@@ -118,6 +121,8 @@ export const createSocialLibrary = (queries: Queries, connectorLibrary: Connecto
       getUserInfo,
       getTokenResponseAndUserInfo,
     } = connector;
+
+    assertNoAuthorizationError(data);
 
     if (enableTokenStorage && isTokenStorageSupported && getTokenResponseAndUserInfo) {
       const { userInfo, tokenResponse } = await getTokenResponseAndUserInfo(

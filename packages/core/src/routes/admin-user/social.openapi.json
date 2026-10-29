@@ -22,6 +22,9 @@
         "responses": {
           "200": {
             "description": "A new identity is linked to the user."
+          },
+          "401": {
+            "description": "The user declined the authorization or cancelled at the social provider (`connector.authorization_failed`, with the provider's `error` and `error_description`)."
           }
         },
         "summary": "Link social identity to user",

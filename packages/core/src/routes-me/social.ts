@@ -6,6 +6,7 @@ import { object, record, string, unknown } from 'zod';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
+import { assertNoAuthorizationError } from '#src/utils/connectors/authorization-error.js';
 import { transpileLogtoConnector } from '#src/utils/connectors/index.js';
 
 import type { RouterInitArgs } from '../routes/types.js';
@@ -118,6 +119,8 @@ export default function socialRoutes<T extends AuthedMeRouter>(
        * Same as above, passing `notImplemented` only works for connectors not relying on session storage.
        * E.g. Google and GitHub
        */
+      assertNoAuthorizationError(connectorData);
+
       const socialUserInfo = await connector.getUserInfo(connectorData, notImplemented);
 
       assertThat(
