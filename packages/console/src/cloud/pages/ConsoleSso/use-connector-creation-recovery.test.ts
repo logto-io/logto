@@ -26,6 +26,51 @@ const deferred = <T>() => {
   return { promise, resolve: resolveResponse };
 };
 
+it.each([409, 503, 'network'])(
+  'clears an unstarted creation after a preview failure (%s) and rechecks coverage',
+  async (status) => {
+    const failure = status === 'network' ? new Error('Network failed') : { response: { status } };
+    const first = renderCreation();
+    await waitFor(() => {
+      expect(first.result.current.billing.isBillingReady).toBe(true);
+    });
+    mockApi.get.mockClear().mockRejectedValueOnce(failure);
+    await act(async () => {
+      await first.result.current.create(SsoProviderName.OIDC);
+    });
+    expect(toastResponseError).toHaveBeenCalledWith(failure);
+    expect(first.result.current.status).toBe('error');
+    expect(first.result.current.isSubmitting).toBe(false);
+    expect(first.result.current.operation).toBeUndefined();
+    expect(readPendingConnectorCreation('alice')).toBeUndefined();
+    expect(mockChooseBillingCustomer).not.toHaveBeenCalled();
+    expect(mockApi.post).not.toHaveBeenCalled();
+    expect(mockApi.delete).not.toHaveBeenCalled();
+    await waitFor(() => {
+      expect(first.result.current.billing.isBillingReady).toBe(true);
+    });
+    expect(mockApi.get).toHaveBeenCalledWith('/api/me/logto-enterprises');
+    first.unmount();
+
+    const { result } = renderCreation();
+    expect(result.current.operation).toBeUndefined();
+    await waitFor(() => {
+      expect(result.current.billing.isBillingReady).toBe(true);
+    });
+    mockApi.get.mockResolvedValueOnce({
+      status: 'subscription_exists',
+      subscriptionId: 'existing-sub',
+    });
+    await act(async () => {
+      await result.current.create(SsoProviderName.SAML);
+    });
+    expect(mockApi.post).toHaveBeenCalledWith('/api/me/console-sso/connectors', {
+      body: { providerName: SsoProviderName.SAML, stripeUserSubscriptionId: 'existing-sub' },
+    });
+    expect(onCreated).toHaveBeenCalledWith('connector-one');
+  }
+);
+
 it.each(['open', 'expired'])(
   'checks a recovered %s session immediately without continued polling',
   async (status) => {

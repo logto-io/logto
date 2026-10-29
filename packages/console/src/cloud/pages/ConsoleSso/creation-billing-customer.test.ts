@@ -114,6 +114,36 @@ it('does not preview again once a billing account was chosen for this Checkout',
   expect(chooseBillingCustomer).not.toHaveBeenCalled();
 });
 
+it('preserves a restarted Checkout when its preview fails', async () => {
+  const saved = savePendingConnectorCreation('alice', {
+    ...operation,
+    checkoutKey: 'retry-key',
+  });
+  const failure = new Error('Preview failed');
+  api.get.mockRejectedValueOnce(failure);
+  await expect(continueConnectorCreation('alice', saved, getApi, options(true))).rejects.toBe(
+    failure
+  );
+  expect(readPendingConnectorCreation('alice')).toEqual(saved);
+  expect(chooseBillingCustomer).not.toHaveBeenCalled();
+  expect(api.post).not.toHaveBeenCalled();
+});
+
+it('preserves a newer operation when an old preview fails', async () => {
+  const replacement = { ...operation, key: 'another-creation' };
+  const failure = new Error('Preview failed');
+  api.get.mockImplementationOnce(async () => {
+    savePendingConnectorCreation('alice', replacement);
+    throw failure;
+  });
+  await expect(continueConnectorCreation('alice', operation, getApi, options(true))).rejects.toBe(
+    failure
+  );
+  expect(readPendingConnectorCreation('alice')).toEqual(replacement);
+  expect(chooseBillingCustomer).not.toHaveBeenCalled();
+  expect(api.post).not.toHaveBeenCalled();
+});
+
 it('does not start Checkout when the billing account dialog is canceled', async () => {
   // eslint-disable-next-line unicorn/no-useless-undefined -- The dialog resolves to nothing on cancel.
   chooseBillingCustomer.mockResolvedValue(undefined);
