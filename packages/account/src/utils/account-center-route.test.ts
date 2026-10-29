@@ -19,6 +19,7 @@ const setLocation = (pathname: string, search = '', origin = 'http://localhost')
 };
 
 const mockReplaceState = jest.fn();
+const mockPushState = jest.fn();
 
 describe('account-center-route', () => {
   beforeEach(() => {
@@ -26,6 +27,8 @@ describe('account-center-route', () => {
     jest.clearAllMocks();
     // eslint-disable-next-line @silverhand/fp/no-mutation
     window.history.replaceState = mockReplaceState;
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    window.history.pushState = mockPushState;
   });
 
   describe('handleAccountCenterRoute – route restore', () => {
@@ -36,6 +39,17 @@ describe('account-center-route', () => {
       handleAccountCenterRoute();
 
       expect(mockReplaceState).toHaveBeenCalledWith({}, '', '/account/security');
+      expect(mockPushState).not.toHaveBeenCalled();
+    });
+
+    it('keeps the base path entry below a restored task flow', () => {
+      accountStorage.routeRestore.set('/account/password');
+      setLocation('/account');
+
+      handleAccountCenterRoute();
+
+      expect(mockPushState).toHaveBeenCalledWith({}, '', '/account/password');
+      expect(mockReplaceState).not.toHaveBeenCalled();
     });
 
     it('clears the stored route after restoration (one-time use)', () => {
