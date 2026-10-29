@@ -16,6 +16,7 @@ import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { getMfaVerifications, deleteMfaVerification, updateWebAuthnName } from '@ac/apis/mfa';
 import ConfirmModal from '@ac/components/ConfirmModal';
 import ErrorPage from '@ac/components/ErrorPage';
+import GlobalLoading from '@ac/components/GlobalLoading';
 import { passkeyAddRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
 import useErrorHandler from '@ac/hooks/use-error-handler';
@@ -236,7 +237,7 @@ const PasskeyView = () => {
   }
 
   if (!passkeys) {
-    return null;
+    return <GlobalLoading />;
   }
 
   return (

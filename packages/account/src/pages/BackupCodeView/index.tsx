@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import PageContext from '@ac/Providers/PageContextProvider/PageContext';
 import { type BackupCodeItem, getBackupCodesList } from '@ac/apis/mfa';
 import ErrorPage from '@ac/components/ErrorPage';
+import GlobalLoading from '@ac/components/GlobalLoading';
 import StepUpEntryFallback from '@ac/components/StepUpEntryFallback';
 import { backupCodesRegenerateRoute } from '@ac/constants/routes';
 import useApi from '@ac/hooks/use-api';
@@ -102,7 +103,7 @@ const BackupCodeView = () => {
   }
 
   if (!codes) {
-    return null;
+    return <GlobalLoading />;
   }
 
   const backupCodeTextContent = codes
