@@ -4,6 +4,7 @@ import type { Middleware } from 'koa';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { toSafeConnectorErrorData } from '#src/utils/sanitize-error.js';
 
 export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware<StateT, ContextT> {
   // Too many error types :-)
@@ -16,7 +17,10 @@ export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware
         throw error;
       }
 
-      const { code, data } = error;
+      const { code } = error;
+      // A `got` error wrapped as `data` carries the request, secrets included: `data` reaches the
+      // client through `RequestError.toBody()` and the audit log.
+      const data = toSafeConnectorErrorData(error.data);
 
       const errorDescriptionGuard = z.object({ errorDescription: z.string() });
       const message =

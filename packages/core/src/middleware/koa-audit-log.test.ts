@@ -1,6 +1,8 @@
 /* eslint-disable max-lines -- Audit log middleware behavior is covered end to end. */
+import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import type { LogKey } from '@logto/schemas';
 import { LogResult, VerificationType } from '@logto/schemas';
+import { Options, RequestError as GotRequestError } from 'got';
 import i18next from 'i18next';
 import type { Context } from 'koa';
 import Router, { type IRouterParamContext } from 'koa-router';
@@ -486,6 +488,41 @@ describe('koaAuditLog middleware', () => {
           userAgentParsed,
         },
       });
+    });
+
+    it('should log a connector error wrapping a `got` request error without the request', async () => {
+      const ctx: TestContext = createTestContext({ 'user-agent': userAgent });
+      ctx.request.ip = ip;
+
+      // Inside the connector error handler, the audit log sees the raw `ConnectorError`, whose
+      // message stringifies the `got` error, request and `Authorization` header included.
+      const gotError = new GotRequestError(
+        'Timeout awaiting request',
+        { code: 'ETIMEDOUT' },
+        new Options({
+          method: 'POST',
+          url: 'https://api.sendgrid.com/v3/mail/send',
+          headers: { Authorization: 'Bearer sendgrid-api-key' },
+        })
+      );
+      const error = new ConnectorError(ConnectorErrorCodes.General, gotError);
+      expect(error.message).toContain('sendgrid-api-key');
+
+      const next = async () => {
+        const log = ctx.createLog(logKey);
+        log.append(mockPayload);
+        throw error;
+      };
+      await expect(koaLog(queries)(ctx, next)).rejects.toMatchError(error);
+
+      expect(insertLog).toHaveBeenCalledTimes(1);
+      const inserted: unknown = insertLog.mock.calls[0]?.[0];
+      const serialized = JSON.stringify(inserted);
+      expect(serialized).toContain('"result":"Error"');
+      expect(serialized).not.toContain('sendgrid-api-key');
+      expect(serialized).toContain(
+        'ConnectorError: (general) [ETIMEDOUT] Timeout awaiting request'
+      );
     });
 
     it('should update all logs with error result when next() throws a RequestError', async () => {

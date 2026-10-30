@@ -9,6 +9,7 @@ import { UAParser } from 'ua-parser-js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import { getInjectedHeaderValues } from '#src/utils/injected-header-mapping.js';
+import { sanitizeError } from '#src/utils/sanitize-error.js';
 import {
   sanitizeSensitiveDataRecord,
   stripNullCharactersFromString,
@@ -190,7 +191,8 @@ export default function koaAuditLog<StateT, ContextT extends IRouterParamContext
           error:
             error instanceof RequestError
               ? pick(error, 'message', 'code', 'data')
-              : { message: String(error) },
+              : // A connector error wrapping a `got` error stringifies the request into its message
+                { message: String(sanitizeError(error)) },
         });
       }
       throw error;
