@@ -9,6 +9,7 @@ import {
   Scopes,
   ApplicationSignInExperiences,
 } from '../db-entries/index.js';
+import { customClientMetadataGuard } from '../foundations/index.js';
 
 /**
  * The application response returned by Management APIs.
@@ -45,7 +46,15 @@ export const applicationCreateGuard = Applications.createGuard
     tenantId: true,
   })
   .partial()
-  .merge(Applications.createGuard.pick({ name: true, type: true }));
+  .merge(Applications.createGuard.pick({ name: true, type: true }))
+  .extend({
+    /**
+     * Strict on the API input: an unknown key (e.g. a typo such as `refreshTokenTtlInDay`) is
+     * rejected with a 400 instead of being silently stripped and answered 200. This makes the keys
+     * of `customClientMetadataGuard` part of the API contract; see the rules documented there.
+     */
+    customClientMetadata: customClientMetadataGuard.strict().optional(),
+  });
 
 export const applicationPatchGuard = applicationCreateGuard.partial().omit({
   type: true,

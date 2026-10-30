@@ -104,6 +104,16 @@ export enum CustomClientMetadataKey {
   MaxAllowedGrants = 'maxAllowedGrants',
 }
 
+/**
+ * The application APIs validate `customClientMetadata` with `.strict()` (see `applicationCreateGuard`),
+ * so the set of keys below is part of the public API contract:
+ *
+ * - Never remove or rename an existing key: a client that still sends it would go from 200 to 400.
+ *   Keep it and mark it `@deprecated` instead, the way {@link CustomClientMetadataKey.RefreshTokenTtl}
+ *   is handled.
+ * - New keys must be `.optional()`: a required key would reject every existing create or update
+ *   payload that sends `customClientMetadata` without it, and PATCH replaces the whole object.
+ */
 export const customClientMetadataGuard = z.object({
   [CustomClientMetadataKey.CorsAllowedOrigins]: z.string().min(1).array().optional(),
   [CustomClientMetadataKey.IdTokenTtl]: z.number().optional(),
