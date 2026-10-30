@@ -19,6 +19,8 @@ const connector = {
   invalid_auth_code: 'رمز المصادقة للموصل غير صالح.',
   social_invalid_id_token: 'رمز الهوية للموصل غير صالح.',
   authorization_failed: 'فشلت عملية ترخيص المستخدم.',
+  social_provider_unreachable:
+    'تعذر الوصول إلى مزود تسجيل الدخول الاجتماعي ({{reason}}). يرجى المحاولة مرة أخرى لاحقًا.',
   social_auth_code_invalid: 'تعذر الحصول على رمز الوصول، يرجى التحقق من رمز الترخيص.',
   more_than_one_sms: 'عدد موصلات الرسائل القصيرة أكبر من 1.',
   more_than_one_email: 'عدد موصلات البريد الإلكتروني أكبر من 1.',

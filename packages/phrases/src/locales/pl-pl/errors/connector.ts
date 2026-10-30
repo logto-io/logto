@@ -21,6 +21,8 @@ const connector = {
   invalid_auth_code: 'Kod autoryzacji łącznika jest nieprawidłowy.',
   social_invalid_id_token: 'Token ID łącznika jest nieprawidłowy.',
   authorization_failed: 'Proces autoryzacji użytkownika zakończył się niepowodzeniem.',
+  social_provider_unreachable:
+    'Nie udało się połączyć z dostawcą logowania społecznościowego ({{reason}}). Spróbuj ponownie później.',
   social_auth_code_invalid:
     'Nie udało się uzyskać tokenu dostępu, proszę sprawdzić kod autoryzacji.',
   more_than_one_sms: 'Ilość łączników SMS jest większa niż 1.',

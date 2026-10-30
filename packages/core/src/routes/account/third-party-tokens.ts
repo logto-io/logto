@@ -107,7 +107,7 @@ export default function thirdPartyTokensRoutes<T extends UserRouter>(
       params: z.object({
         target: z.string().min(1),
       }),
-      status: [200, 404, 403, 401, 422],
+      status: [200, 404, 403, 401, 422, 502],
       response: getThirdPartyAccessTokenResponseGuard,
     }),
     async (ctx, next) => {

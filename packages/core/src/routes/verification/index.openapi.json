@@ -217,6 +217,9 @@
           },
           "401": {
             "description": "The user declined the authorization or cancelled at the social provider (`connector.authorization_failed`, with the provider's `error` and `error_description`)."
+          },
+          "502": {
+            "description": "The social provider could not be reached (timeout, connection reset, DNS or TLS failure)."
           }
         }
       }

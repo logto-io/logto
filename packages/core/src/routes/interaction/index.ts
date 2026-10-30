@@ -69,7 +69,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
         identifier: identifierPayloadGuard.optional(),
         profile: profileGuard.optional(),
       }),
-      status: [204, 400, 401, 403, 422],
+      status: [204, 400, 401, 403, 422, 502],
     }),
     koaInteractionSie(queries),
     async (ctx, next) => {
@@ -171,7 +171,7 @@ export default function interactionRoutes<T extends AnonymousRouter>(
     `${interactionPrefix}/identifiers`,
     koaGuard({
       body: identifierPayloadGuard,
-      status: [204, 400, 401, 404, 422],
+      status: [204, 400, 401, 404, 422, 502],
     }),
     koaInteractionSie(queries),
     async (ctx, next) => {

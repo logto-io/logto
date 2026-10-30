@@ -20,6 +20,8 @@ const connector = {
   invalid_auth_code: 'โค้ดยืนยันตัวตนของคอนเนคเตอร์นี้ไม่ถูกต้อง',
   social_invalid_id_token: 'ID โทเคนของคอนเนคเตอร์นี้ไม่ถูกต้อง',
   authorization_failed: 'กระบวนการขออนุญาตของผู้ใช้ไม่สำเร็จ',
+  social_provider_unreachable:
+    'ไม่สามารถเชื่อมต่อกับผู้ให้บริการโซเชียลได้ ({{reason}}) โปรดลองอีกครั้งในภายหลัง',
   social_auth_code_invalid: 'ไม่สามารถดึงแอคเซสโทเคนได้ กรุณาตรวจสอบโค้ดการอนุญาต',
   more_than_one_sms: 'มีจำนวนคอนเนคเตอร์ SMS มากกว่า 1',
   more_than_one_email: 'มีจำนวนคอนเนคเตอร์อีเมลมากกว่า 1',

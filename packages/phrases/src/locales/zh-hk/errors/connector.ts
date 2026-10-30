@@ -19,6 +19,7 @@ const connector = {
   invalid_auth_code: '當前連接器的授權碼無效',
   social_invalid_id_token: '當前連接器的 id_token 無效',
   authorization_failed: '用戶授權流程失敗',
+  social_provider_unreachable: '無法連接到社交登入提供者（{{reason}}），請稍後再試。',
   social_auth_code_invalid: '無法獲取 access_token，請檢查授權 code 是否有效',
   more_than_one_sms: '同時存在超過 1 個短信連接器',
   more_than_one_email: '同時存在超過 1 個郵件連接器',

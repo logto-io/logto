@@ -95,6 +95,9 @@
           },
           "500": {
             "description": "Connector error. Failed to verify the social authorization response or fetch the user info from the social provider."
+          },
+          "502": {
+            "description": "The social provider could not be reached (timeout, connection reset, DNS or TLS failure)."
           }
         }
       }

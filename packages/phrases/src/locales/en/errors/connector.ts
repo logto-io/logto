@@ -20,6 +20,8 @@ const connector = {
   invalid_auth_code: "The connector's auth code is invalid.",
   social_invalid_id_token: "The connector's id token is invalid.",
   authorization_failed: "The user's authorization process is unsuccessful.",
+  social_provider_unreachable:
+    'The social provider could not be reached ({{reason}}). Please try again later.',
   social_auth_code_invalid: 'Unable to get access token, please check authorization code.',
   more_than_one_sms: 'The number of SMS connectors is larger then 1.',
   more_than_one_email: 'The number of Email connectors is larger then 1.',
