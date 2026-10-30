@@ -1,6 +1,7 @@
 import {
   AgreeToTermsPolicy,
   AlternativeSignUpIdentifier,
+  CrossOriginOpenerPolicy,
   MfaFactor,
   MfaPolicy,
   SignInIdentifier,
@@ -52,6 +53,7 @@ const mockSignInExperience: SignInExperience = {
   agreeToTermsPolicy: AgreeToTermsPolicy.Automatic,
   customUiAssets: null,
   customUiCsp: {},
+  crossOriginOpenerPolicy: CrossOriginOpenerPolicy.UnsafeNone,
   passwordPolicy: {},
   passwordExpiration: {
     enabled: false,

@@ -3,6 +3,7 @@ import {
   AgreeToTermsPolicy,
   ConnectorPlatform,
   ConnectorType,
+  CrossOriginOpenerPolicy,
   MfaPolicy,
   SignInIdentifier,
   SignInMode,
@@ -109,6 +110,7 @@ export const mockSignInExperience: SignInExperience = {
   agreeToTermsPolicy: AgreeToTermsPolicy.ManualRegistrationOnly,
   customUiAssets: null,
   customUiCsp: {},
+  crossOriginOpenerPolicy: CrossOriginOpenerPolicy.UnsafeNone,
   passwordPolicy: {},
   passwordExpiration: {
     enabled: false,

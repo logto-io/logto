@@ -33,7 +33,10 @@ export type ExperienceSocialConnector = Omit<
 
 export type FullSignInExperience = Omit<
   SignInExperience,
-  'emailBlocklistPolicy' | 'forgotPasswordMethods' | 'ssoBrandingBeforeEmailMatch'
+  | 'emailBlocklistPolicy'
+  | 'forgotPasswordMethods'
+  | 'ssoBrandingBeforeEmailMatch'
+  | 'crossOriginOpenerPolicy'
 > & {
   socialConnectors: ExperienceSocialConnector[];
   ssoConnectors: SsoConnectorMetadata[];
@@ -72,6 +75,7 @@ export const fullSignInExperienceGuard = SignInExperiences.guard
     emailBlocklistPolicy: true,
     forgotPasswordMethods: true,
     ssoBrandingBeforeEmailMatch: true,
+    crossOriginOpenerPolicy: true,
   })
   .extend({
     socialConnectors: connectorMetadataGuard

@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 import { defaultUsernamePolicy } from '@logto/core-kit';
 import {
+  CrossOriginOpenerPolicy,
   ForgotPasswordMethod,
   MfaFactor,
   MfaPolicy,
@@ -30,6 +31,7 @@ import {
   mockDemoSocialConnector,
 } from '#src/__mocks__/index.js';
 import { EnvSet } from '#src/env-set/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import LicenseReader from '#src/license/LicenseReader.js';
 import { buildLicensePayload } from '#src/test-utils/license.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -1197,6 +1199,107 @@ describe('PATCH /sign-in-exp customUiCsp', () => {
         },
       })
     ).resolves.toMatchObject({ status: 400 });
+  });
+});
+
+describe('PATCH /sign-in-exp crossOriginOpenerPolicy', () => {
+  const crossOriginOpenerPolicy = CrossOriginOpenerPolicy.SameOriginAllowPopups;
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after each feature-gate test.
+    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
+      originalIsDevFeaturesEnabled;
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after each feature-gate test.
+    (EnvSet.values as { isCloud: boolean }).isCloud = originalIsCloud;
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after each feature-gate test.
+    (EnvSet.values as { isProduction: boolean }).isProduction = originalIsProduction;
+  });
+
+  it('should persist a policy and guard the Bring your UI quota', async () => {
+    const { requester, updateDefaultSignInExperience, guardTenantUsageByKey } =
+      await createCustomUiCspRequester();
+
+    const response = await requester.patch('/sign-in-exp').send({ crossOriginOpenerPolicy });
+
+    expect(response.status).toEqual(200);
+    expect(updateDefaultSignInExperience).toHaveBeenCalledWith({ crossOriginOpenerPolicy });
+    expect(response.body).toMatchObject({ crossOriginOpenerPolicy });
+    expect(guardTenantUsageByKey).toHaveBeenCalledWith('bringYourUiEnabled');
+  });
+
+  it('should reject a policy when dev features are disabled', async () => {
+    const { requester, updateDefaultSignInExperience, guardTenantUsageByKey } =
+      await createCustomUiCspRequester({ isDevFeaturesEnabled: false });
+
+    const response = await requester.patch('/sign-in-exp').send({ crossOriginOpenerPolicy });
+
+    expect(response.status).toEqual(400);
+    expect(updateDefaultSignInExperience).not.toHaveBeenCalled();
+    expect(guardTenantUsageByKey).not.toHaveBeenCalled();
+  });
+
+  it('should not persist a policy when the Bring your UI quota guard rejects', async () => {
+    const { requester, updateDefaultSignInExperience, guardTenantUsageByKey } =
+      await createCustomUiCspRequester();
+    guardTenantUsageByKey.mockRejectedValueOnce(
+      new RequestError({ code: 'subscription.limit_exceeded', status: 403 })
+    );
+
+    const response = await requester.patch('/sign-in-exp').send({ crossOriginOpenerPolicy });
+
+    expect(response.status).toEqual(403);
+    expect(updateDefaultSignInExperience).not.toHaveBeenCalled();
+  });
+
+  it('should reject a policy outside Cloud without a license that grants Bring your UI', async () => {
+    installLicense({ hideLogtoBranding: true });
+    const { requester, updateDefaultSignInExperience } = await createCustomUiCspRequester({
+      isCloud: false,
+    });
+
+    const response = await requester.patch('/sign-in-exp').send({ crossOriginOpenerPolicy });
+
+    expect(response.status).toEqual(400);
+    expect(updateDefaultSignInExperience).not.toHaveBeenCalled();
+  });
+
+  it('should allow a policy outside Cloud with a license that grants Bring your UI', async () => {
+    installLicense({ bringYourUi: true });
+    const { requester, updateDefaultSignInExperience } = await createCustomUiCspRequester({
+      isCloud: false,
+    });
+
+    const response = await requester.patch('/sign-in-exp').send({ crossOriginOpenerPolicy });
+
+    expect(response.status).toEqual(200);
+    expect(updateDefaultSignInExperience).toHaveBeenCalledWith({ crossOriginOpenerPolicy });
+  });
+
+  it('should allow unsafe-none without dev features or a quota check', async () => {
+    const { requester, updateDefaultSignInExperience, guardTenantUsageByKey } =
+      await createCustomUiCspRequester({ isDevFeaturesEnabled: false, isCloud: false });
+
+    const response = await requester
+      .patch('/sign-in-exp')
+      .send({ crossOriginOpenerPolicy: CrossOriginOpenerPolicy.UnsafeNone });
+
+    expect(response.status).toEqual(200);
+    expect(updateDefaultSignInExperience).toHaveBeenCalledWith({
+      crossOriginOpenerPolicy: CrossOriginOpenerPolicy.UnsafeNone,
+    });
+    expect(guardTenantUsageByKey).not.toHaveBeenCalled();
+  });
+
+  it('should reject an unknown policy', async () => {
+    const { requester, updateDefaultSignInExperience } = await createCustomUiCspRequester();
+
+    const response = await requester
+      .patch('/sign-in-exp')
+      .send({ crossOriginOpenerPolicy: 'same-site' });
+
+    expect(response.status).toEqual(400);
+    expect(updateDefaultSignInExperience).not.toHaveBeenCalled();
   });
 });
 

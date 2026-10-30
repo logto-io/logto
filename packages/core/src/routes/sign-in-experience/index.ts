@@ -3,6 +3,7 @@ import { DemoConnector } from '@logto/connector-kit';
 import { PasswordPolicyChecker } from '@logto/core-kit';
 import {
   ConnectorType,
+  CrossOriginOpenerPolicy,
   SignInExperiences,
   MfaPolicy,
   ProductEvent,
@@ -130,11 +131,26 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         passkeySignIn,
         passwordExpiration,
         verificationCodePolicy,
+        crossOriginOpenerPolicy,
       } = rest;
 
       const normalizedSignUpProfileFields = await normalizeProfileFields(signUpProfileFields);
       const normalizedCustomUiCsp = conditional(customUiCsp && normalizeCustomUiCsp(customUiCsp));
       const hasCustomUiCsp = hasCustomUiCspSources(normalizedCustomUiCsp);
+      const hasCrossOriginOpenerPolicy =
+        crossOriginOpenerPolicy !== undefined &&
+        crossOriginOpenerPolicy !== CrossOriginOpenerPolicy.UnsafeNone;
+
+      if (hasCrossOriginOpenerPolicy) {
+        // Dev feature: Bring your UI COOP header
+        assertThat(
+          EnvSet.values.isDevFeaturesEnabled,
+          new RequestError({
+            code: 'request.invalid_input',
+            details: 'Cross-Origin-Opener-Policy configuration is not available',
+          })
+        );
+      }
 
       if (languageInfo) {
         await validateLanguageInfo(languageInfo);
@@ -345,14 +361,18 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         );
       }
 
+      const requiresBringYourUi =
+        hideLogtoBranding === true || hasCustomUiCsp || hasCrossOriginOpenerPolicy;
+
       /**
-       * On Cloud, both features are gated by the tenant subscription through the
-       * `bringYourUiEnabled` quota guard below. On a self-hosted deployment that guard is a no-op,
-       * so each feature is gated by its own entitlement in the installed license instead: hiding
-       * the branding by `hideLogtoBranding`, and the Custom UI CSP by `bringYourUi`, which it is
-       * part of. Without a license, neither is available, as in plain OSS.
+       * On Cloud, hiding the Logto branding, the Custom UI CSP and the Cross-Origin-Opener-Policy
+       * are gated by the tenant subscription through the `bringYourUiEnabled` quota guard below.
+       * On a self-hosted deployment that guard is a no-op, so each feature is gated by its own
+       * entitlement in the installed license instead: hiding the branding by `hideLogtoBranding`,
+       * and the Custom UI CSP and Cross-Origin-Opener-Policy by `bringYourUi`, which they are part
+       * of. Without a license, none is available, as in plain OSS.
        */
-      if (!EnvSet.values.isCloud && (hideLogtoBranding === true || hasCustomUiCsp)) {
+      if (!EnvSet.values.isCloud && requiresBringYourUi) {
         const { quota: licenseQuota } = await subscription.getSelfHostedSubscription();
 
         if (hideLogtoBranding) {
@@ -373,8 +393,17 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
             })
           );
         }
+        if (hasCrossOriginOpenerPolicy) {
+          assertThat(
+            licenseQuota.bringYourUi,
+            new RequestError({
+              code: 'request.invalid_input',
+              details: 'Cross-Origin-Opener-Policy configuration is not available',
+            })
+          );
+        }
       }
-      if (hideLogtoBranding === true || hasCustomUiCsp) {
+      if (requiresBringYourUi) {
         await quota.guardTenantUsageByKey('bringYourUiEnabled');
       }
       if (passkeySignIn?.enabled) {
