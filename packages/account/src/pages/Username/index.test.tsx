@@ -15,8 +15,6 @@ import Username from '.';
 
 const mockGetAccessToken = jest.fn().mockResolvedValue('access-token');
 const mockRequestStepUp = jest.fn();
-const mockStartStepUp = jest.fn();
-const mockCheckIdentityProof = jest.fn().mockResolvedValue(true);
 
 jest.mock('@logto/react', () => ({
   useLogto: () => ({
@@ -26,13 +24,8 @@ jest.mock('@logto/react', () => ({
 
 jest.mock('@ac/hooks/use-step-up', () => ({
   __esModule: true,
-  default: () => ({ requestStepUp: mockRequestStepUp, startStepUp: mockStartStepUp }),
+  default: () => ({ requestStepUp: mockRequestStepUp }),
   useStepUpEntry: () => ({ isReady: true, isChecking: false, hasFailed: false }),
-  useIdentityProof: () => ({
-    isReady: true,
-    isChecking: false,
-    checkIdentityProof: mockCheckIdentityProof,
-  }),
 }));
 
 jest.mock('../../apis/account', () => ({
@@ -214,11 +207,9 @@ describe('<Username />', () => {
     fireEvent.click(getByText('action.save'));
 
     await waitFor(() => {
-      expect(mockRequestStepUp).toHaveBeenCalledWith(
-        expect.any(HTTPError),
-        { type: 'update-username', username: 'new_username' },
-        { isResumed: false }
-      );
+      expect(mockRequestStepUp).toHaveBeenCalledWith(expect.any(HTTPError), {
+        type: 'enter-subpage',
+      });
     });
     expect(setToast).not.toHaveBeenCalled();
     expect(getByText('account_center.username.title')).toBeTruthy();
