@@ -107,6 +107,15 @@ describe('StepUpEntryGuard', () => {
     expect(mockedGetStepUpContext).not.toHaveBeenCalled();
   });
 
+  it('renders the Console preview without reading the interaction', async () => {
+    sessionStorage.clear();
+
+    renderGuard('/sign-in?preview=true');
+
+    expect(await screen.findByText('sign in form')).not.toBeNull();
+    expect(mockedGetStepUpContext).not.toHaveBeenCalled();
+  });
+
   it('returns to the step-up landing from the flow cookie without reading the interaction', async () => {
     setFlowCookie(true);
 
