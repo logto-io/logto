@@ -79,27 +79,35 @@ function InvoiceTable({
         {
           title: t('subscription.billing_history.invoice_column'),
           dataIndex: 'id',
-          render: (invoice) => (
-            <ItemPreview
-              title={formatInvoicePeriod(invoice)}
-              subtitle={hasProduct ? t(getProductTitleKey(invoice.product ?? null)) : undefined}
-            />
-          ),
+          colSpan: 6,
+          render: (invoice) => {
+            const period = formatInvoicePeriod(invoice);
+            return (
+              <ItemPreview
+                // The period can be truncated in narrow layouts, so keep the full text on hover.
+                title={<span title={period}>{period}</span>}
+                subtitle={hasProduct ? t(getProductTitleKey(invoice.product ?? null)) : undefined}
+              />
+            );
+          },
         },
         {
           title: t('subscription.billing_history.status_column'),
           dataIndex: 'status',
+          colSpan: 3,
           render: ({ status }) => <InvoiceStatusTag status={status} />,
         },
         {
           title: t('subscription.billing_history.amount_column'),
           dataIndex: 'amountDue',
+          colSpan: 3,
           render: ({ amountDue, currency }) =>
             formatCurrencyAmount(amountDue, currency, i18n.language),
         },
         {
           title: t('subscription.billing_history.invoice_created_date_column'),
           dataIndex: 'createdAt',
+          colSpan: 4,
           render: ({ createdAt }) => dayjs(createdAt).format('MMMM DD, YYYY'),
         },
       ]}
