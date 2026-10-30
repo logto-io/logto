@@ -24,6 +24,10 @@ create index logs__payload_application_id_created_at
   on logs (tenant_id, payload_application_id, created_at)
   where payload_application_id is not null;
 
+create index logs__payload_hook_id_created_at
+  on logs (tenant_id, payload_hook_id, created_at)
+  where payload_hook_id is not null;
+
 /** Copies the payload keys used for lookups into their `payload_*` columns. */
 create function logs__set_payload_keys() returns trigger as
 $$ begin
