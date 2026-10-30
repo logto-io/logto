@@ -14,14 +14,10 @@ import { LogtoAcr, acrSatisfies, defaultMaximumAuthenticationAgeInSeconds } from
 import { HTTPError } from 'ky';
 
 import { accountCenterBasePath } from './account-center-internal-route';
-import {
-  accountStorage,
-  sessionStorage,
-  type PendingStepUpAction,
-  type StoredPendingStepUp,
-} from './session-storage';
+import { type PendingStepUpAction, type StoredPendingStepUp } from './pending-step-up';
+import { accountStorage, sessionStorage } from './session-storage';
 
-export type { PendingStepUpAction } from './session-storage';
+export type { PendingStepUpAction } from './pending-step-up';
 
 /** The OIDC error a step-up returns when the user can neither verify nor establish a method. */
 export const unmetAuthenticationRequirementsError = 'unmet_authentication_requirements';
