@@ -334,11 +334,6 @@ const application_details = {
     col_sp_claims: 'Nom de la valeur de votre application',
     add_button: 'Ajouter un autre',
   },
-  step_up_authentication: {
-    title: 'Authentification renforcée',
-    description:
-      "Transmettez <code>acr_values</code> (par exemple <code>urn:logto:acr:mfa</code>) et <code>max_age</code> dans la requête d'autorisation pour exiger une authentification récente de l'utilisateur ou la MFA avant les opérations sensibles, puis validez <code>acr</code> et <code>auth_time</code> sur votre serveur de ressources. <a>En savoir plus</a>",
-  },
   concurrent_device_limit,
 };
 

@@ -18,11 +18,3 @@ button.add {
 .expired {
   color: var(--color-placeholder);
 }
-
-.inlineCode {
-  background: var(--color-layer-2);
-  font-family: 'Roboto Mono', monospace;
-  font-size: 13px;
-  padding: _.unit(0.5) _.unit(1);
-  border-radius: 4px;
-}

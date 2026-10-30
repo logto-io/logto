@@ -327,11 +327,6 @@ const application_details = {
     col_sp_claims: 'Value name of your application',
     add_button: 'Add another',
   },
-  step_up_authentication: {
-    title: 'Step-up authentication',
-    description:
-      'Pass <code>acr_values</code> (such as <code>urn:logto:acr:mfa</code>) and <code>max_age</code> in the authorization request to require recent user authentication or MFA before sensitive operations, and validate <code>acr</code> and <code>auth_time</code> on your resource server. <a>Learn more</a>',
-  },
   concurrent_device_limit,
 };
 

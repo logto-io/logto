@@ -336,11 +336,6 @@ const application_details = {
     col_sp_claims: 'Nome valore della tua applicazione',
     add_button: 'Aggiungi un altro',
   },
-  step_up_authentication: {
-    title: 'Autenticazione step-up',
-    description:
-      "Passa <code>acr_values</code> (ad esempio <code>urn:logto:acr:mfa</code>) e <code>max_age</code> nella richiesta di autorizzazione per richiedere un'autenticazione recente dell'utente o la MFA prima delle operazioni sensibili, e convalida <code>acr</code> e <code>auth_time</code> sul tuo server di risorse. <a>Scopri di più</a>",
-  },
   concurrent_device_limit,
 };
 

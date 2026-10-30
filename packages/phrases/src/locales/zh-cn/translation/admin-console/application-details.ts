@@ -306,11 +306,6 @@ const application_details = {
     col_sp_claims: '你应用中的值名称',
     add_button: '添加另一个',
   },
-  step_up_authentication: {
-    title: '升级认证',
-    description:
-      '在授权请求中传入 <code>acr_values</code>（例如 <code>urn:logto:acr:mfa</code>）和 <code>max_age</code>，即可在执行敏感操作前要求最近的用户身份验证或 MFA，并在资源服务器上校验 <code>acr</code> 与 <code>auth_time</code>。<a>了解更多</a>',
-  },
   concurrent_device_limit,
 };
 

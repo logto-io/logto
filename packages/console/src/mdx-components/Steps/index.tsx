@@ -56,9 +56,10 @@ export default function Steps({ children: reactChildren }: Props) {
         title="Further readings"
         fullGuide={metadata.fullGuide}
         furtherReadings={metadata.furtherReadings}
+        target={metadata.target}
       />
     ),
-    [metadata.fullGuide, metadata.furtherReadings]
+    [metadata.fullGuide, metadata.furtherReadings, metadata.target]
   );
   const children: StepElement[] = useMemo(() => {
     const steps = (Array.isArray(reactChildren) ? reactChildren : [reactChildren]).filter(

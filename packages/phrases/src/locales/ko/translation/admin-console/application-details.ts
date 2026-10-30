@@ -323,11 +323,6 @@ const application_details = {
     col_sp_claims: '애플리케이션의 값 이름',
     add_button: '다른 추가',
   },
-  step_up_authentication: {
-    title: '스텝업 인증',
-    description:
-      '인가 요청에 <code>acr_values</code>(예: <code>urn:logto:acr:mfa</code>)와 <code>max_age</code>를 전달하여 민감한 작업 전에 최근 사용자 인증 또는 MFA를 요구하고, 리소스 서버에서 <code>acr</code>과 <code>auth_time</code>을 검증하세요. <a>자세히 알아보기</a>',
-  },
   concurrent_device_limit,
 };
 

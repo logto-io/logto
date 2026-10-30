@@ -330,11 +330,6 @@ const application_details = {
     col_sp_claims: 'Uygulamanızın değer adı',
     add_button: 'Başka bir eklenti',
   },
-  step_up_authentication: {
-    title: 'Yükseltilmiş kimlik doğrulama',
-    description:
-      'Hassas işlemlerden önce yakın zamanlı kullanıcı kimlik doğrulaması veya MFA istemek için yetkilendirme isteğinde <code>acr_values</code> (örneğin <code>urn:logto:acr:mfa</code>) ve <code>max_age</code> iletin; ardından kaynak sunucunuzda <code>acr</code> ve <code>auth_time</code> değerlerini doğrulayın. <a>Daha fazla bilgi</a>',
-  },
   concurrent_device_limit,
 };
 

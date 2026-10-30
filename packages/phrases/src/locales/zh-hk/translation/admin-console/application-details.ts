@@ -307,11 +307,6 @@ const application_details = {
     col_sp_claims: '您的應用程式的值名稱',
     add_button: '添加另一個',
   },
-  step_up_authentication: {
-    title: '升級認證',
-    description:
-      '在授權請求中傳入 <code>acr_values</code>（例如 <code>urn:logto:acr:mfa</code>）和 <code>max_age</code>，即可在執行敏感操作前要求最近的使用者身分驗證或 MFA，並在資源伺服器上驗證 <code>acr</code> 與 <code>auth_time</code>。<a>了解更多</a>',
-  },
   concurrent_device_limit,
 };
 

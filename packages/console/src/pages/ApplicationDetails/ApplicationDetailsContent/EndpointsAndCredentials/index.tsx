@@ -1,29 +1,23 @@
 import {
-  ApplicationType,
   type ApplicationApiResponse,
   type SnakeCaseOidcConfig,
   internalPrefix,
   hasSecrets,
 } from '@logto/schemas';
 import { useCallback, useMemo, useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import CirclePlus from '@/assets/icons/circle-plus.svg?react';
 import Plus from '@/assets/icons/plus.svg?react';
 import FormCard from '@/components/FormCard';
 import OidcEndpoints from '@/components/OidcEndpoints';
-import { isDevFeaturesEnabled } from '@/consts/env';
-import { stepUpAuth } from '@/consts/external-links';
 import Button from '@/ds-components/Button';
 import CopyToClipboard from '@/ds-components/CopyToClipboard';
 import FormField from '@/ds-components/FormField';
-import InlineNotification from '@/ds-components/InlineNotification';
 import Table from '@/ds-components/Table';
-import TextLink from '@/ds-components/TextLink';
 import { type RequestError } from '@/hooks/use-api';
 import useCurrentTenantScopes from '@/hooks/use-current-tenant-scopes';
-import useDocumentationUrl from '@/hooks/use-documentation-url';
 
 import CreateSecretModal from '../CreateSecretModal';
 import EditSecretModal from '../EditSecretModal';
@@ -36,12 +30,6 @@ export { type ApplicationSecretRow } from './use-secret-table-columns';
 const isLegacySecret = (secret?: string): secret is string =>
   Boolean(secret && !secret.startsWith(internalPrefix));
 
-export const shouldShowStepUpAuthentication = (
-  app: Pick<ApplicationApiResponse, 'type' | 'customClientMetadata'>
-) =>
-  [ApplicationType.SPA, ApplicationType.Traditional, ApplicationType.Native].includes(app.type) &&
-  !app.customClientMetadata.isDeviceFlow;
-
 type Props = {
   readonly app: ApplicationApiResponse;
   readonly oidcConfig: SnakeCaseOidcConfig;
@@ -49,12 +37,11 @@ type Props = {
 };
 
 function EndpointsAndCredentials({
-  app: { type, secret, id, isThirdParty, customClientMetadata },
+  app: { type, secret, id, isThirdParty },
   oidcConfig,
   onApplicationUpdated,
 }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { getDocumentationUrl } = useDocumentationUrl();
   const {
     access: { isReadOnly, canReadCredentials },
   } = useCurrentTenantScopes();
@@ -176,21 +163,6 @@ function EndpointsAndCredentials({
               }}
             />
           )}
-        </FormField>
-      )}
-      {/* DEV: OIDC step-up authentication. */}
-      {isDevFeaturesEnabled && shouldShowStepUpAuthentication({ type, customClientMetadata }) && (
-        <FormField title="application_details.step_up_authentication.title">
-          <InlineNotification variant="plain" hasIcon={false}>
-            <Trans
-              components={{
-                code: <code className={styles.inlineCode} />,
-                a: <TextLink href={getDocumentationUrl(stepUpAuth)} targetBlank="noopener" />,
-              }}
-            >
-              {t('application_details.step_up_authentication.description')}
-            </Trans>
-          </InlineNotification>
         </FormField>
       )}
     </FormCard>
