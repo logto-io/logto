@@ -111,6 +111,12 @@ const sign_in_exp = {
     csp_source_invalid_error:
       '有効なソース式を入力してください。https:// URL を使用してください。connect-src では wss:// もサポートされています。CSP キーワードとセミコロンはサポートされていません。',
     csp_source_duplicate_error: 'このソース式はすでに一覧に含まれています。',
+    coop_tip:
+      'カスタムサインイン UI をクロスオリジンのウィンドウから分離します。カスタム UI アセットが提供される場合にのみ適用されます。',
+    coop_unsafe_none: '未設定（デフォルト）',
+    coop_same_origin_allow_popups: 'same-origin-allow-popups（推奨）',
+    coop_warning:
+      'サインインページをクロスオリジンのポップアップで開き、window.opener に依存しているアプリは動作しなくなります。same-origin は、ソーシャルサインインのウィンドウなど、カスタム UI 自体が開くポップアップも切り離します。',
   },
   account_center: {
     recent_authentication: {

@@ -2,6 +2,7 @@ import {
   AccountCenterControlValue,
   type AccountCenter as AccountCenterConfig,
   type AccountCenterProfileFields,
+  type CrossOriginOpenerPolicy,
   type CustomUiCsp,
   type SignUp,
   type SignInExperience,
@@ -223,8 +224,9 @@ export type SignInMethodsObject = Record<
  */
 export type SignInExperiencePageManagedData = Omit<
   SignInExperience,
-  OmittedSignInExperienceKeys | 'customUiCsp' | 'hideLogtoBranding'
+  OmittedSignInExperienceKeys | 'customUiCsp' | 'crossOriginOpenerPolicy' | 'hideLogtoBranding'
 > & {
   customUiCsp?: CustomUiCsp;
+  crossOriginOpenerPolicy?: CrossOriginOpenerPolicy;
   hideLogtoBranding?: boolean;
 };

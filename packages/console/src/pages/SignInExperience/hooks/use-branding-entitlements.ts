@@ -23,7 +23,10 @@ const useBrandingEntitlements = () => {
       isHideLogtoBrandingAvailable: true,
       /** Whether the hide branding switch can be turned on. */
       isHideLogtoBrandingEnabled: bringYourUiEnabled,
-      /** Whether the Custom UI CSP form can be edited and is part of the payload. */
+      /**
+       * Whether the Custom UI CSP and Cross-Origin-Opener-Policy fields can be edited and are part
+       * of the payload.
+       */
       isCustomUiCspEnabled: bringYourUiEnabled,
     };
   }

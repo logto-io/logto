@@ -111,6 +111,12 @@ const sign_in_exp = {
     csp_source_invalid_error:
       'Inserisci un’espressione di origine valida. Usa URL https://; connect-src supporta anche wss://. Le parole chiave CSP e i punti e virgola non sono supportati.',
     csp_source_duplicate_error: 'Questa espressione di origine è già presente nell’elenco.',
+    coop_tip:
+      'Isola la tua interfaccia di accesso personalizzata dalle finestre di altre origini. Applicato solo quando vengono serviti gli asset della UI personalizzata.',
+    coop_unsafe_none: 'Non impostato (predefinito)',
+    coop_same_origin_allow_popups: 'same-origin-allow-popups (consigliato)',
+    coop_warning:
+      'Le app che aprono la pagina di accesso in un popup di un’altra origine e usano window.opener smetteranno di funzionare. same-origin interrompe anche i popup aperti dalla tua UI personalizzata, come le finestre di accesso social.',
   },
   account_center: {
     recent_authentication: {

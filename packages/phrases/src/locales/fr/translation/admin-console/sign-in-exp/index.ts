@@ -112,6 +112,12 @@ const sign_in_exp = {
     csp_source_invalid_error:
       'Saisissez une expression de source valide. Utilisez des URL https:// ; connect-src prend également en charge wss://. Les mots-clés CSP et les points-virgules ne sont pas pris en charge.',
     csp_source_duplicate_error: 'Cette expression de source figure déjà dans la liste.',
+    coop_tip:
+      'Isolez votre interface de connexion personnalisée des fenêtres d’autres origines. Appliqué uniquement lorsque les ressources UI personnalisées sont servies.',
+    coop_unsafe_none: 'Non défini (par défaut)',
+    coop_same_origin_allow_popups: 'same-origin-allow-popups (recommandé)',
+    coop_warning:
+      'Les applications qui ouvrent la page de connexion dans une fenêtre contextuelle d’une autre origine et utilisent window.opener cesseront de fonctionner. same-origin coupe aussi les fenêtres contextuelles que votre interface personnalisée ouvre elle-même, comme les fenêtres de connexion sociale.',
   },
   account_center: {
     recent_authentication: {

@@ -107,6 +107,11 @@ const sign_in_exp = {
     csp_source_invalid_error:
       '請輸入有效的來源表達式。請使用 https:// URL；connect-src 也支援 wss://。不支援 CSP 關鍵字和分號。',
     csp_source_duplicate_error: '此來源表達式已在清單中。',
+    coop_tip: '將你的自訂登入介面與跨來源視窗隔離。只會在提供自訂 UI 資源時套用。',
+    coop_unsafe_none: '未設定（預設）',
+    coop_same_origin_allow_popups: 'same-origin-allow-popups（建議）',
+    coop_warning:
+      '在跨來源彈出視窗中開啟登入頁並依賴 window.opener 的應用程式將無法正常運作。same-origin 也會切斷自訂介面本身開啟的彈出視窗，例如社群登入視窗。',
   },
   account_center: {
     recent_authentication: {

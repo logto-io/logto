@@ -111,6 +111,12 @@ const sign_in_exp = {
     csp_source_invalid_error:
       'Geçerli bir kaynak ifadesi girin. https:// URL’leri kullanın; connect-src ayrıca wss:// desteği sunar. CSP anahtar kelimeleri ve noktalı virgüller desteklenmez.',
     csp_source_duplicate_error: 'Bu kaynak ifadesi zaten listede.',
+    coop_tip:
+      'Özel oturum açma UI’nizi farklı kaynaklı pencerelerden yalıtın. Yalnızca özel UI varlıkları sunulduğunda uygulanır.',
+    coop_unsafe_none: 'Ayarlanmadı (varsayılan)',
+    coop_same_origin_allow_popups: 'same-origin-allow-popups (önerilen)',
+    coop_warning:
+      'Oturum açma sayfasını farklı kaynaklı bir açılır pencerede açan ve window.opener kullanan uygulamalar çalışmayı durdurur. same-origin, sosyal oturum açma pencereleri gibi özel UI’nizin kendi açtığı açılır pencerelerin bağlantısını da keser.',
   },
   account_center: {
     recent_authentication: {
