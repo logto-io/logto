@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-smtp",
-  "version": "1.5.5",
+  "version": "1.5.6",
   "description": "SMTP connector implementation.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "dependencies": {

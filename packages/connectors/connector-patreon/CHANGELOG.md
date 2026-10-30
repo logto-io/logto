@@ -1,5 +1,27 @@
 # @logto/connector-patreon
 
+## 1.2.10
+
+### Patch Changes
+
+- d89e507: support Node.js 26
+
+  Logto and the published packages now declare support for Node.js 22, 24 and 26. The minimum supported versions are 22.23.4, 24.22.1 and 26.12.1, which include the October 2026 Node.js security fixes.
+
+- 97b9115: restore Patreon social sign-in by using Patreon API v2
+
+  Patreon removed the v1 public API, which made the connector fail with `410 Gone`. The connector now requests user profile fields from the v2 identity endpoint, so Patreon sign-in works again.
+
+- Updated dependencies [800eb13]
+- Updated dependencies [f33304e]
+- Updated dependencies [d89e507]
+- Updated dependencies [1b03993]
+- Updated dependencies [9d7d323]
+- Updated dependencies [664e6ac]
+- Updated dependencies [05678f9]
+  - @logto/connector-kit@5.2.0
+  - @logto/connector-oauth@1.8.0
+
 ## 1.2.9
 
 ### Patch Changes

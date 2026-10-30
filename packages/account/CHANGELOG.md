@@ -1,5 +1,17 @@
 # @logto/account
 
+## 0.8.0
+
+### Minor Changes
+
+- e8c954a: create self-service personal access tokens in Account Center
+
+  Users can create, rename, and revoke personal access tokens on the Security page of Account Center when the tenant enables the personal access token field. Each token is shown only once at creation and expires within 365 days. The same operations are available through the Account API under `/api/my-account/personal-access-tokens`.
+
+- d65a8dc: support OIDC step-up authentication for Account Center and developer applications
+
+  Clients can request `acr_values` and `max_age` and receive `acr`, `amr`, and `auth_time` in ID tokens, access tokens, and introspection responses. The built-in Account Center now authorizes sensitive Account API operations with a fresh first-party `urn:logto:acr:1fa` access token instead of a separate verification record, and the legacy permission-verification runtime is removed.
+
 ## 0.7.0
 
 ### Minor Changes

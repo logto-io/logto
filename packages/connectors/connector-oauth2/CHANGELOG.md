@@ -1,5 +1,37 @@
 # @logto/connector-oauth
 
+## 1.8.0
+
+### Minor Changes
+
+- 1b03993: add a `disableEmailSync` switch to the standard OAuth2 connector
+
+  The connector always synced whatever the user info endpoint mapped to `email` to the user profile. This switch makes that configurable, matching the control the Microsoft Azure AD connector already offers. It is off by default, so existing connectors keep their current behavior.
+
+  The standard OAuth2 protocol carries no verification state for an email address, so the mapped value is taken at face value. Turn this on if you do not want the provider to supply the email address; the value stays available in `rawData`.
+
+### Patch Changes
+
+- f33304e: accept string-typed `expires_in` in token responses
+
+  Some identity providers, such as Criipto, return `expires_in` as a string instead of a number. Social sign-in with the generic OAuth 2.0 and OIDC connectors no longer fails with an invalid response error for these providers.
+
+- d89e507: support Node.js 26
+
+  Logto and the published packages now declare support for Node.js 22, 24 and 26. The minimum supported versions are 22.23.4, 24.22.1 and 26.12.1, which include the October 2026 Node.js security fixes.
+
+- 664e6ac: show the provider's actual error message instead of `{}` when a social connector request fails
+- 05678f9: accept token responses that return `scope` as an array
+
+  Some providers, such as Twitch, return `scope` in the token response as a JSON array instead of a space-delimited string. Social sign-in with the generic OAuth 2.0 and OIDC connectors no longer fails with an invalid response error for these providers; the scopes are normalized to a space-delimited string.
+
+- Updated dependencies [800eb13]
+- Updated dependencies [d89e507]
+- Updated dependencies [9d7d323]
+- Updated dependencies [664e6ac]
+- Updated dependencies [05678f9]
+  - @logto/connector-kit@5.2.0
+
 ## 1.7.9
 
 ### Patch Changes
