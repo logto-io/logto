@@ -9,10 +9,13 @@ import {
   defaultTenantId,
   getTenantOrganizationId,
   getTenantRole,
+  MfaFactor,
+  type MfaVerification,
   OrganizationInvitationStatus,
   SignInMode,
   TenantRole,
   type JsonObject,
+  userMfaDataGuard,
   userMfaDataKey,
   userOnboardingDataKey,
   type User,
@@ -22,10 +25,12 @@ import { generateStandardId } from '@logto/shared';
 import { condArray, conditional, conditionalArray, trySafe } from '@silverhand/essentials';
 
 import { EnvSet } from '#src/env-set/index.js';
+import RequestError from '#src/errors/RequestError/index.js';
 import { truncateMembershipDelta } from '#src/libraries/hook/utils.js';
 import { buildUserPasswordPayload } from '#src/libraries/user.utils.js';
 import { type JitOrganization } from '#src/queries/organization/email-domains.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
+import assertThat from '#src/utils/assert-that.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 import { getTenantId } from '#src/utils/tenant.js';
 
@@ -55,11 +60,26 @@ type ProvisioningCustomDataOptions = {
   mergeCustomData?: boolean;
 };
 
+type ProvisionMfaVerificationsOptions = {
+  /**
+   * MFA factors migrated by an Action. They are merged into the user's existing factors; a
+   * conflicting factor fails the write instead of being replaced, except that an exhausted backup
+   * code factor is replaced by a new set.
+   */
+  mfaVerifications?: MfaVerification[];
+};
+
 type CreateUserOptions = {
   checkIdentifierCollision?: boolean;
-} & ProvisioningCustomDataOptions;
+} & ProvisioningCustomDataOptions &
+  ProvisionMfaVerificationsOptions;
 
-type UpdateUserOptions = ProvisioningCustomDataOptions;
+type UpdateUserOptions = ProvisioningCustomDataOptions & ProvisionMfaVerificationsOptions;
+
+type MfaUpdate = {
+  mfaVerifications: MfaVerification[];
+  logtoConfig: JsonObject;
+};
 
 const mergeCreateUserCustomData = (
   existingCustomData: JsonObject | undefined,
@@ -89,6 +109,108 @@ const mergeUpdateUserCustomData = (
       }
     : undefined;
 
+/**
+ * Mark MFA as enabled for a user who is receiving migrated factors.
+ *
+ * New users are inserted with MFA disabled, and an existing user may have explicitly disabled it
+ * or skipped MFA on sign-in. Without clearing both flags the sign-in MFA gate would skip the
+ * migrated factors. Clearing `skipMfaOnSignIn` intentionally overrides a previous opt-out so the
+ * factors are challenged in this sign-in. Other MFA preferences are preserved.
+ */
+const enableMfaInLogtoConfig = (logtoConfig: JsonObject): JsonObject => {
+  const mfaData = userMfaDataGuard.safeParse(logtoConfig[userMfaDataKey]);
+
+  return {
+    ...logtoConfig,
+    [userMfaDataKey]: {
+      ...(mfaData.success ? mfaData.data : {}),
+      enabled: true,
+      skipMfaOnSignIn: false,
+    },
+  };
+};
+
+/**
+ * Merge migrated MFA factors into the user's existing factors.
+ *
+ * Conflicting factors fail instead of being overwritten, matching the Management API rules: one
+ * TOTP factor, one backup code factor with unused codes, and backup codes only alongside another
+ * factor. An exhausted backup code factor is replaced by a new set. WebAuthn credentials must be
+ * unique, including within the migrated set.
+ */
+const mergeMfaVerifications = (
+  existing: readonly MfaVerification[],
+  incoming: readonly MfaVerification[]
+): MfaVerification[] => {
+  const incomingTotp = incoming.filter(({ type }) => type === MfaFactor.TOTP);
+  const incomingBackupCode = incoming.filter(({ type }) => type === MfaFactor.BackupCode);
+
+  assertThat(
+    incomingTotp.length <= 1 &&
+      (incomingTotp.length === 0 || existing.every(({ type }) => type !== MfaFactor.TOTP)),
+    new RequestError({ code: 'user.totp_already_in_use', status: 422 })
+  );
+
+  // An exhausted backup code factor may be followed by a new set, as in the Management API.
+  assertThat(
+    incomingBackupCode.length <= 1 &&
+      (incomingBackupCode.length === 0 ||
+        existing.every(
+          (verification) =>
+            verification.type !== MfaFactor.BackupCode ||
+            verification.codes.every(({ usedAt }) => usedAt)
+        )),
+    new RequestError({ code: 'user.backup_code_already_in_use', status: 422 })
+  );
+
+  assertThat(
+    incomingBackupCode.length === 0 ||
+      existing.some(({ type }) => type !== MfaFactor.BackupCode) ||
+      incoming.some(({ type }) => type !== MfaFactor.BackupCode),
+    new RequestError({ code: 'session.mfa.backup_code_can_not_be_alone', status: 422 })
+  );
+
+  // Backup code verification reads the first backup-code factor, so a replacement set must
+  // replace the exhausted factor instead of being shadowed by it.
+  const existingForMerge =
+    incomingBackupCode.length > 0
+      ? existing.filter(({ type }) => type !== MfaFactor.BackupCode)
+      : existing;
+
+  const credentialIds = new Set(
+    existing.flatMap((verification) =>
+      verification.type === MfaFactor.WebAuthn ? [verification.credentialId] : []
+    )
+  );
+
+  for (const verification of incoming) {
+    if (verification.type !== MfaFactor.WebAuthn) {
+      continue;
+    }
+
+    assertThat(
+      !credentialIds.has(verification.credentialId),
+      new RequestError({ code: 'session.mfa.bind_mfa_existed', status: 422 })
+    );
+    credentialIds.add(verification.credentialId);
+  }
+
+  return [...existingForMerge, ...incoming];
+};
+
+const buildCreateUserMfaPayload = (
+  mfaVerifications: MfaVerification[] | undefined
+): { logtoConfig: JsonObject; mfaVerifications?: MfaVerification[] } => {
+  if (!mfaVerifications || mfaVerifications.length === 0) {
+    return { logtoConfig: { [userMfaDataKey]: { enabled: false } } };
+  }
+
+  return {
+    logtoConfig: { [userMfaDataKey]: { enabled: true } },
+    mfaVerifications: mergeMfaVerifications([], mfaVerifications),
+  };
+};
+
 export class ProvisionLibrary {
   constructor(
     private readonly tenantContext: TenantContext,
@@ -106,6 +228,7 @@ export class ProvisionLibrary {
     {
       checkIdentifierCollision: shouldCheckIdentifierCollision = false,
       mergeCustomData: shouldMergeCustomData = false,
+      mfaVerifications,
     }: CreateUserOptions = {}
   ) {
     const {
@@ -141,6 +264,7 @@ export class ProvisionLibrary {
     const customDataForInsert = shouldMergeCustomData
       ? mergeCreateUserCustomData(customData, profile.customData)
       : customData;
+    const mfaPayload = buildCreateUserMfaPayload(mfaVerifications);
 
     const [user] = await insertUser(
       {
@@ -156,9 +280,7 @@ export class ProvisionLibrary {
         ),
         ...conditional(socialIdentity && { identities: toUserSocialIdentityData(socialIdentity) }),
         ...conditional(customDataForInsert && { customData: customDataForInsert }),
-        logtoConfig: {
-          [userMfaDataKey]: { enabled: false },
-        },
+        ...mfaPayload,
       },
       { roleNames: initialUserRoles, isInteractive: true }
     );
@@ -201,7 +323,7 @@ export class ProvisionLibrary {
   async updateUser(
     userId: string,
     provisioningProfile: InteractionUserProvisioningProfile,
-    { mergeCustomData: shouldMergeCustomData = false }: UpdateUserOptions = {}
+    { mergeCustomData: shouldMergeCustomData = false, mfaVerifications }: UpdateUserOptions = {}
   ) {
     const { queries, libraries } = this.tenantContext;
 
@@ -223,12 +345,15 @@ export class ProvisionLibrary {
       customDataForUpdate,
       existingUser
     );
+    const mfaUpdate = await this.resolveMfaUpdate(userId, mfaVerifications, existingUser);
     const updatePayload = this.buildUpdateUserPayload({
       updateProfile,
       profileForUpdate,
       customDataForUpdate,
       passwordEncrypted,
       passwordEncryptionMethod,
+      mfaVerifications: mfaUpdate?.mfaVerifications,
+      logtoConfig: mfaUpdate?.logtoConfig,
     });
 
     if (Object.keys(updatePayload).length === 0) {
@@ -335,12 +460,31 @@ export class ProvisionLibrary {
     };
   }
 
+  private async resolveMfaUpdate(
+    userId: string,
+    mfaVerifications: MfaVerification[] | undefined,
+    existingUser?: User
+  ): Promise<MfaUpdate | undefined> {
+    if (!mfaVerifications || mfaVerifications.length === 0) {
+      return;
+    }
+
+    const user = existingUser ?? (await this.tenantContext.queries.users.findUserById(userId));
+
+    return {
+      mfaVerifications: mergeMfaVerifications(user.mfaVerifications, mfaVerifications),
+      logtoConfig: enableMfaInLogtoConfig(user.logtoConfig),
+    };
+  }
+
   private buildUpdateUserPayload({
     updateProfile,
     profileForUpdate,
     customDataForUpdate,
     passwordEncrypted,
     passwordEncryptionMethod,
+    mfaVerifications,
+    logtoConfig,
   }: {
     updateProfile: Omit<
       InteractionUserProvisioningProfile,
@@ -350,6 +494,8 @@ export class ProvisionLibrary {
     customDataForUpdate: JsonObject | undefined;
     passwordEncrypted: InteractionUserProvisioningProfile['passwordEncrypted'];
     passwordEncryptionMethod: InteractionUserProvisioningProfile['passwordEncryptionMethod'];
+    mfaVerifications: MfaVerification[] | undefined;
+    logtoConfig: JsonObject | undefined;
   }) {
     return {
       ...updateProfile,
@@ -363,6 +509,8 @@ export class ProvisionLibrary {
             passwordEncryptionMethod,
           })
       ),
+      ...conditional(mfaVerifications !== undefined && { mfaVerifications }),
+      ...conditional(logtoConfig !== undefined && { logtoConfig }),
     };
   }
 

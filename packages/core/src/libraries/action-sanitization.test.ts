@@ -1,6 +1,7 @@
 import {
   InteractionEvent,
   LogtoActionKey,
+  MfaFactor,
   SignInIdentifier,
   VerificationType,
 } from '@logto/schemas';
@@ -138,6 +139,40 @@ describe('toLoggableActionResult', () => {
       userFields: ['primaryEmail', 'name'],
       unknownFieldCount: 2,
     });
+  });
+
+  it('never reports migrated MFA credentials', () => {
+    const secret = 'JBSWY3DPEHPK3PXP';
+    const backupCode = 'd94c2f29ae';
+    const result = toLoggableActionResult({
+      action: 'createUser',
+      passwordVerified: true,
+      user: {
+        name: 'Foo',
+      },
+      mfaVerifications: [
+        { type: MfaFactor.TOTP, secret },
+        { type: MfaFactor.BackupCode, codes: [backupCode] },
+        {
+          type: MfaFactor.WebAuthn,
+          credentialId: 'credential-id',
+          publicKey: 'public-key',
+          counter: 0,
+        },
+      ],
+    });
+
+    expect(result).toEqual({
+      passwordVerified: true,
+      userFields: ['name'],
+      unknownFieldCount: 0,
+    });
+
+    const serialized = JSON.stringify(result);
+    expect(serialized).not.toContain(secret);
+    expect(serialized).not.toContain(backupCode);
+    expect(serialized).not.toContain('credential-id');
+    expect(serialized).not.toContain('public-key');
   });
 
   it('does not report a forged passwordVerified as verified', () => {
