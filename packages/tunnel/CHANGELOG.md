@@ -1,5 +1,21 @@
 # @logto/tunnel
 
+## 0.3.12
+
+### Patch Changes
+
+- d89e507: support Node.js 26
+
+  Logto and the published packages now declare support for Node.js 22, 24 and 26. The minimum supported versions are 22.23.4, 24.22.1 and 26.12.1, which include the October 2026 Node.js security fixes.
+
+- a2db4e1: prevent symlinks in the experience path from serving files outside of it
+
+  The tunnel service now resolves symlinks before serving static files from `--experience-path`. Requests for files whose real location is outside the experience path return 404, while symlinks that point to files inside it and an experience path that is itself a symlink keep working.
+
+- Updated dependencies [d89e507]
+- Updated dependencies [9193c59]
+  - @logto/core-kit@2.14.0
+
 ## 0.3.11
 
 ### Patch Changes

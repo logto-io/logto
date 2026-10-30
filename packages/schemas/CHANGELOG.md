@@ -1,5 +1,55 @@
 # Change Log
 
+## 1.46.0
+
+### Minor Changes
+
+- 4c2822c: support GeeTest as a CAPTCHA provider
+
+  [GeeTest](https://www.geetest.com) CAPTCHA v4 adds an adaptive CAPTCHA service with localized challenges, which suits sign-in experiences targeting mainland China where Google reCAPTCHA is often unreachable.
+
+  To use it, create a CAPTCHA v4 event in the GeeTest dashboard, then go to Console > Security > CAPTCHA and add GeeTest with its CAPTCHA ID and CAPTCHA key. The same configuration is available through the `PUT /api/captcha-provider` Management API with `type: "Geetest"`.
+
+  While GeeTest is the CAPTCHA provider, the sign-in page's Content Security Policy allows GeeTest's SDK, API, and static hosts, which the widget loads the challenge from.
+
+- f8ea006: add `hasPassword` to the members of an organization (`GET /api/organizations/:id/users`)
+
+  Each organization member now includes whether they have a password set, matching the user list and user detail responses.
+
+- c4af1c8: add a `deliveryId` to every webhook payload
+
+  Every webhook payload now carries a `deliveryId`: unique per hook and event, kept across the retries of the same request, so a receiver can process each delivery exactly once without hashing the body. The same value is the id of the audit log entry that records the delivery, so a `deliveryId` reported by a receiver can be opened from the webhook's recent requests in the Console or fetched with `GET /api/logs/:id`. The payload of the "test webhook" action carries one too.
+
+- d65a8dc: support OIDC step-up authentication for Account Center and developer applications
+
+  Clients can request `acr_values` and `max_age` and receive `acr`, `amr`, and `auth_time` in ID tokens, access tokens, and introspection responses. The built-in Account Center now authorizes sensitive Account API operations with a fresh first-party `urn:logto:acr:1fa` access token instead of a separate verification record, and the legacy permission-verification runtime is removed.
+
+- 4dc1d1b: allow admins to require individual users to set up MFA, preventing those users from skipping the setup flow
+
+  Set `mfa.required` to `true` through the Management API, or turn on "Require MFA setup" on the user details page in Console. The user must bind MFA on their next sign-in and cannot skip it, regardless of the organization-level MFA policy.
+
+### Patch Changes
+
+- d89e507: support Node.js 26
+
+  Logto and the published packages now declare support for Node.js 22, 24 and 26. The minimum supported versions are 22.23.4, 24.22.1 and 26.12.1, which include the October 2026 Node.js security fixes.
+
+- Updated dependencies [a7a0af9]
+- Updated dependencies [800eb13]
+- Updated dependencies [4c2822c]
+- Updated dependencies [d89e507]
+- Updated dependencies [9193c59]
+- Updated dependencies [cec1c1a]
+- Updated dependencies [9d7d323]
+- Updated dependencies [664e6ac]
+- Updated dependencies [d65a8dc]
+- Updated dependencies [05678f9]
+- Updated dependencies [4dc1d1b]
+  - @logto/phrases@1.33.0
+  - @logto/connector-kit@5.2.0
+  - @logto/core-kit@2.14.0
+  - @logto/phrases-experience@1.16.0
+
 ## 1.45.0
 
 ## 1.44.0

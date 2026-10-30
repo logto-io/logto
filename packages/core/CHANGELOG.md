@@ -1,5 +1,158 @@
 # Change Log
 
+## 1.46.0
+
+### Minor Changes
+
+- 48b7f01: return an `access_denied` OAuth error when a user cancels consent or a direct sign-in fails
+
+  Cancelling the built-in consent page now finishes the interaction with `access_denied` and sends the user back to the client application with the original `state` and `iss`, instead of redirecting to the client without the OAuth context. A failed direct sign-in returns to the client the same way instead of falling back to the hosted sign-in page.
+
+  Custom experiences can finish the current interaction with the same error through the new `POST /api/experience/abort` endpoint, optionally with a `reason` that becomes `error_description`. `GET /api/experience/interaction/direct-sign-in` returns the `direct_sign_in` value of the current authorization request, so a custom experience can tell a direct sign-in apart from a hosted one before the interaction is initialized.
+
+- e8c954a: create self-service personal access tokens in Account Center
+
+  Users can create, rename, and revoke personal access tokens on the Security page of Account Center when the tenant enables the personal access token field. Each token is shown only once at creation and expires within 365 days. The same operations are available through the Account API under `/api/my-account/personal-access-tokens`.
+
+- 4c2822c: support GeeTest as a CAPTCHA provider
+
+  [GeeTest](https://www.geetest.com) CAPTCHA v4 adds an adaptive CAPTCHA service with localized challenges, which suits sign-in experiences targeting mainland China where Google reCAPTCHA is often unreachable.
+
+  To use it, create a CAPTCHA v4 event in the GeeTest dashboard, then go to Console > Security > CAPTCHA and add GeeTest with its CAPTCHA ID and CAPTCHA key. The same configuration is available through the `PUT /api/captcha-provider` Management API with `type: "Geetest"`.
+
+  While GeeTest is the CAPTCHA provider, the sign-in page's Content Security Policy allows GeeTest's SDK, API, and static hosts, which the widget loads the challenge from.
+
+- 7945f99: support search users by exact custom data in the Management API
+
+  `GET /api/users` now accepts a repeatable `customData` query parameter that matches users whose custom data contains the given JSON object, for example `customData={"customId":114514}`. Repeated values are combined with OR, and the condition is combined with other user filters using AND.
+
+- f8ea006: add `hasPassword` to the members of an organization (`GET /api/organizations/:id/users`)
+
+  Each organization member now includes whether they have a password set, matching the user list and user detail responses.
+
+- d62fd36: add `sha256-crypt` and `sha512-crypt` legacy password hash support
+
+  Users can now be imported with SHA-crypt hashes (`$5$` and `$6$`, as used by Linux, passlib, PHP, and others) by setting the password algorithm to `Legacy` and passing the complete stored crypt string in the password digest.
+
+- c4af1c8: add a `deliveryId` to every webhook payload
+
+  Every webhook payload now carries a `deliveryId`: unique per hook and event, kept across the retries of the same request, so a receiver can process each delivery exactly once without hashing the body. The same value is the id of the audit log entry that records the delivery, so a `deliveryId` reported by a receiver can be opened from the webhook's recent requests in the Console or fetched with `GET /api/logs/:id`. The payload of the "test webhook" action carries one too.
+
+- d65a8dc: support OIDC step-up authentication for Account Center and developer applications
+
+  Clients can request `acr_values` and `max_age` and receive `acr`, `amr`, and `auth_time` in ID tokens, access tokens, and introspection responses. The built-in Account Center now authorizes sensitive Account API operations with a fresh first-party `urn:logto:acr:1fa` access token instead of a separate verification record, and the legacy permission-verification runtime is removed.
+
+- 2caaf0a: add an unlock action on the user details page to clear sign-in and security verification
+  lockouts
+
+  The action clears lockouts keyed on the user ID, primary email, primary phone, and username,
+  so an admin can unlock a user without knowing which identifier triggered the lockout.
+
+- 4dc1d1b: allow admins to require individual users to set up MFA, preventing those users from skipping the setup flow
+
+  Set `mfa.required` to `true` through the Management API, or turn on "Require MFA setup" on the user details page in Console. The user must bind MFA on their next sign-in and cannot skip it, regardless of the organization-level MFA policy.
+
+### Patch Changes
+
+- a7a0af9: respond 502 `connector.social_provider_unreachable` when the social provider cannot be reached
+
+  A social sign-in whose token exchange or user-info request failed at the transport level (timeout, connection reset, DNS failure) ended with a 500 "Internal server error.", indistinguishable from a bug in Logto. The social library now relays such a failure as a 502 that carries the network code and the connector id, whichever HTTP client the connector uses (`got` or `ky`), so a caller can tell a provider outage from a Logto error and the end user gets a translated message instead of a generic one. The request's method and URL are written to the server log.
+
+- ae8412d: warn once when a `/console` request reaches the default tenant because the request origin does not match any configured admin endpoint, asking operators to check the Console URL and `ADMIN_ENDPOINT`
+- f350b05: stop validating a social connector form post callback after 100 invalid fields
+
+  `POST /callback/:connectorId` and `POST /account/callback/social/:connectorId` now reject an invalid body after checking at most 100 invalid fields, instead of checking every field first. The error response is unchanged.
+
+- 3df75b5: answer `connector.authorization_failed` when the user declines the social provider's authorization
+
+  A user who declines the consent screen or cancels at the social provider used to get a generic `connector.general` error whose message was the raw callback parameters, for most social connectors.
+
+  The callback is now checked before the connector runs, on every social sign-in, verification and account linking path: when it carries `error=access_denied` (OAuth 2.0 / OpenID Connect), `user_cancelled_authorize` (Sign in with Apple, LinkedIn) or `user_cancelled_login` (LinkedIn), the request is answered with a 401 `connector.authorization_failed` that carries the provider's `error` and `error_description`. Other provider error codes keep reaching the connector, which surfaces the provider's description as before.
+
+- c83aa00: require a first-party application for Account API third-party token retrieval
+
+  The three Account API endpoints that return or refresh a stored social / enterprise SSO provider token now require a first-party application, matching the first-party only policy the other account routes already enforce:
+
+  - `GET /my-account/identities/:target/access-token`
+  - `GET /my-account/sso-identities/:connectorId/access-token`
+  - `PUT /my-account/identities/:target/access-token`
+
+  These routes were missed when the policy was applied to account mutations, and again when it was extended to account reads that need recent authentication. A stored provider token is a bearer credential for the upstream provider rather than a profile attribute, so it belongs inside that boundary: the `identities` scope tells an application it may read the user's identity details, and the end user consents to "Your social identities" — neither grants custody of a live provider credential.
+
+  Third-party applications now receive `403 auth.third_party_application_forbidden` from these three endpoints. First-party applications are unaffected, including Account Center and Console. If an integration retrieves stored provider tokens today, use a first-party application to obtain the access token.
+
+- 71e8285: nest the social user info under `userInfo` in the `Interaction.SignIn.Identifier.Social.Submit` audit log of the deprecated interaction API
+
+  This only affects social sign-in through the deprecated `/api/interaction` endpoints; the current experience API (`/api/experience`) is unchanged. The change is precautionary: connector profile fields were spread at the top level of that log's payload, so a connector that returns its own `userId` (for example Feishu's employee user ID) could replace the Logto user ID on that entry. Queries that read this entry's profile fields need to read them from `payload.userInfo` instead.
+
+- d89e507: support Node.js 26
+
+  Logto and the published packages now declare support for Node.js 22, 24 and 26. The minimum supported versions are 22.23.4, 24.22.1 and 26.12.1, which include the October 2026 Node.js security fixes.
+
+- b96dca7: retry the database connection at startup when the host name cannot be resolved
+
+  Core now retries the database connection at startup when the host name cannot be resolved (`ENOTFOUND`, `EAI_AGAIN`), instead of exiting immediately. The CLI database commands (`db seed`, `db alteration deploy`…) now retry transient connection errors the same way core does, DNS failures included: they usually run right before `npm start` in the same container and used to exit on the first failed attempt.
+
+- 0fd85d0: list at most 100 issues in request validation errors
+
+  A `guard.invalid_input` error response now lists only the first 100 validation issues instead of every issue in an oversized invalid payload.
+
+- 79a5aba: block MFA factor enrollment and related prompts on sign-ins that skipped MFA verification
+
+  A sign-in that skips MFA verification, for example when Adaptive MFA does not trigger or a trusted device satisfies the policy, no longer shows the additional MFA, passkey or backup-code prompts or allows enrolling a new factor. Registration, pure step-up, and accounts with no stored factor and no primary email or phone that the configured email or phone MFA could use keep their existing behavior. A passkey, social, or SSO verification is only accepted for the account it identified.
+
+- 187d20f: stop exposing the request of a failed outbound `got` request in error responses, audit logs, error logs and telemetry
+
+  `got` keeps the full request options on its `RequestError` as an enumerable property: the form body of a social connector's token exchange (`code=…&client_id=…&client_secret=…`), the `Authorization` header or basic-auth password of an email connector, the query string of the connectors that exchange their code through it. Several connectors wrap such an error as the `data` of a `ConnectorError`, so a single network timeout towards the provider used to put the connector's secret in the error logs, in Application Insights, in the audit log entry of the request, and — through the `connector.general` response the connector error handler builds from it — in the body returned to the end user's browser.
+
+  The error handlers now reduce such an error, and the `ConnectorError` / `RequestError` that wrap it, to its name, code and message (plus method and URL, origin and pathname only, in the server log) before logging, exporting or returning it.
+
+- cec1c1a: fix manual unlock not clearing active security verification lockouts
+
+  Sentinel activity deletion now also removes active blocked decisions older than one hour, so manually unlocking a user works when the lockout duration exceeds 60 minutes. The manual unlock dialog and API documentation now mention user IDs and security verification lockouts.
+
+- 786d5e1: add a sign-in experience setting to control whether sso connector branding is exposed before the email domain matches
+- 214a5b7: prevent sso connector configuration from being returned in sign-in error responses
+- 1b4aee2: reject account API reads that need recent authentication from third-party applications
+
+  Reading backup codes, sessions, grants, and trusted devices now requires a first-party application, matching the first-party only policy that the account mutations already enforce.
+
+- 792197d: keep repeated query parameters in pagination `Link` headers
+
+  Management API list endpoints, such as `GET /api/applications?types=SPA&types=Traditional&page=1`, now return `first`, `prev`, `next` and `last` links that keep every value of a repeated query parameter, instead of joining them into a single comma-separated value that changes the results of the linked page.
+
+- 57d44a2: count only the matching one-time tokens when listing them with a filter
+
+  `GET /api/one-time-tokens` reported the tenant's full one-time token count in the `Total-Number` header even when the request filtered by `email` or `status`. A client paginating a filtered list saw a total that did not describe its results and worked through pages that were never there. The header now counts only the tokens that match the filter.
+
+- Updated dependencies [48b7f01]
+- Updated dependencies [a7a0af9]
+- Updated dependencies [e8c954a]
+- Updated dependencies [800eb13]
+- Updated dependencies [4c2822c]
+- Updated dependencies [f8ea006]
+- Updated dependencies [d89e507]
+- Updated dependencies [f0217e4]
+- Updated dependencies [b96dca7]
+- Updated dependencies [9193c59]
+- Updated dependencies [cec1c1a]
+- Updated dependencies [9d7d323]
+- Updated dependencies [664e6ac]
+- Updated dependencies [c4af1c8]
+- Updated dependencies [d65a8dc]
+- Updated dependencies [ac32be2]
+- Updated dependencies [05678f9]
+- Updated dependencies [4dc1d1b]
+  - @logto/experience@1.24.0
+  - @logto/phrases@1.33.0
+  - @logto/account@0.8.0
+  - @logto/console@1.43.0
+  - @logto/connector-kit@5.2.0
+  - @logto/schemas@1.46.0
+  - @logto/cli@1.46.0
+  - @logto/core-kit@2.14.0
+  - @logto/phrases-experience@1.16.0
+
 ## 1.45.0
 
 ### Minor Changes

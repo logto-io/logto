@@ -1,5 +1,17 @@
 # Change Log
 
+## 2.14.0
+
+### Minor Changes
+
+- 9193c59: add `UserScope.PersonalAccessTokens` for authorizing personal access token management
+
+### Patch Changes
+
+- d89e507: support Node.js 26
+
+  Logto and the published packages now declare support for Node.js 22, 24 and 26. The minimum supported versions are 22.23.4, 24.22.1 and 26.12.1, which include the October 2026 Node.js security fixes.
+
 ## 2.13.0
 
 ### Minor Changes

@@ -1,5 +1,13 @@
 # Change Log
 
+## 3.4.4
+
+### Patch Changes
+
+- d89e507: support Node.js 26
+
+  Logto and the published packages now declare support for Node.js 22, 24 and 26. The minimum supported versions are 22.23.4, 24.22.1 and 26.12.1, which include the October 2026 Node.js security fixes.
+
 ## 3.4.3
 
 ### Patch Changes
