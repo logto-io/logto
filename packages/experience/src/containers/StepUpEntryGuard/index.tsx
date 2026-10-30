@@ -1,7 +1,8 @@
 import { AuthenticationContextMode } from '@logto/schemas';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 
+import PageContext from '@/Providers/PageContextProvider/PageContext';
 import { getStepUpContext } from '@/apis/experience';
 import { stepUpRoutes } from '@/constants/step-up';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
@@ -34,9 +35,14 @@ type State = 'loading' | 'allowed' | 'blocked';
  * stale or edited hint can only change which page the client renders.
  */
 const StepUpEntryGuard = () => {
+  const { isPreview } = useContext(PageContext);
   const tabAppId = sessionStorage.getItem(searchKeys.appId);
-  const isStepUpHint =
-    tabAppId && logtoCookies.appId === tabAppId ? logtoCookies.isStepUp : undefined;
+  // The Console preview has no interaction to inspect, so it is never a step-up.
+  const isStepUpHint = isPreview
+    ? false
+    : tabAppId && logtoCookies.appId === tabAppId
+      ? logtoCookies.isStepUp
+      : undefined;
   const [state, setState] = useState<State>(() =>
     isStepUpHint === undefined ? 'loading' : isStepUpHint ? 'blocked' : 'allowed'
   );
