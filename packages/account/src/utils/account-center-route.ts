@@ -1,6 +1,5 @@
 import { yes } from '@silverhand/essentials';
 
-import { isDevFeaturesEnabled } from '@ac/constants/env';
 import {
   emailRoute,
   emailSuccessRoute,
@@ -207,11 +206,7 @@ export const handleAccountCenterRoute = () => {
   }
 
   handleUiLocalesParameter();
-
-  // DEV: Account Center sign-in hint
-  if (isDevFeaturesEnabled) {
-    handleLoginHintParameter();
-  }
+  handleLoginHintParameter();
 
   // Restore the stored route if the current path is the base path.
   if (window.location.pathname === accountCenterBasePath) {
