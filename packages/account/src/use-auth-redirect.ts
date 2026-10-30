@@ -5,6 +5,7 @@ import { useContext, useEffect, useRef } from 'react';
 import PageContext from './Providers/PageContextProvider/PageContext';
 import {
   accountCenterBasePath,
+  clearLoginHint,
   getLoginHint,
   getUiLocales,
   setRouteRestore,
@@ -40,7 +41,7 @@ export const useAuthRedirect = ({
   const uiLocales = getUiLocales();
   const loginHint = getLoginHint();
   const { isAuthenticated, isLoading, signIn } = useLogto();
-  const { accountCenterSettings, isLoadingExperience, isLoadingUserInfo, userInfoError } =
+  const { accountCenterSettings, isLoadingExperience, isLoadingUserInfo, userInfo, userInfoError } =
     useContext(PageContext);
   const isInitialAuthLoading = !isAuthenticated && isLoading;
   const hasAttemptedSilentReauth = useRef(false);
@@ -105,4 +106,12 @@ export const useAuthRedirect = ({
     uiLocales,
     userInfoError,
   ]);
+
+  useEffect(() => {
+    // A loaded user means the hint was either used by the sign-in that just completed or never
+    // needed. Drop it so a later re-auth fallback doesn't prefill a stale identifier.
+    if (userInfo) {
+      clearLoginHint();
+    }
+  }, [userInfo]);
 };

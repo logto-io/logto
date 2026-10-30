@@ -6,7 +6,7 @@ import { Main } from './App';
 import renderWithPageContext, {
   mockAccountCenterSettings,
 } from './__mocks__/RenderWithPageContext';
-import { setLoginHint } from './utils/account-center-route';
+import { getLoginHint, setLoginHint } from './utils/account-center-route';
 
 // Note: jest.requireActual('@logto/react') can't be used here, as it pulls in
 // @logto/client → @logto/js, which fails to resolve under the monorepo's
@@ -179,6 +179,32 @@ describe('Account Center <Main /> auth-redirect effects', () => {
       expect(signIn).toHaveBeenCalledWith(
         expect.objectContaining({ loginHint: 'foo@example.com' })
       );
+    });
+  });
+
+  describe('login hint lifetime', () => {
+    it('clears the stored login hint once the signed-in user is loaded', () => {
+      setLoginHint('foo@example.com');
+      setLocation('/account/profile');
+      setupUseLogto();
+
+      renderWithPageContext(<Main />, { initialEntries: ['/profile'] }, { pageContext: {} });
+
+      expect(getLoginHint()).toBeUndefined();
+    });
+
+    it('keeps the stored login hint while user info fails, for the re-auth fallback', () => {
+      setLoginHint('foo@example.com');
+      setLocation('/account/profile');
+      setupUseLogto();
+
+      renderWithPageContext(
+        <Main />,
+        { initialEntries: ['/profile'] },
+        { pageContext: { userInfo: undefined, userInfoError: new Error('userinfo failed') } }
+      );
+
+      expect(getLoginHint()).toBe('foo@example.com');
     });
   });
 
