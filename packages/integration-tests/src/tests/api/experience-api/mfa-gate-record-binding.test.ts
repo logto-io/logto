@@ -1,7 +1,8 @@
 import { InteractionEvent, MfaFactor, SignInIdentifier } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
+import { trySafe } from '@silverhand/essentials';
 
-import { createUserMfaVerification } from '#src/api/admin-user.js';
+import { createUserMfaVerification, deleteUser } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { SsoConnectorApi } from '#src/api/sso-connector.js';
 import { initExperienceClient } from '#src/helpers/client.js';
@@ -31,6 +32,8 @@ describe('the MFA exemption of a first-factor record is bound to the account it 
   /** The SSO identity of an account of its own, not of the account being signed in. */
   const ssoAccountSub = generateStandardId();
   const ssoAccountEmail = generateEmail(domain);
+  // eslint-disable-next-line @silverhand/fp/no-let -- Assigned once the SSO account is provisioned.
+  let ssoAccountUserId = '';
 
   const connectorId = () => {
     const id = ssoConnectorApi.firstConnectorId;
@@ -77,7 +80,8 @@ describe('the MFA exemption of a first-factor record is bound to the account it 
     });
     await updateSignInExperience({ singleSignOnEnabled: true });
     // Provision the SSO account, so that the assertion identifies an account that does exist.
-    await signInWithEnterpriseSso(
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Assigned once, see the declaration.
+    ssoAccountUserId = await signInWithEnterpriseSso(
       connectorId(),
       { sub: ssoAccountSub, email: ssoAccountEmail, email_verified: true },
       true
@@ -86,7 +90,12 @@ describe('the MFA exemption of a first-factor record is bound to the account it 
   });
 
   afterAll(async () => {
-    await Promise.all([ssoConnectorApi.cleanUp(), userApi.cleanUp()]);
+    await Promise.all([
+      ssoConnectorApi.cleanUp(),
+      userApi.cleanUp(),
+      // The sign-in flow provisioned this account, so `userApi` does not track it.
+      trySafe(deleteUser(ssoAccountUserId)),
+    ]);
     await resetMfaSettings();
   });
 
@@ -113,6 +122,13 @@ describe('the MFA exemption of a first-factor record is bound to the account it 
     // The switch discards the identified user and keeps the verification records.
     await client.updateInteractionEvent({ interactionEvent: InteractionEvent.Register });
     await client.updateInteractionEvent({ interactionEvent: InteractionEvent.SignIn });
+
+    // Without this, a switch that also dropped the record would leave the case asserting the
+    // same thing as the one above.
+    const { verificationRecords } = await client.getInteractionData();
+    expect(verificationRecords).toEqual(
+      expect.arrayContaining([expect.objectContaining({ id: verificationId })])
+    );
 
     await identifyUserWithUsernamePassword(client, username, password);
 
