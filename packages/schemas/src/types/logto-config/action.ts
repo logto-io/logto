@@ -1,7 +1,7 @@
 import { jsonGuard } from '@logto/connector-kit';
 import { z } from 'zod';
 
-import type { Json } from '../../foundations/index.js';
+import { MfaFactor, type Json, webAuthnTransportGuard } from '../../foundations/index.js';
 import { type ToZodObject } from '../../utils/zod.js';
 import {
   InteractionEvent,
@@ -75,6 +75,37 @@ export const actionUserPatchGuard = userInfoGuard
 
 export type ActionUserPatch = z.infer<typeof actionUserPatchGuard>;
 
+/**
+ * An MFA factor migrated by the Post first-factor verification Action.
+ *
+ * The shape carries only the credential material needed to verify the factor afterwards. Fields
+ * managed by Logto, such as the verification ID and creation time, are generated on write and are
+ * not accepted from the script.
+ */
+export const actionMfaVerificationGuard = z.discriminatedUnion('type', [
+  z.object({
+    type: z.literal(MfaFactor.TOTP),
+    secret: z.string(),
+  }),
+  z.object({
+    type: z.literal(MfaFactor.BackupCode),
+    codes: z.string().array(),
+  }),
+  z.object({
+    type: z.literal(MfaFactor.WebAuthn),
+    credentialId: z.string().min(1),
+    publicKey: z.string().min(1),
+    counter: z.number().int().nonnegative(),
+    /** The relying party ID the credential was registered for. */
+    rpId: z.string().min(1).optional(),
+    transports: webAuthnTransportGuard.array().optional(),
+    agent: z.string().optional(),
+    name: z.string().optional(),
+  }),
+]);
+
+export type ActionMfaVerification = z.infer<typeof actionMfaVerificationGuard>;
+
 export type PostFirstFactorVerificationEvent = {
   key: LogtoActionKey.PostFirstFactorVerification;
   interactionEvent: InteractionEvent.SignIn;
@@ -97,11 +128,13 @@ export const postFirstFactorVerificationResultGuard = z.discriminatedUnion('acti
     action: z.literal('createUser'),
     user: actionUserPatchGuard.passthrough(),
     passwordVerified: z.literal(true),
+    mfaVerifications: actionMfaVerificationGuard.array().optional(),
   }),
   z.object({
     action: z.literal('updateUser'),
     user: actionUserPatchGuard.passthrough(),
     passwordVerified: z.literal(true),
+    mfaVerifications: actionMfaVerificationGuard.array().optional(),
   }),
 ]);
 
@@ -166,6 +199,9 @@ export type LoggableActionEvent =
  * The audit-log description of what a script asked Logto to do. Action results are authored by
  * untrusted scripts, so this reports the shape of the requested user patch instead of its values,
  * and names only fields on the {@link actionUserPatchFields} allowlist.
+ *
+ * Migrated MFA factors are deliberately omitted: their secrets and backup codes must never reach
+ * the audit log.
  */
 export type LoggableActionResult = {
   passwordVerified: boolean;

@@ -3,6 +3,7 @@ import {
   AdditionalIdentifier,
   InteractionEvent,
   LogtoActionKey,
+  MfaFactor,
   SentinelActivityAction,
   SignInIdentifier,
   UsersPasswordEncryptionMethod,
@@ -466,6 +467,43 @@ describe('password verification route PostFirstFactorVerification fallback', () 
       { mergeCustomData: true }
     );
     expect(passwordVerificationRecord.markAsVerified).toHaveBeenCalled();
+  });
+
+  it('passes migrated MFA factors to user provisioning', async () => {
+    const handler = registerRoute();
+    const ctx = createContext();
+
+    passwordVerificationRecord.verify.mockRejectedValueOnce(invalidCredentialsError);
+    findUserByEmail.mockResolvedValueOnce(mockUser);
+    runAction.mockResolvedValueOnce({
+      action: 'updateUser',
+      passwordVerified: true,
+      user: {},
+      mfaVerifications: [
+        {
+          type: MfaFactor.TOTP,
+          secret: 'JBSWY3DPEHPK3PXP',
+        },
+      ],
+    });
+
+    await handler(ctx, jest.fn().mockImplementation(resolveVoid));
+
+    expect(updateUser).toHaveBeenCalledWith(
+      mockUser.id,
+      {
+        ...passwordHashPayload,
+      },
+      {
+        mergeCustomData: true,
+        mfaVerifications: [
+          expect.objectContaining({
+            type: MfaFactor.TOTP,
+            key: 'JBSWY3DPEHPK3PXP',
+          }),
+        ],
+      }
+    );
   });
 
   it('surfaces identity conflict when the action create result targets an existing user', async () => {
