@@ -158,6 +158,13 @@ describe('Tunnel utils', () => {
       await expect(response.text()).resolves.toBe(content);
     });
 
+    it('should serve an empty file without a range', async () => {
+      const response = await fetch(new URL('empty.txt', fileUrl));
+      expect(response.status).toBe(200);
+      expect(response.headers.get('content-length')).toBe('0');
+      await expect(response.text()).resolves.toBe('');
+    });
+
     it('should serve the requested range', async () => {
       const response = await requestRange('bytes=2-5');
       expect(response.status).toBe(206);

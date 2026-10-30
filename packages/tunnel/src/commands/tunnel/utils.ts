@@ -85,12 +85,11 @@ export const getSafeStaticFilePath = async (staticPath: string, requestUrl: stri
 const readFile = async (requestPath: string, start?: number, end?: number) => {
   const fileHandle = await fs.open(requestPath, 'r');
   const { size } = await fileHandle.stat();
-  const lastByte = Math.max(size - 1, 0);
   const readStart = start ?? 0;
   // Clamp the requested range to the file size
-  const readEnd = Math.min(end ?? lastByte, lastByte);
+  const readEnd = Math.min(end ?? size - 1, size - 1);
 
-  if (start !== undefined && (start >= size || start > readEnd)) {
+  if (start !== undefined && start > readEnd) {
     await fileHandle.close();
     throw new Error('Range not satisfiable.');
   }
