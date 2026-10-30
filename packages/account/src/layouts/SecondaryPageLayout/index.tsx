@@ -3,9 +3,16 @@ import NavBar from '@experience/shared/components/NavBar';
 import PageMeta from '@experience/shared/components/PageMeta';
 import classNames from 'classnames';
 import type { TFuncKey } from 'i18next';
-import { type ReactElement } from 'react';
+import { type ReactElement, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { layoutClassNames } from '@ac/constants/layout';
+import {
+  clearPendingReturn,
+  clearShowSuccess,
+  getAccountCenterInternalRoute,
+  getPendingReturn,
+} from '@ac/utils/account-center-route';
 
 import styles from './index.module.scss';
 
@@ -32,10 +39,35 @@ const SecondaryPageLayout = ({
   isNavBarHidden,
   children,
 }: Props) => {
+  const navigate = useNavigate();
+
+  // Leaving a flow opened with a `redirect` parameter returns to that URL, and the return is
+  // cleared so a later flow does not complete into it.
+  const leaveFlow = useCallback(() => {
+    const pendingReturn = getPendingReturn();
+
+    if (!pendingReturn) {
+      window.history.back();
+      return;
+    }
+
+    clearPendingReturn();
+    clearShowSuccess();
+
+    const internalRoute = getAccountCenterInternalRoute(pendingReturn);
+
+    if (internalRoute) {
+      navigate(internalRoute, { replace: true });
+      return;
+    }
+
+    window.location.assign(pendingReturn);
+  }, [navigate]);
+
   return (
     <div className={classNames(styles.wrapper, layoutClassNames.secondaryPageWrapper)}>
       <PageMeta titleKey={title} />
-      <NavBar isHidden={isNavBarHidden} onSkip={onSkip} onClose={onBack} />
+      <NavBar isHidden={isNavBarHidden} onSkip={onSkip} onClose={onBack ?? leaveFlow} />
       <div className={styles.container}>
         {notification}
         <div className={styles.header}>

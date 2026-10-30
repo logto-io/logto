@@ -202,7 +202,17 @@ export const handleAccountCenterRoute = () => {
     }
 
     const { search, hash } = window.location;
-    window.history.replaceState({}, '', `${storedRoute}${search}${hash}`);
+    const restoredUrl = `${storedRoute}${search}${hash}`;
+
+    // A task flow's back button walks the browser history, whose previous entries are the sign-in
+    // experience pages this redirect came back from. Keep the base path entry below the restored
+    // flow, so going back leaves the flow for Account Center instead.
+    if (isTaskFlowRoute(storedRoute)) {
+      window.history.pushState({}, '', restoredUrl);
+      return;
+    }
+
+    window.history.replaceState({}, '', restoredUrl);
   }
 };
 
