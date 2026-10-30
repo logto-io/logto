@@ -16,6 +16,14 @@ create table logs (
   primary key (id)
 );
 
+create index logs__payload_user_id_created_at
+  on logs (tenant_id, payload_user_id, created_at)
+  where payload_user_id is not null;
+
+create index logs__payload_application_id_created_at
+  on logs (tenant_id, payload_application_id, created_at)
+  where payload_application_id is not null;
+
 /** Copies the payload keys used for lookups into their `payload_*` columns. */
 create function logs__set_payload_keys() returns trigger as
 $$ begin
