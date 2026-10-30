@@ -1,7 +1,7 @@
 import { type IncomingMessage, type ServerResponse } from 'node:http';
 import { promisify } from 'node:util';
 
-import { CaptchaType, type CustomUiCsp } from '@logto/schemas';
+import { CaptchaType, CrossOriginOpenerPolicy, type CustomUiCsp } from '@logto/schemas';
 import { conditional, conditionalArray } from '@silverhand/essentials';
 import helmet, { type HelmetOptions } from 'helmet';
 import type { MiddlewareType } from 'koa';
@@ -45,7 +45,8 @@ type SecurityHeaderSettings = {
   readonly getExperienceSecurityHeaderSettings: (
     customUiCsp?: CustomUiCsp,
     capEndpoint?: string,
-    isGeetest?: boolean
+    isGeetest?: boolean,
+    crossOriginOpenerPolicy?: CrossOriginOpenerPolicy
   ) => HelmetOptions;
 };
 
@@ -199,17 +200,24 @@ const createSecurityHeaderSettings = (tenantId: string): SecurityHeaderSettings 
    * @param isGeetest Whether GeeTest is the configured captcha provider. The GeeTest widget loads
    * its SDK and challenge from GeeTest-owned hosts, so they are only allowed while GeeTest is
    * configured.
+   * @param crossOriginOpenerPolicy The Cross-Origin-Opener-Policy for the Bring your UI assets.
    */
   const getExperienceSecurityHeaderSettings = (
     customUiCsp: CustomUiCsp = {},
     capEndpoint?: string,
-    isGeetest?: boolean
+    isGeetest?: boolean,
+    crossOriginOpenerPolicy: CrossOriginOpenerPolicy = CrossOriginOpenerPolicy.UnsafeNone
   ) => {
     const capOrigin = capEndpoint && new URL(capEndpoint).origin;
 
     // @ts-expect-error: helmet typings has lots of {A?: T, B?: never} | {A?: never, B?: T} options definitions. Optional settings type can not inferred correctly.
     const settings: HelmetOptions = {
       ...basicSecurityHeaderSettings,
+      // Dev feature: Bring your UI COOP header
+      ...(EnvSet.values.isDevFeaturesEnabled &&
+        crossOriginOpenerPolicy !== CrossOriginOpenerPolicy.UnsafeNone && {
+          crossOriginOpenerPolicy: { policy: crossOriginOpenerPolicy },
+        }),
       // Guarded by CSP header below
       frameguard: false,
       // Allow being loaded by console preview iframe
@@ -330,7 +338,7 @@ export const koaExperienceSecurityHeaders = <StateT, ContextT, ResponseBodyT>(
 
     const { req, res } = ctx;
     const [
-      { customUiAssets, customUiCsp, captchaPolicy },
+      { customUiAssets, customUiCsp, crossOriginOpenerPolicy, captchaPolicy },
       configuredCapEndpoint,
       configuredCaptchaType,
     ] = await Promise.all([
@@ -347,7 +355,8 @@ export const koaExperienceSecurityHeaders = <StateT, ContextT, ResponseBodyT>(
         ? getExperienceSecurityHeaderSettings(
             conditional(customUiAssets && customUiCsp),
             capEndpoint ?? undefined,
-            isGeetest
+            isGeetest,
+            conditional(customUiAssets && crossOriginOpenerPolicy)
           )
         : defaultExperienceSecurityHeaderSettings,
       req,
