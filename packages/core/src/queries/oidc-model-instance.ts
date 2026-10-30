@@ -9,7 +9,7 @@ import chalk from 'chalk';
 import { addSeconds, isBefore } from 'date-fns';
 
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
-import { convertToIdentifiers, convertToTimestamp } from '#src/utils/sql.js';
+import { conditionalSql, convertToIdentifiers, convertToTimestamp } from '#src/utils/sql.js';
 
 export type WithConsumed<T> = T & { consumed?: boolean };
 export type QueryResult = Pick<OidcModelInstance, 'payload' | 'consumedAt'>;
@@ -179,13 +179,22 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
     return results[0] ? convertResult(results[0], modelName) : undefined;
   };
 
+  /**
+   * Resolves `true` only for the call that consumes a single-use instance, and `false` when it is
+   * already consumed or does not exist. A refresh token stays reusable within
+   * `refreshTokenReuseInterval`, so every call re-stamps it and resolves `true`.
+   */
   const consumeInstanceById = async (modelName: string, id: string) => {
-    await pool.query(sql`
+    const isRefreshToken = modelName === 'RefreshToken';
+    const { rowCount } = await pool.query(sql`
       update ${table}
       set ${fields.consumedAt}=${convertToTimestamp()}
       where ${fields.modelName}=${modelName}
       and ${fields.id}=${id}
+      ${conditionalSql(!isRefreshToken, () => sql`and ${fields.consumedAt} is null`)}
     `);
+
+    return isRefreshToken || rowCount > 0;
   };
 
   const destroyInstanceById = async (modelName: string, id: string) => {
