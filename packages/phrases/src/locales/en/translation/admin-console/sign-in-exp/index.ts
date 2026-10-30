@@ -249,9 +249,9 @@ const sign_in_exp = {
       flows_title: 'Integrate out-of-the-box security setting flows',
       single_task_flows_title: 'Integrate an out-of-the-box single task flow',
       flows_description:
-        'Combine your domain with the route to form your account setting URL (e.g., https://auth.foo.com/account/email). Optionally add `redirect=` to return users to your app after a successful update, `show_success=true` to keep the success page visible, `ui_locales=` to override the default language, or `identifier=` to pre-fill the identifier input field.',
+        'Combine your domain with the route to form your account setting URL (e.g., https://auth.foo.com/account/email). Optionally add `redirect=` to return users to your app after a successful update, `show_success=true` to keep the success page visible, `ui_locales=` to override the default language, or `identifier=` to pre-fill the new value on the email, phone, or username route.',
       single_task_flows_description:
-        'Route users straight into a specific flow (e.g., email linkage). Optionally add `redirect=` to return users to your app after a successful update, `show_success=true` to keep the success page visible, `ui_locales=` to override the default language, or `identifier=` to pre-fill the identifier input field.',
+        'Route users straight into a specific flow (e.g., email linkage). Optionally add `redirect=` to return users to your app after a successful update, `show_success=true` to keep the success page visible, `ui_locales=` to override the default language, or `identifier=` to pre-fill the new value on the email, phone, or username route.',
       tooltips: {
         email: 'Update your primary email address',
         phone: 'Update your primary phone number',

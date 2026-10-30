@@ -245,9 +245,9 @@ const sign_in_exp = {
       flows_title: '기본 제공 보안 설정 흐름 통합',
       single_task_flows_title: '즉시 제공되는 단일 작업 흐름 통합',
       flows_description:
-        '도메인과 경로를 결합하여 계정 설정 URL 을 형성하세요 (예: https://auth.foo.com/account/email). 선택적으로 `redirect=`를 추가하여 성공적인 업데이트 후 사용자를 앱으로 되돌리거나, `show_success=true`로 성공 페이지를 표시하거나, `ui_locales=`로 기본 언어를 재정의하거나, `identifier=`로 식별자 입력 필드를 미리 채울 수 있습니다.',
+        '도메인과 경로를 결합하여 계정 설정 URL 을 형성하세요 (예: https://auth.foo.com/account/email). 선택적으로 `redirect=`를 추가하여 성공적인 업데이트 후 사용자를 앱으로 되돌리거나, `show_success=true`로 성공 페이지를 표시하거나, `ui_locales=`로 기본 언어를 재정의하거나, `identifier=`로 이메일, 전화번호 또는 사용자 이름 경로에서 새 값을 미리 채울 수 있습니다.',
       single_task_flows_description:
-        '사용자를 특정 흐름(예: 이메일 연결)으로 바로 라우팅합니다. 선택적으로 성공적인 업데이트 후 사용자를 앱으로 되돌리기 위해 `redirect=`를, 성공 페이지를 계속 표시하기 위해 `show_success=true`를, 기본 언어를 재정의하기 위해 `ui_locales=`를, 또는 식별자 입력 필드를 미리 채우기 위해 `identifier=`를 추가할 수 있습니다.',
+        '사용자를 특정 흐름(예: 이메일 연결)으로 바로 라우팅합니다. 선택적으로 성공적인 업데이트 후 사용자를 앱으로 되돌리기 위해 `redirect=`를, 성공 페이지를 계속 표시하기 위해 `show_success=true`를, 기본 언어를 재정의하기 위해 `ui_locales=`를, 또는 이메일, 전화번호 또는 사용자 이름 경로에서 새 값을 미리 채우기 위해 `identifier=`를 추가할 수 있습니다.',
       tooltips: {
         email: '주 이메일 주소 업데이트',
         phone: '주 전화번호 업데이트',

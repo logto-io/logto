@@ -236,10 +236,10 @@ const sign_in_exp = {
         '将用户路由到账户中心，以管理电子邮件、手机号、用户名、密码、MFA 和关联账号等安全设置。',
       flows_title: '集成开箱即用的安全设置流程',
       flows_description:
-        '将你的域名与路由组合以形成账户设置 URL（例如 https://auth.foo.com/account/email）。可选择添加 `redirect=` 以在成功更新后将用户返回到你的应用，添加 `show_success=true` 以保持成功页面可见，添加 `ui_locales=` 以覆盖默认语言，或添加 `identifier=` 以预填标识符输入字段。',
+        '将你的域名与路由组合以形成账户设置 URL（例如 https://auth.foo.com/account/email）。可选择添加 `redirect=` 以在成功更新后将用户返回到你的应用，添加 `show_success=true` 以保持成功页面可见，添加 `ui_locales=` 以覆盖默认语言，或添加 `identifier=` 以在邮箱、手机号或用户名路由中预填新的值。',
       single_task_flows_title: '集成开箱即用的单一任务流程',
       single_task_flows_description:
-        '直接将用户路由到特定流程（例如，邮箱绑定）。可选择添加 `redirect=` 以在成功更新后将用户返回到你的应用，添加 `show_success=true` 以保持成功页面可见，添加 `ui_locales=` 以覆盖默认语言，或添加 `identifier=` 以预填标识符输入字段。',
+        '直接将用户路由到特定流程（例如，邮箱绑定）。可选择添加 `redirect=` 以在成功更新后将用户返回到你的应用，添加 `show_success=true` 以保持成功页面可见，添加 `ui_locales=` 以覆盖默认语言，或添加 `identifier=` 以在邮箱、手机号或用户名路由中预填新的值。',
       tooltips: {
         email: '更新你的主要电子邮件地址',
         phone: '更新你的主要手机号码',

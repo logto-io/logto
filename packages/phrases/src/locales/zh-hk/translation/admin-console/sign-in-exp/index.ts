@@ -237,7 +237,7 @@ const sign_in_exp = {
       flows_title: '整合開箱即用的安全設置流程',
       single_task_flows_title: '整合開箱即用的單一資料更新流程',
       flows_description:
-        '結合你的域名與路徑形成你的帳戶設置 URL（例如，https://auth.foo.com/account/email）。可以選擇性地添加 `redirect=` 在成功更新後返回用戶至你的應用程式，添加 `show_success=true` 以保持成功頁面可見，添加 `ui_locales=` 以覆蓋預設語言，或添加 `identifier=` 以預填識別碼輸入欄位。',
+        '結合你的域名與路徑形成你的帳戶設置 URL（例如，https://auth.foo.com/account/email）。可以選擇性地添加 `redirect=` 在成功更新後返回用戶至你的應用程式，添加 `show_success=true` 以保持成功頁面可見，添加 `ui_locales=` 以覆蓋預設語言，或添加 `identifier=` 以在電郵、電話或用戶名稱路徑中預填新的值。',
       single_task_flows_description:
         '結合你的域名與路徑形成你的個人資料更新 URL（例如，https://auth.foo.com/account/profile）。可以選擇性地添加 `redirect=` 在成功更新後返回用戶至你的應用程式，或添加 `ui_locales=` 以覆蓋預設語言。',
       tooltips: {

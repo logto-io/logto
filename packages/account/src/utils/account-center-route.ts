@@ -1,5 +1,6 @@
 import { yes } from '@silverhand/essentials';
 
+import { isDevFeaturesEnabled } from '@ac/constants/env';
 import {
   emailRoute,
   emailSuccessRoute,
@@ -37,6 +38,7 @@ const redirectUrlParameter = 'redirect';
 const showSuccessParameter = 'show_success';
 const uiLocalesParameter = 'ui_locales';
 const identifierParameter = 'identifier';
+const loginHintParameter = 'login_hint';
 
 const knownRoutePrefixes: readonly string[] = [
   securityRoute,
@@ -130,6 +132,9 @@ export const {
   getIdentifier,
   setIdentifier,
   clearIdentifier,
+  getLoginHint,
+  setLoginHint,
+  clearLoginHint,
 } = sessionStorage;
 
 /**
@@ -178,6 +183,18 @@ const handleUiLocalesParameter = () => {
   clearUiLocales();
 };
 
+const handleLoginHintParameter = () => {
+  const parameters = new URLSearchParams(window.location.search);
+  const loginHint = parameters.get(loginHintParameter);
+
+  if (loginHint) {
+    setLoginHint(loginHint);
+    return;
+  }
+
+  clearLoginHint();
+};
+
 /**
  * Handle Account Center route restoration for sign in redirect.
  */
@@ -190,6 +207,11 @@ export const handleAccountCenterRoute = () => {
   }
 
   handleUiLocalesParameter();
+
+  // DEV: Account Center sign-in hint
+  if (isDevFeaturesEnabled) {
+    handleLoginHintParameter();
+  }
 
   // Restore the stored route if the current path is the base path.
   if (window.location.pathname === accountCenterBasePath) {
