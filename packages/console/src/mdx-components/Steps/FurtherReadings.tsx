@@ -3,7 +3,6 @@ import { appendPath } from '@silverhand/essentials';
 import { type Ref, forwardRef } from 'react';
 
 import { type GuideMetadata } from '@/assets/docs/guides/types';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import TextLink from '@/ds-components/TextLink';
 
 import Step, { type Props as StepProps } from '../Step';
@@ -62,8 +61,7 @@ function FurtherReadings(props: Props, ref?: Ref<HTMLDivElement>) {
             Configure client to use RBAC
           </TextLink>
         </li>
-        {/* DEV: OIDC step-up authentication. */}
-        {isDevFeaturesEnabled && stepUpAuthenticationTargets.has(target) && (
+        {stepUpAuthenticationTargets.has(target) && (
           <li>
             <TextLink
               href="https://docs.logto.io/end-user-flows/step-up-authentication"
