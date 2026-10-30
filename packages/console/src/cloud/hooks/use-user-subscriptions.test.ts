@@ -2,7 +2,6 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { createElement, type ReactNode } from 'react';
 import { SWRConfig } from 'swr';
 
-import * as env from '@/consts/env';
 import useCurrentUser from '@/hooks/use-current-user';
 
 import { useCloudApi } from './use-cloud-api';
@@ -25,12 +24,6 @@ jest.mock(
   { virtual: true }
 );
 jest.mock('./use-cloud-api', () => ({ useCloudApi: jest.fn() }));
-jest.mock('@/consts/env', () => ({
-  __esModule: true,
-  get isDevFeaturesEnabled() {
-    return true;
-  },
-}));
 jest.mock('@/hooks/use-current-user', () => ({ __esModule: true, default: jest.fn() }));
 
 const { ResponseError } = jest.requireMock<{
@@ -111,16 +104,6 @@ it('keeps Enterprise access when the personal summary fails', async () => {
   await waitFor(() => {
     expect(result.current.enterprises.data).toHaveLength(1);
   });
-  expect(result.current.hasSubscriptions).toBe(false);
-});
-
-it('does not call the new summary when dev features are disabled', async () => {
-  jest.spyOn(env, 'isDevFeaturesEnabled', 'get').mockReturnValue(false);
-  const { result } = renderBilling(useSubscriptionEntry);
-  await waitFor(() => {
-    expect(result.current.enterprises.data).toEqual([]);
-  });
-  expect(get).toHaveBeenCalledTimes(1);
   expect(result.current.hasSubscriptions).toBe(false);
 });
 

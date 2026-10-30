@@ -30,7 +30,7 @@ const mockMutate = jest.fn(async (data: Promise<unknown>) => data);
 const mockGetClaims = jest.fn().mockResolvedValue({ sub: 'owner', organization_roles: [] });
 const mockConnectors = jest.fn();
 jest.mock('@logto/react', () => ({ useLogto: () => ({ getIdTokenClaims: mockGetClaims }) }));
-jest.mock('@/consts/env', () => ({ isDevFeaturesEnabled: true }));
+jest.mock('@/consts/env', () => ({}));
 jest.mock('@/cloud/hooks/use-cloud-api', () => ({
   useCloudApi: () => ({ delete: mockDelete, get: mockGet }),
   createTenantApi: () => ({ delete: mockTenantDelete }),

@@ -15,7 +15,7 @@ import { useSelfHostedLicenses } from '@/cloud/hooks/use-self-hosted-licenses';
 import UserAvatar from '@/components/UserAvatar';
 import UserInfoCard from '@/components/UserInfoCard';
 import { adminTenantEndpoint } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { GlobalRoute } from '@/contexts/TenantsProvider';
 import Divider from '@/ds-components/Divider';
 import Dropdown, { DropdownItem } from '@/ds-components/Dropdown';
@@ -98,7 +98,7 @@ function UserInfo() {
           </DropdownItem>
         )}
         {/* Console SSO */}
-        {isCloud && isDevFeaturesEnabled && (
+        {isCloud && (
           <DropdownItem
             className={classNames(styles.dropdownItem, isLoading && styles.loading)}
             icon={<SingleSignOn className={styles.icon} />}

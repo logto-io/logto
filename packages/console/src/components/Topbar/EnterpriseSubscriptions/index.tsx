@@ -2,7 +2,6 @@ import classNames from 'classnames';
 
 import CardIcon from '@/assets/icons/card.svg?react';
 import { useSubscriptionEntry } from '@/cloud/hooks/use-user-subscriptions';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { GlobalRoute } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import TextLink from '@/ds-components/TextLink';
@@ -15,8 +14,7 @@ type Props = {
 
 function EnterpriseSubscriptions({ className }: Props) {
   const { enterprises, hasSubscriptions } = useSubscriptionEntry();
-  const enterprise = enterprises.data?.[0];
-  if (!enterprise && !hasSubscriptions) {
+  if (!enterprises.data?.length && !hasSubscriptions) {
     return null;
   }
 
@@ -25,11 +23,7 @@ function EnterpriseSubscriptions({ className }: Props) {
       targetBlank
       className={classNames(styles.button, className)}
       icon={<CardIcon className={styles.icon} />}
-      href={
-        enterprise && !isDevFeaturesEnabled
-          ? `${GlobalRoute.EnterpriseSubscription}/${enterprise.id}`
-          : GlobalRoute.EnterpriseSubscription
-      }
+      href={GlobalRoute.EnterpriseSubscription}
     >
       <DynamicT forKey="topbar.subscription" />
     </TextLink>
