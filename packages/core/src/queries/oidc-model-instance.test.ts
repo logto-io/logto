@@ -24,7 +24,6 @@ const {
   findPayloadByPayloadField,
   findPayloadByUid,
   findPayloadByUserCode,
-  consumeInstanceById,
   destroyInstanceById,
   revokeInstanceByGrantId,
   revokeInstanceByUserId,
@@ -260,28 +259,6 @@ describe('oidc-model-instance query', () => {
 
     await expect(findPayloadByUserCode(instance.modelName, userCode)).resolves.toBeUndefined();
     expect(mockQuery).toHaveBeenCalledTimes(2);
-  });
-
-  it('consumeInstanceById', async () => {
-    jest.useFakeTimers().setSystemTime(100_000);
-
-    const expectSql = sql`
-      update ${table}
-      set ${fields.consumedAt}=to_timestamp($1)
-      where ${fields.modelName}=$2
-      and ${fields.id}=$3
-    `;
-
-    mockQuery.mockImplementationOnce(async (sql, values) => {
-      expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([100, instance.modelName, instance.id]);
-
-      return createMockQueryResult([]);
-    });
-
-    await consumeInstanceById(instance.modelName, instance.id);
-
-    jest.useRealTimers();
   });
 
   it('destroyInstanceById', async () => {

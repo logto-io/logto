@@ -82,6 +82,15 @@ export const createOneTimeTokenQueries = (pool: CommonQueryMethods) => {
       returning *
     `);
 
+  const consumeActiveOneTimeToken = async (token: string) =>
+    pool.maybeOne<OneTimeToken>(sql`
+      update ${table}
+      set ${fields.status} = ${OneTimeTokenStatus.Consumed}
+      where ${fields.token} = ${token}
+      and ${fields.status} = ${OneTimeTokenStatus.Active}
+      returning *
+    `);
+
   /**
    * Revoke the active tokens issued for an email, compared case-insensitively, except the one with
    * `exceptId` if given.
@@ -96,6 +105,7 @@ export const createOneTimeTokenQueries = (pool: CommonQueryMethods) => {
     `);
 
   return {
+    consumeActiveOneTimeToken,
     deleteOneTimeTokenById,
     revokeActiveOneTimeTokensByEmail,
     countOneTimeTokens,
