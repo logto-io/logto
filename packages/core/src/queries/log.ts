@@ -125,6 +125,69 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
 
   const findLogById = buildFindEntityByIdWithPool(pool)(Logs);
 
+  const deleteLogsInRange = async (condition: {
+    endTime: number;
+    startTime?: number;
+    limit: number;
+    includeKeyPrefix: AuditLogPrefix[];
+  }): Promise<{ deletedCount: number; deletedRange?: { oldest: number; newest: number } }> => {
+    const { endTime, startTime, limit, includeKeyPrefix } = condition;
+
+    // Reuse `buildLogConditionSql`, the same builder `GET /logs` uses, so a time window means
+    // exactly the same thing on both endpoints: an inclusive `start_time`, and an `end_time` made
+    // inclusive at millisecond granularity by the `+ interval '1 millisecond'` inside the builder.
+    // Hand-writing the bounds here would let the two endpoints drift apart by one millisecond,
+    // and would let a delete reach rows the matching export never returned.
+    //
+    // Match on `ctid`, not `id`. `id in (select id ... limit n)` is planned as a semi-join whose
+    // outer side carries no qual, so Postgres scans the whole table and joins to the bounded set
+    // afterwards — a full seq scan that grows with the tenant. `ctid = any(array(select ...))`
+    // makes the inner select an InitPlan and the outer a Tid Scan, so the statement touches only
+    // the `limit` rows it deletes. `ctid` is stable for this table because audit logs are
+    // append-only; a row updated between the InitPlan and the scan would simply not be deleted.
+    // Tenant isolation is enforced by RLS through the tenant-scoped pool.
+    const rows = await pool.any<{ createdAt: number }>(sql`
+      delete from ${table}
+      where ctid = any(array(
+        select ctid
+        from ${table}
+        ${buildLogConditionSql({ startTime, endTime, includeKeyPrefix })}
+        order by ${fields.createdAt}, ${fields.id}
+        limit ${limit}
+      ))
+      returning ${fields.createdAt}
+    `);
+
+    // Nothing matched: report an empty batch and omit `deletedRange` entirely. Returning early is
+    // also what keeps the `±Infinity` seeds below from ever reaching the response, where
+    // `JSON.stringify` would render an infinite bound as `null`.
+    if (rows.length === 0) {
+      return { deletedCount: 0 };
+    }
+
+    // This repo's pools use slonik's default `createTypeParserPreset`, whose `timestamptz`
+    // parser is `Date.parse(value)`, so the column arrives as a unix-millisecond number.
+    const timestamps = rows.map(({ createdAt }) => createdAt);
+
+    // Fold instead of spreading into `Math.min` / `Math.max`: the spread is limited by the
+    // engine's maximum argument count, which `maxDeleteLimit` could exceed if it is raised.
+    //
+    // The seeds are the identity elements for min/max. `rows` is non-empty here (the empty case
+    // returned above), so both are always replaced by real timestamps before this is returned.
+    const deletedRange = timestamps.reduce(
+      (range, timestamp) => ({
+        oldest: Math.min(range.oldest, timestamp),
+        newest: Math.max(range.newest, timestamp),
+      }),
+      { oldest: Number.POSITIVE_INFINITY, newest: Number.NEGATIVE_INFINITY }
+    );
+
+    return {
+      deletedCount: timestamps.length,
+      deletedRange,
+    };
+  };
+
   const getHookExecutionStatsByHookId = async (hookId: string) => {
     const startTimeExclusive = subDays(new Date(), 1).getTime();
     return pool.one<HookExecutionStats>(sql`
@@ -142,6 +205,7 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
     countLogs,
     findLogs,
     findLogById,
+    deleteLogsInRange,
     getHookExecutionStatsByHookId,
   };
 };
