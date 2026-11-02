@@ -45,6 +45,11 @@
             "name": "showFeatured",
             "in": "query",
             "description": "Whether to show featured users in the organization. Featured users are randomly selected from the organization members.\n\nIf not provided, `featuredUsers` will not be included in the response."
+          },
+          {
+            "name": "jitEmailDomain",
+            "in": "query",
+            "description": "Only return the organizations that have this email domain for just-in-time provisioning (e.g. `example.com`), that is the organizations a user with this email domain would be provisioned into. The domain is matched exactly, and `q` still searches by id or name within the result."
           }
         ],
         "responses": {

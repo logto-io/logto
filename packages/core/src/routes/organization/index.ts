@@ -74,7 +74,11 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
     '/',
     koaPagination(),
     koaGuard({
-      query: z.object({ q: z.string().optional(), showFeatured: z.string().optional() }),
+      query: z.object({
+        q: z.string().optional(),
+        showFeatured: z.string().optional(),
+        jitEmailDomain: z.string().min(1).optional(),
+      }),
       response: (
         organizationResponseGuard.merge(
           // For `showFeatured` query
@@ -92,7 +96,13 @@ export default function organizationRoutes<T extends ManagementApiRouter>(
       const { query } = ctx.guard;
       const search = parseSearchOptions(['id', 'name'], query);
       const { limit, offset } = ctx.pagination;
-      const [count, entities] = await organizations.findAll(limit, offset, search);
+      const [count, entities] = query.jitEmailDomain
+        ? await organizations.jit.emailDomains.findOrganizations(
+            query.jitEmailDomain,
+            { limit, offset },
+            search
+          )
+        : await organizations.findAll(limit, offset, search);
 
       ctx.pagination.totalCount = count;
       ctx.body = yes(query.showFeatured)
