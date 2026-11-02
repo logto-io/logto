@@ -26,6 +26,35 @@ describe('application APIs', () => {
     expect(fetchedApplication.id).toBe(application.id);
   });
 
+  it('should reject an unknown `customClientMetadata` key when creating an application', async () => {
+    await expectRejects(
+      createApplication('test-create-app', ApplicationType.SPA, {
+        // @ts-expect-error The typo is the point of the test.
+        customClientMetadata: { refreshTokenTtlInDay: 1 },
+      }),
+      { code: 'guard.invalid_input', status: 400 }
+    );
+  });
+
+  it('should reject an unknown `customClientMetadata` key when updating an application', async () => {
+    const application = await createApplication('test-update-app', ApplicationType.SPA, {
+      customClientMetadata: { refreshTokenTtlInDays: 10 },
+    });
+
+    await expectRejects(
+      updateApplication(application.id, {
+        // @ts-expect-error The typo is the point of the test.
+        customClientMetadata: { refreshTokenTtlInDay: 1 },
+      }),
+      { code: 'guard.invalid_input', status: 400 }
+    );
+
+    const fetchedApplication = await getApplication(application.id);
+    expect(fetchedApplication.customClientMetadata.refreshTokenTtlInDays).toBe(10);
+
+    await deleteApplication(application.id);
+  });
+
   it('should throw error when creating an OIDC third party application with invalid type', async () => {
     await expectRejects(
       createApplication('test-create-app', ApplicationType.MachineToMachine, {

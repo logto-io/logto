@@ -64,6 +64,9 @@
                         "description": "The origin of target website, e.g., https://example.com."
                       }
                     }
+                  },
+                  "customClientMetadata": {
+                    "description": "Custom client metadata of the application. Unknown keys are rejected with a 400 `guard.invalid_input` error whose `data` lists the key."
                   }
                 }
               }
@@ -129,6 +132,9 @@
                   "appLevelAccessControlEnabled": {
                     "type": "boolean",
                     "description": "Whether app-level access control is enabled for this application."
+                  },
+                  "customClientMetadata": {
+                    "description": "Custom client metadata of the application. Unknown keys are rejected with a 400 `guard.invalid_input` error whose `data` lists the key."
                   }
                 }
               }
