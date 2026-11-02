@@ -332,6 +332,9 @@ const application_details = {
     col_logto_claims: 'Значение Logto',
     col_sp_claims: 'Название значения вашего приложения',
     add_button: 'Добавить еще',
+    static_attributes_title: 'Статические атрибуты',
+    static_attributes_description:
+      'Добавьте фиксированные атрибуты, которые отправляются в каждом утверждении SAML, например постоянные значения, необходимые вашему приложению.',
   },
   concurrent_device_limit,
 };

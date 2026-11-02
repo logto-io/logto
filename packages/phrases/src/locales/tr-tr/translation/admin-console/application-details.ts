@@ -329,6 +329,9 @@ const application_details = {
     col_logto_claims: 'Logto değeri',
     col_sp_claims: 'Uygulamanızın değer adı',
     add_button: 'Başka bir eklenti',
+    static_attributes_title: 'Statik özellikler',
+    static_attributes_description:
+      'Uygulamanızın gerektirdiği sabit değerler gibi, her SAML beyanında gönderilen sabit özellikler ekleyin.',
   },
   concurrent_device_limit,
 };
