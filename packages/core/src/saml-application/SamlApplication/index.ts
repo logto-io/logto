@@ -187,15 +187,11 @@ export class SamlApplication {
     binding: 'post' | 'redirect',
     loginRequest: Parameters<typeof saml.IdentityProviderInstance.prototype.parseLoginRequest>[2]
   ) {
-    if (!this.config.authnRequestConfig?.requireSignedAuthnRequests) {
-      return this.idp.parseLoginRequest(this.sp, binding, loginRequest);
-    }
-
     const result = await tryThat(
       this.idp.parseLoginRequest(this.sp, binding, loginRequest),
       new RequestError('application.saml.invalid_saml_request')
     );
-    if (binding === 'post') {
+    if (this.config.authnRequestConfig?.requireSignedAuthnRequests && binding === 'post') {
       assertSamlAuthnRequestSignatureScope(result.samlContent);
     }
     return result;
@@ -577,15 +573,14 @@ export class SamlApplication {
   // Used to check whether xml content is valid in format.
   private setSchemaValidator() {
     saml.setSchemaValidator({
+      // Samlify ignores the resolved value and fails the request only when this throws.
       validate: async (xmlContent: string) => {
-        try {
-          XMLValidator.validate(xmlContent, {
-            allowBooleanAttributes: true,
-          });
+        const result = XMLValidator.validate(xmlContent, {
+          allowBooleanAttributes: true,
+        });
 
-          return true;
-        } catch {
-          return false;
+        if (result !== true) {
+          throw new Error(result.err.msg);
         }
       },
     });
