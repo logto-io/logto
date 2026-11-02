@@ -15,6 +15,10 @@ import forge from 'node-forge';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import {
+  generateSamlAttributeTag,
+  getSamlUserAttributeNames,
+} from '#src/saml-application/SamlApplication/utils.js';
 import assertThat from '#src/utils/assert-that.js';
 
 // Add PEM certificate validation
@@ -130,6 +134,7 @@ export const assembleSamlApplication = ({
     | 'encryption'
     | 'nameIdFormat'
     | 'authnRequestConfig'
+    | 'staticAttributes'
   >;
 }): SamlApplicationResponse => {
   return {
@@ -169,5 +174,27 @@ export const validateSamlAuthnRequestConfig = (config?: Nullable<SamlAuthnReques
   assertThat(
     certificate?.publicKey.asymmetricKeyType === 'rsa',
     'application.saml.invalid_certificate_pem_format'
+  );
+};
+
+/**
+ * Assertion attribute values are keyed by their camel-cased tag, so a static attribute must not share
+ * a tag with another static attribute or with a user attribute.
+ */
+export const validateSamlStaticAttributes = ({
+  attributeMapping,
+  staticAttributes,
+}: Pick<SamlApplicationConfig, 'attributeMapping' | 'staticAttributes'>) => {
+  const userAttributeTags = new Set(
+    getSamlUserAttributeNames(attributeMapping).map((name) => generateSamlAttributeTag(name))
+  );
+  const staticAttributeTags = Object.keys(staticAttributes).map((name) =>
+    generateSamlAttributeTag(name)
+  );
+
+  assertThat(
+    new Set(staticAttributeTags).size === staticAttributeTags.length &&
+      staticAttributeTags.every((tag) => !userAttributeTags.has(tag)),
+    new RequestError({ code: 'application.saml.static_attribute_name_conflict', status: 400 })
   );
 };

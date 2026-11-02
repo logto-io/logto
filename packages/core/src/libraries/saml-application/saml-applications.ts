@@ -21,6 +21,7 @@ import {
   assembleSamlApplication,
   generateKeyPairAndCertificate,
   validateSamlAuthnRequestConfig,
+  validateSamlStaticAttributes,
 } from './utils.js';
 
 const consoleLog = new ConsoleLog(chalk.magenta('SAML app custom domain'));
@@ -111,6 +112,8 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
     const originalAppConfig = await findSamlApplicationConfigByApplicationId(id);
 
     validateSamlAuthnRequestConfig(config.authnRequestConfig);
+    const mergedAppConfig = { ...originalAppConfig, ...config };
+    validateSamlStaticAttributes(mergedAppConfig);
 
     const [updatedApplication, upToDateSamlConfig] = await Promise.all([
       Object.keys(applicationData).length > 0
@@ -118,7 +121,7 @@ export const createSamlApplicationsLibrary = (queries: Queries) => {
         : originalApplication,
       Object.keys(config).length > 0
         ? updateSamlApplicationConfig({
-            set: { ...originalAppConfig, ...config },
+            set: mergedAppConfig,
             where: { applicationId: id },
             jsonbMode: 'replace',
           })

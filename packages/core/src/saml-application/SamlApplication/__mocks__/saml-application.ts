@@ -17,6 +17,7 @@ export const createMockSamlApplicationDetails = (
   secret: 'mock-secret',
   nameIdFormat: NameIdFormat.Persistent,
   attributeMapping: {},
+  staticAttributes: {},
   encryption: null,
   authnRequestConfig: null,
   active: true,

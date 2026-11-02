@@ -16,6 +16,15 @@ export const samlAttributeMappingGuard = z
   )
   .partial() satisfies z.ZodType<SamlAttributeMapping>;
 
+/** Fixed SAML attributes added to every assertion, keyed by attribute name. */
+export type SamlStaticAttributes = Record<string, string>;
+
+export const samlStaticAttributesGuard = z.record(
+  // Names are inserted into the assertion XML unescaped by samlify.
+  z.string().regex(/^[\w#./:@-]+$/),
+  z.string().min(1)
+) satisfies z.ZodType<SamlStaticAttributes>;
+
 export enum BindingType {
   Post = 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
   Redirect = 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',

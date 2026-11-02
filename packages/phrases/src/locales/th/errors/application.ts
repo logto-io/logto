@@ -51,6 +51,8 @@ const application = {
     sp_initiated_saml_sso_session_not_found:
       'ไม่พบ SAML SSO session ที่ถูกเริ่มต้นโดย service provider',
     state_mismatch: '`state` ไม่ตรงกัน',
+    static_attribute_name_conflict:
+      'ชื่อแอตทริบิวต์แบบคงที่ต้องไม่ซ้ำกันเองหรือซ้ำกับชื่อแอตทริบิวต์ของผู้ใช้ใน assertion',
   },
 };
 

@@ -52,6 +52,8 @@ const application = {
     sp_initiated_saml_sso_session_not_found:
       'لم يتم العثور على جلسة SAML SSO التي بدأت من قبل مزود الخدمة.',
     state_mismatch: 'عدم تطابق `state`.',
+    static_attribute_name_conflict:
+      'يجب ألا تتعارض أسماء السمات الثابتة مع بعضها البعض أو مع أسماء سمات المستخدم في التأكيد.',
   },
 };
 

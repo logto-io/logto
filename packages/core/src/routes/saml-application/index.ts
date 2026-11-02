@@ -17,6 +17,7 @@ import {
   assembleSamlApplication,
   validateAcsUrl,
   validateSamlAuthnRequestConfig,
+  validateSamlStaticAttributes,
 } from '#src/libraries/saml-application/utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { koaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
@@ -68,6 +69,10 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
       );
 
       validateSamlAuthnRequestConfig(config.authnRequestConfig);
+      validateSamlStaticAttributes({
+        attributeMapping: config.attributeMapping ?? {},
+        staticAttributes: config.staticAttributes ?? {},
+      });
 
       if (config.acsUrl) {
         validateAcsUrl(config.acsUrl);
@@ -154,7 +159,7 @@ export default function samlApplicationRoutes<T extends ManagementApiRouter>(
       params: z.object({ id: z.string() }),
       body: samlApplicationPatchGuard,
       response: samlApplicationResponseGuard,
-      status: [200, 404, 422],
+      status: [200, 400, 404, 422],
     }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;

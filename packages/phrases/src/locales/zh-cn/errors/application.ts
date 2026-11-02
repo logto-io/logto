@@ -45,6 +45,7 @@ const application = {
       '在 cookies 中未找到服务提供者发起的 SAML 单点登录会话 ID。',
     sp_initiated_saml_sso_session_not_found: '未找到服务提供者发起的 SAML 单点登录会话。',
     state_mismatch: '`state` 不匹配。',
+    static_attribute_name_conflict: '静态属性名称不能彼此冲突，也不能与断言中的用户属性名称冲突。',
   },
 };
 

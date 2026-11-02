@@ -1,4 +1,4 @@
-import { NameIdFormat } from '@logto/schemas';
+import { NameIdFormat, type SamlAttributeMapping } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { appendPath } from '@silverhand/essentials';
 import saml from 'samlify';
@@ -6,6 +6,8 @@ import saml from 'samlify';
 import RequestError from '#src/errors/RequestError/index.js';
 import { type IdTokenProfileStandardClaims } from '#src/sso/types/oidc.js';
 import assertThat from '#src/utils/assert-that.js';
+
+import { fallbackAttributes } from './consts.js';
 
 /**
  * Determines the SAML NameID format and value based on the user's claims and IdP's NameID format.
@@ -130,6 +132,10 @@ export const generateSamlAttributeTag = (content: string, prefix = 'attr'): stri
     .join('');
   return prefix + camelContent.charAt(0).toUpperCase() + camelContent.slice(1);
 };
+
+/** Names of the user attributes in the assertion; `fallbackAttributes` apply when nothing is mapped. */
+export const getSamlUserAttributeNames = (attributeMapping: SamlAttributeMapping): string[] =>
+  Object.keys(attributeMapping).length > 0 ? Object.values(attributeMapping) : fallbackAttributes;
 
 /**
  * Whether the service provider asked to re-authenticate the user, i.e. its `AuthnRequest` carries

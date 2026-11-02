@@ -59,6 +59,8 @@ const application = {
     sp_initiated_saml_sso_session_not_found:
       'La session SSO SAML initiée par le fournisseur de services est introuvable.',
     state_mismatch: 'Mismatch `state`.',
+    static_attribute_name_conflict:
+      'Les noms des attributs statiques ne doivent pas entrer en conflit entre eux ni avec les noms des attributs utilisateur de l’assertion.',
   },
 };
 

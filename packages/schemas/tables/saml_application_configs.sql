@@ -12,6 +12,7 @@ create table saml_application_configs (
   encryption jsonb /* @use SamlEncryption */,
   authn_request_config jsonb /* @use SamlAuthnRequestConfig */,
   name_id_format varchar(128) /* @use NameIdFormat */ not null,
+  static_attributes jsonb /* @use SamlStaticAttributes */ not null default '{}'::jsonb,
   primary key (tenant_id, application_id),
   constraint saml_application_configs__application_type
     check (check_application_type(application_id, 'SAML'))

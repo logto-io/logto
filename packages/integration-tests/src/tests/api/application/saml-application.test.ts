@@ -172,6 +172,7 @@ describe('SAML application', () => {
     expect(createdSamlApplication.attributeMapping).toEqual({});
     expect(createdSamlApplication.nameIdFormat).toEqual(NameIdFormat.Persistent);
     expect(createdSamlApplication.encryption).toBe(null);
+    expect(createdSamlApplication.staticAttributes).toEqual({});
 
     // Update application with new config
     const updatedSamlApplication = await updateSamlApplication(createdSamlApplication.id, {
@@ -210,6 +211,54 @@ describe('SAML application', () => {
     const upToDateSamlApplication = await getSamlApplication(createdSamlApplication.id);
     expect(updatedSamlApplication).toEqual(upToDateSamlApplication);
     await deleteSamlApplication(createdSamlApplication.id);
+  });
+
+  it('should manage static attributes', async () => {
+    const createdSamlApplication = await createSamlApplication({
+      name: 'test',
+      staticAttributes: { site: '2' },
+    });
+    expect(createdSamlApplication.staticAttributes).toEqual({ site: '2' });
+
+    const staticAttributes = {
+      site: '3',
+      account: 'acct-1',
+      'urn:oid:2.5.4.42': 'given-name',
+      'http://schemas.example.com/claims/tenant': 'tenant-1',
+    };
+    const updatedSamlApplication = await updateSamlApplication(createdSamlApplication.id, {
+      staticAttributes,
+    });
+    expect(updatedSamlApplication.staticAttributes).toEqual(staticAttributes);
+    await expect(getSamlApplication(createdSamlApplication.id)).resolves.toMatchObject({
+      staticAttributes,
+    });
+
+    await expectRejects(
+      updateSamlApplication(createdSamlApplication.id, { attributeMapping: { email: 'site' } }),
+      { code: 'application.saml.static_attribute_name_conflict', status: 400 }
+    );
+
+    const clearedSamlApplication = await updateSamlApplication(createdSamlApplication.id, {
+      staticAttributes: {},
+    });
+    expect(clearedSamlApplication.staticAttributes).toEqual({});
+
+    await deleteSamlApplication(createdSamlApplication.id);
+  });
+
+  it('should reject invalid static attributes on create', async () => {
+    await expectRejects(createSamlApplication({ name: 'test', staticAttributes: { email: 'x' } }), {
+      code: 'application.saml.static_attribute_name_conflict',
+      status: 400,
+    });
+    await expectRejects(
+      createSamlApplication({ name: 'test', staticAttributes: { 'site"': '2' } }),
+      {
+        code: 'guard.invalid_input',
+        status: 400,
+      }
+    );
   });
 
   it('can not delete/update/get non-SAML applications with `DEL /saml-applications/:id` API', async () => {

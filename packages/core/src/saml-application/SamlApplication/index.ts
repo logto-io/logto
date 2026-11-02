@@ -47,6 +47,7 @@ import {
   buildSamlAssertionNameId,
   getSamlAppCallbackUrl,
   generateSamlAttributeTag,
+  getSamlUserAttributeNames,
   assertSamlAuthnRequestSignatureScope,
 } from './utils.js';
 
@@ -136,6 +137,10 @@ class SamlApplicationConfig {
 
   public get attributeMapping() {
     return this._details.attributeMapping;
+  }
+
+  public get staticAttributes() {
+    return this._details.staticAttributes;
   }
 }
 
@@ -506,6 +511,7 @@ export class SamlApplication {
         NameID,
         InResponseTo: samlRequestId ?? 'null',
         ...this.buildSamlAttributesTagValues(userInfo),
+        ...this.buildSamlStaticAttributesTagValues(),
         // Since we currently does not distinguish the way user used to pass authentication, we set the default AuthnContextClassRef to passwordProtectedTransport.
         AuthnContextClassRef:
           saml.Constants.namespace.authnContextClassRef.passwordProtectedTransport,
@@ -524,10 +530,10 @@ export class SamlApplication {
   protected readonly buildLoginResponseTemplate = () => {
     return {
       context: samlLogInResponseTemplate,
-      attributes: (Object.entries(this.config.attributeMapping).length > 0
-        ? Object.values(this.config.attributeMapping)
-        : fallbackAttributes
-      ).map((value) => ({
+      attributes: [
+        ...getSamlUserAttributeNames(this.config.attributeMapping),
+        ...Object.keys(this.config.staticAttributes),
+      ].map((value) => ({
         name: value,
         valueTag: value,
         nameFormat: samlAttributeNameFormatBasic,
@@ -573,6 +579,14 @@ export class SamlApplication {
           ])
         );
   };
+
+  protected readonly buildSamlStaticAttributesTagValues = (): Record<string, string> =>
+    Object.fromEntries(
+      Object.entries(this.config.staticAttributes).map(([name, value]) => [
+        generateSamlAttributeTag(name),
+        value,
+      ])
+    );
 
   // Used to check whether xml content is valid in format.
   private setSchemaValidator() {
