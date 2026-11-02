@@ -66,6 +66,14 @@ describe('createPoolWithRetry()', () => {
     expect(factory).toHaveBeenCalledTimes(1);
   });
 
+  it('should not retry a non-transient error thrown while creating the pool', async () => {
+    const error = new Error('invalid database options');
+    const factory = vi.fn().mockRejectedValue(error);
+
+    await expect(createPoolWithRetry(factory, 3, noDelay)).rejects.toBe(error);
+    expect(factory).toHaveBeenCalledTimes(1);
+  });
+
   it('should rethrow the last transient error after exhausting retries', async () => {
     const error = new DnsError('db.example.com');
     const factory = vi.fn().mockRejectedValue(error);
