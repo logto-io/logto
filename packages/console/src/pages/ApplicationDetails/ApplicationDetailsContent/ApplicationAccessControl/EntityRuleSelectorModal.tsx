@@ -15,6 +15,7 @@ type Props<TEntity extends Identifiable> = {
   readonly searchProps: {
     pathname: string;
     parameters?: Record<string, string>;
+    searchParameterName?: string;
   };
   readonly emptyPlaceholder: AdminConsoleKey;
   readonly isLoading: boolean;
