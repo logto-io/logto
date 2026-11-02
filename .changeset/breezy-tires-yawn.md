@@ -2,4 +2,4 @@
 "@logto/console": patch
 ---
 
-fix organization search in application access rules
+fix the organization selector in application access control rules showing unfiltered results when searching for an organization
