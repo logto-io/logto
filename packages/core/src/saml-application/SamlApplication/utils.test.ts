@@ -1,10 +1,53 @@
 import { NameIdFormat } from '@logto/schemas';
+import saml from 'samlify';
 
+import { samlAttributeNameFormatBasic, samlValueXmlnsXsi } from './consts.js';
 import {
   generateAutoSubmitForm,
   buildSamlAssertionNameId,
+  generateSamlAttributeTag,
   isForceAuthnRequested,
 } from './utils.js';
+
+describe('generateSamlAttributeTag', () => {
+  it.each([
+    'email',
+    'emailAddress',
+    'first_name',
+    'first-name',
+    'First Name',
+    'FirstName',
+    'SAMLSubject',
+    'sAMAccountName',
+    'userID',
+    'o365Role',
+    'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress',
+    'urn:oid:0.9.2342.19200300.100.1.3',
+    'o365role',
+    'tenant1id',
+    '2fa',
+    'a.#b',
+    'x-/y',
+    'a_:b',
+    'nomÉcole',
+  ])("fills samlify's placeholder for %s", (name) => {
+    const statement = saml.SamlLib.attributeStatementBuilder([
+      {
+        name,
+        valueTag: name,
+        nameFormat: samlAttributeNameFormatBasic,
+        valueXsiType: samlValueXmlnsXsi.string,
+      },
+    ]);
+
+    const filled = saml.SamlLib.replaceTagsByValue(statement, {
+      [generateSamlAttributeTag(name)]: 'the-value',
+    });
+
+    expect(filled).toContain('>the-value</saml:AttributeValue>');
+    expect(filled).not.toContain('{attr');
+  });
+});
 
 describe('buildSamlAssertionNameId', () => {
   it('should use email when email_verified is true', () => {

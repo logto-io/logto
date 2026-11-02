@@ -1,7 +1,6 @@
 import { NameIdFormat } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { appendPath } from '@silverhand/essentials';
-import camelCase from 'camelcase';
 import saml from 'samlify';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -111,13 +110,24 @@ export const getSamlAppCallbackUrl = (baseUrl: URL, samlAppId: string) =>
   appendPath(baseUrl, `api/saml-applications/${samlAppId}/callback`);
 
 /**
- * @desc Tag normalization, copied from https://github.com/tngan/samlify/blob/master/src/libsaml.ts#L230-L240 to get SAML attribute tag name.
- * @param {string} prefix     prefix of the tag
- * @param {content} content   normalize it to capitalized camel case
- * @return {string}
+ * Get the template tag samlify fills with an attribute value: `prefix` followed by `content` in
+ * capitalized camel case. It must equal samlify's `tagging` output, otherwise samlify leaves the
+ * `{attr…}` placeholder in the assertion. samlify does not expose `tagging` or its `camelCase`
+ * publicly, so both are mirrored here.
+ *
+ * @see {@link https://github.com/tngan/samlify/blob/v2.13.1/src/utility.ts | samlify `camelCase`}
  */
 export const generateSamlAttributeTag = (content: string, prefix = 'attr'): string => {
-  const camelContent = camelCase(content, { locale: 'en-us' });
+  const camelContent = content
+    .replaceAll(/([\da-z])([A-Z])/g, '$1\0$2')
+    .replaceAll(/([A-Z]+)([A-Z][a-z])/g, '$1\0$2')
+    .split(/[\s\0._-]+/)
+    .filter(Boolean)
+    .map((word, index) => {
+      const lower = word.toLocaleLowerCase('en-US');
+      return index === 0 ? lower : lower.charAt(0).toLocaleUpperCase('en-US') + lower.slice(1);
+    })
+    .join('');
   return prefix + camelContent.charAt(0).toUpperCase() + camelContent.slice(1);
 };
 
