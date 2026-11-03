@@ -56,6 +56,9 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://siteniz.com',
   cors_allowed_origins_tip:
     'Varsayılan olarak, Yönlendirme URIlerinin tüm originlerine izin verilir. Genellikle bu alan için herhangi bir işlem gerekmez. Ayrıntılı bilgi için <a>MDN doc</a> sayfasına bakın.',
+  show_continue_to_app_page: 'iOS’ta “Uygulamaya devam et” sayfasını göster',
+  show_continue_to_app_page_description:
+    'Kullanıcılar iOS veya iPadOS’ta parolayla oturum açtıktan sonra hemen uygulamaya dönmek yerine “Devam” düğmesi olan bir sayfa gösterir, böylece sistemin “Parolayı Kaydet” istemi ekranda kalır. ASWebAuthenticationSession kullanan uygulamalar için önerilir.',
   token_endpoint: 'Belirteç bitiş noktası',
   user_info_endpoint: 'Kullanıcı bilgileri bitiş noktası',
   enable_admin_access: 'Yönetici erişimini etkinleştir',

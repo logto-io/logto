@@ -9,6 +9,7 @@ import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
 import FormCard from '@/components/FormCard';
 import MultiTextInputField from '@/components/MultiTextInputField';
 import { applicationDataStructure, deviceFlow, thirdPartyApp } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { AppDataContext } from '@/contexts/AppDataProvider';
 import Button from '@/ds-components/Button';
 import CodeEditor from '@/ds-components/CodeEditor';
@@ -20,6 +21,7 @@ import {
   convertRhfErrorMessage,
   createValidatorForRhf,
 } from '@/ds-components/MultiTextInput/utils';
+import Switch from '@/ds-components/Switch';
 import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
@@ -73,6 +75,35 @@ function WildcardUriWarning() {
     <InlineNotification severity="alert" className={styles.mixedUriWarning}>
       {t('application_details.wildcard_redirect_uri_warning')}
     </InlineNotification>
+  );
+}
+
+/**
+ * Toggle for the iOS "Continue to app" page. Only native apps sign in through
+ * `ASWebAuthenticationSession`; device flow apps never return to the app from the browser.
+ */
+function ContinueToAppPageField({
+  applicationType,
+  isDeviceFlow,
+}: {
+  readonly applicationType: ApplicationType;
+  readonly isDeviceFlow: boolean;
+}) {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { register } = useFormContext<ApplicationForm>();
+
+  // Dev feature: iOS "Continue to app" page for native apps
+  if (!isDevFeaturesEnabled || applicationType !== ApplicationType.Native || isDeviceFlow) {
+    return null;
+  }
+
+  return (
+    <FormField title="application_details.show_continue_to_app_page">
+      <Switch
+        label={t('application_details.show_continue_to_app_page_description')}
+        {...register('customClientMetadata.showContinueToAppPage')}
+      />
+    </FormField>
   );
 }
 
@@ -259,6 +290,7 @@ function Settings({ data }: Props) {
           )}
         />
       )}
+      <ContinueToAppPageField applicationType={applicationType} isDeviceFlow={isDeviceFlow} />
       <Controller
         name="customData"
         control={control}

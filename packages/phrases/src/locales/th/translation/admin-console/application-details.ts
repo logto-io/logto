@@ -56,6 +56,9 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://your.website.com',
   cors_allowed_origins_tip:
     'โดยค่าเริ่มต้น ต้นกำเนิดทั้งหมดของ Redirect URIs จะได้รับอนุญาต โดยปกติไม่ต้องดำเนินการสำหรับฟิลด์นี้ ดู <a>MDN doc</a> สำหรับข้อมูลเพิ่มเติม',
+  show_continue_to_app_page: 'แสดงหน้า "ดำเนินการต่อไปยังแอป" บน iOS',
+  show_continue_to_app_page_description:
+    'หลังจากผู้ใช้ลงชื่อเข้าใช้ด้วยรหัสผ่านบน iOS หรือ iPadOS จะแสดงหน้าที่มีปุ่ม "ดำเนินการต่อ" แทนการกลับไปยังแอปทันที เพื่อให้ข้อความแจ้ง "บันทึกรหัสผ่าน" ของระบบยังคงแสดงบนหน้าจอ แนะนำสำหรับแอปที่ใช้ ASWebAuthenticationSession',
   token_endpoint: 'Token endpoint',
   user_info_endpoint: 'Userinfo endpoint',
   enable_admin_access: 'เปิดการเข้าถึงแอดมิน',

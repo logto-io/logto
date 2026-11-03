@@ -54,6 +54,9 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://your.website.com',
   cors_allowed_origins_tip:
     '所有重定向 URI 的来源将默认被允许。通常不需要对此字段进行操作。参见 <a>MDN 文档</a> 以了解更多。',
+  show_continue_to_app_page: '在 iOS 上显示“继续前往应用”页面',
+  show_continue_to_app_page_description:
+    '用户在 iOS 或 iPadOS 上使用密码登录后，显示一个带有“继续”按钮的页面，而不是立即返回应用，使系统的“存储密码”提示能够保留在屏幕上。推荐使用 ASWebAuthenticationSession 的应用开启。',
   token_endpoint: 'Token 端点',
   user_info_endpoint: '用户信息端点',
   enable_admin_access: '启用管理访问',

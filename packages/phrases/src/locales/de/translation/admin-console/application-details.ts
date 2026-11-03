@@ -58,6 +58,9 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://deine.website.de',
   cors_allowed_origins_tip:
     'Standardmäßig sind alle Ursprünge für Umleitungs-URIs zugelassen. In der Regel ist dieses Feld nicht erforderlich. Siehe die <a>MDN-Dokumentation</a> für detaillierte Informationen.',
+  show_continue_to_app_page: 'Seite „Weiter zur App“ unter iOS anzeigen',
+  show_continue_to_app_page_description:
+    'Nach der Anmeldung mit einem Passwort unter iOS oder iPadOS wird eine Seite mit der Schaltfläche „Weiter“ angezeigt, statt sofort zur App zurückzukehren. So bleibt die Systemabfrage „Passwort sichern“ auf dem Bildschirm. Empfohlen für Apps, die ASWebAuthenticationSession verwenden.',
   token_endpoint: 'Token-Endpunkt',
   user_info_endpoint: 'Benutzerinformations-Endpunkt',
   enable_admin_access: 'Admin-Zugriff aktivieren',

@@ -57,6 +57,9 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://seusite.com.br',
   cors_allowed_origins_tip:
     'Por padrão, todas as origens dos URIs de redirecionamento serão permitidas. Normalmente, nenhuma ação é necessária para este campo. Confira a <a>documentação MDN</a> para informações detalhadas.',
+  show_continue_to_app_page: 'Mostrar a página "Continuar para o app" no iOS',
+  show_continue_to_app_page_description:
+    'Depois que os usuários entrarem com uma senha no iOS ou iPadOS, mostra uma página com um botão "Continuar" em vez de voltar ao app imediatamente, para que o aviso do sistema "Salvar senha" permaneça na tela. Recomendado para apps que usam ASWebAuthenticationSession.',
   token_endpoint: 'Token Endpoint',
   user_info_endpoint: 'Userinfo Endpoint',
   enable_admin_access: 'Ativar acesso de administrador',

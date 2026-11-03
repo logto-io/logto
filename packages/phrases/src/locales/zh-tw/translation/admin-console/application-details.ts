@@ -54,6 +54,9 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://your.website.com',
   cors_allowed_origins_tip:
     '所有重新導向 URI 的來源都將默認被允許。通常不需要對此欄位進行操作。參見 <a>MDN 文件</a> 以了解更多。',
+  show_continue_to_app_page: '在 iOS 上顯示「繼續前往應用程式」頁面',
+  show_continue_to_app_page_description:
+    '使用者在 iOS 或 iPadOS 上使用密碼登入後，顯示一個帶有「繼續」按鈕的頁面，而不是立即返回應用程式，讓系統的「儲存密碼」提示能保留在畫面上。建議使用 ASWebAuthenticationSession 的應用程式開啟。',
   token_endpoint: 'Token 端點',
   user_info_endpoint: '用戶資訊端點',
   enable_admin_access: '啟用管理訪問',

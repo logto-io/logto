@@ -57,6 +57,9 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://votre.site.com',
   cors_allowed_origins_tip:
     "Par défaut, toutes les origines des URI de redirection seront autorisées. En général, aucune action n'est requise pour ce champ. Consultez la documentation <a>MDN</a> pour des informations détaillées.",
+  show_continue_to_app_page: 'Afficher la page « Continuer vers l’application » sur iOS',
+  show_continue_to_app_page_description:
+    'Après une connexion avec un mot de passe sur iOS ou iPadOS, affiche une page avec un bouton « Continuer » au lieu de revenir immédiatement à l’application, afin que l’invite système « Enregistrer le mot de passe » reste à l’écran. Recommandé pour les applications qui utilisent ASWebAuthenticationSession.',
   token_endpoint: 'Point de terminaison du jeton',
   user_info_endpoint: "Point de terminaison de l'utilisateur",
   enable_admin_access: "Activer l'accès administrateur",

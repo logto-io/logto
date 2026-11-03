@@ -56,6 +56,9 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://your.website.com',
   cors_allowed_origins_tip:
     'به طور پیش‌فرض، تمام مبداهای URI‌های هدایت مجاز خواهند بود. معمولاً هیچ اقدامی برای این فیلد لازم نیست. برای اطلاعات دقیق به <a>مستندات MDN</a> مراجعه کنید.',
+  show_continue_to_app_page: 'نمایش صفحه «ادامه به برنامه» در iOS',
+  show_continue_to_app_page_description:
+    'پس از ورود کاربران با رمز عبور در iOS یا iPadOS، به جای بازگشت فوری به برنامه، صفحه‌ای با دکمه «ادامه» نمایش داده می‌شود تا درخواست سیستمی «ذخیره رمز عبور» روی صفحه باقی بماند. برای برنامه‌هایی که از ASWebAuthenticationSession استفاده می‌کنند توصیه می‌شود.',
   token_endpoint: 'نقطه پایانی توکن',
   user_info_endpoint: 'نقطه پایانی اطلاعات کاربر',
   enable_admin_access: 'فعال‌سازی دسترسی مدیر',

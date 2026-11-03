@@ -57,6 +57,9 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://seusite.com',
   cors_allowed_origins_tip:
     'Por padrão, todas as origens de redirecionamento são permitidas. Recomenda-se restringi-las. Consulte a <a>documentação MDN</a> para obter informações detalhadas.',
+  show_continue_to_app_page: 'Mostrar a página "Continuar para a aplicação" no iOS',
+  show_continue_to_app_page_description:
+    'Depois de os utilizadores iniciarem sessão com uma palavra-passe no iOS ou iPadOS, mostra uma página com um botão "Continuar" em vez de regressar à aplicação de imediato, para que o aviso do sistema "Guardar palavra-passe" permaneça no ecrã. Recomendado para aplicações que utilizam ASWebAuthenticationSession.',
   token_endpoint: 'Endpoint do token',
   user_info_endpoint: 'Endpoint do Utilizador',
   enable_admin_access: 'Ativar o acesso de administrador',

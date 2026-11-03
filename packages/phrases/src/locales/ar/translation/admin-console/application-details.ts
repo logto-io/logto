@@ -56,6 +56,9 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://your.website.com',
   cors_allowed_origins_tip:
     'بشكل افتراضي ، سيتم السماح بجميع مصادر عناوين URI لإعادة التوجيه. عادةً ما لا يلزم اتخاذ أي إجراء لهذا الحقل. انظر <a>وثائق MDN</a> للحصول على معلومات مفصلة.',
+  show_continue_to_app_page: 'إظهار صفحة "المتابعة إلى التطبيق" على iOS',
+  show_continue_to_app_page_description:
+    'بعد تسجيل دخول المستخدمين بكلمة مرور على iOS أو iPadOS، يتم عرض صفحة تحتوي على زر "متابعة" بدلاً من العودة إلى التطبيق فورًا، حتى تبقى مطالبة النظام "حفظ كلمة السر" ظاهرة على الشاشة. يوصى به للتطبيقات التي تستخدم ASWebAuthenticationSession.',
   token_endpoint: 'نقطة نهاية الرمز',
   user_info_endpoint: 'نقطة نهاية معلومات المستخدم',
   enable_admin_access: 'تمكين الوصول الإداري',

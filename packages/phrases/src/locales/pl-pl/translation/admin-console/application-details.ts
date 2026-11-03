@@ -57,6 +57,9 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://twoja.strona.com',
   cors_allowed_origins_tip:
     'Domyślnie dozwolone są wszystkie źródła z adresów URL przekierowania. Zazwyczaj nie wymaga to żadnych działań. Zobacz <a>dokumentację MDN</a> dla szczegółowych informacji.',
+  show_continue_to_app_page: 'Pokaż stronę „Przejdź do aplikacji” w iOS',
+  show_continue_to_app_page_description:
+    'Po zalogowaniu się hasłem w iOS lub iPadOS wyświetla stronę z przyciskiem „Kontynuuj” zamiast od razu wracać do aplikacji, dzięki czemu systemowy monit „Zachowaj hasło” pozostaje na ekranie. Zalecane dla aplikacji korzystających z ASWebAuthenticationSession.',
   token_endpoint: 'Punkt końcowy tokena',
   user_info_endpoint: 'Punkt końcowy informacji o użytkowniku',
   enable_admin_access: 'Włącz dostęp administratora',

@@ -57,6 +57,9 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://your.website.com',
   cors_allowed_origins_tip:
     'デフォルトでは、リダイレクト URI のすべてのオリジンが許可されます。通常、このフィールドでは何も行動を必要としません。これについての詳細情報は<a>MDN doc</a>を参照してください。',
+  show_continue_to_app_page: 'iOS で「アプリに戻る」ページを表示',
+  show_continue_to_app_page_description:
+    'iOS または iPadOS でユーザーがパスワードでサインインした後、すぐにアプリに戻る代わりに「続行」ボタンのあるページを表示し、システムの「パスワードを保存」プロンプトが画面に残るようにします。ASWebAuthenticationSession を使用するアプリに推奨されます。',
   token_endpoint: 'トークンエンドポイント',
   user_info_endpoint: 'ユーザー情報エンドポイント',
   enable_admin_access: '管理者アクセスを有効にする',

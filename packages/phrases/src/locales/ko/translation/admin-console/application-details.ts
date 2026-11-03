@@ -56,6 +56,9 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://your.website.com',
   cors_allowed_origins_tip:
     '기본적으로 모든 리디렉트 오리진들이 허용됩니다. 일반적으로 이 값을 변경할 필요가 없습니다. 더 자세한 정보는 <a>MDN 문서</a>를 확인하세요.',
+  show_continue_to_app_page: 'iOS에서 "앱으로 계속" 페이지 표시',
+  show_continue_to_app_page_description:
+    'iOS 또는 iPadOS에서 사용자가 비밀번호로 로그인한 후 바로 앱으로 돌아가는 대신 "계속" 버튼이 있는 페이지를 표시하여 시스템의 "암호 저장" 프롬프트가 화면에 남아 있도록 합니다. ASWebAuthenticationSession을 사용하는 앱에 권장됩니다.',
   token_endpoint: '토큰 엔드포인트',
   user_info_endpoint: '사용자 정보 엔드포인트',
   enable_admin_access: '관리자 접근 활성화',

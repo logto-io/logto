@@ -57,6 +57,9 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://il-tuo-sito-web.com',
   cors_allowed_origins_tip:
     'Per impostazione predefinita, saranno consentite tutte le origini degli URI di reindirizzamento. Di solito non è richiesta alcuna azione per questo campo. Vedi la documentazione MDN per informazioni dettagliate.',
+  show_continue_to_app_page: 'Mostra la pagina “Continua nell’app” su iOS',
+  show_continue_to_app_page_description:
+    'Dopo l’accesso con una password su iOS o iPadOS, mostra una pagina con un pulsante “Continua” invece di tornare subito all’app, così il prompt di sistema “Salva password” resta sullo schermo. Consigliato per le app che usano ASWebAuthenticationSession.',
   token_endpoint: 'Endpoint token',
   user_info_endpoint: 'Endpoint informazioni utente',
   enable_admin_access: "Abilita l'accesso amministratore",

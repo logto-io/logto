@@ -57,6 +57,9 @@ const application_details = {
   cors_allowed_origins_placeholder: 'https://tu.pagina.com',
   cors_allowed_origins_tip:
     'Por defecto, se permitirán todos los orígenes de los URIs de Redireccionamiento. Normalmente no es necesario hacer nada en este campo. Consulta la <a>documentación de MDN</a> para obtener información detallada.',
+  show_continue_to_app_page: 'Mostrar la página "Continuar a la app" en iOS',
+  show_continue_to_app_page_description:
+    'Después de que los usuarios inicien sesión con una contraseña en iOS o iPadOS, muestra una página con un botón "Continuar" en lugar de volver a la app de inmediato, para que el aviso del sistema "Guardar contraseña" permanezca en pantalla. Recomendado para apps que usan ASWebAuthenticationSession.',
   token_endpoint: 'Endpoint del Token',
   user_info_endpoint: 'Endpoint del Usuario',
   enable_admin_access: 'Habilitar acceso de administrador',
