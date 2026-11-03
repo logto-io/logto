@@ -452,6 +452,37 @@ export class Mfa {
   }
 
   /**
+   * Whether MFA is required for the user, either by an explicit per-user requirement or by
+   * an organization that requires MFA.
+   *
+   * The per-user requirement is independent of `organizationRequiredMfaPolicy`. When no MFA factor
+   * is enabled in the sign-in experience, there is nothing to enforce.
+   */
+  async isMfaRequiredByUser(
+    mfaSettings: MfaSettings,
+    user: Pick<User, 'id' | 'logtoConfig'>,
+    organizations?: Readonly<OrganizationWithRoles[]>
+  ) {
+    if (mfaSettings.factors.length === 0) {
+      return false;
+    }
+
+    if (parseUserMfaData(user.logtoConfig).required === true) {
+      return true;
+    }
+
+    if (mfaSettings.organizationRequiredMfaPolicy !== OrganizationRequiredMfaPolicy.Mandatory) {
+      return false;
+    }
+
+    const resolvedOrganizations =
+      organizations ??
+      (await this.queries.organizations.relations.users.getOrganizationsByUserId(user.id));
+
+    return resolvedOrganizations.some(({ isMfaRequired }) => isMfaRequired);
+  }
+
+  /**
    * If the MFA is not mandatory, prompt policy is NOT `NoPrompt`, and the user has not skipped MFA, suggest MFA binding
    * by throwing a 422 `user.suggest_mfa` error and navigate user to a "Turn on 2-step verification" screen.
    *
@@ -740,37 +771,6 @@ export class Mfa {
     );
 
     assertThat(isFactorsEnabled, new RequestError({ code: 'session.mfa.mfa_factor_not_enabled' }));
-  }
-
-  /**
-   * Whether MFA setup is required for the user, either by an explicit per-user requirement or by
-   * an organization that requires MFA.
-   *
-   * The per-user requirement is independent of `organizationRequiredMfaPolicy`. When no MFA factor
-   * is enabled in the sign-in experience, there is nothing to enforce.
-   */
-  private async isMfaRequiredByUser(
-    mfaSettings: MfaSettings,
-    user: Pick<User, 'id' | 'logtoConfig'>,
-    organizations?: Readonly<OrganizationWithRoles[]>
-  ) {
-    if (mfaSettings.factors.length === 0) {
-      return false;
-    }
-
-    if (parseUserMfaData(user.logtoConfig).required === true) {
-      return true;
-    }
-
-    if (mfaSettings.organizationRequiredMfaPolicy !== OrganizationRequiredMfaPolicy.Mandatory) {
-      return false;
-    }
-
-    const resolvedOrganizations =
-      organizations ??
-      (await this.queries.organizations.relations.users.getOrganizationsByUserId(user.id));
-
-    return resolvedOrganizations.some(({ isMfaRequired }) => isMfaRequired);
   }
 
   /**

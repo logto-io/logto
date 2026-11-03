@@ -63,7 +63,10 @@ export class MfaValidator {
   constructor(
     private readonly mfaSettings: Mfa,
     private readonly user: User,
-    private readonly adaptiveMfaResult?: Optional<AdaptiveMfaResult>
+    private readonly verificationContext: {
+      adaptiveMfaResult?: Optional<AdaptiveMfaResult>;
+      isMfaRequiredByUser?: boolean;
+    } = {}
   ) {}
 
   /**
@@ -102,21 +105,27 @@ export class MfaValidator {
    * Whether MFA verification is required for the current sign-in interaction.
    *
    * Decision order:
-   * 1. If adaptive MFA is enabled (result defined):
+   * 1. If MFA is required by the user or an organization: require any available user factor.
+   * 2. If adaptive MFA is enabled (result defined):
    *    - triggered + user has factors → required
    *    - otherwise → not required
-   * 2. If adaptive MFA is disabled (result undefined), fall back to SIE policy:
+   * 3. If adaptive MFA is disabled (result undefined), fall back to SIE policy:
    *    - skipMfaOnSignIn + non-Mandatory policy → not required
    *    - user has factors → required
    *    - otherwise → not required
    */
   get isMfaRequired(): boolean {
     const hasUserFactors = this.userEnabledMfaVerifications.length > 0;
+    const { adaptiveMfaResult, isMfaRequiredByUser } = this.verificationContext;
 
-    if (this.adaptiveMfaResult !== undefined) {
+    if (isMfaRequiredByUser) {
+      return hasUserFactors;
+    }
+
+    if (adaptiveMfaResult !== undefined) {
       // Verification guard only applies when the user already has MFA factors
       // enabled in the current sign-in experience.
-      return this.adaptiveMfaResult.requiresMfa && hasUserFactors;
+      return adaptiveMfaResult.requiresMfa && hasUserFactors;
     }
 
     const mfaData = userMfaDataGuard.safeParse(this.user.logtoConfig[userMfaDataKey]);

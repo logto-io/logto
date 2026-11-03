@@ -703,7 +703,10 @@ export default class ExperienceInteraction {
     const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
     const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(log);
 
-    const mfaValidator = new MfaValidator(mfaSettings, user, adaptiveMfaResult);
+    const mfaValidator = new MfaValidator(mfaSettings, user, {
+      adaptiveMfaResult,
+      isMfaRequiredByUser: await this.mfa.isMfaRequiredByUser(mfaSettings, user),
+    });
 
     // A requested `mfa` only offers the factors that pair with the first factor already proven and
     // that the eligibility offers: a factor of the same kind (an MFA email code after an email
