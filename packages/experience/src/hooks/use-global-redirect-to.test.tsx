@@ -103,17 +103,17 @@ describe('useGlobalRedirectTo', () => {
     sessionStorage.clear();
   });
 
-  it('should show the continue-to-app page for confirm_redirect=password after a password is entered', () => {
-    sessionStorage.setItem('confirm_redirect', 'password');
+  it('should show the continue-to-app page for confirm_redirect_policy=password after a password is entered', () => {
+    sessionStorage.setItem('confirm_redirect_policy', 'password');
     renderHarness();
     expectContinueToAppPage(redirectUrl);
   });
 
   it.each([
-    { name: 'confirm_redirect is not set', policy: undefined },
-    { name: 'confirm_redirect is unknown', policy: 'always' },
+    { name: 'confirm_redirect_policy is not set', policy: undefined },
+    { name: 'confirm_redirect_policy is unknown', policy: 'always' },
     {
-      name: 'confirm_redirect=password and no password was entered',
+      name: 'confirm_redirect_policy=password and no password was entered',
       policy: 'password',
       hasEnteredPassword: false,
     },
@@ -124,7 +124,7 @@ describe('useGlobalRedirectTo', () => {
     },
   ])('should redirect right away when $name', ({ policy, ...rest }) => {
     if (policy) {
-      sessionStorage.setItem('confirm_redirect', policy);
+      sessionStorage.setItem('confirm_redirect_policy', policy);
     }
 
     renderHarness(rest);
@@ -132,13 +132,13 @@ describe('useGlobalRedirectTo', () => {
   });
 
   it('should never hold a social or SSO redirect', () => {
-    sessionStorage.setItem('confirm_redirect', 'password');
+    sessionStorage.setItem('confirm_redirect_policy', 'password');
     renderHarness({ options: { shouldClearInteractionContextSession: false, isReplace: false } });
     expectRedirectedRightAway(assign);
   });
 
   it('should show the continue-to-app page after a password sign-in', async () => {
-    sessionStorage.setItem('confirm_redirect', 'password');
+    sessionStorage.setItem('confirm_redirect_policy', 'password');
     const { getByText, container } = renderWithPageContext(
       <SettingsProvider>
         <ConfirmModalProvider>

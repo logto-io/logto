@@ -330,10 +330,11 @@ export default function initOidc(
         switch (prompt.name) {
           case 'login': {
             // Third-party and CIMD clients always show the consent screen after sign-in, which
-            // already holds the session open, so `confirm_redirect` would only add a page.
-            const { [ExtraParamsKey.ConfirmRedirect]: confirmRedirect, ...rest } = params;
+            // already holds the session open, so `confirm_redirect_policy` would only add a page.
+            const { [ExtraParamsKey.ConfirmRedirectPolicy]: confirmRedirectPolicy, ...rest } =
+              params;
             const shouldDropConfirmRedirect =
-              confirmRedirect !== undefined &&
+              confirmRedirectPolicy !== undefined &&
               resolvedAppId !== undefined &&
               (await isThirdPartyApplication(queries, resolvedAppId));
 

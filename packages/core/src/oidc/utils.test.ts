@@ -388,21 +388,21 @@ describe('buildLoginPromptUrl', () => {
     expect(buildLoginPromptUrl({ direct_sign_in: '' })).toBe('sign-in');
   });
 
-  it('should forward confirm_redirect to every entry, including step-up', () => {
-    expect(buildLoginPromptUrl({ confirm_redirect: 'password' }, { appId: 'foo' })).toBe(
-      'sign-in?app_id=foo&confirm_redirect=password'
+  it('should forward confirm_redirect_policy to every entry, including step-up', () => {
+    expect(buildLoginPromptUrl({ confirm_redirect_policy: 'password' }, { appId: 'foo' })).toBe(
+      'sign-in?app_id=foo&confirm_redirect_policy=password'
     );
     expect(
-      buildLoginPromptUrl({ confirm_redirect: 'password', direct_sign_in: 'social:google' })
-    ).toBe('direct/social/google?confirm_redirect=password&fallback=sign-in');
+      buildLoginPromptUrl({ confirm_redirect_policy: 'password', direct_sign_in: 'social:google' })
+    ).toBe('direct/social/google?confirm_redirect_policy=password&fallback=sign-in');
     expect(
-      buildLoginPromptUrl({ confirm_redirect: 'password' }, undefined, {
+      buildLoginPromptUrl({ confirm_redirect_policy: 'password' }, undefined, {
         authenticationContext: {
           mode: AuthenticationContextMode.StepUp,
           requestedAcrValues: [LogtoAcr.Mfa],
         },
       })
-    ).toBe('step-up?confirm_redirect=password');
+    ).toBe('step-up?confirm_redirect_policy=password');
   });
 
   it('should return the correct url for mixed parameters', () => {

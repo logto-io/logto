@@ -194,7 +194,7 @@ const App = () => {
                       {/* Trusted device */}
                       <Route path={experience.routes.trustedDevice} element={<TrustedDevice />} />
 
-                      {/* Confirm the redirect back to the app (`confirm_redirect` sign-in parameter) */}
+                      {/* Confirm the redirect back to the app (`confirm_redirect_policy` sign-in parameter) */}
                       <Route path={continueToAppPath} element={<ContinueToApp />} />
 
                       {/* Step-up establishment and enrollment reuse the existing pages. */}

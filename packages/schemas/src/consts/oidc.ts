@@ -100,7 +100,7 @@ export enum ExtraParamsKey {
    * Omit it to redirect right away. An unrecognized value is ignored without affecting the other
    * parameters.
    */
-  ConfirmRedirect = 'confirm_redirect',
+  ConfirmRedirectPolicy = 'confirm_redirect_policy',
 }
 
 /** @deprecated Use {@link FirstScreen} instead. */
@@ -132,7 +132,7 @@ export const extraParamsObjectGuard = z
     [ExtraParamsKey.OneTimeToken]: z.string(),
     [ExtraParamsKey.GoogleOneTapCredential]: z.string(),
     [ExtraParamsKey.Theme]: z.string(),
-    [ExtraParamsKey.ConfirmRedirect]: z.string(),
+    [ExtraParamsKey.ConfirmRedirectPolicy]: z.string(),
   })
   .partial() satisfies ToZodObject<ExtraParamsObject>;
 
@@ -147,5 +147,5 @@ export type ExtraParamsObject = Partial<{
   [ExtraParamsKey.OneTimeToken]: string;
   [ExtraParamsKey.GoogleOneTapCredential]: string;
   [ExtraParamsKey.Theme]: string;
-  [ExtraParamsKey.ConfirmRedirect]: string;
+  [ExtraParamsKey.ConfirmRedirectPolicy]: string;
 }>;

@@ -4,9 +4,9 @@ import { useCallback, useContext } from 'react';
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
-import { confirmRedirectKey } from '@/shared/utils/search-parameters';
+import { confirmRedirectPolicyKey } from '@/shared/utils/search-parameters';
 
-/** The route of the "Continue to app" page that holds the redirect for `confirm_redirect`. */
+/** The route of the "Continue to app" page that holds the redirect for `confirm_redirect_policy`. */
 export const continueToAppPath = 'continue-to-app';
 
 type Options = {
@@ -23,7 +23,7 @@ type Options = {
    */
   isReplace?: boolean;
   /**
-   * Whether the `confirm_redirect` sign-in parameter may hold this redirect on the "Continue to
+   * Whether the `confirm_redirect_policy` sign-in parameter may hold this redirect on the "Continue to
    * app" page. Defaults to `true`.
    * Set to `false` for the redirect from the "Continue to app" page itself.
    */
@@ -55,11 +55,11 @@ function useGlobalRedirectTo({
     async (url: string | URL): Promise<never> => {
       /**
        * Hold the final sign-in redirect on the "Continue to app" page when the client asks for it
-       * with `confirm_redirect` (see `ExtraParamsKey.ConfirmRedirect`). It works around iOS
+       * with `confirm_redirect_policy` (see `ExtraParamsKey.ConfirmRedirectPolicy`). It works around iOS
        * `ASWebAuthenticationSession`, which closes on the callback URL and dismisses the "Save
        * Password" prompt. The page redirects through this hook once the user taps "Continue".
        */
-      const policy = sessionStorage.getItem(confirmRedirectKey);
+      const policy = sessionStorage.getItem(confirmRedirectPolicyKey);
       const shouldConfirmRedirect =
         canConfirmRedirect &&
         shouldClearInteractionContextSession &&

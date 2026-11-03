@@ -346,8 +346,8 @@ export const isStepUpPrompt = (promptDetails: unknown): boolean => {
  * Build the Experience URL for a login prompt. A step-up prompt lands directly on the `step-up`
  * route tree: the subject is pinned from the session, so the first screen, direct sign-in, and
  * identifier hints do not apply and only the shared app, organization, and locale params, plus
- * `confirm_redirect`, are kept. A prompt whose details carry only the requested ACR values (no session) keeps the
- * regular sign-in URL.
+ * `confirm_redirect_policy`, are kept. A prompt whose details carry only the requested ACR values
+ * (no session) keeps the regular sign-in URL.
  */
 // eslint-disable-next-line complexity
 export const buildLoginPromptUrl = (
@@ -363,8 +363,11 @@ export const buildLoginPromptUrl = (
   }
 
   // Applies to every entry, including step-up, so the experience reads it at the final redirect.
-  if (params[ExtraParamsKey.ConfirmRedirect]) {
-    searchParams.append(ExtraParamsKey.ConfirmRedirect, params[ExtraParamsKey.ConfirmRedirect]);
+  if (params[ExtraParamsKey.ConfirmRedirectPolicy]) {
+    searchParams.append(
+      ExtraParamsKey.ConfirmRedirectPolicy,
+      params[ExtraParamsKey.ConfirmRedirectPolicy]
+    );
   }
 
   if (isStepUpPrompt(promptDetails)) {

@@ -727,11 +727,11 @@ describe('experience cookie for login prompts', () => {
   });
 });
 
-describe('confirm_redirect in the login prompt URL', () => {
+describe('confirm_redirect_policy in the login prompt URL', () => {
   const loginPrompt = { name: 'login', details: {} };
 
   it.each([
-    { isThirdParty: false, expected: '/sign-in?app_id=foo&confirm_redirect=password' },
+    { isThirdParty: false, expected: '/sign-in?app_id=foo&confirm_redirect_policy=password' },
     // The consent screen that follows already holds the session open.
     { isThirdParty: true, expected: '/sign-in?app_id=foo' },
   ])(
@@ -744,7 +744,7 @@ describe('confirm_redirect in the login prompt URL', () => {
       );
 
       const { url } = runInteractionUrl(provider, 'foo', loginPrompt, {
-        confirm_redirect: 'password',
+        confirm_redirect_policy: 'password',
       });
 
       await expect(url).resolves.toBe(expected);
