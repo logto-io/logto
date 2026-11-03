@@ -135,7 +135,7 @@ const description = {
   switch_account_description:
     'Щоб продовжити, ви будете вийдені з поточного облікового запису та автоматично переключені на новий.',
   continue_to_app_title: 'Ви увійшли',
-  continue_to_app_description: 'Натисніть «Продовжити», щоб повернутися до застосунку.',
+  continue_to_app_description: 'Тепер ви можете повернутися до застосунку.',
   about_yourself: 'Розкажіть про себе',
   verify_identity: 'Підтвердьте свою особу',
   choose_verification_method: 'Виберіть спосіб входу',

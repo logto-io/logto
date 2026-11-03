@@ -132,7 +132,7 @@ const description = {
   switch_account_description:
     'Pro pokračování budeš odhlášen/a z aktuálního účtu a automaticky přepnut/a na nový účet.',
   continue_to_app_title: 'Jste přihlášeni',
-  continue_to_app_description: 'Klepnutím na „Pokračovat“ se vrátíte do aplikace.',
+  continue_to_app_description: 'Nyní se můžete vrátit do aplikace.',
   about_yourself: 'Řekni nám něco o sobě',
   verify_identity: 'Ověř svou identitu',
   choose_verification_method: 'Vyber, jak se chceš přihlásit',

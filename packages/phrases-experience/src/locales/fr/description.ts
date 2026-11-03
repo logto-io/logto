@@ -137,7 +137,7 @@ const description = {
   switch_account_description:
     'Pour continuer, vous serez déconnecté du compte actuel, et le passage au nouveau compte se fera automatiquement.',
   continue_to_app_title: 'Vous êtes connecté',
-  continue_to_app_description: 'Appuyez sur « Continuer » pour revenir à l’application.',
+  continue_to_app_description: 'Vous pouvez maintenant revenir à l’application.',
   about_yourself: 'Parlez-nous de vous',
   verify_identity: 'Vérifiez votre identité',
   choose_verification_method: 'Choisissez comment vous connecter',

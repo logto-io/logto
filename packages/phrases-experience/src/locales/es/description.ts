@@ -138,7 +138,7 @@ const description = {
   switch_account_description:
     'Para continuar, se cerrará la sesión de la cuenta actual, y se cambiará automáticamente a la nueva cuenta.',
   continue_to_app_title: 'Has iniciado sesión',
-  continue_to_app_description: 'Toca "Continuar" para volver a la app.',
+  continue_to_app_description: 'Ya puedes volver a la app.',
   about_yourself: 'Cuéntanos sobre ti',
   verify_identity: 'Verifica tu identidad',
   choose_verification_method: 'Elige cómo quieres iniciar sesión',

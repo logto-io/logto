@@ -130,7 +130,7 @@ const description = {
   switch_account_description:
     'للمتابعة، سيتم تسجيل الخروج من الحساب الحالي، والتبديل تلقائيًا إلى الحساب الجديد.',
   continue_to_app_title: 'لقد سجلت الدخول',
-  continue_to_app_description: 'اضغط على "متابعة" للعودة إلى التطبيق.',
+  continue_to_app_description: 'يمكنك الآن العودة إلى التطبيق.',
   about_yourself: 'أخبرنا عن نفسك',
   verify_identity: 'تحقق من هويتك',
   choose_verification_method: 'اختر طريقة تسجيل الدخول',

@@ -135,7 +135,7 @@ const description = {
   switch_account_description:
     'Чтобы продолжить, вы будете выйти из текущей учетной записи и автоматически переключены на новую учетную запись.',
   continue_to_app_title: 'Вы вошли в систему',
-  continue_to_app_description: 'Нажмите «Продолжить», чтобы вернуться в приложение.',
+  continue_to_app_description: 'Теперь вы можете вернуться в приложение.',
   about_yourself: 'Расскажите нам о себе',
   verify_identity: 'Подтвердите свою личность',
   choose_verification_method: 'Выберите способ входа',

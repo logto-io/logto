@@ -116,7 +116,7 @@ const description = {
   switch_account_title: '你當前以 {{account}} 登錄',
   switch_account_description: '要繼續，你將退出當前帳號，並自動切換到新帳號。',
   continue_to_app_title: '你已登入',
-  continue_to_app_description: '點擊「繼續」返回應用程式。',
+  continue_to_app_description: '你現在可以返回應用程式了。',
   about_yourself: '講講你自己',
   verify_identity: '驗證你的身份',
   choose_verification_method: '選擇你要登入的方式',
