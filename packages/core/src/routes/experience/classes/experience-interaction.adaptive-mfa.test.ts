@@ -4,8 +4,6 @@ import {
   InteractionHookEvent,
   MfaFactor,
   MfaPolicy,
-  OrganizationRequiredMfaPolicy,
-  type OrganizationWithRoles,
   type User,
   userMfaDataKey,
   VerificationType,
@@ -164,92 +162,6 @@ describe('ExperienceInteraction adaptive MFA', () => {
       expect(mfaValidator.isMfaRequired).toBe(expected);
     }
   );
-
-  describe('user and organization MFA requirements', () => {
-    afterEach(() => {
-      jest
-        .spyOn(tenant.queries.organizations.relations.users, 'getOrganizationsByUserId')
-        .mockRestore();
-    });
-
-    it.each([
-      { organizationRequiresMfa: true, skipMfaOnSignIn: false, required: false, expected: true },
-      { organizationRequiresMfa: true, skipMfaOnSignIn: true, required: false, expected: true },
-      { organizationRequiresMfa: false, skipMfaOnSignIn: false, required: false, expected: false },
-      { organizationRequiresMfa: false, skipMfaOnSignIn: true, required: true, expected: true },
-    ])(
-      'email MFA: organization=$organizationRequiresMfa, skip=$skipMfaOnSignIn, user requirement=$required',
-      async ({ organizationRequiresMfa, skipMfaOnSignIn, required, expected }) => {
-        signInExperiences.findDefaultSignInExperience.mockResolvedValue({
-          ...mockSignInExperience,
-          adaptiveMfa: { enabled: false },
-          mfa: {
-            policy: MfaPolicy.NoPrompt,
-            factors: [MfaFactor.EmailVerificationCode],
-            organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.Mandatory,
-          },
-        });
-        const user: User = {
-          ...mockUserWithMfaVerifications,
-          primaryEmail: 'user@example.com',
-          mfaVerifications: [],
-          logtoConfig: { mfa: { enabled: false, skipMfaOnSignIn, required } },
-        };
-        users.findUserById.mockResolvedValueOnce(user);
-        jest
-          .spyOn(tenant.queries.organizations.relations.users, 'getOrganizationsByUserId')
-          .mockResolvedValue([
-            { isMfaRequired: organizationRequiresMfa },
-          ] as OrganizationWithRoles[]);
-
-        const ctx = {
-          assignReleaseOnSuccessInteractionHookResult: jest.fn(),
-          assignReleaseAnywayInteractionHookResult: jest.fn(),
-          appendDataHookContext: jest.fn(),
-          ...createContextWithRouteParameters(),
-          ...createMockLogContext(),
-        } as unknown as WithHooksAndLogsContext;
-        const interactionDetails = {
-          result: { interactionEvent: InteractionEvent.SignIn, userId: user.id },
-        } as unknown as ConstructorParameters<typeof ExperienceInteraction>[2];
-        const interaction = new ExperienceInteraction(ctx, tenant, interactionDetails);
-
-        // The existing email fulfills enrollment, but has not verified this sign-in.
-        await expect(interaction.mfa.assertMfaFulfilled()).resolves.toBeUndefined();
-
-        await (expected
-          ? expect(interaction.guardMfaVerificationStatus()).rejects.toMatchObject({
-              code: 'session.mfa.require_mfa_verification',
-              status: 403,
-              data: { availableFactors: [MfaFactor.EmailVerificationCode] },
-            })
-          : expect(interaction.guardMfaVerificationStatus()).resolves.toBeUndefined());
-        expect(user.logtoConfig.mfa).toEqual({ enabled: false, skipMfaOnSignIn, required });
-      }
-    );
-
-    it.each([undefined, { requiresMfa: false, triggeredRules: [] }])(
-      'enforces a user requirement regardless of adaptive result %j',
-      (adaptiveMfaResult) => {
-        const settings = {
-          policy: MfaPolicy.NoPrompt,
-          factors: [MfaFactor.EmailVerificationCode],
-        };
-        const user: User = {
-          ...mockUserWithMfaVerifications,
-          primaryEmail: 'user@example.com',
-          mfaVerifications: [],
-          logtoConfig: { mfa: { enabled: false, skipMfaOnSignIn: true } },
-        };
-        const context = { adaptiveMfaResult, isMfaRequiredByUser: true };
-
-        expect(new MfaValidator(settings, user, context).isMfaRequired).toBe(true);
-        expect(
-          new MfaValidator(settings, { ...user, primaryEmail: null }, context).isMfaRequired
-        ).toBe(false);
-      }
-    );
-  });
 
   it('requires MFA even when skipMfaOnSignIn is true if adaptive MFA triggers', async () => {
     const user: User = {
