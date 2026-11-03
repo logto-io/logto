@@ -107,6 +107,8 @@ const userInteractionContext: UserInteractionContextType = {
   clearInteractionContextSessionStorage: noop,
   hasBoundPasskey: false,
   setHasBoundPasskey: noop,
+  hasEnteredPassword: () => false,
+  markPasswordEntered: noop,
 };
 
 /** Every method family, in the canonical server order. */

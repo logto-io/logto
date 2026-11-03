@@ -20,6 +20,12 @@ export const searchKeys = Object.freeze({
   uiLocales: 'ui_locales',
 } satisfies Record<SearchKeysCamelCase, string>);
 
+/**
+ * The `confirm_redirect` sign-in parameter. It is stored in the session storage like
+ * {@link searchKeys}, but it is not sent to the sign-in experience API.
+ */
+export const confirmRedirectKey = 'confirm_redirect';
+
 const replaceSearchParameters = (parameters: URLSearchParams) => {
   const parameterString = parameters.toString();
   const conditionalParamString = condString(parameterString && `?${parameterString}`);
@@ -44,7 +50,7 @@ export const handleSearchParametersData = () => {
 
   // Store known search keys to the session storage and remove them from the URL to keep the URL
   // clean.
-  for (const key of Object.values(searchKeys)) {
+  for (const key of [...Object.values(searchKeys), confirmRedirectKey]) {
     const value = parameters.get(key);
     if (value) {
       sessionStorage.setItem(key, value);

@@ -87,6 +87,22 @@ export enum ExtraParamsKey {
    * The available values are `light` and `dark`.
    */
   Theme = 'theme',
+  /**
+   * Ask the end-user to confirm before the sign-in experience redirects back to the client after a
+   * successful sign-in, by showing a "You're signed in / Continue" page.
+   *
+   * It works around iOS `ASWebAuthenticationSession`, which closes as soon as it sees the callback
+   * URL and dismisses the system "Save Password" prompt with it.
+   *
+   * The available values are:
+   *
+   * - `password`: Confirm only when the end-user entered a password in the sign-in experience.
+   * - `always`: Confirm for every sign-in method.
+   *
+   * Omit it to redirect right away. An unrecognized value is ignored without affecting the other
+   * parameters.
+   */
+  ConfirmRedirect = 'confirm_redirect',
 }
 
 /** @deprecated Use {@link FirstScreen} instead. */
@@ -118,6 +134,7 @@ export const extraParamsObjectGuard = z
     [ExtraParamsKey.OneTimeToken]: z.string(),
     [ExtraParamsKey.GoogleOneTapCredential]: z.string(),
     [ExtraParamsKey.Theme]: z.string(),
+    [ExtraParamsKey.ConfirmRedirect]: z.string(),
   })
   .partial() satisfies ToZodObject<ExtraParamsObject>;
 
@@ -132,4 +149,5 @@ export type ExtraParamsObject = Partial<{
   [ExtraParamsKey.OneTimeToken]: string;
   [ExtraParamsKey.GoogleOneTapCredential]: string;
   [ExtraParamsKey.Theme]: string;
+  [ExtraParamsKey.ConfirmRedirect]: string;
 }>;

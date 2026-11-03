@@ -1,6 +1,7 @@
 import { InteractionEvent } from '@logto/schemas';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { verifyStepUpPassword } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
@@ -26,6 +27,7 @@ const useStepUpPasswordVerification = () => {
 
   const handleError = useErrorHandler();
   const redirectTo = useGlobalRedirectTo();
+  const { markPasswordEntered } = useContext(UserInteractionContext);
   const asyncVerifyStepUpPassword = useApi(verifyStepUpPassword);
   const stepUpErrorHandlers = useStepUpErrorHandler();
   const submitInteractionErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.SignIn, {
@@ -49,6 +51,7 @@ const useStepUpPasswordVerification = () => {
 
   const onSubmit = useCallback(
     async (password: string) => {
+      markPasswordEntered();
       const [error, result] = await asyncVerifyStepUpPassword(password);
 
       if (error) {
@@ -60,7 +63,7 @@ const useStepUpPasswordVerification = () => {
         await redirectTo(result.redirectTo);
       }
     },
-    [asyncVerifyStepUpPassword, errorHandlers, handleError, redirectTo]
+    [asyncVerifyStepUpPassword, errorHandlers, handleError, redirectTo, markPasswordEntered]
   );
 
   return { errorMessage, clearErrorMessage, onSubmit };

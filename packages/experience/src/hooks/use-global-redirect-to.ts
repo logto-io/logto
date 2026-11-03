@@ -3,6 +3,9 @@ import { useCallback, useContext } from 'react';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
+import { continueToAppPath } from '@/pages/ContinueToApp';
+import { confirmRedirectKey } from '@/shared/utils/search-parameters';
 
 type Options = {
   /**
@@ -17,6 +20,12 @@ type Options = {
    * Use `false` if this is a 3rd-party URL redirection (social sign-in or single sign-on redirection) that should be added to the browser history.
    */
   isReplace?: boolean;
+  /**
+   * Whether the `confirm_redirect` sign-in parameter may hold this redirect on the "Continue to
+   * app" page. Defaults to `true`.
+   * Set to `false` if this redirection does not complete a sign-in (e.g. aborting the interaction).
+   */
+  canConfirmRedirect?: boolean;
 };
 
 /**
@@ -33,12 +42,49 @@ type Options = {
 function useGlobalRedirectTo({
   shouldClearInteractionContextSession = true,
   isReplace = true,
+  canConfirmRedirect = true,
 }: Options = {}) {
   const { setLoading } = useContext(PageContext);
-  const { clearInteractionContextSessionStorage } = useContext(UserInteractionContext);
+  const { clearInteractionContextSessionStorage, hasEnteredPassword } =
+    useContext(UserInteractionContext);
+  const navigate = useNavigateWithPreservedSearchParams();
+
+  /**
+   * Workaround for iOS `ASWebAuthenticationSession`: the session closes as soon as it sees the
+   * app callback URL, which dismisses the system "Save Password" prompt right after it shows up,
+   * and Apple provides no API to delay it. Instead of redirecting right away, show a "Continue to
+   * app" page and wait for the user to tap the button (an automatic delay does not work).
+   *
+   * The user agent cannot tell `ASWebAuthenticationSession` from Safari, so the client opts in
+   * with the `confirm_redirect` sign-in parameter (see `ExtraParamsKey.ConfirmRedirect`):
+   * `password` confirms only when a password was entered in this interaction, and `always`
+   * confirms for every sign-in method. It only applies to the final redirect after a sign-in.
+   *
+   * Remove this once Apple fixes the issue.
+   *
+   * @see https://github.com/auth0/react-native-auth0/issues/725
+   * @see https://github.com/AzureAD/microsoft-authentication-library-for-objc/issues/848
+   * @see https://curity.io/resources/learn/appauth-ios-guide/
+   */
+  const shouldConfirmRedirect = useCallback(() => {
+    if (!canConfirmRedirect || !shouldClearInteractionContextSession) {
+      return false;
+    }
+
+    const policy = sessionStorage.getItem(confirmRedirectKey);
+
+    return policy === 'always' || (policy === 'password' && hasEnteredPassword());
+  }, [canConfirmRedirect, hasEnteredPassword, shouldClearInteractionContextSession]);
 
   const redirectTo = useCallback(
     async (url: string | URL): Promise<never> => {
+      if (shouldConfirmRedirect()) {
+        clearInteractionContextSessionStorage();
+        navigate(`/${continueToAppPath}`, { replace: true, state: { redirectTo: url.toString() } });
+
+        return new Promise<never>(noop);
+      }
+
       /**
        * Set global loading state to true
        * This prevents further user interaction during the redirect process
@@ -71,8 +117,10 @@ function useGlobalRedirectTo({
     [
       clearInteractionContextSessionStorage,
       isReplace,
+      navigate,
       setLoading,
       shouldClearInteractionContextSession,
+      shouldConfirmRedirect,
     ]
   );
 

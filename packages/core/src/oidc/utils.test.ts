@@ -1,9 +1,12 @@
+/* eslint-disable max-lines -- The OIDC utility cases share the mocks set up in this file. */
 import {
   ApplicationType,
+  AuthenticationContextMode,
   CustomClientMetadataKey,
   FirstScreen,
   GrantType,
   InteractionMode,
+  LogtoAcr,
   Theme,
   demoAppApplicationId,
 } from '@logto/schemas';
@@ -385,6 +388,23 @@ describe('buildLoginPromptUrl', () => {
     expect(buildLoginPromptUrl({ direct_sign_in: '' })).toBe('sign-in');
   });
 
+  it('should forward confirm_redirect to every entry, including step-up', () => {
+    expect(buildLoginPromptUrl({ confirm_redirect: 'password' }, { appId: 'foo' })).toBe(
+      'sign-in?app_id=foo&confirm_redirect=password'
+    );
+    expect(
+      buildLoginPromptUrl({ confirm_redirect: 'always', direct_sign_in: 'social:google' })
+    ).toBe('direct/social/google?confirm_redirect=always&fallback=sign-in');
+    expect(
+      buildLoginPromptUrl({ confirm_redirect: 'password' }, undefined, {
+        authenticationContext: {
+          mode: AuthenticationContextMode.StepUp,
+          requestedAcrValues: [LogtoAcr.Mfa],
+        },
+      })
+    ).toBe('step-up?confirm_redirect=password');
+  });
+
   it('should return the correct url for mixed parameters', () => {
     expect(
       buildLoginPromptUrl({
@@ -450,3 +470,4 @@ describe('parseSharedExperienceParams', () => {
     });
   });
 });
+/* eslint-enable max-lines */

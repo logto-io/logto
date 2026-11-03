@@ -17,7 +17,7 @@ const useAbortDirectSignIn = () => {
   // Most lookups end in the hosted fallback, so keep the global loading mask off.
   const asyncGetDirectSignIn = useApi(getDirectSignIn, { silent: true });
   const asyncAbortInteraction = useApi(abortInteraction);
-  const redirectTo = useGlobalRedirectTo();
+  const redirectTo = useGlobalRedirectTo({ canConfirmRedirect: false });
 
   return useCallback(
     async (reason?: string) => {

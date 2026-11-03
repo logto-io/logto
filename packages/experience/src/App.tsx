@@ -18,6 +18,7 @@ import StepUpRecoveryGuard from './containers/StepUpRecoveryGuard';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
 import Continue from './pages/Continue';
+import ContinueToApp, { continueToAppPath } from './pages/ContinueToApp';
 import Device from './pages/Device';
 import DeviceSuccess from './pages/Device/Success';
 import DirectSignIn from './pages/DirectSignIn';
@@ -191,6 +192,9 @@ const App = () => {
 
                       {/* Trusted device */}
                       <Route path={experience.routes.trustedDevice} element={<TrustedDevice />} />
+
+                      {/* Confirm the redirect back to the app (`confirm_redirect` sign-in parameter) */}
+                      <Route path={continueToAppPath} element={<ContinueToApp />} />
 
                       {/* Step-up establishment and enrollment reuse the existing pages. */}
                       <Route element={<StepUpRecoveryGuard />}>

@@ -91,6 +91,8 @@ const userInteractionContext = (
   verificationIdsMap,
   hasBoundPasskey: false,
   setHasBoundPasskey: noop,
+  hasEnteredPassword: () => false,
+  markPasswordEntered: noop,
   clearInteractionContextSessionStorage: noop,
 });
 

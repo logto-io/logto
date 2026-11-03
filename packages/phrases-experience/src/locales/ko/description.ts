@@ -123,6 +123,8 @@ const description = {
   switch_account_title: '현재 {{account}}으로 로그인 중입니다',
   switch_account_description:
     '계속 진행하려면 현재 계정에서 로그아웃되고 새 계정으로 자동 전환됩니다.',
+  continue_to_app_title: '로그인되었습니다',
+  continue_to_app_description: '"계속"을 탭하여 앱으로 돌아가세요.',
   about_yourself: '자신에 대해 알려주세요',
   verify_identity: '신원 확인',
   choose_verification_method: '로그인 방법을 선택하세요',

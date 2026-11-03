@@ -44,7 +44,8 @@ const Consent = () => {
   const asyncConsent = useApi(consent);
   const asyncAbort = useApi(abortInteraction);
   const { t } = useTranslation();
-  const redirectTo = useGlobalRedirectTo();
+  // The sign-in was already confirmed before consent, and cancelling does not complete it.
+  const redirectTo = useGlobalRedirectTo({ canConfirmRedirect: false });
 
   const [consentData, setConsentData] = useState<ConsentInfoResponse>();
   const [selectedOrganization, setSelectedOrganization] = useState<Organization>();
