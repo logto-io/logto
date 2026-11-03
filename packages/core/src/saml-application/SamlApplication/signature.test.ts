@@ -7,6 +7,7 @@ import {
   generateKeyPairAndCertificate,
   validateSamlAuthnRequestConfig,
 } from '#src/libraries/saml-application/utils.js';
+import { LogEntry } from '#src/middleware/koa-audit-log.js';
 
 import {
   createMockSamlApplicationDetails,
@@ -15,6 +16,7 @@ import {
 import { SamlApplication } from './index.js';
 import { getSamlRedirectSignatureInput, assertSamlAuthnRequestSignatureScope } from './utils.js';
 
+const createLog = () => new LogEntry('SamlApplication.AuthnRequest');
 const keys = await generateKeyPairAndCertificate(1);
 const wrongKeys = await generateKeyPairAndCertificate(1);
 const createApplication = (required = true, certificate = keys.certificate) => {
@@ -82,7 +84,7 @@ describe('SAML request signatures', () => {
   describe.each(['post', 'redirect'] as const)('%s binding', (binding) => {
     it('accepts a request signed by the configured SP', async () => {
       await expect(
-        createApplication().parseLoginRequest(binding, createRequest(binding))
+        createApplication().parseLoginRequest(binding, createRequest(binding), createLog())
       ).resolves.toBeDefined();
     });
 
@@ -90,15 +92,19 @@ describe('SAML request signatures', () => {
       await expect(
         createApplication(true, wrongKeys.certificate).parseLoginRequest(
           binding,
-          createRequest(binding)
+          createRequest(binding),
+          createLog()
         )
       ).rejects.toThrow();
     });
 
-    it('rejects a tampered request', async () => {
+    it('rejects a tampered request without logging a format error', async () => {
+      const log = createLog();
+
       await expect(
-        createApplication().parseLoginRequest(binding, createRequest(binding, true))
+        createApplication().parseLoginRequest(binding, createRequest(binding, true), log)
       ).rejects.toThrow();
+      expect(log.payload).not.toHaveProperty('samlRequestError');
     });
 
     it.each([true, false])('handles unsigned requests with requirement %s', async (required) => {
@@ -106,7 +112,7 @@ describe('SAML request signatures', () => {
         binding === 'post'
           ? { body: { SAMLRequest: Buffer.from(unsignedXml).toString('base64') } }
           : { query: { SAMLRequest: deflateRawSync(unsignedXml).toString('base64') } };
-      const result = createApplication(required).parseLoginRequest(binding, request);
+      const result = createApplication(required).parseLoginRequest(binding, request, createLog());
       if (required) {
         await expect(result).rejects.toThrow();
         return;
