@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- the full sign-in experience assembles many independent parts in one library. */
 import { GoogleConnector } from '@logto/connector-kit';
 import { builtInLanguages } from '@logto/phrases-experience';
 import type {
@@ -28,6 +29,8 @@ import assertThat from '#src/utils/assert-that.js';
 import { isKeyOfI18nPhrases } from '#src/utils/translation.js';
 
 import type { LogtoConnector } from '../../utils/connectors/types.js';
+
+import { findIsContinueToAppPageEnabled } from './continue-to-app-page.js';
 
 export * from './sign-up.js';
 export * from './sign-in.js';
@@ -259,6 +262,7 @@ export const createSignInExperienceLibrary = (
       organizationOverride,
       appSignInExperience,
       customProfileFields,
+      isContinueToAppPageEnabled,
     ] = await Promise.all([
       findDefaultSignInExperience(),
       getLogtoConnectors(),
@@ -266,6 +270,7 @@ export const createSignInExperienceLibrary = (
       getOrganizationOverride(organizationId),
       findApplicationSignInExperience(appId),
       findAllCustomProfileFields(),
+      findIsContinueToAppPageEnabled(queries, appId),
     ]);
 
     // Always return empty array if single-sign-on is disabled
@@ -377,6 +382,7 @@ export const createSignInExperienceLibrary = (
       captchaConfig: await getCaptchaConfig(),
       customProfileFields: signUpCustomProfileFields,
       customProfileFieldCatalog: customProfileFields,
+      ...(isContinueToAppPageEnabled && { isContinueToAppPageEnabled }),
     };
   };
 
@@ -409,3 +415,4 @@ export const createSignInExperienceLibrary = (
     findCaseConflicts,
   };
 };
+/* eslint-enable max-lines */

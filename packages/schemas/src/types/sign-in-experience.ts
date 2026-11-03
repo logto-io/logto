@@ -68,6 +68,11 @@ export type FullSignInExperience = Omit<
    * and `type`) outside the sign-up field list, such as the account center profile page.
    */
   customProfileFieldCatalog?: Readonly<CustomProfileField[]>;
+  /**
+   * Whether the current application is a native application with the "Continue to app" page
+   * enabled (see `CustomClientMetadataKey.ShowContinueToAppPage`). Only present when `true`.
+   */
+  isContinueToAppPageEnabled?: boolean;
 };
 
 export const fullSignInExperienceGuard = SignInExperiences.guard
@@ -104,4 +109,5 @@ export const fullSignInExperienceGuard = SignInExperiences.guard
       .optional(),
     customProfileFields: CustomProfileFields.guard.array(),
     customProfileFieldCatalog: CustomProfileFields.guard.array().optional(),
+    isContinueToAppPageEnabled: z.boolean().optional(),
   }) satisfies ToZodObject<FullSignInExperience>;

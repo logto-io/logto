@@ -102,6 +102,15 @@ export enum CustomClientMetadataKey {
    * When exceeded, old sessions should be revoked according to server policy.
    */
   MaxAllowedGrants = 'maxAllowedGrants',
+  /**
+   * Whether to show a "Continue to app" page after the user signs in with a password on iOS or
+   * iPadOS, instead of redirecting back to the app right away. The page gives the system "Save
+   * Password" prompt time to stay on screen, because `ASWebAuthenticationSession` closes as soon
+   * as it sees the callback URL.
+   *
+   * Only applicable to native applications. Defaults to `false`.
+   */
+  ShowContinueToAppPage = 'showContinueToAppPage',
 }
 
 /**
@@ -125,6 +134,7 @@ export const customClientMetadataGuard = z.object({
   [CustomClientMetadataKey.AllowTokenExchange]: z.boolean().optional(),
   [CustomClientMetadataKey.IsDeviceFlow]: z.boolean().optional(),
   [CustomClientMetadataKey.MaxAllowedGrants]: z.number().int().positive().optional(),
+  [CustomClientMetadataKey.ShowContinueToAppPage]: z.boolean().optional(),
 } satisfies Record<CustomClientMetadataKey, z.ZodType>);
 
 /**

@@ -2,6 +2,7 @@
 import type { LanguageTag } from '@logto/language-kit';
 import { builtInLanguages } from '@logto/phrases-experience';
 import {
+  ApplicationType,
   CaptchaType,
   ForgotPasswordMethod,
   ossDefaultQuota,
@@ -12,6 +13,7 @@ import { TtlCache } from '@logto/shared';
 
 import {
   mockAliyunDmConnector,
+  mockApplication,
   mockAliyunSmsConnector,
   mockCaptchaProvider,
   mockCustomProfileFields,
@@ -62,6 +64,11 @@ const customProfileFields = {
 };
 const { findAllCustomProfileFields } = customProfileFields;
 
+const applications = {
+  findApplicationById: jest.fn(),
+};
+const { findApplicationById } = applications;
+
 const { MockQueries } = await import('#src/test-utils/tenant.js');
 
 const queries = new MockQueries({
@@ -69,6 +76,7 @@ const queries = new MockQueries({
   signInExperiences,
   captchaProviders,
   customProfileFields,
+  applications,
 });
 const connectorLibrary = createConnectorLibrary(queries, {
   getClient: jest.fn(),
@@ -555,6 +563,50 @@ describe('forgot password methods', () => {
       email: false,
       phone: false,
     });
+  });
+});
+describe('getFullSignInExperience() isContinueToAppPageEnabled', () => {
+  beforeEach(() => {
+    findDefaultSignInExperience.mockResolvedValue(mockSignInExperience);
+    getLogtoConnectors.mockResolvedValue([]);
+    findAllCustomProfileFields.mockResolvedValue([]);
+    mockSsoConnectorLibrary.getAvailableSsoConnectors.mockResolvedValue([]);
+  });
+
+  it.each([
+    { type: ApplicationType.Native, showContinueToAppPage: true, expected: true },
+    { type: ApplicationType.Native, showContinueToAppPage: false, expected: undefined },
+    { type: ApplicationType.Native, showContinueToAppPage: undefined, expected: undefined },
+    { type: ApplicationType.SPA, showContinueToAppPage: true, expected: undefined },
+  ])(
+    'should be $expected for a $type app with showContinueToAppPage=$showContinueToAppPage',
+    async ({ type, showContinueToAppPage, expected }) => {
+      findApplicationById.mockResolvedValueOnce({
+        ...mockApplication,
+        type,
+        customClientMetadata: { showContinueToAppPage },
+      });
+
+      const result = await getFullSignInExperience({ locale: 'en', appId: mockApplication.id });
+
+      expect(findApplicationById).toHaveBeenCalledWith(mockApplication.id);
+      expect(result.isContinueToAppPageEnabled).toBe(expected);
+    }
+  );
+
+  it('should not be set when the application is not found', async () => {
+    findApplicationById.mockRejectedValueOnce(new Error('not found'));
+
+    const result = await getFullSignInExperience({ locale: 'en', appId: 'unknown' });
+
+    expect(result).not.toHaveProperty('isContinueToAppPageEnabled');
+  });
+
+  it('should not query the application without an app ID', async () => {
+    const result = await getFullSignInExperience({ locale: 'en' });
+
+    expect(findApplicationById).not.toHaveBeenCalled();
+    expect(result).not.toHaveProperty('isContinueToAppPageEnabled');
   });
 });
 /* eslint-enable max-lines */
