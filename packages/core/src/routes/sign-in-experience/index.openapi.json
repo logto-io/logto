@@ -191,7 +191,7 @@
                     }
                   },
                   "crossOriginOpenerPolicy": {
-                    "description": "The `Cross-Origin-Opener-Policy` header to send with the hosted sign-in page while Custom UI assets are configured. `unsafe-none` (the default) sends no header; other values require Bring your UI. Any other value cuts off apps that open the sign-in page in a cross-origin popup and rely on `window.opener`, and `same-origin` also cuts off cross-origin popups the Custom UI opens itself (for example, social sign-in windows), so `same-origin-allow-popups` is recommended.",
+                    "description": "The `Cross-Origin-Opener-Policy` header to send with the hosted sign-in page while Custom UI assets are configured. `unsafe-none` (the default) sends no header; other values require Bring your UI. Any other value cuts off apps that open the sign-in page in a popup and rely on `window.opener`. Popups the Custom UI opens itself also lose `window.opener` when they navigate back to the Custom UI (for example, to a social sign-in callback), and with `same-origin` they lose it as soon as they open, so `same-origin-allow-popups` is recommended over `same-origin`.",
                     "x-logto-dev-feature": true
                   },
                   "passwordPolicy": {
