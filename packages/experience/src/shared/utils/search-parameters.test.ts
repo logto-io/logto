@@ -35,4 +35,16 @@ describe('search parameters utils', () => {
 
     expect(sessionStorage.getItem('confirm_redirect')).toBeNull();
   });
+
+  it.each(['/callback/github', '/callback/social/github'])(
+    'keeps confirm_redirect on a %s load',
+    (pathname) => {
+      sessionStorage.setItem('confirm_redirect', 'always');
+      window.history.pushState(window.history.state, '', `${pathname}?code=foo&state=bar`);
+      handleSearchParametersData();
+
+      expect(sessionStorage.getItem('confirm_redirect')).toBe('always');
+      expect(window.location.search).toBe('?code=foo&state=bar');
+    }
+  );
 });

@@ -44,7 +44,7 @@ const Consent = () => {
   const asyncConsent = useApi(consent);
   const asyncAbort = useApi(abortInteraction);
   const { t } = useTranslation();
-  // The sign-in was already confirmed before consent, and cancelling does not complete it.
+  // The consent screen already holds the session open, so core drops `confirm_redirect` for it.
   const redirectTo = useGlobalRedirectTo({ canConfirmRedirect: false });
 
   const [consentData, setConsentData] = useState<ConsentInfoResponse>();

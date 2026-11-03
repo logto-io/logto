@@ -47,10 +47,16 @@ export const handleSearchParametersData = () => {
   }
 
   const parameters = new URLSearchParams(search);
+  // A social or SSO callback (`/callback/...?code=...`) resumes the same sign-in, so it keeps the
+  // stored `confirm_redirect`.
+  const isRedirectCallback = window.location.pathname.startsWith('/callback/');
 
   // Store known search keys to the session storage and remove them from the URL to keep the URL
   // clean.
-  for (const key of [...Object.values(searchKeys), confirmRedirectKey]) {
+  for (const key of [
+    ...Object.values(searchKeys),
+    ...(isRedirectCallback ? [] : [confirmRedirectKey]),
+  ]) {
     const value = parameters.get(key);
     if (value) {
       sessionStorage.setItem(key, value);
