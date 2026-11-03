@@ -25,6 +25,7 @@ const mockSamlApplication = {
   encryption: {},
   authnRequestConfig: null,
   nameIdFormat: NameIdFormat.Persistent,
+  staticAttributes: {},
 };
 
 const updateSamlApplicationById = jest.fn(async (_, data) => ({
@@ -111,6 +112,46 @@ describe('SAML application route', () => {
       .send({ authnRequestConfig: { forceAuthn: 'true' } });
     expect(response.status).toBe(400);
     expect(updateSamlApplicationById).not.toHaveBeenCalled();
+  });
+
+  it('POST rejects a static attribute that conflicts with a user attribute', async () => {
+    const response = await createSamlApplicationRequest()
+      .post('/saml-applications')
+      .send({ name: 'SAML app', staticAttributes: { email: 'x' } });
+    expect(response.status).toBe(400);
+    expect(response.text).toBe(
+      new RequestError('application.saml.static_attribute_name_conflict').message
+    );
+  });
+
+  it.each([{ 'site"': '2' }, { 'site name': '2' }, { site: '' }])(
+    'POST rejects invalid static attributes: %j',
+    async (staticAttributes) => {
+      const response = await createSamlApplicationRequest()
+        .post('/saml-applications')
+        .send({ name: 'SAML app', staticAttributes });
+      expect(response.status).toBe(400);
+    }
+  );
+
+  it('PATCH persists static attributes', async () => {
+    const staticAttributes = { site: '2', account: 'acct-1' };
+    const response = await createSamlApplicationRequest()
+      .patch('/saml-applications/foo')
+      .send({ staticAttributes });
+    expect(response.status).toBe(200);
+    expect(updateSamlApplicationById).toHaveBeenCalledWith('foo', { staticAttributes });
+    expect(response.body.staticAttributes).toEqual(staticAttributes);
+  });
+
+  it('PATCH returns a static attribute conflict as 400', async () => {
+    updateSamlApplicationById.mockRejectedValueOnce(
+      new RequestError({ code: 'application.saml.static_attribute_name_conflict', status: 400 })
+    );
+    const response = await createSamlApplicationRequest()
+      .patch('/saml-applications/foo')
+      .send({ attributeMapping: { email: 'site' } });
+    expect(response.status).toBe(400);
   });
 
   afterEach(() => {

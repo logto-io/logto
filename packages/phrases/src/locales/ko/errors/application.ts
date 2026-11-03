@@ -52,6 +52,8 @@ const application = {
     sp_initiated_saml_sso_session_not_found:
       '서비스 제공자가 시작한 SAML SSO 세션을 찾을 수 없습니다.',
     state_mismatch: '`state` 가 일치하지 않습니다.',
+    static_attribute_name_conflict:
+      '정적 속성 이름은 서로 또는 주장의 사용자 속성 이름과 충돌할 수 없습니다.',
   },
 };
 

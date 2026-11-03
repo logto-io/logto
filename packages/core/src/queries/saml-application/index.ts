@@ -44,6 +44,7 @@ export type SamlApplicationDetails = Pick<
     | 'encryption'
     | 'nameIdFormat'
     | 'authnRequestConfig'
+    | 'staticAttributes'
   > &
   NullableObject<SamlApplicationSecretDetails>;
 
@@ -64,6 +65,7 @@ const samlApplicationDetailsGuard = Applications.guard
       nameIdFormat: true,
       encryption: true,
       authnRequestConfig: true,
+      staticAttributes: true,
     })
   )
   .merge(
@@ -79,7 +81,7 @@ const samlApplicationDetailsGuard = Applications.guard
 export const createSamlApplicationQueries = (pool: CommonQueryMethods) => {
   const getSamlApplicationDetailsById = async (id: string): Promise<SamlApplicationDetails> => {
     const result = await pool.maybeOne(sql`
-      select ${fields.id} as id, ${fields.secret} as secret, ${fields.name} as name, ${fields.description} as description, ${fields.customData} as custom_data, ${fields.oidcClientMetadata} as oidc_client_metadata, ${samlApplicationConfigsFields.attributeMapping} as attribute_mapping, ${samlApplicationConfigsFields.entityId} as entity_id, ${samlApplicationConfigsFields.acsUrl} as acs_url, ${samlApplicationConfigsFields.encryption} as encryption, ${samlApplicationConfigsFields.authnRequestConfig} as authn_request_config, ${samlApplicationConfigsFields.nameIdFormat} as name_id_format, ${samlApplicationSecretsFields.privateKey} as private_key, ${samlApplicationSecretsFields.certificate} as certificate, ${samlApplicationSecretsFields.active} as active, ${samlApplicationSecretsFields.expiresAt} as expires_at
+      select ${fields.id} as id, ${fields.secret} as secret, ${fields.name} as name, ${fields.description} as description, ${fields.customData} as custom_data, ${fields.oidcClientMetadata} as oidc_client_metadata, ${samlApplicationConfigsFields.attributeMapping} as attribute_mapping, ${samlApplicationConfigsFields.entityId} as entity_id, ${samlApplicationConfigsFields.acsUrl} as acs_url, ${samlApplicationConfigsFields.encryption} as encryption, ${samlApplicationConfigsFields.authnRequestConfig} as authn_request_config, ${samlApplicationConfigsFields.nameIdFormat} as name_id_format, ${samlApplicationConfigsFields.staticAttributes} as static_attributes, ${samlApplicationSecretsFields.privateKey} as private_key, ${samlApplicationSecretsFields.certificate} as certificate, ${samlApplicationSecretsFields.active} as active, ${samlApplicationSecretsFields.expiresAt} as expires_at
       from ${table}
       left join ${samlApplicationConfigsTable} on ${fields.id}=${samlApplicationConfigsFields.applicationId}
       left join ${samlApplicationSecretsTable} on ${fields.id}=${samlApplicationSecretsFields.applicationId}

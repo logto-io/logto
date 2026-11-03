@@ -52,6 +52,8 @@ const application = {
     sp_initiated_saml_sso_session_not_found:
       'نشست SAML SSO آغازشده توسط ارائه‌دهنده سرویس یافت نشد.',
     state_mismatch: 'عدم تطابق `state`.',
+    static_attribute_name_conflict:
+      'نام ویژگی‌های ثابت نباید با یکدیگر یا با نام ویژگی‌های کاربر در ادعای SAML تداخل داشته باشد.',
   },
 };
 

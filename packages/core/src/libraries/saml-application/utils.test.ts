@@ -3,7 +3,11 @@ import forge from 'node-forge';
 
 import RequestError from '#src/errors/RequestError/index.js';
 
-import { generateKeyPairAndCertificate, calculateCertificateFingerprints } from './utils.js';
+import {
+  generateKeyPairAndCertificate,
+  calculateCertificateFingerprints,
+  validateSamlStaticAttributes,
+} from './utils.js';
 
 describe('generateKeyPairAndCertificate', () => {
   it('should generate valid key pair and certificate', async () => {
@@ -125,5 +129,33 @@ describe('calculateCertificateFingerprints', () => {
     const secondResult = calculateCertificateFingerprints(validCertificate);
 
     expect(firstResult).toEqual(secondResult);
+  });
+});
+
+describe('validateSamlStaticAttributes', () => {
+  type Config = Parameters<typeof validateSamlStaticAttributes>[0];
+
+  it.each<Config>([
+    { attributeMapping: {}, staticAttributes: {} },
+    { attributeMapping: { email: 'mail', name: 'Mail' }, staticAttributes: {} },
+    { attributeMapping: {}, staticAttributes: { site: '2', account: 'acct-1' } },
+    { attributeMapping: { email: 'email' }, staticAttributes: { sub: '1', name: 'n' } },
+  ])('accepts %j', (config) => {
+    expect(() => {
+      validateSamlStaticAttributes(config);
+    }).not.toThrow();
+  });
+
+  it.each<Config>([
+    { attributeMapping: { email: 'site' }, staticAttributes: { Site: '2' } },
+    { attributeMapping: {}, staticAttributes: { email: 'x' } },
+    { attributeMapping: {}, staticAttributes: { site: '2', Site: '3' } },
+    { attributeMapping: {}, staticAttributes: { account_id: '1', accountId: '2' } },
+  ])('rejects %j', (config) => {
+    expect(() => {
+      validateSamlStaticAttributes(config);
+    }).toThrow(
+      new RequestError({ code: 'application.saml.static_attribute_name_conflict', status: 400 })
+    );
   });
 });

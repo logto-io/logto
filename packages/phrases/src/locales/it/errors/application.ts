@@ -57,6 +57,8 @@ const application = {
     sp_initiated_saml_sso_session_not_found:
       'Sessione SSO SAML iniziata dal fornitore di servizi non trovata.',
     state_mismatch: 'Discrepanza nel `state`.',
+    static_attribute_name_conflict:
+      'I nomi degli attributi statici non devono entrare in conflitto tra loro né con i nomi degli attributi utente nella dichiarazione.',
   },
 };
 

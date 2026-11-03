@@ -1,4 +1,11 @@
-import { ApplicationType, BindingType, NameIdFormat, type Application } from '@logto/schemas';
+import {
+  ApplicationType,
+  BindingType,
+  NameIdFormat,
+  type Application,
+  type PatchSamlApplication,
+  type SamlApplicationConfig,
+} from '@logto/schemas';
 
 import { mockApplication } from '#src/__mocks__/index.js';
 import { MockQueries } from '#src/test-utils/tenant.js';
@@ -23,6 +30,7 @@ const mockSamlConfig = {
   encryption: {},
   authnRequestConfig: null,
   nameIdFormat: NameIdFormat.Persistent,
+  staticAttributes: {},
 };
 
 const findApplicationById = jest.fn(async () => mockSamlApplication);
@@ -72,6 +80,45 @@ describe('createSamlApplicationsLibrary()', () => {
       expect(updateApplicationById).not.toHaveBeenCalled();
     }
   );
+
+  it('persists static attributes', async () => {
+    const staticAttributes = { site: '2' };
+    const result = await createLibrary().updateSamlApplicationById('foo', { staticAttributes });
+    expect(updateSamlApplicationConfig).toHaveBeenCalledWith({
+      set: { ...mockSamlConfig, staticAttributes },
+      where: { applicationId: 'foo' },
+      jsonbMode: 'replace',
+    });
+    expect(result.staticAttributes).toEqual(staticAttributes);
+  });
+
+  it.each<{
+    stored: Partial<Pick<SamlApplicationConfig, 'attributeMapping' | 'staticAttributes'>>;
+    patch: PatchSamlApplication;
+  }>([
+    {
+      stored: { staticAttributes: { site: '2' } },
+      patch: { attributeMapping: { email: 'site' } },
+    },
+    {
+      stored: { attributeMapping: { email: 'mail' } },
+      patch: { staticAttributes: { mail: 'x' } },
+    },
+    { stored: {}, patch: { staticAttributes: { email: 'x' } } },
+    {
+      stored: { attributeMapping: { email: 'mail' }, staticAttributes: { email: 'x' } },
+      patch: { attributeMapping: {} },
+    },
+  ])('rejects a conflict with the stored config: %j', async ({ stored, patch }) => {
+    findSamlApplicationConfigByApplicationId.mockResolvedValueOnce({
+      ...mockSamlConfig,
+      ...stored,
+    });
+    await expect(createLibrary().updateSamlApplicationById('foo', patch)).rejects.toMatchObject({
+      code: 'application.saml.static_attribute_name_conflict',
+    });
+    expect(updateSamlApplicationConfig).not.toHaveBeenCalled();
+  });
 
   afterEach(() => {
     jest.clearAllMocks();

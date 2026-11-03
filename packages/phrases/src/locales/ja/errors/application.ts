@@ -54,6 +54,8 @@ const application = {
     sp_initiated_saml_sso_session_not_found:
       'サービスプロバイダーが開始した SAML SSO セッションが見つかりません。',
     state_mismatch: '`state` が一致しません。',
+    static_attribute_name_conflict:
+      '静的属性の名前は、互いに、またはアサーション内のユーザー属性の名前と競合してはいけません。',
   },
 };
 

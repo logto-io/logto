@@ -19,6 +19,7 @@ const samlAppConfigGuard = SamlApplicationConfigs.guard.pick({
   encryption: true,
   authnRequestConfig: true,
   nameIdFormat: true,
+  staticAttributes: true,
 });
 
 export const samlApplicationCreateGuard = applicationCreateGuard

@@ -45,6 +45,7 @@ const application = {
       '在 Cookie 中未找到服務提供者初始化的 SAML SSO 會話 ID。',
     sp_initiated_saml_sso_session_not_found: '未找到服務提供者初始化的 SAML SSO 會話。',
     state_mismatch: '`state` 不匹配。',
+    static_attribute_name_conflict: '靜態屬性名稱不能彼此衝突，也不能與斷言中的用戶屬性名稱衝突。',
   },
 };
 

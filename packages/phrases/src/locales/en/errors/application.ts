@@ -52,6 +52,8 @@ const application = {
     sp_initiated_saml_sso_session_not_found:
       'Service provider initiated SAML SSO session not found.',
     state_mismatch: '`state` mismatch.',
+    static_attribute_name_conflict:
+      'Static attribute names must not conflict with each other or with user attribute names in the assertion.',
   },
 };
 

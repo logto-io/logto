@@ -53,6 +53,8 @@ const application = {
     sp_initiated_saml_sso_session_not_found:
       'Hizmet sağlayıcı tarafından başlatılan SAML SSO oturumu bulunamadı.',
     state_mismatch: '`state` uyuşmazlığı.',
+    static_attribute_name_conflict:
+      'Statik öznitelik adları birbiriyle veya beyandaki kullanıcı öznitelik adlarıyla çakışmamalıdır.',
   },
 };
 

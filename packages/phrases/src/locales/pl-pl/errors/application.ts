@@ -53,6 +53,8 @@ const application = {
     sp_initiated_saml_sso_session_not_found:
       'Sesja SAML SSO zainicjowana przez dostawcę usług nie została znaleziona.',
     state_mismatch: 'Niezgodność `state`.',
+    static_attribute_name_conflict:
+      'Nazwy atrybutów statycznych nie mogą kolidować ze sobą ani z nazwami atrybutów użytkownika w oświadczeniu.',
   },
 };
 
