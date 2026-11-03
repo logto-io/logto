@@ -5,7 +5,6 @@ import { updateSignInExperience } from '#src/api/index.js';
 import { putSystemLicense } from '#src/api/system.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { buildTestLicensePayload, signTestLicenseKey } from '#src/helpers/license.js';
-import { devFeatureDisabledTest, devFeatureTest } from '#src/utils.js';
 
 // Security headers are set before Custom UI assets are served, so this id needs no uploaded assets.
 const customUiAssets = Object.freeze({
@@ -44,7 +43,7 @@ describe('sign-in experience Cross-Origin-Opener-Policy', () => {
     await expect(getCrossOriginOpenerPolicy()).resolves.toBeNull();
   });
 
-  devFeatureTest.it('sends the header only while Custom UI assets are served', async () => {
+  it('sends the header only while Custom UI assets are served', async () => {
     await installLicense(true);
     await updateSignInExperience({
       customUiAssets,
@@ -60,17 +59,8 @@ describe('sign-in experience Cross-Origin-Opener-Policy', () => {
     await expect(getCrossOriginOpenerPolicy()).resolves.toBeNull();
   });
 
-  devFeatureTest.it('rejects a non-default value without Bring your UI', async () => {
+  it('rejects a non-default value without Bring your UI', async () => {
     await installLicense(false);
-
-    await expectRejects(
-      updateSignInExperience({ crossOriginOpenerPolicy: CrossOriginOpenerPolicy.SameOrigin }),
-      { code: 'request.invalid_input', status: 400 }
-    );
-  });
-
-  devFeatureDisabledTest.it('rejects a non-default value', async () => {
-    await installLicense(true);
 
     await expectRejects(
       updateSignInExperience({ crossOriginOpenerPolicy: CrossOriginOpenerPolicy.SameOrigin }),
