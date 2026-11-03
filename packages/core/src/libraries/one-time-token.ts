@@ -7,6 +7,7 @@ import assertThat from '#src/utils/assert-that.js';
 export const createOneTimeTokenLibrary = (queries: Queries) => {
   const {
     updateOneTimeTokenStatus: updateOneTimeTokenStatusQuery,
+    consumeActiveOneTimeToken,
     getOneTimeTokenById,
     getOneTimeTokenByToken,
   } = queries.oneTimeTokens;
@@ -63,7 +64,10 @@ export const createOneTimeTokenLibrary = (queries: Queries) => {
   ) => {
     await checkOneTimeToken(token, email, expectedInteractionEvent);
 
-    return updateOneTimeTokenStatus(token, OneTimeTokenStatus.Consumed);
+    const consumedToken = await consumeActiveOneTimeToken(token);
+    assertThat(consumedToken, 'one_time_token.token_consumed');
+
+    return consumedToken;
   };
 
   return {

@@ -28,7 +28,7 @@ const oidcModelInstances = {
   findPayloadByPayloadField: jest.fn(),
   findPayloadByUid: jest.fn(),
   findPayloadByUserCode: jest.fn(),
-  consumeInstanceById: jest.fn(),
+  consumeInstanceById: jest.fn(async () => true),
   destroyInstanceById: jest.fn(),
   revokeInstanceByGrantId: jest.fn(),
 };
@@ -147,6 +147,23 @@ describe('postgres Adapter', () => {
 
     await adapter.revokeByGrantId(grantId);
     expect(revokeInstanceByGrantId).toBeCalledWith(modelName, grantId);
+  });
+
+  it.each([
+    ['AuthorizationCode', { error: 'invalid_grant' }],
+    ['DeviceCode', { error: 'invalid_grant' }],
+    [
+      'PushedAuthorizationRequest',
+      {
+        error: 'invalid_request_uri',
+        error_description: 'request_uri is invalid, expired, or was already used',
+      },
+    ],
+  ])('rejects %s once it is no longer consumable', async (modelName, expected) => {
+    consumeInstanceById.mockResolvedValueOnce(false);
+    const adapter = postgresAdapter(mockEnvSet, queries, modelName);
+
+    await expect(adapter.consume('fooId')).rejects.toMatchObject(expected);
   });
 
   it('includes runtime custom-domain redirect URI for Account Center built-in app', async () => {

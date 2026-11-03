@@ -228,7 +228,18 @@ export default function postgresAdapter(
     find: async (id) => findPayloadById(modelName, id),
     findByUserCode: async (userCode) => findPayloadByUserCode(modelName, userCode),
     findByUid: async (uid) => findPayloadByUid(modelName, uid),
-    consume: async (id) => consumeInstanceById(modelName, id),
+    consume: async (id) => {
+      if (await consumeInstanceById(modelName, id)) {
+        return;
+      }
+
+      // The provider ignores this method's result and checks `consumed` only on the instance it read
+      // earlier, so throw the error it raises for an already consumed one. Unlike that path, this
+      // does not revoke the grant.
+      throw modelName === 'PushedAuthorizationRequest'
+        ? new errors.InvalidRequestUri('request_uri is invalid, expired, or was already used')
+        : new errors.InvalidGrant(`${modelName} already consumed or no longer exists`);
+    },
     destroy: async (id) => destroyInstanceById(modelName, id),
     revokeByGrantId: async (grantId) => revokeInstanceByGrantId(modelName, grantId),
   };

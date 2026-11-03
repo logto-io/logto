@@ -16,10 +16,10 @@ const pool = createMockPool({
 });
 
 const { createOneTimeTokenQueries } = await import('./one-time-tokens.js');
-const { countOneTimeTokens } = createOneTimeTokenQueries(pool);
+const { countOneTimeTokens, consumeActiveOneTimeToken } = createOneTimeTokenQueries(pool);
 
 describe('one-time token query', () => {
-  const { table } = convertToIdentifiers(OneTimeTokens);
+  const { table, fields } = convertToIdentifiers(OneTimeTokens);
 
   it('counts every token when no condition is given', async () => {
     const expectSql = sql`
@@ -55,5 +55,25 @@ describe('one-time token query', () => {
     await expect(countOneTimeTokens({ email, status: OneTimeTokenStatus.Active })).resolves.toEqual(
       { count: 2 }
     );
+  });
+
+  it('consumes a token only while it is active', async () => {
+    const token = 'foo-token';
+    const expectSql = sql`
+      update ${table}
+      set ${fields.status} = $1
+      where ${fields.token} = $2
+      and ${fields.status} = $3
+      returning *
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([OneTimeTokenStatus.Consumed, token, OneTimeTokenStatus.Active]);
+
+      return createMockQueryResult([]);
+    });
+
+    await expect(consumeActiveOneTimeToken(token)).resolves.toBeNull();
   });
 });
