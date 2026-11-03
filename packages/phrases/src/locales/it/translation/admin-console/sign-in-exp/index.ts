@@ -249,9 +249,9 @@ const sign_in_exp = {
       flows_title: 'Integra i flussi di impostazione di sicurezza predefiniti',
       single_task_flows_title: 'Integra i flussi di aggiornamento profilo singolo predefiniti',
       flows_description:
-        "Combina il tuo dominio con il percorso per formare il tuo URL di impostazione dell'account (ad es., https://auth.foo.com/account/email). Opzionalmente aggiungi `redirect=` per riportare gli utenti alla tua app dopo un aggiornamento riuscito, `show_success=true` per mantenere visibile la pagina di successo, `ui_locales=` per sovrascrivere la lingua predefinita, o `identifier=` per precompilare il nuovo valore sul percorso email, telefono o nome utente.",
+        "Combina il tuo dominio con il percorso per formare il tuo URL di impostazione dell'account (ad es., https://auth.foo.com/account/email). Opzionalmente aggiungi `redirect=` per riportare gli utenti alla tua app dopo un aggiornamento riuscito, `show_success=true` per mantenere visibile la pagina di successo, `ui_locales=` per sovrascrivere la lingua predefinita, `login_hint=` per precompilare l'identificativo nella pagina di accesso, o `identifier=` per precompilare il nuovo valore sul percorso email, telefono o nome utente.",
       single_task_flows_description:
-        'Combina il tuo dominio con il percorso per formare il tuo URL di aggiornamento del profilo (ad es., https://auth.foo.com/account/profile). Opzionalmente aggiungi `redirect=` per riportare gli utenti alla tua app dopo un aggiornamento riuscito, o `ui_locales=` per sovrascrivere la lingua predefinita.',
+        "Indirizza gli utenti direttamente a un flusso specifico (ad es., collegamento email). Opzionalmente aggiungi `redirect=` per riportare gli utenti alla tua app dopo un aggiornamento riuscito, `show_success=true` per mantenere visibile la pagina di successo, `ui_locales=` per sovrascrivere la lingua predefinita, `login_hint=` per precompilare l'identificativo nella pagina di accesso, o `identifier=` per precompilare il nuovo valore sul percorso email, telefono o nome utente.",
       tooltips: {
         email: 'Aggiorna il tuo indirizzo email principale',
         phone: 'Aggiorna il tuo numero di telefono principale',

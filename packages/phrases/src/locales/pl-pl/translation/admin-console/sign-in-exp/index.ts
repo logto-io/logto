@@ -249,9 +249,9 @@ const sign_in_exp = {
       flows_title: 'Integruj gotowe przepływy ustawień bezpieczeństwa',
       single_task_flows_title: 'Zintegruj gotowy przepływ pojedynczego zadania',
       flows_description:
-        'Połącz swoją domenę ze ścieżką, aby utworzyć URL ustawień konta (np. https://auth.foo.com/account/email). Opcjonalnie dodaj `redirect=`, aby użytkownicy mogli wrócić do Twojej aplikacji po pomyślnej aktualizacji, `show_success=true`, aby strona sukcesu była widoczna, `ui_locales=`, aby nadpisać domyślny język, lub `identifier=`, aby wstępnie wypełnić nową wartość na ścieżce e-mail, telefonu lub nazwy użytkownika.',
+        'Połącz swoją domenę ze ścieżką, aby utworzyć URL ustawień konta (np. https://auth.foo.com/account/email). Opcjonalnie dodaj `redirect=`, aby użytkownicy mogli wrócić do Twojej aplikacji po pomyślnej aktualizacji, `show_success=true`, aby strona sukcesu była widoczna, `ui_locales=`, aby nadpisać domyślny język, `login_hint=`, aby wstępnie wypełnić identyfikator na stronie logowania, lub `identifier=`, aby wstępnie wypełnić nową wartość na ścieżce e-mail, telefonu lub nazwy użytkownika.',
       single_task_flows_description:
-        'Kieruj użytkowników bezpośrednio do określonego przepływu (np. łączenie emaila). Opcjonalnie dodaj `redirect=`, aby użytkownicy mogli wrócić do Twojej aplikacji po pomyślnej aktualizacji, `show_success=true`, aby strona sukcesu była widoczna, `ui_locales=`, aby nadpisać domyślny język, lub `identifier=`, aby wstępnie wypełnić nową wartość na ścieżce e-mail, telefonu lub nazwy użytkownika.',
+        'Kieruj użytkowników bezpośrednio do określonego przepływu (np. łączenie emaila). Opcjonalnie dodaj `redirect=`, aby użytkownicy mogli wrócić do Twojej aplikacji po pomyślnej aktualizacji, `show_success=true`, aby strona sukcesu była widoczna, `ui_locales=`, aby nadpisać domyślny język, `login_hint=`, aby wstępnie wypełnić identyfikator na stronie logowania, lub `identifier=`, aby wstępnie wypełnić nową wartość na ścieżce e-mail, telefonu lub nazwy użytkownika.',
       tooltips: {
         email: 'Zaktualizuj swój główny adres e-mail',
         phone: 'Zaktualizuj swój główny numer telefonu',

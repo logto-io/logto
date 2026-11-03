@@ -7,11 +7,6 @@ import {
 } from './account-center-route';
 import { accountStorage } from './session-storage';
 
-jest.mock('@ac/constants/env', () => ({
-  __esModule: true,
-  isDevFeaturesEnabled: true,
-}));
-
 const setLocation = (pathname: string, search = '', origin = 'http://localhost') => {
   // eslint-disable-next-line @silverhand/fp/no-mutating-methods
   Object.defineProperty(window, 'location', {
