@@ -305,6 +305,9 @@ const application_details = {
     col_logto_claims: 'Logto 的值',
     col_sp_claims: '你应用中的值名称',
     add_button: '添加另一个',
+    static_attributes_title: '静态属性',
+    static_attributes_description:
+      '添加在每个 SAML 断言中发送的固定属性，例如你的应用程序需要的常量值。',
   },
   concurrent_device_limit,
 };

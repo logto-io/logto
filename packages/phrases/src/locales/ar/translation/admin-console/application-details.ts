@@ -324,6 +324,9 @@ const application_details = {
     col_logto_claims: 'قيمة Logto',
     col_sp_claims: 'اسم القيمة في تطبيقك',
     add_button: 'أضف آخر.',
+    static_attributes_title: 'السمات الثابتة',
+    static_attributes_description:
+      'أضف سمات ثابتة تُرسل في كل تأكيد SAML، مثل القيم الثابتة التي يتطلبها تطبيقك.',
   },
   concurrent_device_limit,
 };

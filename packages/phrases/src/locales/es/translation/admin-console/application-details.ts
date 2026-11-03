@@ -334,6 +334,9 @@ const application_details = {
     col_logto_claims: 'Valor de Logto',
     col_sp_claims: 'Nombre del valor de tu aplicación',
     add_button: 'Añadir otro',
+    static_attributes_title: 'Atributos estáticos',
+    static_attributes_description:
+      'Añade atributos fijos que se envían en cada afirmación SAML, como valores constantes que requiere tu aplicación.',
   },
   concurrent_device_limit,
 };

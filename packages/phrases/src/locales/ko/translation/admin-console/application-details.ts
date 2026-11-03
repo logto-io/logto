@@ -322,6 +322,9 @@ const application_details = {
     col_logto_claims: 'Logto 값',
     col_sp_claims: '애플리케이션의 값 이름',
     add_button: '다른 추가',
+    static_attributes_title: '정적 속성',
+    static_attributes_description:
+      '애플리케이션에 필요한 상수 값처럼 모든 SAML 주장에 포함되는 고정 속성을 추가하세요.',
   },
   concurrent_device_limit,
 };

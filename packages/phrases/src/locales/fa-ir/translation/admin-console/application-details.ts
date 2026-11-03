@@ -327,6 +327,9 @@ const application_details = {
     col_logto_claims: 'مقدار Logto',
     col_sp_claims: 'نام مقدار برنامه شما',
     add_button: 'افزودن مورد دیگر',
+    static_attributes_title: 'ویژگی‌های ثابت',
+    static_attributes_description:
+      'ویژگی‌های ثابتی اضافه کنید که در هر ادعای SAML ارسال می‌شوند، مانند مقادیر ثابتی که برنامه شما نیاز دارد.',
   },
   concurrent_device_limit,
 };

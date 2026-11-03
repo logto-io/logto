@@ -323,6 +323,9 @@ const application_details = {
     col_logto_claims: 'ค่าของ Logto',
     col_sp_claims: 'ชื่อค่าของแอปของคุณ',
     add_button: 'เพิ่มอีกหนึ่งรายการ',
+    static_attributes_title: 'คุณสมบัติแบบคงที่',
+    static_attributes_description:
+      'เพิ่มคุณสมบัติแบบคงที่ที่ส่งไปในทุก SAML assertion เช่น ค่าคงที่ที่แอปพลิเคชันของคุณต้องการ',
   },
   concurrent_device_limit,
 };

@@ -331,6 +331,9 @@ const application_details = {
     col_logto_claims: 'Logto の値',
     col_sp_claims: 'アプリケーションの値名',
     add_button: '別のものを追加',
+    static_attributes_title: '静的属性',
+    static_attributes_description:
+      'アプリケーションが必要とする定数値など、すべての SAML アサーションで送信される固定属性を追加します。',
   },
   concurrent_device_limit,
 };
