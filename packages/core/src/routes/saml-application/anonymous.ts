@@ -273,14 +273,18 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
       const { SAMLRequest, SigAlg } = rest;
 
       // Parse login request
-      const loginRequestResult = await samlApplication.parseLoginRequest('redirect', {
-        query: removeUndefinedKeys({
-          SAMLRequest,
-          Signature,
-          SigAlg,
-        }),
-        octetString,
-      });
+      const loginRequestResult = await samlApplication.parseLoginRequest(
+        'redirect',
+        {
+          query: removeUndefinedKeys({
+            SAMLRequest,
+            Signature,
+            SigAlg,
+          }),
+          octetString,
+        },
+        log
+      );
 
       log.append({ loginRequestResult });
       const extractResult = authRequestInfoGuard.safeParse(loginRequestResult.extract);
@@ -373,11 +377,15 @@ export default function samlApplicationAnonymousRoutes<T extends AnonymousRouter
       const samlApplication = new SamlApplication(details, id, envSet);
 
       // Parse login request
-      const loginRequestResult = await samlApplication.parseLoginRequest('post', {
-        body: {
-          SAMLRequest,
+      const loginRequestResult = await samlApplication.parseLoginRequest(
+        'post',
+        {
+          body: {
+            SAMLRequest,
+          },
         },
-      });
+        log
+      );
 
       log.append({ loginRequestResult });
       const extractResult = authRequestInfoGuard.safeParse(loginRequestResult.extract);
