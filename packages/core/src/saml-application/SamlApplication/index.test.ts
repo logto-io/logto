@@ -1,6 +1,7 @@
 import { UserScope, ReservedScope } from '@logto/core-kit';
 import { NameIdFormat } from '@logto/schemas';
 import nock from 'nock';
+import saml from 'samlify';
 
 import {
   createMockSamlApplicationDetails,
@@ -107,6 +108,33 @@ describe('SamlApplication', () => {
       // The markup must not create a new element, and its angle brackets must be escaped.
       expect(context).not.toMatch(/<saml:Attribute\s+Name="role"/);
       expect(context).toContain('&lt;/saml:AttributeValue&gt;');
+    });
+
+    it('emits one AttributeValue per item of a multi-valued claim', () => {
+      const samlAppWithRoles = new TestSamlApplication(
+        createMockSamlApplicationDetails({ attributeMapping: { roles: 'role', name: 'name' } }),
+        mockSamlApplicationId,
+        createMockSamlEnvSet({ issuer: mockIssuer })
+      );
+      const statement = saml.SamlLib.attributeStatementBuilder(
+        samlAppWithRoles.exposedBuildLoginResponseTemplate().attributes
+      );
+      const userInfo = { ...mockUser, roles: ['Development', 'Employees'] };
+
+      const { context } = samlAppWithRoles.exposedCreateSamlTemplateCallback({
+        userInfo,
+        samlRequestId: null,
+        sessionId: undefined,
+        sessionExpiresAt: undefined,
+      })(statement);
+
+      const valueElement = (value: string) =>
+        `<saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">${value}</saml:AttributeValue>`;
+      expect(context).toContain(
+        `<saml:Attribute Name="role" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">${valueElement('Development')}${valueElement('Employees')}</saml:Attribute>`
+      );
+      expect(context).toContain(`${valueElement('Test User')}</saml:Attribute>`);
+      expect(context).not.toContain('[');
     });
 
     it('should leave a legitimate attribute value intact (backward compatibility)', () => {
