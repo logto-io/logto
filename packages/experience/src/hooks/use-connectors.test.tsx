@@ -41,7 +41,7 @@ const createUserInteractionContext = (
   hasBoundPasskey: false,
   setHasBoundPasskey: noop,
   hasEnteredPassword: () => false,
-  markPasswordEntered: noop,
+  setHasEnteredPassword: noop,
   clearInteractionContextSessionStorage: noop,
 });
 

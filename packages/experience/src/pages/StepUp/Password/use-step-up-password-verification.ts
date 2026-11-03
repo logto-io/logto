@@ -27,7 +27,7 @@ const useStepUpPasswordVerification = () => {
 
   const handleError = useErrorHandler();
   const redirectTo = useGlobalRedirectTo();
-  const { markPasswordEntered } = useContext(UserInteractionContext);
+  const { setHasEnteredPassword } = useContext(UserInteractionContext);
   const asyncVerifyStepUpPassword = useApi(verifyStepUpPassword);
   const stepUpErrorHandlers = useStepUpErrorHandler();
   const submitInteractionErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.SignIn, {
@@ -51,7 +51,7 @@ const useStepUpPasswordVerification = () => {
 
   const onSubmit = useCallback(
     async (password: string) => {
-      markPasswordEntered();
+      setHasEnteredPassword(true);
       const [error, result] = await asyncVerifyStepUpPassword(password);
 
       if (error) {
@@ -63,7 +63,7 @@ const useStepUpPasswordVerification = () => {
         await redirectTo(result.redirectTo);
       }
     },
-    [asyncVerifyStepUpPassword, errorHandlers, handleError, redirectTo, markPasswordEntered]
+    [asyncVerifyStepUpPassword, errorHandlers, handleError, redirectTo, setHasEnteredPassword]
   );
 
   return { errorMessage, clearErrorMessage, onSubmit };

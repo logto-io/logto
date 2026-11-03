@@ -22,7 +22,7 @@ const RegisterPassword = () => {
 
   const navigate = useNavigateWithPreservedSearchParams();
   const redirectTo = useGlobalRedirectTo();
-  const { markPasswordEntered } = useContext(UserInteractionContext);
+  const { setHasEnteredPassword } = useContext(UserInteractionContext);
   const { show } = usePromiseConfirmModal();
   const [errorMessage, setErrorMessage] = useState<string>();
   const clearErrorMessage = useCallback(() => {
@@ -59,7 +59,7 @@ const RegisterPassword = () => {
         return;
       }
 
-      markPasswordEntered();
+      setHasEnteredPassword(true);
       const [error, result] = await asyncRegisterPassword(password);
 
       if (error) {
@@ -77,7 +77,7 @@ const RegisterPassword = () => {
       errorHandlers,
       handleError,
       redirectTo,
-      markPasswordEntered,
+      setHasEnteredPassword,
     ]
   );
 

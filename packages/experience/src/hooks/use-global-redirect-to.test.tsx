@@ -40,11 +40,17 @@ const redirectUrl = 'https://logto.dev/oidc/auth/foo';
 
 const Harness = ({ options }: { readonly options?: Parameters<typeof useGlobalRedirectTo>[0] }) => {
   const redirectTo = useGlobalRedirectTo(options);
-  const { markPasswordEntered } = useContext(UserInteractionContext);
+  const { setHasEnteredPassword } = useContext(UserInteractionContext);
 
   return (
     <>
-      <button onClick={markPasswordEntered}>enter password</button>
+      <button
+        onClick={() => {
+          setHasEnteredPassword(true);
+        }}
+      >
+        enter password
+      </button>
       <button
         onClick={async () => {
           await redirectTo(redirectUrl);

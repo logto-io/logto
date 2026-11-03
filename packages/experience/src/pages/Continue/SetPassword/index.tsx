@@ -30,7 +30,7 @@ const SetPassword = ({ interactionEvent }: Props) => {
   const navigate = useNavigateWithPreservedSearchParams();
   const { show } = usePromiseConfirmModal();
   const redirectTo = useGlobalRedirectTo();
-  const { markPasswordEntered } = useContext(UserInteractionContext);
+  const { setHasEnteredPassword } = useContext(UserInteractionContext);
 
   const checkPassword = usePasswordPolicyChecker({ setErrorMessage });
   const addPassword = useApi(fulfillProfile);
@@ -61,7 +61,7 @@ const SetPassword = ({ interactionEvent }: Props) => {
         return;
       }
 
-      markPasswordEntered();
+      setHasEnteredPassword(true);
       const [error, result] = await addPassword(
         { type: 'password', value: password },
         interactionEvent
@@ -83,7 +83,7 @@ const SetPassword = ({ interactionEvent }: Props) => {
       interactionEvent,
       handleError,
       redirectTo,
-      markPasswordEntered,
+      setHasEnteredPassword,
     ]
   );
 

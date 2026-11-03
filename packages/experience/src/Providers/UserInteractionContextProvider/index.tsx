@@ -42,9 +42,9 @@ const UserInteractionContextProvider = ({ children }: Props) => {
   const [hasBoundPasskey, setHasBoundPasskey] = useState(false);
   const hasEnteredPasswordRef = useRef(false);
   const hasEnteredPassword = useCallback(() => hasEnteredPasswordRef.current, []);
-  const markPasswordEntered = useCallback(() => {
+  const setHasEnteredPassword = useCallback((value: boolean) => {
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Ref-backed so redirects read the latest value.
-    hasEnteredPasswordRef.current = true;
+    hasEnteredPasswordRef.current = value;
   }, []);
 
   useEffect(() => {
@@ -124,7 +124,7 @@ const UserInteractionContextProvider = ({ children }: Props) => {
       hasBoundPasskey,
       setHasBoundPasskey,
       hasEnteredPassword,
-      markPasswordEntered,
+      setHasEnteredPassword,
     }),
     [
       ssoEmail,
@@ -137,7 +137,7 @@ const UserInteractionContextProvider = ({ children }: Props) => {
       clearInteractionContextSessionStorage,
       hasBoundPasskey,
       hasEnteredPassword,
-      markPasswordEntered,
+      setHasEnteredPassword,
     ]
   );
 

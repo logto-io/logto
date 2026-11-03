@@ -54,18 +54,14 @@ export type UserInteractionContextType = {
    */
   setHasBoundPasskey: React.Dispatch<React.SetStateAction<boolean>>;
   /**
-   * Whether the user has entered a password in this interaction (password sign-in, register
-   * password, set password, or step-up password). Used by the iOS "Continue to app" page, see
-   * `useGlobalRedirectTo`.
-   *
-   * It is a getter backed by a ref, so a redirect that runs right after the password submission
-   * reads the latest value instead of the one captured when the callback was created.
+   * Whether the user has entered a password in this interaction. A getter backed by a ref, so a
+   * redirect right after the password submission reads the latest value.
    */
   hasEnteredPassword: () => boolean;
   /**
-   * Mark that the user has entered a password in this interaction.
+   * Set whether the user has entered a password in this interaction.
    */
-  markPasswordEntered: () => void;
+  setHasEnteredPassword: (hasEnteredPassword: boolean) => void;
 };
 
 export default createContext<UserInteractionContextType>({
@@ -84,5 +80,5 @@ export default createContext<UserInteractionContextType>({
   hasBoundPasskey: false,
   setHasBoundPasskey: noop,
   hasEnteredPassword: () => false,
-  markPasswordEntered: noop,
+  setHasEnteredPassword: noop,
 });

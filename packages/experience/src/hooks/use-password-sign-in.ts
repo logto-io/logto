@@ -32,7 +32,7 @@ const usePasswordSignIn = () => {
   const navigate = useNavigateWithPreservedSearchParams();
   const { isForgotPasswordEnabled } = useForgotPasswordSettings();
 
-  const { identifierInputValue, setForgotPasswordIdentifierInputValue, markPasswordEntered } =
+  const { identifierInputValue, setForgotPasswordIdentifierInputValue, setHasEnteredPassword } =
     useContext(UserInteractionContext);
 
   const clearErrorMessage = useCallback(() => {
@@ -91,7 +91,7 @@ const usePasswordSignIn = () => {
         }
       }
 
-      markPasswordEntered();
+      setHasEnteredPassword(true);
       const [error, result] = await asyncSignIn(payload, captchaToken);
 
       if (error) {
@@ -111,7 +111,7 @@ const usePasswordSignIn = () => {
       executeCaptcha,
       handleError,
       redirectTo,
-      markPasswordEntered,
+      setHasEnteredPassword,
     ]
   );
 
