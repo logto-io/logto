@@ -393,8 +393,8 @@ describe('buildLoginPromptUrl', () => {
       'sign-in?app_id=foo&confirm_redirect=password'
     );
     expect(
-      buildLoginPromptUrl({ confirm_redirect: 'always', direct_sign_in: 'social:google' })
-    ).toBe('direct/social/google?confirm_redirect=always&fallback=sign-in');
+      buildLoginPromptUrl({ confirm_redirect: 'password', direct_sign_in: 'social:google' })
+    ).toBe('direct/social/google?confirm_redirect=password&fallback=sign-in');
     expect(
       buildLoginPromptUrl({ confirm_redirect: 'password' }, undefined, {
         authenticationContext: {

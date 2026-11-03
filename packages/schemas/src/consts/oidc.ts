@@ -94,10 +94,8 @@ export enum ExtraParamsKey {
    * It works around iOS `ASWebAuthenticationSession`, which closes as soon as it sees the callback
    * URL and dismisses the system "Save Password" prompt with it.
    *
-   * The available values are:
-   *
-   * - `password`: Confirm only when the end-user entered a password in the sign-in experience.
-   * - `always`: Confirm for every sign-in method.
+   * The only available value is `password`: confirm only when the end-user entered a password in
+   * the sign-in experience.
    *
    * Omit it to redirect right away. An unrecognized value is ignored without affecting the other
    * parameters.

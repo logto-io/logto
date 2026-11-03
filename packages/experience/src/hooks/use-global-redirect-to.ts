@@ -25,7 +25,7 @@ type Options = {
   /**
    * Whether the `confirm_redirect` sign-in parameter may hold this redirect on the "Continue to
    * app" page. Defaults to `true`.
-   * Set to `false` if this redirection does not complete a sign-in (e.g. aborting the interaction).
+   * Set to `false` for the redirect from the "Continue to app" page itself.
    */
   canConfirmRedirect?: boolean;
 };
@@ -63,7 +63,8 @@ function useGlobalRedirectTo({
       const shouldConfirmRedirect =
         canConfirmRedirect &&
         shouldClearInteractionContextSession &&
-        (policy === 'always' || (policy === 'password' && hasEnteredPassword()));
+        policy === 'password' &&
+        hasEnteredPassword();
 
       if (shouldConfirmRedirect) {
         navigate(`/${continueToAppPath}`, { replace: true, state: { redirectTo: url.toString() } });

@@ -97,30 +97,23 @@ describe('useGlobalRedirectTo', () => {
     sessionStorage.clear();
   });
 
-  it.each([
-    { policy: 'password', hasEnteredPassword: true },
-    { policy: 'always', hasEnteredPassword: true },
-    { policy: 'always', hasEnteredPassword: false },
-  ])(
-    'should show the continue-to-app page for confirm_redirect=$policy (password entered: $hasEnteredPassword)',
-    ({ policy, hasEnteredPassword }) => {
-      sessionStorage.setItem('confirm_redirect', policy);
-      renderHarness({ hasEnteredPassword });
-      expectContinueToAppPage(redirectUrl);
-    }
-  );
+  it('should show the continue-to-app page for confirm_redirect=password after a password is entered', () => {
+    sessionStorage.setItem('confirm_redirect', 'password');
+    renderHarness();
+    expectContinueToAppPage(redirectUrl);
+  });
 
   it.each([
     { name: 'confirm_redirect is not set', policy: undefined },
-    { name: 'confirm_redirect is unknown', policy: 'true' },
+    { name: 'confirm_redirect is unknown', policy: 'always' },
     {
       name: 'confirm_redirect=password and no password was entered',
       policy: 'password',
       hasEnteredPassword: false,
     },
     {
-      name: 'the redirect does not complete a sign-in',
-      policy: 'always',
+      name: 'the redirect opts out (the continue page itself)',
+      policy: 'password',
       options: { canConfirmRedirect: false },
     },
   ])('should redirect right away when $name', ({ policy, ...rest }) => {
@@ -133,7 +126,7 @@ describe('useGlobalRedirectTo', () => {
   });
 
   it('should never hold a social or SSO redirect', () => {
-    sessionStorage.setItem('confirm_redirect', 'always');
+    sessionStorage.setItem('confirm_redirect', 'password');
     renderHarness({ options: { shouldClearInteractionContextSession: false, isReplace: false } });
     expectRedirectedRightAway(assign);
   });

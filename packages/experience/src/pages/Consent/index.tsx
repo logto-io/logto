@@ -44,8 +44,7 @@ const Consent = () => {
   const asyncConsent = useApi(consent);
   const asyncAbort = useApi(abortInteraction);
   const { t } = useTranslation();
-  // The consent screen already holds the session open, so core drops `confirm_redirect` for it.
-  const redirectTo = useGlobalRedirectTo({ canConfirmRedirect: false });
+  const redirectTo = useGlobalRedirectTo();
 
   const [consentData, setConsentData] = useState<ConsentInfoResponse>();
   const [selectedOrganization, setSelectedOrganization] = useState<Organization>();
