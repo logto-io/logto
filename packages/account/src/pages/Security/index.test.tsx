@@ -164,9 +164,9 @@ describe('<Security />', () => {
     jest.resetAllMocks();
     mockGetAccessToken.mockResolvedValue('access-token');
     mockGetIdTokenClaims.mockResolvedValue(createIdTokenClaims());
-    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true });
+    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true, required: false });
     mockGetMfaVerifications.mockResolvedValue([]);
-    mockUpdateMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true });
+    mockUpdateMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true, required: false });
     mockGetTrustedDevices.mockResolvedValue([]);
     mockRemoveTrustedDevice.mockResolvedValue(undefined);
     window.sessionStorage.clear();
@@ -421,7 +421,7 @@ describe('<Security />', () => {
   });
 
   it('renders configured MFA method rows from mocked API data', async () => {
-    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
+    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false, required: false });
     mockGetMfaVerifications.mockResolvedValue(configuredMfaVerifications);
 
     const { queryAllByText, queryByText } = renderSecurity({
@@ -496,7 +496,11 @@ describe('<Security />', () => {
   });
 
   it('shows setup incomplete when 2-step verification is preferred without a configured factor', async () => {
-    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false, enabled: true });
+    mockGetMfaSettings.mockResolvedValue({
+      skipMfaOnSignIn: false,
+      enabled: true,
+      required: false,
+    });
 
     const { getByLabelText, queryByText } = renderSecurity({
       accountCenterSettings: {
@@ -532,7 +536,7 @@ describe('<Security />', () => {
   });
 
   it('shows the off state for legacy users without the enabled flag and no configured factor', async () => {
-    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
+    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false, required: false });
 
     const { getByLabelText, queryByText } = renderSecurity({
       accountCenterSettings: {
@@ -568,7 +572,7 @@ describe('<Security />', () => {
   });
 
   it('describes 2-step verification as active when a factor is configured', async () => {
-    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
+    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false, required: false });
     mockGetMfaVerifications.mockResolvedValue(configuredMfaVerifications);
 
     const { getByLabelText, queryByText } = renderSecurity({
@@ -602,7 +606,11 @@ describe('<Security />', () => {
   });
 
   it('shows the off state when MFA is explicitly disabled', async () => {
-    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false, enabled: false });
+    mockGetMfaSettings.mockResolvedValue({
+      skipMfaOnSignIn: false,
+      enabled: false,
+      required: false,
+    });
 
     const { getByLabelText, queryByText } = renderSecurity({
       accountCenterSettings: {
@@ -641,9 +649,17 @@ describe('<Security />', () => {
   });
 
   it('enables MFA when turning 2-step verification on from an explicit disablement', async () => {
-    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false, enabled: false });
+    mockGetMfaSettings.mockResolvedValue({
+      skipMfaOnSignIn: false,
+      enabled: false,
+      required: false,
+    });
     mockGetMfaVerifications.mockResolvedValue(configuredMfaVerifications);
-    mockUpdateMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false, enabled: true });
+    mockUpdateMfaSettings.mockResolvedValue({
+      skipMfaOnSignIn: false,
+      enabled: true,
+      required: false,
+    });
 
     const { getByLabelText, queryByText } = renderSecurity({
       accountCenterSettings: {
@@ -683,7 +699,7 @@ describe('<Security />', () => {
   });
 
   it('does not warn when an email verification code is the configured second factor', async () => {
-    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
+    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false, required: false });
 
     const { getByLabelText, queryByText } = renderSecurity({
       accountCenterSettings: {
@@ -718,7 +734,7 @@ describe('<Security />', () => {
   });
 
   it('does not warn when a primary email is hidden by the email field control', async () => {
-    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
+    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false, required: false });
 
     const { getByLabelText, queryByText } = renderSecurity({
       accountCenterSettings: {
@@ -756,7 +772,11 @@ describe('<Security />', () => {
   });
 
   it('does not mark an exhausted backup code as configured', async () => {
-    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false, enabled: true });
+    mockGetMfaSettings.mockResolvedValue({
+      skipMfaOnSignIn: false,
+      enabled: true,
+      required: false,
+    });
     mockGetMfaVerifications.mockResolvedValue([
       {
         id: 'backup-code-verification-id',
@@ -796,7 +816,7 @@ describe('<Security />', () => {
   });
 
   it('uses the usable backup code record when an exhausted record also exists', async () => {
-    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
+    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false, required: false });
     mockGetMfaVerifications.mockResolvedValue([
       {
         id: 'exhausted-backup-code-verification-id',
@@ -874,7 +894,11 @@ describe('<Security />', () => {
       queryByText('account_center.security.two_step_verification_incomplete_description')
     ).toBeNull();
 
-    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false, enabled: true });
+    mockGetMfaSettings.mockResolvedValue({
+      skipMfaOnSignIn: false,
+      enabled: true,
+      required: false,
+    });
     fireEvent.click(getByText('account_center.security.two_step_verification_retry'));
 
     await waitFor(() => {
@@ -886,7 +910,7 @@ describe('<Security />', () => {
   });
 
   it('shows a load error instead of setup incomplete when MFA verifications fail', async () => {
-    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
+    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false, required: false });
     mockGetMfaVerifications.mockRejectedValueOnce(new Error('failed'));
 
     const { getByLabelText, getByText, queryByText } = renderSecurity({
@@ -957,6 +981,36 @@ describe('<Security />', () => {
     expect(mockGetMfaSettings).not.toHaveBeenCalled();
   });
 
+  it('hides two-step verification toggle when MFA is required for the user', async () => {
+    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true, required: true });
+
+    const { queryByLabelText, queryByText } = renderSecurity({
+      accountCenterSettings: {
+        fields: {
+          username: AccountCenterControlValue.Off,
+          email: AccountCenterControlValue.Off,
+          phone: AccountCenterControlValue.Off,
+          password: AccountCenterControlValue.Off,
+          social: AccountCenterControlValue.Off,
+          mfa: AccountCenterControlValue.Edit,
+        },
+      },
+      experienceSettings: {
+        mfa: {
+          factors: [MfaFactor.TOTP],
+          policy: MfaPolicy.PromptAtSignInAndSignUp,
+        },
+      },
+    });
+
+    await waitFor(() => {
+      expect(queryByText('account_center.security.authenticator_app')).not.toBeNull();
+    });
+
+    expect(mockGetMfaSettings).toHaveBeenCalledTimes(1);
+    expect(queryByLabelText('Toggle switch')).toBeNull();
+  });
+
   it('starts a step-up when enabling MFA with a stale authentication context', async () => {
     const { getByLabelText, getByText } = renderSecurity({
       accountCenterSettings: {
@@ -998,7 +1052,7 @@ describe('<Security />', () => {
   });
 
   it('updates MFA settings when the authentication context is fresh', async () => {
-    mockUpdateMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
+    mockUpdateMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false, required: false });
 
     const { getByLabelText } = renderSecurity({
       accountCenterSettings: {
@@ -1035,7 +1089,11 @@ describe('<Security />', () => {
   });
 
   it('starts a step-up after confirming disable with a stale authentication context', async () => {
-    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false, enabled: true });
+    mockGetMfaSettings.mockResolvedValue({
+      skipMfaOnSignIn: false,
+      enabled: true,
+      required: false,
+    });
 
     const { getByLabelText, getByText } = renderSecurity({
       accountCenterSettings: {
@@ -1077,8 +1135,12 @@ describe('<Security />', () => {
   });
 
   it('updates MFA settings and UI state after confirming disable', async () => {
-    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false, enabled: true });
-    mockUpdateMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true });
+    mockGetMfaSettings.mockResolvedValue({
+      skipMfaOnSignIn: false,
+      enabled: true,
+      required: false,
+    });
+    mockUpdateMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true, required: false });
 
     const { getByLabelText, getByText } = renderSecurity({
       accountCenterSettings: {

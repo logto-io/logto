@@ -33,6 +33,7 @@ import { conditional, trySafe } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { isMfaRequiredByUser } from '#src/libraries/sign-in-experience/mfa-policy.js';
 import { buildUserPasswordPayload } from '#src/libraries/user.utils.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 import { getClientIdentifierPayload } from '#src/oidc/cimd/index.js';
@@ -703,7 +704,12 @@ export default class ExperienceInteraction {
     const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
     const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(log);
 
-    const mfaValidator = new MfaValidator(mfaSettings, user, adaptiveMfaResult);
+    const mfaValidator = new MfaValidator(
+      mfaSettings,
+      user,
+      adaptiveMfaResult,
+      await isMfaRequiredByUser(this.tenant.queries, mfaSettings, user)
+    );
 
     // A requested `mfa` only offers the factors that pair with the first factor already proven and
     // that the eligibility offers: a factor of the same kind (an MFA email code after an email

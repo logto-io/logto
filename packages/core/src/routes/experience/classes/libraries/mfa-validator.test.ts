@@ -1,4 +1,4 @@
-import { MfaFactor, MfaPolicy, VerificationType } from '@logto/schemas';
+import { MfaFactor, MfaPolicy, VerificationType, userMfaDataKey } from '@logto/schemas';
 
 import { mockUserWithMfaVerifications } from '#src/__mocks__/user.js';
 
@@ -33,5 +33,21 @@ describe('MfaValidator verified-record ownership', () => {
 
   it('does not count a verified record that names no user', () => {
     expect(validator.isMfaVerified([totpRecord()])).toBe(false);
+  });
+});
+
+describe('MfaValidator.isMfaRequired with skipMfaOnSignIn', () => {
+  const user = {
+    ...mockUserWithMfaVerifications,
+    logtoConfig: { [userMfaDataKey]: { skipMfaOnSignIn: true } },
+  };
+  const optionalMfaSettings = { policy: MfaPolicy.NoPrompt, factors: [MfaFactor.TOTP] };
+
+  it('lets the user skip MFA verification under an optional policy', () => {
+    expect(new MfaValidator(optionalMfaSettings, user).isMfaRequired).toBe(false);
+  });
+
+  it('requires MFA verification when MFA is required for the user', () => {
+    expect(new MfaValidator(optionalMfaSettings, user, undefined, true).isMfaRequired).toBe(true);
   });
 });

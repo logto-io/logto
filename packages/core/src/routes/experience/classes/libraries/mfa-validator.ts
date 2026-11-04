@@ -63,7 +63,9 @@ export class MfaValidator {
   constructor(
     private readonly mfaSettings: Mfa,
     private readonly user: User,
-    private readonly adaptiveMfaResult?: Optional<AdaptiveMfaResult>
+    private readonly adaptiveMfaResult?: Optional<AdaptiveMfaResult>,
+    /** Whether MFA is required for the user by a per-user requirement or an organization. */
+    private readonly isRequiredByUser = false
   ) {}
 
   /**
@@ -106,7 +108,7 @@ export class MfaValidator {
    *    - triggered + user has factors → required
    *    - otherwise → not required
    * 2. If adaptive MFA is disabled (result undefined), fall back to SIE policy:
-   *    - skipMfaOnSignIn + non-Mandatory policy → not required
+   *    - skipMfaOnSignIn + non-Mandatory policy + MFA not required by user → not required
    *    - user has factors → required
    *    - otherwise → not required
    */
@@ -125,10 +127,11 @@ export class MfaValidator {
 
     // If `isMfaEnabled` is undefined, it means the user exists before the `enabled` flag is introduced,
     // we should still enforce MFA for them if they have MFA factors. Only skip the check if mfa is explicitly
-    // disabled, or skipped on sign-in.
+    // disabled, or skipped on sign-in. A user that MFA is required for cannot opt out.
     if (
       (isMfaEnabled === false || skipMfaOnSignIn) &&
-      !isNoSkipMfaPolicy(this.mfaSettings.policy)
+      !isNoSkipMfaPolicy(this.mfaSettings.policy) &&
+      !this.isRequiredByUser
     ) {
       return false;
     }

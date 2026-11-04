@@ -71,6 +71,11 @@ export type UserPasskeySignInData = z.infer<typeof userPasskeySignInDataGuard>;
 export const userMfaSettingsResponseGuard = z.object({
   skipMfaOnSignIn: z.boolean(),
   enabled: z.boolean().optional(),
+  /**
+   * Whether MFA verification on sign-in is required for the user by the MFA policy, a per-user
+   * requirement, or an organization, so `skipMfaOnSignIn` and `enabled` cannot turn it off.
+   */
+  required: z.boolean(),
 });
 
 export type UserMfaSettingsResponse = z.infer<typeof userMfaSettingsResponseGuard>;

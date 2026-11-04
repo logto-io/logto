@@ -117,7 +117,7 @@ describe('<Security /> OIDC step-up', () => {
     window.sessionStorage.clear();
     mockGetAccessToken.mockResolvedValue('access-token');
     mockGetIdTokenClaims.mockResolvedValue(createIdTokenClaims());
-    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true });
+    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true, required: false });
     mockGetMfaVerifications.mockResolvedValue([]);
   });
 
@@ -150,7 +150,7 @@ describe('<Security /> OIDC step-up', () => {
   });
 
   it('calls the Account API directly when the ID token has a fresh 1fa context', async () => {
-    mockUpdateMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
+    mockUpdateMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false, required: false });
 
     const { getByLabelText } = renderMfaSection();
 
@@ -222,7 +222,7 @@ describe('<Security /> OIDC step-up', () => {
     mockGetIdTokenClaims.mockResolvedValue(
       createIdTokenClaims(Math.floor(Date.now() / 1000) - 600)
     );
-    mockUpdateMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
+    mockUpdateMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false, required: false });
 
     const { getByLabelText } = renderMfaSection(7200);
 
@@ -241,7 +241,7 @@ describe('<Security /> OIDC step-up', () => {
   });
 
   it('runs the resumed action once with the elevated token', async () => {
-    mockUpdateMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true });
+    mockUpdateMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true, required: false });
     prepareResumableStepUp('disable-mfa');
     const { getByLabelText, unmount } = renderMfaSection();
 

@@ -29,6 +29,7 @@ import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import {
+  isMfaRequiredByUser,
   isNoSkipMfaPolicy,
   isPromptOnlyAtSignInPolicy,
 } from '#src/libraries/sign-in-experience/mfa-policy.js';
@@ -93,7 +94,6 @@ const parseUserMfaData = (
 ): {
   enabled?: boolean;
   skipped?: boolean;
-  required?: boolean;
   additionalBindingSuggestionSkipped?: boolean;
 } => {
   const parsed = z.object({ [userMfaDataKey]: userMfaDataGuard }).safeParse(logtoConfig);
@@ -252,7 +252,7 @@ export class Mfa {
     const user = await this.interactionContext.getIdentifiedUser();
 
     assertThat(
-      !isNoSkipMfaPolicy(policy) && !(await this.isMfaRequiredByUser(mfaSettings, user)),
+      !isNoSkipMfaPolicy(policy) && !(await isMfaRequiredByUser(this.queries, mfaSettings, user)),
       new RequestError({
         code: 'session.mfa.mfa_policy_not_user_controlled',
         status: 422,
@@ -499,7 +499,7 @@ export class Mfa {
     }
 
     // If MFA is required for the user, bypass the optional suggestion.
-    if (await this.isMfaRequiredByUser(mfaSettings, identifiedUser, organizations)) {
+    if (await isMfaRequiredByUser(this.queries, mfaSettings, identifiedUser, organizations)) {
       return;
     }
 
@@ -537,7 +537,8 @@ export class Mfa {
     const { user: identifiedUser } = submitMfaValidationContext;
     const { logtoConfig } = identifiedUser;
 
-    const isMfaRequired = await this.isMfaRequiredByUser(
+    const isMfaRequired = await isMfaRequiredByUser(
+      this.queries,
       mfaSettings,
       identifiedUser,
       organizations
@@ -740,37 +741,6 @@ export class Mfa {
     );
 
     assertThat(isFactorsEnabled, new RequestError({ code: 'session.mfa.mfa_factor_not_enabled' }));
-  }
-
-  /**
-   * Whether MFA setup is required for the user, either by an explicit per-user requirement or by
-   * an organization that requires MFA.
-   *
-   * The per-user requirement is independent of `organizationRequiredMfaPolicy`. When no MFA factor
-   * is enabled in the sign-in experience, there is nothing to enforce.
-   */
-  private async isMfaRequiredByUser(
-    mfaSettings: MfaSettings,
-    user: Pick<User, 'id' | 'logtoConfig'>,
-    organizations?: Readonly<OrganizationWithRoles[]>
-  ) {
-    if (mfaSettings.factors.length === 0) {
-      return false;
-    }
-
-    if (parseUserMfaData(user.logtoConfig).required === true) {
-      return true;
-    }
-
-    if (mfaSettings.organizationRequiredMfaPolicy !== OrganizationRequiredMfaPolicy.Mandatory) {
-      return false;
-    }
-
-    const resolvedOrganizations =
-      organizations ??
-      (await this.queries.organizations.relations.users.getOrganizationsByUserId(user.id));
-
-    return resolvedOrganizations.some(({ isMfaRequired }) => isMfaRequired);
   }
 
   /**
