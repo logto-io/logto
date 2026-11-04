@@ -70,13 +70,19 @@ type SamlServiceProviderConfig = {
 
 type SamlUserInfo = IdTokenProfileStandardClaims & { auth_time: number };
 
-/** Array claims keep their items; `expandMultiValuedAttributeTags` emits one value element each. */
+const toSamlAttributeTagItem = (value: unknown): string =>
+  typeof value === 'object' ? JSON.stringify(value) : String(value);
+
+/**
+ * Array claims keep their items; `expandMultiValuedAttributeTags` emits one value element each.
+ * Object items, such as those of `organization_data` and `sso_identities`, stay JSON-encoded.
+ */
 const toSamlAttributeTagValue = (value: unknown): string | string[] => {
   if (Array.isArray(value)) {
-    return value.map(String);
+    return value.map((item) => toSamlAttributeTagItem(item));
   }
 
-  return typeof value === 'object' ? JSON.stringify(value) : String(value);
+  return toSamlAttributeTagItem(value);
 };
 
 class SamlApplicationConfig {

@@ -137,6 +137,42 @@ describe('SamlApplication', () => {
       expect(context).not.toContain('[');
     });
 
+    it('keeps object items of a multi-valued claim JSON-encoded', () => {
+      const samlAppWithOrganizations = new TestSamlApplication(
+        createMockSamlApplicationDetails({
+          attributeMapping: { organization_data: 'organizations', name: 'name' },
+        }),
+        mockSamlApplicationId,
+        createMockSamlEnvSet({ issuer: mockIssuer })
+      );
+      const statement = saml.SamlLib.attributeStatementBuilder(
+        samlAppWithOrganizations.exposedBuildLoginResponseTemplate().attributes
+      );
+      const userInfo = {
+        ...mockUser,
+        organization_data: [
+          { id: 'org-1', name: 'Org 1', description: null },
+          { id: 'org-2', name: 'Org 2', description: null },
+        ],
+      };
+
+      const { context } = samlAppWithOrganizations.exposedCreateSamlTemplateCallback({
+        userInfo,
+        samlRequestId: null,
+        sessionId: undefined,
+        sessionExpiresAt: undefined,
+      })(statement);
+
+      const [, organizationsAttribute] =
+        /<saml:Attribute Name="organizations"[^>]*>(.*?)<\/saml:Attribute>/.exec(context) ?? [];
+      const valueElements = organizationsAttribute?.match(/<saml:AttributeValue/g) ?? [];
+
+      expect(valueElements).toHaveLength(2);
+      expect(organizationsAttribute).not.toContain('[object Object]');
+      expect(organizationsAttribute).toContain('org-1');
+      expect(organizationsAttribute).toContain('org-2');
+    });
+
     it('should leave a legitimate attribute value intact (backward compatibility)', () => {
       // A normal value containing XML metacharacters must round-trip as a single escaped value,
       // not be mangled or double-escaped.
