@@ -225,13 +225,15 @@ describe('logRoutes', () => {
       });
     });
 
-    it('scopes the delete to audit log keys, leaving webhook delivery logs alone', async () => {
+    it('passes the window through without a key filter', async () => {
       await logRequest.delete('/logs?end_time=5000');
 
-      const [condition] = deleteLogsInRange.mock.calls[0] as [{ includeKeyPrefix: string[] }];
+      const [condition] = deleteLogsInRange.mock.calls[0] as [Record<string, unknown>];
 
-      expect(condition.includeKeyPrefix).toEqual(expect.arrayContaining(['Interaction', 'Action']));
-      expect(condition.includeKeyPrefix).not.toContain('TriggerHook');
+      // Webhook delivery logs share the `logs` table and are intentionally in scope here: adding
+      // a key filter would keep the statement off the time index and make each batch of a purge
+      // loop more expensive than the last.
+      expect(condition).not.toHaveProperty('includeKeyPrefix');
     });
 
     it('defaults limit to 1000 and passes startTime as undefined when omitted', async () => {

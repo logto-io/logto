@@ -129,29 +129,34 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
     endTime: number;
     startTime?: number;
     limit: number;
-    includeKeyPrefix: AuditLogPrefix[];
   }): Promise<{ deletedCount: number; deletedRange?: { oldest: number; newest: number } }> => {
-    const { endTime, startTime, limit, includeKeyPrefix } = condition;
+    const { endTime, startTime, limit } = condition;
 
-    // Reuse `buildLogConditionSql`, the same builder `GET /logs` uses, so a time window means
-    // exactly the same thing on both endpoints: an inclusive `start_time`, and an `end_time` made
-    // inclusive at millisecond granularity by the `+ interval '1 millisecond'` inside the builder.
-    // Hand-writing the bounds here would let the two endpoints drift apart by one millisecond,
-    // and would let a delete reach rows the matching export never returned.
+    // Reuse `buildLogConditionSql`, the same builder `GET /logs` uses, for the time bounds, so a
+    // window means exactly the same thing on both endpoints: an inclusive `start_time`, and an
+    // `end_time` made inclusive at millisecond granularity by the `+ interval '1 millisecond'`
+    // inside the builder. Hand-writing the bounds here would let the two endpoints drift apart by
+    // one millisecond.
+    //
+    // No key filter is passed on purpose: this deletes every log row in the window, including
+    // webhook delivery logs (`TriggerHook.*`), which share the table but are never returned by
+    // `GET /logs`. Filtering by key here would keep this statement off the index — `key` is not
+    // part of `logs__created_at_id`, so Postgres would have to scan a table-sized range to collect
+    // `limit` matching rows, and each batch of a purge loop would get more expensive than the last.
     //
     // Match on `ctid`, not `id`. `id in (select id ... limit n)` is planned as a semi-join whose
     // outer side carries no qual, so Postgres scans the whole table and joins to the bounded set
     // afterwards — a full seq scan that grows with the tenant. `ctid = any(array(select ...))`
     // makes the inner select an InitPlan and the outer a Tid Scan, so the statement touches only
-    // the `limit` rows it deletes. `ctid` is stable for this table because audit logs are
-    // append-only; a row updated between the InitPlan and the scan would simply not be deleted.
+    // the `limit` rows it deletes. `ctid` is stable for this table because logs are append-only; a
+    // row updated between the InitPlan and the scan would simply not be deleted.
     // Tenant isolation is enforced by RLS through the tenant-scoped pool.
     const rows = await pool.any<{ createdAt: number }>(sql`
       delete from ${table}
       where ctid = any(array(
         select ctid
         from ${table}
-        ${buildLogConditionSql({ startTime, endTime, includeKeyPrefix })}
+        ${buildLogConditionSql({ startTime, endTime })}
         order by ${fields.createdAt}, ${fields.id}
         limit ${limit}
       ))

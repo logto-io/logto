@@ -1,4 +1,3 @@
-import { interaction, type AuditLogPrefix } from '@logto/schemas';
 import { createMockPool, createMockQueryResult } from '@silverhand/slonik';
 
 import type { QueryType } from '#src/utils/test-utils.js';
@@ -12,9 +11,6 @@ const pool = createMockPool({
 
 const { createLogQueries } = await import('./log.js');
 const { deleteLogsInRange } = createLogQueries(pool);
-
-const auditPrefix = interaction.prefix;
-const includeKeyPrefix: AuditLogPrefix[] = [auditPrefix];
 
 describe('deleteLogsInRange()', () => {
   beforeEach(() => {
@@ -33,25 +29,26 @@ describe('deleteLogsInRange()', () => {
 
       // The window must be the one `GET /logs` applies: inclusive lower bound, and an upper bound
       // made inclusive at millisecond granularity.
-      expect(statement).toContain('"created_at" >= to_timestamp($2::double precision / 1000)');
+      expect(statement).toContain('"created_at" >= to_timestamp($1::double precision / 1000)');
       expect(statement).toContain(
-        `"created_at" < to_timestamp($3::double precision / 1000) + interval '1 millisecond'`
+        `"created_at" < to_timestamp($2::double precision / 1000) + interval '1 millisecond'`
       );
 
-      // Only the requested key prefixes are in scope, so webhook delivery logs are left alone.
-      expect(statement).toContain('"key" like $1');
+      // No key filter: the delete covers every log row in the window, webhook delivery logs
+      // included, which is what keeps the statement on the time index.
+      expect(statement).not.toContain('"key"');
 
       // Tenant isolation is enforced by RLS; the statement must carry no tenant predicate.
       expect(statement).not.toContain('tenant_id');
 
-      expect(values).toEqual([`${auditPrefix}%`, 1000, 5000, 100]);
+      expect(values).toEqual([1000, 5000, 100]);
 
       // Out-of-order fixtures: a first/last read instead of a min/max fold would be wrong.
       return createMockQueryResult([{ createdAt: 3000 }, { createdAt: 1000 }]);
     });
 
     await expect(
-      deleteLogsInRange({ endTime: 5000, startTime: 1000, limit: 100, includeKeyPrefix })
+      deleteLogsInRange({ endTime: 5000, startTime: 1000, limit: 100 })
     ).resolves.toEqual({
       deletedCount: 2,
       deletedRange: { oldest: 1000, newest: 3000 },
@@ -64,36 +61,37 @@ describe('deleteLogsInRange()', () => {
 
       expect(statement).not.toContain('>= to_timestamp');
       expect(statement).toContain(
-        `"created_at" < to_timestamp($2::double precision / 1000) + interval '1 millisecond'`
+        `"created_at" < to_timestamp($1::double precision / 1000) + interval '1 millisecond'`
       );
-      expect(values).toEqual([`${auditPrefix}%`, 5000, 10]);
+      expect(values).toEqual([5000, 10]);
 
       return createMockQueryResult([{ createdAt: 2000 }]);
     });
 
-    await expect(
-      deleteLogsInRange({ endTime: 5000, limit: 10, includeKeyPrefix })
-    ).resolves.toEqual({ deletedCount: 1, deletedRange: { oldest: 2000, newest: 2000 } });
+    await expect(deleteLogsInRange({ endTime: 5000, limit: 10 })).resolves.toEqual({
+      deletedCount: 1,
+      deletedRange: { oldest: 2000, newest: 2000 },
+    });
   });
 
   it('applies a start time of `0` as a real bound', async () => {
     mockQuery.mockImplementationOnce(async (query, values) => {
-      expect(String(query)).toContain('"created_at" >= to_timestamp($2::double precision / 1000)');
-      expect(values).toEqual([`${auditPrefix}%`, 0, 5000, 10]);
+      expect(String(query)).toContain('"created_at" >= to_timestamp($1::double precision / 1000)');
+      expect(values).toEqual([0, 5000, 10]);
 
       return createMockQueryResult([]);
     });
 
-    await expect(
-      deleteLogsInRange({ endTime: 5000, startTime: 0, limit: 10, includeKeyPrefix })
-    ).resolves.toEqual({ deletedCount: 0 });
+    await expect(deleteLogsInRange({ endTime: 5000, startTime: 0, limit: 10 })).resolves.toEqual({
+      deletedCount: 0,
+    });
   });
 
   it('omits the range when nothing was deleted', async () => {
     mockQuery.mockResolvedValueOnce(createMockQueryResult([]));
 
-    await expect(
-      deleteLogsInRange({ endTime: 5000, limit: 10, includeKeyPrefix })
-    ).resolves.toEqual({ deletedCount: 0 });
+    await expect(deleteLogsInRange({ endTime: 5000, limit: 10 })).resolves.toEqual({
+      deletedCount: 0,
+    });
   });
 });

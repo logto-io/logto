@@ -23,8 +23,8 @@ type CleanupResponse = {
 //    millisecond outside, and half a millisecond inside.
 // 2. The Management API does not write audit logs at all — `koaAuditLog` is mounted on the
 //    experience router only — so driving this suite's API cannot produce the needed rows.
-// 3. The delete filters by time and key prefix only, so borrowing rows produced by other tests
-//    would delete shared state and make this test depend on execution order.
+// 3. The delete filters by time only, so borrowing rows produced by other tests would delete
+//    shared state and make this test depend on execution order.
 //
 // The window is deliberately far in the past where no other test writes rows, and unique log keys
 // keep this test's fixtures distinguishable. The assertions read back through the API (GET before
@@ -59,8 +59,9 @@ describe('DELETE /logs cleanup', () => {
 
   const logKey = `${interaction.prefix}.CleanupBoundary.${generateStandardId()}`;
 
-  // Webhook delivery logs share the `logs` table but are a separate surface. One sits inside the
-  // window and must survive: `DELETE /api/logs` only targets audit log keys.
+  // Webhook delivery logs share the `logs` table and are readable only through
+  // `GET /hooks/:id/recent-logs`, but this endpoint purges every log row in the window, so this
+  // one is expected to be deleted as well.
   const webhookLogKey = `${hook.Type.TriggerHook}.SignIn`;
   const webhookLogId = generateStandardId();
 
@@ -111,7 +112,7 @@ describe('DELETE /logs cleanup', () => {
     await pool.end();
   });
 
-  it('deletes exactly the audit logs inside the inclusive window', async () => {
+  it('deletes every log row inside the inclusive window', async () => {
     // Read the seeded rows back through the public API first, so the test proves the list and
     // delete endpoints agree on what exists, rather than only trusting the seeder.
     const beforeDelete = await getAuditLogs(new URLSearchParams({ logKey }));
@@ -134,7 +135,9 @@ describe('DELETE /logs cleanup', () => {
 
     expect(response.status).toBe(200);
     expect(body).toEqual({
-      deletedCount: deletedIds.length,
+      // One more than the seeded audit rows: the webhook delivery row inside the window is
+      // deleted too, and it is not visible through `GET /logs`.
+      deletedCount: deletedIds.length + 1,
       hasMore: false,
       deletedRange: { oldest: startTime, newest: endTime },
     });
@@ -149,12 +152,12 @@ describe('DELETE /logs cleanup', () => {
     ).toEqual(survivingIds.slice().sort());
   });
 
-  it('leaves webhook delivery logs inside the same window untouched', async () => {
+  it('deletes webhook delivery logs in the same window', async () => {
     const remaining = await pool.any<{ id: string }>(sql`
       select id from logs
       where tenant_id = ${defaultTenantId} and id = ${webhookLogId}
     `);
 
-    expect(remaining).toHaveLength(1);
+    expect(remaining).toHaveLength(0);
   });
 });

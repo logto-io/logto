@@ -30,14 +30,13 @@ const defaultDeleteLimit = 1000;
 const maxDeleteLimit = 10_000;
 
 /**
- * The audit log keys exposed by `GET /logs`. The delete endpoint reuses the exact same list, so
- * both endpoints operate on the same row set: whatever an export at a given time window returns is
- * what a delete at the same window removes.
+ * The audit log keys exposed by `GET /logs`.
  *
  * Webhook delivery logs (`TriggerHook.*`) share the `logs` table but are a separate surface, read
- * through `GET /hooks/:id/recent-logs`, and are deliberately excluded here — deleting them would
- * destroy rows this endpoint never shows and would skew the 24-hour hook execution stats that are
- * derived from the same table.
+ * through `GET /hooks/:id/recent-logs`, so they are excluded from this list. Note that
+ * `DELETE /logs` deliberately does *not* apply this list: it purges every log row in the window,
+ * webhook delivery logs included, which is what lets it use the time index and reclaim their
+ * space.
  */
 const auditLogKeyPrefixes: AuditLogPrefix[] = [
   token.Type.ExchangeTokenBy,
@@ -209,7 +208,6 @@ export default function logRoutes<T extends ManagementApiRouter>(
         endTime,
         startTime,
         limit,
-        includeKeyPrefix: auditLogKeyPrefixes,
       });
 
       ctx.body = {
