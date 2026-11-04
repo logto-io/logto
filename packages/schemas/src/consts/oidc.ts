@@ -89,7 +89,7 @@ export enum ExtraParamsKey {
   Theme = 'theme',
   /**
    * Ask the end-user to confirm before the sign-in experience redirects back to the client after a
-   * successful sign-in, by showing a "You're signed in / Continue" page.
+   * successful sign-in, by showing a "Return to the app / Continue" page.
    *
    * It works around iOS `ASWebAuthenticationSession`, which closes as soon as it sees the callback
    * URL and dismisses the system "Save Password" prompt with it.

@@ -54,6 +54,8 @@ const usePasswordSignIn = () => {
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
       'session.invalid_credentials': (error) => {
+        // The password was not accepted, so another method may finish the sign-in.
+        setHasEnteredPassword(false);
         setErrorMessage(error.message);
       },
       ...conditional(
@@ -74,7 +76,14 @@ const usePasswordSignIn = () => {
       ),
       ...preSignInErrorHandler,
     }),
-    [handleRedirectToForgotPassword, isForgotPasswordEnabled, preSignInErrorHandler, show, t]
+    [
+      handleRedirectToForgotPassword,
+      isForgotPasswordEnabled,
+      preSignInErrorHandler,
+      setHasEnteredPassword,
+      show,
+      t,
+    ]
   );
 
   const onSubmit = useCallback(

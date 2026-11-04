@@ -1,5 +1,6 @@
 import { SignInIdentifier } from '@logto/schemas';
 import { act, fireEvent, waitFor } from '@testing-library/react';
+import { HTTPError } from 'ky';
 import { useContext } from 'react';
 
 import ConfirmModalProvider from '@/Providers/ConfirmModalProvider';
@@ -7,6 +8,7 @@ import UserInteractionContextProvider from '@/Providers/UserInteractionContextPr
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
+import { signInWithPasswordIdentifier } from '@/apis/experience';
 import PasswordForm from '@/pages/SignInPassword/PasswordForm';
 
 import useGlobalRedirectTo from './use-global-redirect-to';
@@ -162,5 +164,49 @@ describe('useGlobalRedirectTo', () => {
     await waitFor(() => {
       expectContinueToAppPage('/oidc/auth/foo');
     });
+  });
+
+  it('should redirect right away when the password was rejected and another method finishes', async () => {
+    sessionStorage.setItem('confirm_redirect_policy', 'password');
+    (signInWithPasswordIdentifier as jest.Mock).mockRejectedValueOnce(
+      new HTTPError(
+        {
+          json: async () => ({
+            code: 'session.invalid_credentials',
+            message: 'session.invalid_credentials',
+          }),
+        } as Response,
+        {} as Request,
+        {} as never
+      )
+    );
+    const { getByText, container } = renderWithPageContext(
+      <SettingsProvider>
+        <ConfirmModalProvider>
+          <UserInteractionContextProvider>
+            <PasswordForm identifier={SignInIdentifier.Username} value="foo" />
+            <Harness />
+          </UserInteractionContextProvider>
+        </ConfirmModalProvider>
+      </SettingsProvider>
+    );
+
+    const passwordInput = container.querySelector('input[name="password"]');
+
+    if (passwordInput) {
+      fireEvent.change(passwordInput, { target: { value: 'wrong' } });
+    }
+
+    act(() => {
+      fireEvent.submit(getByText('action.continue'));
+    });
+
+    await waitFor(() => {
+      expect(getByText('session.invalid_credentials')).not.toBeNull();
+    });
+
+    // E.g. the user switches to a verification code and finishes the sign-in with it.
+    fireEvent.click(getByText('redirect'));
+    expectRedirectedRightAway();
   });
 });

@@ -329,8 +329,9 @@ export default function initOidc(
 
         switch (prompt.name) {
           case 'login': {
-            // Third-party and CIMD clients always show the consent screen after sign-in, which
-            // already holds the session open, so `confirm_redirect_policy` would only add a page.
+            // Third-party and CIMD clients usually show the consent screen after sign-in, which
+            // already holds the session open. Re-authentication with an existing grant can skip
+            // consent and redirect right away; that falls back to the default behavior.
             const { [ExtraParamsKey.ConfirmRedirectPolicy]: confirmRedirectPolicy, ...rest } =
               params;
             const shouldDropConfirmRedirect =

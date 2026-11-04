@@ -41,12 +41,14 @@ const useStepUpPasswordVerification = () => {
   const errorHandlers = useMemo<ErrorHandlers>(
     () => ({
       'session.invalid_credentials': (error) => {
+        // The password was not accepted, so another method may finish the sign-in.
+        setHasEnteredPassword(false);
         setErrorMessage(error.message);
       },
       ...submitInteractionErrorHandler,
       ...stepUpErrorHandlers,
     }),
-    [stepUpErrorHandlers, submitInteractionErrorHandler]
+    [setHasEnteredPassword, stepUpErrorHandlers, submitInteractionErrorHandler]
   );
 
   const onSubmit = useCallback(
