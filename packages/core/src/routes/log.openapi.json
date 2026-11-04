@@ -73,12 +73,12 @@
             "name": "end_time",
             "in": "query",
             "required": true,
-            "description": "Inclusive upper bound on `createdAt`, in unix milliseconds, with the same semantics as `GET /api/logs`. Only audit logs with `createdAt <= end_time` are deleted. Returns `400` if the value is in the future."
+            "description": "Inclusive upper bound on `createdAt`, in unix milliseconds, with the same semantics as `GET /api/logs`. Only log rows with `createdAt <= end_time` are deleted. Returns `400` if the value is in the future."
           },
           {
             "name": "start_time",
             "in": "query",
-            "description": "Inclusive lower bound on `createdAt`, in unix milliseconds, with the same semantics as `GET /api/logs`. Only audit logs with `createdAt >= start_time` are deleted. Omit to purge everything up to `end_time`. Returns `400` if it is after `end_time`."
+            "description": "Inclusive lower bound on `createdAt`, in unix milliseconds, with the same semantics as `GET /api/logs`. Only log rows with `createdAt >= start_time` are deleted. Omit to purge everything up to `end_time`. Returns `400` if it is after `end_time`."
           },
           {
             "name": "limit",
@@ -88,7 +88,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Summary of the rows deleted by this call. `deletedCount` is the number of audit log rows deleted, and `deletedRange` is an optional `{ oldest, newest }` object holding the unix-millisecond timestamps of the deleted rows; it is omitted when nothing was deleted. `hasMore` is `true` when `deletedCount` equals `limit`, meaning this batch was full rather than that more rows definitely exist, so the caller should repeat the request with the same bounds."
+            "description": "Summary of the rows deleted by this call. `deletedCount` is the number of log rows deleted, and `deletedRange` is an optional `{ oldest, newest }` object holding the unix-millisecond timestamps of the deleted rows; it is omitted when nothing was deleted. `hasMore` is `true` when `deletedCount` equals `limit`, meaning this batch was full rather than that more rows definitely exist, so the caller should repeat the request with the same bounds."
           },
           "400": {
             "description": "Returned when `end_time` is missing, empty, negative, outside the safe integer range, in the future, or not a finite number; when `start_time` is malformed or after `end_time`; or when `limit` is outside `1..10000`."
