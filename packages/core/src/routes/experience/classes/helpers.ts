@@ -248,7 +248,7 @@ export const getProfileMfaFactors = (
  */
 export const getAllUserEnabledMfaVerifications = (
   mfaSettings: Mfa,
-  user: User,
+  user: Pick<User, 'mfaVerifications' | 'primaryEmail' | 'primaryPhone'>,
   currentProfile?: InteractionProfile
 ): MfaFactor[] => {
   const storedVerifications = filterOutEmptyBackupCodes(user.mfaVerifications)

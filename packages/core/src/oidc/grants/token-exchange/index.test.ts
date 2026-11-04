@@ -1,8 +1,8 @@
-import { type SubjectToken } from '@logto/schemas';
+import { MfaFactor, type Organization, type SubjectToken } from '@logto/schemas';
 import { type KoaContextWithOIDC, errors } from 'oidc-provider';
 import Sinon from 'sinon';
 
-import { mockApplication } from '#src/__mocks__/index.js';
+import { mockApplication, mockSignInExperience, mockUser } from '#src/__mocks__/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { getProviderConfiguration } from '#src/oidc/oidc-provider-internals.js';
 import { createOidcContext } from '#src/test-utils/oidc-provider.js';
@@ -39,6 +39,28 @@ const assertUserHasApplicationAccess = jest.fn(async () => {
 const mockTenant = new MockTenant(undefined, mockQueries);
 const mockHandler = (tenant = mockTenant) => {
   return buildHandler(tenant.envSet, tenant.queries, { assertUserHasApplicationAccess });
+};
+
+/**
+ * Stub the MFA requirement of the organization. With `factors`, the organization requires MFA, the
+ * sign-in experience enables `factors`, and the user has only the primary email and phone of
+ * `mockUser`, with no stored MFA verification.
+ */
+const stubOrganizationMfa = (tenant: MockTenant, factors?: MfaFactor[]) => {
+  Sinon.stub(tenant.queries.organizations, 'findById').resolves({
+    isMfaRequired: Boolean(factors),
+  } as Organization);
+
+  if (factors) {
+    Sinon.stub(tenant.queries.signInExperiences, 'findDefaultSignInExperience').resolves({
+      ...mockSignInExperience,
+      mfa: { ...mockSignInExperience.mfa, factors },
+    });
+    Sinon.stub(tenant.queries.users, 'findUserById').resolves({
+      ...mockUser,
+      mfaVerifications: [],
+    });
+  }
 };
 
 const clientId = 'some_client_id';
@@ -229,16 +251,23 @@ describe('token exchange', () => {
 
       const tenant = new MockTenant(undefined, mockQueries);
       Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(true);
-      Sinon.stub(tenant.queries.organizations, 'getMfaStatus').resolves({
-        isMfaRequired: true,
-        hasMfaConfigured: false,
-      });
+      stubOrganizationMfa(tenant, [MfaFactor.TOTP]);
       await expect(mockHandler(tenant)(ctx)).rejects.toThrow(
         createAccessDeniedError('organization requires MFA but user has no MFA configured', 403)
       );
     });
 
-    it('should not explode when everything looks fine', async () => {
+    it.each([
+      { case: 'the organization does not require MFA', factors: undefined },
+      {
+        case: 'the primary email fulfills the required MFA',
+        factors: [MfaFactor.EmailVerificationCode],
+      },
+      {
+        case: 'the primary phone fulfills the required MFA',
+        factors: [MfaFactor.PhoneVerificationCode],
+      },
+    ])('should issue the organization token when $case', async ({ factors }) => {
       const ctx = createPreparedOrganizationContext();
       findSubjectToken.mockResolvedValueOnce(createValidSubjectToken());
       Sinon.stub(getProviderConfiguration(ctx.oidc.provider), 'findAccount').resolves({
@@ -252,10 +281,7 @@ describe('token exchange', () => {
         { tenantId: 'default', id: 'bar', name: 'bar', description: 'bar' },
         { tenantId: 'default', id: 'baz', name: 'baz', description: 'baz' },
       ]);
-      Sinon.stub(tenant.queries.organizations, 'getMfaStatus').resolves({
-        isMfaRequired: false,
-        hasMfaConfigured: false,
-      });
+      stubOrganizationMfa(tenant, factors);
 
       const entityStub = Sinon.stub(ctx.oidc, 'entity');
       await expect(mockHandler(tenant)(ctx)).resolves.toBeUndefined();

@@ -20,7 +20,10 @@ import { type userSearchKeys } from '../user.js';
 
 import { aggregateRoles } from './utils.js';
 
-type UserWithoutMfa = Pick<User, 'id' | 'username' | 'primaryEmail' | 'name' | 'avatar'>;
+type MemberMfaProfile = Pick<
+  User,
+  'id' | 'username' | 'primaryEmail' | 'primaryPhone' | 'name' | 'avatar' | 'mfaVerifications'
+>;
 
 /** The query class for the organization - user relation. */
 export class UserRelationQueries extends TwoRelationsQueries<typeof Organizations, typeof Users> {
@@ -83,26 +86,27 @@ export class UserRelationQueries extends TwoRelationsQueries<typeof Organization
   }
 
   /**
-   * Find the members of an organization who have no MFA configured, i.e. the members its MFA
-   * requirement will challenge at their next sign-in. "Configured" follows
-   * `OrganizationQueries.getMfaStatus()`: any MFA verification counts.
+   * Get the members of an organization with the profile that decides whether they have MFA
+   * configured, i.e. their stored MFA verifications and their primary email and phone, which are
+   * implicit MFA factors when enabled in the sign-in experience.
    */
-  async getUsersWithoutMfa(organizationId: string): Promise<readonly UserWithoutMfa[]> {
+  async getMembersWithMfaProfile(organizationId: string): Promise<readonly MemberMfaProfile[]> {
     const users = convertToIdentifiers(Users, true);
     const relations = convertToIdentifiers(OrganizationUserRelations, true);
 
-    return this.pool.any<UserWithoutMfa>(sql`
+    return this.pool.any<MemberMfaProfile>(sql`
       select
         ${users.fields.id},
         ${users.fields.username},
         ${users.fields.primaryEmail},
+        ${users.fields.primaryPhone},
         ${users.fields.name},
-        ${users.fields.avatar}
+        ${users.fields.avatar},
+        ${users.fields.mfaVerifications}
       from ${relations.table}
       join ${users.table}
         on ${relations.fields.userId} = ${users.fields.id}
       where ${relations.fields.organizationId} = ${organizationId}
-        and jsonb_array_length(${users.fields.mfaVerifications}) = 0
       order by ${users.fields.createdAt}
     `);
   }

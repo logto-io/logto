@@ -1,9 +1,10 @@
 /* eslint-disable max-lines -- the CIMD grant scenarios push the suite over the limit */
 import { UserScope } from '@logto/core-kit';
+import { MfaFactor, type Organization } from '@logto/schemas';
 import { type KoaContextWithOIDC, errors, type Adapter } from 'oidc-provider';
 import Sinon from 'sinon';
 
-import { mockApplication } from '#src/__mocks__/index.js';
+import { mockApplication, mockSignInExperience, mockUser } from '#src/__mocks__/index.js';
 import { type EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { getProviderConfiguration } from '#src/oidc/oidc-provider-internals.js';
@@ -20,6 +21,28 @@ const assertUserHasApplicationAccess = jest.fn(async () => {
 
 const mockHandler = (tenant = new MockTenant()) => {
   return buildHandler(tenant.envSet, tenant.queries, { assertUserHasApplicationAccess });
+};
+
+/**
+ * Stub the MFA requirement of the organization. With `factors`, the organization requires MFA, the
+ * sign-in experience enables `factors`, and the user has only the primary email and phone of
+ * `mockUser`, with no stored MFA verification.
+ */
+const stubOrganizationMfa = (tenant: MockTenant, factors?: MfaFactor[]) => {
+  Sinon.stub(tenant.queries.organizations, 'findById').resolves({
+    isMfaRequired: Boolean(factors),
+  } as Organization);
+
+  if (factors) {
+    Sinon.stub(tenant.queries.signInExperiences, 'findDefaultSignInExperience').resolves({
+      ...mockSignInExperience,
+      mfa: { ...mockSignInExperience.mfa, factors },
+    });
+    Sinon.stub(tenant.queries.users, 'findUserById').resolves({
+      ...mockUser,
+      mfaVerifications: [],
+    });
+  }
 };
 
 const clientId = 'some_client_id';
@@ -351,10 +374,7 @@ describe('refresh token grant', () => {
     Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(true);
     Sinon.stub(tenant.queries.applications, 'findApplicationById').resolves(mockApplication);
     Sinon.stub(tenant.queries.applications.userConsentOrganizations, 'exists').resolves(true);
-    Sinon.stub(tenant.queries.organizations, 'getMfaStatus').resolves({
-      isMfaRequired: true,
-      hasMfaConfigured: false,
-    });
+    stubOrganizationMfa(tenant, [MfaFactor.TOTP]);
     await expect(mockHandler(tenant)(ctx)).rejects.toThrow(
       createAccessDeniedError('organization requires MFA but user has no MFA configured', 403)
     );
@@ -380,10 +400,7 @@ describe('refresh token grant', () => {
       { tenantId: 'default', id: 'bar', name: 'bar', description: 'bar' },
       { tenantId: 'default', id: 'baz', name: 'baz', description: 'baz' },
     ]);
-    Sinon.stub(tenant.queries.organizations, 'getMfaStatus').resolves({
-      isMfaRequired: false,
-      hasMfaConfigured: false,
-    });
+    stubOrganizationMfa(tenant);
 
     await expect(mockHandler(tenant)(ctx)).rejects.toMatchError(
       new errors.InsufficientScope('refresh token missing required scope', UserScope.Organizations)
@@ -518,10 +535,7 @@ describe('refresh token grant', () => {
     Sinon.stub(tenant.queries.organizations.relations.usersRoles, 'getUserScopes').resolves([
       { tenantId: 'default', id: 'email', name: UserScope.Email, description: null },
     ]);
-    Sinon.stub(tenant.queries.organizations, 'getMfaStatus').resolves({
-      isMfaRequired: false,
-      hasMfaConfigured: false,
-    });
+    stubOrganizationMfa(tenant);
 
     const entityStub = Sinon.stub(ctx.oidc, 'entity');
     await expect(mockHandler(tenant)(ctx)).resolves.toBeUndefined();
@@ -563,10 +577,7 @@ describe('refresh token grant', () => {
     const tenant = new MockTenant();
     Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(true);
     Sinon.stub(tenant.queries.applications, 'findApplicationById').resolves(mockApplication);
-    Sinon.stub(tenant.queries.organizations, 'getMfaStatus').resolves({
-      isMfaRequired: false,
-      hasMfaConfigured: false,
-    });
+    stubOrganizationMfa(tenant);
 
     await expect(mockHandler(tenant)(ctx)).rejects.toMatchError(
       new errors.InsufficientScope(
@@ -587,10 +598,7 @@ describe('refresh token grant', () => {
       { tenantId: 'default', id: 'bar', name: 'bar', description: 'bar' },
       { tenantId: 'default', id: 'baz', name: 'baz', description: 'baz' },
     ]);
-    Sinon.stub(tenant.queries.organizations, 'getMfaStatus').resolves({
-      isMfaRequired: false,
-      hasMfaConfigured: false,
-    });
+    stubOrganizationMfa(tenant);
 
     const entityStub = Sinon.stub(ctx.oidc, 'entity');
     await expect(mockHandler(tenant)(ctx)).resolves.toBeUndefined();
@@ -707,10 +715,7 @@ describe('refresh token grant for CIMD clients', () => {
       { tenantId: 'default', id: 'foo', name: 'foo', description: 'foo' },
       { tenantId: 'default', id: 'bar', name: 'bar', description: 'bar' },
     ]);
-    Sinon.stub(tenant.queries.organizations, 'getMfaStatus').resolves({
-      isMfaRequired: false,
-      hasMfaConfigured: false,
-    });
+    stubOrganizationMfa(tenant);
 
     const entityStub = Sinon.stub(ctx.oidc, 'entity');
     await expect(buildCimdHandler(tenant)(ctx)).resolves.toBeUndefined();
