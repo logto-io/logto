@@ -36,7 +36,7 @@ function CrossOriginOpenerPolicyField({ isDisabled }: Props) {
           },
           {
             value: CrossOriginOpenerPolicy.SameOriginAllowPopups,
-            title: t('sign_in_exp.custom_ui.coop_same_origin_allow_popups'),
+            title: CrossOriginOpenerPolicy.SameOriginAllowPopups,
           },
           {
             value: CrossOriginOpenerPolicy.SameOrigin,

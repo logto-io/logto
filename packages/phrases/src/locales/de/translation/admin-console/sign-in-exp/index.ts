@@ -113,10 +113,9 @@ const sign_in_exp = {
     csp_source_duplicate_error: 'Dieser Quellausdruck ist bereits aufgeführt.',
     coop_tip:
       'Isolieren Sie Ihre benutzerdefinierte Anmeldeoberfläche von ursprungsübergreifenden Fenstern. Wird nur angewendet, wenn benutzerdefinierte UI-Assets bereitgestellt werden.',
-    coop_unsafe_none: 'Nicht festgelegt (Standard)',
-    coop_same_origin_allow_popups: 'same-origin-allow-popups (empfohlen)',
+    coop_unsafe_none: 'Nicht festgelegt (kein Header)',
     coop_warning:
-      'Apps, die die Anmeldeseite in einem ursprungsübergreifenden Popup öffnen und window.opener verwenden, funktionieren nicht mehr. same-origin trennt außerdem Popups, die Ihre benutzerdefinierte Oberfläche selbst öffnet, etwa Fenster für die Social-Anmeldung.',
+      'Apps, die die Anmeldeseite in einem Popup öffnen und window.opener verwenden, funktionieren nicht mehr. Popups, die Ihre benutzerdefinierte UI öffnet, verlieren window.opener ebenfalls, sobald sie zu Ihrer benutzerdefinierten UI zurückkehren, etwa bei einem Callback der Social-Anmeldung. Mit same-origin verlieren sie es bereits beim Öffnen.',
   },
   account_center: {
     recent_authentication: {

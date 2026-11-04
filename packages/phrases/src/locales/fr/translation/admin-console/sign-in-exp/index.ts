@@ -114,10 +114,9 @@ const sign_in_exp = {
     csp_source_duplicate_error: 'Cette expression de source figure déjà dans la liste.',
     coop_tip:
       'Isolez votre interface de connexion personnalisée des fenêtres d’autres origines. Appliqué uniquement lorsque les ressources UI personnalisées sont servies.',
-    coop_unsafe_none: 'Non défini (par défaut)',
-    coop_same_origin_allow_popups: 'same-origin-allow-popups (recommandé)',
+    coop_unsafe_none: 'Non défini (aucun en-tête)',
     coop_warning:
-      'Les applications qui ouvrent la page de connexion dans une fenêtre contextuelle d’une autre origine et utilisent window.opener cesseront de fonctionner. same-origin coupe aussi les fenêtres contextuelles que votre interface personnalisée ouvre elle-même, comme les fenêtres de connexion sociale.',
+      'Les applications qui ouvrent la page de connexion dans une fenêtre contextuelle et utilisent window.opener cesseront de fonctionner. Les fenêtres contextuelles ouvertes par votre interface personnalisée perdent aussi window.opener lorsqu’elles reviennent vers votre interface personnalisée, par exemple sur un callback de connexion sociale. Avec same-origin, elles le perdent dès leur ouverture.',
   },
   account_center: {
     recent_authentication: {

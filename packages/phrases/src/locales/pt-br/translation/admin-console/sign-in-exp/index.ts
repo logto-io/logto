@@ -113,10 +113,9 @@ const sign_in_exp = {
     csp_source_duplicate_error: 'Esta expressão de origem já está listada.',
     coop_tip:
       'Isole sua interface de login personalizada de janelas de outras origens. Aplicado somente quando os ativos de UI personalizados são servidos.',
-    coop_unsafe_none: 'Não definido (padrão)',
-    coop_same_origin_allow_popups: 'same-origin-allow-popups (recomendado)',
+    coop_unsafe_none: 'Não definido (sem cabeçalho)',
     coop_warning:
-      'Apps que abrem a página de login em um pop-up de outra origem e dependem de window.opener deixarão de funcionar. same-origin também corta os pop-ups que a própria UI personalizada abre, como janelas de login social.',
+      'Apps que abrem a página de login em um pop-up e dependem de window.opener deixarão de funcionar. Os pop-ups que a UI personalizada abre também perdem window.opener quando voltam para a UI personalizada, por exemplo no callback de login social. Com same-origin, eles o perdem assim que abrem.',
   },
   account_center: {
     recent_authentication: {

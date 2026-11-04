@@ -115,10 +115,9 @@ const sign_in_exp = {
     csp_source_duplicate_error: 'Esta expresión de origen ya está en la lista.',
     coop_tip:
       'Aísla tu interfaz de inicio de sesión personalizada de las ventanas de otros orígenes. Solo se aplica cuando se sirven los activos de la UI personalizada.',
-    coop_unsafe_none: 'Sin configurar (predeterminado)',
-    coop_same_origin_allow_popups: 'same-origin-allow-popups (recomendado)',
+    coop_unsafe_none: 'Sin configurar (sin encabezado)',
     coop_warning:
-      'Las apps que abren la página de inicio de sesión en una ventana emergente de otro origen y dependen de window.opener dejarán de funcionar. same-origin también corta las ventanas emergentes que abre tu propia UI personalizada, como las de inicio de sesión social.',
+      'Las apps que abren la página de inicio de sesión en una ventana emergente y dependen de window.opener dejarán de funcionar. Las ventanas emergentes que abre tu UI personalizada también pierden window.opener cuando vuelven a tu UI personalizada, por ejemplo en un callback de inicio de sesión social. Con same-origin, lo pierden en cuanto se abren.',
   },
   account_center: {
     recent_authentication: {

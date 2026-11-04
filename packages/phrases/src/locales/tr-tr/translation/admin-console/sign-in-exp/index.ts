@@ -113,10 +113,9 @@ const sign_in_exp = {
     csp_source_duplicate_error: 'Bu kaynak ifadesi zaten listede.',
     coop_tip:
       'Özel oturum açma UI’nizi farklı kaynaklı pencerelerden yalıtın. Yalnızca özel UI varlıkları sunulduğunda uygulanır.',
-    coop_unsafe_none: 'Ayarlanmadı (varsayılan)',
-    coop_same_origin_allow_popups: 'same-origin-allow-popups (önerilen)',
+    coop_unsafe_none: 'Ayarlanmadı (başlık yok)',
     coop_warning:
-      'Oturum açma sayfasını farklı kaynaklı bir açılır pencerede açan ve window.opener kullanan uygulamalar çalışmayı durdurur. same-origin, sosyal oturum açma pencereleri gibi özel UI’nizin kendi açtığı açılır pencerelerin bağlantısını da keser.',
+      'Oturum açma sayfasını bir açılır pencerede açan ve window.opener kullanan uygulamalar çalışmayı durdurur. Özel UI’nizin açtığı açılır pencereler de özel UI’nize geri döndüklerinde (örneğin sosyal oturum açma geri çağrısında) window.opener bağlantısını kaybeder. same-origin ile bu bağlantıyı açıldıkları anda kaybederler.',
   },
   account_center: {
     recent_authentication: {
