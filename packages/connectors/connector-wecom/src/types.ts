@@ -5,6 +5,7 @@ export const wecomConfigGuard = z.object({
   appSecret: z.string(),
   scope: z.string().optional(),
   agentId: z.string(),
+  disableEmailSync: z.boolean().optional(),
 });
 
 export type WecomConfig = z.infer<typeof wecomConfigGuard>;

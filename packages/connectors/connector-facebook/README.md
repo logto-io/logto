@@ -91,6 +91,12 @@ In the Facebook connector, you can set the policy for syncing profile informatio
 - **Only sync at sign-up**: Profile info is fetched once when the user first signs in.
 - **Always sync at sign-in**: Profile info is updated every time the user signs in.
 
+### Disable email sync
+
+Facebook returns the user's primary email address in the `email` field, but reports no verification state for it.
+
+Logto syncs that address to the user profile, where it serves as a user identifier. This switch stops it from doing so. It is off by default. Turn it on to leave the raw value in `rawData` only and source the email elsewhere.
+
 ### Store tokens to access Facebook APIs (Optional)
 
 If you want to access Facebook APIs and perform actions with user authorization (whether via social sign-in or account linking), Logto needs to get specific API scopes and store tokens.

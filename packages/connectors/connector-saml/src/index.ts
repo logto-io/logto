@@ -1,4 +1,4 @@
-import { assert } from '@silverhand/essentials';
+import { assert, conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import type {
@@ -157,7 +157,15 @@ const getUserInfo =
 
     const rawUserProfile = rawProfileParseResult.data;
 
-    return getUserInfoFromRawUserProfile(rawUserProfile, profileMap);
+    const { email, ...userProfile } = getUserInfoFromRawUserProfile(rawUserProfile, profileMap);
+
+    return {
+      ...userProfile,
+      // Spread rather than assign: `userProfileMapping` omits the key when the provider returned
+      // nothing, and an explicit `email: undefined` would overwrite that absence for consumers
+      // that merge this profile.
+      ...conditional(!parsedConfig.disableEmailSync && email && { email }),
+    };
   };
 
 const createSamlConnector: CreateConnector<SocialConnector> = async ({ getConfig }) => {

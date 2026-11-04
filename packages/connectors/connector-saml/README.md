@@ -112,6 +112,14 @@ If `SAML Assertion Encrypted` is `true`, the corresponding certificate generated
 
 Logto also provide a `Profile Mapping` field that users can customize the mapping from the social vendors' profiles which are usually not standard. Each `Profile Mapping` keys is Logto's standard user profile field name and corresponding value should be social profiles field name. In current stage, Logto only concern 'id', 'name', 'avatar', 'email' and 'phone' from social profile, only 'id' is REQUIRED and others are optional fields.
 
+### Disable Email Sync
+
+SAML carries no standard verification state for an email address, so whatever attribute `Profile Mapping` maps to `email` is taken at face value — it is only as trustworthy as the identity provider asserting it.
+
+Logto syncs that address to the user profile, where it serves as a user identifier. This switch stops it from doing so. It is off by default. Turn it on to source the email elsewhere.
+
+Consider turning it on when the identity provider does not verify email ownership, or when users can change their email address at the identity provider without re-verifying it.
+
 ### Config types
 
 | Name                        | Type                                                                                                                                                                                                                                                                                                  | Required | Default Value                                           |
@@ -130,6 +138,7 @@ Logto also provide a `Profile Mapping` field that users can customize the mappin
 | Name ID Format                | `urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified` \| `urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress` \| `urn:oasis:names:tc:SAML:1.1:nameid-format:X509SubjectName` \| `urn:oasis:names:tc:SAML:2.0:nameid-format:persistent` \| `urn:oasis:names:tc:SAML:2.0:nameid-format:transient` | false    | `urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified` |
 | Timeout                     | number                                                                                                                                                                                                                                                                                                | false    | 5000                                                    |
 | Profile Mapping                  | ProfileMap                                                                                                                                                                                                                                                                                            | false    |                                                         |
+| Disable Email Sync                     | boolean                                                                                                                                                                                                                                                                                               | false    | false                                                   |
 
 | ProfileMap fields | Type   | Required | Default value |
 | ----------------- | ------ | -------- | ------------- |

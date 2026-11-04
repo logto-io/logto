@@ -164,6 +164,20 @@ describe('Dingtalk connector', () => {
       });
     });
 
+    it('should not return the email when email sync is disabled', async () => {
+      nock(userInfoEndpoint).get('').reply(200, {
+        nick: 'zhangsan',
+        unionId: '123',
+        email: 'zhangsan@alibaba-inc.com',
+      });
+      const connector = await createConnector({
+        getConfig: vi.fn().mockResolvedValue({ ...mockedConfig, disableEmailSync: true }),
+      });
+      const socialUserInfo = await connector.getUserInfo({ code: 'code' }, vi.fn());
+      expect(socialUserInfo.email).toBeUndefined();
+      expect(socialUserInfo.rawData).toMatchObject({ email: 'zhangsan@alibaba-inc.com' });
+    });
+
     it('throws SocialAccessTokenInvalid error if remote response code is 400', async () => {
       nock(userInfoEndpoint).get('').reply(400);
       const connector = await createConnector({ getConfig });

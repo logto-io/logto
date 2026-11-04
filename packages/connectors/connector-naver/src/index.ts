@@ -112,7 +112,7 @@ const getUserInfo =
       return {
         id,
         avatar: conditional(profile_image),
-        email: conditional(email),
+        email: conditional(!config.disableEmailSync && email),
         name: conditional(nickname),
         rawData,
       };

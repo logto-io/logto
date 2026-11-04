@@ -3,7 +3,7 @@
  * https://developers.weixin.qq.com/doc/oplatform/Website_App/WeChat_Login/Wechat_Login.html
  */
 
-import { assert, trySafe } from '@silverhand/essentials';
+import { assert, conditional, trySafe } from '@silverhand/essentials';
 import { got, HTTPError } from 'got';
 
 import type {
@@ -196,7 +196,7 @@ const getUserInfo =
       return {
         id,
         avatar: userDetail?.avatar,
-        email: userDetail?.email,
+        email: conditional(!config.disableEmailSync && userDetail?.email),
         name: userDetail?.name ?? id,
         phone: mobile
           ? trySafe(() => new PhoneNumberParser(normalizePhoneNumber(mobile)).internationalNumber)

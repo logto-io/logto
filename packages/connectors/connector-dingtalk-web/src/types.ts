@@ -4,6 +4,7 @@ export const dingtalkConfigGuard = z.object({
   clientId: z.string(),
   clientSecret: z.string(),
   scope: z.string().optional(),
+  disableEmailSync: z.boolean().optional(),
 });
 
 export type DingtalkConfig = z.infer<typeof dingtalkConfigGuard>;
