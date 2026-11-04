@@ -27,7 +27,10 @@ import type MockClient from '#src/client/index.js';
 import { initExperienceClient, processSession } from '#src/helpers/client.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
-import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
+import {
+  enableAllPasswordSignInMethods,
+  enableUserControlledMfaWithTotp,
+} from '#src/helpers/sign-in-experience.js';
 import {
   devFeatureDisabledTest,
   devFeatureTest,
@@ -450,6 +453,9 @@ describe('Token Exchange', () => {
     });
 
     it('should be able to get access token for organization when user has mfa configured', async () => {
+      // Organization tokens follow the sign-in rule: a stored factor only counts when it is
+      // enabled in the sign-in experience.
+      await enableUserControlledMfaWithTotp();
       const { subjectToken } = await createSubjectToken(testUserId);
       await createUserMfaVerification(testUserId, MfaFactor.TOTP);
       const { access_token } = await oidcApi

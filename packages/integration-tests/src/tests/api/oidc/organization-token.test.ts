@@ -10,7 +10,10 @@ import { initExperienceClient, processSession } from '#src/helpers/client.js';
 import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
 import { createUserByAdmin } from '#src/helpers/index.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
-import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
+import {
+  enableAllPasswordSignInMethods,
+  enableUserControlledMfaWithTotp,
+} from '#src/helpers/sign-in-experience.js';
 import { generatePassword, generateUsername, randomString } from '#src/utils.js';
 
 describe('get access token for organization', () => {
@@ -117,6 +120,9 @@ describe('get access token for organization', () => {
   });
 
   it('should be able to get access token for organization when user has mfa configured', async () => {
+    // Organization tokens follow the sign-in rule: a stored factor only counts when it is enabled
+    // in the sign-in experience.
+    await enableUserControlledMfaWithTotp();
     await createUserMfaVerification(testUserId, MfaFactor.TOTP);
     await expect(client.getOrganizationTokenClaims(testOrganizationId)).resolves.toMatchObject({
       aud: buildOrganizationUrn(testOrganizationId),
