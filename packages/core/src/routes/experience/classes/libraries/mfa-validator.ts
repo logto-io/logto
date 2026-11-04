@@ -8,10 +8,10 @@ import {
 } from '@logto/schemas';
 import { type Optional } from '@silverhand/essentials';
 
+import { getAllUserEnabledMfaVerifications } from '#src/libraries/mfa.js';
 import { isNoSkipMfaPolicy } from '#src/libraries/sign-in-experience/mfa-policy.js';
 
 import { type InteractionProfile } from '../../types.js';
-import { getAllUserEnabledMfaVerifications } from '../helpers.js';
 import { type BackupCodeVerification } from '../verifications/backup-code-verification.js';
 import {
   type MfaEmailCodeVerification,

@@ -1,8 +1,8 @@
 import { Users } from '@logto/schemas';
 import { z } from 'zod';
 
+import { getAllUserEnabledMfaVerifications } from '#src/libraries/mfa.js';
 import koaGuard from '#src/middleware/koa-guard.js';
-import { getAllUserEnabledMfaVerifications } from '#src/routes/experience/classes/helpers.js';
 import type { RouterInitArgs } from '#src/routes/types.js';
 
 import {

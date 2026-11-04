@@ -4,7 +4,7 @@ import { errors } from 'oidc-provider';
 import type { Provider, Account, KoaContextWithOIDC } from 'oidc-provider';
 
 import { type EnvSet } from '#src/env-set/index.js';
-import { getAllUserEnabledMfaVerifications } from '#src/routes/experience/classes/helpers.js';
+import { getAllUserEnabledMfaVerifications } from '#src/libraries/mfa.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
