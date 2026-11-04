@@ -51,6 +51,7 @@ import {
   generateSamlAttributeTag,
   getSamlUserAttributeNames,
   assertSamlAuthnRequestSignatureScope,
+  type SamlTagValue,
 } from './utils.js';
 
 type SamlIdentityProviderConfig = {
@@ -577,7 +578,7 @@ export class SamlApplication {
 
   protected readonly buildSamlAttributesTagValues = (
     userInfo: IdTokenProfileStandardClaims
-  ): Record<string, Nullable<string> | string[]> => {
+  ): Record<string, SamlTagValue | SamlTagValue[]> => {
     return Object.entries(this.config.attributeMapping).length > 0
       ? Object.fromEntries(
           Object.entries(this.config.attributeMapping)

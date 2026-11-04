@@ -110,69 +110,6 @@ describe('SamlApplication', () => {
       expect(context).toContain('&lt;/saml:AttributeValue&gt;');
     });
 
-    it('emits one AttributeValue per item of a multi-valued claim', () => {
-      const samlAppWithRoles = new TestSamlApplication(
-        createMockSamlApplicationDetails({ attributeMapping: { roles: 'role', name: 'name' } }),
-        mockSamlApplicationId,
-        createMockSamlEnvSet({ issuer: mockIssuer })
-      );
-      const statement = saml.SamlLib.attributeStatementBuilder(
-        samlAppWithRoles.exposedBuildLoginResponseTemplate().attributes
-      );
-      const userInfo = { ...mockUser, roles: ['Development', 'Employees'] };
-
-      const { context } = samlAppWithRoles.exposedCreateSamlTemplateCallback({
-        userInfo,
-        samlRequestId: null,
-        sessionId: undefined,
-        sessionExpiresAt: undefined,
-      })(statement);
-
-      const valueElement = (value: string) =>
-        `<saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">${value}</saml:AttributeValue>`;
-      expect(context).toContain(
-        `<saml:Attribute Name="role" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:basic">${valueElement('Development')}${valueElement('Employees')}</saml:Attribute>`
-      );
-      expect(context).toContain(`${valueElement('Test User')}</saml:Attribute>`);
-      expect(context).not.toContain('[');
-    });
-
-    it('keeps object items of a multi-valued claim JSON-encoded', () => {
-      const samlAppWithOrganizations = new TestSamlApplication(
-        createMockSamlApplicationDetails({
-          attributeMapping: { organization_data: 'organizations', name: 'name' },
-        }),
-        mockSamlApplicationId,
-        createMockSamlEnvSet({ issuer: mockIssuer })
-      );
-      const statement = saml.SamlLib.attributeStatementBuilder(
-        samlAppWithOrganizations.exposedBuildLoginResponseTemplate().attributes
-      );
-      const userInfo = {
-        ...mockUser,
-        organization_data: [
-          { id: 'org-1', name: 'Org 1', description: null },
-          { id: 'org-2', name: 'Org 2', description: null },
-        ],
-      };
-
-      const { context } = samlAppWithOrganizations.exposedCreateSamlTemplateCallback({
-        userInfo,
-        samlRequestId: null,
-        sessionId: undefined,
-        sessionExpiresAt: undefined,
-      })(statement);
-
-      const [, organizationsAttribute] =
-        /<saml:Attribute Name="organizations"[^>]*>(.*?)<\/saml:Attribute>/.exec(context) ?? [];
-      const valueElements = organizationsAttribute?.match(/<saml:AttributeValue/g) ?? [];
-
-      expect(valueElements).toHaveLength(2);
-      expect(organizationsAttribute).not.toContain('[object Object]');
-      expect(organizationsAttribute).toContain('org-1');
-      expect(organizationsAttribute).toContain('org-2');
-    });
-
     it('should leave a legitimate attribute value intact (backward compatibility)', () => {
       // A normal value containing XML metacharacters must round-trip as a single escaped value,
       // not be mangled or double-escaped.

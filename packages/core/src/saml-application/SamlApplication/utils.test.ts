@@ -265,9 +265,10 @@ describe('isForceAuthnRequested', () => {
   });
 });
 
+const valueElement = (tag: string) =>
+  `<saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">{${tag}}</saml:AttributeValue>`;
+
 describe('expandMultiValuedAttributeTags', () => {
-  const valueElement = (tag: string) =>
-    `<saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">{${tag}}</saml:AttributeValue>`;
   const template = `<saml:Attribute Name="role">${valueElement('attrRole')}</saml:Attribute><saml:Attribute Name="name">${valueElement('attrName')}</saml:Attribute>`;
 
   it('emits one value element per array item and keeps the element attributes', () => {
@@ -318,10 +319,12 @@ describe('expandMultiValuedAttributeTags', () => {
   });
 
   it('passes scalar tags through unchanged', () => {
-    const expanded = expandMultiValuedAttributeTags(template, { attrRole: 'admin', attrName: null });
+    const expanded = expandMultiValuedAttributeTags(template, {
+      attrRole: 'admin',
+      attrName: null,
+    });
 
     expect(expanded.template).toBe(template);
     expect(expanded.tagValues).toEqual({ attrRole: 'admin', attrName: null });
   });
 });
-

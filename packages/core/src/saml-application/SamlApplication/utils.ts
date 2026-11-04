@@ -1,6 +1,6 @@
 import { NameIdFormat, type SamlAttributeMapping } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { appendPath } from '@silverhand/essentials';
+import { appendPath, type Nullable } from '@silverhand/essentials';
 import saml from 'samlify';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -134,7 +134,7 @@ export const generateSamlAttributeTag = (content: string, prefix = 'attr'): stri
 };
 
 /** A value samlify substitutes for a template tag. */
-export type SamlTagValue = string | number | null | undefined;
+export type SamlTagValue = Nullable<string | number> | undefined;
 
 const escapeRegExp = (value: string) => value.replaceAll(/[$()*+.?[\\\]^{|}]/g, '\\$&');
 
