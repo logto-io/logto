@@ -16,7 +16,7 @@ import styles from './index.module.scss';
 export const continueToAppStateGuard = object({ redirectTo: string() });
 
 /**
- * The "Return to the app / Continue" page that holds the final sign-in redirect for the
+ * The continue page that holds the final sign-in redirect for the
  * `confirm_redirect_policy` sign-in parameter. See `useGlobalRedirectTo` for why it exists.
  */
 const ContinueToApp = () => {

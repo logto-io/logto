@@ -54,10 +54,10 @@ function useGlobalRedirectTo({
   const redirectTo = useCallback(
     async (url: string | URL): Promise<never> => {
       /**
-       * Hold the final sign-in redirect on the "Continue to app" page when the client asks for it
-       * with `confirm_redirect_policy` (see `ExtraParamsKey.ConfirmRedirectPolicy`). It works around iOS
+       * Hold the final sign-in redirect on the continue page when the client asks for it with
+       * `confirm_redirect_policy` (see `ExtraParamsKey.ConfirmRedirectPolicy`). It works around iOS
        * `ASWebAuthenticationSession`, which closes on the callback URL and dismisses the "Save
-       * Password" prompt. The page redirects through this hook once the user taps "Continue".
+       * Password" prompt. The page redirects through this hook once the user continues.
        */
       const policy = sessionStorage.getItem(confirmRedirectPolicyKey);
       const shouldConfirmRedirect =
