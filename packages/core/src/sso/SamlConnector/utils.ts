@@ -6,7 +6,7 @@ import { type Optional, appendPath, tryThat } from '@silverhand/essentials';
 import { conditional } from '@silverhand/essentials';
 import { HTTPError } from 'got';
 import * as saml from 'samlify';
-import { z, ZodError } from 'zod';
+import { z } from 'zod';
 
 import { ssoPath } from '#src/constants/index.js';
 import { ssrfProtectedGot } from '#src/utils/outbound-request.js';
@@ -171,12 +171,15 @@ export const getExtendedUserInfoFromRawUserProfile = (
  * @param request The SAML assertion sent by IdP (after getting the SAML auth request).
  * @param identityProvider The SAML identity provider instance (where we can get parsed IdP metadata).
  * @param metadata The selected part of metadata of the SAML SSO connector.
+ * @param defaultSpEntityId The connector's SP entity ID on the tenant's default domain, accepted as
+ * the audience along with `metadata.entityId`.
  * @returns The returned info contained in the SAML assertion.
  */
 export const handleSamlAssertion = async (
   request: ESamlHttpRequest,
   identityProvider: saml.IdentityProviderInstance,
-  metadata: { entityId: string; x509Certificate: string }
+  metadata: { entityId: string; x509Certificate: string },
+  defaultSpEntityId: string
 ): Promise<SsoSamlAssertionContent> => {
   const { entityId: entityID, x509Certificate } = metadata;
 
@@ -189,20 +192,37 @@ export const handleSamlAssertion = async (
   // Used to check whether xml content is valid in format.
   saml.setSchemaValidator(validator);
 
-  try {
-    const assertionResult = await serviceProvider.parseLoginResponse(
-      identityProvider,
-      'post',
-      request
-    );
+  const { extract } = await serviceProvider
+    .parseLoginResponse(identityProvider, 'post', request)
+    .catch((error: unknown) => {
+      throw new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
+        message: 'Invalid SAML assertion',
+        error,
+      });
+    });
 
-    return ssoSamlAssertionContentGuard.parse(assertionResult.extract);
-  } catch (error: unknown) {
+  // `samlify` does not check the audience, and the signature only shows that the IdP issued the
+  // assertion, not which service provider it is for. Match this connector's SP entity IDs exactly.
+  const spEntityIds = [...new Set([entityID, defaultSpEntityId])];
+  const audiences = [extract.audience ?? []].flat();
+
+  if (!audiences.some((audience) => spEntityIds.includes(audience))) {
     throw new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
-      message: 'Invalid SAML assertion',
-      error: error instanceof ZodError ? error.flatten() : error,
+      message: 'SAML assertion audience does not match the SP entity ID',
+      error: { expected: spEntityIds, actual: audiences },
     });
   }
+
+  const result = ssoSamlAssertionContentGuard.safeParse(extract);
+
+  if (!result.success) {
+    throw new SsoConnectorError(SsoConnectorErrorCodes.AuthorizationFailed, {
+      message: 'Invalid SAML assertion',
+      error: result.error.flatten(),
+    });
+  }
+
+  return result.data;
 };
 
 /**
