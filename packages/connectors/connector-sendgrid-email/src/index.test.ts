@@ -3,7 +3,13 @@ import nock from 'nock';
 import { TemplateType } from '@logto/connector-kit';
 
 import createConnector from './index.js';
-import { fromEmail, mockedConfig, mockedGenericEmailParameters, toEmail } from './mock.js';
+import {
+  fromEmail,
+  fromName,
+  mockedConfig,
+  mockedGenericEmailParameters,
+  toEmail,
+} from './mock.js';
 
 const getConfig = vi.fn();
 // eslint-disable-next-line unicorn/no-useless-undefined
@@ -132,6 +138,67 @@ describe('SendGrid connector', () => {
         code: '123456',
         application: { name: 'Test app' },
       },
+    });
+  });
+
+  it('should address the recipient by email only and honor sendFrom and replyTo of the i18n template', async () => {
+    getI18nEmailTemplate.mockResolvedValue({
+      subject: 'Passcode {{code}}',
+      content: '<p>Your passcode is {{code}}</p>',
+      contentType: 'text/html',
+      sendFrom: '{{application.name}}',
+      replyTo: 'support@{{domain}}',
+    });
+
+    nock('https://api.sendgrid.com')
+      .post('/v3/mail/send')
+      .matchHeader('authorization', `Bearer ${mockedConfig.apiKey}`)
+      .reply((_, body, callback) => {
+        expect(body).toEqual({
+          personalizations: [{ to: [{ email: toEmail }] }],
+          from: { email: fromEmail, name: 'Test app' },
+          reply_to: { email: 'support@example.com' },
+          subject: 'Passcode 123456',
+          content: [{ type: 'text/html', value: '<p>Your passcode is 123456</p>' }],
+        });
+        callback(null, [200, 'OK']);
+      });
+
+    getConfig.mockResolvedValue(mockedConfig);
+
+    await connector.sendMessage({
+      to: toEmail,
+      type: TemplateType.Generic,
+      payload: { code: '123456', domain: 'example.com', application: { name: 'Test app' } },
+    });
+  });
+
+  it('should fall back to the configured fromName when the i18n template has no sendFrom', async () => {
+    getI18nEmailTemplate.mockResolvedValue({
+      subject: 'Passcode {{code}}',
+      content: 'Your passcode is {{code}}',
+      contentType: 'text/plain',
+    });
+
+    nock('https://api.sendgrid.com')
+      .post('/v3/mail/send')
+      .matchHeader('authorization', `Bearer ${mockedConfig.apiKey}`)
+      .reply((_, body, callback) => {
+        expect(body).toEqual({
+          personalizations: [{ to: [{ email: toEmail }] }],
+          from: { email: fromEmail, name: fromName },
+          subject: 'Passcode 123456',
+          content: [{ type: 'text/plain', value: 'Your passcode is 123456' }],
+        });
+        callback(null, [200, 'OK']);
+      });
+
+    getConfig.mockResolvedValue(mockedConfig);
+
+    await connector.sendMessage({
+      to: toEmail,
+      type: TemplateType.Generic,
+      payload: { code: '123456' },
     });
   });
 });
