@@ -1,10 +1,10 @@
 {
   "name": "@logto/connector-http-sms",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "SMS connector to send SMS via HTTP call.",
   "author": "Michel Courtine <michel@021.dev>",
   "dependencies": {
-    "@logto/connector-kit": "workspace:^5.0.0",
+    "@logto/connector-kit": "workspace:^5.2.0",
     "@silverhand/essentials": "^2.9.3",
     "got": "^14.0.0",
     "zod": "3.24.3"

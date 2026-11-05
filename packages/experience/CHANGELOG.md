@@ -1,5 +1,39 @@
 # Change Log
 
+## 1.24.0
+
+### Minor Changes
+
+- 48b7f01: return an `access_denied` OAuth error when a user cancels consent or a direct sign-in fails
+
+  Cancelling the built-in consent page now finishes the interaction with `access_denied` and sends the user back to the client application with the original `state` and `iss`, instead of redirecting to the client without the OAuth context. A failed direct sign-in returns to the client the same way instead of falling back to the hosted sign-in page.
+
+  Custom experiences can finish the current interaction with the same error through the new `POST /api/experience/abort` endpoint, optionally with a `reason` that becomes `error_description`. `GET /api/experience/interaction/direct-sign-in` returns the `direct_sign_in` value of the current authorization request, so a custom experience can tell a direct sign-in apart from a hosted one before the interaction is initialized.
+
+- 22967f6: add the `confirm_redirect_policy` sign-in parameter to show a "Continue" page before returning to the app
+
+  On iOS, `ASWebAuthenticationSession` closes as soon as it sees the app callback URL, so the system "Save Password" prompt is dismissed right after the user signs in with a password. Pass `confirm_redirect_policy=password` in the authorization request to show a "Return to the app" page after the user entered a password in the sign-in experience (password sign-in, password registration, setting a password, or a step-up password verification). The page returns to the app only when the user selects "Continue".
+
+  Omit the parameter to keep redirecting back to the app right away. Third-party applications ignore it, because they usually show a consent page that already holds the session open.
+
+- 4c2822c: support GeeTest as a CAPTCHA provider
+
+  [GeeTest](https://www.geetest.com) CAPTCHA v4 adds an adaptive CAPTCHA service with localized challenges, which suits sign-in experiences targeting mainland China where Google reCAPTCHA is often unreachable.
+
+  To use it, create a CAPTCHA v4 event in the GeeTest dashboard, then go to Console > Security > CAPTCHA and add GeeTest with its CAPTCHA ID and CAPTCHA key. The same configuration is available through the `PUT /api/captcha-provider` Management API with `type: "Geetest"`.
+
+  While GeeTest is the CAPTCHA provider, the sign-in page's Content Security Policy allows GeeTest's SDK, API, and static hosts, which the widget loads the challenge from.
+
+- d65a8dc: support OIDC step-up authentication for Account Center and developer applications
+
+  Clients can request `acr_values` and `max_age` and receive `acr`, `amr`, and `auth_time` in ID tokens, access tokens, and introspection responses. The built-in Account Center now authorizes sensitive Account API operations with a fresh first-party `urn:logto:acr:1fa` access token instead of a separate verification record, and the legacy permission-verification runtime is removed.
+
+### Patch Changes
+
+- f0217e4: fix the blank sign-in page on iOS and Safari versions earlier than 16.4
+
+  The sign-in experience is now compiled for iOS 15 and Safari 15 and later, so older Apple devices no longer fail to parse the page bundle.
+
 ## 1.23.0
 
 ### Minor Changes

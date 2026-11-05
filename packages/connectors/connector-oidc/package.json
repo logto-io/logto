@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-oidc",
-  "version": "1.7.6",
+  "version": "1.7.7",
   "description": "OIDC standard connector implementation.",
   "dependencies": {
     "@logto/connector-kit": "workspace:^",

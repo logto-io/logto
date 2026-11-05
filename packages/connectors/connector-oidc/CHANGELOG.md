@@ -1,5 +1,32 @@
 # @logto/connector-oidc
 
+## 1.7.7
+
+### Patch Changes
+
+- f33304e: accept string-typed `expires_in` in token responses
+
+  Some identity providers, such as Criipto, return `expires_in` as a string instead of a number. Social sign-in with the generic OAuth 2.0 and OIDC connectors no longer fails with an invalid response error for these providers.
+
+- d89e507: support Node.js 26
+
+  Logto and the published packages now declare support for Node.js 22, 24 and 26. The minimum supported versions are 22.23.4, 24.22.1 and 26.12.1, which include the October 2026 Node.js security fixes.
+
+- 664e6ac: show the provider's actual error message instead of `{}` when a social connector request fails
+- 05678f9: accept token responses that return `scope` as an array
+
+  Some providers, such as Twitch, return `scope` in the token response as a JSON array instead of a space-delimited string. Social sign-in with the generic OAuth 2.0 and OIDC connectors no longer fails with an invalid response error for these providers; the scopes are normalized to a space-delimited string.
+
+- Updated dependencies [800eb13]
+- Updated dependencies [f33304e]
+- Updated dependencies [d89e507]
+- Updated dependencies [1b03993]
+- Updated dependencies [9d7d323]
+- Updated dependencies [664e6ac]
+- Updated dependencies [05678f9]
+  - @logto/connector-kit@5.2.0
+  - @logto/connector-oauth@1.8.0
+
 ## 1.7.6
 
 ### Patch Changes
