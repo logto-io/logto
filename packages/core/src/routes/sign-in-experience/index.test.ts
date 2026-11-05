@@ -1228,15 +1228,15 @@ describe('PATCH /sign-in-exp crossOriginOpenerPolicy', () => {
     expect(guardTenantUsageByKey).toHaveBeenCalledWith('bringYourUiEnabled');
   });
 
-  it('should reject a policy when dev features are disabled', async () => {
+  it('should persist a policy when dev features are disabled', async () => {
     const { requester, updateDefaultSignInExperience, guardTenantUsageByKey } =
       await createCustomUiCspRequester({ isDevFeaturesEnabled: false });
 
     const response = await requester.patch('/sign-in-exp').send({ crossOriginOpenerPolicy });
 
-    expect(response.status).toEqual(400);
-    expect(updateDefaultSignInExperience).not.toHaveBeenCalled();
-    expect(guardTenantUsageByKey).not.toHaveBeenCalled();
+    expect(response.status).toEqual(200);
+    expect(updateDefaultSignInExperience).toHaveBeenCalledWith({ crossOriginOpenerPolicy });
+    expect(guardTenantUsageByKey).toHaveBeenCalledWith('bringYourUiEnabled');
   });
 
   it('should not persist a policy when the Bring your UI quota guard rejects', async () => {
@@ -1276,9 +1276,9 @@ describe('PATCH /sign-in-exp crossOriginOpenerPolicy', () => {
     expect(updateDefaultSignInExperience).toHaveBeenCalledWith({ crossOriginOpenerPolicy });
   });
 
-  it('should allow unsafe-none without dev features or a quota check', async () => {
+  it('should allow unsafe-none without Bring your UI', async () => {
     const { requester, updateDefaultSignInExperience, guardTenantUsageByKey } =
-      await createCustomUiCspRequester({ isDevFeaturesEnabled: false, isCloud: false });
+      await createCustomUiCspRequester({ isCloud: false });
 
     const response = await requester
       .patch('/sign-in-exp')

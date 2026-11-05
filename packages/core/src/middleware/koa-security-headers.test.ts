@@ -10,11 +10,12 @@ import createMockContext from '#src/test-utils/jest-koa-mocks/create-mock-contex
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
 
-// One shared instance, so a test can toggle the dev-feature flag.
-const envValues = new GlobalValues();
-
 await mockEsmWithActual('#src/env-set/index.js', () => ({
-  EnvSet: { values: envValues },
+  EnvSet: {
+    get values() {
+      return new GlobalValues();
+    },
+  },
   AdminApps: { Console: 'console', Welcome: 'welcome' },
   UserApps: { AccountCenter: 'account' },
   getTenantEndpoint: () => new URL('https://tenant.example.com'),
@@ -22,9 +23,6 @@ await mockEsmWithActual('#src/env-set/index.js', () => ({
 
 const { default: koaSecurityHeaders, koaExperienceSecurityHeaders } = await import(
   './koa-security-headers.js'
-);
-const { setDevFeaturesEnabled, resetDevFeaturesEnabled } = await import(
-  '#src/test-utils/dev-features.js'
 );
 
 const koaNoop = noop as unknown as Koa.Next;
@@ -349,10 +347,6 @@ describe('koaSecurityHeaders() middleware — experience CSP', () => {
 });
 
 describe('koaExperienceSecurityHeaders() middleware — Cross-Origin-Opener-Policy', () => {
-  afterEach(() => {
-    resetDevFeaturesEnabled();
-  });
-
   it.each([CrossOriginOpenerPolicy.SameOriginAllowPopups, CrossOriginOpenerPolicy.SameOrigin])(
     'sends %s while Custom UI assets are served',
     async (crossOriginOpenerPolicy) => {
@@ -379,17 +373,6 @@ describe('koaExperienceSecurityHeaders() middleware — Cross-Origin-Opener-Poli
     await expect(
       getCrossOriginOpenerPolicy({
         ...settings,
-        crossOriginOpenerPolicy: CrossOriginOpenerPolicy.SameOrigin,
-      })
-    ).resolves.toBeUndefined();
-  });
-
-  it('sends no header when dev features are disabled', async () => {
-    setDevFeaturesEnabled(false);
-
-    await expect(
-      getCrossOriginOpenerPolicy({
-        customUiAssets,
         crossOriginOpenerPolicy: CrossOriginOpenerPolicy.SameOrigin,
       })
     ).resolves.toBeUndefined();

@@ -67,8 +67,7 @@
                       }
                     },
                     "crossOriginOpenerPolicy": {
-                      "description": "The `Cross-Origin-Opener-Policy` header sent with the hosted sign-in page while Custom UI assets are configured. `unsafe-none` (the default) sends no header.",
-                      "x-logto-dev-feature": true
+                      "description": "The `Cross-Origin-Opener-Policy` header sent with the hosted sign-in page while Custom UI assets are configured. `unsafe-none` (the default) sends no header."
                     },
                     "passwordPolicy": {
                       "description": "Password policies to adjust the password strength requirements."
@@ -191,8 +190,7 @@
                     }
                   },
                   "crossOriginOpenerPolicy": {
-                    "description": "The `Cross-Origin-Opener-Policy` header to send with the hosted sign-in page while Custom UI assets are configured. `unsafe-none` (the default) sends no header; other values require Bring your UI. Any other value cuts off apps that open the sign-in page in a popup and rely on `window.opener`. Popups the Custom UI opens itself also lose `window.opener` when they navigate back to the Custom UI (for example, to a social sign-in callback), and with `same-origin` they lose it as soon as they open, so `same-origin-allow-popups` is recommended over `same-origin`.",
-                    "x-logto-dev-feature": true
+                    "description": "The `Cross-Origin-Opener-Policy` header to send with the hosted sign-in page while Custom UI assets are configured. `unsafe-none` (the default) sends no header; other values require Bring your UI. Any other value cuts off apps that open the sign-in page in a popup and rely on `window.opener`. Popups the Custom UI opens itself also lose `window.opener` when they navigate back to the Custom UI (for example, to a social sign-in callback), and with `same-origin` they lose it as soon as they open, so `same-origin-allow-popups` is recommended over `same-origin`."
                   },
                   "passwordPolicy": {
                     "description": "Password policies to adjust the password strength requirements."
@@ -250,19 +248,7 @@
         },
         "responses": {
           "200": {
-            "description": "Updated default sign-in experience settings.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "crossOriginOpenerPolicy": {
-                      "description": "The `Cross-Origin-Opener-Policy` header sent with the hosted sign-in page while Custom UI assets are configured. `unsafe-none` (the default) sends no header.",
-                      "x-logto-dev-feature": true
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Updated default sign-in experience settings."
           },
           "400": {
             "description": "Bad request. Invalid data provided."

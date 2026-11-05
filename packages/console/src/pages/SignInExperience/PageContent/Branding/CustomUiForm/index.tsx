@@ -6,7 +6,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import CloudUploadIcon from '@/assets/icons/cloud-upload.svg?react';
 import CustomCssEditorField from '@/components/CustomCssEditorField';
 import { CloudTag } from '@/components/FeatureTag';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { latestProPlanId } from '@/consts/subscriptions';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import Card from '@/ds-components/Card';
@@ -129,10 +129,11 @@ function CustomUiForm() {
             />
           </FormField>
         )}
-        {shouldShowCustomUiCspForm && <CustomUiCspForm isDisabled={!isCustomUiCspEnabled} />}
-        {/* Dev feature: Bring your UI COOP header */}
-        {isDevFeaturesEnabled && shouldShowCustomUiCspForm && (
-          <CrossOriginOpenerPolicyField isDisabled={!isCustomUiCspEnabled} />
+        {shouldShowCustomUiCspForm && (
+          <>
+            <CustomUiCspForm isDisabled={!isCustomUiCspEnabled} />
+            <CrossOriginOpenerPolicyField isDisabled={!isCustomUiCspEnabled} />
+          </>
         )}
         {shouldShowOssBringYourUi && <OssBringYourUiCard />}
       </Card>
