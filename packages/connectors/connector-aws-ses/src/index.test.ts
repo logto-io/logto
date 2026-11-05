@@ -91,7 +91,6 @@ describe('sendMessage()', () => {
   it('should call SendMail() with custom template', async () => {
     const connector = await createConnector({ getConfig, getI18nEmailTemplate });
     const toMail = 'to@email.com';
-    const { emailAddress } = mockedConfig;
     await connector.sendMessage({
       to: toMail,
       type: TemplateType.Generic,
@@ -101,7 +100,8 @@ describe('sendMessage()', () => {
     expect(SESv2Client.prototype.send).toHaveBeenCalledWith(
       expect.objectContaining({
         input: {
-          FromEmailAddress: emailAddress,
+          FromEmailAddress: 'Foo',
+          ReplyToAddresses: ['Reply-to {{to}}'],
           Destination: { ToAddresses: toExpected },
           Content: {
             Simple: {
@@ -118,6 +118,24 @@ describe('sendMessage()', () => {
           FromEmailAddressIdentityArn: undefined,
           ConfigurationSetName: undefined,
         },
+      })
+    );
+  });
+
+  it('should honor sendFrom and replyTo of the i18n email template', async () => {
+    const connector = await createConnector({ getConfig, getI18nEmailTemplate });
+    const toMail = 'to@email.com';
+    await connector.sendMessage({
+      to: toMail,
+      type: TemplateType.Generic,
+      payload: { code: '1234', to: toMail },
+    });
+    expect(SESv2Client.prototype.send).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        input: expect.objectContaining({
+          FromEmailAddress: 'Foo',
+          ReplyToAddresses: [`Reply-to ${toMail}`],
+        }),
       })
     );
   });

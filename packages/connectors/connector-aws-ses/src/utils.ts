@@ -41,12 +41,23 @@ export const makeEmailContent = (
 export const makeCommand = (
   config: AwsSesConfig,
   emailContent: EmailContent,
-  to: string
+  to: string,
+  template?: Template | EmailTemplateDetails,
+  payload?: SendMessagePayload
 ): SendEmailCommand => {
+  // The i18n email template may customize the sender and the reply-to address.
+  const sendFrom = template && 'sendFrom' in template ? template.sendFrom : undefined;
+  const replyTo = template && 'replyTo' in template ? template.replyTo : undefined;
+
   return new SendEmailCommand({
     Destination: { ToAddresses: [to] },
     Content: emailContent,
-    FromEmailAddress: config.emailAddress,
+    FromEmailAddress:
+      sendFrom && payload ? replaceSendMessageHandlebars(sendFrom, payload) : config.emailAddress,
+    ...(replyTo &&
+      payload && {
+        ReplyToAddresses: [replaceSendMessageHandlebars(replyTo, payload)],
+      }),
     FromEmailAddressIdentityArn: config.emailAddressIdentityArn,
     FeedbackForwardingEmailAddress: config.feedbackForwardingEmailAddress,
     FeedbackForwardingEmailAddressIdentityArn: config.feedbackForwardingEmailAddressIdentityArn,
