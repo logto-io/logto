@@ -24,6 +24,7 @@ const passcode = {
 
 const findUnconsumedPasscodeByJtiAndType = jest.fn();
 const findDefaultSignInExperience = jest.fn();
+const increasePasscodeTryCount = jest.fn().mockResolvedValue(null);
 const { verifyPasscode } = createPasscodeLibrary(
   new MockQueries({
     passcodes: {
@@ -34,7 +35,7 @@ const { verifyPasscode } = createPasscodeLibrary(
       deletePasscodesByIds: jest.fn(),
       insertPasscode: jest.fn(),
       consumePasscode: jest.fn(),
-      increasePasscodeTryCount: jest.fn(),
+      increasePasscodeTryCount,
     },
     signInExperiences: {
       findDefaultSignInExperience,
@@ -55,25 +56,31 @@ describe('verifyPasscode verification code policy', () => {
       verificationCodePolicy: { expirationDuration: 60 },
       passcodeOverrides: { createdAt: Date.now() - 60 * 1000 - 100 },
       error: new RequestError('verification_code.expired'),
+      attempts: [],
     },
     {
       name: 'custom max retry attempts',
       verificationCodePolicy: { maxRetryAttempts: 1 },
       passcodeOverrides: { tryCount: 1 },
       error: new RequestError('verification_code.exceed_max_try'),
+      attempts: [[passcode.id, 1]],
     },
-  ])('should respect $name', async ({ verificationCodePolicy, passcodeOverrides, error }) => {
-    findDefaultSignInExperience.mockResolvedValueOnce({
-      ...mockSignInExperience,
-      verificationCodePolicy,
-    });
-    findUnconsumedPasscodeByJtiAndType.mockResolvedValueOnce({
-      ...passcode,
-      ...passcodeOverrides,
-    });
+  ])(
+    'should respect $name',
+    async ({ verificationCodePolicy, passcodeOverrides, error, attempts }) => {
+      findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        verificationCodePolicy,
+      });
+      findUnconsumedPasscodeByJtiAndType.mockResolvedValue({
+        ...passcode,
+        ...passcodeOverrides,
+      });
 
-    await expect(
-      verifyPasscode(passcode.interactionJti, passcode.type, passcode.code, { phone: 'phone' })
-    ).rejects.toThrow(error);
-  });
+      await expect(
+        verifyPasscode(passcode.interactionJti, passcode.type, passcode.code, { phone: 'phone' })
+      ).rejects.toThrow(error);
+      expect(increasePasscodeTryCount.mock.calls).toEqual(attempts);
+    }
+  );
 });

@@ -59,18 +59,21 @@ export const createPasscodeQueries = (pool: CommonQueryMethods) => {
   });
 
   const consumePasscode = async (id: string) =>
-    pool.query<Passcode>(sql`
+    pool.maybeOne<Passcode>(sql`
       update ${table}
       set ${fields.consumed}=true
       where ${fields.id}=${id}
+      and ${fields.consumed}=false
       returning ${sql.join(Object.values(fields), sql`, `)}
     `);
 
-  const increasePasscodeTryCount = async (id: string) =>
-    pool.query<Passcode>(sql`
+  const increasePasscodeTryCount = async (id: string, maxTryCount: number) =>
+    pool.maybeOne<Passcode>(sql`
       update ${table}
       set ${fields.tryCount}=${fields.tryCount}+1
       where ${fields.id}=${id}
+      and ${fields.consumed}=false
+      and ${fields.tryCount}<${maxTryCount}
       returning ${sql.join(Object.values(fields), sql`, `)}
     `);
 

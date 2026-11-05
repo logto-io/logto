@@ -126,11 +126,14 @@ export const createPasscodeLibrary = (queries: Queries, connectorLibrary: Connec
     code: string,
     payload: { phone: string } | { email: string }
   ): Promise<void> => {
-    const passcode = jti
-      ? // Session based flows. E.g. SignIn, Register, etc.
-        await findUnconsumedPasscodeByJtiAndType(jti, type)
-      : // Generic flow. E.g. Triggered by management API
-        await findUnconsumedPasscodeByIdentifierAndType({ type, ...payload });
+    const findPasscode = async () =>
+      jti
+        ? // Session based flows. E.g. SignIn, Register, etc.
+          findUnconsumedPasscodeByJtiAndType(jti, type)
+        : // Generic flow. E.g. Triggered by management API
+          findUnconsumedPasscodeByIdentifierAndType({ type, ...payload });
+
+    const passcode = await findPasscode();
 
     if (!passcode) {
       throw new RequestError('verification_code.not_found');
@@ -156,16 +159,28 @@ export const createPasscodeLibrary = (queries: Queries, connectorLibrary: Connec
       throw new RequestError('verification_code.expired');
     }
 
-    if (passcode.tryCount >= maxTryCount) {
-      throw new RequestError('verification_code.exceed_max_try');
+    const attemptedPasscode = await increasePasscodeTryCount(passcode.id, maxTryCount);
+
+    if (!attemptedPasscode) {
+      // The write also refuses a code consumed or replaced since it was read, so only a code that
+      // is still unconsumed has reached the retry limit.
+      const currentPasscode = await findPasscode();
+      throw new RequestError(
+        currentPasscode?.id === passcode.id
+          ? 'verification_code.exceed_max_try'
+          : 'verification_code.not_found'
+      );
     }
 
     if (code !== passcode.code) {
-      await increasePasscodeTryCount(passcode.id);
       throw new RequestError('verification_code.code_mismatch');
     }
 
-    await consumePasscode(passcode.id);
+    const consumedPasscode = await consumePasscode(passcode.id);
+
+    if (!consumedPasscode) {
+      throw new RequestError('verification_code.not_found');
+    }
   };
 
   /**
