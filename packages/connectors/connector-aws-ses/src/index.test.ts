@@ -91,6 +91,7 @@ describe('sendMessage()', () => {
   it('should call SendMail() with custom template', async () => {
     const connector = await createConnector({ getConfig, getI18nEmailTemplate });
     const toMail = 'to@email.com';
+    const { emailAddress } = mockedConfig;
     await connector.sendMessage({
       to: toMail,
       type: TemplateType.Generic,
@@ -100,7 +101,7 @@ describe('sendMessage()', () => {
     expect(SESv2Client.prototype.send).toHaveBeenCalledWith(
       expect.objectContaining({
         input: {
-          FromEmailAddress: 'Foo',
+          FromEmailAddress: `Foo <${emailAddress}>`,
           ReplyToAddresses: ['Reply-to {{to}}'],
           Destination: { ToAddresses: toExpected },
           Content: {
@@ -133,9 +134,28 @@ describe('sendMessage()', () => {
     expect(SESv2Client.prototype.send).toHaveBeenLastCalledWith(
       expect.objectContaining({
         input: expect.objectContaining({
-          FromEmailAddress: 'Foo',
+          FromEmailAddress: `Foo <${mockedConfig.emailAddress}>`,
           ReplyToAddresses: [`Reply-to ${toMail}`],
         }),
+      })
+    );
+  });
+
+  it('should use sendFrom as is when it is a full address', async () => {
+    const connector = await createConnector({
+      getConfig,
+      getI18nEmailTemplate: vi
+        .fn()
+        .mockResolvedValue({ ...mockGenericI18nEmailTemplate, sendFrom: 'Foo <foo@logto.io>' }),
+    });
+    await connector.sendMessage({
+      to: 'to@email.com',
+      type: TemplateType.Generic,
+      payload: { code: '1234' },
+    });
+    expect(SESv2Client.prototype.send).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        input: expect.objectContaining({ FromEmailAddress: 'Foo <foo@logto.io>' }),
       })
     );
   });

@@ -38,6 +38,24 @@ export const makeEmailContent = (
   };
 };
 
+/**
+ * `sendFrom` of the i18n email template is either a full address, which is used as is, or just a
+ * display name, which is combined with the configured address (SES rejects a bare name).
+ */
+const getFromEmailAddress = (
+  emailAddress: string,
+  sendFrom?: string,
+  payload?: SendMessagePayload
+): string => {
+  const resolved = sendFrom && payload ? replaceSendMessageHandlebars(sendFrom, payload) : '';
+
+  if (!resolved) {
+    return emailAddress;
+  }
+
+  return resolved.includes('@') ? resolved : `${resolved} <${emailAddress}>`;
+};
+
 export const makeCommand = (
   config: AwsSesConfig,
   emailContent: EmailContent,
@@ -52,8 +70,7 @@ export const makeCommand = (
   return new SendEmailCommand({
     Destination: { ToAddresses: [to] },
     Content: emailContent,
-    FromEmailAddress:
-      sendFrom && payload ? replaceSendMessageHandlebars(sendFrom, payload) : config.emailAddress,
+    FromEmailAddress: getFromEmailAddress(config.emailAddress, sendFrom, payload),
     ...(replyTo &&
       payload && {
         ReplyToAddresses: [replaceSendMessageHandlebars(replyTo, payload)],
