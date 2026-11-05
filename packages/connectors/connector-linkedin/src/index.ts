@@ -109,12 +109,12 @@ const getUserInfo =
         throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, userInfoResult.error);
       }
 
-      const { sub, name, email, picture } = userInfoResult.data;
+      const { sub, name, email, email_verified, picture } = userInfoResult.data;
 
       return {
         id: sub,
         name: conditional(name),
-        email: conditional(email),
+        email: conditional(email_verified && email),
         picture: conditional(picture),
         rawData: jsonGuard.parse(userInfo),
       };

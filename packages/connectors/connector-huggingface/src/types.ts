@@ -23,6 +23,7 @@ export const userInfoResponseGuard = z.object({
   name: z.string().optional().nullable(),
   picture: z.string().optional().nullable(),
   email: z.string().optional().nullable(),
+  email_verified: z.boolean().optional().nullable(),
 });
 
 export type UserInfoResponse = z.infer<typeof userInfoResponseGuard>;

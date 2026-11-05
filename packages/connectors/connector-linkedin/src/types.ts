@@ -12,6 +12,7 @@ export const userInfoResponseGuard = z.object({
   sub: z.string(),
   name: z.string().nullish(),
   email: z.string().nullish(),
+  email_verified: z.boolean().nullish(),
   picture: z.string().nullish(),
 });
 

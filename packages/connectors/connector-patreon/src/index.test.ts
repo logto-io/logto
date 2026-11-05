@@ -129,6 +129,26 @@ describe('Patreon connector', () => {
     });
   });
 
+  it.each([{ is_email_verified: false }, {}])(
+    'should not return the email unless it is verified (%j)',
+    async (verification) => {
+      nock(userInfoEndpoint)
+        .get('')
+        .query({ 'fields[user]': expectedUserInfoFields })
+        .reply(200, {
+          data: { id: '12345', attributes: { email: 'janedoe@example.com', ...verification } },
+        });
+
+      const connector = await createConnector({ getConfig });
+      const socialUserInfo = await connector.getUserInfo({ code: 'code' }, getSessionMock);
+
+      expect(socialUserInfo.email).toBeUndefined();
+      expect(socialUserInfo.rawData).toMatchObject({
+        data: { attributes: { email: 'janedoe@example.com' } },
+      });
+    }
+  );
+
   it('throws AuthorizationFailed error if authentication failed', async () => {
     const connector = await createConnector({ getConfig });
     await expect(

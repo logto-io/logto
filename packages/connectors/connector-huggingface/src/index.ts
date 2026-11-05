@@ -117,12 +117,12 @@ const getUserInfo =
         throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, parsedUserInfoResponse.error);
       }
 
-      const { sub, picture, email, name } = parsedUserInfoResponse.data;
+      const { sub, picture, email, email_verified, name } = parsedUserInfoResponse.data;
 
       return {
         id: sub,
         avatar: conditional(picture),
-        email: conditional(email),
+        email: conditional(email_verified && email),
         name: conditional(name),
         rawData,
       };
