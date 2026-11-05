@@ -128,6 +128,8 @@ const description = {
   switch_account_title: '現在 {{account}} としてサインインしています',
   switch_account_description:
     '続行するには、現在のアカウントからサインアウトし、新しいアカウントに自動的に切り替わります。',
+  continue_to_app_title: 'アプリに戻る',
+  continue_to_app_description: '続行してアプリに戻ります。',
   about_yourself: 'あなたについて教えてください',
   verify_identity: '本人確認を行う',
   choose_verification_method: 'サインイン方法を選択してください',

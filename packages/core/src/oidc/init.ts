@@ -276,7 +276,7 @@ export default function initOidc(
       // Evaluate `acr_values` and `max_age` strictly and route step-up prompts; without the policy
       // the provider ignores `acr_values`, which OIDC treats as voluntary.
       policy: buildInteractionPolicy(),
-      url: (ctx, { params: { client_id: appId }, prompt }) => {
+      url: async (ctx, { params: { client_id: appId }, prompt }) => {
         const params = trySafe(() => extraParamsObjectGuard.parse(ctx.oidc.params ?? {})) ?? {};
         const resolvedAppId = readOptionalQueryString(appId);
         const sharedParams = {
@@ -329,7 +329,24 @@ export default function initOidc(
 
         switch (prompt.name) {
           case 'login': {
-            return '/' + buildLoginPromptUrl(params, sharedParams, prompt.details);
+            // Third-party and CIMD clients usually show the consent screen after sign-in, which
+            // already holds the session open. Re-authentication with an existing grant can skip
+            // consent and redirect right away; that falls back to the default behavior.
+            const { [ExtraParamsKey.ConfirmRedirectPolicy]: confirmRedirectPolicy, ...rest } =
+              params;
+            const shouldDropConfirmRedirect =
+              confirmRedirectPolicy !== undefined &&
+              resolvedAppId !== undefined &&
+              (await isThirdPartyApplication(queries, resolvedAppId));
+
+            return (
+              '/' +
+              buildLoginPromptUrl(
+                shouldDropConfirmRedirect ? rest : params,
+                sharedParams,
+                prompt.details
+              )
+            );
           }
 
           case 'consent': {

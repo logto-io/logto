@@ -32,7 +32,7 @@ const usePasswordSignIn = () => {
   const navigate = useNavigateWithPreservedSearchParams();
   const { isForgotPasswordEnabled } = useForgotPasswordSettings();
 
-  const { identifierInputValue, setForgotPasswordIdentifierInputValue } =
+  const { identifierInputValue, setForgotPasswordIdentifierInputValue, setHasEnteredPassword } =
     useContext(UserInteractionContext);
 
   const clearErrorMessage = useCallback(() => {
@@ -54,6 +54,8 @@ const usePasswordSignIn = () => {
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
       'session.invalid_credentials': (error) => {
+        // The password was not accepted, so another method may finish the sign-in.
+        setHasEnteredPassword(false);
         setErrorMessage(error.message);
       },
       ...conditional(
@@ -74,7 +76,14 @@ const usePasswordSignIn = () => {
       ),
       ...preSignInErrorHandler,
     }),
-    [handleRedirectToForgotPassword, isForgotPasswordEnabled, preSignInErrorHandler, show, t]
+    [
+      handleRedirectToForgotPassword,
+      isForgotPasswordEnabled,
+      preSignInErrorHandler,
+      setHasEnteredPassword,
+      show,
+      t,
+    ]
   );
 
   const onSubmit = useCallback(
@@ -91,6 +100,7 @@ const usePasswordSignIn = () => {
         }
       }
 
+      setHasEnteredPassword(true);
       const [error, result] = await asyncSignIn(payload, captchaToken);
 
       if (error) {
@@ -103,7 +113,15 @@ const usePasswordSignIn = () => {
         await redirectTo(result.redirectTo);
       }
     },
-    [asyncSignIn, checkSingleSignOn, errorHandlers, executeCaptcha, handleError, redirectTo]
+    [
+      asyncSignIn,
+      checkSingleSignOn,
+      errorHandlers,
+      executeCaptcha,
+      handleError,
+      redirectTo,
+      setHasEnteredPassword,
+    ]
   );
 
   return {

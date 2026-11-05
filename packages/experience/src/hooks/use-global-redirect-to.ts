@@ -3,6 +3,11 @@ import { useCallback, useContext } from 'react';
 
 import PageContext from '@/Providers/PageContextProvider/PageContext';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
+import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
+import { confirmRedirectPolicyKey } from '@/shared/utils/search-parameters';
+
+/** The route of the "Continue to app" page that holds the redirect for `confirm_redirect_policy`. */
+export const continueToAppPath = 'continue-to-app';
 
 type Options = {
   /**
@@ -17,6 +22,12 @@ type Options = {
    * Use `false` if this is a 3rd-party URL redirection (social sign-in or single sign-on redirection) that should be added to the browser history.
    */
   isReplace?: boolean;
+  /**
+   * Whether the `confirm_redirect_policy` sign-in parameter may hold this redirect on the "Continue to
+   * app" page. Defaults to `true`.
+   * Set to `false` for the redirect from the "Continue to app" page itself.
+   */
+  canConfirmRedirect?: boolean;
 };
 
 /**
@@ -33,44 +44,57 @@ type Options = {
 function useGlobalRedirectTo({
   shouldClearInteractionContextSession = true,
   isReplace = true,
+  canConfirmRedirect = true,
 }: Options = {}) {
   const { setLoading } = useContext(PageContext);
-  const { clearInteractionContextSessionStorage } = useContext(UserInteractionContext);
+  const { clearInteractionContextSessionStorage, hasEnteredPassword } =
+    useContext(UserInteractionContext);
+  const navigate = useNavigateWithPreservedSearchParams();
 
   const redirectTo = useCallback(
     async (url: string | URL): Promise<never> => {
       /**
-       * Set global loading state to true
-       * This prevents further user interaction during the redirect process
+       * Hold the final sign-in redirect on the "Continue to app" page when the client asks for it
+       * with `confirm_redirect_policy` (see `ExtraParamsKey.ConfirmRedirectPolicy`). It works around iOS
+       * `ASWebAuthenticationSession`, which closes on the callback URL and dismisses the "Save
+       * Password" prompt. The page redirects through this hook once the user taps "Continue".
        */
-      setLoading(true);
-      /**
-       * Clear all identifier input values from the storage once the interaction is submitted.
-       * The Identifier cache should be session-isolated, so it should be cleared after the interaction is completed.
-       */
-      if (shouldClearInteractionContextSession) {
-        clearInteractionContextSessionStorage();
-      }
-      /**
-       * Perform the actual redirect
-       * This is a synchronous operation and will immediately unload the current page
-       */
-      if (isReplace) {
-        window.location.replace(url);
+      const policy = sessionStorage.getItem(confirmRedirectPolicyKey);
+      const shouldConfirmRedirect =
+        canConfirmRedirect &&
+        shouldClearInteractionContextSession &&
+        policy === 'password' &&
+        hasEnteredPassword();
+
+      if (shouldConfirmRedirect) {
+        navigate(`/${continueToAppPath}`, { replace: true, state: { redirectTo: url.toString() } });
       } else {
-        window.location.assign(url);
+        // Set the global loading state to prevent further user interaction during the redirect
+        setLoading(true);
+
+        // The identifier cache is session-isolated, so clear it once the interaction is submitted
+        if (shouldClearInteractionContextSession) {
+          clearInteractionContextSessionStorage();
+        }
+
+        // Synchronous, and unloads the current page right away
+        if (isReplace) {
+          window.location.replace(url);
+        } else {
+          window.location.assign(url);
+        }
       }
 
-      /**
-       * Return a Promise that never resolves
-       * This ensures that any async function awaiting this redirect will never continue
-       * Thus maintaining the loading state on the UI until the new page is loaded
-       */
+      // Never resolve, so the caller keeps its loading state until the page leaves or switches to
+      // the "Continue to app" page
       return new Promise<never>(noop);
     },
     [
+      canConfirmRedirect,
       clearInteractionContextSessionStorage,
+      hasEnteredPassword,
       isReplace,
+      navigate,
       setLoading,
       shouldClearInteractionContextSession,
     ]

@@ -1,6 +1,7 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { fulfillProfile } from '@/apis/experience';
 import SetPasswordForm from '@/containers/SetPassword';
 import useApi from '@/hooks/use-api';
@@ -29,6 +30,7 @@ const SetPassword = ({ interactionEvent }: Props) => {
   const navigate = useNavigateWithPreservedSearchParams();
   const { show } = usePromiseConfirmModal();
   const redirectTo = useGlobalRedirectTo();
+  const { setHasEnteredPassword } = useContext(UserInteractionContext);
 
   const checkPassword = usePasswordPolicyChecker({ setErrorMessage });
   const addPassword = useApi(fulfillProfile);
@@ -59,6 +61,7 @@ const SetPassword = ({ interactionEvent }: Props) => {
         return;
       }
 
+      setHasEnteredPassword(true);
       const [error, result] = await addPassword(
         { type: 'password', value: password },
         interactionEvent
@@ -73,7 +76,15 @@ const SetPassword = ({ interactionEvent }: Props) => {
         await redirectTo(result.redirectTo);
       }
     },
-    [addPassword, checkPassword, errorHandlers, interactionEvent, handleError, redirectTo]
+    [
+      addPassword,
+      checkPassword,
+      errorHandlers,
+      interactionEvent,
+      handleError,
+      redirectTo,
+      setHasEnteredPassword,
+    ]
   );
 
   const {

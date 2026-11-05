@@ -635,10 +635,11 @@ describe('getResourceServerInfo for CIMD clients', () => {
 const runInteractionUrl = (
   provider: ReturnType<typeof createProvider>,
   promptClientId: string,
-  prompt?: Record<string, unknown>
+  prompt?: Record<string, unknown>,
+  params: Record<string, unknown> = {}
 ) => {
   const configuration = getProviderConfiguration(provider);
-  const ctx = createOidcContext({ provider });
+  const ctx = createOidcContext({ provider, params });
   const interaction = {
     params: { client_id: promptClientId },
     prompt: prompt ?? { name: 'consent', reasons: [], details: {} },
@@ -724,6 +725,31 @@ describe('experience cookie for login prompts', () => {
       expect.anything()
     );
   });
+});
+
+describe('confirm_redirect_policy in the login prompt URL', () => {
+  const loginPrompt = { name: 'login', details: {} };
+
+  it.each([
+    { isThirdParty: false, expected: '/sign-in?app_id=foo&confirm_redirect_policy=password' },
+    // The consent screen that follows already holds the session open.
+    { isThirdParty: true, expected: '/sign-in?app_id=foo' },
+  ])(
+    'should forward it only for first-party apps (third-party: $isThirdParty)',
+    async ({ isThirdParty, expected }) => {
+      const provider = createProvider(
+        new MockTenant(undefined, {
+          applications: { findApplicationById: jest.fn().mockResolvedValue({ isThirdParty }) },
+        })
+      );
+
+      const { url } = runInteractionUrl(provider, 'foo', loginPrompt, {
+        confirm_redirect_policy: 'password',
+      });
+
+      await expect(url).resolves.toBe(expected);
+    }
+  );
 });
 
 describe('loadExistingGrant for CIMD clients', () => {

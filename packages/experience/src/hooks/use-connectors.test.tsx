@@ -40,6 +40,8 @@ const createUserInteractionContext = (
   verificationIdsMap: {},
   hasBoundPasskey: false,
   setHasBoundPasskey: noop,
+  hasEnteredPassword: () => false,
+  setHasEnteredPassword: noop,
   clearInteractionContextSessionStorage: noop,
 });
 

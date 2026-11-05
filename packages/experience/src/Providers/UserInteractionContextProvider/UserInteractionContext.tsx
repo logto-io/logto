@@ -53,6 +53,15 @@ export type UserInteractionContextType = {
    * Set whether the user has any passkeys bound.
    */
   setHasBoundPasskey: React.Dispatch<React.SetStateAction<boolean>>;
+  /**
+   * Whether the user has entered a password in this interaction. A getter backed by a ref, so a
+   * redirect right after the password submission reads the latest value.
+   */
+  hasEnteredPassword: () => boolean;
+  /**
+   * Set whether the user has entered a password in this interaction.
+   */
+  setHasEnteredPassword: (hasEnteredPassword: boolean) => void;
 };
 
 export default createContext<UserInteractionContextType>({
@@ -70,4 +79,6 @@ export default createContext<UserInteractionContextType>({
   clearInteractionContextSessionStorage: noop,
   hasBoundPasskey: false,
   setHasBoundPasskey: noop,
+  hasEnteredPassword: () => false,
+  setHasEnteredPassword: noop,
 });

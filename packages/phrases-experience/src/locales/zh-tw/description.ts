@@ -115,6 +115,8 @@ const description = {
   support_website: '支援網站: <link></link>',
   switch_account_title: '目前以 {{account}} 登錄',
   switch_account_description: '若要繼續，你將退出當前帳號，並自動切換到新帳號。',
+  continue_to_app_title: '返回應用程式',
+  continue_to_app_description: '繼續即可返回應用程式。',
   about_yourself: '告訴我們一些關於你自己的事情',
   verify_identity: '驗證你的身分',
   choose_verification_method: '選擇你要登入的方式',

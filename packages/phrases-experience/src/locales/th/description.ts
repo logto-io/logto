@@ -129,6 +129,8 @@ const description = {
   switch_account_title: 'คุณกำลังเข้าสู่ระบบในชื่อ {{account}}',
   switch_account_description:
     'ในการดำเนินการต่อ คุณจะออกจากบัญชีปัจจุบัน และสลับไปยังบัญชีใหม่โดยอัตโนมัติ',
+  continue_to_app_title: 'กลับไปยังแอป',
+  continue_to_app_description: 'ดำเนินการต่อเพื่อกลับไปยังแอป',
   about_yourself: 'บอกเราเกี่ยวกับตัวคุณ',
   verify_identity: 'ยืนยันตัวตนของคุณ',
   choose_verification_method: 'เลือกวิธีการเข้าสู่ระบบ',

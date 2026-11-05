@@ -130,6 +130,8 @@ const description = {
   switch_account_title: 'در حال حاضر با {{account}} وارد شده‌اید',
   switch_account_description:
     'برای ادامه، از حساب فعلی خارج می‌شوید و به‌طور خودکار به حساب جدید تغییر می‌کنید.',
+  continue_to_app_title: 'بازگشت به برنامه',
+  continue_to_app_description: 'برای بازگشت به برنامه ادامه دهید.',
   about_yourself: 'درباره خودتان بگویید',
   verify_identity: 'هویت خود را تأیید کنید',
   choose_verification_method: 'روش ورود خود را انتخاب کنید',

@@ -115,6 +115,8 @@ const description = {
   support_website: '支持网站：<link></link>',
   switch_account_title: '你当前登录的账号是 {{account}}',
   switch_account_description: '要继续，你将退出当前账户，并自动切换到新账户。',
+  continue_to_app_title: '返回应用',
+  continue_to_app_description: '继续即可返回应用。',
   about_yourself: '介绍一下你自己',
   verify_identity: '验证你的身份',
   choose_verification_method: '选择登录方式',

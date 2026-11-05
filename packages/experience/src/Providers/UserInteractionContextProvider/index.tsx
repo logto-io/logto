@@ -1,5 +1,5 @@
 import { type SsoConnectorMetadata, type VerificationType } from '@logto/schemas';
-import { type ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import useSessionStorage, { StorageKeys } from '@/hooks/use-session-storages';
 import { useSieMethods } from '@/hooks/use-sie';
@@ -40,6 +40,12 @@ const UserInteractionContextProvider = ({ children }: Props) => {
   );
 
   const [hasBoundPasskey, setHasBoundPasskey] = useState(false);
+  const hasEnteredPasswordRef = useRef(false);
+  const hasEnteredPassword = useCallback(() => hasEnteredPasswordRef.current, []);
+  const setHasEnteredPassword = useCallback((value: boolean) => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Ref-backed so redirects read the latest value.
+    hasEnteredPasswordRef.current = value;
+  }, []);
 
   useEffect(() => {
     if (!ssoEmail) {
@@ -117,6 +123,8 @@ const UserInteractionContextProvider = ({ children }: Props) => {
       clearInteractionContextSessionStorage,
       hasBoundPasskey,
       setHasBoundPasskey,
+      hasEnteredPassword,
+      setHasEnteredPassword,
     }),
     [
       ssoEmail,
@@ -128,6 +136,8 @@ const UserInteractionContextProvider = ({ children }: Props) => {
       setVerificationId,
       clearInteractionContextSessionStorage,
       hasBoundPasskey,
+      hasEnteredPassword,
+      setHasEnteredPassword,
     ]
   );
 
