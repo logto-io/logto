@@ -3,6 +3,7 @@ import { z } from 'zod';
 export const feishuConfigGuard = z.object({
   appId: z.string(),
   appSecret: z.string(),
+  disableEmailSync: z.boolean().optional(),
 });
 
 export type FeishuConfig = z.infer<typeof feishuConfigGuard>;

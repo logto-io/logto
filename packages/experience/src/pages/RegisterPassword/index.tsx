@@ -1,7 +1,8 @@
 import { InteractionEvent, SignInIdentifier } from '@logto/schemas';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { continueRegisterWithPassword } from '@/apis/experience';
 import SetPassword from '@/containers/SetPassword';
 import useApi from '@/hooks/use-api';
@@ -21,6 +22,7 @@ const RegisterPassword = () => {
 
   const navigate = useNavigateWithPreservedSearchParams();
   const redirectTo = useGlobalRedirectTo();
+  const { setHasEnteredPassword } = useContext(UserInteractionContext);
   const { show } = usePromiseConfirmModal();
   const [errorMessage, setErrorMessage] = useState<string>();
   const clearErrorMessage = useCallback(() => {
@@ -57,6 +59,7 @@ const RegisterPassword = () => {
         return;
       }
 
+      setHasEnteredPassword(true);
       const [error, result] = await asyncRegisterPassword(password);
 
       if (error) {
@@ -68,7 +71,14 @@ const RegisterPassword = () => {
         await redirectTo(result.redirectTo);
       }
     },
-    [asyncRegisterPassword, checkPassword, errorHandlers, handleError, redirectTo]
+    [
+      asyncRegisterPassword,
+      checkPassword,
+      errorHandlers,
+      handleError,
+      redirectTo,
+      setHasEnteredPassword,
+    ]
   );
 
   const {

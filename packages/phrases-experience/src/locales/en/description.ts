@@ -131,6 +131,8 @@ const description = {
   switch_account_title: 'You are currently signed in as {{account}}',
   switch_account_description:
     'To continue, you will be signed out of the current account, and switch to the new account automatically.',
+  continue_to_app_title: 'Return to the app',
+  continue_to_app_description: 'Continue to return to the app.',
   about_yourself: 'Tell us about yourself',
   verify_identity: 'Verify your identity',
   choose_verification_method: 'Choose how you want to sign in',

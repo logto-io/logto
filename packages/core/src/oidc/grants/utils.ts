@@ -4,6 +4,7 @@ import { errors } from 'oidc-provider';
 import type { Provider, Account, KoaContextWithOIDC } from 'oidc-provider';
 
 import { type EnvSet } from '#src/env-set/index.js';
+import { getAllUserEnabledMfaVerifications } from '#src/libraries/mfa.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -105,13 +106,19 @@ export const checkOrganizationAccess = async (
       throw accessDenied('organization access is not granted to the application');
     }
 
-    // Check if the organization requires MFA and the user has MFA enabled
-    const { isMfaRequired, hasMfaConfigured } = await queries.organizations.getMfaStatus(
-      organizationId,
-      account.accountId
-    );
-    if (isMfaRequired && !hasMfaConfigured) {
-      throw accessDenied('organization requires MFA but user has no MFA configured');
+    // Check if the organization requires MFA and the user has MFA configured. "Configured" follows
+    // sign-in: any factor enabled in the sign-in experience counts, including the implicit email
+    // and phone factors of the user's primary email and phone.
+    const { isMfaRequired } = await queries.organizations.findById(organizationId);
+    if (isMfaRequired) {
+      const [{ mfa }, user] = await Promise.all([
+        queries.signInExperiences.findDefaultSignInExperience(),
+        queries.users.findUserById(account.accountId),
+      ]);
+
+      if (getAllUserEnabledMfaVerifications(mfa, user).length === 0) {
+        throw accessDenied('organization requires MFA but user has no MFA configured');
+      }
     }
   }
 

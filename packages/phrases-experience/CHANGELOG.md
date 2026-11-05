@@ -1,5 +1,29 @@
 # Change Log
 
+## 1.16.0
+
+### Minor Changes
+
+- 22967f6: add the `confirm_redirect_policy` sign-in parameter to show a "Continue" page before returning to the app
+
+  On iOS, `ASWebAuthenticationSession` closes as soon as it sees the app callback URL, so the system "Save Password" prompt is dismissed right after the user signs in with a password. Pass `confirm_redirect_policy=password` in the authorization request to show a "Return to the app" page after the user entered a password in the sign-in experience (password sign-in, password registration, setting a password, or a step-up password verification). The page returns to the app only when the user selects "Continue".
+
+  Omit the parameter to keep redirecting back to the app right away. Third-party applications ignore it, because they usually show a consent page that already holds the session open.
+
+- 9d7d323: add Sign-In with Ethereum (SIWE / EIP-4361) for EVM wallets
+
+  Administrators can enable an Ethereum Wallet social connector. Users with an injected EIP-1193 wallet can sign a one-time SIWE message without leaving the sign-in page. A single address works across supported EVM chains, and administrators can restrict the allowed chain IDs.
+
+### Patch Changes
+
+- d89e507: support Node.js 26
+
+  Logto and the published packages now declare support for Node.js 22, 24 and 26. The minimum supported versions are 22.23.4, 24.22.1 and 26.12.1, which include the October 2026 Node.js security fixes.
+
+- Updated dependencies [d89e507]
+- Updated dependencies [9193c59]
+  - @logto/core-kit@2.14.0
+
 ## 1.15.0
 
 ### Minor Changes

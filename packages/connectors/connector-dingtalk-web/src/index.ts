@@ -3,6 +3,7 @@
  * https://open.dingtalk.com/document/orgapp/obtain-identity-credentials#title-4up-u8w-5ug
  */
 
+import { conditional } from '@silverhand/essentials';
 import { got, HTTPError } from 'got';
 
 import type {
@@ -111,7 +112,7 @@ const getUserInfo =
         id,
         avatar,
         phone: stateCode && mobile ? `${stateCode}${mobile}` : undefined,
-        email,
+        email: conditional(!config.disableEmailSync && email),
         name,
         rawData: corpId ? { ...rawData, corpId } : rawData,
       };

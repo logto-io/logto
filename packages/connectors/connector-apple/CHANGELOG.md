@@ -1,5 +1,24 @@
 # @logto/connector-apple
 
+## 1.6.11
+
+### Patch Changes
+
+- e2a3290: use only the verified email from the Apple ID token
+
+  The Apple connector now takes the user's email only from the Apple ID token, and recognizes `email_verified` whether Apple sends it as `true` or `"true"`. When Apple marks the email as unverified, no email is returned. The name still comes from the user details Apple sends on the first authorization.
+
+- d89e507: support Node.js 26
+
+  Logto and the published packages now declare support for Node.js 22, 24 and 26. The minimum supported versions are 22.23.4, 24.22.1 and 26.12.1, which include the October 2026 Node.js security fixes.
+
+- Updated dependencies [800eb13]
+- Updated dependencies [d89e507]
+- Updated dependencies [9d7d323]
+- Updated dependencies [664e6ac]
+- Updated dependencies [05678f9]
+  - @logto/connector-kit@5.2.0
+
 ## 1.6.10
 
 ### Patch Changes

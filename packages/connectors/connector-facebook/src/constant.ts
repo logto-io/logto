@@ -57,6 +57,17 @@ export const defaultMetadata: ConnectorMetadata = {
       placeholder: 'Enter the scopes (separated by a space)',
       description: "The `scope` determines permissions granted by the user's authorization. ",
     },
+    {
+      key: 'disableEmailSync',
+      type: ConnectorConfigFormItemType.Switch,
+      required: false,
+      label: 'Disable Email Sync',
+      description:
+        'Stop syncing the `email` field returned by Facebook to the user profile. Turn this on if you do not want Facebook to supply the email address.',
+      tooltip:
+        'Facebook reports no verification state for `email`. Turning this on leaves the address in `rawData` only.',
+      defaultValue: false,
+    },
   ],
   isTokenStorageSupported: true,
 };

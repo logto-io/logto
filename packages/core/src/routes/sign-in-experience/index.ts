@@ -141,17 +141,6 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
         crossOriginOpenerPolicy !== undefined &&
         crossOriginOpenerPolicy !== CrossOriginOpenerPolicy.UnsafeNone;
 
-      if (hasCrossOriginOpenerPolicy) {
-        // Dev feature: Bring your UI COOP header
-        assertThat(
-          EnvSet.values.isDevFeaturesEnabled,
-          new RequestError({
-            code: 'request.invalid_input',
-            details: 'Cross-Origin-Opener-Policy configuration is not available',
-          })
-        );
-      }
-
       if (languageInfo) {
         await validateLanguageInfo(languageInfo);
       }

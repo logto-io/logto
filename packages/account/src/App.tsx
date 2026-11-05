@@ -217,8 +217,10 @@ export const Main = () => {
 };
 
 const Layout = () => {
-  const { accountCenterSettings, experienceSettings, theme, platform } = useContext(PageContext);
-  const hideLogtoBranding = experienceSettings?.hideLogtoBranding === true;
+  const { accountCenterSettings, experienceSettings, isLoadingExperience, theme, platform } =
+    useContext(PageContext);
+  // Hide while settings load, since `hideLogtoBranding` is unknown until then
+  const hideLogtoBranding = isLoadingExperience || experienceSettings?.hideLogtoBranding === true;
   const { pathname } = useLocation();
   const accountNavItems = useMemo(
     () => getAccountTabSettings({ accountCenterSettings, experienceSettings }).navItems,

@@ -108,10 +108,9 @@ const sign_in_exp = {
       '请输入有效的源表达式。请使用 https:// URL；connect-src 也支持 wss://。不支持 CSP 关键字和分号。',
     csp_source_duplicate_error: '此源表达式已在列表中。',
     coop_tip: '将你的自定义登录 UI 与跨源窗口隔离。仅在提供自定义 UI 资源时生效。',
-    coop_unsafe_none: '未设置（默认）',
-    coop_same_origin_allow_popups: 'same-origin-allow-popups（推荐）',
+    coop_unsafe_none: '未设置（无标头）',
     coop_warning:
-      '在跨源弹出窗口中打开登录页并依赖 window.opener 的应用将无法正常工作。same-origin 还会切断自定义 UI 自身打开的弹出窗口，例如社交登录窗口。',
+      '在弹出窗口中打开登录页并依赖 window.opener 的应用将无法正常工作。自定义 UI 打开的弹出窗口在返回自定义 UI 时（例如社交登录回调）也会失去 window.opener；使用 same-origin 时，弹出窗口一打开就会失去它。',
   },
   account_center: {
     recent_authentication: {

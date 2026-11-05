@@ -1,4 +1,4 @@
-/* eslint-disable max-lines */
+/* eslint-disable max-lines -- Interaction lifecycle and verification scenarios share the test harness. */
 import { TemplateType } from '@logto/connector-kit';
 import { PasswordPolicyChecker } from '@logto/core-kit';
 import {
@@ -20,6 +20,8 @@ import {
   type JwtCustomizerUserContext,
   MfaFactor,
   MfaPolicy,
+  OrganizationRequiredMfaPolicy,
+  type OrganizationWithRoles,
   type SignInExperience,
   SignInIdentifier,
   SignInMode,
@@ -3506,6 +3508,48 @@ describe('ExperienceInteraction class', () => {
   });
 
   describe('guardMfaVerificationStatus', () => {
+    it.each([
+      { organizationRequiresMfa: true, skipMfaOnSignIn: false, required: false, expected: true },
+      { organizationRequiresMfa: true, skipMfaOnSignIn: true, required: false, expected: true },
+      { organizationRequiresMfa: false, skipMfaOnSignIn: false, required: false, expected: false },
+      { organizationRequiresMfa: false, skipMfaOnSignIn: true, required: true, expected: true },
+    ])(
+      'email MFA: organization=$organizationRequiresMfa, skip=$skipMfaOnSignIn, user requirement=$required',
+      async ({ organizationRequiresMfa, skipMfaOnSignIn, required, expected }) => {
+        const { experienceInteraction, signInTenant, signInUserQueries } = createSignInInteraction({
+          user: {
+            ...mockUserWithMfaVerifications,
+            primaryEmail: 'user@example.com',
+            mfaVerifications: [],
+            logtoConfig: { mfa: { enabled: false, skipMfaOnSignIn, required } },
+          },
+          signInExperienceOverrides: {
+            mfa: {
+              policy: MfaPolicy.NoPrompt,
+              factors: [MfaFactor.EmailVerificationCode],
+              organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.Mandatory,
+            },
+          },
+        });
+        jest
+          .spyOn(signInTenant.queries.organizations.relations.users, 'getOrganizationsByUserId')
+          .mockResolvedValue([
+            { isMfaRequired: organizationRequiresMfa },
+          ] as OrganizationWithRoles[]);
+
+        // The existing email fulfills enrollment, but has not verified this sign-in.
+        await expect(experienceInteraction.mfa.assertMfaFulfilled()).resolves.toBeUndefined();
+        await (expected
+          ? expect(experienceInteraction.guardMfaVerificationStatus()).rejects.toMatchObject({
+              code: 'session.mfa.require_mfa_verification',
+              status: 403,
+              data: { availableFactors: [MfaFactor.EmailVerificationCode] },
+            })
+          : expect(experienceInteraction.guardMfaVerificationStatus()).resolves.toBeUndefined());
+        expect(signInUserQueries.updateUserById).not.toHaveBeenCalled();
+      }
+    );
+
     it('skips MFA verification check when sign-in passkey is already verified', async () => {
       const { libraries, queries } = tenant;
       const interactionDetails = {

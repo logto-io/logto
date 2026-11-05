@@ -69,6 +69,7 @@ export const samlConfigGuard = z
     authnRequestBinding: z.enum(authnRequestBinding).optional().default('HTTP-Redirect'),
     assertionBinding: z.enum(assertionBinding).optional().default('HTTP-POST'),
     profileMap: profileMapGuard,
+    disableEmailSync: z.boolean().optional(),
   })
   .refine(
     ({ signAuthnRequest, privateKey }) => !signAuthnRequest || privateKey,

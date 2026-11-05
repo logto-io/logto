@@ -44,10 +44,11 @@ from `API 설정(API Setting)` from your application project setting.
 
 ### Config types
 
-| Name         | Type   |
-|--------------|--------|
-| clientId     | string |
-| clientSecret | string |
+| Name             | Type    |
+|------------------|---------|
+| clientId         | string  |
+| clientSecret     | string  |
+| disableEmailSync | boolean |
 
 #### clientId
 `clientId` is `Client ID` of your project.
@@ -57,3 +58,7 @@ from `API 설정(API Setting)` from your application project setting.
 `clientSecret` is `Client Secret` of your project.
 (You can find it from `애플리케이션 정보(Application Info)` of your project from Naver developers.)
 
+#### disableEmailSync
+Naver returns the user's contact email address in the `email` field, but reports no verification state for it. It is the user's naver.com address by default, or an external address if the user has changed it.
+
+Logto syncs that address to the user profile, where it serves as a user identifier. This switch stops it from doing so. It is off by default. Turn it on to leave the raw value in `rawData` only and source the email elsewhere.

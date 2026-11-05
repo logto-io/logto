@@ -4,12 +4,13 @@ import { jsonObjectGuard, SsoAuthenticationQueryKey } from '@logto/schemas';
 import { z } from 'zod';
 
 import { idpInitiatedSamlSsoSessionCookieName, ssoPath } from '#src/constants/index.js';
-import { EnvSet } from '#src/env-set/index.js';
+import { EnvSet, getTenantEndpoint } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import { verifyBearerTokenFromRequest } from '#src/middleware/koa-auth/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import SamlConnector from '#src/sso/SamlConnector/index.js';
+import { buildSpEntityId } from '#src/sso/SamlConnector/utils.js';
 import { ssoConnectorFactories } from '#src/sso/index.js';
 import assertThat from '#src/utils/assert-that.js';
 import {
@@ -202,6 +203,13 @@ export default function authnRoutes<T extends AnonymousRouter>(
 
       assertThat(connectorInstance instanceof SamlConnector, 'connector.unexpected_type');
 
+      // The SP entity ID includes the domain. An IdP set up before a custom domain was added may
+      // still send the default domain's ID while posting the response to the custom domain.
+      const defaultSpEntityId = buildSpEntityId(
+        getTenantEndpoint(tenantId, EnvSet.values),
+        connectorId
+      );
+
       // Get relay state from the request body. We need to use it to find the connector session.
       // All the rest of the request body will be validated and parsed by the connector.
       const { RelayState: jti } = body;
@@ -227,7 +235,10 @@ export default function authnRoutes<T extends AnonymousRouter>(
           await quota.guardTenantUsageByKey('idpInitiatedSsoEnabled');
         }
 
-        const assertionContent = await connectorInstance.parseSamlAssertionContent(body);
+        const assertionContent = await connectorInstance.parseSamlAssertionContent(
+          body,
+          defaultSpEntityId
+        );
 
         const { id, expiresAt } = await ssoConnectorsLibrary.createIdpInitiatedSamlSsoSession(
           connectorId,
@@ -302,7 +313,10 @@ export default function authnRoutes<T extends AnonymousRouter>(
         })
       );
 
-      const assertionContent = await connectorInstance.parseSamlAssertionContent(body);
+      const assertionContent = await connectorInstance.parseSamlAssertionContent(
+        body,
+        defaultSpEntityId
+      );
       const userInfo = connectorInstance.getUserInfoFromSamlAssertion(assertionContent);
 
       // Store the extracted user info to the connector session storage for later use.

@@ -83,6 +83,7 @@ describe('Hugging Face connector', () => {
       sub: 'id',
       name: 'name',
       email: 'email',
+      email_verified: true,
       picture: 'picture',
     });
 
@@ -98,10 +99,26 @@ describe('Hugging Face connector', () => {
         sub: 'id',
         name: 'name',
         email: 'email',
+        email_verified: true,
         picture: 'picture',
       },
     });
   });
+
+  it.each([{ email_verified: false }, {}])(
+    'should not return the email unless it is verified (%j)',
+    async (verification) => {
+      nock(userInfoEndpoint)
+        .get('')
+        .reply(200, { sub: 'id', email: 'email', ...verification });
+
+      const connector = await createConnector({ getConfig });
+      const socialUserInfo = await connector.getUserInfo({ code: 'code' }, getSessionMock);
+
+      expect(socialUserInfo.email).toBeUndefined();
+      expect(socialUserInfo.rawData).toMatchObject({ email: 'email' });
+    }
+  );
 
   it('throws AuthorizationFailed error if authentication failed', async () => {
     const connector = await createConnector({ getConfig });

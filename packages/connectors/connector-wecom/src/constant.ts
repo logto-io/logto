@@ -65,6 +65,17 @@ export const defaultMetadata: ConnectorMetadata = {
       placeholder: 'Enter the scopes (separated by a space)',
       description: "The `scope` determines permissions granted by the user's authorization. ",
     },
+    {
+      key: 'disableEmailSync',
+      type: ConnectorConfigFormItemType.Switch,
+      required: false,
+      label: 'Disable Email Sync',
+      description:
+        'Stop syncing the `email` field returned by WeCom to the user profile. Turn this on if you do not want WeCom to supply the email address.',
+      tooltip:
+        'WeCom reports no verification state for `email`, and an administrator or a contact sync can set it to any address. Turning this on leaves the address in `rawData` only.',
+      defaultValue: false,
+    },
   ],
 };
 

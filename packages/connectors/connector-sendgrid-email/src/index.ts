@@ -48,25 +48,21 @@ const buildParametersFromDefaultTemplate = (
 const buildParametersFromCustomTemplate = (
   to: string,
   config: SendGridMailConfig,
-  { subject, content, sendFrom, contentType = 'text/html' }: EmailTemplateDetails,
+  { subject, content, sendFrom, replyTo, contentType = 'text/html' }: EmailTemplateDetails,
   payload: SendMessagePayload
 ): PublicParameters => {
+  const fromName = sendFrom ? replaceSendMessageHandlebars(sendFrom, payload) : config.fromName;
+
   return {
-    personalizations: [
-      {
-        to: [
-          {
-            email: to,
-            ...conditional(config.fromName && { name: config.fromName }),
-          },
-        ],
-      },
-    ],
+    personalizations: [{ to: [{ email: to }] }],
     from: {
       email: config.fromEmail,
       // If sendFrom is provided, we will replace the handlebars with the payload
-      ...conditional(sendFrom && { name: replaceSendMessageHandlebars(sendFrom, payload) }),
+      ...conditional(fromName && { name: fromName }),
     },
+    ...conditional(
+      replyTo && { reply_to: { email: replaceSendMessageHandlebars(replyTo, payload) } }
+    ),
     subject: replaceSendMessageHandlebars(subject, payload),
     content: [
       {

@@ -39,6 +39,17 @@ export const defaultMetadata: ConnectorMetadata = {
       label: 'Client Secret',
       placeholder: '<client-secret>',
     },
+    {
+      key: 'disableEmailSync',
+      type: ConnectorConfigFormItemType.Switch,
+      required: false,
+      label: 'Disable Email Sync',
+      description:
+        'Stop syncing the `email` field returned by Naver to the user profile. Turn this on if you do not want Naver to supply the email address.',
+      tooltip:
+        'Naver reports no verification state for `email`, which can be an external address the user has set. Turning this on leaves the address in `rawData` only.',
+      defaultValue: false,
+    },
   ],
 };
 

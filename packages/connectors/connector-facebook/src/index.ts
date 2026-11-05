@@ -3,7 +3,7 @@
  * https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow
  */
 
-import { assert } from '@silverhand/essentials';
+import { assert, conditional } from '@silverhand/essentials';
 import { got, HTTPError } from 'got';
 
 import type {
@@ -110,13 +110,11 @@ export const getLongLivedAccessToken = async (config: FacebookConfig, accessToke
 };
 
 const handleAuthorizationCallback = async (
-  getConfig: GetConnectorConfig,
+  config: FacebookConfig,
   data: unknown,
   exchangeLongLivedAccessToken = false
 ) => {
   const { code, redirectUri } = await authorizationCallbackHandler(data);
-  const config = await getConfig(defaultMetadata.id);
-  validateConfig(config, facebookConfigGuard);
   const tokenResponse = await getAccessToken(config, { code, redirectUri });
 
   if (!exchangeLongLivedAccessToken) {
@@ -126,7 +124,7 @@ const handleAuthorizationCallback = async (
   return getLongLivedAccessToken(config, tokenResponse.access_token);
 };
 
-const _getUserInfo = async (accessToken: string) => {
+const _getUserInfo = async (config: FacebookConfig, accessToken: string) => {
   try {
     const httpResponse = await got.get(userInfoEndpoint, {
       headers: {
@@ -149,7 +147,7 @@ const _getUserInfo = async (accessToken: string) => {
     return {
       id,
       avatar: picture?.data.url,
-      email,
+      email: conditional(!config.disableEmailSync && email),
       name,
       rawData,
     };
@@ -171,14 +169,16 @@ const _getUserInfo = async (accessToken: string) => {
 const getTokenResponseAndUserInfo =
   (getConfig: GetConnectorConfig): GetTokenResponseAndUserInfo =>
   async (data) => {
+    const config = await getConfig(defaultMetadata.id);
+    validateConfig(config, facebookConfigGuard);
     // Always fetch long lived access token if token storage is enabled
     const EXCHANGE_LONG_LIVED_TOKEN = true;
     const tokenResponse = await handleAuthorizationCallback(
-      getConfig,
+      config,
       data,
       EXCHANGE_LONG_LIVED_TOKEN
     );
-    const userInfo = await _getUserInfo(tokenResponse.access_token);
+    const userInfo = await _getUserInfo(config, tokenResponse.access_token);
 
     return {
       tokenResponse,
@@ -189,8 +189,10 @@ const getTokenResponseAndUserInfo =
 const getUserInfo =
   (getConfig: GetConnectorConfig): GetUserInfo =>
   async (data) => {
-    const { access_token: accessToken } = await handleAuthorizationCallback(getConfig, data);
-    return _getUserInfo(accessToken);
+    const config = await getConfig(defaultMetadata.id);
+    validateConfig(config, facebookConfigGuard);
+    const { access_token: accessToken } = await handleAuthorizationCallback(config, data);
+    return _getUserInfo(config, accessToken);
   };
 
 const authorizationCallbackHandler = async (parameterObject: unknown) => {

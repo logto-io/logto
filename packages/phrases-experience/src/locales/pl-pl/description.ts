@@ -134,6 +134,8 @@ const description = {
   switch_account_title: 'Jesteś obecnie zalogowany jako {{account}}',
   switch_account_description:
     'Aby kontynuować, zostaniesz wylogowany z obecnego konta i automatycznie przełączony na nowe konto.',
+  continue_to_app_title: 'Powrót do aplikacji',
+  continue_to_app_description: 'Kontynuuj, aby wrócić do aplikacji.',
   about_yourself: 'Opowiedz nam o sobie',
   verify_identity: 'Zweryfikuj swoją tożsamość',
   choose_verification_method: 'Wybierz sposób logowania',

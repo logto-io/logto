@@ -1,4 +1,4 @@
-import { MfaFactor, MfaPolicy, VerificationType, userMfaDataKey } from '@logto/schemas';
+import { MfaFactor, MfaPolicy, type User, VerificationType } from '@logto/schemas';
 
 import { mockUserWithMfaVerifications } from '#src/__mocks__/user.js';
 
@@ -36,18 +36,30 @@ describe('MfaValidator verified-record ownership', () => {
   });
 });
 
-describe('MfaValidator.isMfaRequired with skipMfaOnSignIn', () => {
-  const user = {
-    ...mockUserWithMfaVerifications,
-    logtoConfig: { [userMfaDataKey]: { skipMfaOnSignIn: true } },
-  };
-  const optionalMfaSettings = { policy: MfaPolicy.NoPrompt, factors: [MfaFactor.TOTP] };
+describe('MfaValidator enforced requirements', () => {
+  it.each([
+    { adaptiveMfaResult: undefined, expected: true },
+    { adaptiveMfaResult: { requiresMfa: false, triggeredRules: [] }, expected: false },
+    { adaptiveMfaResult: { requiresMfa: true, triggeredRules: [] }, expected: true },
+  ])(
+    'requires MFA=$expected with an enforced requirement and adaptive result $adaptiveMfaResult',
+    ({ adaptiveMfaResult, expected }) => {
+      const settings = {
+        policy: MfaPolicy.NoPrompt,
+        factors: [MfaFactor.EmailVerificationCode],
+      };
+      const user: User = {
+        ...mockUserWithMfaVerifications,
+        primaryEmail: 'user@example.com',
+        mfaVerifications: [],
+        logtoConfig: { mfa: { enabled: false, skipMfaOnSignIn: true } },
+      };
+      const context = { adaptiveMfaResult, isMfaRequiredByUser: true };
 
-  it('lets the user skip MFA verification under an optional policy', () => {
-    expect(new MfaValidator(optionalMfaSettings, user).isMfaRequired).toBe(false);
-  });
-
-  it('requires MFA verification when MFA is required for the user', () => {
-    expect(new MfaValidator(optionalMfaSettings, user, undefined, true).isMfaRequired).toBe(true);
-  });
+      expect(new MfaValidator(settings, user, context).isMfaRequired).toBe(expected);
+      expect(
+        new MfaValidator(settings, { ...user, primaryEmail: null }, context).isMfaRequired
+      ).toBe(false);
+    }
+  );
 });

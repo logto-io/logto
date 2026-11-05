@@ -101,7 +101,7 @@ describe('getUserInfo', () => {
     expect(userInfo).toEqual({ id: 'userId', rawData: { id_token: 'idToken' } });
   });
 
-  it('should get user info from the `user` field', async () => {
+  it('should take the email from the ID token and the name from `user`', async () => {
     const userId = 'userId';
     const connector = await createConnector({ getConfig });
     jwtVerify.mockImplementationOnce(() => ({
@@ -117,10 +117,9 @@ describe('getUserInfo', () => {
       },
       vi.fn()
     );
-    // Should use info from `user` field first
     expect(userInfo).toEqual({
       id: userId,
-      email: 'foo2@bar.com',
+      email: 'foo@bar.com',
       name: 'foo bar',
       rawData: {
         id_token: 'idToken',
@@ -130,6 +129,42 @@ describe('getUserInfo', () => {
         }),
       },
     });
+  });
+
+  it('should take the email from the ID token if `email_verified` is "true"', async () => {
+    jwtVerify.mockImplementationOnce(() => ({
+      payload: { sub: 'userId', email: 'foo@bar.com', email_verified: 'true' },
+    }));
+    const connector = await createConnector({ getConfig });
+    const userInfo = await connector.getUserInfo({ id_token: 'idToken' }, vi.fn());
+    expect(userInfo).toEqual({
+      id: 'userId',
+      email: 'foo@bar.com',
+      rawData: { id_token: 'idToken' },
+    });
+  });
+
+  it.each([false, 'false'])(
+    'should return no email when `email_verified` is %j',
+    async (emailVerified) => {
+      jwtVerify.mockImplementationOnce(() => ({
+        payload: { sub: 'userId', email: 'foo@bar.com', email_verified: emailVerified },
+      }));
+      const connector = await createConnector({ getConfig });
+      const data = { id_token: 'idToken', user: JSON.stringify({ email: 'foo2@bar.com' }) };
+      const userInfo = await connector.getUserInfo(data, vi.fn());
+      expect(userInfo).toEqual({ id: 'userId', rawData: data });
+    }
+  );
+
+  it('should ignore `user.email` when the ID token has no email', async () => {
+    jwtVerify.mockImplementationOnce(() => ({
+      payload: { sub: 'userId', email_verified: true },
+    }));
+    const connector = await createConnector({ getConfig });
+    const data = { id_token: 'idToken', user: JSON.stringify({ email: 'foo2@bar.com' }) };
+    const userInfo = await connector.getUserInfo(data, vi.fn());
+    expect(userInfo).toEqual({ id: 'userId', rawData: data });
   });
 
   it('should throw if id token is missing', async () => {

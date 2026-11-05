@@ -269,6 +269,37 @@ describe('getUserInfo', () => {
     });
   });
 
+  it('should not return the email when email sync is disabled', async () => {
+    nock(userInfoEndpointUrl.origin)
+      .get(userInfoEndpointUrl.pathname)
+      .query(userInfoParams)
+      .reply(200, {
+        errcode: 0,
+        errmsg: 'ok',
+        userid: 'zhangsan',
+        user_ticket: 'user_ticket',
+      });
+
+    nock(userDetailByUserIdEndpointUrl.origin)
+      .get(userDetailByUserIdEndpointUrl.pathname)
+      .query(userDetailByUserIdParams)
+      .reply(200, mockedUserDetailByUserIdResponse);
+
+    nock(userDetailByUserTicketEndpointUrl.origin)
+      .post(userDetailByUserTicketEndpointUrl.pathname, { user_ticket: 'user_ticket' })
+      .query(userDetailByUserTicketParams)
+      .reply(200, mockedUserDetailByUserTicketResponse);
+
+    const connector = await createConnector({
+      getConfig: vi.fn().mockResolvedValue({ ...mockedConfig, disableEmailSync: true }),
+    });
+    const socialUserInfo = await connector.getUserInfo({ code: 'code' }, vi.fn());
+    expect(socialUserInfo.email).toBeUndefined();
+    expect(socialUserInfo.rawData).toMatchObject({
+      email: mockedUserDetailByUserTicketResponse.email,
+    });
+  });
+
   it('should fall back to userDetailByUserIdResult when userDetailByUserTicket request fails', async () => {
     nock(userInfoEndpointUrl.origin)
       .get(userInfoEndpointUrl.pathname)

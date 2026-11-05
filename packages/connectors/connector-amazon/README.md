@@ -51,11 +51,18 @@ In your Logto connector configuration, fill out the following fields with the va
 
 ### Config types
 
-| Name         | Type   |
-| ------------ | ------ |
-| clientId     | string |
-| clientSecret | string |
-| scope        | string |
+| Name             | Type    |
+| ---------------- | ------- |
+| clientId         | string  |
+| clientSecret     | string  |
+| scope            | string  |
+| disableEmailSync | boolean |
+
+### Disable email sync
+
+Amazon returns the user's email address in the `email` field of the customer profile, but reports no verification state for it.
+
+Logto syncs that address to the user profile, where it serves as a user identifier. This switch stops it from doing so. It is off by default. Turn it on to leave the raw value in `rawData` only and source the email elsewhere.
 
 ## Test Amazon connector
 

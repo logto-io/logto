@@ -113,10 +113,9 @@ const sign_in_exp = {
     csp_source_duplicate_error: 'Questa espressione di origine è già presente nell’elenco.',
     coop_tip:
       'Isola la tua interfaccia di accesso personalizzata dalle finestre di altre origini. Applicato solo quando vengono serviti gli asset della UI personalizzata.',
-    coop_unsafe_none: 'Non impostato (predefinito)',
-    coop_same_origin_allow_popups: 'same-origin-allow-popups (consigliato)',
+    coop_unsafe_none: 'Non impostato (nessun header)',
     coop_warning:
-      'Le app che aprono la pagina di accesso in un popup di un’altra origine e usano window.opener smetteranno di funzionare. same-origin interrompe anche i popup aperti dalla tua UI personalizzata, come le finestre di accesso social.',
+      'Le app che aprono la pagina di accesso in un popup e usano window.opener smetteranno di funzionare. Anche i popup aperti dalla tua UI personalizzata perdono window.opener quando tornano alla tua UI personalizzata, ad esempio su un callback di accesso social. Con same-origin, lo perdono non appena si aprono.',
   },
   account_center: {
     recent_authentication: {

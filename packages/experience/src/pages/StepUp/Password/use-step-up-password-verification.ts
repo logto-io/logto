@@ -1,6 +1,7 @@
 import { InteractionEvent } from '@logto/schemas';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 
+import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { verifyStepUpPassword } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import type { ErrorHandlers } from '@/hooks/use-error-handler';
@@ -26,6 +27,7 @@ const useStepUpPasswordVerification = () => {
 
   const handleError = useErrorHandler();
   const redirectTo = useGlobalRedirectTo();
+  const { setHasEnteredPassword } = useContext(UserInteractionContext);
   const asyncVerifyStepUpPassword = useApi(verifyStepUpPassword);
   const stepUpErrorHandlers = useStepUpErrorHandler();
   const submitInteractionErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.SignIn, {
@@ -39,16 +41,19 @@ const useStepUpPasswordVerification = () => {
   const errorHandlers = useMemo<ErrorHandlers>(
     () => ({
       'session.invalid_credentials': (error) => {
+        // The password was not accepted, so another method may finish the sign-in.
+        setHasEnteredPassword(false);
         setErrorMessage(error.message);
       },
       ...submitInteractionErrorHandler,
       ...stepUpErrorHandlers,
     }),
-    [stepUpErrorHandlers, submitInteractionErrorHandler]
+    [setHasEnteredPassword, stepUpErrorHandlers, submitInteractionErrorHandler]
   );
 
   const onSubmit = useCallback(
     async (password: string) => {
+      setHasEnteredPassword(true);
       const [error, result] = await asyncVerifyStepUpPassword(password);
 
       if (error) {
@@ -60,7 +65,7 @@ const useStepUpPasswordVerification = () => {
         await redirectTo(result.redirectTo);
       }
     },
-    [asyncVerifyStepUpPassword, errorHandlers, handleError, redirectTo]
+    [asyncVerifyStepUpPassword, errorHandlers, handleError, redirectTo, setHasEnteredPassword]
   );
 
   return { errorMessage, clearErrorMessage, onSubmit };

@@ -28,6 +28,7 @@ import { cond, conditional, condObject, deduplicate, pick } from '@silverhand/es
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { getAllUserEnabledMfaVerifications, getProfileMfaFactors } from '#src/libraries/mfa.js';
 import {
   isMfaRequiredByUser,
   isNoSkipMfaPolicy,
@@ -40,11 +41,7 @@ import assertThat from '#src/utils/assert-that.js';
 
 import { type UserMfaVerificationsData, type InteractionContext } from '../types.js';
 
-import {
-  getAllUserEnabledMfaVerifications,
-  getProfileMfaFactors,
-  sortMfaFactors,
-} from './helpers.js';
+import { sortMfaFactors } from './helpers.js';
 import { SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
 
 export type MfaData = {

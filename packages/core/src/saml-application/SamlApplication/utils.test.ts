@@ -5,6 +5,7 @@ import { samlAttributeNameFormatBasic, samlValueXmlnsXsi } from './consts.js';
 import {
   generateAutoSubmitForm,
   buildSamlAssertionNameId,
+  expandMultiValuedAttributeTags,
   generateSamlAttributeTag,
   isForceAuthnRequested,
 } from './utils.js';
@@ -261,5 +262,69 @@ describe('isForceAuthnRequested', () => {
 
   it('should be false when ForceAuthn is "false"', () => {
     expect(isForceAuthnRequested(buildAuthnRequest(' ForceAuthn="false"'))).toBe(false);
+  });
+});
+
+const valueElement = (tag: string) =>
+  `<saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">{${tag}}</saml:AttributeValue>`;
+
+describe('expandMultiValuedAttributeTags', () => {
+  const template = `<saml:Attribute Name="role">${valueElement('attrRole')}</saml:Attribute><saml:Attribute Name="name">${valueElement('attrName')}</saml:Attribute>`;
+
+  it('emits one value element per array item and keeps the element attributes', () => {
+    const expanded = expandMultiValuedAttributeTags(template, {
+      attrRole: ['Development', 'Employees'],
+      attrName: 'Tom',
+    });
+
+    expect(expanded.template).toBe(
+      `<saml:Attribute Name="role">${valueElement('attrRole:0')}${valueElement('attrRole:1')}</saml:Attribute><saml:Attribute Name="name">${valueElement('attrName')}</saml:Attribute>`
+    );
+    expect(expanded.tagValues).toEqual({
+      'attrRole:0': 'Development',
+      'attrRole:1': 'Employees',
+      attrName: 'Tom',
+    });
+  });
+
+  it('substitutes each item through samlify as its own escaped value', () => {
+    const expanded = expandMultiValuedAttributeTags(template, {
+      attrRole: ['a & b', '<admin>'],
+      attrName: null,
+    });
+
+    expect(saml.SamlLib.replaceTagsByValue(expanded.template, expanded.tagValues)).toBe(
+      '<saml:Attribute Name="role">' +
+        '<saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">a &amp; b</saml:AttributeValue>' +
+        '<saml:AttributeValue xmlns:xs="http://www.w3.org/2001/XMLSchema" xsi:type="xs:string">&lt;admin&gt;</saml:AttributeValue>' +
+        '</saml:Attribute><saml:Attribute Name="name"></saml:Attribute>'
+    );
+  });
+
+  it('leaves an attribute without values when the array is empty', () => {
+    const expanded = expandMultiValuedAttributeTags(template, { attrRole: [], attrName: 'Tom' });
+
+    expect(expanded.template).toBe(
+      `<saml:Attribute Name="role"></saml:Attribute><saml:Attribute Name="name">${valueElement('attrName')}</saml:Attribute>`
+    );
+    expect(expanded.tagValues).toEqual({ attrName: 'Tom' });
+  });
+
+  it('keeps the JSON string when the template has no value element for the tag', () => {
+    const custom = '<saml:Attribute Name="role">{attrRole}</saml:Attribute>';
+    const expanded = expandMultiValuedAttributeTags(custom, { attrRole: ['a', 'b'] });
+
+    expect(expanded.template).toBe(custom);
+    expect(expanded.tagValues).toEqual({ attrRole: '["a","b"]' });
+  });
+
+  it('passes scalar tags through unchanged', () => {
+    const expanded = expandMultiValuedAttributeTags(template, {
+      attrRole: 'admin',
+      attrName: null,
+    });
+
+    expect(expanded.template).toBe(template);
+    expect(expanded.tagValues).toEqual({ attrRole: 'admin', attrName: null });
   });
 });

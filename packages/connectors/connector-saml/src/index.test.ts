@@ -78,4 +78,17 @@ describe('getUserInfo', () => {
       name: 'saml test',
     });
   });
+
+  it('should not return the email when email sync is disabled', async () => {
+    getSession.mockResolvedValue({ extractedRawProfile: mockAttributes });
+    const connector = await createConnector({
+      getConfig: vi.fn().mockResolvedValue({ ...mockedConfig, disableEmailSync: true }),
+    });
+    const userInfo = await connector.getUserInfo(undefined, getSession);
+    expect(userInfo).toStrictEqual({
+      avatar: 'https://logto.io/logo.4667af9d.svg',
+      id: 'google-oauth2|u98ewdsah9annkjsn',
+      name: 'saml test',
+    });
+  });
 });

@@ -1,7 +1,14 @@
+import saml from 'samlify';
+
+import { generateKeyPairAndCertificate } from '#src/libraries/saml-application/utils.js';
+
+import { SsoConnectorError } from '../types/error.js';
+
 import {
   attributeMappingPostProcessor,
   getExtendedUserInfoFromRawUserProfile,
   getPemCertificate,
+  handleSamlAssertion,
 } from './utils.js';
 
 const expectedDefaultAttributeMapping = {
@@ -55,5 +62,143 @@ const testCertificate =
 describe('getPemCertificate', () => {
   it('should not throw error with a valid certificate', () => {
     expect(() => getPemCertificate(testCertificate)).not.toThrow();
+  });
+});
+
+const { privateKey, certificate } = await generateKeyPairAndCertificate(1);
+
+describe('handleSamlAssertion', () => {
+  const idpEntityId = 'https://idp.example.com';
+  const defaultSpEntityId = 'https://tenant.logto.app/enterprise-sso/connector';
+  const spEntityId = 'https://auth.example.com/enterprise-sso/connector';
+  const otherCustomDomainSpEntityId = 'https://login.example.com/enterprise-sso/connector';
+  const otherSpEntityId = 'https://other-app.example.com';
+  const acsUrl = 'https://auth.example.com/api/authn/single-sign-on/saml/connector';
+
+  // eslint-disable-next-line new-cap -- Samlify exposes capitalized entity factories.
+  const identityProvider = saml.IdentityProvider({
+    entityID: idpEntityId,
+    privateKey,
+    signingCert: certificate,
+    singleSignOnService: [
+      { Binding: saml.Constants.BindingNamespace.Redirect, Location: `${idpEntityId}/sso` },
+    ],
+  });
+  // eslint-disable-next-line new-cap -- Samlify exposes capitalized entity factories.
+  const responseServiceProvider = saml.ServiceProvider({
+    entityID: spEntityId,
+    assertionConsumerService: [{ Binding: saml.Constants.BindingNamespace.Post, Location: acsUrl }],
+  });
+
+  const createSamlResponse = async (audiences: string[]) => {
+    const now = new Date();
+    const fiveMinutesLater = new Date(now.getTime() + 5 * 60 * 1000).toISOString();
+    const audienceRestriction =
+      audiences.length > 0
+        ? `<saml:AudienceRestriction>${audiences
+            .map((audience) => `<saml:Audience>${audience}</saml:Audience>`)
+            .join('')}</saml:AudienceRestriction>`
+        : '';
+
+    const { context } = await identityProvider.createLoginResponse(
+      responseServiceProvider,
+      { extract: {} },
+      'post',
+      {},
+      (template) => ({
+        id: '_response',
+        context: saml.SamlLib.replaceTagsByValue(
+          template.replace(
+            '<saml:AudienceRestriction><saml:Audience>{Audience}</saml:Audience></saml:AudienceRestriction>',
+            audienceRestriction
+          ),
+          {
+            ID: '_response',
+            AssertionID: '_assertion',
+            InResponseTo: '_request',
+            Destination: acsUrl,
+            SubjectRecipient: acsUrl,
+            Issuer: idpEntityId,
+            IssueInstant: now.toISOString(),
+            StatusCode: saml.Constants.StatusCode.Success,
+            ConditionsNotBefore: now.toISOString(),
+            ConditionsNotOnOrAfter: fiveMinutesLater,
+            SubjectConfirmationDataNotOnOrAfter: fiveMinutesLater,
+            NameIDFormat: saml.Constants.namespace.format.emailAddress,
+            NameID: 'user@example.com',
+            AuthnStatement: '',
+            AttributeStatement: '',
+          }
+        ),
+      })
+    );
+
+    return context;
+  };
+
+  const handle = async (SAMLResponse: string, requestSpEntityId = spEntityId) =>
+    handleSamlAssertion(
+      { body: { SAMLResponse } },
+      identityProvider,
+      { entityId: requestSpEntityId, x509Certificate: certificate },
+      defaultSpEntityId
+    );
+
+  it('should accept the request domain entity ID', async () => {
+    await expect(handle(await createSamlResponse([spEntityId]))).resolves.toMatchObject({
+      nameID: 'user@example.com',
+    });
+  });
+
+  it('should accept the default domain entity ID', async () => {
+    await expect(handle(await createSamlResponse([defaultSpEntityId]))).resolves.toMatchObject({
+      nameID: 'user@example.com',
+    });
+  });
+
+  it('should accept an audience list that includes an entity ID', async () => {
+    await expect(
+      handle(await createSamlResponse([otherSpEntityId, defaultSpEntityId]))
+    ).resolves.toMatchObject({ nameID: 'user@example.com' });
+  });
+
+  it.each([
+    ['an audience naming another service provider', [otherSpEntityId]],
+    ['the entity ID of another custom domain', [otherCustomDomainSpEntityId]],
+    ['the entity ID with a trailing slash', [`${spEntityId}/`]],
+    ['the entity ID in a different case', [spEntityId.toUpperCase()]],
+    ['an audience list without an entity ID', [otherSpEntityId, `${spEntityId}/`]],
+    ['a missing audience', []],
+  ])('should reject %s', async (_, audiences) => {
+    const error = await handle(await createSamlResponse(audiences)).catch(
+      (error: unknown) => error
+    );
+
+    expect(error).toBeInstanceOf(SsoConnectorError);
+    expect(error).toHaveProperty('data', {
+      ssoErrorCode: 'authorization_failed',
+      message: 'SAML assertion audience does not match the SP entity ID',
+      error: { expected: [spEntityId, defaultSpEntityId], actual: audiences },
+    });
+  });
+
+  it('should list the default domain entity ID once on the default domain', async () => {
+    await expect(
+      handle(await createSamlResponse([otherSpEntityId]), defaultSpEntityId)
+    ).rejects.toMatchObject({
+      data: { error: { expected: [defaultSpEntityId], actual: [otherSpEntityId] } },
+    });
+  });
+
+  it('should verify the signature before the audience', async () => {
+    const tampered = Buffer.from(
+      Buffer.from(await createSamlResponse([otherSpEntityId]), 'base64')
+        .toString()
+        .replace('user@example.com', 'admin@example.com')
+    ).toString('base64');
+
+    await expect(handle(tampered)).rejects.toMatchObject({
+      data: { ssoErrorCode: 'authorization_failed', message: 'Invalid SAML assertion' },
+    });
   });
 });

@@ -1,6 +1,6 @@
 import { NameIdFormat, type SamlAttributeMapping } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { appendPath } from '@silverhand/essentials';
+import { appendPath, type Nullable } from '@silverhand/essentials';
 import saml from 'samlify';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -132,6 +132,54 @@ export const generateSamlAttributeTag = (content: string, prefix = 'attr'): stri
     .join('');
   return prefix + camelContent.charAt(0).toUpperCase() + camelContent.slice(1);
 };
+
+/** A value samlify substitutes for a template tag. */
+export type SamlTagValue = Nullable<string | number> | undefined;
+
+const escapeRegExp = (value: string) => value.replaceAll(/[$()*+.?[\\\]^{|}]/g, '\\$&');
+
+/**
+ * Expand the `<saml:AttributeValue>` element of every array-valued tag into one element per item,
+ * so a multi-valued claim such as `roles` is emitted as sibling values (SAML core 2.7.3.1) rather
+ * than one JSON-encoded string. The array is replaced by per-item tags (`{attrRole:0}`, …). When
+ * the template has no value element for the tag, the array is kept as a JSON string so a custom
+ * template keeps its previous output.
+ */
+export const expandMultiValuedAttributeTags = (
+  template: string,
+  tagValues: Record<string, SamlTagValue | SamlTagValue[]>
+): { template: string; tagValues: Record<string, SamlTagValue> } =>
+  Object.entries(tagValues).reduce<{ template: string; tagValues: Record<string, SamlTagValue> }>(
+    (expanded, [tag, value]) => {
+      if (!Array.isArray(value)) {
+        return { ...expanded, tagValues: { ...expanded.tagValues, [tag]: value } };
+      }
+
+      const items = value.map((item, index) => [`${tag}:${index}`, item] as const);
+      const expandedTemplate = expanded.template.replaceAll(
+        new RegExp(
+          `<saml:AttributeValue([^>]*)>\\{${escapeRegExp(tag)}\\}</saml:AttributeValue>`,
+          'g'
+        ),
+        (_, attributes: string) =>
+          items
+            .map(
+              ([itemTag]) => `<saml:AttributeValue${attributes}>{${itemTag}}</saml:AttributeValue>`
+            )
+            .join('')
+      );
+
+      if (expandedTemplate === expanded.template) {
+        return { ...expanded, tagValues: { ...expanded.tagValues, [tag]: JSON.stringify(value) } };
+      }
+
+      return {
+        template: expandedTemplate,
+        tagValues: { ...expanded.tagValues, ...Object.fromEntries(items) },
+      };
+    },
+    { template, tagValues: {} }
+  );
 
 /** Names of the user attributes in the assertion; `fallbackAttributes` apply when nothing is mapped. */
 export const getSamlUserAttributeNames = (attributeMapping: SamlAttributeMapping): string[] =>

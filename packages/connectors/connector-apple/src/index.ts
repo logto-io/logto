@@ -22,6 +22,10 @@ import { appleConfigGuard, dataGuard } from './types.js';
 
 const generateNonce = () => generateStandardId();
 
+// Apple sends `email_verified` as either a boolean or a string.
+// See https://developer.apple.com/documentation/signinwithapplejs/authorizationi/id_token
+const isEmailVerified = (value: unknown) => value === true || value === 'true';
+
 const getAuthorizationUri =
   (getConfig: GetConnectorConfig): GetAuthorizationUri =>
   async ({ state, redirectUri, scope }, setSession) => {
@@ -104,14 +108,14 @@ const getUserInfo =
 
       return {
         id: payload.sub,
-        // The `user` object is only available at the first sign-in. Didn't find this in Apple's
-        // docs but it seems to be the case. Fallback to the `email` field in the ID token just in
-        // case.
-        // See desperate developer discussion here:
-        // https://forums.developer.apple.com/forums/thread/132223
+        // Take the email only from the signed ID token, which Apple includes on every
+        // authorization. The `user` field is posted outside the token and only on the first
+        // authorization, so it supplies just the name, which the ID token never carries.
+        // See https://developer.apple.com/documentation/signinwithapple/authenticating-users-with-sign-in-with-apple
         email:
-          user?.email ??
-          (payload.email && payload.email_verified === true ? String(payload.email) : undefined),
+          payload.email && isEmailVerified(payload.email_verified)
+            ? String(payload.email)
+            : undefined,
         name: [user?.name?.firstName, user?.name?.lastName].filter(Boolean).join(' ') || undefined,
         rawData: jsonGuard.parse(data),
       };

@@ -43,3 +43,9 @@ Let's complete the form for the connector.
 You can leave the `Scope` field blank as it is optional. Alternatively, you can fill in `snsapi_base` or `snsapi_privateinfo`.
 
 **Save and done**
+
+## Disable email sync
+
+WeCom returns the member's email address in the `email` field, but reports no verification state for it. `email` is a directory attribute that an administrator or a contact sync can set to any address, so it is only as trustworthy as the directory it comes from.
+
+Logto syncs that address to the user profile, where it serves as a user identifier. This switch stops it from doing so. It is off by default. Turn it on to leave the raw value in `rawData` only and source the email elsewhere.

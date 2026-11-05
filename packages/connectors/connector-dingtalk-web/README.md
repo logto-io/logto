@@ -68,11 +68,18 @@ Fill out the `clientId` and `clientSecret` field with _Client ID(formerly AppKey
 
 ### Config types
 
-| Name         | Type   |
-|--------------|--------|
-| clientId     | string |
-| clientSecret | string |
-| scope        | string |
+| Name             | Type    |
+|------------------|---------|
+| clientId         | string  |
+| clientSecret     | string  |
+| scope            | string  |
+| disableEmailSync | boolean |
+
+### Disable email sync
+
+DingTalk returns the user's personal email address in the `email` field, but reports no verification state for it.
+
+Logto syncs that address to the user profile, where it serves as a user identifier. This switch stops it from doing so. It is off by default. Turn it on to leave the raw value in `rawData` only and source the email elsewhere.
 
 ## Test DingTalk connector
 
@@ -128,11 +135,18 @@ If you have any questions or need further assistance, please visit the [DingTalk
 
 ### 配置类型
 
-| Name         | Type   |
-|--------------|--------|
-| clientId     | string |
-| clientSecret | string |
-| scope        | string |
+| Name             | Type    |
+|------------------|---------|
+| clientId         | string  |
+| clientSecret     | string  |
+| scope            | string  |
+| disableEmailSync | boolean |
+
+### 禁用邮箱同步
+
+钉钉在 `email` 字段中返回用户的个人邮箱，但不提供该邮箱的验证状态。
+
+Logto 会将该邮箱同步到用户资料中，并将其用作用户标识。此开关用于停止同步，默认关闭。开启后，该邮箱仅保留在 `rawData` 中，你可以通过其他方式获取用户邮箱。
 
 ## 测试钉钉连接器
 

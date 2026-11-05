@@ -213,11 +213,9 @@ const createSecurityHeaderSettings = (tenantId: string): SecurityHeaderSettings 
     // @ts-expect-error: helmet typings has lots of {A?: T, B?: never} | {A?: never, B?: T} options definitions. Optional settings type can not inferred correctly.
     const settings: HelmetOptions = {
       ...basicSecurityHeaderSettings,
-      // Dev feature: Bring your UI COOP header
-      ...(EnvSet.values.isDevFeaturesEnabled &&
-        crossOriginOpenerPolicy !== CrossOriginOpenerPolicy.UnsafeNone && {
-          crossOriginOpenerPolicy: { policy: crossOriginOpenerPolicy },
-        }),
+      ...(crossOriginOpenerPolicy !== CrossOriginOpenerPolicy.UnsafeNone && {
+        crossOriginOpenerPolicy: { policy: crossOriginOpenerPolicy },
+      }),
       // Guarded by CSP header below
       frameguard: false,
       // Allow being loaded by console preview iframe

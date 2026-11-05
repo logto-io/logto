@@ -151,7 +151,7 @@ export function getUserInfo(getConfig: GetConnectorConfig): GetUserInfo {
         id: sub,
         name,
         avatar,
-        email: conditional(email),
+        email: conditional(!config.disableEmailSync && email),
         userId: conditional(user_id),
         phone: conditional(mobile?.replace('+', '')),
         rawData: jsonGuard.parse(response.body),

@@ -88,6 +88,7 @@ describe('getUserInfo', () => {
       sub: '1',
       name: 'monalisa',
       email: 'monalisa@example.com',
+      email_verified: true,
       picture: 'https://example.com/picture.jpg',
     });
     const connector = await createConnector({ getConfig });
@@ -104,10 +105,27 @@ describe('getUserInfo', () => {
         sub: '1',
         name: 'monalisa',
         email: 'monalisa@example.com',
+        email_verified: true,
         picture: 'https://example.com/picture.jpg',
       },
     });
   });
+
+  it.each([{ email_verified: false }, {}])(
+    'should not return the email unless it is verified (%j)',
+    async (verification) => {
+      nock(userInfoEndpoint)
+        .get('')
+        .reply(200, { sub: '1', email: 'monalisa@example.com', ...verification });
+      const connector = await createConnector({ getConfig });
+      const socialUserInfo = await connector.getUserInfo(
+        { code: 'code', redirectUri: 'http://localhost:3000/callback' },
+        getSession
+      );
+      expect(socialUserInfo.email).toBeUndefined();
+      expect(socialUserInfo.rawData).toMatchObject({ email: 'monalisa@example.com' });
+    }
+  );
 
   it('throws unrecognized error', async () => {
     nock(userInfoEndpoint).get('').reply(500);

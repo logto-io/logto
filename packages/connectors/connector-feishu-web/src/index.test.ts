@@ -143,6 +143,33 @@ describe('getUserInfo', () => {
     expect(rawData).toEqual(jsonResponse);
   });
 
+  it('should not return the email when email sync is disabled', async () => {
+    nock(userInfoUrl.origin).get(userInfoUrl.pathname).query(true).once().reply(200, {
+      sub: 'ou_caecc734c2e3328a62489fe0648c4b98779515d3',
+      name: '李雷',
+      picture: 'https://www.feishu.cn/avatar',
+      open_id: 'ou_caecc734c2e3328a62489fe0648c4b98779515d3',
+      union_id: 'on_d89jhsdhjsajkda7828enjdj328ydhhw3u43yjhdj',
+      en_name: 'Lilei',
+      tenant_key: '736588c92lxf175d',
+      avatar_url: 'www.feishu.cn/avatar/icon',
+      avatar_thumb: 'www.feishu.cn/avatar/icon_thumb',
+      avatar_middle: 'www.feishu.cn/avatar/icon_middle',
+      avatar_big: 'www.feishu.cn/avatar/icon_big',
+      email: 'zhangsan@feishu.cn',
+    });
+
+    const connector = await createConnector({
+      getConfig: vi.fn().mockResolvedValue({ ...mockedFeishuConfig, disableEmailSync: true }),
+    });
+    const { email, rawData } = await connector.getUserInfo(
+      { code: 'code', redirectUri: 'http://localhost:3000' },
+      vi.fn()
+    );
+    expect(email).toBeUndefined();
+    expect(rawData).toMatchObject({ email: 'zhangsan@feishu.cn' });
+  });
+
   it('throw General error if code not provided in input', async () => {
     const connector = await createConnector({ getConfig });
     await expect(connector.getUserInfo({}, vi.fn())).rejects.toStrictEqual(

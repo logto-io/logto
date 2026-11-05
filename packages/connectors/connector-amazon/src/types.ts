@@ -4,6 +4,7 @@ export const amazonConfigGuard = z.object({
   clientId: z.string(),
   clientSecret: z.string(),
   scope: z.string().optional(),
+  disableEmailSync: z.boolean().optional(),
 });
 
 export type AmazonConfig = z.infer<typeof amazonConfigGuard>;

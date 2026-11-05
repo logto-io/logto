@@ -19,3 +19,9 @@ If you do not have a Feishu developer account, please register on the [Feishu Op
 
 > ℹ️ **Note**
 > For non-enterprise internal use, you also need to click "Create a version" button in "Version Management and Release" page. The "App ID" and "App Secret" will only take effect after the application status changes to "Enabled."
+
+## Disable email sync
+
+Feishu returns the user's email address in the `email` field, but reports no verification state for it. Feishu describes it as contact information imported by a tenant administrator, so it is only as trustworthy as the tenant it comes from.
+
+Logto syncs that address to the user profile, where it serves as a user identifier. This switch stops it from doing so. It is off by default. Turn it on to leave the raw value in `rawData` only and source the email elsewhere.

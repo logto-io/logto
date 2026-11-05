@@ -142,17 +142,23 @@ class SamlConnector {
    * Parse the SAML assertion content received from IdP.
    *
    * @param body The raw SAML assertion request body received from IdP.
+   * @param defaultSpEntityId This connector's SP entity ID on the tenant's default domain.
    * @throws {SsoConnectorError} If the SAML assertion is invalid or cannot be parsed.
    */
-  async parseSamlAssertionContent(body: Record<string, unknown>) {
+  async parseSamlAssertionContent(body: Record<string, unknown>, defaultSpEntityId: string) {
     const identityProvider = await this.getIdentityProvider();
     const { x509Certificate } = await this.getSamlIdpMetadata();
 
     // HandleSamlAssertion takes a HTTPResponse-like object, need to wrap body in a object.
-    const samlAssertionContent = await handleSamlAssertion({ body }, identityProvider, {
-      x509Certificate,
-      entityId: this.serviceProviderMetadata.entityId,
-    });
+    const samlAssertionContent = await handleSamlAssertion(
+      { body },
+      identityProvider,
+      {
+        x509Certificate,
+        entityId: this.serviceProviderMetadata.entityId,
+      },
+      defaultSpEntityId
+    );
 
     return samlAssertionContent;
   }

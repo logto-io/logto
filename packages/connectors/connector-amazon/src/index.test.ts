@@ -109,6 +109,23 @@ describe('getUserInfo', () => {
     });
   });
 
+  it('should not return the email when email sync is disabled', async () => {
+    nock(userInfoEndpoint).get('').reply(200, {
+      user_id: '1',
+      name: 'monalisa',
+      email: 'monalisa@example.com',
+    });
+    const connector = await createConnector({
+      getConfig: vi.fn().mockResolvedValue({ ...mockedConfig, disableEmailSync: true }),
+    });
+    const socialUserInfo = await connector.getUserInfo(
+      { code: 'code', redirectUri: 'http://localhost:3000/callback' },
+      getSession
+    );
+    expect(socialUserInfo.email).toBeUndefined();
+    expect(socialUserInfo.rawData).toMatchObject({ email: 'monalisa@example.com' });
+  });
+
   it('throws unrecognized error', async () => {
     nock(userInfoEndpoint).get('').reply(500);
     const connector = await createConnector({ getConfig });

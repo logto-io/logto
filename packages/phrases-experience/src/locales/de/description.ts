@@ -136,6 +136,8 @@ const description = {
   switch_account_title: 'Du bist derzeit als {{account}} angemeldet',
   switch_account_description:
     'Um fortzufahren, wirst du vom aktuellen Konto abgemeldet und automatisch zum neuen Konto gewechselt.',
+  continue_to_app_title: 'Zurück zur App',
+  continue_to_app_description: 'Fahre fort, um zur App zurückzukehren.',
   about_yourself: 'Erzähl uns etwas über dich',
   verify_identity: 'Bestätige deine Identität',
   choose_verification_method: 'Wähle, wie du dich anmelden möchtest',

@@ -113,10 +113,9 @@ const sign_in_exp = {
     csp_source_duplicate_error: 'このソース式はすでに一覧に含まれています。',
     coop_tip:
       'カスタムサインイン UI をクロスオリジンのウィンドウから分離します。カスタム UI アセットが提供される場合にのみ適用されます。',
-    coop_unsafe_none: '未設定（デフォルト）',
-    coop_same_origin_allow_popups: 'same-origin-allow-popups（推奨）',
+    coop_unsafe_none: '未設定（ヘッダーなし）',
     coop_warning:
-      'サインインページをクロスオリジンのポップアップで開き、window.opener に依存しているアプリは動作しなくなります。same-origin は、ソーシャルサインインのウィンドウなど、カスタム UI 自体が開くポップアップも切り離します。',
+      'サインインページをポップアップで開き、window.opener に依存しているアプリは動作しなくなります。カスタム UI が開いたポップアップも、ソーシャルサインインのコールバックなどでカスタム UI に戻ると window.opener を失います。same-origin では、ポップアップを開いた時点で失われます。',
   },
   account_center: {
     recent_authentication: {
