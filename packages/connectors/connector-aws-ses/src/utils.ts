@@ -43,17 +43,22 @@ export const makeEmailContent = (
  * display name, which is combined with the configured address (SES rejects a bare name).
  */
 const getFromEmailAddress = (
-  emailAddress: string,
+  emailAddress?: string,
   sendFrom?: string,
   payload?: SendMessagePayload
-): string => {
+): string | undefined => {
   const resolved = sendFrom && payload ? replaceSendMessageHandlebars(sendFrom, payload) : '';
 
   if (!resolved) {
     return emailAddress;
   }
 
-  return resolved.includes('@') ? resolved : `${resolved} <${emailAddress}>`;
+  if (resolved.includes('@')) {
+    return resolved;
+  }
+
+  // A bare display name needs a configured address to be combined with.
+  return emailAddress && `${resolved} <${emailAddress}>`;
 };
 
 export const makeCommand = (
