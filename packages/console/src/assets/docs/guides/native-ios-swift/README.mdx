@@ -247,6 +247,15 @@ You can also call `logtoClient.signOut()` without a post sign-out redirect URI. 
 
 </InlineNotification>
 
+To keep the iOS "Save Password" prompt after a password sign-in, pass `confirm_redirect_policy=password` in `extraParams`. Logto then shows a continue page after the user enters a password, and returns to your app once the user continues. See [Keep the iOS "Save Password" prompt](https://docs.logto.io/end-user-flows/authentication-parameters#keep-the-ios-save-password-prompt) for details.
+
+```swift
+try await logtoClient.signInWithBrowser(
+  redirectUri: redirectUri,
+  extraParams: ["confirm_redirect_policy": "password"]
+)
+```
+
 </TabItem>
 
 <TabItem value="v1" label="v1">
