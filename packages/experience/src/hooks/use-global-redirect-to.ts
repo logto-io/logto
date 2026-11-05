@@ -6,7 +6,7 @@ import UserInteractionContext from '@/Providers/UserInteractionContextProvider/U
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { confirmRedirectPolicyKey } from '@/shared/utils/search-parameters';
 
-/** The route of the "Continue to app" page that holds the redirect for `confirm_redirect_policy`. */
+/** The route of the continue page that holds the redirect for `confirm_redirect_policy`. */
 export const continueToAppPath = 'continue-to-app';
 
 type Options = {
@@ -25,7 +25,7 @@ type Options = {
   /**
    * Whether the `confirm_redirect_policy` sign-in parameter may hold this redirect on the "Continue to
    * app" page. Defaults to `true`.
-   * Set to `false` for the redirect from the "Continue to app" page itself.
+   * Set to `false` for the redirect from the continue page itself.
    */
   canConfirmRedirect?: boolean;
 };
@@ -86,7 +86,7 @@ function useGlobalRedirectTo({
       }
 
       // Never resolve, so the caller keeps its loading state until the page leaves or switches to
-      // the "Continue to app" page
+      // the continue page
       return new Promise<never>(noop);
     },
     [
