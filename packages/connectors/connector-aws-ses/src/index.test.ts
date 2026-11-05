@@ -131,14 +131,12 @@ describe('sendMessage()', () => {
       type: TemplateType.Generic,
       payload: { code: '1234', to: toMail },
     });
-    expect(SESv2Client.prototype.send).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        input: expect.objectContaining({
-          FromEmailAddress: `Foo <${mockedConfig.emailAddress}>`,
-          ReplyToAddresses: [`Reply-to ${toMail}`],
-        }),
-      })
-    );
+    expect(vi.mocked(SESv2Client.prototype.send).mock.lastCall?.[0]).toMatchObject({
+      input: {
+        FromEmailAddress: `Foo <${mockedConfig.emailAddress}>`,
+        ReplyToAddresses: [`Reply-to ${toMail}`],
+      },
+    });
   });
 
   it('should use sendFrom as is when it is a full address', async () => {
@@ -153,10 +151,8 @@ describe('sendMessage()', () => {
       type: TemplateType.Generic,
       payload: { code: '1234' },
     });
-    expect(SESv2Client.prototype.send).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        input: expect.objectContaining({ FromEmailAddress: 'Foo <foo@logto.io>' }),
-      })
-    );
+    expect(vi.mocked(SESv2Client.prototype.send).mock.lastCall?.[0]).toMatchObject({
+      input: { FromEmailAddress: 'Foo <foo@logto.io>' },
+    });
   });
 });

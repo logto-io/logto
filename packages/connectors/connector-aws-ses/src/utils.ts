@@ -60,8 +60,10 @@ export const makeCommand = (
   config: AwsSesConfig,
   emailContent: EmailContent,
   to: string,
-  template?: Template | EmailTemplateDetails,
-  payload?: SendMessagePayload
+  {
+    template,
+    payload,
+  }: { template?: Template | EmailTemplateDetails; payload?: SendMessagePayload } = {}
 ): SendEmailCommand => {
   // The i18n email template may customize the sender and the reply-to address.
   const sendFrom = template && 'sendFrom' in template ? template.sendFrom : undefined;
