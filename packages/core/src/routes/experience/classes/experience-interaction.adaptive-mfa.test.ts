@@ -1,4 +1,4 @@
-/* eslint-disable max-lines */
+/* eslint-disable max-lines -- MFA policy and adaptive verification scenarios share the interaction harness. */
 import {
   InteractionEvent,
   InteractionHookEvent,
@@ -158,7 +158,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
         mfaVerifications: hasMfa ? mockUserWithMfaVerifications.mfaVerifications : [],
         logtoConfig: skipMfaOnSignIn ? { mfa: { skipMfaOnSignIn: true } } : {},
       };
-      const mfaValidator = new MfaValidator(mfaSettings, user, adaptiveMfaResult);
+      const mfaValidator = new MfaValidator(mfaSettings, user, { adaptiveMfaResult });
       expect(mfaValidator.isMfaRequired).toBe(expected);
     }
   );
