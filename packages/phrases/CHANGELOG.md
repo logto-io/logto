@@ -1,5 +1,57 @@
 # Change Log
 
+## 1.33.0
+
+### Minor Changes
+
+- c738bda: add a Cross-Origin-Opener-Policy setting for Bring your UI sign-in pages
+
+  Tenants with Bring your UI can choose `same-origin-allow-popups` or `same-origin` under Sign-in experience > Branding > Bring your UI, or set `crossOriginOpenerPolicy` with the sign-in experience Management API. The header is sent on the hosted sign-in pages while custom UI assets are served. The default, `unsafe-none`, sends no header, so apps that open the sign-in page in a popup keep working.
+
+- 4c2822c: support GeeTest as a CAPTCHA provider
+
+  [GeeTest](https://www.geetest.com) CAPTCHA v4 adds an adaptive CAPTCHA service with localized challenges, which suits sign-in experiences targeting mainland China where Google reCAPTCHA is often unreachable.
+
+  To use it, create a CAPTCHA v4 event in the GeeTest dashboard, then go to Console > Security > CAPTCHA and add GeeTest with its CAPTCHA ID and CAPTCHA key. The same configuration is available through the `PUT /api/captcha-provider` Management API with `type: "Geetest"`.
+
+  While GeeTest is the CAPTCHA provider, the sign-in page's Content Security Policy allows GeeTest's SDK, API, and static hosts, which the widget loads the challenge from.
+
+- bdd4d5a: configure static attributes for SAML applications in Console
+
+  The attribute mapping tab of a SAML application now has a "Static attributes" section, where you can add fixed attribute names and values that are sent in every assertion alongside the mapped user attributes.
+
+- fa062b6: add static attributes to SAML application assertions
+
+  SAML applications can define fixed attribute name-value pairs with the `staticAttributes` field of the `POST /api/saml-applications` and `PATCH /api/saml-applications/{id}` Management APIs. They are added to every assertion alongside the mapped user attributes, for service providers that require constant values such as an account or site ID.
+
+  Attribute names may contain letters, digits, and `_.:/#@-`. They must not conflict with each other or with the user attribute names in the assertion, including names that differ only in case or separators, such as `site_id` and `siteId`.
+
+- d65a8dc: support OIDC step-up authentication for Account Center and developer applications
+
+  Clients can request `acr_values` and `max_age` and receive `acr`, `amr`, and `auth_time` in ID tokens, access tokens, and introspection responses. The built-in Account Center now authorizes sensitive Account API operations with a fresh first-party `urn:logto:acr:1fa` access token instead of a separate verification record, and the legacy permission-verification runtime is removed.
+
+### Patch Changes
+
+- 249bfda: forward `login_hint` from Account Center URLs to the sign-in page
+
+  Add `login_hint=` to any Account Center URL (for example, `https://auth.foo.com/account/security?login_hint=foo@example.com`) to pre-fill the identifier on the sign-in page when the user needs to sign in. The hint only pre-fills the field, so users can still sign in with a different identifier.
+
+- a7a0af9: respond 502 `connector.social_provider_unreachable` when the social provider cannot be reached
+
+  A social sign-in whose token exchange or user-info request failed at the transport level (timeout, connection reset, DNS failure) ended with a 500 "Internal server error.", indistinguishable from a bug in Logto. The social library now relays such a failure as a 502 that carries the network code and the connector id, whichever HTTP client the connector uses (`got` or `ky`), so a caller can tell a provider outage from a Logto error and the end user gets a translated message instead of a generic one. The request's method and URL are written to the server log.
+
+- d89e507: support Node.js 26
+
+  Logto and the published packages now declare support for Node.js 22, 24 and 26. The minimum supported versions are 22.23.4, 24.22.1 and 26.12.1, which include the October 2026 Node.js security fixes.
+
+- cec1c1a: fix manual unlock not clearing active security verification lockouts
+
+  Sentinel activity deletion now also removes active blocked decisions older than one hour, so manually unlocking a user works when the lockout duration exceeds 60 minutes. The manual unlock dialog and API documentation now mention user IDs and security verification lockouts.
+
+- 4dc1d1b: allow admins to require individual users to set up MFA, preventing those users from skipping the setup flow
+
+  Set `mfa.required` to `true` through the Management API, or turn on "Require MFA setup" on the user details page in Console. The user must bind MFA on their next sign-in and cannot skip it, regardless of the organization-level MFA policy.
+
 ## 1.32.1
 
 ### Patch Changes

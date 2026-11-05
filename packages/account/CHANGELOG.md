@@ -1,5 +1,25 @@
 # @logto/account
 
+## 0.8.0
+
+### Minor Changes
+
+- 249bfda: forward `login_hint` from Account Center URLs to the sign-in page
+
+  Add `login_hint=` to any Account Center URL (for example, `https://auth.foo.com/account/security?login_hint=foo@example.com`) to pre-fill the identifier on the sign-in page when the user needs to sign in. The hint only pre-fills the field, so users can still sign in with a different identifier.
+
+- e8c954a: create self-service personal access tokens in Account Center
+
+  Users can create, rename, and revoke personal access tokens on the Security page of Account Center when the tenant enables the personal access token field. Each token is shown only once at creation and expires within 365 days. The same operations are available through the Account API under `/api/my-account/personal-access-tokens`.
+
+- d65a8dc: support OIDC step-up authentication for Account Center and developer applications
+
+  Clients can request `acr_values` and `max_age` and receive `acr`, `amr`, and `auth_time` in ID tokens, access tokens, and introspection responses. The built-in Account Center now authorizes sensitive Account API operations with a fresh first-party `urn:logto:acr:1fa` access token instead of a separate verification record, and the legacy permission-verification runtime is removed.
+
+### Patch Changes
+
+- 713f77a: stop showing the "Powered by Logto" mark while Account Center loads when Logto branding is hidden
+
 ## 0.7.0
 
 ### Minor Changes
