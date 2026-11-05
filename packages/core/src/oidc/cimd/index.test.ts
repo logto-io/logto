@@ -1,4 +1,5 @@
 import { UserScope } from '@logto/core-kit';
+import { type CimdConfig } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 import { type AllClientMetadata, type Client } from 'oidc-provider';
 
@@ -11,14 +12,16 @@ const { mockEsm } = createMockUtils(jest);
 const loadCimdModule = async ({
   isSsrfProtectionEnabled = true,
   ssrfAllowedAddresses = [],
+  isDevFeaturesEnabled = true,
 }: {
   isSsrfProtectionEnabled?: boolean;
   ssrfAllowedAddresses?: string[];
+  isDevFeaturesEnabled?: boolean;
 } = {}) => {
   jest.resetModules();
   mockEsm('#src/env-set/index.js', () => ({
     EnvSet: {
-      values: { isSsrfProtectionEnabled, ssrfAllowedAddresses },
+      values: { isSsrfProtectionEnabled, ssrfAllowedAddresses, isDevFeaturesEnabled },
     },
   }));
 
@@ -30,11 +33,14 @@ const buildEnvSet = (cimdEnabled: boolean, jwkSigningAlg?: 'ES256' | 'ES384' | '
   return { oidc: { cimdEnabled, jwkSigningAlg } } as EnvSet;
 };
 
-const buildCimdQueries = (findAllUserScopes: () => Promise<UserScope[]> = async () => []) => {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal queries stub scoped to the methods the transform reads
+const buildCimdQueries = (
+  findAllUserScopes: () => Promise<UserScope[]> = async () => [],
+  getCimdConfig: () => Promise<CimdConfig> = async () => ({ enabled: true })
+) => {
   return {
-    userScopes: { findAll: findAllUserScopes },
-  } as Queries['cimd'];
+    cimd: { userScopes: { findAll: findAllUserScopes } },
+    logtoConfigs: { getCimdConfig },
+  } as unknown as Pick<Queries, 'cimd' | 'logtoConfigs'>;
 };
 
 const cimdClientIdMaxLength = 2048;
@@ -68,22 +74,25 @@ const captureThrown = (run: () => unknown): unknown => {
 const loadEnabledFeature = async ({
   jwkSigningAlg,
   ceilingUserScopes = [],
+  cimdConfig = { enabled: true },
 }: {
   jwkSigningAlg?: 'ES256' | 'ES384' | 'ES512';
   ceilingUserScopes?: UserScope[];
+  cimdConfig?: CimdConfig;
 } = {}) => {
   const { buildClientIdMetadataDocumentFeature } = await loadCimdModule();
   const findAllUserScopes = jest.fn(async () => ceilingUserScopes);
+  const getCimdConfig = jest.fn(async () => cimdConfig);
   const feature = buildClientIdMetadataDocumentFeature(
     buildEnvSet(true, jwkSigningAlg),
-    buildCimdQueries(findAllUserScopes)
+    buildCimdQueries(findAllUserScopes, getCimdConfig)
   );
 
   if (!feature) {
     throw new Error('Expected the CIMD feature to be built');
   }
 
-  return { ...feature.clientIdMetadataDocument, findAllUserScopes };
+  return { ...feature.clientIdMetadataDocument, findAllUserScopes, getCimdConfig };
 };
 
 describe('isCimdEffectivelyEnabled', () => {
@@ -243,6 +252,7 @@ describe('server-side metadata takeover', () => {
       scope: 'openid offline_access profile email',
       grant_types: ['authorization_code', 'refresh_token'],
       response_types: ['code'],
+      refreshTokenTtlInDays: 14,
     });
   });
 
@@ -253,6 +263,7 @@ describe('server-side metadata takeover', () => {
       scope: 'openid offline_access',
       grant_types: ['authorization_code', 'refresh_token'],
       response_types: ['code'],
+      refreshTokenTtlInDays: 14,
     });
   });
 
@@ -293,7 +304,32 @@ describe('server-side metadata takeover', () => {
       scope: 'openid offline_access',
       grant_types: ['authorization_code', 'refresh_token'],
       response_types: ['code'],
+      refreshTokenTtlInDays: 14,
     });
+  });
+
+  it('overwrites the document refresh token TTL with the tenant CIMD config on every resolution', async () => {
+    const { transformClientMetadata, getCimdConfig } = await loadEnabledFeature({
+      cimdConfig: { enabled: true, refreshTokenTtlInDays: 180 },
+    });
+
+    await expect(
+      transformClientMetadata(undefined, { refreshTokenTtlInDays: 30 })
+    ).resolves.toMatchObject({ refreshTokenTtlInDays: 180 });
+
+    getCimdConfig.mockResolvedValueOnce({ enabled: true, refreshTokenTtlInDays: 90 });
+
+    await expect(transformClientMetadata(undefined, {})).resolves.toMatchObject({
+      refreshTokenTtlInDays: 90,
+    });
+  });
+
+  it('overwrites the document refresh token TTL with the default when the config has none', async () => {
+    const { transformClientMetadata } = await loadEnabledFeature();
+
+    await expect(
+      transformClientMetadata(undefined, { refreshTokenTtlInDays: 180 })
+    ).resolves.toMatchObject({ refreshTokenTtlInDays: 14 });
   });
 });
 
@@ -360,6 +396,14 @@ describe('private metadata deny', () => {
       error_description:
         'client_id metadata document must not contain Logto private metadata (appLevelAccessControlEnabled)',
     });
+  });
+
+  it('allowClient accepts the refresh token TTL the transform always overwrites', async () => {
+    const { allowClient } = await loadEnabledFeature();
+
+    expect(
+      allowClient(undefined, buildClient(clientId, undefined, { refreshTokenTtlInDays: 180 }))
+    ).toBe(true);
   });
 });
 

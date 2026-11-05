@@ -224,7 +224,7 @@ export default function initOidc(
       dPoP: { enabled: false },
       backchannelLogout: { enabled: true },
       deviceFlow: deviceFlowConfig,
-      ...buildClientIdMetadataDocumentFeature(envSet, queries.cimd),
+      ...buildClientIdMetadataDocumentFeature(envSet, queries),
       rpInitiatedLogout: {
         logoutSource: (ctx, form) => {
           // eslint-disable-next-line no-template-curly-in-string
