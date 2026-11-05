@@ -23,8 +23,8 @@ import { condArray, conditional, conditionalArray, trySafe } from '@silverhand/e
 
 import { EnvSet } from '#src/env-set/index.js';
 import { truncateMembershipDelta } from '#src/libraries/hook/utils.js';
+import { type JitOrganizationProvisionResult } from '#src/libraries/user.js';
 import { buildUserPasswordPayload } from '#src/libraries/user.utils.js';
-import { type JitOrganization } from '#src/queries/organization/email-domains.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 import { getTenantId } from '#src/utils/tenant.js';
@@ -142,7 +142,7 @@ export class ProvisionLibrary {
       ? mergeCreateUserCustomData(customData, profile.customData)
       : customData;
 
-    const [user] = await insertUser(
+    const [user, assignedRoleIds] = await insertUser(
       {
         id: await generateUserId(),
         ...rest,
@@ -192,6 +192,7 @@ export class ProvisionLibrary {
     await this.provisionNewUserJitOrganizations(user.id, profile);
 
     this.ctx.appendDataHookContext('User.Created', { user });
+    this.appendUserRolesUpdatedHook(user.id, assignedRoleIds);
 
     this.triggerAnalyticReports(user);
 
@@ -300,14 +301,41 @@ export class ProvisionLibrary {
 
   private appendMembershipUpdatedHooks(
     userId: string,
-    provisionedOrganizations: readonly JitOrganization[]
+    provisionedOrganizations: readonly JitOrganizationProvisionResult[]
   ) {
-    for (const { organizationId } of provisionedOrganizations) {
-      this.ctx.appendDataHookContext('Organization.Membership.Updated', {
-        organizationId,
-        ...truncateMembershipDelta({ addedUserIds: [userId] }),
-      });
+    for (const {
+      organizationId,
+      isNewMembership,
+      assignedOrganizationRoleIds,
+    } of provisionedOrganizations) {
+      if (isNewMembership) {
+        this.ctx.appendDataHookContext('Organization.Membership.Updated', {
+          organizationId,
+          ...truncateMembershipDelta({ addedUserIds: [userId] }),
+        });
+      }
+
+      if (assignedOrganizationRoleIds.length > 0) {
+        this.ctx.appendDataHookContext('Organization.UserRoles.Updated', {
+          organizationId,
+          userId,
+          addedOrganizationRoleIds: assignedOrganizationRoleIds,
+          removedOrganizationRoleIds: [],
+        });
+      }
     }
+  }
+
+  private appendUserRolesUpdatedHook(userId: string, addedRoleIds: readonly string[]) {
+    if (addedRoleIds.length === 0) {
+      return;
+    }
+
+    this.ctx.appendDataHookContext('User.Roles.Updated', {
+      userId,
+      addedRoleIds,
+      removedRoleIds: [],
+    });
   }
 
   /**

@@ -336,3 +336,49 @@ describe('addUserMfaVerification()', () => {
     });
   });
 });
+
+describe('provisionOrganizations()', () => {
+  it('reports roles newly assigned to an existing member', async () => {
+    const insertWithResult = jest.fn().mockResolvedValue([
+      {
+        organizationId: 'org-1',
+        userId: mockUser.id,
+        organizationRoleId: 'role-new',
+      },
+    ]);
+    const getExistingOrganizationIds = jest.fn().mockResolvedValue(['org-1']);
+    const jitOrganizations = [
+      { organizationId: 'org-1', organizationRoleIds: ['role-existing', 'role-new'] },
+    ];
+    const jitQueries = new MockQueries({
+      organizations: {
+        relations: {
+          users: { getExistingOrganizationIds, insert: jest.fn() },
+          usersRoles: { insertWithResult },
+        },
+        jit: {
+          ssoConnectors: {
+            getJitOrganizations: jest.fn().mockResolvedValue(jitOrganizations),
+          },
+        },
+      } as unknown as InstanceType<typeof MockQueries>['organizations'],
+    });
+    const { provisionOrganizations } = createUserLibrary(defaultTenantId, jitQueries);
+
+    await expect(
+      provisionOrganizations({ userId: mockUser.id, ssoConnectorId: 'connector-id' })
+    ).resolves.toEqual([
+      {
+        organizationId: 'org-1',
+        organizationRoleIds: ['role-existing', 'role-new'],
+        isNewMembership: false,
+        assignedOrganizationRoleIds: ['role-new'],
+      },
+    ]);
+
+    expect(insertWithResult).toHaveBeenCalledWith(
+      { organizationId: 'org-1', organizationRoleId: 'role-existing', userId: mockUser.id },
+      { organizationId: 'org-1', organizationRoleId: 'role-new', userId: mockUser.id }
+    );
+  });
+});

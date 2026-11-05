@@ -41,11 +41,13 @@ export const koaManagementApiHooks = <StateT, ContextT extends IRouterParamConte
     try {
       await next();
 
-      // Auto append pre-registered management API hooks if any
+      // Auto append pre-registered management API hooks if any. Prepend the primary route event
+      // so events appended inside the route handler (e.g. `User.Roles.Updated` after
+      // `POST /users`) follow it in the trigger order.
       const registeredDataHookContext = hooksContextManager.getRegisteredHookEventContext(ctx);
 
       if (registeredDataHookContext) {
-        hooksContextManager.appendDataHookContext(...registeredDataHookContext);
+        hooksContextManager.prependDataHookContext(...registeredDataHookContext);
       }
 
       // Trigger data hooks

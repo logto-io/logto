@@ -179,12 +179,22 @@ export default function organizationInvitationRoutes<T extends ManagementApiRout
       // Always emit, matching every other Organization.Membership.Updated trigger. The
       // helper omits empty arrays, so a re-accept (no real change) reduces to the legacy
       // `{ organizationId }`-only shape.
-      const { organizationId } = result;
+      const { organizationId, addedOrganizationRoleIds } = result;
       ctx.appendDataHookContext('Organization.Membership.Updated', {
         ...buildManagementApiContext(ctx),
         organizationId,
         ...truncateMembershipDelta({ addedUserIds }),
       });
+
+      if (addedOrganizationRoleIds.length > 0) {
+        ctx.appendDataHookContext('Organization.UserRoles.Updated', {
+          ...buildManagementApiContext(ctx),
+          organizationId,
+          userId: acceptedUserId,
+          addedOrganizationRoleIds,
+          removedOrganizationRoleIds: [],
+        });
+      }
 
       return next();
     }

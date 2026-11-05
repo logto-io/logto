@@ -10,6 +10,7 @@ import {
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import type { Provider } from 'oidc-provider';
 
+import { mockUser } from '#src/__mocks__/user.js';
 import { type InsertUserResult } from '#src/libraries/user.js';
 import { createMockLogContext } from '#src/test-utils/koa-audit-log.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -64,7 +65,7 @@ const { hasActiveUsers, updateUserById, hasUserWithEmail, hasUserWithNormalizedP
 
 const userLibraries = {
   generateUserId: jest.fn().mockResolvedValue('uid'),
-  insertUser: jest.fn(async (user: CreateUser): Promise<InsertUserResult> => [user as User]),
+  insertUser: jest.fn(async (user: CreateUser): Promise<InsertUserResult> => [user as User, []]),
 };
 const { generateUserId, insertUser } = userLibraries;
 
@@ -160,6 +161,28 @@ describe('submit action', () => {
         id: 'uid',
         ...upsertProfile,
       },
+    });
+  });
+
+  it('register emits initial roles after User.Created', async () => {
+    const createdUser = { ...mockUser, id: 'uid', primaryEmail: 'email@logto.io' };
+    insertUser.mockResolvedValueOnce([createdUser, ['role-id']]);
+
+    const interaction: VerifiedRegisterInteractionResult = {
+      event: InteractionEvent.Register,
+      profile,
+      identifiers,
+    };
+
+    await submitInteraction(interaction, ctx, tenant);
+
+    expect(ctx.appendDataHookContext).toHaveBeenNthCalledWith(1, 'User.Created', {
+      user: createdUser,
+    });
+    expect(ctx.appendDataHookContext).toHaveBeenNthCalledWith(2, 'User.Roles.Updated', {
+      userId: 'uid',
+      addedRoleIds: ['role-id'],
+      removedRoleIds: [],
     });
   });
 

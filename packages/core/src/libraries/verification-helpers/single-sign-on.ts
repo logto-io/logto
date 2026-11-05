@@ -440,10 +440,25 @@ const signInAndLinkWithSsoAuthentication = async (
     ssoConnectorId: connectorId,
   });
 
-  for (const { organizationId } of provisionedOrganizations) {
-    ctx.appendDataHookContext('Organization.Membership.Updated', {
-      organizationId,
-    });
+  for (const {
+    organizationId,
+    isNewMembership,
+    assignedOrganizationRoleIds,
+  } of provisionedOrganizations) {
+    if (isNewMembership) {
+      ctx.appendDataHookContext('Organization.Membership.Updated', {
+        organizationId,
+      });
+    }
+
+    if (assignedOrganizationRoleIds.length > 0) {
+      ctx.appendDataHookContext('Organization.UserRoles.Updated', {
+        organizationId,
+        userId,
+        addedOrganizationRoleIds: assignedOrganizationRoleIds,
+        removedOrganizationRoleIds: [],
+      });
+    }
   }
 
   log.append({
@@ -482,7 +497,7 @@ export const registerWithSsoAuthentication = async (
   };
 
   // Insert new user
-  const [user] = await usersLibrary.insertUser(
+  const [user, assignedRoleIds] = await usersLibrary.insertUser(
     {
       id: await usersLibrary.generateUserId(),
       ...syncingProfile,
@@ -509,9 +524,33 @@ export const registerWithSsoAuthentication = async (
     ssoConnectorId: connectorId,
   });
 
-  for (const { organizationId } of provisionedOrganizations) {
-    ctx.appendDataHookContext('Organization.Membership.Updated', {
-      organizationId,
+  for (const {
+    organizationId,
+    isNewMembership,
+    assignedOrganizationRoleIds,
+  } of provisionedOrganizations) {
+    if (isNewMembership) {
+      ctx.appendDataHookContext('Organization.Membership.Updated', {
+        organizationId,
+      });
+    }
+
+    if (assignedOrganizationRoleIds.length > 0) {
+      ctx.appendDataHookContext('Organization.UserRoles.Updated', {
+        organizationId,
+        userId,
+        addedOrganizationRoleIds: assignedOrganizationRoleIds,
+        removedOrganizationRoleIds: [],
+      });
+    }
+  }
+
+  ctx.appendDataHookContext('User.Created', { user });
+  if (assignedRoleIds.length > 0) {
+    ctx.appendDataHookContext('User.Roles.Updated', {
+      userId,
+      addedRoleIds: assignedRoleIds,
+      removedRoleIds: [],
     });
   }
 

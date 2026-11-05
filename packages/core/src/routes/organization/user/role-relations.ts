@@ -9,6 +9,7 @@ import { deduplicate } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import type OrganizationQueries from '#src/queries/organization/index.js';
@@ -103,7 +104,7 @@ export default function userRoleRelationRoutes(
         ...organizationRoleIdsFromNames.map(({ id }) => id),
       ]);
 
-      await organizations.relations.usersRoles.insert(
+      const insertedRelations = await organizations.relations.usersRoles.insertWithResult(
         ...roleIds.map((roleId) => ({
           organizationId: id,
           organizationRoleId: roleId,
@@ -113,6 +114,21 @@ export default function userRoleRelationRoutes(
 
       ctx.body = { organizationRoleIds: roleIds };
       ctx.status = 201;
+
+      const addedOrganizationRoleIds = insertedRelations.map(
+        ({ organizationRoleId }) => organizationRoleId
+      );
+
+      if (addedOrganizationRoleIds.length > 0) {
+        ctx.appendDataHookContext('Organization.UserRoles.Updated', {
+          ...buildManagementApiContext(ctx),
+          organizationId: id,
+          userId,
+          addedOrganizationRoleIds,
+          removedOrganizationRoleIds: [],
+        });
+      }
+
       return next();
     }
   );
@@ -153,9 +169,24 @@ export default function userRoleRelationRoutes(
         ...organizationRoleIdsFromNames.map(({ id }) => id),
       ]);
 
-      await organizations.relations.usersRoles.replace(id, userId, roleIds);
+      const { added, removed } = await organizations.relations.usersRoles.replaceWithDelta(
+        id,
+        userId,
+        roleIds
+      );
 
       ctx.status = 204;
+
+      if (added.length > 0 || removed.length > 0) {
+        ctx.appendDataHookContext('Organization.UserRoles.Updated', {
+          ...buildManagementApiContext(ctx),
+          organizationId: id,
+          userId,
+          addedOrganizationRoleIds: added,
+          removedOrganizationRoleIds: removed,
+        });
+      }
+
       return next();
     }
   );
@@ -176,6 +207,15 @@ export default function userRoleRelationRoutes(
       });
 
       ctx.status = 204;
+
+      ctx.appendDataHookContext('Organization.UserRoles.Updated', {
+        ...buildManagementApiContext(ctx),
+        organizationId: id,
+        userId,
+        addedOrganizationRoleIds: [],
+        removedOrganizationRoleIds: [organizationRoleId],
+      });
+
       return next();
     }
   );

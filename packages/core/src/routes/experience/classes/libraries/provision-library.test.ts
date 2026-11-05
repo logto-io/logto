@@ -41,9 +41,11 @@ const encryptedTokenSet = {
 const createProvisionLibrary = ({
   invitations = [],
   user = mockUser,
+  assignedRoleIds = [],
 }: {
   invitations?: Array<{ status: OrganizationInvitationStatus }>;
   user?: User;
+  assignedRoleIds?: readonly string[];
 } = {}) => {
   const hasActiveUsers = jest.fn().mockResolvedValue(true);
   const findUserById = jest.fn(async (): Promise<User> => user);
@@ -56,7 +58,9 @@ const createProvisionLibrary = ({
   );
   const checkIdentifierCollision = jest.fn();
   const generateUserId = jest.fn().mockResolvedValue('uid');
-  const insertUser = jest.fn(async (user: CreateUser): Promise<InsertUserResult> => [user as User]);
+  const insertUser = jest.fn(
+    async (user: CreateUser): Promise<InsertUserResult> => [user as User, assignedRoleIds]
+  );
   const provisionOrganizations = jest.fn().mockResolvedValue([]);
   const provisionOrganizationsByEmailDomain = jest.fn().mockResolvedValue([]);
   const upsertSocialTokenSetSecret = jest.fn();
@@ -288,6 +292,84 @@ describe('ProvisionLibrary', () => {
         user: expect.objectContaining({
           id: 'uid',
         }) as User,
+      });
+    });
+
+    it('emits initial roles after User.Created', async () => {
+      const { provisionLibrary, ctx } = createProvisionLibrary({
+        assignedRoleIds: ['role-id'],
+      });
+
+      await provisionLibrary.createUser({ name: 'Jane Doe' });
+
+      expect(ctx.appendDataHookContext).toHaveBeenNthCalledWith(
+        1,
+        'User.Created',
+        expect.any(Object)
+      );
+      expect(ctx.appendDataHookContext).toHaveBeenNthCalledWith(2, 'User.Roles.Updated', {
+        userId: 'uid',
+        addedRoleIds: ['role-id'],
+        removedRoleIds: [],
+      });
+    });
+
+    it('emits organization user roles for roles added to an existing member', async () => {
+      const { provisionLibrary, ctx, provisionOrganizations } = createProvisionLibrary();
+      provisionOrganizations.mockResolvedValueOnce([
+        {
+          organizationId: 'org-1',
+          organizationRoleIds: ['role-1'],
+          isNewMembership: false,
+          assignedOrganizationRoleIds: ['role-1'],
+        },
+      ]);
+
+      await provisionLibrary.provisionJitOrganization({
+        userId: 'uid',
+        organizationIds: ['org-1'],
+      });
+
+      expect(ctx.appendDataHookContext).toHaveBeenCalledWith('Organization.UserRoles.Updated', {
+        organizationId: 'org-1',
+        userId: 'uid',
+        addedOrganizationRoleIds: ['role-1'],
+        removedOrganizationRoleIds: [],
+      });
+      expect(ctx.appendDataHookContext).not.toHaveBeenCalledWith(
+        'Organization.Membership.Updated',
+        expect.anything()
+      );
+    });
+
+    it('emits membership and user role events for a new JIT membership', async () => {
+      const { provisionLibrary, ctx, provisionOrganizations } = createProvisionLibrary();
+      provisionOrganizations.mockResolvedValueOnce([
+        {
+          organizationId: 'org-1',
+          organizationRoleIds: ['role-1'],
+          isNewMembership: true,
+          assignedOrganizationRoleIds: ['role-1'],
+        },
+      ]);
+
+      await provisionLibrary.provisionJitOrganization({
+        userId: 'uid',
+        organizationIds: ['org-1'],
+      });
+
+      expect(ctx.appendDataHookContext).toHaveBeenCalledWith(
+        'Organization.Membership.Updated',
+        expect.objectContaining({
+          organizationId: 'org-1',
+          addedUserIds: ['uid'],
+        })
+      );
+      expect(ctx.appendDataHookContext).toHaveBeenCalledWith('Organization.UserRoles.Updated', {
+        organizationId: 'org-1',
+        userId: 'uid',
+        addedOrganizationRoleIds: ['role-1'],
+        removedOrganizationRoleIds: [],
       });
     });
 

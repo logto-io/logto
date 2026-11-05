@@ -108,6 +108,49 @@ describe('koaManagementApiHooks', () => {
         })
       );
     });
+
+    it('should prepend the registered event before events appended in the route handler', async () => {
+      const ctxParams = createContextWithRouteParameters();
+      const ctx: ParameterizedContext<unknown, WithHookContext> = {
+        ...ctxParams,
+        header: {},
+        appendDataHookContext: notToBeCalled,
+        appendExceptionHookContext: notToBeCalled,
+        method: 'POST',
+        _matchedRoute: '/users',
+        path: '/users',
+        response: {
+          ...ctxParams.response,
+          body: { key: 'POST /users' },
+        },
+        status: 200,
+      };
+
+      const nextWithFollowUp = jest.fn(async () => {
+        ctx.appendDataHookContext('User.Roles.Updated', {
+          userId: 'user-id',
+          addedRoleIds: ['role-id'],
+          removedRoleIds: [],
+        });
+      });
+
+      await koaManagementApiHooks(mockHooksLibrary)(ctx, nextWithFollowUp);
+
+      expect(triggerDataHooks).toBeCalledWith(
+        expect.any(ConsoleLog),
+        expect.objectContaining({
+          dataHookContextArray: [
+            expect.objectContaining({ event: 'User.Created', data: { key: 'POST /users' } }),
+            expect.objectContaining({
+              event: 'User.Roles.Updated',
+              userId: 'user-id',
+              addedRoleIds: ['role-id'],
+              removedRoleIds: [],
+            }),
+          ],
+        })
+      );
+    });
   });
 
   describe('exception hooks', () => {

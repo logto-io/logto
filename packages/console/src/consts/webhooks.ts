@@ -1,10 +1,13 @@
 import { type AdminConsoleKey } from '@logto/phrases';
 import {
   DataHookSchema,
+  devFeatureHookEvents,
   InteractionHookEvent,
   hookEvents,
   type DataHookEvent,
 } from '@logto/schemas';
+
+import { isDevFeaturesEnabled } from '@/consts/env';
 
 export const dataHookEventsLabel = Object.freeze({
   [DataHookSchema.User]: 'webhooks.schemas.user',
@@ -18,8 +21,11 @@ export const dataHookEventsLabel = Object.freeze({
 
 export const interactionHookEvents = Object.values(InteractionHookEvent);
 const interactionHookEventSet = new Set<string>(interactionHookEvents);
+const devFeatureHookEventSet = new Set<string>(devFeatureHookEvents);
 
-export const availableHookEvents = [...hookEvents];
+export const availableHookEvents = hookEvents.filter(
+  (event) => isDevFeaturesEnabled || !devFeatureHookEventSet.has(event)
+);
 
 const dataHookEvents: DataHookEvent[] = availableHookEvents.filter(
   (event): event is DataHookEvent => !interactionHookEventSet.has(event)

@@ -34,7 +34,7 @@ const updateUserSsoIdentityMock = jest.fn();
 const insertUserSsoIdentityMock = jest.fn();
 const updateUserMock = jest.fn();
 const findUserByEmailMock = jest.fn();
-const insertUserMock = jest.fn().mockResolvedValue([{ id: 'foo' }, { organizations: [] }]);
+const insertUserMock = jest.fn().mockResolvedValue([{ id: 'foo' }, []]);
 const generateUserIdMock = jest.fn().mockResolvedValue('foo');
 const getAvailableSsoConnectorsMock = jest.fn();
 
@@ -326,7 +326,7 @@ describe('Single sign on util methods tests', () => {
 
   describe('registerWithSsoAuthentication tests', () => {
     it('should register if no related user account found', async () => {
-      insertUserMock.mockResolvedValueOnce([{ id: 'foo' }, { organizations: [] }]);
+      insertUserMock.mockResolvedValueOnce([{ id: 'foo' }, ['role-id']]);
 
       const { id } = await registerWithSsoAuthentication(mockContext, tenant, {
         connectorId: wellConfiguredSsoConnector.id,
@@ -335,6 +335,15 @@ describe('Single sign on util methods tests', () => {
       });
 
       expect(id).toBe('foo');
+
+      expect(mockContext.appendDataHookContext).toHaveBeenCalledWith('User.Created', {
+        user: { id: 'foo' },
+      });
+      expect(mockContext.appendDataHookContext).toHaveBeenCalledWith('User.Roles.Updated', {
+        userId: 'foo',
+        addedRoleIds: ['role-id'],
+        removedRoleIds: [],
+      });
 
       // Should create new user
       expect(insertUserMock).toBeCalledWith(
