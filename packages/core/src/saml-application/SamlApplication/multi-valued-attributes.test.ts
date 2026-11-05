@@ -31,7 +31,6 @@ const buildContext = (samlApp: TestSamlApplication, userInfo: Record<string, unk
   );
 
   return samlApp.exposedCreateSamlTemplateCallback({
-    // eslint-disable-next-line no-restricted-syntax
     userInfo: userInfo as typeof mockUser,
     samlRequestId: null,
     sessionId: undefined,

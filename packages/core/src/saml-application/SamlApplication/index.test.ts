@@ -1,7 +1,6 @@
 import { UserScope, ReservedScope } from '@logto/core-kit';
 import { NameIdFormat } from '@logto/schemas';
 import nock from 'nock';
-import saml from 'samlify';
 
 import {
   createMockSamlApplicationDetails,
