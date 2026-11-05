@@ -41,5 +41,16 @@ export const defaultMetadata: ConnectorMetadata = {
       required: true,
       placeholder: '<app-secret>',
     },
+    {
+      key: 'disableEmailSync',
+      type: ConnectorConfigFormItemType.Switch,
+      required: false,
+      label: 'Disable Email Sync',
+      description:
+        'Stop syncing the `email` field returned by Feishu to the user profile. Turn this on if you do not want Feishu to supply the email address.',
+      tooltip:
+        'Feishu reports no verification state for `email`, which is contact information imported by a tenant administrator. Turning this on leaves the address in `rawData` only.',
+      defaultValue: false,
+    },
   ],
 };

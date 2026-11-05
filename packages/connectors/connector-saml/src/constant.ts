@@ -163,6 +163,17 @@ export const formItems: ConnectorConfigFormItem[] = [
     },
     required: false,
   },
+  {
+    key: 'disableEmailSync',
+    type: ConnectorConfigFormItemType.Switch,
+    required: false,
+    label: 'Disable Email Sync',
+    description:
+      'Stop syncing the attribute that `Profile Mapping` maps to `email` to the user profile. Turn this on if you do not want the identity provider to supply the email address.',
+    tooltip:
+      'SAML carries no standard verification state for an email attribute, so the mapped value is taken at face value. Turning this on drops the address from the synced profile.',
+    defaultValue: false,
+  },
 ];
 
 export const defaultMetadata: ConnectorMetadata = {

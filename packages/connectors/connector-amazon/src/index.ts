@@ -114,7 +114,7 @@ const getUserInfo =
       return {
         id: user_id,
         name: conditional(name),
-        email: conditional(email),
+        email: conditional(!config.disableEmailSync && email),
         rawData: jsonGuard.parse(userInfo),
       };
     } catch (error: unknown) {

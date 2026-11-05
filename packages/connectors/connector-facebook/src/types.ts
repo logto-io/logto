@@ -4,6 +4,7 @@ export const facebookConfigGuard = z.object({
   clientId: z.string(),
   clientSecret: z.string(),
   scope: z.string().optional(),
+  disableEmailSync: z.boolean().optional(),
 });
 
 export type FacebookConfig = z.infer<typeof facebookConfigGuard>;

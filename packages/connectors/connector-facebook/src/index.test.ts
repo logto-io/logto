@@ -144,6 +144,22 @@ describe('Facebook connector', () => {
       });
     });
 
+    it('should not return the email when email sync is disabled', async () => {
+      nock(userInfoEndpoint).get('').query({ fields }).reply(200, {
+        id: '1234567890',
+        email: 'octocat@facebook.com',
+      });
+      const connector = await createConnector({
+        getConfig: vi.fn().mockResolvedValue({ ...mockedConfig, disableEmailSync: true }),
+      });
+      const socialUserInfo = await connector.getUserInfo(
+        { code, redirectUri: dummyRedirectUri },
+        vi.fn()
+      );
+      expect(socialUserInfo.email).toBeUndefined();
+      expect(socialUserInfo.rawData).toMatchObject({ email: 'octocat@facebook.com' });
+    });
+
     it('throws SocialAccessTokenInvalid error if remote response code is 401', async () => {
       nock(userInfoEndpoint).get('').query({ fields }).reply(400);
       const connector = await createConnector({ getConfig });

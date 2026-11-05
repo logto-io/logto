@@ -3,6 +3,7 @@ import { z } from 'zod';
 export const naverConfigGuard = z.object({
   clientId: z.string(),
   clientSecret: z.string(),
+  disableEmailSync: z.boolean().optional(),
 });
 
 export type NaverConfig = z.infer<typeof naverConfigGuard>;
