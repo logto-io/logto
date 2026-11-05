@@ -30,6 +30,8 @@ const {
   findUnconsumedPasscodeByIdentifierAndType,
   findUnconsumedPasscodesByIdentifierAndType,
   insertPasscode,
+  consumePasscode,
+  increasePasscodeTryCount,
   deletePasscodeById,
   deletePasscodesByIds,
 } = createPasscodeQueries(pool);
@@ -145,6 +147,45 @@ describe('passcode query', () => {
     });
 
     await expect(insertPasscode(mockPasscode)).resolves.toEqual(mockPasscode);
+  });
+
+  it('consumes a passcode only while it is unconsumed', async () => {
+    const expectSql = sql`
+      update ${table}
+      set ${fields.consumed}=true
+      where ${fields.id}=$1
+      and ${fields.consumed}=false
+      returning ${sql.join(Object.values(fields), sql`, `)}
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([mockPasscode.id]);
+
+      return createMockQueryResult([]);
+    });
+
+    await expect(consumePasscode(mockPasscode.id)).resolves.toBeNull();
+  });
+
+  it('increases the try count only while it is under the limit', async () => {
+    const expectSql = sql`
+      update ${table}
+      set ${fields.tryCount}=${fields.tryCount}+1
+      where ${fields.id}=$1
+      and ${fields.consumed}=false
+      and ${fields.tryCount}<$2
+      returning ${sql.join(Object.values(fields), sql`, `)}
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([mockPasscode.id, 10]);
+
+      return createMockQueryResult([]);
+    });
+
+    await expect(increasePasscodeTryCount(mockPasscode.id, 10)).resolves.toBeNull();
   });
 
   it('deletePasscodeById', async () => {
