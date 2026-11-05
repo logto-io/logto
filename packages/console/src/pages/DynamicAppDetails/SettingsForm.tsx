@@ -1,4 +1,8 @@
-import { type CimdConfig, type SnakeCaseOidcConfig } from '@logto/schemas';
+import {
+  type CimdConfig,
+  customClientMetadataDefault,
+  type SnakeCaseOidcConfig,
+} from '@logto/schemas';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -6,12 +10,14 @@ import { useSWRConfig } from 'swr';
 
 import DetailsForm from '@/components/DetailsForm';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import useApi from '@/hooks/use-api';
 import { cimdConfigEndpoint } from '@/hooks/use-dynamic-app';
 import { trySubmitSafe } from '@/utils/form';
 
 import ClientCompatibility from './ClientCompatibility';
 import EndpointsAndCredentials from './EndpointsAndCredentials';
+import RefreshTokenSettings from './RefreshTokenSettings';
 import Settings from './Settings';
 import { type SettingsFormData } from './types';
 
@@ -20,8 +26,12 @@ type Props = {
   readonly oidcConfig: SnakeCaseOidcConfig;
 };
 
-const toFormData = ({ addConsentPromptForOfflineAccess }: CimdConfig): SettingsFormData => ({
+const toFormData = ({
+  addConsentPromptForOfflineAccess,
+  refreshTokenTtlInDays,
+}: CimdConfig): SettingsFormData => ({
   addConsentPromptForOfflineAccess: addConsentPromptForOfflineAccess ?? false,
+  refreshTokenTtlInDays: refreshTokenTtlInDays ?? customClientMetadataDefault.refreshTokenTtlInDays,
 });
 
 function SettingsForm({ data, oidcConfig }: Props) {
@@ -37,8 +47,13 @@ function SettingsForm({ data, oidcConfig }: Props) {
   } = formMethods;
 
   const onSubmit = handleSubmit(
-    trySubmitSafe(async (formData) => {
-      const updated = await api.patch(cimdConfigEndpoint, { json: formData }).json<CimdConfig>();
+    trySubmitSafe(async ({ refreshTokenTtlInDays, ...formData }) => {
+      const updated = await api
+        .patch(cimdConfigEndpoint, {
+          // DEV: Dynamic app refresh token lifetime
+          json: isDevFeaturesEnabled ? { ...formData, refreshTokenTtlInDays } : formData,
+        })
+        .json<CimdConfig>();
 
       reset(toFormData(updated));
       void mutate(cimdConfigEndpoint, updated, { revalidate: false });
@@ -57,6 +72,8 @@ function SettingsForm({ data, oidcConfig }: Props) {
         >
           <Settings />
           <EndpointsAndCredentials oidcConfig={oidcConfig} />
+          {/* DEV: Dynamic app refresh token lifetime */}
+          {isDevFeaturesEnabled && <RefreshTokenSettings />}
           <ClientCompatibility />
         </DetailsForm>
       </FormProvider>
