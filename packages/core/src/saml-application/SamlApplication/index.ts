@@ -47,9 +47,11 @@ import {
 import {
   buildSamlAssertionNameId,
   getSamlAppCallbackUrl,
+  expandMultiValuedAttributeTags,
   generateSamlAttributeTag,
   getSamlUserAttributeNames,
   assertSamlAuthnRequestSignatureScope,
+  type SamlTagValue,
 } from './utils.js';
 
 type SamlIdentityProviderConfig = {
@@ -68,6 +70,21 @@ type SamlServiceProviderConfig = {
 };
 
 type SamlUserInfo = IdTokenProfileStandardClaims & { auth_time: number };
+
+const toSamlAttributeTagItem = (value: unknown): string =>
+  typeof value === 'object' ? JSON.stringify(value) : String(value);
+
+/**
+ * Array claims keep their items; `expandMultiValuedAttributeTags` emits one value element each.
+ * Object items, such as those of `organization_data` and `sso_identities`, stay JSON-encoded.
+ */
+const toSamlAttributeTagValue = (value: unknown): string | string[] => {
+  if (Array.isArray(value)) {
+    return value.map((item) => toSamlAttributeTagItem(item));
+  }
+
+  return toSamlAttributeTagItem(value);
+};
 
 class SamlApplicationConfig {
   constructor(
@@ -534,7 +551,9 @@ export class SamlApplication {
         SessionIndex: sessionId ?? '',
       };
 
-      const context = saml.SamlLib.replaceTagsByValue(template, tagValues);
+      const { template: expandedTemplate, tagValues: scalarTagValues } =
+        expandMultiValuedAttributeTags(template, tagValues);
+      const context = saml.SamlLib.replaceTagsByValue(expandedTemplate, scalarTagValues);
 
       return {
         id,
@@ -559,7 +578,7 @@ export class SamlApplication {
 
   protected readonly buildSamlAttributesTagValues = (
     userInfo: IdTokenProfileStandardClaims
-  ): Record<string, Nullable<string>> => {
+  ): Record<string, SamlTagValue | SamlTagValue[]> => {
     return Object.entries(this.config.attributeMapping).length > 0
       ? Object.fromEntries(
           Object.entries(this.config.attributeMapping)
@@ -570,10 +589,7 @@ export class SamlApplication {
                 unknown,
               ];
             })
-            .map(([key, value]) => [
-              generateSamlAttributeTag(key),
-              typeof value === 'object' ? JSON.stringify(value) : String(value),
-            ])
+            .map(([key, value]) => [generateSamlAttributeTag(key), toSamlAttributeTagValue(value)])
         )
       : /**
          * User attributes for SAML response
