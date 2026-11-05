@@ -1,6 +1,17 @@
-import { TenantRole, defaultTenantId, getTenantOrganizationId } from '@logto/schemas';
+import {
+  MfaFactor,
+  TenantRole,
+  type User,
+  defaultTenantId,
+  getTenantOrganizationId,
+} from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
+import {
+  mockSignInExperience,
+  mockUser,
+  mockUserTotpMfaVerification,
+} from '#src/__mocks__/index.js';
 import { EnvSet } from '#src/env-set/index.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
@@ -40,25 +51,51 @@ const updateById = jest.fn(async (_id: string, data: { isMfaRequired: boolean })
   id: tenantOrganizationId,
   ...data,
 }));
-const getMfaStatus = jest.fn(async () => ({ isMfaRequired: true, hasMfaConfigured: false }));
-const getUsersWithoutMfa = jest.fn(async () => [
-  { id: 'foo', username: 'foo', primaryEmail: null, name: null, avatar: null },
+const findById = jest.fn(async () => ({ id: tenantOrganizationId, isMfaRequired: true }));
+/** Email is an MFA factor of the sign-in experience, phone is not. */
+const findDefaultSignInExperience = jest.fn(async () => ({
+  ...mockSignInExperience,
+  mfa: { ...mockSignInExperience.mfa, factors: [MfaFactor.TOTP, MfaFactor.EmailVerificationCode] },
+}));
+const findUserById = jest.fn(async () => ({
+  ...mockUser,
+  primaryEmail: null,
+  primaryPhone: '111111',
+  mfaVerifications: [],
+}));
+const member = (id: string, profile: Partial<User> = {}) => ({
+  id,
+  username: id,
+  primaryEmail: null,
+  primaryPhone: null,
+  name: null,
+  avatar: null,
+  mfaVerifications: [],
+  ...profile,
+});
+const getMembersWithMfaProfile = jest.fn(async () => [
+  member('none'),
+  member('phone', { primaryPhone: '111111' }),
+  member('email', { primaryEmail: 'email@logto.io' }),
+  member('totp', { mfaVerifications: [mockUserTotpMfaVerification] }),
 ]);
 
 const mockedQueries = {
   organizations: {
     updateById,
-    getMfaStatus,
+    findById,
     relations: {
       users: {
         exists: isMember,
-        getUsersWithoutMfa,
+        getMembersWithMfaProfile,
       },
       usersRoles: {
         exists: hasRole,
       },
     },
   },
+  signInExperiences: { findDefaultSignInExperience },
+  users: { findUserById },
 } as unknown as Partial2<Queries>;
 
 const tenantContext = new MockTenant(undefined, mockedQueries);
@@ -110,7 +147,8 @@ describe('me tenant routes', () => {
         isMember: true,
         isAdmin: false,
       });
-      expect(getMfaStatus).toHaveBeenCalledWith(tenantOrganizationId, callerId);
+      expect(findById).toHaveBeenCalledWith(tenantOrganizationId);
+      expect(findUserById).toHaveBeenCalledWith(callerId);
     });
 
     it('should tell an admin they can change the requirement', async () => {
@@ -134,8 +172,12 @@ describe('me tenant routes', () => {
       const response = await request.get('/tenant/members-without-mfa');
 
       expect(response.status).toBe(200);
-      expect(response.body).toEqual([expect.objectContaining({ id: 'foo' })]);
-      expect(getUsersWithoutMfa).toHaveBeenCalledWith(tenantOrganizationId);
+      // A primary email counts as MFA since email is an MFA factor; a primary phone does not.
+      expect(response.body).toEqual([
+        { id: 'none', username: 'none', primaryEmail: null, name: null, avatar: null },
+        { id: 'phone', username: 'phone', primaryEmail: null, name: null, avatar: null },
+      ]);
+      expect(getMembersWithMfaProfile).toHaveBeenCalledWith(tenantOrganizationId);
     });
 
     it('should reject a collaborator', async () => {
@@ -144,7 +186,7 @@ describe('me tenant routes', () => {
       const response = await request.get('/tenant/members-without-mfa');
 
       expect(response.status).toBe(403);
-      expect(getUsersWithoutMfa).not.toHaveBeenCalled();
+      expect(getMembersWithMfaProfile).not.toHaveBeenCalled();
     });
   });
 

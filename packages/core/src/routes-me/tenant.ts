@@ -1,6 +1,7 @@
 import { Users } from '@logto/schemas';
 import { z } from 'zod';
 
+import { getAllUserEnabledMfaVerifications } from '#src/libraries/mfa.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type { RouterInitArgs } from '#src/routes/types.js';
 
@@ -38,7 +39,7 @@ export default function tenantRoutes<T extends AuthedMeRouter>(
   ...[router, tenant]: RouterInitArgs<T>
 ) {
   const {
-    queries: { organizations },
+    queries: { organizations, signInExperiences, users },
   } = tenant;
 
   const { isAdmin, assertAdmin } = createTenantMemberAuthorization(tenant);
@@ -67,13 +68,20 @@ export default function tenantRoutes<T extends AuthedMeRouter>(
       assertNotCloud();
 
       const { id: userId } = ctx.auth;
-      const [status, isMember, isCallerAdmin] = await Promise.all([
-        organizations.getMfaStatus(tenantOrganizationId, userId),
+      const [{ isMfaRequired }, { mfa }, user, isMember, isCallerAdmin] = await Promise.all([
+        organizations.findById(tenantOrganizationId),
+        signInExperiences.findDefaultSignInExperience(),
+        users.findUserById(userId),
         organizations.relations.users.exists({ organizationId: tenantOrganizationId, userId }),
         isAdmin(userId),
       ]);
 
-      ctx.body = { ...status, isMember, isAdmin: isCallerAdmin };
+      ctx.body = {
+        isMfaRequired,
+        hasMfaConfigured: getAllUserEnabledMfaVerifications(mfa, user).length > 0,
+        isMember,
+        isAdmin: isCallerAdmin,
+      };
 
       return next();
     }
@@ -90,7 +98,20 @@ export default function tenantRoutes<T extends AuthedMeRouter>(
       assertNotCloud();
       await assertAdmin(ctx.auth.id);
 
-      ctx.body = await organizations.relations.users.getUsersWithoutMfa(tenantOrganizationId);
+      const [{ mfa }, members] = await Promise.all([
+        signInExperiences.findDefaultSignInExperience(),
+        organizations.relations.users.getMembersWithMfaProfile(tenantOrganizationId),
+      ]);
+
+      ctx.body = members
+        .filter((member) => getAllUserEnabledMfaVerifications(mfa, member).length === 0)
+        .map(({ id, username, primaryEmail, name, avatar }) => ({
+          id,
+          username,
+          primaryEmail,
+          name,
+          avatar,
+        }));
 
       return next();
     }
