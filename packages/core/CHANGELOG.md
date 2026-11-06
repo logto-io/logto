@@ -1,5 +1,31 @@
 # Change Log
 
+## 1.46.1
+
+### Patch Changes
+
+- 7ba0206: count email and phone MFA factors when issuing organization tokens for organizations that require MFA
+
+  Users whose only MFA factor is the email verification code or SMS verification code enabled in the sign-in experience were always denied organization tokens for organizations that require MFA, even after completing MFA at sign-in. Organization token issuance now uses the same MFA factors as sign-in, and the Console's tenant MFA status and list of members without MFA follow the same rule.
+
+  This also means MFA factors that are not enabled in the sign-in experience, and backup codes that have all been used, no longer count as configured MFA. Users in an organization that requires MFA whose only MFA is such a factor (for example, a TOTP added through the Management API while TOTP is not enabled, or a factor that was later disabled) are denied organization tokens until they set up an enabled MFA factor. With the organization MFA policy set to mandatory in the sign-in experience, they are asked to do so at their next sign-in.
+
+- 08b8a0e: emit one `AttributeValue` per item for multi-valued SAML attributes
+
+  A mapped claim that holds an array, such as `roles` or `organizations`, was written into the SAML assertion as one JSON-encoded string (`["Development","Employees"]`). Service providers expect one `saml:AttributeValue` element per value, as the SAML core specification describes, so role-based rules on the SP side could not match. Each item is now emitted as its own `AttributeValue`.
+
+  Object items, such as those of `organization_data` and `sso_identities`, stay JSON-encoded, one per `AttributeValue`.
+
+  This changes the assertion shape for existing integrations. A service provider that parses the JSON-encoded string of an array claim now receives one `AttributeValue` per item and should read them as a list, and an empty array yields the attribute without a value instead of `[]`.
+
+- 426f4dc: count every attempt at a verification code toward its retry limit, and accept a correct code from at most one request
+
+  An attempt after the limit is reached gets `verification_code.exceed_max_try`, and any other request that presents a code already used gets `verification_code.not_found`.
+
+- 9b4106d: link enterprise SSO sign-ins to existing accounts by email only on the connector's email domains
+
+  Upgrade note: an enterprise SSO sign-in is linked automatically to an existing account with the same email only when the email's domain is listed in the connector's "Enterprise email domains", so list every email domain the connector serves.
+
 ## 1.46.0
 
 ### Minor Changes
