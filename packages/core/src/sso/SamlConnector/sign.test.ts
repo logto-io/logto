@@ -1,8 +1,13 @@
 import { generateKeyPairAndCertificate } from '#src/libraries/saml-application/utils.js';
 
+import { SsoConnectorErrorCodes } from '../types/error.js';
 import { SamlAuthnRequestSignatureAlgorithm } from '../types/saml.js';
 
 import SamlConnector from './index.js';
+
+// Each generation is a slow synchronous RSA-4096 keygen, and no case here needs fresh keys.
+const idp = await generateKeyPairAndCertificate(1);
+const sp = await generateKeyPairAndCertificate(1);
 
 // Minimal IdP metadata with a redirect SSO endpoint and a signing cert. Pass a namespace `prefix`
 // (e.g. `md`, `saml-md`) to exercise prefixed elements; default is the un-prefixed default namespace.
@@ -28,17 +33,14 @@ describe('SamlConnector signed AuthnRequest', () => {
   const endpoint = new URL('https://logto.example.com');
 
   it('omits Signature when signAuthnRequest is off', async () => {
-    const { certificate } = await generateKeyPairAndCertificate(1);
     const connector = new SamlConnector(endpoint, 'conn-1', {
-      metadata: buildIdpMetadataXml(certificate),
+      metadata: buildIdpMetadataXml(idp.certificate),
     });
     const url = await connector.getSingleSignOnUrl('relay-1');
     expect(url).not.toContain('Signature=');
   });
 
   it('signs when enabled and a credential is set', async () => {
-    const idp = await generateKeyPairAndCertificate(1);
-    const sp = await generateKeyPairAndCertificate(1);
     const connector = new SamlConnector(endpoint, 'conn-2', {
       metadata: buildIdpMetadataXml(idp.certificate),
       signAuthnRequest: true,
@@ -54,20 +56,20 @@ describe('SamlConnector signed AuthnRequest', () => {
   });
 
   it('throws (fail-closed) when enabled with no credential', async () => {
-    const idp = await generateKeyPairAndCertificate(1);
     const connector = new SamlConnector(endpoint, 'conn-3', {
       metadata: buildIdpMetadataXml(idp.certificate),
       signAuthnRequest: true,
     });
-    await expect(connector.getSingleSignOnUrl('relay-3')).rejects.toThrow();
+    await expect(connector.getSingleSignOnUrl('relay-3')).rejects.toMatchObject({
+      data: { ssoErrorCode: SsoConnectorErrorCodes.InvalidConfig },
+    });
   });
 
   it('stays unsigned when off despite metadata wanting it', async () => {
     // Regression: samlify throws ERR_METADATA_CONFLICT / "not private key" if the IdP advertises
     // WantAuthnRequestsSigned="true" while we send unsigned. Our flag drives both sides, so an
     // off connector yields a clean unsigned request regardless of the metadata.
-    const { certificate } = await generateKeyPairAndCertificate(1);
-    const metadata = buildIdpMetadataXml(certificate).replace(
+    const metadata = buildIdpMetadataXml(idp.certificate).replace(
       '<IDPSSODescriptor',
       '<IDPSSODescriptor WantAuthnRequestsSigned="true"'
     );
@@ -77,8 +79,6 @@ describe('SamlConnector signed AuthnRequest', () => {
   });
 
   it('signs on the manual-config path (no metadata XML)', async () => {
-    const idp = await generateKeyPairAndCertificate(1);
-    const sp = await generateKeyPairAndCertificate(1);
     const connector = new SamlConnector(endpoint, 'conn-5', {
       entityId: 'https://idp.example.com',
       signInEndpoint: 'https://idp.example.com/sso',
@@ -94,8 +94,6 @@ describe('SamlConnector signed AuthnRequest', () => {
   });
 
   it('uses the configured RSA-SHA512 algorithm', async () => {
-    const idp = await generateKeyPairAndCertificate(1);
-    const sp = await generateKeyPairAndCertificate(1);
     const connector = new SamlConnector(endpoint, 'conn-6', {
       metadata: buildIdpMetadataXml(idp.certificate),
       signAuthnRequest: true,
@@ -110,8 +108,6 @@ describe('SamlConnector signed AuthnRequest', () => {
   });
 
   it('defaults to RSA-SHA256 when no algorithm is configured', async () => {
-    const idp = await generateKeyPairAndCertificate(1);
-    const sp = await generateKeyPairAndCertificate(1);
     const connector = new SamlConnector(endpoint, 'conn-7', {
       metadata: buildIdpMetadataXml(idp.certificate),
       signAuthnRequest: true,
@@ -125,8 +121,6 @@ describe('SamlConnector signed AuthnRequest', () => {
   });
 
   it('rewrites WantAuthnRequestsSigned="false" when enabled', async () => {
-    const idp = await generateKeyPairAndCertificate(1);
-    const sp = await generateKeyPairAndCertificate(1);
     const metadata = buildIdpMetadataXml(idp.certificate).replace(
       '<IDPSSODescriptor',
       '<IDPSSODescriptor WantAuthnRequestsSigned="false"'
@@ -144,7 +138,6 @@ describe('SamlConnector signed AuthnRequest', () => {
   });
 
   it('throws when enabled and metadata has no IDPSSODescriptor', async () => {
-    const sp = await generateKeyPairAndCertificate(1);
     const metadata =
       '<?xml version="1.0"?><EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" entityID="https://idp.example.com"></EntityDescriptor>';
     const connector = new SamlConnector(endpoint, 'conn-9', {
@@ -159,8 +152,6 @@ describe('SamlConnector signed AuthnRequest', () => {
   });
 
   it('signs when the IdP metadata uses a hyphenated namespace prefix', async () => {
-    const idp = await generateKeyPairAndCertificate(1);
-    const sp = await generateKeyPairAndCertificate(1);
     const connector = new SamlConnector(endpoint, 'conn-11', {
       metadata: buildIdpMetadataXml(idp.certificate, 'saml-md'),
       signAuthnRequest: true,
@@ -174,11 +165,10 @@ describe('SamlConnector signed AuthnRequest', () => {
   });
 
   it('stays unsigned on the manual-config path when off', async () => {
-    const { certificate } = await generateKeyPairAndCertificate(1);
     const connector = new SamlConnector(endpoint, 'conn-12', {
       entityId: 'https://idp.example.com',
       signInEndpoint: 'https://idp.example.com/sso',
-      x509Certificate: certificate,
+      x509Certificate: idp.certificate,
     });
     const url = await connector.getSingleSignOnUrl('relay-12');
     expect(url).not.toContain('Signature=');
