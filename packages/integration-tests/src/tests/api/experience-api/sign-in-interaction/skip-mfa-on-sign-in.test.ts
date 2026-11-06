@@ -2,12 +2,13 @@ import { UserScope } from '@logto/core-kit';
 import { MfaFactor, MfaPolicy } from '@logto/schemas';
 
 import { enableAllAccountCenterFields } from '#src/api/account-center.js';
-import { createUserMfaVerification } from '#src/api/admin-user.js';
+import { createUserMfaVerification, updateUserLogtoConfig } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/index.js';
-import { updateMfaSettings } from '#src/api/my-account.js';
+import { getMfaSettings, updateMfaSettings } from '#src/api/my-account.js';
 import { createVerificationRecordByPassword } from '#src/api/verification-record.js';
 import { initExperienceClient } from '#src/helpers/client.js';
 import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
+import { expectRejects } from '#src/helpers/index.js';
 import {
   signInAndGetUserApi,
   createDefaultTenantUserWithPassword,
@@ -91,6 +92,39 @@ describe('skipMfaOnSignIn user setting', () => {
 
       // Should still require MFA due to Mandatory policy (ignoring user's skipMfaOnSignIn = true)
       await expect(client.submitInteraction()).rejects.toThrow();
+
+      await deleteDefaultTenantUser(user.id);
+    });
+  });
+
+  describe('User required MFA override', () => {
+    it('should ignore user setting when MFA is required for the user', async () => {
+      await updateSignInExperience({
+        adaptiveMfa: { enabled: false },
+        mfa: { factors: [MfaFactor.TOTP], policy: MfaPolicy.NoPrompt },
+      });
+
+      const { user, username, password } = await createDefaultTenantUserWithPassword();
+      const api = await signInAndGetUserApi(username, password, {
+        scopes: [UserScope.Profile, UserScope.Identities],
+      });
+      const verificationRecordId = await createVerificationRecordByPassword(api, password);
+      await updateMfaSettings(api, verificationRecordId, true);
+      await createUserMfaVerification(user.id, MfaFactor.TOTP);
+      await updateUserLogtoConfig(user.id, { mfa: { required: true }, passkeySignIn: {} });
+
+      await expect(getMfaSettings(api)).resolves.toMatchObject({
+        skipMfaOnSignIn: true,
+        required: true,
+      });
+
+      const client = await initExperienceClient();
+      await identifyUserWithUsernamePassword(client, username, password);
+
+      await expectRejects(client.submitInteraction(), {
+        code: 'session.mfa.require_mfa_verification',
+        status: 403,
+      });
 
       await deleteDefaultTenantUser(user.id);
     });

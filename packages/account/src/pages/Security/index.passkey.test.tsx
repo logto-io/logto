@@ -103,8 +103,8 @@ describe('<Security /> with passkey sign-in enabled', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     mockGetAccessToken.mockResolvedValue('access-token');
-    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true });
-    mockUpdateMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true });
+    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true, required: false });
+    mockUpdateMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true, required: false });
     mockGetLogtoConfig.mockResolvedValue(mockLogtoConfigResponse);
     mockUpdateLogtoConfig.mockResolvedValue(mockLogtoConfigResponse);
     window.sessionStorage.clear();
@@ -172,7 +172,11 @@ describe('<Security /> with passkey sign-in enabled', () => {
   });
 
   it('warns to add a second verification method when only a passkey is configured', async () => {
-    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false, enabled: true });
+    mockGetMfaSettings.mockResolvedValue({
+      skipMfaOnSignIn: false,
+      enabled: true,
+      required: false,
+    });
     const { queryByText } = renderSecurity({
       factors: [MfaFactor.TOTP, MfaFactor.WebAuthn],
       mfaVerifications: [
@@ -190,7 +194,7 @@ describe('<Security /> with passkey sign-in enabled', () => {
   });
 
   it('does not warn when a non-passkey second factor is configured alongside the passkey', async () => {
-    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false });
+    mockGetMfaSettings.mockResolvedValue({ skipMfaOnSignIn: false, required: false });
     const { queryByText } = renderSecurity({
       factors: [MfaFactor.TOTP, MfaFactor.WebAuthn],
       mfaVerifications: [

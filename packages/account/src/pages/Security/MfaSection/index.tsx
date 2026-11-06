@@ -150,6 +150,7 @@ const MfaSection = () => {
   } = useMfaVerifications();
   const [skipMfaOnSignIn, setSkipMfaOnSignIn] = useState<boolean>();
   const [isMfaEnabled, setIsMfaEnabled] = useState<boolean>();
+  const [isMfaRequired, setIsMfaRequired] = useState(false);
   const [hasLoadedMfaSettings, setHasLoadedMfaSettings] = useState(false);
   const [isLoadingMfaSettings, setIsLoadingMfaSettings] = useState(false);
   const [hasMfaSettingsError, setHasMfaSettingsError] = useState(false);
@@ -168,6 +169,9 @@ const MfaSection = () => {
     mfaPolicy !== undefined &&
     !mandatoryMfaPolicies.has(mfaPolicy) &&
     hasEnabledSecondFactor(experienceSettings);
+  // MFA can also be required for the user by an admin or an organization, which only the MFA
+  // settings API knows about. Users cannot turn off MFA in either case.
+  const isToggleVisible = showToggle && !isMfaRequired;
 
   const hasConfiguredMfa = hasConfiguredSecondFactor(
     mfaVerifications,
@@ -195,6 +199,7 @@ const MfaSection = () => {
     if (!error && result) {
       setSkipMfaOnSignIn(result.skipMfaOnSignIn);
       setIsMfaEnabled(result.enabled);
+      setIsMfaRequired(result.required);
     }
     setHasLoadedMfaSettings(true);
     setIsLoadingMfaSettings(false);
@@ -300,7 +305,7 @@ const MfaSection = () => {
       <SecuritySection
         title={t('account_center.security.two_step_verification')}
         notification={
-          !isMfaSectionLoading && showToggle && twoStepState === 'incomplete' ? (
+          !isMfaSectionLoading && isToggleVisible && twoStepState === 'incomplete' ? (
             <InlineNotification
               message="account_center.security.no_verification_method_warning"
               className={styles.notification}
@@ -310,7 +315,7 @@ const MfaSection = () => {
       >
         <MfaContent
           isLoading={isMfaSectionLoading}
-          hasToggle={showToggle}
+          hasToggle={isToggleVisible}
           twoStepState={twoStepState}
           rows={rows}
           onToggleChange={handleToggleChange}

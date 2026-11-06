@@ -1,7 +1,7 @@
 import crypto from 'node:crypto';
 
 import { PasswordPolicyChecker } from '@logto/core-kit';
-import { InteractionEvent, MfaFactor, MfaPolicy } from '@logto/schemas';
+import { InteractionEvent, MfaFactor, MfaPolicy, userMfaDataKey } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 import type { Provider } from 'oidc-provider';
 
@@ -368,6 +368,27 @@ describe('verifyMfa', () => {
         verifiedMfa: undefined,
       })
     ).rejects.toThrowError();
+  });
+
+  it('should pass without verifiedMfa if user skips MFA on sign-in', async () => {
+    findUserById.mockResolvedValueOnce({
+      ...mockUserWithMfaVerifications,
+      logtoConfig: { [userMfaDataKey]: { skipMfaOnSignIn: true } },
+    });
+    await expect(verifyMfa(baseCtx, tenantContext, signInInteraction)).resolves.not.toThrow();
+  });
+
+  it('should reject without verifiedMfa if MFA is required for the user who skips it', async () => {
+    findUserById.mockResolvedValueOnce({
+      ...mockUserWithMfaVerifications,
+      logtoConfig: { [userMfaDataKey]: { skipMfaOnSignIn: true, required: true } },
+    });
+    await expect(verifyMfa(baseCtx, tenantContext, signInInteraction)).rejects.toMatchError(
+      new RequestError(
+        { code: 'session.mfa.require_mfa_verification', status: 403 },
+        { availableFactors: [MfaFactor.TOTP] }
+      )
+    );
   });
 
   it('should reject and sort availableFactors', async () => {

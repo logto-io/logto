@@ -35,6 +35,7 @@ describe('my-account (mfa-settings)', () => {
 
       expect(mfaSettings).toEqual({
         skipMfaOnSignIn: false, // Default value (MFA required)
+        required: false,
       });
 
       await deleteDefaultTenantUser(user.id);
@@ -89,6 +90,7 @@ describe('my-account (mfa-settings)', () => {
 
       expect(mfaSettings).toEqual({
         skipMfaOnSignIn: false,
+        required: false,
       });
 
       await deleteDefaultTenantUser(user.id);
@@ -108,12 +110,12 @@ describe('my-account (mfa-settings)', () => {
 
       // Update MFA settings to skip MFA
       const updateResponse = await updateMfaSettings(api, verificationRecordId, true);
-      expect(updateResponse).toEqual({ skipMfaOnSignIn: true });
+      expect(updateResponse).toEqual({ skipMfaOnSignIn: true, required: false });
 
       // Update back to require MFA
       const verificationRecordId2 = await createVerificationRecordByPassword(api, password);
       const updateResponse2 = await updateMfaSettings(api, verificationRecordId2, false);
-      expect(updateResponse2).toEqual({ skipMfaOnSignIn: false });
+      expect(updateResponse2).toEqual({ skipMfaOnSignIn: false, required: false });
 
       await deleteDefaultTenantUser(user.id);
     });
@@ -126,10 +128,10 @@ describe('my-account (mfa-settings)', () => {
 
       const verificationRecordId = await createVerificationRecordByPassword(api, password);
       const updateResponse = await updateMfaSettings(api, verificationRecordId, false, true);
-      expect(updateResponse).toEqual({ skipMfaOnSignIn: false, enabled: true });
+      expect(updateResponse).toEqual({ skipMfaOnSignIn: false, enabled: true, required: false });
 
       const mfaSettings = await getMfaSettings(api);
-      expect(mfaSettings).toEqual({ skipMfaOnSignIn: false, enabled: true });
+      expect(mfaSettings).toEqual({ skipMfaOnSignIn: false, enabled: true, required: false });
 
       await deleteDefaultTenantUser(user.id);
     });
