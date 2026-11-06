@@ -34,6 +34,7 @@ const updateUserSsoIdentityMock = jest.fn();
 const insertUserSsoIdentityMock = jest.fn();
 const updateUserMock = jest.fn();
 const findUserByEmailMock = jest.fn();
+const hasUserWithEmailMock = jest.fn().mockResolvedValue(false);
 const insertUserMock = jest.fn().mockResolvedValue([{ id: 'foo' }, { organizations: [] }]);
 const generateUserIdMock = jest.fn().mockResolvedValue('foo');
 const getAvailableSsoConnectorsMock = jest.fn();
@@ -108,6 +109,7 @@ describe('Single sign on util methods tests', () => {
       users: {
         updateUserById: updateUserMock,
         findUserByEmail: findUserByEmailMock,
+        hasUserWithEmail: hasUserWithEmailMock,
       },
       ssoConnectors: {
         findIdpInitiatedSamlSsoSessionById: findIdpInitiatedSamlSsoSessionMock,
@@ -273,6 +275,7 @@ describe('Single sign on util methods tests', () => {
         tenant,
         {
           ...wellConfiguredSsoConnector,
+          domains: ['logto.io'],
           syncProfile: false,
         },
         {
@@ -308,10 +311,15 @@ describe('Single sign on util methods tests', () => {
       findUserByEmailMock.mockResolvedValueOnce(null);
 
       await expect(async () =>
-        handleSsoAuthentication(mockContext, tenant, mockSsoConnector, {
-          issuer: mockIssuer,
-          userInfo: mockSsoUserInfo,
-        })
+        handleSsoAuthentication(
+          mockContext,
+          tenant,
+          { ...mockSsoConnector, domains: ['logto.io'] },
+          {
+            issuer: mockIssuer,
+            userInfo: mockSsoUserInfo,
+          }
+        )
       ).rejects.toMatchObject(
         new RequestError(
           {
@@ -321,6 +329,60 @@ describe('Single sign on util methods tests', () => {
           {}
         )
       );
+      expect(findUserByEmailMock).toBeCalledWith(mockSsoUserInfo.email);
+    });
+
+    it('should sign in a linked identity regardless of the connector domains', async () => {
+      findUserSsoIdentityBySsoIdentityIdMock.mockResolvedValueOnce({
+        id: 'ssoIdentityId',
+        userId: 'foo',
+        issuer: mockIssuer,
+      });
+
+      await expect(
+        handleSsoAuthentication(
+          mockContext,
+          tenant,
+          { ...wellConfiguredSsoConnector, domains: [] },
+          { issuer: mockIssuer, userInfo: mockSsoUserInfo }
+        )
+      ).resolves.toBe('foo');
+      expect(findUserByEmailMock).not.toBeCalled();
+    });
+
+    it.each([{ domains: ['foo.com'] }, { domains: [] }])(
+      'should not link by email when the connector domains are $domains',
+      async ({ domains }) => {
+        findUserSsoIdentityBySsoIdentityIdMock.mockResolvedValueOnce(null);
+
+        await expect(
+          handleSsoAuthentication(
+            mockContext,
+            tenant,
+            { ...wellConfiguredSsoConnector, domains },
+            { issuer: mockIssuer, userInfo: mockSsoUserInfo }
+          )
+        ).rejects.toMatchObject(
+          new RequestError({ code: 'user.identity_not_exist', status: 422 }, {})
+        );
+        expect(findUserByEmailMock).not.toBeCalled();
+        expect(insertUserSsoIdentityMock).not.toBeCalled();
+      }
+    );
+
+    it('should match the email domain case-insensitively', async () => {
+      findUserSsoIdentityBySsoIdentityIdMock.mockResolvedValueOnce(null);
+      findUserByEmailMock.mockResolvedValueOnce({ id: 'foo' });
+
+      await expect(
+        handleSsoAuthentication(
+          mockContext,
+          tenant,
+          { ...wellConfiguredSsoConnector, domains: ['LOGTO.io'] },
+          { issuer: mockIssuer, userInfo: { ...mockSsoUserInfo, email: 'Foo@Logto.IO' } }
+        )
+      ).resolves.toBe('foo');
+      expect(findUserByEmailMock).toBeCalledWith('Foo@Logto.IO');
     });
   });
 
@@ -360,6 +422,19 @@ describe('Single sign on util methods tests', () => {
         issuer: mockIssuer,
         detail: mockSsoUserInfo,
       });
+    });
+
+    it('should reject an email that is already in use', async () => {
+      hasUserWithEmailMock.mockResolvedValueOnce(true);
+
+      await expect(
+        registerWithSsoAuthentication(mockContext, tenant, {
+          connectorId: wellConfiguredSsoConnector.id,
+          issuer: mockIssuer,
+          userInfo: mockSsoUserInfo,
+        })
+      ).rejects.toMatchError(new RequestError({ code: 'user.email_already_in_use', status: 422 }));
+      expect(insertUserMock).not.toBeCalled();
     });
   });
 

@@ -264,6 +264,25 @@ export const verifySsoIdentity = async (
   }
 };
 
+/**
+ * Whether the email's domain exactly matches one of the SSO connector's `domains`, ignoring case.
+ * An existing account is linked to an SSO identity by email only when this holds.
+ */
+export const isEmailInSsoConnectorDomains = (
+  { domains }: Pick<SupportedSsoConnector, 'domains'>,
+  email: string
+): boolean => {
+  const atIndex = email.lastIndexOf('@');
+
+  if (atIndex === -1) {
+    return false;
+  }
+
+  const domain = email.slice(atIndex + 1).toLowerCase();
+
+  return domains.some((item) => item.toLowerCase() === domain);
+};
+
 // Remark:
 // The following functions are used in the legacy interaction single sign on routes only.
 // The SSO interaction flow will be handled in the latest experience APIs using the SSO verification record.
@@ -315,7 +334,10 @@ export const handleSsoAuthentication = async (
     });
   }
 
-  const user = userInfo.email && (await usersQueries.findUserByEmail(userInfo.email));
+  const user =
+    userInfo.email &&
+    isEmailInSsoConnectorDomains(connectorData, userInfo.email) &&
+    (await usersQueries.findUserByEmail(userInfo.email));
 
   // SignIn and link with existing user account with a same email
   if (user) {
@@ -473,6 +495,8 @@ export const registerWithSsoAuthentication = async (
   const { createLog } = ctx;
   const log = createLog(`Interaction.Register.Submit`);
   const { issuer, userInfo, connectorId } = ssoAuthentication;
+
+  await usersLibrary.checkIdentifierCollision({ primaryEmail: userInfo.email });
 
   // Only sync the name, avatar and email (conflict email account will be guarded ahead)
   const syncingProfile = {

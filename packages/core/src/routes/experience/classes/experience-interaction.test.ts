@@ -34,6 +34,7 @@ import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import { conditional } from '@silverhand/essentials';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
+import { wellConfiguredSsoConnector } from '#src/__mocks__/sso.js';
 import {
   mockUser,
   mockUserTotpMfaVerification,
@@ -3504,6 +3505,43 @@ describe('ExperienceInteraction class', () => {
         data: { availableFactors: [MfaFactor.TOTP] },
       });
       expect(signInUserQueries.updateUserById).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('enterprise SSO email outside the connector domains', () => {
+    it('neither links nor registers an account with the email', async () => {
+      jest.clearAllMocks();
+      const { experienceInteraction, signInTenant, signInUserQueries } = createSignInInteraction({
+        interactionResult: {
+          userId: undefined,
+          verificationRecords: [
+            {
+              id: 'sso-verification-id',
+              type: VerificationType.EnterpriseSso,
+              connectorId: wellConfiguredSsoConnector.id,
+              enterpriseSsoUserInfo: { id: 'sso-user-id', email: mockUser.primaryEmail },
+              issuer: 'issuer',
+            },
+          ],
+        },
+      });
+      jest
+        .spyOn(signInTenant.libraries.ssoConnectors, 'getSsoConnectorById')
+        .mockResolvedValue({ ...wellConfiguredSsoConnector, domains: ['other.com'] });
+
+      await expect(experienceInteraction.identifyUser('sso-verification-id')).rejects.toMatchError(
+        new RequestError({ code: 'user.sso_identity_not_exist', status: 404 })
+      );
+      expect(signInUserQueries.findUserByEmail).not.toHaveBeenCalled();
+
+      jest.mocked(signInUserQueries.hasUserWithEmail).mockResolvedValueOnce(true);
+      await experienceInteraction.setInteractionEvent(InteractionEvent.Register);
+
+      await expect(experienceInteraction.createUser('sso-verification-id')).rejects.toMatchError(
+        new RequestError({ code: 'user.email_already_in_use', status: 422 })
+      );
+      expect(signInUserQueries.hasUserWithEmail).toHaveBeenCalledWith(mockUser.primaryEmail);
+      expect(userLibraries.insertUser).not.toHaveBeenCalled();
     });
   });
 

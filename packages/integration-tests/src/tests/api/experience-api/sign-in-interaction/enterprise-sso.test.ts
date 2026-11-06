@@ -2,6 +2,7 @@ import { InteractionEvent, MfaFactor, SignInIdentifier, SignInMode } from '@logt
 import { generateStandardId } from '@logto/shared';
 
 import {
+  createUser,
   createUserMfaVerification,
   deleteUser,
   getUser,
@@ -21,7 +22,7 @@ import {
   enableAllVerificationCodeSignInMethods,
   enableMandatoryMfaWithTotp,
 } from '#src/helpers/sign-in-experience.js';
-import { generateNewUser, UserApiTest } from '#src/helpers/user.js';
+import { UserApiTest } from '#src/helpers/user.js';
 import { generateEmail, generatePassword } from '#src/utils.js';
 
 describe('enterprise sso sign-in and sign-up', () => {
@@ -121,11 +122,8 @@ describe('enterprise sso sign-in and sign-up', () => {
       throw new Error('SSO connector is not created');
     }
 
-    const { userProfile, user } = await generateNewUser({
-      primaryEmail: true,
-    });
-
-    const { primaryEmail } = userProfile;
+    const primaryEmail = generateEmail(domain);
+    const user = await createUser({ primaryEmail });
 
     const userId = await signInWithEnterpriseSso(ssoConnectorApi.firstConnectorId, {
       sub: enterpriseSsoIdentityId,
