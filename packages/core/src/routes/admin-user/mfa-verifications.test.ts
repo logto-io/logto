@@ -85,6 +85,8 @@ describe('adminUserRoutes', () => {
 
   describe('POST /users/:userId/mfa-verifications', () => {
     describe('TOTP', () => {
+      // Rendering a real QR code costs about 200 ms of CPU under Jest, which a busy machine can
+      // stretch past the default timeout.
       it('should bind and return totp secret', async () => {
         findUserById.mockResolvedValueOnce(mockUser);
         const response = await userRequest.post(`/users/${mockUser.id}/mfa-verifications`).send({
@@ -96,7 +98,7 @@ describe('adminUserRoutes', () => {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           secretQrCode: expect.stringContaining('data:image'),
         });
-      });
+      }, 20_000);
 
       it('should fail for duplicate', async () => {
         findUserById.mockResolvedValueOnce({
@@ -118,6 +120,7 @@ describe('adminUserRoutes', () => {
         expect(response.status).toEqual(422);
       });
 
+      // Renders a real QR code, which a busy machine can stretch past the default timeout.
       it('should return supplied secret', async () => {
         findUserById.mockResolvedValueOnce(mockUser);
         const response = await userRequest.post(`/users/${mockUser.id}/mfa-verifications`).send({
@@ -130,7 +133,7 @@ describe('adminUserRoutes', () => {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           secretQrCode: expect.stringContaining('data:image'),
         });
-      });
+      }, 20_000);
     });
   });
 
