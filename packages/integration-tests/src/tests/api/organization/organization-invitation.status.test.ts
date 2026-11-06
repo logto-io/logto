@@ -48,7 +48,7 @@ describe('organization invitation status update', () => {
     const error = await invitationApi
       .updateStatus(invitation.id, OrganizationInvitationStatus.Accepted)
       .catch((error: unknown) => error);
-    await expectErrorResponse(error, 422, 'request.invalid_input');
+    await expectErrorResponse(error, 422, 'organization.accepted_user_id_required');
   });
 
   it('should be able to accept an invitation', async () => {
@@ -128,7 +128,7 @@ describe('organization invitation status update', () => {
       .updateStatus(invitation.id, OrganizationInvitationStatus.Accepted, user.id)
       .catch((error: unknown) => error);
 
-    await expectErrorResponse(error, 422, 'request.invalid_input');
+    await expectErrorResponse(error, 422, 'organization.accepted_user_email_mismatch');
   });
 
   it('should not be able to accept an invitation with an invalid user id', async () => {
@@ -162,7 +162,28 @@ describe('organization invitation status update', () => {
       .updateStatus(invitation.id, OrganizationInvitationStatus.Accepted)
       .catch((error: unknown) => error);
 
-    await expectErrorResponse(error, 422, 'request.invalid_input');
+    await expectErrorResponse(error, 422, 'organization.accepted_user_id_required');
+  });
+
+  it('should not be able to update the status of an accepted invitation', async () => {
+    const organization = await organizationApi.create({ name: 'test' });
+    const invitation = await invitationApi.create({
+      organizationId: organization.id,
+      invitee: `${randomId()}@example.com`,
+      expiresAt: Date.now() + 1_000_000,
+    });
+    expect(invitation.status).toBe('Pending');
+
+    const user = await userApi.create({
+      primaryEmail: invitation.invitee,
+    });
+    await invitationApi.updateStatus(invitation.id, OrganizationInvitationStatus.Accepted, user.id);
+
+    const error = await invitationApi
+      .updateStatus(invitation.id, OrganizationInvitationStatus.Revoked)
+      .catch((error: unknown) => error);
+
+    await expectErrorResponse(error, 422, 'organization.invitation_status_not_changeable');
   });
 
   it('should never both accept and revoke an invitation changed at the same time', async () => {
