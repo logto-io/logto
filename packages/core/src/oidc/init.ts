@@ -173,13 +173,12 @@ export default function initOidc(
   // and keeping the reference of the `envSet` object helps dynamically update oidc provider configs.
   const oidc = new Provider(envSet.oidc.issuer, {
     adapter: postgresAdapter.bind(null, envSet, queries),
-    // Align the error response regardless of the request format. It will be `application/json` by default.
-    // Rendering different error response based on the request format is okay, but it brought more trouble
-    // since `renderError` will be only called when the request prefers `text/html` format.
+    // The provider's `error_handler.js` only calls `renderError` when the request prefers HTML, and
+    // sets the same body otherwise. Its `authorization_error_handler.js` calls it for any `Accept`.
+    // Either way the object reaches `koaOidcErrorHandler`, the one place that decides the format,
+    // unless `koaCompress` has already compressed a large one (see the handler's known limit).
     //
     // See https://github.com/panva/node-oidc-provider/blob/37d0a6cfb3c618141a44cbb904ce45659438f821/lib/shared/error_handler.js#L48-L55
-    //
-    // Since we prefer a more consistent error response, we will handle it in `koaOidcErrorHandler` middleware.
     renderError: (ctx, out, _error) => {
       ctx.body = out;
     },

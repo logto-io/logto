@@ -1,6 +1,8 @@
+import { appInsights } from '@logto/app-insights/node';
 import { type IRouterContext } from 'koa-router';
 import { errors } from 'oidc-provider';
 
+import { resetDevFeaturesEnabled, setDevFeaturesEnabled } from '#src/test-utils/dev-features.js';
 import { i18next } from '#src/utils/i18n.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
@@ -31,6 +33,25 @@ describe('koaOidcErrorHandler middleware', () => {
       message: i18next.t('errors:' + code),
       ...extraMatch,
     });
+  };
+
+  const handleRedirectUriError = async (url: string, accept?: string) => {
+    const ctx = createContextWithRouteParameters({
+      url,
+      ...(accept && { headers: { accept } }),
+    });
+    // The helper spreads the Koa context, which drops what it delegates from its prototype.
+    Reflect.set(ctx, 'accepts', ctx.request.accepts.bind(ctx.request));
+    Reflect.set(ctx, 'query', ctx.request.query);
+
+    // The provider's own error handlers set the body instead of throwing.
+    next.mockImplementationOnce(() => {
+      ctx.status = 400;
+      ctx.body = errorOut(new errors.InvalidRedirectUri());
+    });
+    await koaOidcErrorHandler()(ctx, next);
+
+    return ctx;
   };
 
   it('should throw no errors if no errors are caught', async () => {
@@ -117,5 +138,79 @@ describe('koaOidcErrorHandler middleware', () => {
 
     expect(ctx.status).toBe(500);
     expect(ctx.body).toMatchObject({ ...unrecognizedError, code: 'oidc.some_error' });
+  });
+
+  describe('error page', () => {
+    const browserAccept =
+      'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8';
+    const code = 'oidc.invalid_redirect_uri';
+
+    beforeEach(() => {
+      setDevFeaturesEnabled(true);
+    });
+
+    afterEach(() => {
+      resetDevFeaturesEnabled();
+      jest.restoreAllMocks();
+    });
+
+    it.each([
+      '/oidc/auth',
+      '/oidc/auth/some-uid',
+      '/oidc/session/end',
+      '/oidc/session/end/confirm',
+    ])('renders the page for a browser on %s', async (url) => {
+      const ctx = await handleRedirectUriError(url, browserAccept);
+
+      expect(ctx.status).toBe(400);
+      expect(ctx.type).toBe('html');
+      expect(ctx.body).toContain('<!DOCTYPE html>');
+      expect(ctx.body).toContain(code);
+      expect(ctx.response.get('Content-Security-Policy')).toContain("default-src 'none'");
+    });
+
+    it.each(['/oidc/token', '/oidc/device', '/oidc/authorize', '/auth', '/api/oidc/auth'])(
+      'keeps the JSON body on %s',
+      async (url) => {
+        const ctx = await handleRedirectUriError(url, browserAccept);
+
+        expect(ctx.body).toMatchObject({ code });
+      }
+    );
+
+    it.each(['application/json', '*/*', 'text/plain', undefined])(
+      'keeps the JSON body when Accept is %s',
+      async (accept) => {
+        const ctx = await handleRedirectUriError('/oidc/auth', accept);
+
+        expect(ctx.body).toMatchObject({ code });
+      }
+    );
+
+    it('keeps the JSON body when dev features are disabled', async () => {
+      setDevFeaturesEnabled(false);
+
+      const ctx = await handleRedirectUriError('/oidc/auth', browserAccept);
+
+      expect(ctx.body).toMatchObject({ code });
+    });
+
+    it('keeps the raw error body when parse_error is false', async () => {
+      const ctx = await handleRedirectUriError('/oidc/auth?parse_error=false', browserAccept);
+
+      expect(ctx.body).toEqual(errorOut(new errors.InvalidRedirectUri()));
+    });
+
+    it('tracks the JSON body before rendering the page', async () => {
+      const trackException = jest.spyOn(appInsights, 'trackException');
+
+      const ctx = await handleRedirectUriError('/oidc/auth', browserAccept);
+
+      expect(typeof ctx.body).toBe('string');
+      expect(trackException).toHaveBeenCalledWith(
+        expect.objectContaining({ code }),
+        expect.anything()
+      );
+    });
   });
 });
