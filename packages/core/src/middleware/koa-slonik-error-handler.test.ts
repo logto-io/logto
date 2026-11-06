@@ -52,6 +52,7 @@ describe('koaSlonikErrorHandler middleware', () => {
   it.each([
     ['22P05', 'unsupported Unicode escape sequence'],
     ['22003', 'value overflows numeric format'],
+    ['22021', 'invalid byte sequence for encoding "UTF8": 0x00'],
   ])('should map DatabaseError %s to invalid request input', async (code, message) => {
     const error = new TestDatabaseError(code, message);
 

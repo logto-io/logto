@@ -45,9 +45,10 @@ export default function koaSlonikErrorHandler<StateT, ContextT>(): Middleware<St
         }
 
         // A value that is valid JSON can still be rejected by the JSONB parser, e.g. `\u0000`
-        // (`22P05`) or a number that overflows the numeric format (`22003`). Both mean the request
-        // input is invalid rather than the server failed.
-        if (error.code === '22P05' || error.code === '22003') {
+        // (`22P05`), a number that overflows the numeric format (`22003`), or a text value that
+        // contains a NUL character (`22021`, invalid byte sequence for UTF8). All of them mean the
+        // request input is invalid rather than the server failed.
+        if (error.code === '22P05' || error.code === '22003' || error.code === '22021') {
           throw new RequestError({
             code: 'request.invalid_input',
             status: 400,
