@@ -194,4 +194,76 @@ describe('sendMessage()', () => {
       'input.ReplyToAddresses'
     );
   });
+  it.each([['Billing @ Acme Europe'], ['Acme, Inc.']])(
+    'should quote the display name %s',
+    async (sendFrom) => {
+      const connector = await createConnector({
+        getConfig,
+        getI18nEmailTemplate: vi
+          .fn()
+          .mockResolvedValue({ ...mockGenericI18nEmailTemplate, sendFrom }),
+      });
+      await connector.sendMessage({
+        to: 'to@email.com',
+        type: TemplateType.Generic,
+        payload: { code: '1234' },
+      });
+      expect(vi.mocked(SESv2Client.prototype.send).mock.lastCall?.[0]).toMatchObject({
+        input: { FromEmailAddress: `"${sendFrom}" <${mockedConfig.emailAddress}>` },
+      });
+    }
+  );
+
+  it('should RFC 2047 encode a non-ASCII display name', async () => {
+    const connector = await createConnector({
+      getConfig,
+      getI18nEmailTemplate: vi
+        .fn()
+        .mockResolvedValue({ ...mockGenericI18nEmailTemplate, sendFrom: 'Logto 团队' }),
+    });
+    await connector.sendMessage({
+      to: 'to@email.com',
+      type: TemplateType.Generic,
+      payload: { code: '1234' },
+    });
+    const encoded = Buffer.from('Logto 团队', 'utf8').toString('base64');
+    expect(vi.mocked(SESv2Client.prototype.send).mock.lastCall?.[0]).toMatchObject({
+      input: { FromEmailAddress: `=?UTF-8?B?${encoded}?= <${mockedConfig.emailAddress}>` },
+    });
+  });
+
+  it('should not take a bracketed name as the address', async () => {
+    const connector = await createConnector({
+      getConfig,
+      getI18nEmailTemplate: vi.fn().mockResolvedValue({
+        ...mockGenericI18nEmailTemplate,
+        sendFrom: '"Platform <EU>" <foo@logto.io>',
+      }),
+    });
+    await connector.sendMessage({
+      to: 'to@email.com',
+      type: TemplateType.Generic,
+      payload: { code: '1234' },
+    });
+    expect(vi.mocked(SESv2Client.prototype.send).mock.lastCall?.[0]).toMatchObject({
+      input: { FromEmailAddress: 'Platform EU <foo@logto.io>' },
+    });
+  });
+
+  it('should fall back to the configured address when sendFrom has no valid address', async () => {
+    const connector = await createConnector({
+      getConfig,
+      getI18nEmailTemplate: vi
+        .fn()
+        .mockResolvedValue({ ...mockGenericI18nEmailTemplate, sendFrom: 'Foo <not-an-email>' }),
+    });
+    await connector.sendMessage({
+      to: 'to@email.com',
+      type: TemplateType.Generic,
+      payload: { code: '1234' },
+    });
+    expect(vi.mocked(SESv2Client.prototype.send).mock.lastCall?.[0]).toMatchObject({
+      input: { FromEmailAddress: mockedConfig.emailAddress },
+    });
+  });
 });
