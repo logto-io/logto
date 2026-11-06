@@ -114,6 +114,8 @@ const applications = {
       permission_delete_confirm:
         'Bu işlem, izni dinamik uygulamadan kaldıracak ve OAuth istemcilerinin bu izin için kullanıcı yetkilendirmesi istemesini engelleyecektir. Devam etmek istediğinizden emin misiniz?',
     },
+    refresh_token_settings_description:
+      'Dinamik uygulama üzerinden bağlanan OAuth istemcileri için yenileme belirteci kurallarını yönetin.',
     client_compatibility: {
       title: 'İstemci uyumluluğu',
       description:

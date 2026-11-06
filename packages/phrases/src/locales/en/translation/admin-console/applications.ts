@@ -112,6 +112,8 @@ const applications = {
       permission_delete_confirm:
         'This action will remove the permission from the dynamic app, preventing OAuth clients from requesting user authorization for it. Are you sure you want to continue?',
     },
+    refresh_token_settings_description:
+      'Manage the refresh token rules for OAuth clients that connect through the dynamic app.',
     client_compatibility: {
       title: 'Client compatibility',
       description:

@@ -116,6 +116,8 @@ const applications = {
       permission_delete_confirm:
         "Cette action retirera la permission de l'application dynamique, empêchant les clients OAuth de demander l'autorisation de l'utilisateur pour celle-ci. Êtes-vous sûr de vouloir continuer ?",
     },
+    refresh_token_settings_description:
+      "Gérez les règles du jeton d'actualisation pour les clients OAuth qui se connectent via l'application dynamique.",
     client_compatibility: {
       title: 'Compatibilité des clients',
       description:

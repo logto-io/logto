@@ -108,6 +108,7 @@ const applications = {
       permission_delete_confirm:
         '此操作将从动态应用中移除该权限，阻止 OAuth 客户端就该权限请求用户授权。你确定要继续吗？',
     },
+    refresh_token_settings_description: '管理通过动态应用接入的 OAuth 客户端的刷新令牌规则。',
     client_compatibility: {
       title: '客户端兼容性',
       description:
