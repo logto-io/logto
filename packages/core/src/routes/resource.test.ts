@@ -84,7 +84,7 @@ describe('resource routes', () => {
 
   it('POST /resources', async () => {
     const name = 'user api';
-    const indicator = 'logto.dev/user';
+    const indicator = 'https://logto.dev/user';
     const accessTokenTtl = 60;
 
     const response = await resourceRequest
@@ -116,6 +116,12 @@ describe('resource routes', () => {
       'status',
       400
     );
+  });
+
+  it('POST /resources should throw when the indicator is not a valid URI', async () => {
+    await expect(
+      resourceRequest.post('/resources').send({ name: 'user api', indicator: 'not a uri' })
+    ).resolves.toHaveProperty('status', 400);
   });
 
   it('POST /resource should throw with duplicated indicator', async () => {
