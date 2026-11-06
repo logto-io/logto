@@ -3,6 +3,7 @@ import { pickDefault } from '@logto/shared/esm';
 import Sinon from 'sinon';
 
 import { EnvSet } from '#src/env-set/index.js';
+import { resetDevFeaturesEnabled, setDevFeaturesEnabled } from '#src/test-utils/dev-features.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -90,6 +91,50 @@ describe('CIMD config routes', () => {
 
       expect(response.status).toEqual(200);
       expect(logtoConfigQueries.upsertCimdConfig).toHaveBeenCalledWith({ enabled: false });
+    });
+  });
+
+  describe('PATCH /configs/cimd refreshTokenTtlInDays', () => {
+    afterEach(() => {
+      resetDevFeaturesEnabled();
+    });
+
+    it('merges the TTL onto the current config', async () => {
+      logtoConfigQueries.getCimdConfig.mockResolvedValueOnce({
+        enabled: true,
+        addConsentPromptForOfflineAccess: true,
+      });
+
+      const response = await routeRequester
+        .patch('/configs/cimd')
+        .send({ refreshTokenTtlInDays: 180 });
+
+      expect(response.status).toEqual(200);
+      expect(logtoConfigQueries.upsertCimdConfig).toHaveBeenCalledWith({
+        enabled: true,
+        addConsentPromptForOfflineAccess: true,
+        refreshTokenTtlInDays: 180,
+      });
+    });
+
+    it.each([0, 181, 1.5])('rejects %s days with 400', async (refreshTokenTtlInDays) => {
+      const response = await routeRequester.patch('/configs/cimd').send({ refreshTokenTtlInDays });
+
+      expect(response.status).toEqual(400);
+      expect(logtoConfigQueries.upsertCimdConfig).not.toHaveBeenCalled();
+    });
+
+    it('drops the TTL while dev features are disabled', async () => {
+      setDevFeaturesEnabled(false);
+      logtoConfigQueries.getCimdConfig.mockResolvedValueOnce({ enabled: true });
+
+      const response = await routeRequester
+        .patch('/configs/cimd')
+        .send({ refreshTokenTtlInDays: 180 });
+
+      expect(response.status).toEqual(200);
+      expect(logtoConfigQueries.upsertCimdConfig).toHaveBeenCalledWith({ enabled: true });
+      expect(response.body).toEqual({ enabled: true });
     });
   });
 });

@@ -830,13 +830,14 @@ describe('loadExistingGrant for CIMD clients', () => {
   });
 });
 
-describe('RefreshToken TTL on rotation', () => {
+describe('RefreshToken TTL', () => {
   const remainingTtl = 60;
   const configuredTtl = 18 * 24 * 60 * 60;
 
-  const getRotatedRefreshTokenTtl = (
+  const getRefreshTokenTtl = (
     rotatedClientId: string,
-    applicationType: 'web' | 'native'
+    applicationType: 'web' | 'native',
+    { isRotation = true } = {}
   ) => {
     const { id, queries, libraries, logtoConfigs, subscription } = new MockTenant();
     const provider = initOidc(id, cimdEnvSet, queries, libraries, logtoConfigs, subscription);
@@ -844,7 +845,7 @@ describe('RefreshToken TTL on rotation', () => {
     assert(typeof refreshTokenTtl === 'function');
     const ctx = createOidcContext({
       provider,
-      entities: { RotatedRefreshToken: { remainingTTL: remainingTtl } },
+      entities: isRotation ? { RotatedRefreshToken: { remainingTTL: remainingTtl } } : {},
     } as unknown as Partial<KoaContextWithOIDC['oidc']>);
     const client = {
       clientId: rotatedClientId,
@@ -860,19 +861,27 @@ describe('RefreshToken TTL on rotation', () => {
   };
 
   it.each(['web', 'native'] as const)(
+    'should use the TTL in the client metadata on first issuance to a %s CIMD client',
+    (applicationType) => {
+      expect(
+        getRefreshTokenTtl('https://client.example.com/client-metadata.json', applicationType, {
+          isRotation: false,
+        })
+      ).toBe(configuredTtl);
+    }
+  );
+
+  it.each(['web', 'native'] as const)(
     'should keep the remaining TTL when rotating a %s CIMD client refresh token',
     (applicationType) => {
       expect(
-        getRotatedRefreshTokenTtl(
-          'https://client.example.com/client-metadata.json',
-          applicationType
-        )
+        getRefreshTokenTtl('https://client.example.com/client-metadata.json', applicationType)
       ).toBe(remainingTtl);
     }
   );
 
   it('should still renew the configured TTL when rotating a native registered application refresh token', () => {
-    expect(getRotatedRefreshTokenTtl(clientId, 'native')).toBe(configuredTtl);
+    expect(getRefreshTokenTtl(clientId, 'native')).toBe(configuredTtl);
   });
 });
 

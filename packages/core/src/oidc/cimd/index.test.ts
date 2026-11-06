@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- CIMD feature tests share one module loader; splitting duplicates the mock setup. */
 import { UserScope } from '@logto/core-kit';
 import { type CimdConfig } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
@@ -75,12 +76,14 @@ const loadEnabledFeature = async ({
   jwkSigningAlg,
   ceilingUserScopes = [],
   cimdConfig = { enabled: true },
+  isDevFeaturesEnabled,
 }: {
   jwkSigningAlg?: 'ES256' | 'ES384' | 'ES512';
   ceilingUserScopes?: UserScope[];
   cimdConfig?: CimdConfig;
+  isDevFeaturesEnabled?: boolean;
 } = {}) => {
-  const { buildClientIdMetadataDocumentFeature } = await loadCimdModule();
+  const { buildClientIdMetadataDocumentFeature } = await loadCimdModule({ isDevFeaturesEnabled });
   const findAllUserScopes = jest.fn(async () => ceilingUserScopes);
   const getCimdConfig = jest.fn(async () => cimdConfig);
   const feature = buildClientIdMetadataDocumentFeature(
@@ -460,3 +463,43 @@ describe('wildcard redirect URI pattern validation', () => {
     });
   });
 });
+
+const disabledFeatureOptions = {
+  isDevFeaturesEnabled: false,
+  cimdConfig: { enabled: true, refreshTokenTtlInDays: 180 },
+};
+
+describe('refresh token TTL with dev features disabled', () => {
+  it('transform neither reads the CIMD config nor sets the TTL', async () => {
+    const { transformClientMetadata, getCimdConfig } =
+      await loadEnabledFeature(disabledFeatureOptions);
+
+    await expect(
+      transformClientMetadata(undefined, { refreshTokenTtlInDays: 30 })
+    ).resolves.toEqual({
+      refreshTokenTtlInDays: 30,
+      scope: 'openid offline_access',
+      grant_types: ['authorization_code', 'refresh_token'],
+      response_types: ['code'],
+    });
+    expect(getCimdConfig).not.toHaveBeenCalled();
+  });
+
+  it('allowClient rejects a document carrying the refresh token TTL', async () => {
+    const { allowClient } = await loadEnabledFeature(disabledFeatureOptions);
+
+    expect(
+      captureThrown(() =>
+        allowClient(
+          undefined,
+          buildClient(buildClientId(64), undefined, { refreshTokenTtlInDays: 180 })
+        )
+      )
+    ).toMatchObject({
+      message: 'invalid_client_metadata',
+      error_description:
+        'client_id metadata document must not contain Logto private metadata (refreshTokenTtlInDays)',
+    });
+  });
+});
+/* eslint-enable max-lines */

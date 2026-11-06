@@ -174,9 +174,10 @@ export const buildClientIdMetadataDocumentFeature = (
           _ctx: KoaContextWithOIDC | undefined,
           metadata: AllClientMetadata
         ): Promise<AllClientMetadata> => {
-          const [userScopes, { refreshTokenTtlInDays }] = await Promise.all([
+          const [userScopes, cimdConfig] = await Promise.all([
             cimdQueries.userScopes.findAll(),
-            getCimdConfig(),
+            // DEV: Dynamic app refresh token lifetime
+            EnvSet.values.isDevFeaturesEnabled ? getCimdConfig() : undefined,
           ]);
 
           return {
@@ -186,9 +187,10 @@ export const buildClientIdMetadataDocumentFeature = (
             response_types: ['code'],
             // DEV: Dynamic app refresh token lifetime
             ...conditional(
-              EnvSet.values.isDevFeaturesEnabled && {
+              cimdConfig && {
                 [CustomClientMetadataKey.RefreshTokenTtlInDays]:
-                  refreshTokenTtlInDays ?? customClientMetadataDefault.refreshTokenTtlInDays,
+                  cimdConfig.refreshTokenTtlInDays ??
+                  customClientMetadataDefault.refreshTokenTtlInDays,
               }
             ),
           };
