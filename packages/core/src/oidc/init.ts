@@ -565,6 +565,21 @@ export default function initOidc(
           return defaultTtl;
         }
 
+        /**
+         * A CIMD document declares its own `application_type` and auth method, so the default
+         * branch above can't be trusted to apply. Keep the expiration from the first issuance on
+         * every CIMD rotation, so the configured lifetime stays fixed.
+         */
+        // DEV: Dynamic app refresh token lifetime
+        const { RotatedRefreshToken: rotatedRefreshToken } = ctx.oidc.entities;
+        if (
+          EnvSet.values.isDevFeaturesEnabled &&
+          rotatedRefreshToken &&
+          shouldTreatAsCimdClient(envSet, client.clientId)
+        ) {
+          return rotatedRefreshToken.remainingTTL;
+        }
+
         /** Customized logic for Refresh Token TTL */
         const { refreshTokenTtlInDays, refreshTokenTtl } = client.metadata();
 

@@ -830,6 +830,52 @@ describe('loadExistingGrant for CIMD clients', () => {
   });
 });
 
+describe('RefreshToken TTL on rotation', () => {
+  const remainingTtl = 60;
+  const configuredTtl = 18 * 24 * 60 * 60;
+
+  const getRotatedRefreshTokenTtl = (
+    rotatedClientId: string,
+    applicationType: 'web' | 'native'
+  ) => {
+    const { id, queries, libraries, logtoConfigs, subscription } = new MockTenant();
+    const provider = initOidc(id, cimdEnvSet, queries, libraries, logtoConfigs, subscription);
+    const { RefreshToken: refreshTokenTtl } = getProviderConfiguration(provider).ttl;
+    assert(typeof refreshTokenTtl === 'function');
+    const ctx = createOidcContext({
+      provider,
+      entities: { RotatedRefreshToken: { remainingTTL: remainingTtl } },
+    } as unknown as Partial<KoaContextWithOIDC['oidc']>);
+    const client = {
+      clientId: rotatedClientId,
+      applicationType,
+      clientAuthMethod: 'none',
+      metadata: () => ({ refreshTokenTtlInDays: 18 }),
+    } as unknown as Parameters<typeof refreshTokenTtl>[2];
+    const token = { isSenderConstrained: () => false } as unknown as Parameters<
+      typeof refreshTokenTtl
+    >[1];
+
+    return refreshTokenTtl(ctx, token, client);
+  };
+
+  it.each(['web', 'native'] as const)(
+    'should keep the remaining TTL when rotating a %s CIMD client refresh token',
+    (applicationType) => {
+      expect(
+        getRotatedRefreshTokenTtl(
+          'https://client.example.com/client-metadata.json',
+          applicationType
+        )
+      ).toBe(remainingTtl);
+    }
+  );
+
+  it('should still renew the configured TTL when rotating a native registered application refresh token', () => {
+    expect(getRotatedRefreshTokenTtl(clientId, 'native')).toBe(configuredTtl);
+  });
+});
+
 const findAccount = async (findUserById: () => Promise<typeof mockUser>) => {
   const provider = createProvider(new MockTenant(undefined, { users: { findUserById } }));
   const configuration = getProviderConfiguration(provider);
