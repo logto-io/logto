@@ -115,6 +115,8 @@ const applications = {
       permission_delete_confirm:
         'Diese Aktion entfernt die Berechtigung aus der dynamischen App, sodass OAuth-Clients keine Benutzerberechtigung mehr dafür anfragen können. Sind Sie sicher, dass Sie fortfahren möchten?',
     },
+    refresh_token_settings_description:
+      'Verwalte die Refresh-Token-Regeln für OAuth-Clients, die sich über die dynamische App verbinden.',
     client_compatibility: {
       title: 'Client-Kompatibilität',
       description:

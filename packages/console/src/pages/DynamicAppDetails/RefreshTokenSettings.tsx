@@ -11,7 +11,7 @@ function RefreshTokenSettings() {
   return (
     <FormCard
       title="application_details.refresh_token_settings"
-      description="application_details.refresh_token_settings_description"
+      description="applications.dynamic_app.refresh_token_settings_description"
     >
       <RefreshTokenTtlField<SettingsFormData> isRequired name="refreshTokenTtlInDays" />
     </FormCard>

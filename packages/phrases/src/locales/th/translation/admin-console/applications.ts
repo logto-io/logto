@@ -109,6 +109,8 @@ const applications = {
       permission_delete_confirm:
         'การดำเนินการนี้จะลบสิทธิ์ออกจากแอปแบบไดนามิก ทำให้ไคลเอนต์ OAuth ไม่สามารถขออนุญาตผู้ใช้สำหรับสิทธิ์นี้ได้ คุณแน่ใจหรือไม่ว่าต้องการดำเนินการต่อ?',
     },
+    refresh_token_settings_description:
+      'จัดการกฎของโทเค็นรีเฟรชสำหรับไคลเอนต์ OAuth ที่เชื่อมต่อผ่านแอปไดนามิก',
     client_compatibility: {
       title: 'ความเข้ากันได้ของไคลเอนต์',
       description:
