@@ -155,4 +155,43 @@ describe('sendMessage()', () => {
       input: { FromEmailAddress: 'Foo <foo@logto.io>' },
     });
   });
+
+  it('should not nest angle brackets when the configured address has a display name', async () => {
+    const connector = await createConnector({
+      getConfig: vi
+        .fn()
+        .mockResolvedValue({ ...mockedConfig, emailAddress: 'Logto<noreply@logto.io>' }),
+      getI18nEmailTemplate: vi
+        .fn()
+        .mockResolvedValue({ ...mockGenericI18nEmailTemplate, sendFrom: 'Foo' }),
+    });
+    await connector.sendMessage({
+      to: 'to@email.com',
+      type: TemplateType.Generic,
+      payload: { code: '1234' },
+    });
+    expect(vi.mocked(SESv2Client.prototype.send).mock.lastCall?.[0]).toMatchObject({
+      input: { FromEmailAddress: 'Foo <noreply@logto.io>' },
+    });
+  });
+
+  it('should omit ReplyToAddresses when replyTo renders to an empty string', async () => {
+    const connector = await createConnector({
+      getConfig,
+      getI18nEmailTemplate: vi
+        .fn()
+        .mockResolvedValue({ ...mockGenericI18nEmailTemplate, replyTo: '{{code.missing}}' }),
+    });
+    await connector.sendMessage({
+      to: 'to@email.com',
+      type: TemplateType.Generic,
+      payload: { code: '1234' },
+    });
+    expect(vi.mocked(SESv2Client.prototype.send).mock.lastCall?.[0]).toMatchObject({
+      input: { FromEmailAddress: `Foo <${mockedConfig.emailAddress}>` },
+    });
+    expect(vi.mocked(SESv2Client.prototype.send).mock.lastCall?.[0]).not.toHaveProperty(
+      'input.ReplyToAddresses'
+    );
+  });
 });

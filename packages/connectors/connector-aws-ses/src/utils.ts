@@ -57,8 +57,11 @@ const getFromEmailAddress = (
     return resolved;
   }
 
-  // A bare display name needs a configured address to be combined with.
-  return emailAddress && `${resolved} <${emailAddress}>`;
+  // A bare display name needs a configured address to be combined with. The configured address may
+  // already carry its own display name (`Logto<noreply@logto.io>`), so only its bare address is used.
+  const bareAddress = emailAddress?.match(/<([^>]*)>/)?.[1]?.trim() ?? emailAddress;
+
+  return bareAddress && `${resolved} <${bareAddress}>`;
 };
 
 export const makeCommand = (
@@ -74,14 +77,14 @@ export const makeCommand = (
   const sendFrom = template && 'sendFrom' in template ? template.sendFrom : undefined;
   const replyTo = template && 'replyTo' in template ? template.replyTo : undefined;
 
+  const replyToAddress = replyTo && payload ? replaceSendMessageHandlebars(replyTo, payload) : '';
+
   return new SendEmailCommand({
     Destination: { ToAddresses: [to] },
     Content: emailContent,
     FromEmailAddress: getFromEmailAddress(config.emailAddress, sendFrom, payload),
-    ...(replyTo &&
-      payload && {
-        ReplyToAddresses: [replaceSendMessageHandlebars(replyTo, payload)],
-      }),
+    // SES rejects an empty reply-to address, so skip it when the template renders to nothing.
+    ...(replyToAddress && { ReplyToAddresses: [replyToAddress] }),
     FromEmailAddressIdentityArn: config.emailAddressIdentityArn,
     FeedbackForwardingEmailAddress: config.feedbackForwardingEmailAddress,
     FeedbackForwardingEmailAddressIdentityArn: config.feedbackForwardingEmailAddressIdentityArn,
