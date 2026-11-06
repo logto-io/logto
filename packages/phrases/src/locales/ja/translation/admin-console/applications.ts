@@ -112,6 +112,8 @@ const applications = {
       permission_delete_confirm:
         'この操作により、ダイナミックアプリからこの権限が削除され、OAuth クライアントはこの権限に対するユーザー認可を要求できなくなります。続行してもよろしいですか？',
     },
+    refresh_token_settings_description:
+      'ダイナミックアプリ経由で接続する OAuth クライアントのリフレッシュトークンのルールを管理します。',
     client_compatibility: {
       title: 'クライアントの互換性',
       description:

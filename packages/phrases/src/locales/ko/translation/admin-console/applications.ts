@@ -112,6 +112,8 @@ const applications = {
       permission_delete_confirm:
         '이 작업은 다이나믹 앱에서 해당 권한을 제거하여 OAuth 클라이언트가 이에 대한 사용자 승인을 요청할 수 없게 합니다. 계속 진행하시겠습니까?',
     },
+    refresh_token_settings_description:
+      '동적 앱을 통해 연결되는 OAuth 클라이언트의 리프레시 토큰 규칙을 관리합니다.',
     client_compatibility: {
       title: '클라이언트 호환성',
       description:

@@ -108,6 +108,8 @@ const applications = {
       permission_delete_confirm:
         '此操作將從動態應用中移除該權限，防止 OAuth 用戶端為其要求用戶授權。確定要繼續嗎？',
     },
+    refresh_token_settings_description:
+      '管理透過動態應用程式接入的 OAuth 用戶端的重新整理權杖規則。',
     client_compatibility: {
       title: '用戶端相容性',
       description:

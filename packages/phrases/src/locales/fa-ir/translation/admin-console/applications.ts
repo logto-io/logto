@@ -112,6 +112,8 @@ const applications = {
       permission_delete_confirm:
         'این عمل مجوز را از برنامه پویا حذف می‌کند و مانع از درخواست مجوز کاربر برای آن توسط کلاینت‌های OAuth می‌شود. آیا مطمئنید که می‌خواهید ادامه دهید؟',
     },
+    refresh_token_settings_description:
+      'قوانین توکن تازه‌سازی را برای کلاینت‌های OAuth که از طریق برنامه پویا متصل می‌شوند مدیریت کنید.',
     client_compatibility: {
       title: 'سازگاری با کلاینت‌ها',
       description:
