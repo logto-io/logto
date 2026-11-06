@@ -56,7 +56,7 @@ export const buildSamlAssertionNameId = (
   });
 };
 
-const escapeHtmlAttributeValue = (value: string): string =>
+export const escapeHtmlAttributeValue = (value: string): string =>
   value
     .replaceAll('&', '&amp;')
     .replaceAll('"', '&quot;')
