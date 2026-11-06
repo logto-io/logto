@@ -5,6 +5,7 @@ import { errors } from 'oidc-provider';
 import { z } from 'zod';
 
 import { EnvSet } from '#src/env-set/index.js';
+import { oidcErrorPageCsp, renderOidcErrorPage } from '#src/oidc/error-page.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 
@@ -16,6 +17,12 @@ import { type WithI18nContext } from './koa-i18next.js';
 const errorUris: Record<string, string> = Object.freeze({
   invalid_grant: 'https://openid.sh/debug/invalid_grant',
 });
+
+/**
+ * Browser-facing endpoints with no error UI of their own; the device flow redirects its errors to
+ * the experience. Others, such as `/oidc/token`, must return JSON even if the client prefers HTML.
+ */
+const browserFacingOidcPath = /^\/oidc\/(auth|session\/end)(\/|$)/;
 
 /**
  * Transform oidc-provider error to a format for the client. This is edited from oidc-provider's
@@ -73,6 +80,10 @@ const isSessionNotFound = (description?: string) =>
  *
  * The original `error` and `error_description` properties will be kept for compliance with the
  * OAuth 2.0 spec.
+ *
+ * A request to a {@link browserFacingOidcPath} that prefers HTML over JSON gets an HTML page showing
+ * that body instead, unless `parse_error` is `false`. Errors thrown out of the provider stay JSON,
+ * because `koa-mount` leaves `ctx.path` relative to the mount when it throws.
  *
  * If the error is not an `oidc-provider` error, the handler will throw the error.
  *
@@ -143,7 +154,8 @@ export default function koaOidcErrorHandler<StateT, ContextT extends WithI18nCon
             code,
             scope: data.scope,
             interpolation: {
-              // Disable i18next escape value since it's for API response, we can show HTML tags.
+              // Disable i18next escape value since it's for API response. The HTML error page
+              // escapes whatever it shows.
               escapeValue: false,
             },
           }),
@@ -156,6 +168,18 @@ export default function koaOidcErrorHandler<StateT, ContextT extends WithI18nCon
         }
 
         void appInsights.trackException(ctx.body, buildAppInsightsTelemetry(ctx));
+
+        // Dev feature: OIDC error page
+        if (
+          EnvSet.values.isDevFeaturesEnabled &&
+          browserFacingOidcPath.test(ctx.path) &&
+          ctx.accepts('json', 'html') === 'html'
+        ) {
+          ctx.set('Content-Security-Policy', oidcErrorPageCsp);
+          // Koa keeps the JSON type from the object body when a string replaces it.
+          ctx.type = 'html';
+          ctx.body = renderOidcErrorPage(ctx.i18n, ctx.body);
+        }
       }
     }
   };

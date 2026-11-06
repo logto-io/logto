@@ -10,6 +10,12 @@ import { escapeHtmlAttributeValue } from '#src/saml-application/SamlApplication/
 const template = readFileSync('static/html/oidc-error.html', 'utf8');
 
 /**
+ * The page only uses inline styles. `base-uri` and `form-action` don't fall back to `default-src`.
+ */
+export const oidcErrorPageCsp =
+  "default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'";
+
+/**
  * Render the page shown when a browser hits an OIDC error that can't be sent back to the app.
  *
  * @param body The JSON error response, shown in the page's error details.
