@@ -87,7 +87,6 @@ const migratedMfaVerifications: ActionMfaVerification[] = [
     credentialId: 'AQIDBA',
     publicKey: 'AQIDBAUGBwgJ',
     counter: 1,
-    rpId: 'example.com',
     transports: ['internal'],
     agent: 'agent',
     name: 'Laptop',
@@ -201,7 +200,6 @@ describe('validatePostFirstFactorVerificationActionResult', () => {
           credentialId: 'AQIDBA',
           publicKey: 'AQIDBAUGBwgJ',
           counter: 1,
-          rpId: 'example.com',
           transports: ['internal'],
           agent: 'agent',
           name: 'Laptop',
@@ -246,9 +244,46 @@ describe('validatePostFirstFactorVerificationActionResult', () => {
     });
   });
 
+  it('normalizes legacy TOTP secrets and accepts a partial set of unused backup codes', () => {
+    expect(
+      validatePostFirstFactorVerificationActionResult({
+        event: p1Event(actionUser),
+        result: {
+          action: 'updateUser',
+          passwordVerified: true,
+          user: {},
+          mfaVerifications: [
+            { type: MfaFactor.TOTP, secret: 'jbsw y3dp ehpk 3pxp jbsw y3dp eh' },
+            { type: MfaFactor.BackupCode, codes: backupCodes.slice(0, 3) },
+          ],
+        },
+      })
+    ).toEqual({
+      action: 'updateUser',
+      userId: actionUser.id,
+      user: {},
+      mfaVerifications: [
+        {
+          id: anyString,
+          createdAt: anyString,
+          type: MfaFactor.TOTP,
+          key: 'JBSWY3DPEHPK3PXPJBSWY3DPEH======',
+        },
+        {
+          id: anyString,
+          createdAt: anyString,
+          type: MfaFactor.BackupCode,
+          codes: backupCodes.slice(0, 3).map((code) => ({ code })),
+        },
+      ],
+    });
+  });
+
   it.each([
     { type: MfaFactor.TOTP, secret: 'invalid' },
     { type: MfaFactor.BackupCode, codes: ['invalid'] },
+    { type: MfaFactor.BackupCode, codes: [] },
+    { type: MfaFactor.BackupCode, codes: [...backupCodes, 'abcdef0123'] },
     {
       type: MfaFactor.WebAuthn,
       credentialId: 'AQIDBA',

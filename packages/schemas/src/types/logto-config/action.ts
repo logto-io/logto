@@ -96,8 +96,6 @@ export const actionMfaVerificationGuard = z.discriminatedUnion('type', [
     credentialId: z.string().min(1),
     publicKey: z.string().min(1),
     counter: z.number().int().nonnegative(),
-    /** The relying party ID the credential was registered for. */
-    rpId: z.string().min(1).optional(),
     transports: webAuthnTransportGuard.array().optional(),
     agent: z.string().optional(),
     name: z.string().optional(),

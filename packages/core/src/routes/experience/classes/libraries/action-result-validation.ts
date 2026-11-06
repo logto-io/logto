@@ -13,7 +13,10 @@ import { conditional, isPlainObject } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { doesActionPreserveSignInIdentifier } from '#src/libraries/action-identifier-validation.js';
-import { validateBackupCodes } from '#src/libraries/verification-helpers/backup-code-validation.js';
+import {
+  backupCodeCount,
+  isValidBackupCode,
+} from '#src/libraries/verification-helpers/backup-code-validation.js';
 import { validateTotpSecret } from '#src/libraries/verification-helpers/totp-validation.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -99,6 +102,24 @@ const isValidWebAuthnCredential = (credentialId: string, publicKey: string) =>
   isBase64Url(credentialId) && isBase64Url(publicKey);
 
 /**
+ * Legacy systems often export TOTP secrets in lowercase, grouped with spaces, or without base32
+ * padding. Normalize them to the padded uppercase form Logto validates and stores.
+ */
+const normalizeTotpSecret = (secret: string) => {
+  const compact = secret.replaceAll(/\s/g, '').toUpperCase();
+  return compact.padEnd(Math.ceil(compact.length / 8) * 8, '=');
+};
+
+/**
+ * Migrated users may have used some of their backup codes, so scripts pass only the unused ones:
+ * accept up to a full set instead of exactly one.
+ */
+const isValidMigratedBackupCodes = (codes: string[]) =>
+  codes.length > 0 &&
+  codes.length <= backupCodeCount &&
+  codes.every((code) => isValidBackupCode(code));
+
+/**
  * Convert one script-supplied MFA factor into a stored verification.
  *
  * Returns `undefined` when the factor carries invalid credential material. Format errors never
@@ -112,16 +133,18 @@ const toMfaVerification = (input: ActionMfaVerification): MfaVerification | unde
 
   switch (input.type) {
     case MfaFactor.TOTP: {
-      return validateTotpSecret(input.secret)
+      const secret = normalizeTotpSecret(input.secret);
+
+      return validateTotpSecret(secret)
         ? {
             ...base,
             type: input.type,
-            key: input.secret,
+            key: secret,
           }
         : undefined;
     }
     case MfaFactor.BackupCode: {
-      return validateBackupCodes(input.codes)
+      return isValidMigratedBackupCodes(input.codes)
         ? {
             ...base,
             type: input.type,
@@ -137,7 +160,6 @@ const toMfaVerification = (input: ActionMfaVerification): MfaVerification | unde
             credentialId: input.credentialId,
             publicKey: input.publicKey,
             counter: input.counter,
-            ...conditional(input.rpId !== undefined && { rpId: input.rpId }),
             ...conditional(input.transports !== undefined && { transports: input.transports }),
             agent: input.agent ?? '',
             ...conditional(input.name !== undefined && { name: input.name }),

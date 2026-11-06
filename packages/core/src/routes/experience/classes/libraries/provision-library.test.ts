@@ -84,6 +84,7 @@ const createProvisionLibrary = ({
 } = {}) => {
   const hasActiveUsers = jest.fn().mockResolvedValue(true);
   const findUserById = jest.fn(async (): Promise<User> => user);
+  const findUserByWebAuthnCredential = jest.fn().mockResolvedValue(null);
   const updateUserById = jest.fn(
     async (userId: string, payload: Partial<CreateUser>): Promise<User> => ({
       ...user,
@@ -110,6 +111,7 @@ const createProvisionLibrary = ({
     {
       users: {
         findUserById,
+        findUserByWebAuthnCredential,
         hasActiveUsers,
         updateUserById,
       },
@@ -157,6 +159,7 @@ const createProvisionLibrary = ({
     provisionLibrary: new ProvisionLibrary(tenant, ctx),
     ctx,
     findUserById,
+    findUserByWebAuthnCredential,
     hasActiveUsers,
     updateUserById,
     checkIdentifierCollision,
@@ -802,7 +805,7 @@ describe('ProvisionLibrary', () => {
       expect(ctx.appendDataHookContext).not.toHaveBeenCalled();
     });
 
-    it('appends migrated MFA factors, enables MFA, and clears skipMfaOnSignIn', async () => {
+    it('appends migrated MFA factors, enables MFA, and keeps skipMfaOnSignIn', async () => {
       const existingWebAuthn = {
         ...mfaVerifications.webAuthn,
         id: 'existing-webauthn-id',
@@ -838,7 +841,7 @@ describe('ProvisionLibrary', () => {
           mfaVerifications: [existingWebAuthn, mfaVerifications.totp],
           logtoConfig: {
             [userMfaDataKey]: {
-              skipMfaOnSignIn: false,
+              skipMfaOnSignIn: true,
               enabled: true,
             },
             passkey_sign_in: {
@@ -864,7 +867,9 @@ describe('ProvisionLibrary', () => {
           'user-id',
           {},
           {
-            mfaVerifications: [{ ...mfaVerifications.totp, id: 'new-totp-id' }],
+            mfaVerifications: [
+              { ...mfaVerifications.totp, id: 'new-totp-id', key: 'GEZDGNBVGY3TQOJQ' },
+            ],
           }
         )
       ).rejects.toMatchObject({
@@ -950,7 +955,9 @@ describe('ProvisionLibrary', () => {
           'user-id',
           {},
           {
-            mfaVerifications: [{ ...mfaVerifications.webAuthn, id: 'new-webauthn-id' }],
+            mfaVerifications: [
+              { ...mfaVerifications.webAuthn, id: 'new-webauthn-id', publicKey: 'CQgHBgUEAwIB' },
+            ],
           }
         )
       ).rejects.toMatchObject({
@@ -958,6 +965,65 @@ describe('ProvisionLibrary', () => {
         status: 422,
       });
 
+      expect(updateUserById).not.toHaveBeenCalled();
+    });
+
+    it('skips migrated factors identical to existing ones', async () => {
+      const { provisionLibrary, updateUserById } = createProvisionLibrary({
+        user: {
+          ...mockUser,
+          id: 'user-id',
+          mfaVerifications: [mfaVerifications.totp, mfaVerifications.webAuthn],
+        },
+      });
+
+      await provisionLibrary.updateUser(
+        'user-id',
+        {},
+        {
+          mfaVerifications: [
+            { ...mfaVerifications.totp, id: 'new-totp-id' },
+            { ...mfaVerifications.webAuthn, id: 'new-webauthn-id' },
+            mfaVerifications.backupCode,
+          ],
+        }
+      );
+
+      expect(updateUserById).toHaveBeenCalledWith(
+        'user-id',
+        expect.objectContaining({
+          mfaVerifications: [
+            mfaVerifications.totp,
+            mfaVerifications.webAuthn,
+            mfaVerifications.backupCode,
+          ],
+        }),
+        'merge'
+      );
+    });
+
+    it('rejects a migrated WebAuthn credential that belongs to another user', async () => {
+      const { provisionLibrary, findUserByWebAuthnCredential, updateUserById } =
+        createProvisionLibrary({ user: { ...mockUser, id: 'user-id' } });
+
+      findUserByWebAuthnCredential.mockResolvedValueOnce({ ...mockUser, id: 'another-user-id' });
+
+      await expect(
+        provisionLibrary.updateUser(
+          'user-id',
+          {},
+          {
+            mfaVerifications: [mfaVerifications.totp, mfaVerifications.webAuthn],
+          }
+        )
+      ).rejects.toMatchObject({
+        code: 'session.mfa.bind_mfa_existed',
+        status: 422,
+      });
+
+      expect(findUserByWebAuthnCredential).toHaveBeenCalledWith(
+        mfaVerifications.webAuthn.credentialId
+      );
       expect(updateUserById).not.toHaveBeenCalled();
     });
   });

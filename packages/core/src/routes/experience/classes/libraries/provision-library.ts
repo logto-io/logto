@@ -112,10 +112,9 @@ const mergeUpdateUserCustomData = (
 /**
  * Mark MFA as enabled for a user who is receiving migrated factors.
  *
- * New users are inserted with MFA disabled, and an existing user may have explicitly disabled it
- * or skipped MFA on sign-in. Without clearing both flags the sign-in MFA gate would skip the
- * migrated factors. Clearing `skipMfaOnSignIn` intentionally overrides a previous opt-out so the
- * factors are challenged in this sign-in. Other MFA preferences are preserved.
+ * New users are inserted with MFA disabled, so the sign-in MFA gate would skip the migrated
+ * factors. An explicit `skipMfaOnSignIn` set by the user or an admin is preserved, as are other MFA
+ * preferences.
  */
 const enableMfaInLogtoConfig = (logtoConfig: JsonObject): JsonObject => {
   const mfaData = userMfaDataGuard.safeParse(logtoConfig[userMfaDataKey]);
@@ -125,10 +124,18 @@ const enableMfaInLogtoConfig = (logtoConfig: JsonObject): JsonObject => {
     [userMfaDataKey]: {
       ...(mfaData.success ? mfaData.data : {}),
       enabled: true,
-      skipMfaOnSignIn: false,
     },
   };
 };
+
+const isSameMfaFactor = (current: MfaVerification, migrated: MfaVerification) =>
+  (current.type === MfaFactor.TOTP &&
+    migrated.type === MfaFactor.TOTP &&
+    current.key === migrated.key) ||
+  (current.type === MfaFactor.WebAuthn &&
+    migrated.type === MfaFactor.WebAuthn &&
+    current.credentialId === migrated.credentialId &&
+    current.publicKey === migrated.publicKey);
 
 /**
  * Merge migrated MFA factors into the user's existing factors.
@@ -136,12 +143,16 @@ const enableMfaInLogtoConfig = (logtoConfig: JsonObject): JsonObject => {
  * Conflicting factors fail instead of being overwritten, matching the Management API rules: one
  * TOTP factor, one backup code factor with unused codes, and backup codes only alongside another
  * factor. An exhausted backup code factor is replaced by a new set. WebAuthn credentials must be
- * unique, including within the migrated set.
+ * unique, including within the migrated set. A migrated factor identical to an existing one is
+ * skipped, so a user who already has it is not locked out of every later sign-in.
  */
 const mergeMfaVerifications = (
   existing: readonly MfaVerification[],
-  incoming: readonly MfaVerification[]
+  migrated: readonly MfaVerification[]
 ): MfaVerification[] => {
+  const incoming = migrated.filter(
+    (verification) => !existing.some((current) => isSameMfaFactor(current, verification))
+  );
   const incomingTotp = incoming.filter(({ type }) => type === MfaFactor.TOTP);
   const incomingBackupCode = incoming.filter(({ type }) => type === MfaFactor.BackupCode);
 
@@ -264,6 +275,7 @@ export class ProvisionLibrary {
     const customDataForInsert = shouldMergeCustomData
       ? mergeCreateUserCustomData(customData, profile.customData)
       : customData;
+    await this.assertWebAuthnCredentialsUnbound(mfaVerifications);
     const mfaPayload = buildCreateUserMfaPayload(mfaVerifications);
 
     const [user] = await insertUser(
@@ -469,12 +481,35 @@ export class ProvisionLibrary {
       return;
     }
 
+    await this.assertWebAuthnCredentialsUnbound(mfaVerifications, userId);
     const user = existingUser ?? (await this.tenantContext.queries.users.findUserById(userId));
 
     return {
       mfaVerifications: mergeMfaVerifications(user.mfaVerifications, mfaVerifications),
       logtoConfig: enableMfaInLogtoConfig(user.logtoConfig),
     };
+  }
+
+  /**
+   * Passkey sign-in resolves a credential to a single user, so a migrated WebAuthn credential that
+   * already belongs to another user would let either user sign in as the other.
+   */
+  private async assertWebAuthnCredentialsUnbound(
+    mfaVerifications: MfaVerification[] | undefined,
+    userId?: string
+  ) {
+    const { findUserByWebAuthnCredential } = this.tenantContext.queries.users;
+    const credentialIds = (mfaVerifications ?? []).flatMap((verification) =>
+      verification.type === MfaFactor.WebAuthn ? [verification.credentialId] : []
+    );
+    const owners = await Promise.all(
+      credentialIds.map(async (credentialId) => findUserByWebAuthnCredential(credentialId))
+    );
+
+    assertThat(
+      owners.every((owner) => !owner || owner.id === userId),
+      new RequestError({ code: 'session.mfa.bind_mfa_existed', status: 422 })
+    );
   }
 
   private buildUpdateUserPayload({
