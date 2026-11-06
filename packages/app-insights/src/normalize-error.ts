@@ -1,9 +1,32 @@
-import { trySafe } from '@silverhand/essentials';
+import { pick, trySafe } from '@silverhand/essentials';
 
 const transformedKey = Symbol('Indicates an object is transformed from an `Error` instance');
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 const isObject = (value: unknown): value is object => typeof value === 'object' && value !== null;
+
+type GotError = Error & {
+  options: { method: string; url?: URL };
+  response?: { statusCode: number; statusMessage?: string; body?: unknown };
+};
+
+// Duck-typed on `toJSON()` of got's `Options` class to avoid a dependency on got.
+const isGotError = (error: Error): error is GotError =>
+  'options' in error &&
+  isObject(error.options) &&
+  'toJSON' in error.options &&
+  typeof error.options.toJSON === 'function';
+
+/**
+ * `options`, `request`, and `response` of a got error all hold the raw request headers and body,
+ * e.g., `response.req._header`, so only the fields useful for debugging are kept. The URL leaves
+ * out its query string and credentials.
+ */
+const pickGotErrorDetails = ({ options: { method, url }, response }: GotError) => ({
+  options: { method, url: url && `${url.origin}${url.pathname}` },
+  request: undefined,
+  response: response && pick(response, 'statusCode', 'statusMessage', 'body'),
+});
 
 // Edited from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Cyclic_object_value#circular_references
 function getCircularReplacer() {
@@ -25,7 +48,10 @@ function getCircularReplacer() {
         // eslint-disable-next-line @silverhand/fp/no-mutation
         transformed[transformedKey] = true;
 
-        transformedMap.set(value, transformed);
+        transformedMap.set(
+          value,
+          isGotError(value) ? { ...transformed, ...pickGotErrorDetails(value) } : transformed
+        );
       }
 
       return transformedMap.get(value);

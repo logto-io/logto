@@ -373,6 +373,9 @@ importers:
       eslint:
         specifier: ^8.56.0
         version: 8.57.0
+      got:
+        specifier: ^14.0.0
+        version: 14.0.0
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2
