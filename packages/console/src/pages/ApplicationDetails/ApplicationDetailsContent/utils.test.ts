@@ -41,3 +41,41 @@ describe('application redirect URI request mapping', () => {
     expect(payload.oidcClientMetadata?.postLogoutRedirectUris).toBeUndefined();
   });
 });
+
+const mapCorsAllowedOrigins = (corsAllowedOrigins?: string[]) =>
+  applicationFormDataParser.toRequestPayload({
+    name: 'Test app',
+    customClientMetadata: { corsAllowedOrigins },
+  }).customClientMetadata?.corsAllowedOrigins;
+
+describe('application CORS allowed origin request mapping', () => {
+  it.each([
+    ['https://example.com/', 'https://example.com'],
+    ['https://example.com///', 'https://example.com'],
+    ['http://localhost:3000/', 'http://localhost:3000'],
+    ['chrome-extension://abcdefg/', 'chrome-extension://abcdefg'],
+  ])('removes trailing slashes from %s', (origin, expected) => {
+    expect(mapCorsAllowedOrigins([origin])).toEqual([expected]);
+  });
+
+  it.each(['https://%E4%B8%AD%E6%96%87.com', 'https://example.com%3A3000'])(
+    'does not decode %s',
+    (origin) => {
+      expect(mapCorsAllowedOrigins([origin])).toEqual([origin]);
+    }
+  );
+
+  it('does not throw on a literal percent sign', () => {
+    expect(mapCorsAllowedOrigins(['https://example.com/100%'])).toEqual([
+      'https://example.com/100%',
+    ]);
+  });
+
+  it('still filters empty rows', () => {
+    expect(mapCorsAllowedOrigins(['', 'https://example.com', ''])).toEqual(['https://example.com']);
+  });
+
+  it('allows an unset list', () => {
+    expect(mapCorsAllowedOrigins()).toBeUndefined();
+  });
+});
