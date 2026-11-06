@@ -224,7 +224,7 @@ export default function initOidc(
       dPoP: { enabled: false },
       backchannelLogout: { enabled: true },
       deviceFlow: deviceFlowConfig,
-      ...buildClientIdMetadataDocumentFeature(envSet, queries.cimd),
+      ...buildClientIdMetadataDocumentFeature(envSet, queries),
       rpInitiatedLogout: {
         logoutSource: (ctx, form) => {
           // eslint-disable-next-line no-template-curly-in-string
@@ -563,6 +563,21 @@ export default function initOidc(
 
         if (defaultTtl !== undefined) {
           return defaultTtl;
+        }
+
+        /**
+         * A CIMD document declares its own `application_type` and auth method, so the default
+         * branch above can't be trusted to apply. Keep the expiration from the first issuance on
+         * every CIMD rotation, so the configured lifetime stays fixed.
+         */
+        // DEV: Dynamic app refresh token lifetime
+        const { RotatedRefreshToken: rotatedRefreshToken } = ctx.oidc.entities;
+        if (
+          EnvSet.values.isDevFeaturesEnabled &&
+          rotatedRefreshToken &&
+          shouldTreatAsCimdClient(envSet, client.clientId)
+        ) {
+          return rotatedRefreshToken.remainingTTL;
         }
 
         /** Customized logic for Refresh Token TTL */
