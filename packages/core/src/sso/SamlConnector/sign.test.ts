@@ -1,5 +1,6 @@
 import { generateKeyPairAndCertificate } from '#src/libraries/saml-application/utils.js';
 
+import { SsoConnectorErrorCodes } from '../types/error.js';
 import { SamlAuthnRequestSignatureAlgorithm } from '../types/saml.js';
 
 import SamlConnector from './index.js';
@@ -59,7 +60,9 @@ describe('SamlConnector signed AuthnRequest', () => {
       metadata: buildIdpMetadataXml(idp.certificate),
       signAuthnRequest: true,
     });
-    await expect(connector.getSingleSignOnUrl('relay-3')).rejects.toThrow();
+    await expect(connector.getSingleSignOnUrl('relay-3')).rejects.toMatchObject({
+      data: { ssoErrorCode: SsoConnectorErrorCodes.InvalidConfig },
+    });
   });
 
   it('stays unsigned when off despite metadata wanting it', async () => {
