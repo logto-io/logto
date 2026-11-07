@@ -71,6 +71,7 @@ export class Profile {
       'socialIdentity',
       'enterpriseSsoIdentity',
       'jitOrganizationIds',
+      'jitOrganizationRoleIds',
       'syncedEnterpriseSsoIdentity'
     );
   }

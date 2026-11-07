@@ -248,10 +248,13 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
         /** The SSO connector ID to determine JIT organizations. */
         ssoConnectorId: string;
         organizationIds?: undefined;
+        organizationRoleIds?: undefined;
       }
     | {
         userId: string;
         organizationIds: string[];
+        /** When set, assign these roles instead of each organization's default JIT roles. */
+        organizationRoleIds?: string[];
         ssoConnectorId?: undefined;
       };
 
@@ -295,6 +298,31 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
   };
 
   /**
+   * Resolve the explicit JIT organizations. When role IDs are given, they replace the default JIT
+   * roles of every organization. The roles may have changed since the IDs were recorded (e.g. in a
+   * one-time token), so only the ones that can still be assigned to a user are kept; assigning the
+   * others would violate the constraints of the relation table and fail the whole sign-in.
+   */
+  const findJitOrganizationsByIds = async (
+    organizationIds: string[],
+    organizationRoleIds?: string[]
+  ): Promise<readonly JitOrganization[]> => {
+    const jitOrganizations = await organizations.jit.getJitOrganizationsByIds(organizationIds);
+
+    if (!organizationRoleIds) {
+      return jitOrganizations;
+    }
+
+    const roles = await organizations.roles.findByIds(organizationRoleIds);
+    const userRoleIds = roles.filter(({ type }) => type === RoleType.User).map(({ id }) => id);
+
+    return jitOrganizations.map(({ organizationId }) => ({
+      organizationId,
+      organizationRoleIds: userRoleIds,
+    }));
+  };
+
+  /**
    * Provision the user with JIT organizations and roles based on SSO connector or explicit org IDs.
    * For email-domain JIT, use `provisionOrganizationsByEmailDomain` instead.
    * Returns only the JIT orgs the user was newly added to (i.e. orgs the user was not already a
@@ -305,10 +333,11 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
     userId,
     ssoConnectorId,
     organizationIds,
+    organizationRoleIds,
   }: ProvisionOrganizationsParams): Promise<readonly JitOrganization[]> => {
     const jitOrganizations = condArray(
       ssoConnectorId && (await organizations.jit.ssoConnectors.getJitOrganizations(ssoConnectorId)),
-      organizationIds && (await organizations.jit.getJitOrganizationsByIds(organizationIds))
+      organizationIds && (await findJitOrganizationsByIds(organizationIds, organizationRoleIds))
     );
 
     return insertJitMemberships(userId, jitOrganizations);

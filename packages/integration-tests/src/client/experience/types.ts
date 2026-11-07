@@ -43,6 +43,7 @@ export type SanitizedInteractionStorageData = {
       detail: Record<string, unknown>;
     };
     jitOrganizationIds?: string[];
+    jitOrganizationRoleIds?: string[];
   };
   verificationRecords?: Array<{
     id: string;
