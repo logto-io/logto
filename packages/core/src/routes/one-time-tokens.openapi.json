@@ -48,7 +48,13 @@
                     "description": "The expiration time in seconds. If not provided, defaults to 10 mins (600 seconds)."
                   },
                   "context": {
-                    "description": "Additional context to store with the one-time token. Set `interactionEvent` to scope the token to a specific flow, such as `ForgotPassword` for reset-password magic links."
+                    "description": "Additional context to store with the one-time token. Set `interactionEvent` to scope the token to a specific flow, such as `ForgotPassword` for reset-password magic links.",
+                    "properties": {
+                      "jitOrganizationRoleIds": {
+                        "x-logto-dev-feature": true,
+                        "description": "The IDs of the organization roles to assign to the user in `jitOrganizationIds` when the token is used, instead of the default JIT roles of each organization. An empty list assigns no roles. Only organization roles for users are accepted, and `jitOrganizationIds` is required when it is not empty. Roles deleted before the token is used are skipped."
+                      }
+                    }
                   }
                 }
               }

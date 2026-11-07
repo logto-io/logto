@@ -1217,6 +1217,7 @@ export default class ExperienceInteraction {
       enterpriseSsoIdentity,
       syncedEnterpriseSsoIdentity,
       jitOrganizationIds,
+      jitOrganizationRoleIds,
       socialConnectorTokenSetSecret,
       enterpriseSsoConnectorTokenSetSecret,
       passwordEncrypted,
@@ -1299,6 +1300,7 @@ export default class ExperienceInteraction {
       await this.provisionLibrary.provisionJitOrganization({
         userId: user.id,
         organizationIds: jitOrganizationIds,
+        organizationRoleIds: jitOrganizationRoleIds,
       });
     }
 

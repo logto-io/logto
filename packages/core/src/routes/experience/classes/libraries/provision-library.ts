@@ -54,6 +54,7 @@ type OrganizationProvisionPayload =
   | {
       userId: string;
       organizationIds: string[];
+      organizationRoleIds?: string[];
     };
 
 type ProvisioningCustomDataOptions = {
@@ -260,6 +261,7 @@ export class ProvisionLibrary {
       enterpriseSsoIdentity,
       syncedEnterpriseSsoIdentity,
       jitOrganizationIds,
+      jitOrganizationRoleIds,
       socialConnectorTokenSetSecret,
       enterpriseSsoConnectorTokenSetSecret,
       passwordEncrypted,
@@ -668,13 +670,19 @@ export class ProvisionLibrary {
    */
   private async provisionNewUserJitOrganizations(
     userId: string,
-    { primaryEmail, enterpriseSsoIdentity, jitOrganizationIds }: InteractionProfile
+    {
+      primaryEmail,
+      enterpriseSsoIdentity,
+      jitOrganizationIds,
+      jitOrganizationRoleIds,
+    }: InteractionProfile
   ) {
     const extraJitOrganizations = condArray(
       jitOrganizationIds &&
         (await this.provisionJitOrganization({
           userId,
           organizationIds: jitOrganizationIds,
+          organizationRoleIds: jitOrganizationRoleIds,
         }))
     );
     if (enterpriseSsoIdentity) {

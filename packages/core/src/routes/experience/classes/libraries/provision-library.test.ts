@@ -226,6 +226,7 @@ describe('ProvisionLibrary', () => {
             },
           },
           jitOrganizationIds: ['jit-organization-id'],
+          jitOrganizationRoleIds: ['jit-organization-role-id'],
           socialConnectorTokenSetSecret: {
             encryptedTokenSet,
             socialConnectorRelationPayload: {
@@ -302,6 +303,7 @@ describe('ProvisionLibrary', () => {
       expect(provisionOrganizations).toHaveBeenCalledWith({
         userId: 'uid',
         organizationIds: ['jit-organization-id'],
+        organizationRoleIds: ['jit-organization-role-id'],
       });
       expect(provisionOrganizationsByEmailDomain).toHaveBeenCalledWith('uid', 'jane@example.com');
       expect(upsertSocialTokenSetSecret).toHaveBeenCalledWith('uid', {
