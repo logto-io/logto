@@ -1,6 +1,7 @@
 import {
   defaultTenantId,
   MfaFactor,
+  RoleType,
   type User,
   UsersPasswordEncryptionMethod,
 } from '@logto/schemas';
@@ -312,6 +313,98 @@ describe('findUserRoles()', () => {
 
   it('returns user roles', async () => {
     await expect(findUserRoles(mockUser.id)).resolves.toEqual([mockAdminUserRole]);
+  });
+});
+
+describe('provisionOrganizations()', () => {
+  const userId = 'user-id';
+  const organizationId = 'organization-id';
+  const getJitOrganizationsByIds = jest.fn(async () => [
+    { organizationId, organizationRoleIds: ['default-role'] },
+  ]);
+  const findRolesByIds = jest.fn(async (): Promise<Array<{ id: string; type: RoleType }>> => []);
+  const insertUsers = jest.fn();
+  const insertUsersRoles = jest.fn();
+
+  const { provisionOrganizations } = createUserLibrary(
+    defaultTenantId,
+    new MockQueries({
+      organizations: {
+        jit: { getJitOrganizationsByIds },
+        roles: { findByIds: findRolesByIds },
+        relations: {
+          users: { getExistingOrganizationIds: async () => [], insert: insertUsers },
+          usersRoles: { insert: insertUsersRoles },
+        },
+      },
+    } as unknown as ConstructorParameters<typeof MockQueries>[0])
+  );
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('assigns the default JIT roles when no role IDs are given', async () => {
+    await provisionOrganizations({ userId, organizationIds: [organizationId] });
+
+    expect(findRolesByIds).not.toHaveBeenCalled();
+    expect(insertUsersRoles).toHaveBeenCalledWith({
+      organizationId,
+      organizationRoleId: 'default-role',
+      userId,
+    });
+  });
+
+  it('assigns the given roles instead of the default JIT roles', async () => {
+    findRolesByIds.mockResolvedValueOnce([{ id: 'admin', type: RoleType.User }]);
+
+    await expect(
+      provisionOrganizations({
+        userId,
+        organizationIds: [organizationId],
+        organizationRoleIds: ['admin'],
+      })
+    ).resolves.toEqual([{ organizationId, organizationRoleIds: ['admin'] }]);
+
+    expect(insertUsersRoles).toHaveBeenCalledTimes(1);
+    expect(insertUsersRoles).toHaveBeenCalledWith({
+      organizationId,
+      organizationRoleId: 'admin',
+      userId,
+    });
+  });
+
+  it('skips the given roles that can no longer be assigned to a user', async () => {
+    findRolesByIds.mockResolvedValueOnce([
+      { id: 'admin', type: RoleType.User },
+      { id: 'machine', type: RoleType.MachineToMachine },
+    ]);
+
+    await provisionOrganizations({
+      userId,
+      organizationIds: [organizationId],
+      organizationRoleIds: ['admin', 'machine', 'deleted'],
+    });
+
+    expect(insertUsersRoles).toHaveBeenCalledTimes(1);
+    expect(insertUsersRoles).toHaveBeenCalledWith({
+      organizationId,
+      organizationRoleId: 'admin',
+      userId,
+    });
+  });
+
+  it('adds the membership without roles when none of the given roles remain', async () => {
+    findRolesByIds.mockResolvedValueOnce([]);
+
+    await provisionOrganizations({
+      userId,
+      organizationIds: [organizationId],
+      organizationRoleIds: ['deleted'],
+    });
+
+    expect(insertUsers).toHaveBeenCalledWith({ organizationId, userId });
+    expect(insertUsersRoles).not.toHaveBeenCalled();
   });
 });
 
