@@ -10,7 +10,12 @@
  */
 
 import { ReservedScope } from '@logto/core-kit';
-import { GrantType, isCimdClientId } from '@logto/schemas';
+import {
+  CustomClientMetadataKey,
+  customClientMetadataDefault,
+  GrantType,
+  isCimdClientId,
+} from '@logto/schemas';
 import { conditional, type Optional } from '@silverhand/essentials';
 import {
   type AllClientMetadata,
@@ -31,6 +36,19 @@ import { isValidWildcardRedirectUriPattern } from '../redirect-uri/utils.js';
  * `invalid_client` rather than a database error.
  */
 const cimdClientIdMaxLength = 2048;
+
+/**
+ * Logto private client metadata a CIMD document must not carry. The provider recognizes exactly
+ * {@link extraClientMetadataKeys}, so without this deny a remote document could set those keys and
+ * have them honored. `refreshTokenTtlInDays` is not denied: the transform always sets it from the
+ * tenant CIMD config, so a document value never reaches the client.
+ */
+const cimdDeniedClientMetadataKeys: readonly string[] = Object.freeze(
+  // DEV: Dynamic app refresh token lifetime
+  EnvSet.values.isDevFeaturesEnabled
+    ? extraClientMetadataKeys.filter((key) => key !== CustomClientMetadataKey.RefreshTokenTtlInDays)
+    : extraClientMetadataKeys
+);
 
 const assertClientIdWithinLengthBound = (clientId: string) => {
   if (clientId.length > cimdClientIdMaxLength) {
@@ -110,7 +128,7 @@ export const shouldTreatAsCimdClient = (envSet: EnvSet, clientId?: string): bool
  */
 export const buildClientIdMetadataDocumentFeature = (
   envSet: EnvSet,
-  cimdQueries: Queries['cimd']
+  { cimd: cimdQueries, logtoConfigs: { getCimdConfig } }: Pick<Queries, 'cimd' | 'logtoConfigs'>
 ): Optional<{
   clientIdMetadataDocument: {
     enabled: true;
@@ -149,20 +167,34 @@ export const buildClientIdMetadataDocumentFeature = (
          *   type or explicit opt-in.
          * - `response_types` must be pinned too, or the schema re-derives the implicit
          *   grant from a declared response type.
+         * - `refreshTokenTtlInDays` carries the tenant CIMD config, as CIMD clients have no
+         *   application record; read on every resolution so changes apply to the next token.
          */
         transformClientMetadata: async (
           _ctx: KoaContextWithOIDC | undefined,
           metadata: AllClientMetadata
-        ): Promise<AllClientMetadata> => ({
-          ...metadata,
-          scope: [
-            ReservedScope.OpenId,
-            ReservedScope.OfflineAccess,
-            ...(await cimdQueries.userScopes.findAll()),
-          ].join(' '),
-          grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken],
-          response_types: ['code'],
-        }),
+        ): Promise<AllClientMetadata> => {
+          const [userScopes, cimdConfig] = await Promise.all([
+            cimdQueries.userScopes.findAll(),
+            // DEV: Dynamic app refresh token lifetime
+            EnvSet.values.isDevFeaturesEnabled ? getCimdConfig() : undefined,
+          ]);
+
+          return {
+            ...metadata,
+            scope: [ReservedScope.OpenId, ReservedScope.OfflineAccess, ...userScopes].join(' '),
+            grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken],
+            response_types: ['code'],
+            // DEV: Dynamic app refresh token lifetime
+            ...conditional(
+              cimdConfig && {
+                [CustomClientMetadataKey.RefreshTokenTtlInDays]:
+                  cimdConfig.refreshTokenTtlInDays ??
+                  customClientMetadataDefault.refreshTokenTtlInDays,
+              }
+            ),
+          };
+        },
         /**
          * Runs on every use of a CIMD client including metadata-cache hits (a cached document
          * can be up to 24 hours old), so tenant policy always applies before the client is
@@ -192,12 +224,9 @@ export const buildClientIdMetadataDocumentFeature = (
 
           const metadata = client.metadata();
 
-          /**
-           * Logto private client metadata that a remote CIMD document must never carry. The
-           * provider recognizes exactly {@link extraClientMetadataKeys}, so without this deny
-           * a remote document could set those keys and have them honored.
-           */
-          const forbiddenKey = extraClientMetadataKeys.find((key) => metadata[key] !== undefined);
+          const forbiddenKey = cimdDeniedClientMetadataKeys.find(
+            (key) => metadata[key] !== undefined
+          );
 
           if (forbiddenKey) {
             throw new errors.InvalidClientMetadata(

@@ -189,6 +189,8 @@ export type SigningKeyRotationState = z.infer<typeof signingKeyRotationStateGuar
 export const cimdConfigGuard = z.object({
   enabled: z.boolean(),
   addConsentPromptForOfflineAccess: z.boolean().optional(),
+  /** Fixed refresh token lifetime for CIMD clients, with the same bounds as registered apps. */
+  refreshTokenTtlInDays: z.number().int().min(1).max(180).optional(),
 });
 export type CimdConfig = z.infer<typeof cimdConfigGuard>;
 

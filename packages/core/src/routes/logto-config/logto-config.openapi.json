@@ -567,6 +567,10 @@
                   "properties": {
                     "addConsentPromptForOfflineAccess": {
                       "description": "Experimental. When enabled, Logto adds `consent` to the `prompt` parameter of CIMD authorization requests that include the `offline_access` scope without it, so the client can receive a refresh token. Requests with `prompt=none` are not changed. Defaults to `false`."
+                    },
+                    "refreshTokenTtlInDays": {
+                      "description": "Dev feature. The refresh token lifetime in days (1 to 180) for CIMD clients. Existing refresh tokens keep their expiration. Defaults to 14 days.",
+                      "x-logto-dev-feature": true
                     }
                   }
                 }
@@ -588,6 +592,10 @@
                   },
                   "addConsentPromptForOfflineAccess": {
                     "description": "Experimental. When enabled, Logto adds `consent` to the `prompt` parameter of CIMD authorization requests that include the `offline_access` scope without it, so the client can receive a refresh token. Requests with `prompt=none` are not changed. Defaults to `false`."
+                  },
+                  "refreshTokenTtlInDays": {
+                    "description": "Dev feature. The refresh token lifetime in days (1 to 180) for CIMD clients. Existing refresh tokens keep their expiration. Defaults to 14 days.",
+                    "x-logto-dev-feature": true
                   }
                 }
               }
@@ -603,6 +611,10 @@
                   "properties": {
                     "addConsentPromptForOfflineAccess": {
                       "description": "Experimental. When enabled, Logto adds `consent` to the `prompt` parameter of CIMD authorization requests that include the `offline_access` scope without it, so the client can receive a refresh token. Requests with `prompt=none` are not changed. Defaults to `false`."
+                    },
+                    "refreshTokenTtlInDays": {
+                      "description": "Dev feature. The refresh token lifetime in days (1 to 180) for CIMD clients. Existing refresh tokens keep their expiration. Defaults to 14 days.",
+                      "x-logto-dev-feature": true
                     }
                   }
                 }
