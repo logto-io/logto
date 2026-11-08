@@ -111,6 +111,8 @@ const applications = {
       permission_delete_confirm:
         'سيؤدي هذا الإجراء إلى إزالة الإذن من التطبيق الديناميكي، مما يمنع عملاء OAuth من طلب موافقة المستخدم عليه. هل أنت متأكد أنك تريد المتابعة؟',
     },
+    refresh_token_settings_description:
+      'إدارة قواعد رمز التحديث لعملاء OAuth الذين يتصلون عبر التطبيق الديناميكي.',
     client_compatibility: {
       title: 'توافق العملاء',
       description:
