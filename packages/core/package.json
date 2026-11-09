@@ -85,7 +85,7 @@
     "mime": "^4.0.4",
     "nanoid": "^5.0.9",
     "node-forge": "^1.4.2",
-    "oidc-provider": "github:logto-io/node-oidc-provider#8cd31afcac3f8f3ab9b5e3368104bb0b7e0611b3",
+    "oidc-provider": "github:logto-io/node-oidc-provider#33def0c7c3ffa159778e72a2eeef3823b2ce9e49",
     "openapi-types": "^12.1.3",
     "otplib": "^12.0.1",
     "p-map": "^7.0.2",
