@@ -49,6 +49,24 @@ const unquote = (name: string): string =>
     ? name.slice(1, -1).replaceAll(/\\(.)/g, '$1')
     : name;
 
+/** Max bytes per encoded-word: `=?UTF-8?B?` + base64 + `?=` must stay within 75 characters. */
+const maxEncodedWordBytes = 45;
+
+/** RFC 2047 encoded-words for `name`, split at UTF-8 character boundaries, joined by spaces. */
+const encodeDisplayName = (name: string): string => {
+  const chunks = [...name].reduce<string[]>((accumulator, character) => {
+    const last = accumulator.at(-1);
+
+    return last !== undefined && Buffer.byteLength(last + character, 'utf8') <= maxEncodedWordBytes
+      ? [...accumulator.slice(0, -1), last + character]
+      : [...accumulator, character];
+  }, []);
+
+  return chunks
+    .map((chunk) => `=?UTF-8?B?${Buffer.from(chunk, 'utf8').toString('base64')}?=`)
+    .join(' ');
+};
+
 /**
  * Format a mailbox for the SES `FromEmailAddress`: a name with non-ASCII characters is sent as an
  * RFC 2047 encoded-word, and a name with RFC 5322 specials (`,`, `(`, `"`, ...) is quoted.
@@ -62,7 +80,7 @@ const formatSesMailbox = (email: string, name?: string): string => {
   const isAscii = /^[\u0000-\u007F]*$/.test(name);
 
   if (!isAscii) {
-    return `=?UTF-8?B?${Buffer.from(name, 'utf8').toString('base64')}?= <${email}>`;
+    return `${encodeDisplayName(name)} <${email}>`;
   }
 
   const isPlainWords = /^[\w!#$%&'*+/=?^`{|}~-]+(?: [\w!#$%&'*+/=?^`{|}~-]+)*$/.test(name);
@@ -113,13 +131,18 @@ export const makeCommand = (
   const sendFrom = template && 'sendFrom' in template ? template.sendFrom : undefined;
   const replyTo = template && 'replyTo' in template ? template.replyTo : undefined;
 
-  const replyToAddress = replyTo && payload ? replaceSendMessageHandlebars(replyTo, payload) : '';
+  const renderedReplyTo =
+    replyTo && payload ? replaceSendMessageHandlebars(replyTo, payload).trim() : '';
+  // An unresolved placeholder (e.g. `{{user.primaryEmail}}` without a user) is not an address.
+  const replyToAddress = emailGuard.safeParse(renderedReplyTo).success
+    ? renderedReplyTo
+    : undefined;
 
   return new SendEmailCommand({
     Destination: { ToAddresses: [to] },
     Content: emailContent,
     FromEmailAddress: getFromEmailAddress(config.emailAddress, sendFrom, payload),
-    // SES rejects an empty reply-to address, so skip it when the template renders to nothing.
+    // SES rejects an empty reply-to address, so skip it unless the template renders to a valid address.
     ...(replyToAddress && { ReplyToAddresses: [replyToAddress] }),
     FromEmailAddressIdentityArn: config.emailAddressIdentityArn,
     FeedbackForwardingEmailAddress: config.feedbackForwardingEmailAddress,

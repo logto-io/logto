@@ -102,7 +102,6 @@ describe('sendMessage()', () => {
       expect.objectContaining({
         input: {
           FromEmailAddress: `Foo <${emailAddress}>`,
-          ReplyToAddresses: ['Reply-to {{to}}'],
           Destination: { ToAddresses: toExpected },
           Content: {
             Simple: {
@@ -134,7 +133,7 @@ describe('sendMessage()', () => {
     expect(vi.mocked(SESv2Client.prototype.send).mock.lastCall?.[0]).toMatchObject({
       input: {
         FromEmailAddress: `Foo <${mockedConfig.emailAddress}>`,
-        ReplyToAddresses: [`Reply-to ${toMail}`],
+        ReplyToAddresses: [toMail],
       },
     });
   });
@@ -194,6 +193,53 @@ describe('sendMessage()', () => {
       'input.ReplyToAddresses'
     );
   });
+
+  it('should omit ReplyToAddresses when replyTo renders to an unresolved placeholder', async () => {
+    const connector = await createConnector({
+      getConfig,
+      getI18nEmailTemplate: vi
+        .fn()
+        .mockResolvedValue({ ...mockGenericI18nEmailTemplate, replyTo: '{{user.primaryEmail}}' }),
+    });
+    await connector.sendMessage({
+      to: 'to@email.com',
+      type: TemplateType.Generic,
+      payload: { code: '1234' },
+    });
+    expect(vi.mocked(SESv2Client.prototype.send).mock.lastCall?.[0]).not.toHaveProperty(
+      'input.ReplyToAddresses'
+    );
+  });
+
+  it('should split a long non-ASCII display name into encoded-words of at most 75 characters', async () => {
+    const name = 'お客様サポートチームからのお知らせ';
+    const connector = await createConnector({
+      getConfig,
+      getI18nEmailTemplate: vi
+        .fn()
+        .mockResolvedValue({ ...mockGenericI18nEmailTemplate, sendFrom: name }),
+    });
+    await connector.sendMessage({
+      to: 'to@email.com',
+      type: TemplateType.Generic,
+      payload: { code: '1234' },
+    });
+    const from = (
+      vi.mocked(SESv2Client.prototype.send).mock.lastCall?.[0] as {
+        input: { FromEmailAddress: string };
+      }
+    ).input.FromEmailAddress;
+    const words = from.slice(0, from.lastIndexOf(' <')).split(' ');
+    expect(words.length).toBeGreaterThan(1);
+    for (const word of words) {
+      expect(word.length).toBeLessThanOrEqual(75);
+    }
+    const decoded = words
+      .map((word) => Buffer.from(word.slice('=?UTF-8?B?'.length, -2), 'base64').toString('utf8'))
+      .join('');
+    expect(decoded).toBe(name);
+  });
+
   it.each([['Billing @ Acme Europe'], ['Acme, Inc.']])(
     'should quote the display name %s',
     async (sendFrom) => {
