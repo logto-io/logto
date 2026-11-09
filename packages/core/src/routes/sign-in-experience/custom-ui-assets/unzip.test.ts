@@ -112,6 +112,8 @@ describe('unzipCustomUiAssets()', () => {
     expect(uploadFile).not.toHaveBeenCalled();
   });
 
+  // Inflating 10 MiB takes hundreds of thread pool round trips and its allocations can trigger a
+  // GC, so a busy machine can stretch it past the default timeout.
   it('should accept 200 entries and a file one byte below 10 MiB', async () => {
     const entries = Object.fromEntries(
       Array.from({ length: 199 }, (_, index) => [`${index}.txt`, ''])
@@ -127,7 +129,7 @@ describe('unzipCustomUiAssets()', () => {
       'prefix/index.html',
       { contentType: 'text/html', isPublic: false }
     );
-  });
+  }, 20_000);
 
   it.each([10 * 1024 * 1024, 10 * 1024 * 1024 + 1])(
     'should reject a file of %i bytes',
@@ -146,6 +148,7 @@ describe('unzipCustomUiAssets()', () => {
     }
   );
 
+  // Inflates up to the 10 MiB cap, which a busy machine can stretch past the default timeout.
   it('should reject a file of 10 MB or more that declares a size of 0', async () => {
     const zip = new AdmZip();
     zip.addFile('a-large.bin', Buffer.alloc(10 * 1024 * 1024));
@@ -173,7 +176,7 @@ describe('unzipCustomUiAssets()', () => {
       'prefix/a-large.bin',
       expect.anything()
     );
-  });
+  }, 20_000);
 
   it.each(['../evil.txt', 'root/../evil.txt', 'root\\..\\evil.txt'])(
     'should reject the entry path `%s` before uploading anything',
