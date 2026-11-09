@@ -16,11 +16,10 @@ export type ApplicationForm = {
   customData?: string;
 };
 
-const mapToUriFormatArrays = (value?: string[]) =>
-  value?.filter(Boolean).map((uri) => decodeURIComponent(uri));
+const mapToUriFormatArrays = (value?: string[]) => value?.filter(Boolean);
 
 const mapToUriOriginFormatArrays = (value?: string[]) =>
-  value?.filter(Boolean).map((uri) => decodeURIComponent(uri.replace(/\/*$/, '')));
+  value?.filter(Boolean).map((uri) => uri.replace(/\/*$/, ''));
 
 const parseProtectedAppMetadataFromResponse = (
   protectedAppMetadata: NonNullable<ProtectedAppMetadataType>
