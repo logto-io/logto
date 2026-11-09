@@ -64,6 +64,36 @@
             }
           }
         }
+      },
+      "delete": {
+        "summary": "Delete logs",
+        "description": "Delete log rows in bounded batches.\n\n`start_time` / `end_time` carry the same inclusive semantics as `GET /api/logs`: a row is deleted when its `createdAt` falls in `[start_time, end_time]`, at millisecond granularity. Note that this operation removes **every** log row in that window, while `GET /api/logs` returns audit logs only.\n\nWebhook delivery logs (`TriggerHook.*`) share the `logs` table but are read through `GET /api/hooks/{id}/recent-logs` rather than by `GET /api/logs`, so `deletedCount` can exceed the number of rows an export returned. A window covering the last 24 hours also removes the deliveries counted by the execution stats on `GET /api/hooks`.\n\n`end_time` is required, so a bare `DELETE /api/logs` never means \"delete everything\". `end_time` must not be in the future and is rejected with `400` otherwise; a common cause is passing microseconds or nanoseconds instead of milliseconds, or a miscomputed timezone offset. Passing seconds instead yields a boundary in the past, which deletes nothing rather than deleting too much.\n\nThis operation is irreversible and reachable by any Management API token. Each call deletes at most `limit` rows in a single statement and reports `hasMore`. Keep both bounds fixed across calls and repeat while `hasMore` is `true`; recomputing a boundary between calls would skip rows. Run one cleanup at a time: a concurrent purge can make `hasMore` under-report.\n\n### Performance\n\n`DELETE` marks rows dead and leaves index cleanup to autovacuum, so writes are dominated by heap tuples and WAL. The statement is matched on `ctid`, so the outer side is a Tid Scan over exactly `limit` rows and the inner select reads those row ids from `logs__created_at_id`; expect the cost of a call to track `limit` rather than the size of the table. Measure with `EXPLAIN (ANALYZE, BUFFERS)` on your own data before running a large purge.\n\nFreed space is reused by later inserts but the table file does not shrink, so disk usage will not drop immediately after a purge.",
+        "parameters": [
+          {
+            "name": "end_time",
+            "in": "query",
+            "required": true,
+            "description": "Inclusive upper bound on `createdAt`, in unix milliseconds, with the same semantics as `GET /api/logs`. Only log rows with `createdAt <= end_time` are deleted. Returns `400` if the value is in the future."
+          },
+          {
+            "name": "start_time",
+            "in": "query",
+            "description": "Inclusive lower bound on `createdAt`, in unix milliseconds, with the same semantics as `GET /api/logs`. Only log rows with `createdAt >= start_time` are deleted. Omit to purge everything up to `end_time`. Returns `400` if it is after `end_time`."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum rows deleted by this call. Default `1000`, maximum `10000`. Returns `400` for values outside that range."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Summary of the rows deleted by this call. `deletedCount` is the number of log rows deleted, and `deletedRange` is an optional `{ oldest, newest }` object holding the unix-millisecond timestamps of the deleted rows; it is omitted when nothing was deleted. `hasMore` is `true` when `deletedCount` equals `limit`, meaning this batch was full rather than that more rows definitely exist, so the caller should repeat the request with the same bounds."
+          },
+          "400": {
+            "description": "Returned when `end_time` is missing, empty, negative, outside the safe integer range, in the future, or not a finite number; when `start_time` is malformed or after `end_time`; or when `limit` is outside `1..10000`."
+          }
+        }
       }
     },
     "/api/logs/{id}": {
