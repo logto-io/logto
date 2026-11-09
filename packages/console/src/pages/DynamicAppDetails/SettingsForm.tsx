@@ -10,7 +10,6 @@ import { useSWRConfig } from 'swr';
 
 import DetailsForm from '@/components/DetailsForm';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import useApi from '@/hooks/use-api';
 import { cimdConfigEndpoint } from '@/hooks/use-dynamic-app';
 import { trySubmitSafe } from '@/utils/form';
@@ -47,13 +46,8 @@ function SettingsForm({ data, oidcConfig }: Props) {
   } = formMethods;
 
   const onSubmit = handleSubmit(
-    trySubmitSafe(async ({ refreshTokenTtlInDays, ...formData }) => {
-      const updated = await api
-        .patch(cimdConfigEndpoint, {
-          // DEV: Dynamic app refresh token lifetime
-          json: isDevFeaturesEnabled ? { ...formData, refreshTokenTtlInDays } : formData,
-        })
-        .json<CimdConfig>();
+    trySubmitSafe(async (formData) => {
+      const updated = await api.patch(cimdConfigEndpoint, { json: formData }).json<CimdConfig>();
 
       reset(toFormData(updated));
       void mutate(cimdConfigEndpoint, updated, { revalidate: false });
@@ -72,8 +66,7 @@ function SettingsForm({ data, oidcConfig }: Props) {
         >
           <Settings />
           <EndpointsAndCredentials oidcConfig={oidcConfig} />
-          {/* DEV: Dynamic app refresh token lifetime */}
-          {isDevFeaturesEnabled && <RefreshTokenSettings />}
+          <RefreshTokenSettings />
           <ClientCompatibility />
         </DetailsForm>
       </FormProvider>

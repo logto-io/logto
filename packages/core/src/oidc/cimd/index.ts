@@ -44,10 +44,7 @@ const cimdClientIdMaxLength = 2048;
  * tenant CIMD config, so a document value never reaches the client.
  */
 const cimdDeniedClientMetadataKeys: readonly string[] = Object.freeze(
-  // DEV: Dynamic app refresh token lifetime
-  EnvSet.values.isDevFeaturesEnabled
-    ? extraClientMetadataKeys.filter((key) => key !== CustomClientMetadataKey.RefreshTokenTtlInDays)
-    : extraClientMetadataKeys
+  extraClientMetadataKeys.filter((key) => key !== CustomClientMetadataKey.RefreshTokenTtlInDays)
 );
 
 const assertClientIdWithinLengthBound = (clientId: string) => {
@@ -174,10 +171,9 @@ export const buildClientIdMetadataDocumentFeature = (
           _ctx: KoaContextWithOIDC | undefined,
           metadata: AllClientMetadata
         ): Promise<AllClientMetadata> => {
-          const [userScopes, cimdConfig] = await Promise.all([
+          const [userScopes, { refreshTokenTtlInDays }] = await Promise.all([
             cimdQueries.userScopes.findAll(),
-            // DEV: Dynamic app refresh token lifetime
-            EnvSet.values.isDevFeaturesEnabled ? getCimdConfig() : undefined,
+            getCimdConfig(),
           ]);
 
           return {
@@ -185,14 +181,8 @@ export const buildClientIdMetadataDocumentFeature = (
             scope: [ReservedScope.OpenId, ReservedScope.OfflineAccess, ...userScopes].join(' '),
             grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken],
             response_types: ['code'],
-            // DEV: Dynamic app refresh token lifetime
-            ...conditional(
-              cimdConfig && {
-                [CustomClientMetadataKey.RefreshTokenTtlInDays]:
-                  cimdConfig.refreshTokenTtlInDays ??
-                  customClientMetadataDefault.refreshTokenTtlInDays,
-              }
-            ),
+            [CustomClientMetadataKey.RefreshTokenTtlInDays]:
+              refreshTokenTtlInDays ?? customClientMetadataDefault.refreshTokenTtlInDays,
           };
         },
         /**

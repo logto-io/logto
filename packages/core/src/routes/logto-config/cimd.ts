@@ -39,10 +39,7 @@ export default function logtoConfigCimdRoutes<T extends ManagementApiRouter>(
       status: [200, 422],
     }),
     async (ctx, next) => {
-      // DEV: Dynamic app refresh token lifetime
-      // Drop the field while the feature is off, so a stored value can't take effect on release.
-      const { refreshTokenTtlInDays, ...bodyWithoutTtl } = ctx.guard.body;
-      const body = EnvSet.values.isDevFeaturesEnabled ? ctx.guard.body : bodyWithoutTtl;
+      const { body } = ctx.guard;
 
       /**
        * Fail fast so enabling never looks successful while the protection is off. This is not the
