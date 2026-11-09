@@ -4313,8 +4313,8 @@ importers:
         specifier: ^1.4.2
         version: 1.4.2
       oidc-provider:
-        specifier: github:logto-io/node-oidc-provider#8cd31afcac3f8f3ab9b5e3368104bb0b7e0611b3
-        version: https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/8cd31afcac3f8f3ab9b5e3368104bb0b7e0611b3
+        specifier: github:logto-io/node-oidc-provider#33def0c7c3ffa159778e72a2eeef3823b2ce9e49
+        version: https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/33def0c7c3ffa159778e72a2eeef3823b2ce9e49
       openapi-types:
         specifier: ^12.1.3
         version: 12.1.3
@@ -13332,8 +13332,8 @@ packages:
   obug@2.1.1:
     resolution: {integrity: sha512-uTqF9MuPraAQ+IsnPf366RG4cP9RtUi7MLO1N3KEc+wb0a6yKpeL0lmk2IB1jY5KHPAlTc6T/JRdC/YqxHNwkQ==}
 
-  oidc-provider@https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/8cd31afcac3f8f3ab9b5e3368104bb0b7e0611b3:
-    resolution: {gitHosted: true, integrity: sha512-BBsBQpElx3kXDjTFewxmW68KgRjcVSfVlAzUN8syT2lTRybhhQU17NeLHjnaIEhebPGHnEVK/eIQB9cmFCG7cg==, tarball: https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/8cd31afcac3f8f3ab9b5e3368104bb0b7e0611b3}
+  oidc-provider@https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/33def0c7c3ffa159778e72a2eeef3823b2ce9e49:
+    resolution: {gitHosted: true, integrity: sha512-i9yeqE3T/fxFPdZnm1g24jJnF0m9u9EDvH9550PyEhF/+2lj3f/zngIku7L+FKBrb+OahWX9O7WNTbad0S9gug==, tarball: https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/33def0c7c3ffa159778e72a2eeef3823b2ce9e49}
     version: 9.11.3
 
   on-finished@2.4.1:
@@ -26031,7 +26031,7 @@ snapshots:
 
   obug@2.1.1: {}
 
-  oidc-provider@https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/8cd31afcac3f8f3ab9b5e3368104bb0b7e0611b3:
+  oidc-provider@https://codeload.github.com/logto-io/node-oidc-provider/tar.gz/33def0c7c3ffa159778e72a2eeef3823b2ce9e49:
     dependencies:
       debug: 4.4.3(supports-color@10.0.0)
       jose: 6.2.8
