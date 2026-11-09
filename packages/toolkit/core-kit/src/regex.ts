@@ -20,8 +20,11 @@ export const numberAndAlphabetRegEx = /^[\dA-Za-z]+$/;
  * Used when creating tenants with custom IDs in private cloud regions.
  */
 
-/** Maximum length for custom tenant ID */
-export const customTenantIdMaxLength = 21;
+/**
+ * Maximum length for custom tenant ID. Cloud derives admin tenant IDs such as `m-<tenantId>` and
+ * `t-<tenantId>` from it, which must fit the 21-character ID columns.
+ */
+export const customTenantIdMaxLength = 19;
 
 /** Pattern for custom tenant ID: lowercase letters, numbers, and hyphens only */
 export const customTenantIdRegEx = /^[\da-z-]+$/;
