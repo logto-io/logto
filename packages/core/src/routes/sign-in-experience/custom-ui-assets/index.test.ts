@@ -215,11 +215,17 @@ describe('POST /sign-in-exp/default/custom-ui-assets', () => {
       setEnv({ isCloud: false, isDevFeaturesEnabled: false });
       const requester = createSignInExperienceRequester();
       // eslint-disable-next-line @silverhand/fp/no-mutation
-      upload = async (filePath) =>
-        requester
+      upload = async (filePath) => {
+        // A rejecting license guard responds before the body is read, and the client's default
+        // `Connection: close` makes the server close the socket right after. A buffer is written
+        // with the headers, but a file stream can still be writing by then and fail with `EPIPE`.
+        const file = await fs.readFile(filePath);
+
+        return requester
           .post('/sign-in-exp/default/custom-ui-assets')
           .field('name', 'file')
-          .attach('file', filePath);
+          .attach('file', file, path.basename(filePath));
+      };
     });
 
     beforeEach(() => {
