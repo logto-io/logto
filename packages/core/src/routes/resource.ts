@@ -88,7 +88,9 @@ export default function resourceRoutes<T extends ManagementApiRouter>(
       // Use the dedicated API `PATCH /resources/:id/is-default` to update.
       body: Resources.createGuard.omit({ id: true, isDefault: true }).extend({
         // Same rule as the console form: OIDC rejects authorization requests for non-URI indicators.
-        indicator: string().min(1).refine((value) => isValidUrl(value)),
+        indicator: string()
+          .min(1)
+          .refine((value) => isValidUrl(value)),
       }),
       response: Resources.guard.extend({ scopes: Scopes.guard.array().optional() }),
       status: [201, 400, 422],
