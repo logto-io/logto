@@ -1,4 +1,4 @@
-import { MfaFactor, readOnlyAccessHeader, type CreateUser, type User } from '@logto/schemas';
+import { MfaFactor, type CreateUser, type User } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 import { removeUndefinedKeys } from '@silverhand/essentials';
 
@@ -11,7 +11,6 @@ import {
 } from '#src/__mocks__/index.js';
 import { EnvSet } from '#src/env-set/index.js';
 import { type InsertUserResult } from '#src/libraries/user.js';
-import koaReadOnlyAccess from '#src/middleware/koa-read-only-access.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import { MockTenant, type Partial2 } from '#src/test-utils/tenant.js';
@@ -74,13 +73,6 @@ const adminUserRoutes = await pickDefault(import('./mfa-verifications.js'));
 describe('adminUserRoutes', () => {
   const tenantContext = new MockTenant(undefined, mockedQueries, undefined, mockLibraries);
   const userRequest = createRequester({ authedRoutes: adminUserRoutes, tenantContext });
-  const readOnlyAwareRequest = createRequester({
-    authedRoutes: (router, tenant) => {
-      router.use(koaReadOnlyAccess());
-      adminUserRoutes(router, tenant);
-    },
-    tenantContext,
-  });
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -93,7 +85,7 @@ describe('adminUserRoutes', () => {
     expect(response.body).toMatchObject([{ id, type, createdAt }]);
   });
 
-  describe('GET /users/:userId/mfa-verifications?includeWebAuthnCredentials', () => {
+  describe('GET /users/:userId/mfa-verifications with WebAuthn', () => {
     const webAuthnVerification = {
       ...mockUserWebAuthnMfaVerification,
       rpId: 'auth.example.com',
@@ -116,10 +108,8 @@ describe('adminUserRoutes', () => {
       Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', isDevFeaturesEnabled);
     });
 
-    it('should include the stored WebAuthn credential when opted in', async () => {
-      const response = await readOnlyAwareRequest.get(
-        `/users/${mockUser.id}/mfa-verifications?includeWebAuthnCredentials=true`
-      );
+    it('should include the stored WebAuthn credential', async () => {
+      const response = await userRequest.get(`/users/${mockUser.id}/mfa-verifications`);
 
       expect(response.status).toEqual(200);
       expect(response.body).toEqual([
@@ -143,15 +133,9 @@ describe('adminUserRoutes', () => {
       ]);
     });
 
-    it.each([
-      ['without the query parameter', '', undefined, true],
-      ['with a falsy query parameter', '?includeWebAuthnCredentials=false', undefined, true],
-      ['under read-only access', '?includeWebAuthnCredentials=true', 'true', true],
-      ['when dev features are disabled', '?includeWebAuthnCredentials=true', undefined, false],
-    ])('should omit the credential %s', async (_, query, readOnly, devFeatures) => {
-      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', devFeatures);
-      const request = readOnlyAwareRequest.get(`/users/${mockUser.id}/mfa-verifications${query}`);
-      const response = await (readOnly ? request.set(readOnlyAccessHeader, readOnly) : request);
+    it('should omit the credential when dev features are disabled', async () => {
+      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+      const response = await userRequest.get(`/users/${mockUser.id}/mfa-verifications`);
 
       expect(response.status).toEqual(200);
       expect(response.body[0]).toMatchObject({ id: webAuthnVerification.id, name: 'MacBook' });

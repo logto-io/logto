@@ -48,7 +48,8 @@ type AdminUserMfaVerificationResponse = z.infer<typeof adminUserMfaVerificationR
 
 /**
  * @param options.includeWebAuthnCredentials - When `true`, WebAuthn entries also include the
- * stored credential (`credentialId`, `publicKey`, `counter`, `transports`, `rpId`) for export.
+ * stored credential (`credentialId`, `publicKey`, `counter`, `transports`, `rpId`) for export. The
+ * Management API sets it; the Account API leaves it off.
  */
 export const transpileUserMfaVerifications = (
   mfaVerifications: User['mfaVerifications'],

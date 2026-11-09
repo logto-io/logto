@@ -1,6 +1,5 @@
 import { MfaFactor } from '@logto/schemas';
 import { getUserDisplayName } from '@logto/shared';
-import { yes } from '@silverhand/essentials';
 import { authenticator } from 'otplib';
 import qrcode from 'qrcode';
 import { object, string, z } from 'zod';
@@ -44,7 +43,6 @@ export default function adminUserMfaVerificationsRoutes<T extends ManagementApiR
     '/users/:userId/mfa-verifications',
     koaGuard({
       params: object({ userId: string() }),
-      query: object({ includeWebAuthnCredentials: string().optional() }),
       response: adminUserMfaVerificationResponseGuard,
       status: [200, 404],
     }),
@@ -52,10 +50,7 @@ export default function adminUserMfaVerificationsRoutes<T extends ManagementApiR
       const user = await findUserById(ctx.guard.params.userId);
       ctx.body = transpileUserMfaVerifications(user.mfaVerifications, {
         // Dev feature: WebAuthn credential export
-        includeWebAuthnCredentials:
-          EnvSet.values.isDevFeaturesEnabled &&
-          yes(ctx.guard.query.includeWebAuthnCredentials) &&
-          !ctx.auth.isReadOnly,
+        includeWebAuthnCredentials: EnvSet.values.isDevFeaturesEnabled,
       });
       return next();
     }
