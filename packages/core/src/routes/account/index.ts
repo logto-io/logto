@@ -7,11 +7,16 @@ import {
   userMfaDataKey,
   userMfaSettingsResponseGuard,
   jsonObjectGuard,
+  type User,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import {
+  isMfaRequiredByUser,
+  isNoSkipMfaPolicy,
+} from '#src/libraries/sign-in-experience/mfa-policy.js';
 import { buildUserPasswordPayloadFromPassword } from '#src/libraries/user.utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { assertFirstPartyClient } from '#src/utils/assert-first-party-client.js';
@@ -50,6 +55,12 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
   const {
     users: { checkIdentifierCollision },
   } = libraries;
+
+  /** Whether the user cannot opt out of MFA verification on sign-in. */
+  const isMfaRequiredOnSignIn = async (user: Pick<User, 'id' | 'logtoConfig'>) => {
+    const { mfa } = await findDefaultSignInExperience();
+    return isNoSkipMfaPolicy(mfa.policy) || isMfaRequiredByUser(queries, mfa, user);
+  };
 
   router.use(koaAccountCenter(queries));
 
@@ -243,7 +254,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
       const skipMfaOnSignIn = mfaData.success ? (mfaData.data.skipMfaOnSignIn ?? false) : false;
       const enabled = mfaData.success ? mfaData.data.enabled : undefined;
 
-      ctx.body = { skipMfaOnSignIn, enabled };
+      ctx.body = { skipMfaOnSignIn, enabled, required: await isMfaRequiredOnSignIn(user) };
 
       return next();
     }
@@ -297,6 +308,7 @@ export default function accountRoutes<T extends UserRouter>(...args: RouterInitA
       ctx.body = {
         skipMfaOnSignIn,
         enabled: updatedMfaData.success ? updatedMfaData.data.enabled : undefined,
+        required: await isMfaRequiredOnSignIn(updatedUser),
       };
 
       return next();

@@ -13,6 +13,7 @@ import type { Provider } from 'oidc-provider';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import {
+  isMfaRequiredByUser,
   isNoSkipMfaPolicy,
   isPromptOnlyAtSignInPolicy,
 } from '#src/libraries/sign-in-experience/mfa-policy.js';
@@ -113,7 +114,13 @@ export const verifyMfa = async (
   if (availableUserVerifications.length > 0) {
     const mfaData = userMfaDataGuard.safeParse(logtoConfig[userMfaDataKey]);
     const skipMfaOnSignIn = mfaData.success ? mfaData.data.skipMfaOnSignIn : undefined;
-    const canSkipMfa = skipMfaOnSignIn && !isNoSkipMfaPolicy(policy);
+    const canSkipMfa =
+      skipMfaOnSignIn &&
+      !isNoSkipMfaPolicy(policy) &&
+      !(await isMfaRequiredByUser(tenant.queries, ctx.signInExperience.mfa, {
+        id: accountId,
+        logtoConfig,
+      }));
 
     assertThat(
       Boolean(canSkipMfa) || Boolean(verifiedMfa),

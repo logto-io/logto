@@ -33,6 +33,7 @@ import { conditional, trySafe } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { isMfaRequiredByUser } from '#src/libraries/sign-in-experience/mfa-policy.js';
 import { buildUserPasswordPayload } from '#src/libraries/user.utils.js';
 import { type LogEntry } from '#src/middleware/koa-audit-log.js';
 import { getClientIdentifierPayload } from '#src/oidc/cimd/index.js';
@@ -705,7 +706,7 @@ export default class ExperienceInteraction {
 
     const mfaValidator = new MfaValidator(mfaSettings, user, {
       adaptiveMfaResult,
-      isMfaRequiredByUser: await this.mfa.isMfaRequiredByUser(mfaSettings, user),
+      isMfaRequiredByUser: await isMfaRequiredByUser(this.tenant.queries, mfaSettings, user),
     });
 
     // A requested `mfa` only offers the factors that pair with the first factor already proven and

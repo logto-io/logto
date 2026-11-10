@@ -191,7 +191,18 @@
         "description": "Get MFA settings for the user. This endpoint requires the Identities scope. Returns whether the user has enabled MFA and whether MFA verification is skipped at sign-in. `enabled` is omitted for users who predate the flag, which is treated as enabled when the user has usable factors.",
         "responses": {
           "200": {
-            "description": "The MFA settings were retrieved successfully."
+            "description": "The MFA settings were retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "required": {
+                      "description": "Whether MFA verification on sign-in is required for the user by the MFA policy, a per-user requirement, or an organization. When `true`, `skipMfaOnSignIn` and `enabled` do not turn off MFA verification."
+                    }
+                  }
+                }
+              }
+            }
           },
           "401": {
             "description": "Permission denied, insufficient scope or MFA field not enabled."
@@ -208,7 +219,7 @@
               "schema": {
                 "properties": {
                   "skipMfaOnSignIn": {
-                    "description": "Set whether the user has opted to skip MFA verification on sign-in. This is ignored when the MFA policy is mandatory."
+                    "description": "Set whether the user has opted to skip MFA verification on sign-in. This is ignored when MFA is required for the user (see `required` in the response)."
                   },
                   "enabled": {
                     "description": "Set whether MFA is enabled for the user. Omit to keep the stored value; `undefined` for legacy users is treated as enabled when the user has usable factors."
@@ -220,7 +231,18 @@
         },
         "responses": {
           "200": {
-            "description": "The MFA settings were updated successfully."
+            "description": "The MFA settings were updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "required": {
+                      "description": "Whether MFA verification on sign-in is required for the user by the MFA policy, a per-user requirement, or an organization. When `true`, `skipMfaOnSignIn` and `enabled` do not turn off MFA verification."
+                    }
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "The request body is invalid."
@@ -266,7 +288,7 @@
                         "description": "Set whether the user is marked as having skipped MFA binding."
                       },
                       "skipMfaOnSignIn": {
-                        "description": "Set whether the user has opted to skip MFA verification on sign-in. This is ignored when the MFA policy is mandatory."
+                        "description": "Set whether the user has opted to skip MFA verification on sign-in. This is ignored when MFA is required for the user (see `required` in the response)."
                       }
                     }
                   },
