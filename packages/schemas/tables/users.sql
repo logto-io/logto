@@ -69,3 +69,11 @@ create trigger set_updated_at
   before update on users
   for each row
   execute procedure set_updated_at();
+
+create index users__primary_email_lower
+  on users (tenant_id, primary_email_lower)
+  where primary_email_lower is not null;
+
+create index users__username_lower
+  on users (tenant_id, username_lower)
+  where username_lower is not null;
