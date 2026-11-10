@@ -454,6 +454,22 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     });
   };
 
+  const updateUserFromSignIn = async (id: string, set: Partial<OmitAutoSetFields<CreateUser>>) =>
+    pool.transaction(async (connection) => {
+      // Serialize with Link and Unlink, and evaluate the identity against the current row.
+      const current = await connection.one<Pick<User, 'identities'>>(sql`
+        select ${fields.identities} from ${table} where ${fields.id}=${id} for update
+      `);
+      const { identities = {}, ...profile } = set;
+      const accepted = Object.fromEntries(
+        Object.entries(identities).filter(([target, identity]) => {
+          const linked = current.identities[target];
+          return !linked || linked.userId === identity.userId;
+        })
+      );
+      return createUserQueries(connection).updateUserById(id, { ...profile, identities: accepted });
+    });
+
   const updateUserTotpMfaVerificationLastUsed = async (
     id: string,
     mfaVerificationId: string,
@@ -572,6 +588,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     findUsers,
     findUsersByIds,
     updateUserById,
+    updateUserFromSignIn,
     updateUserTotpMfaVerificationLastUsed,
     insertUser,
     deleteUserById,

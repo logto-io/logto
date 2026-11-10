@@ -60,7 +60,6 @@ export default function adminUserSocialRoutes<T extends ManagementApiRouter>(
 
       const updatedUser = await updateUserById(userId, {
         identities: {
-          ...user.identities,
           [target]: identity,
         },
       });
@@ -88,7 +87,7 @@ export default function adminUserSocialRoutes<T extends ManagementApiRouter>(
         body: { connectorId, connectorData },
       } = ctx.guard;
 
-      const [connector, user] = await Promise.all([
+      const [connector] = await Promise.all([
         getLogtoConnectorById(connectorId),
         findUserById(userId),
       ]);
@@ -122,7 +121,6 @@ export default function adminUserSocialRoutes<T extends ManagementApiRouter>(
 
       const updatedUser = await updateUserById(userId, {
         identities: {
-          ...user.identities,
           [target]: {
             userId: socialUserInfo.id,
             details: socialUserInfo,

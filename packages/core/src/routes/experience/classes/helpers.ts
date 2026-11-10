@@ -148,9 +148,18 @@ export const identifyUserByVerificationRecord = async (
         ? await verificationRecord.identifyRelatedUser()
         : await verificationRecord.identifyUser();
 
+      const profile = await verificationRecord.toUserProfile();
+      const { target, userInfo } = profile.socialIdentity;
+      const linked = user.identities[target];
+
+      // Email-based sign-in must not replace an already linked account or its tokens.
+      if (linkSocialIdentity && linked && linked.userId !== userInfo.id) {
+        return { user };
+      }
+
       const syncedProfile = {
         ...(await verificationRecord.toSyncedProfile()),
-        ...conditional(linkSocialIdentity && (await verificationRecord.toUserProfile())),
+        ...conditional(linkSocialIdentity && profile),
         socialConnectorTokenSetSecret: await verificationRecord.getTokenSetSecret(),
       };
 

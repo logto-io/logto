@@ -74,7 +74,6 @@ export default function identitiesRoutes<T extends UserRouter>(
 
     const updatedUser = await updateUserById(user.id, {
       identities: {
-        ...currentUser.identities,
         [target]: {
           userId: userInfo.id,
           details: userInfo,

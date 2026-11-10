@@ -11,13 +11,17 @@ import {
   SecretSocialConnectorRelations,
   SecretType,
   type SocialTokenSetSecret,
+  Users,
 } from '@logto/schemas';
 import { sql, type CommonQueryMethods } from '@silverhand/slonik';
+
+import RequestError from '#src/errors/RequestError/index.js';
 
 import { buildInsertIntoWithPool } from '../database/insert-into.js';
 import SchemaQueries from '../utils/SchemaQueries.js';
 import { convertToIdentifiers } from '../utils/sql.js';
 
+const users = convertToIdentifiers(Users, true);
 const secrets = convertToIdentifiers(Secrets, true);
 const secretSocialConnectorRelations = convertToIdentifiers(SecretSocialConnectorRelations, true);
 const secretEnterpriseSsoConnectorRelations = convertToIdentifiers(
@@ -42,8 +46,19 @@ class SecretQueries extends SchemaQueries<SecretKeys, CreateSecret, Secret> {
     socialConnectorRelationPayload: SecretSocialConnectorRelationPayload
   ) {
     return this.pool.transaction(async (transaction) => {
-      // Delete any existing secret for the same social target and identity
-      // This is to ensure only one secret exists for a given social target and identity
+      // A delayed login must not replace tokens after another account was linked or unlinked.
+      const linked = await transaction.maybeOne(sql`
+        select ${users.fields.id} from ${users.table}
+        where ${users.fields.id}=${secret.userId}
+          and ${users.fields.identities}::jsonb -> ${socialConnectorRelationPayload.target}
+            ->> 'userId' = ${socialConnectorRelationPayload.identityId}
+        for update
+      `);
+      if (!linked) {
+        throw new RequestError({ code: 'user.identity_not_exists_in_current_user', status: 422 });
+      }
+
+      // Replace tokens only while the matching identity remains locked.
       await transaction.query(sql`
         delete from ${secrets.table}
         using ${secretSocialConnectorRelations.table}

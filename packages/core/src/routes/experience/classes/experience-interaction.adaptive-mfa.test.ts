@@ -50,7 +50,7 @@ const signInExperiences = {
 
 const users = {
   findUserById: jest.fn(),
-  updateUserById: jest.fn(),
+  updateUserFromSignIn: jest.fn(),
   hasUser: jest.fn().mockResolvedValue(false),
   hasUserWithEmail: jest.fn().mockResolvedValue(false),
   hasUserWithNormalizedPhone: jest.fn().mockResolvedValue(false),
@@ -627,7 +627,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
     };
 
     users.findUserById.mockResolvedValueOnce(user);
-    users.updateUserById.mockResolvedValueOnce(user);
+    users.updateUserFromSignIn.mockResolvedValueOnce(user);
 
     // @ts-expect-error -- mock test context
     const ctx: WithHooksAndLogsContext = {
@@ -668,7 +668,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
     };
 
     users.findUserById.mockResolvedValueOnce(user);
-    users.updateUserById.mockResolvedValueOnce(user);
+    users.updateUserFromSignIn.mockResolvedValueOnce(user);
 
     // @ts-expect-error -- mock test context
     const ctx: WithHooksAndLogsContext = {
@@ -743,7 +743,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
       };
 
       users.findUserById.mockResolvedValueOnce(user);
-      users.updateUserById.mockResolvedValueOnce(user);
+      users.updateUserFromSignIn.mockResolvedValueOnce(user);
 
       // @ts-expect-error -- mock test context
       const ctx: WithHooksAndLogsContext = {
@@ -795,7 +795,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
     };
 
     users.findUserById.mockResolvedValueOnce(user);
-    users.updateUserById.mockResolvedValueOnce(user);
+    users.updateUserFromSignIn.mockResolvedValueOnce(user);
 
     // @ts-expect-error -- mock test context
     const ctx: WithHooksAndLogsContext = {
@@ -847,7 +847,7 @@ describe('ExperienceInteraction adaptive MFA', () => {
     };
 
     users.findUserById.mockResolvedValueOnce(user);
-    users.updateUserById.mockResolvedValueOnce(user);
+    users.updateUserFromSignIn.mockResolvedValueOnce(user);
 
     // @ts-expect-error -- mock test context
     const ctx: WithHooksAndLogsContext = {
