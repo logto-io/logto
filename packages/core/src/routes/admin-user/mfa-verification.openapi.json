@@ -16,7 +16,7 @@
                       },
                       "credentialId": {
                         "x-logto-dev-feature": true,
-                        "description": "The base64url-encoded WebAuthn credential ID. Only present for WebAuthn verifications."
+                        "description": "The base64url-encoded WebAuthn credential ID. Only present for WebAuthn verifications. The credential's `userHandle` is the UTF-8 bytes of the path `userId`."
                       },
                       "publicKey": {
                         "x-logto-dev-feature": true,
