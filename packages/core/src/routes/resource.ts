@@ -1,4 +1,3 @@
-import { isValidUrl } from '@logto/core-kit';
 import { isManagementApi, ProductEvent, Resources, Scopes } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { yes } from '@silverhand/essentials';
@@ -88,12 +87,10 @@ export default function resourceRoutes<T extends ManagementApiRouter>(
       // Use the dedicated API `PATCH /resources/:id/is-default` to update.
       body: Resources.createGuard.omit({ id: true, isDefault: true }).extend({
         // Same rule as the console form: OIDC rejects authorization requests for non-URI indicators.
-        indicator: string()
-          .min(1)
-          .refine((value) => isValidUrl(value)),
+        indicator: string().min(1).url(),
       }),
       response: Resources.guard.extend({ scopes: Scopes.guard.array().optional() }),
-      status: [201, 400, 422],
+      status: [201, 422],
     }),
     koaReportSubscriptionUpdates({
       key: 'resourcesLimit',
