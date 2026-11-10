@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Covers every function of the user library in one place. */
 import {
   defaultTenantId,
   MfaFactor,
@@ -408,6 +409,61 @@ describe('provisionOrganizations()', () => {
   });
 });
 
+describe('provisionOrganizationsByEmailDomain()', () => {
+  const userId = 'user-id';
+  const getJitOrganizations = jest.fn(async () => [
+    { organizationId: 'organization-1', organizationRoleIds: ['default-role'] },
+    { organizationId: 'organization-2', organizationRoleIds: ['default-role'] },
+  ]);
+  const insertUsers = jest.fn();
+  const insertUsersRoles = jest.fn();
+
+  const { provisionOrganizationsByEmailDomain } = createUserLibrary(
+    defaultTenantId,
+    new MockQueries({
+      organizations: {
+        jit: { emailDomains: { getJitOrganizations } },
+        relations: {
+          users: { getExistingOrganizationIds: async () => [], insert: insertUsers },
+          usersRoles: { insert: insertUsersRoles },
+        },
+      },
+    } as unknown as ConstructorParameters<typeof MockQueries>[0])
+  );
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('skips the excluded organizations', async () => {
+    await expect(
+      provisionOrganizationsByEmailDomain(userId, 'foo@example.com', ['organization-1'])
+    ).resolves.toEqual([
+      { organizationId: 'organization-2', organizationRoleIds: ['default-role'] },
+    ]);
+
+    expect(getJitOrganizations).toHaveBeenCalledWith('example.com');
+    expect(insertUsers).toHaveBeenCalledWith({ organizationId: 'organization-2', userId });
+    expect(insertUsersRoles).toHaveBeenCalledWith({
+      organizationId: 'organization-2',
+      organizationRoleId: 'default-role',
+      userId,
+    });
+  });
+
+  it('inserts nothing when every organization is excluded', async () => {
+    await expect(
+      provisionOrganizationsByEmailDomain(userId, 'foo@example.com', [
+        'organization-1',
+        'organization-2',
+      ])
+    ).resolves.toEqual([]);
+
+    expect(insertUsers).not.toHaveBeenCalled();
+    expect(insertUsersRoles).not.toHaveBeenCalled();
+  });
+});
+
 describe('addUserMfaVerification()', () => {
   const createdAt = new Date().toISOString();
   const { addUserMfaVerification } = createUserLibrary(defaultTenantId, queries);
@@ -429,3 +485,4 @@ describe('addUserMfaVerification()', () => {
     });
   });
 });
+/* eslint-enable max-lines */

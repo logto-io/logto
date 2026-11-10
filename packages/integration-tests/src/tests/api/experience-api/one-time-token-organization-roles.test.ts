@@ -7,7 +7,7 @@ import { initExperienceClient, logoutClient, processSession } from '#src/helpers
 import { setEmailConnector } from '#src/helpers/connector.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import { generateNewUser } from '#src/helpers/user.js';
-import { devFeatureTest, generateEmail, generateTestName } from '#src/utils.js';
+import { devFeatureTest, generateDomain, generateEmail, generateTestName } from '#src/utils.js';
 
 const completeOneTimeTokenInteraction = async (
   interactionEvent: InteractionEvent,
@@ -84,6 +84,27 @@ devFeatureTest.describe('one-time token with organization roles', () => {
   it('should assign the given roles to a new user instead of the default JIT roles', async () => {
     const email = generateEmail();
     const { organization, invitedRole } = await createOrganizationWithRoles();
+    const { id, token } = await createOneTimeToken({
+      email,
+      context: {
+        jitOrganizationIds: [organization.id],
+        jitOrganizationRoleIds: [invitedRole.id],
+      },
+    });
+
+    const userId = await completeOneTimeTokenInteraction(InteractionEvent.Register, email, token);
+
+    await expect(getUserRoleIds(organization.id, userId)).resolves.toEqual([invitedRole.id]);
+
+    await deleteOneTimeTokenById(id);
+    await deleteUser(userId);
+  });
+
+  it('should not add the default JIT roles through email-domain JIT', async () => {
+    const domain = generateDomain();
+    const email = generateEmail(domain);
+    const { organization, invitedRole } = await createOrganizationWithRoles();
+    await organizationApi.jit.addEmailDomain(organization.id, domain);
     const { id, token } = await createOneTimeToken({
       email,
       context: {

@@ -347,10 +347,14 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
   /**
    * Provision the user with JIT organizations and roles based on the email domain.
    * Returns only the JIT orgs the user was newly added to.
+   *
+   * @param excludedOrganizationIds Organizations to skip, e.g. the ones already provisioned with
+   * explicit roles that the default JIT roles must not be added to.
    */
   const provisionOrganizationsByEmailDomain = async (
     userId: string,
-    email: string
+    email: string,
+    excludedOrganizationIds: readonly string[] = []
   ): Promise<readonly JitOrganization[]> => {
     const userEmailDomain = email.split('@')[1];
     if (!userEmailDomain) {
@@ -359,7 +363,12 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
     const jitOrganizations =
       await organizations.jit.emailDomains.getJitOrganizations(userEmailDomain);
 
-    return insertJitMemberships(userId, jitOrganizations);
+    return insertJitMemberships(
+      userId,
+      jitOrganizations.filter(
+        ({ organizationId }) => !excludedOrganizationIds.includes(organizationId)
+      )
+    );
   };
 
   return {

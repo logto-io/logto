@@ -26,7 +26,25 @@
         ],
         "responses": {
           "200": {
-            "description": "A list of one-time tokens."
+            "description": "A list of one-time tokens.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "properties": {
+                      "context": {
+                        "properties": {
+                          "jitOrganizationRoleIds": {
+                            "x-logto-dev-feature": true,
+                            "description": "The IDs of the organization roles to assign to the user in `jitOrganizationIds` when the token is used, instead of the default JIT roles of each organization."
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "403": {
             "description": "The request carries the `logto-read-only-access: true` header, which cannot read one-time tokens."
@@ -63,7 +81,23 @@
         },
         "responses": {
           "201": {
-            "description": "The one-time token was created successfully."
+            "description": "The one-time token was created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "context": {
+                      "properties": {
+                        "jitOrganizationRoleIds": {
+                          "x-logto-dev-feature": true,
+                          "description": "The IDs of the organization roles to assign to the user in `jitOrganizationIds` when the token is used, instead of the default JIT roles of each organization."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -74,7 +108,23 @@
         "description": "Get a one-time token by its ID.",
         "responses": {
           "200": {
-            "description": "The one-time token found by ID."
+            "description": "The one-time token found by ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "context": {
+                      "properties": {
+                        "jitOrganizationRoleIds": {
+                          "x-logto-dev-feature": true,
+                          "description": "The IDs of the organization roles to assign to the user in `jitOrganizationIds` when the token is used, instead of the default JIT roles of each organization."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "403": {
             "description": "The request carries the `logto-read-only-access: true` header, which cannot read one-time tokens."
@@ -113,7 +163,23 @@
         },
         "responses": {
           "200": {
-            "description": "The one-time token was verified successfully."
+            "description": "The one-time token was verified successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "context": {
+                      "properties": {
+                        "jitOrganizationRoleIds": {
+                          "x-logto-dev-feature": true,
+                          "description": "The IDs of the organization roles to assign to the user in `jitOrganizationIds` when the token is used, instead of the default JIT roles of each organization."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -137,7 +203,23 @@
         },
         "responses": {
           "200": {
-            "description": "The one-time token status was updated successfully."
+            "description": "The one-time token status was updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "context": {
+                      "properties": {
+                        "jitOrganizationRoleIds": {
+                          "x-logto-dev-feature": true,
+                          "description": "The IDs of the organization roles to assign to the user in `jitOrganizationIds` when the token is used, instead of the default JIT roles of each organization."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }

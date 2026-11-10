@@ -427,14 +427,19 @@ export class ProvisionLibrary {
   /**
    * Provision the user with JIT organizations based on the email domain.
    */
-  private async provisionJitOrganizationByEmailDomain(userId: string, email: string) {
+  private async provisionJitOrganizationByEmailDomain(
+    userId: string,
+    email: string,
+    excludedOrganizationIds: readonly string[] = []
+  ) {
     const {
       libraries: { users: usersLibraries },
     } = this.tenantContext;
 
     const provisionedOrganizations = await usersLibraries.provisionOrganizationsByEmailDomain(
       userId,
-      email
+      email,
+      excludedOrganizationIds
     );
 
     this.appendMembershipUpdatedHooks(userId, provisionedOrganizations);
@@ -697,7 +702,13 @@ export class ProvisionLibrary {
     if (primaryEmail) {
       return [
         ...extraJitOrganizations,
-        ...(await this.provisionJitOrganizationByEmailDomain(userId, primaryEmail)),
+        ...(await this.provisionJitOrganizationByEmailDomain(
+          userId,
+          primaryEmail,
+          // The one-time token roles replace the default JIT roles of its organizations, so don't
+          // let email-domain JIT add the default roles back.
+          jitOrganizationRoleIds && jitOrganizationIds
+        )),
       ];
     }
   }
