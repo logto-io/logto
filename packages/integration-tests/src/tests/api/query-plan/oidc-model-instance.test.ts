@@ -111,7 +111,8 @@ describe('oidc_model_instances query plans under the tenant role', () => {
       expectFilter(plan, grantIdExpression);
     });
 
-    it('seeks by the grant id column', async () => {
+    // #9996 drops the payload indexes to widen the tenant ids and #9997 recreates them; skipped in between.
+    it.skip('seeks by the grant id column', async () => {
       const plan = await explain(sql`
         select id from oidc_model_instances
         where model_name = ${'RefreshToken'}
@@ -123,16 +124,20 @@ describe('oidc_model_instances query plans under the tenant role', () => {
     });
   });
 
-  it.each(['Session', 'Grant'])('seeks a %s lookup by the account id column', async (modelName) => {
-    const plan = await explain(sql`
-      select id from oidc_model_instances
-      where model_name = ${modelName}
-        and payload_account_id = ${'query-plan-seed-account-1'}
-        and expires_at > now()
-    `);
+  // #9996 drops the payload indexes to widen the tenant ids and #9997 recreates them; skipped in between.
+  it.skip.each(['Session', 'Grant'])(
+    'seeks a %s lookup by the account id column',
+    async (modelName) => {
+      const plan = await explain(sql`
+        select id from oidc_model_instances
+        where model_name = ${modelName}
+          and payload_account_id = ${'query-plan-seed-account-1'}
+          and expires_at > now()
+      `);
 
-    expectIndexCondition(plan, 'payload_account_id');
-  });
+      expectIndexCondition(plan, 'payload_account_id');
+    }
+  );
 
   it('seeks by the tenant and filters the current uid lookup', async () => {
     // The shape `findPayloadByUid` runs today, after its expression index was dropped. The planner
@@ -148,7 +153,8 @@ describe('oidc_model_instances query plans under the tenant role', () => {
     expectFilter(plan, /payload ->> 'uid'/);
   });
 
-  it('seeks a session lookup by the uid column', async () => {
+  // #9996 drops the payload indexes to widen the tenant ids and #9997 recreates them; skipped in between.
+  it.skip('seeks a session lookup by the uid column', async () => {
     const plan = await explain(sql`
       select payload, consumed_at from oidc_model_instances
       where model_name = ${'Session'} and payload_uid = ${'query-plan-seed-uid-1'}
@@ -158,7 +164,8 @@ describe('oidc_model_instances query plans under the tenant role', () => {
     expectIndexCondition(plan, 'payload_uid');
   });
 
-  it('seeks a device code lookup by the user code column', async () => {
+  // #9996 drops the payload indexes to widen the tenant ids and #9997 recreates them; skipped in between.
+  it.skip('seeks a device code lookup by the user code column', async () => {
     const plan = await explain(sql`
       select payload, consumed_at from oidc_model_instances
       where model_name = ${'DeviceCode'} and payload_user_code = ${'query-plan-seed-user-code-1'}
