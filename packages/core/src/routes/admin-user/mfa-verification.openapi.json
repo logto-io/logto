@@ -12,7 +12,7 @@
                     "properties": {
                       "rpId": {
                         "x-logto-dev-feature": true,
-                        "description": "The relying party ID the WebAuthn credential was registered for. Only present for WebAuthn verifications, and absent when it was not recorded at registration."
+                        "description": "The relying party ID the WebAuthn credential was registered for. Only present for WebAuthn verifications. Absent for credentials registered before it was recorded and not used to sign in since; such a credential is bound to the domain that served the sign-in page at registration, which may not be the current custom domain."
                       },
                       "credentialId": {
                         "x-logto-dev-feature": true,
