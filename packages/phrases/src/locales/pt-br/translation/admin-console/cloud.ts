@@ -23,6 +23,15 @@ const cloud = {
       'Copie a chave de produção para produção ou a chave de não produção para desenvolvimento e testes.',
     install_paste:
       'No console auto-hospedado, abra Configurações → Licença, cole a chave e instale-a.',
+    usage_warning_description: 'Esta licença está acima dos limites de uso do plano:',
+    usage_warning_metric: '{{metric}} ({{env}}): {{value}} (limite {{limit}})',
+    deployments_title: 'Implantações',
+    deployments_description:
+      'Implantações que atualizaram esta licença, com o último uso informado por cada uma. Os valores mensais são o maior entre o mês passado e o mês atual até agora.',
+    deployments_empty: 'Nenhuma implantação atualizou esta licença ainda.',
+    deployment_id: 'ID da implantação',
+    logto_version: 'Versão do Logto',
+    last_seen: 'Visto por último',
     status: {
       active: 'Ativa',
       past_due: 'Pagamento atrasado',

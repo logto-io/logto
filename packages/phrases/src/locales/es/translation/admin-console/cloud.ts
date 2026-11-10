@@ -23,6 +23,15 @@ const cloud = {
       'Copia la clave de producción para producción o la clave de no producción para desarrollo y pruebas.',
     install_paste:
       'En tu consola autoalojada, abre Configuración → Licencia, pega la clave e instálala.',
+    usage_warning_description: 'Esta licencia supera los límites de uso de su plan:',
+    usage_warning_metric: '{{metric}} ({{env}}): {{value}} (límite {{limit}})',
+    deployments_title: 'Despliegues',
+    deployments_description:
+      'Despliegues que han actualizado esta licencia, con el último uso que informó cada uno. Las cifras mensuales son el mayor valor entre el mes pasado y el mes en curso.',
+    deployments_empty: 'Ningún despliegue ha actualizado esta licencia todavía.',
+    deployment_id: 'ID del despliegue',
+    logto_version: 'Versión de Logto',
+    last_seen: 'Visto por última vez',
     status: {
       active: 'Activa',
       past_due: 'Pago vencido',

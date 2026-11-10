@@ -44,3 +44,20 @@
     margin-top: _.unit(3);
   }
 }
+
+.warnings {
+  margin: _.unit(1) 0;
+  padding-inline-start: _.unit(5);
+}
+
+.deploymentId {
+  max-width: 0;
+
+  span {
+    display: block;
+    font-family: 'Roboto Mono', monospace;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

@@ -19,6 +19,15 @@ const cloud = {
     install_copy: 'انسخ مفتاح الإنتاج لبيئة الإنتاج، أو مفتاح غير الإنتاج للتطوير والاختبار.',
     install_paste:
       'في وحدة التحكم ذاتية الاستضافة، افتح الإعدادات ← الترخيص، والصق المفتاح ثم ثبّته.',
+    usage_warning_description: 'هذا الترخيص يتجاوز حدود الاستخدام لخطته:',
+    usage_warning_metric: '{{metric}} ({{env}}): {{value}} (الحد {{limit}})',
+    deployments_title: 'عمليات النشر',
+    deployments_description:
+      'عمليات النشر التي حدّثت هذا الترخيص، مع آخر استخدام أبلغت عنه كل منها. الأرقام الشهرية هي الأعلى بين الشهر الماضي والشهر الحالي حتى الآن.',
+    deployments_empty: 'لم تحدّث أي عملية نشر هذا الترخيص بعد.',
+    deployment_id: 'معرّف النشر',
+    logto_version: 'إصدار Logto',
+    last_seen: 'آخر ظهور',
     status: {
       active: 'نشط',
       past_due: 'متأخر الدفع',

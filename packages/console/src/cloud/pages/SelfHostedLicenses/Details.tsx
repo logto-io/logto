@@ -5,6 +5,7 @@ import DetailsPage from '@/components/DetailsPage';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import FormCard, { FormCardSkeleton } from '@/components/FormCard';
 import SkuName from '@/components/SkuName';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { selfHostedLicenseGuideLink } from '@/consts/external-links';
 import { GlobalRoute } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
@@ -12,6 +13,7 @@ import InlineNotification from '@/ds-components/InlineNotification';
 
 import Keys from './Keys';
 import Status from './Status';
+import Usage from './Usage';
 import styles from './index.module.scss';
 
 type Props = { readonly id: string };
@@ -54,6 +56,8 @@ function Details({ id }: Props) {
             }
             identifier={{ name: 'ID', value: data.id }}
           />
+          {/* Self-hosted license usage reporting is still in development. */}
+          {isDevFeaturesEnabled && <Usage license={data} />}
           <FormCard
             title="cloud.self_hosted_licenses.keys_title"
             description="cloud.self_hosted_licenses.keys_description"

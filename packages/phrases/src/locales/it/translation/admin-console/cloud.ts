@@ -23,6 +23,15 @@ const cloud = {
       'Copia la chiave di produzione per la produzione o quella non di produzione per sviluppo e test.',
     install_paste:
       'Nella console self-hosted, apri Impostazioni → Licenza, incolla la chiave e installala.',
+    usage_warning_description: 'Questa licenza supera i limiti di utilizzo del suo piano:',
+    usage_warning_metric: '{{metric}} ({{env}}): {{value}} (limite {{limit}})',
+    deployments_title: 'Distribuzioni',
+    deployments_description:
+      "Distribuzioni che hanno aggiornato questa licenza, con l'ultimo utilizzo segnalato da ciascuna. I valori mensili sono il più alto tra il mese scorso e il mese in corso.",
+    deployments_empty: 'Nessuna distribuzione ha ancora aggiornato questa licenza.',
+    deployment_id: 'ID distribuzione',
+    logto_version: 'Versione di Logto',
+    last_seen: 'Ultimo rilevamento',
     status: {
       active: 'Attiva',
       past_due: 'Pagamento scaduto',

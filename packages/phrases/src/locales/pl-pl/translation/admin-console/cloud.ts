@@ -22,6 +22,15 @@ const cloud = {
     install_copy:
       'Skopiuj klucz produkcyjny dla produkcji lub klucz nieprodukcyjny do prac programistycznych i testów.',
     install_paste: 'We własnej konsoli otwórz Ustawienia → Licencja, wklej klucz i zainstaluj go.',
+    usage_warning_description: 'Ta licencja przekracza limity użycia swojego planu:',
+    usage_warning_metric: '{{metric}} ({{env}}): {{value}} (limit {{limit}})',
+    deployments_title: 'Wdrożenia',
+    deployments_description:
+      'Wdrożenia, które odświeżyły tę licencję, wraz z ostatnim zgłoszonym przez każde z nich użyciem. Wartości miesięczne to wyższa z wartości z ostatniego miesiąca i bieżącego miesiąca.',
+    deployments_empty: 'Żadne wdrożenie nie odświeżyło jeszcze tej licencji.',
+    deployment_id: 'ID wdrożenia',
+    logto_version: 'Wersja Logto',
+    last_seen: 'Ostatnio widziane',
     status: {
       active: 'Aktywna',
       past_due: 'Zaległa płatność',

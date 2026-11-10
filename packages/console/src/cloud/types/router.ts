@@ -153,6 +153,11 @@ export type ConsoleSsoDomain = GuardedResponse<
 
 /** Account-level license metadata, without signed keys. */
 export type SelfHostedLicenseSummary = GuardedResponse<
+  RouterRoutes<typeof selfHostedLicensesRouter>['get']['/api/me/self-hosted-licenses']
+>[number];
+
+/** License metadata with its deployments, their latest usage, and the current usage warnings. */
+export type SelfHostedLicenseDetails = GuardedResponse<
   RouterRoutes<typeof selfHostedLicensesRouter>['get']['/api/me/self-hosted-licenses/:id']
 >;
 

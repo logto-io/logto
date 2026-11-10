@@ -22,6 +22,15 @@ const cloud = {
       'Üretim dağıtımı için üretim anahtarını, geliştirme ve test için üretim dışı anahtarı kopyala.',
     install_paste:
       'Kendi sunucundaki konsolda Ayarlar → Lisans bölümünü aç, anahtarı yapıştır ve yükle.',
+    usage_warning_description: 'Bu lisans, planının kullanım sınırlarının üzerinde:',
+    usage_warning_metric: '{{metric}} ({{env}}): {{value}} (sınır {{limit}})',
+    deployments_title: 'Dağıtımlar',
+    deployments_description:
+      'Bu lisansı yenileyen dağıtımlar ve her birinin bildirdiği son kullanım. Aylık değerler, geçen ay ile bu ayın şu ana kadarki değerinden yüksek olanıdır.',
+    deployments_empty: 'Henüz hiçbir dağıtım bu lisansı yenilemedi.',
+    deployment_id: 'Dağıtım kimliği',
+    logto_version: 'Logto sürümü',
+    last_seen: 'Son görülme',
     status: {
       active: 'Etkin',
       past_due: 'Ödeme gecikmiş',
