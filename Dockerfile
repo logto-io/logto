@@ -37,12 +37,22 @@ ENV ADDITIONAL_CONNECTOR_ARGS=${additional_connector_args}
 RUN pnpm cli connector link $ADDITIONAL_CONNECTOR_ARGS -p .
 
 ### Prune dependencies for production ###
+# `pnpm install` only skips devDependencies with an explicit `--prod` flag; `NODE_ENV=production`
+# alone does not prune them.
+# Only the direct `packages/*/node_modules` folders are removed here: nested workspace
+# `node_modules` (e.g. `packages/toolkit/*`) keep peer dependency links such as `ky` that are
+# resolved from the package itself at runtime.
 # Keep prune + production install in one layer to avoid extra transient disk usage.
 RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
-  rm -rf node_modules packages/**/node_modules && NODE_ENV=production pnpm i
+  rm -rf node_modules packages/*/node_modules && pnpm i --prod --frozen-lockfile
 
 ### Clean up ###
-RUN rm -rf .scripts pnpm-*.yaml packages/cloud
+# The SPA packages are only served from their built `dist` folders, so their TypeScript sources,
+# source maps and test-only packages are not needed at runtime.
+RUN rm -rf .scripts pnpm-*.yaml packages/cloud \
+  packages/integration-tests packages/create \
+  packages/*/src packages/*/*/src \
+  && find packages -name '*.map' -type f -delete
 
 ###### [STAGE] Seal ######
 FROM node:26-alpine AS app
