@@ -239,6 +239,34 @@ describe('account mfa verification routes', () => {
     });
   });
 
+  describe('GET /api/my-account/mfa-verifications', () => {
+    it('should not expose the stored WebAuthn credential', async () => {
+      findUserById.mockResolvedValueOnce({
+        ...mockUser,
+        mfaVerifications: [
+          {
+            ...mockUserWebAuthnMfaVerification,
+            rpId: 'auth.example.com',
+            transports: ['internal'],
+            counter: 7,
+          },
+        ],
+      });
+
+      const response = await accountRequest.get('/my-account/mfa-verifications');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual([
+        {
+          id: mockUserWebAuthnMfaVerification.id,
+          type: MfaFactor.WebAuthn,
+          createdAt: mockUserWebAuthnMfaVerification.createdAt,
+          agent: 'agent',
+        },
+      ]);
+    });
+  });
+
   describe('GET /api/my-account/mfa-verifications/backup-codes', () => {
     it('returns the usable backup code record when an exhausted record also exists', async () => {
       const exhaustedBackupCode = {

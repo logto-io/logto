@@ -6,8 +6,10 @@ import {
   mockUser,
   mockUserBackupCodeMfaVerification,
   mockUserTotpMfaVerification,
+  mockUserWebAuthnMfaVerification,
   mockUserWithMfaVerifications,
 } from '#src/__mocks__/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import { type InsertUserResult } from '#src/libraries/user.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -81,6 +83,67 @@ describe('adminUserRoutes', () => {
     const response = await userRequest.get(`/users/${mockUser.id}/mfa-verifications`);
     const { id, type, createdAt } = mockUserTotpMfaVerification;
     expect(response.body).toMatchObject([{ id, type, createdAt }]);
+  });
+
+  describe('GET /users/:userId/mfa-verifications with WebAuthn', () => {
+    const webAuthnVerification = {
+      ...mockUserWebAuthnMfaVerification,
+      rpId: 'auth.example.com',
+      transports: ['internal', 'hybrid'],
+      counter: 7,
+      name: 'MacBook',
+    } satisfies User['mfaVerifications'][number];
+    const credentialFields = ['rpId', 'credentialId', 'publicKey', 'counter', 'transports'];
+    const { isDevFeaturesEnabled } = EnvSet.values;
+
+    beforeEach(() => {
+      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+      findUserById.mockResolvedValueOnce({
+        ...mockUser,
+        mfaVerifications: [webAuthnVerification, mockUserTotpMfaVerification],
+      });
+    });
+
+    afterEach(() => {
+      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', isDevFeaturesEnabled);
+    });
+
+    it('should include the stored WebAuthn credential', async () => {
+      const response = await userRequest.get(`/users/${mockUser.id}/mfa-verifications`);
+
+      expect(response.status).toEqual(200);
+      expect(response.body).toEqual([
+        {
+          id: webAuthnVerification.id,
+          type: MfaFactor.WebAuthn,
+          createdAt: webAuthnVerification.createdAt,
+          agent: 'agent',
+          name: 'MacBook',
+          rpId: 'auth.example.com',
+          credentialId: 'credentialId',
+          publicKey: webAuthnVerification.publicKey,
+          counter: 7,
+          transports: ['internal', 'hybrid'],
+        },
+        {
+          id: mockUserTotpMfaVerification.id,
+          type: MfaFactor.TOTP,
+          createdAt: mockUserTotpMfaVerification.createdAt,
+        },
+      ]);
+    });
+
+    it('should omit the credential when dev features are disabled', async () => {
+      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
+      const response = await userRequest.get(`/users/${mockUser.id}/mfa-verifications`);
+
+      expect(response.status).toEqual(200);
+      expect(response.body[0]).toMatchObject({ id: webAuthnVerification.id, name: 'MacBook' });
+
+      for (const field of credentialFields) {
+        expect(response.body[0]).not.toHaveProperty(field);
+      }
+    });
   });
 
   describe('POST /users/:userId/mfa-verifications', () => {

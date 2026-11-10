@@ -2,12 +2,13 @@ import { type UsernamePolicy, validateUsernameAgainstPolicy } from '@logto/core-
 import {
   MfaFactor,
   Users,
+  mfaVerificationWebAuthn,
   userInfoSelectFields,
+  userMfaVerificationResponseGuard,
   userProfileResponseGuard,
   type UserProfileResponse,
   type UserSsoIdentity,
   type User,
-  type UserMfaVerificationResponse,
 } from '@logto/schemas';
 import { PhoneNumberParser } from '@logto/shared/universal';
 import { pick } from '@silverhand/essentials';
@@ -35,9 +36,25 @@ export const adminUserProfileResponseGuard = userProfileResponseGuard.extend({
 
 type AdminUserProfileResponse = z.infer<typeof adminUserProfileResponseGuard>;
 
+export const adminUserMfaVerificationResponseGuard = userMfaVerificationResponseGuard.element
+  .extend(
+    mfaVerificationWebAuthn
+      .pick({ rpId: true, credentialId: true, publicKey: true, transports: true, counter: true })
+      .partial().shape
+  )
+  .array();
+
+type AdminUserMfaVerificationResponse = z.infer<typeof adminUserMfaVerificationResponseGuard>;
+
+/**
+ * @param options.includeWebAuthnCredentials - When `true`, WebAuthn entries also include the
+ * stored credential (`credentialId`, `publicKey`, `counter`, `transports`, `rpId`) for export. The
+ * Management API sets it; the Account API leaves it off.
+ */
 export const transpileUserMfaVerifications = (
-  mfaVerifications: User['mfaVerifications']
-): UserMfaVerificationResponse => {
+  mfaVerifications: User['mfaVerifications'],
+  { includeWebAuthnCredentials = false }: { includeWebAuthnCredentials?: boolean } = {}
+): AdminUserMfaVerificationResponse => {
   return mfaVerifications.map((verification) => {
     const { id, createdAt, type } = verification;
 
@@ -50,7 +67,16 @@ export const transpileUserMfaVerifications = (
     if (type === MfaFactor.WebAuthn) {
       const { agent, name, lastUsedAt } = verification;
 
-      return { id, createdAt, lastUsedAt, type, agent, name };
+      return {
+        id,
+        createdAt,
+        lastUsedAt,
+        type,
+        agent,
+        name,
+        ...(includeWebAuthnCredentials &&
+          pick(verification, 'rpId', 'credentialId', 'publicKey', 'transports', 'counter')),
+      };
     }
 
     return { id, createdAt, type };
