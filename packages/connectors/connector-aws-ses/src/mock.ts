@@ -36,6 +36,6 @@ export const mockedConfig = {
 export const mockGenericI18nEmailTemplate: EmailTemplateDetails = {
   subject: 'Generic email',
   content: 'Verification code is {{code}}',
-  replyTo: 'Reply-to {{to}}',
+  replyTo: '{{to}}',
   sendFrom: 'Foo',
 };

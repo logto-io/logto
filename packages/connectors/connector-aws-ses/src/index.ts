@@ -47,7 +47,7 @@ const sendMessage =
 
     const client: SESv2Client = makeClient(accessKeyId, accessKeySecret, region);
     const emailContent = makeEmailContent(template, payload);
-    const command: SendEmailCommand = makeCommand(config, emailContent, to);
+    const command: SendEmailCommand = makeCommand(config, emailContent, to, { template, payload });
 
     try {
       const response: SendEmailCommandOutput = await client.send(command);
