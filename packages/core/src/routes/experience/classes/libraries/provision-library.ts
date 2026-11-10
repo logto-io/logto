@@ -135,7 +135,11 @@ const isSameMfaFactor = (current: MfaVerification, migrated: MfaVerification) =>
   (current.type === MfaFactor.WebAuthn &&
     migrated.type === MfaFactor.WebAuthn &&
     current.credentialId === migrated.credentialId &&
-    current.publicKey === migrated.publicKey);
+    current.publicKey === migrated.publicKey) ||
+  // Existing codes keep their used state, so re-sending used codes cannot make them valid again.
+  (current.type === MfaFactor.BackupCode &&
+    migrated.type === MfaFactor.BackupCode &&
+    migrated.codes.every(({ code }) => current.codes.some((existing) => existing.code === code)));
 
 /**
  * Merge migrated MFA factors into the user's existing factors.
@@ -144,7 +148,8 @@ const isSameMfaFactor = (current: MfaVerification, migrated: MfaVerification) =>
  * TOTP factor, one backup code factor with unused codes, and backup codes only alongside another
  * factor. An exhausted backup code factor is replaced by a new set. WebAuthn credentials must be
  * unique, including within the migrated set. A migrated factor identical to an existing one is
- * skipped, so a user who already has it is not locked out of every later sign-in.
+ * skipped, so a user who already has it is not locked out of every later sign-in. Backup codes are
+ * identical when every migrated code is already in the user's set, used or not.
  */
 const mergeMfaVerifications = (
   existing: readonly MfaVerification[],

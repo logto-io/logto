@@ -894,7 +894,13 @@ describe('ProvisionLibrary', () => {
           'user-id',
           {},
           {
-            mfaVerifications: [{ ...mfaVerifications.backupCode, id: 'new-backup-code-id' }],
+            mfaVerifications: [
+              {
+                ...mfaVerifications.backupCode,
+                id: 'new-backup-code-id',
+                codes: [{ code: '1a2b3c4d5e' }],
+              },
+            ],
           }
         )
       ).rejects.toMatchObject({
@@ -913,6 +919,11 @@ describe('ProvisionLibrary', () => {
           usedAt: '2024-01-01T00:00:00.000Z',
         })),
       };
+      const newBackupCodes = {
+        ...mfaVerifications.backupCode,
+        id: 'new-backup-code-id',
+        codes: [{ code: '1a2b3c4d5e' }],
+      };
       const { provisionLibrary, updateUserById } = createProvisionLibrary({
         user: {
           ...mockUser,
@@ -925,17 +936,14 @@ describe('ProvisionLibrary', () => {
         'user-id',
         {},
         {
-          mfaVerifications: [{ ...mfaVerifications.backupCode, id: 'new-backup-code-id' }],
+          mfaVerifications: [newBackupCodes],
         }
       );
 
       expect(updateUserById).toHaveBeenCalledWith(
         'user-id',
         expect.objectContaining({
-          mfaVerifications: [
-            mfaVerifications.totp,
-            { ...mfaVerifications.backupCode, id: 'new-backup-code-id' },
-          ],
+          mfaVerifications: [mfaVerifications.totp, newBackupCodes],
         }),
         'merge'
       );
@@ -997,6 +1005,46 @@ describe('ProvisionLibrary', () => {
             mfaVerifications.webAuthn,
             mfaVerifications.backupCode,
           ],
+        }),
+        'merge'
+      );
+    });
+
+    it('skips migrated backup codes already in the user set without reviving used codes', async () => {
+      const partlyUsedBackupCodes = {
+        ...mfaVerifications.backupCode,
+        codes: mfaVerifications.backupCode.codes.map((code, index) => ({
+          ...code,
+          ...(index === 0 && { usedAt: '2024-01-01T00:00:00.000Z' }),
+        })),
+      };
+      const { provisionLibrary, updateUserById } = createProvisionLibrary({
+        user: {
+          ...mockUser,
+          id: 'user-id',
+          mfaVerifications: [mfaVerifications.totp, partlyUsedBackupCodes],
+        },
+      });
+
+      await provisionLibrary.updateUser(
+        'user-id',
+        {},
+        {
+          mfaVerifications: [
+            { ...mfaVerifications.totp, id: 'new-totp-id' },
+            {
+              ...mfaVerifications.backupCode,
+              id: 'new-backup-code-id',
+              codes: mfaVerifications.backupCode.codes.slice(0, 3),
+            },
+          ],
+        }
+      );
+
+      expect(updateUserById).toHaveBeenCalledWith(
+        'user-id',
+        expect.objectContaining({
+          mfaVerifications: [mfaVerifications.totp, partlyUsedBackupCodes],
         }),
         'merge'
       );
