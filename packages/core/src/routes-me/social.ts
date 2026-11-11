@@ -1,5 +1,5 @@
 import { notImplemented } from '@logto/cli/lib/connector/index.js';
-import { ConnectorType } from '@logto/schemas';
+import { ConnectorType, connectorResponseGuard } from '@logto/schemas';
 import { has } from '@silverhand/essentials';
 import { object, record, string, unknown } from 'zod';
 
@@ -29,21 +29,25 @@ export default function socialRoutes<T extends AuthedMeRouter>(
     connectors: { getLogtoConnectors, getLogtoConnectorById },
   } = tenant;
 
-  router.get('/social/connectors', async (ctx, next) => {
-    const connectors = await getLogtoConnectors();
-    const { socialSignInConnectorTargets } = await findDefaultSignInExperience();
+  router.get(
+    '/social/connectors',
+    koaGuard({ response: connectorResponseGuard.omit({ config: true }).array(), status: 200 }),
+    async (ctx, next) => {
+      const connectors = await getLogtoConnectors();
+      const { socialSignInConnectorTargets } = await findDefaultSignInExperience();
 
-    ctx.body = await Promise.all(
-      connectors
-        .filter(
-          ({ type, metadata: { target } }) =>
-            type === ConnectorType.Social && socialSignInConnectorTargets.includes(target)
-        )
-        .map(async (connector) => transpileLogtoConnector(connector))
-    );
+      ctx.body = await Promise.all(
+        connectors
+          .filter(
+            ({ type, metadata: { target } }) =>
+              type === ConnectorType.Social && socialSignInConnectorTargets.includes(target)
+          )
+          .map(async (connector) => transpileLogtoConnector(connector))
+      );
 
-    return next();
-  });
+      return next();
+    }
+  );
 
   router.post(
     '/social/authorization-uri',
