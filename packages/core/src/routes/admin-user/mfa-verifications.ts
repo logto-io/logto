@@ -4,7 +4,6 @@ import { authenticator } from 'otplib';
 import qrcode from 'qrcode';
 import { object, string, z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import {
   generateBackupCodes,
@@ -49,8 +48,7 @@ export default function adminUserMfaVerificationsRoutes<T extends ManagementApiR
     async (ctx, next) => {
       const user = await findUserById(ctx.guard.params.userId);
       ctx.body = transpileUserMfaVerifications(user.mfaVerifications, {
-        // Dev feature: WebAuthn credential export
-        includeWebAuthnCredentials: EnvSet.values.isDevFeaturesEnabled,
+        includeWebAuthnCredentials: true,
       });
       return next();
     }
