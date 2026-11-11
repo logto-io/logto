@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- The GET /logs, export, detail and delete suites share one requester and mock set. */
 import {
   LogResult,
   token,
@@ -11,12 +12,21 @@ import {
 import type { Log, LogResponse } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
+import { EnvSet } from '#src/env-set/index.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
+
+// The export route is registered only while the log export dev feature is enabled.
+const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+
+afterAll(() => {
+  Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
+});
 
 const mockBody = { key: 'a', payload: { key: 'a', result: LogResult.Success }, createdAt: 123 };
 const mockLog: LogResponse = { tenantId: 'fake_tenant', id: '1', ...mockBody };
@@ -35,10 +45,11 @@ const logs = {
     count: mockLogs.length,
   }),
   findLogs: jest.fn().mockResolvedValue(mockLogs.map((log) => toRow(log))),
+  findLogsForExport: jest.fn().mockResolvedValue([]),
   findLogById: jest.fn().mockResolvedValue(toRow(mockLog)),
   deleteLogsInRange: jest.fn().mockResolvedValue({ deletedCount: 0 }),
 };
-const { countLogs, findLogs, findLogById, deleteLogsInRange } = logs;
+const { countLogs, findLogs, findLogsForExport, findLogById, deleteLogsInRange } = logs;
 const logRoutes = await pickDefault(import('./log.js'));
 
 describe('logRoutes', () => {
@@ -190,6 +201,173 @@ describe('logRoutes', () => {
     });
   });
 
+  describe('GET /logs/export', () => {
+    const exportRow = {
+      ...mockLog,
+      createdAtCursor: '2026-11-11T04:40:45.123456Z',
+    };
+
+    beforeEach(() => {
+      findLogsForExport.mockReset();
+      findLogsForExport.mockResolvedValue([]);
+    });
+
+    // The route asks for an ascending first page and a descending newest row before it starts
+    // streaming. Keep both probes consistent so page-resume assertions are not confused by the
+    // range probe.
+    const mockExportRows = (rows: Array<typeof exportRow>) => {
+      findLogsForExport.mockImplementation(async (_limit, condition, order) => {
+        if (order === 'desc') {
+          const last = rows.at(-1);
+          return last ? [last] : [];
+        }
+
+        return condition.after === undefined ? rows : [];
+      });
+    };
+
+    it('streams CSV rows instead of resolving /logs/:id', async () => {
+      mockExportRows([exportRow]);
+
+      const response = await logRequest.get('/logs/export?format=csv&end_time=5000');
+
+      expect(response.status).toEqual(200);
+      expect(response.header['content-type']).toContain('text/csv');
+      expect(response.header['content-disposition']).toMatch(
+        /^attachment; filename="logs-.+\.csv"$/
+      );
+      expect(response.header['x-log-range-oldest']).toBe('123');
+      expect(response.header['x-log-range-newest']).toBe('123');
+      expect(findLogById).not.toHaveBeenCalled();
+
+      const [header, csvRow] = response.text.split('\n');
+      expect(header).toBe('tenantId,id,key,createdAt,payload');
+      const match = /^fake_tenant,1,a,123,"(.*)"$/.exec(csvRow ?? '');
+      expect(match).not.toBeNull();
+      expect(JSON.parse((match?.[1] ?? '').replaceAll('""', '"'))).toEqual(mockLog.payload);
+    });
+
+    it('streams JSONL rows', async () => {
+      mockExportRows([exportRow]);
+
+      const response = await logRequest.get('/logs/export?format=jsonl&end_time=5000');
+
+      expect(response.status).toEqual(200);
+      expect(response.header['content-type']).toContain('application/x-ndjson');
+      expect(response.header['content-disposition']).toMatch(
+        /^attachment; filename="logs-.+\.jsonl"$/
+      );
+      expect(JSON.parse(response.text.trim())).toEqual({
+        tenantId: mockLog.tenantId,
+        id: mockLog.id,
+        key: mockLog.key,
+        createdAt: mockLog.createdAt,
+        payload: mockLog.payload,
+      });
+    });
+
+    it('passes the GET /logs filters and the delete-style window validation through', async () => {
+      await logRequest.get(
+        '/logs/export?format=jsonl&end_time=5000&start_time=1000&userId=user&applicationId=app&logKey=Key'
+      );
+
+      expect(findLogsForExport).toHaveBeenCalledWith(
+        1000,
+        expect.objectContaining({
+          payload: { userId: 'user', applicationId: 'app' },
+          logKey: 'Key',
+          startTime: 1000,
+          endTime: 5000,
+          after: undefined,
+        })
+      );
+
+      const [, condition] = findLogsForExport.mock.calls[0] as [
+        number,
+        { includeKeyPrefix?: unknown[] },
+      ];
+      // Webhook delivery logs are included by default; only the explicit opt-out narrows the
+      // export to the audit-log key prefixes.
+      expect(condition.includeKeyPrefix).toBeUndefined();
+    });
+
+    it('excludes webhook delivery logs when excludeWebhookLogs=true', async () => {
+      await logRequest.get('/logs/export?format=jsonl&end_time=5000&excludeWebhookLogs=true');
+
+      const [, condition] = findLogsForExport.mock.calls[0] as [
+        number,
+        { includeKeyPrefix?: unknown[] },
+      ];
+      expect(condition.includeKeyPrefix).toContain(interaction.prefix);
+    });
+
+    it('reports the actual exported range in headers', async () => {
+      findLogsForExport.mockImplementation(async (_limit, condition, order) => {
+        if (order === 'desc') {
+          return [{ ...exportRow, createdAt: 900 }];
+        }
+
+        return condition.after === undefined ? [{ ...exportRow, createdAt: 123 }] : [];
+      });
+
+      const response = await logRequest.get('/logs/export?format=jsonl&end_time=5000');
+
+      expect(response.header['x-log-range-oldest']).toBe('123');
+      expect(response.header['x-log-range-newest']).toBe('900');
+    });
+
+    it('resumes after the last row of the previous page', async () => {
+      mockExportRows([exportRow]);
+
+      await logRequest.get('/logs/export?format=jsonl&end_time=5000');
+
+      expect(findLogsForExport).toHaveBeenCalledWith(
+        1000,
+        expect.objectContaining({
+          after: { createdAt: exportRow.createdAtCursor, id: exportRow.id },
+        })
+      );
+    });
+
+    it('accepts end_time=0 and start_time=0 as real bounds', async () => {
+      const response = await logRequest.get('/logs/export?format=csv&end_time=0&start_time=0');
+
+      expect(response.status).toEqual(200);
+      expect(findLogsForExport).toHaveBeenCalledWith(
+        1000,
+        expect.objectContaining({ startTime: 0, endTime: 0 })
+      );
+      expect(response.text).toBe('tenantId,id,key,createdAt,payload\n');
+      expect(response.header['x-log-range-oldest']).toBeUndefined();
+    });
+
+    it('returns 500 before sending the download when the first page fails', async () => {
+      findLogsForExport.mockRejectedValueOnce(new Error('database unavailable'));
+
+      const response = await logRequest.get('/logs/export?format=csv&end_time=5000');
+
+      expect(response.status).toEqual(500);
+      expect(response.header['content-disposition']).toBeUndefined();
+    });
+
+    it.each([
+      ['missing format', '/logs/export?end_time=5000'],
+      ['unknown format', '/logs/export?format=xml&end_time=5000'],
+      ['missing end_time', '/logs/export?format=csv'],
+      ['future end_time', `/logs/export?format=csv&end_time=${Date.now() + 3_600_000}`],
+      ['inverted window', '/logs/export?format=csv&end_time=5000&start_time=6000'],
+      ['empty start_time', '/logs/export?format=csv&end_time=5000&start_time='],
+      ['negative end_time', '/logs/export?format=csv&end_time=-1'],
+      ['fractional end_time', '/logs/export?format=csv&end_time=1.5'],
+      ['invalid webhook exclusion', '/logs/export?format=csv&end_time=5000&excludeWebhookLogs=yes'],
+    ])('returns 400 for %s', async (_name, path) => {
+      const response = await logRequest.get(path);
+
+      expect(response.status).toEqual(400);
+      expect(findLogsForExport).not.toHaveBeenCalled();
+    });
+  });
+
   describe('GET /logs/:id', () => {
     const logId = 'logIdValue';
 
@@ -338,3 +516,5 @@ describe('logRoutes', () => {
     });
   });
 });
+
+/* eslint-enable max-lines */
