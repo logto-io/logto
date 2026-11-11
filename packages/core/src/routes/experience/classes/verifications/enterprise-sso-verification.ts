@@ -16,6 +16,7 @@ import { conditional } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import {
+  assertSsoIdentityMatchesConnector,
   getSsoAuthorizationUrl,
   isEmailInSsoConnectorDomains,
   verifySsoIdentity,
@@ -274,6 +275,8 @@ export class EnterpriseSsoVerification
     );
 
     if (userSsoIdentity) {
+      assertSsoIdentityMatchesConnector(await this.getConnectorData(), userSsoIdentity);
+
       const user = await usersQueries.findUserById(userSsoIdentity.userId);
       return {
         user,

@@ -350,6 +350,62 @@ describe('Single sign on util methods tests', () => {
       expect(findUserByEmailMock).not.toBeCalled();
     });
 
+    it('should sign in an OIDC identity linked through another connector', async () => {
+      findUserSsoIdentityBySsoIdentityIdMock.mockResolvedValueOnce({
+        id: 'ssoIdentityId',
+        userId: 'foo',
+        issuer: mockIssuer,
+        ssoConnectorId: 'other-connector',
+      });
+
+      await expect(
+        handleSsoAuthentication(mockContext, tenant, wellConfiguredSsoConnector, {
+          issuer: mockIssuer,
+          userInfo: mockSsoUserInfo,
+        })
+      ).resolves.toBe('foo');
+    });
+
+    it('should sign in a SAML identity linked through the same connector', async () => {
+      findUserSsoIdentityBySsoIdentityIdMock.mockResolvedValueOnce({
+        id: 'ssoIdentityId',
+        userId: 'foo',
+        issuer: mockIssuer,
+        ssoConnectorId: mockSamlSsoConnector.id,
+      });
+
+      await expect(
+        handleSsoAuthentication(mockContext, tenant, mockSamlSsoConnector, {
+          issuer: mockIssuer,
+          userInfo: mockSsoUserInfo,
+        })
+      ).resolves.toBe('foo');
+    });
+
+    it('should refuse a SAML identity linked through another connector', async () => {
+      findUserSsoIdentityBySsoIdentityIdMock.mockResolvedValueOnce({
+        id: 'ssoIdentityId',
+        userId: 'foo',
+        issuer: mockIssuer,
+        ssoConnectorId: 'other-connector',
+      });
+
+      await expect(
+        handleSsoAuthentication(mockContext, tenant, mockSamlSsoConnector, {
+          issuer: mockIssuer,
+          userInfo: mockSsoUserInfo,
+        })
+      ).rejects.toMatchError(
+        new RequestError({
+          code: 'user.enterprise_sso_identity_not_exists',
+          status: 404,
+          ssoConnectorId: mockSamlSsoConnector.id,
+        })
+      );
+      expect(updateUserSsoIdentityMock).not.toBeCalled();
+      expect(updateUserMock).not.toBeCalled();
+    });
+
     it.each([{ domains: ['foo.com'] }, { domains: [] }])(
       'should not link by email when the connector domains are $domains',
       async ({ domains }) => {
