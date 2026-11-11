@@ -16,7 +16,7 @@ console.log(cmd);
 await execAsync(cmd).catch(catchCmdError);
 
 // Manually run lifecycle script since changesets didn't
-await execAsync(`pnpm -r version`).catch(catchCmdError);
+await execAsync(`pnpm -r run version`).catch(catchCmdError);
 
 // Sanity check for prepublish scripts
 await execAsync(`pnpm -r prepack`).catch(catchCmdError);

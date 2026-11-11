@@ -87,3 +87,12 @@ allowBuilds:
   core-js: false
   esbuild: false
   puppeteer: false
+
+publicHoistPattern:
+  - "*eslint*"
+
+# Packages published by Logto are often adopted on the day they are released.
+minimumReleaseAgeExclude:
+  - "@logto/*"
+  - "@silverhand/*"
+  - "@withtyped/*"
