@@ -22,11 +22,12 @@ const cloud = {
     usage_warning_metric: '{{metric}}（{{env}}）：{{value}}（上限 {{limit}}）',
     deployments_title: '部署',
     deployments_description:
-      '刷新过此许可证的部署，以及每个部署最近上报的用量。月度数值取上月与本月至今中的较大值。',
+      '刷新过此许可证的部署，以及每个部署最近上报的用量。月度数值取上月与本月至今中的较大值。不活跃的部署在最近 15 天内未刷新，不计入用量限制。',
     deployments_empty: '尚无部署刷新过此许可证。',
     deployment_id: '部署 ID',
     logto_version: 'Logto 版本',
     last_seen: '最近活跃',
+    inactive: '不活跃',
     status: {
       active: '有效',
       past_due: '付款逾期',

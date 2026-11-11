@@ -73,6 +73,8 @@ function Usage({
           isRowHoverEffectDisabled
           rowGroups={[{ key: 'deployments', data: deployments }]}
           rowIndexKey="deploymentId"
+          // A Cloud that predates `active` returns no flag, so its rows show as active.
+          rowClassName={({ active }) => (active ? undefined : styles.inactive)}
           placeholder={
             <div className={styles.empty}>
               <DynamicT forKey="cloud.self_hosted_licenses.deployments_empty" />
@@ -106,7 +108,16 @@ function Usage({
               title: t('cloud.self_hosted_licenses.last_seen'),
               dataIndex: 'lastSeenAt',
               colSpan: 2,
-              render: ({ lastSeenAt }) => dateFormatter.format(new Date(lastSeenAt)),
+              render: ({ lastSeenAt, active }) => (
+                <div className={styles.lastSeen}>
+                  {dateFormatter.format(new Date(lastSeenAt))}
+                  {!active && (
+                    <Tag size="small">
+                      <DynamicT forKey="cloud.self_hosted_licenses.inactive" />
+                    </Tag>
+                  )}
+                </div>
+              ),
             },
             {
               title: t('tenants.license.usage_metric_mau'),

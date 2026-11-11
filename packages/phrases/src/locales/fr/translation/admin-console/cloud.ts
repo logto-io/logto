@@ -28,11 +28,12 @@ const cloud = {
     usage_warning_metric: '{{metric}} ({{env}}) : {{value}} (limite {{limit}})',
     deployments_title: 'Déploiements',
     deployments_description:
-      'Déploiements ayant actualisé cette licence, avec la dernière utilisation signalée par chacun. Les chiffres mensuels correspondent au plus élevé entre le mois dernier et le mois en cours.',
+      "Déploiements ayant actualisé cette licence, avec la dernière utilisation signalée par chacun. Les chiffres mensuels correspondent au plus élevé entre le mois dernier et le mois en cours. Les déploiements inactifs n'ont pas actualisé la licence au cours des 15 derniers jours et ne comptent pas dans les limites.",
     deployments_empty: "Aucun déploiement n'a encore actualisé cette licence.",
     deployment_id: 'ID du déploiement',
     logto_version: 'Version de Logto',
     last_seen: 'Vu pour la dernière fois',
+    inactive: 'Inactif',
     status: {
       active: 'Active',
       past_due: 'Paiement en retard',

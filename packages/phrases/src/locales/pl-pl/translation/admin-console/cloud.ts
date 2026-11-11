@@ -26,11 +26,12 @@ const cloud = {
     usage_warning_metric: '{{metric}} ({{env}}): {{value}} (limit {{limit}})',
     deployments_title: 'Wdrożenia',
     deployments_description:
-      'Wdrożenia, które odświeżyły tę licencję, wraz z ostatnim zgłoszonym przez każde z nich użyciem. Wartości miesięczne to wyższa z wartości z ostatniego miesiąca i bieżącego miesiąca.',
+      'Wdrożenia, które odświeżyły tę licencję, wraz z ostatnim zgłoszonym przez każde z nich użyciem. Wartości miesięczne to wyższa z wartości z ostatniego miesiąca i bieżącego miesiąca. Nieaktywne wdrożenia nie odświeżyły licencji w ciągu ostatnich 15 dni i nie są wliczane do limitów.',
     deployments_empty: 'Żadne wdrożenie nie odświeżyło jeszcze tej licencji.',
     deployment_id: 'ID wdrożenia',
     logto_version: 'Wersja Logto',
     last_seen: 'Ostatnio widziane',
+    inactive: 'Nieaktywne',
     status: {
       active: 'Aktywna',
       past_due: 'Zaległa płatność',

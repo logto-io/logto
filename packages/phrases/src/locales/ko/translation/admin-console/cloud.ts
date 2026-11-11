@@ -22,11 +22,12 @@ const cloud = {
     usage_warning_metric: '{{metric}} ({{env}}): {{value}} (한도 {{limit}})',
     deployments_title: '배포',
     deployments_description:
-      '이 라이선스를 갱신한 배포와 각 배포가 마지막으로 보고한 사용량입니다. 월별 수치는 지난달과 이번 달 현재까지 중 더 높은 값입니다.',
+      '이 라이선스를 갱신한 배포와 각 배포가 마지막으로 보고한 사용량입니다. 월별 수치는 지난달과 이번 달 현재까지 중 더 높은 값입니다. 비활성 배포는 최근 15일 동안 갱신되지 않았으며 한도에 포함되지 않습니다.',
     deployments_empty: '아직 이 라이선스를 갱신한 배포가 없습니다.',
     deployment_id: '배포 ID',
     logto_version: 'Logto 버전',
     last_seen: '마지막 확인',
+    inactive: '비활성',
     status: {
       active: '활성',
       past_due: '결제 연체',

@@ -27,11 +27,12 @@ const cloud = {
     usage_warning_metric: '{{metric}} ({{env}}): {{value}} (limite {{limit}})',
     deployments_title: 'Distribuzioni',
     deployments_description:
-      "Distribuzioni che hanno aggiornato questa licenza, con l'ultimo utilizzo segnalato da ciascuna. I valori mensili sono il più alto tra il mese scorso e il mese in corso.",
+      "Distribuzioni che hanno aggiornato questa licenza, con l'ultimo utilizzo segnalato da ciascuna. I valori mensili sono il più alto tra il mese scorso e il mese in corso. Le distribuzioni inattive non si sono aggiornate negli ultimi 15 giorni e non contano ai fini dei limiti.",
     deployments_empty: 'Nessuna distribuzione ha ancora aggiornato questa licenza.',
     deployment_id: 'ID distribuzione',
     logto_version: 'Versione di Logto',
     last_seen: 'Ultimo rilevamento',
+    inactive: 'Inattiva',
     status: {
       active: 'Attiva',
       past_due: 'Pagamento scaduto',

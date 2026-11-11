@@ -22,11 +22,12 @@ const cloud = {
     usage_warning_metric: '{{metric}}（{{env}}）：{{value}}（上限 {{limit}}）',
     deployments_title: '部署',
     deployments_description:
-      '曾重新整理此授權的部署，以及每個部署最近上報的用量。每月數值取上月與本月至今中的較大值。',
+      '曾重新整理此授權的部署，以及每個部署最近上報的用量。每月數值取上月與本月至今中的較大值。不活躍的部署在最近 15 天內未重新整理，不計入用量限制。',
     deployments_empty: '尚未有部署重新整理此授權。',
     deployment_id: '部署 ID',
     logto_version: 'Logto 版本',
     last_seen: '最近活躍',
+    inactive: '不活躍',
     status: {
       active: '有效',
       past_due: '付款逾期',

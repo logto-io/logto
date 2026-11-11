@@ -250,6 +250,7 @@ it('shows the deployments, their latest usage, and the current usage warnings', 
         logtoVersion: '1.40.0',
         firstSeenAt: '2026-10-01T00:00:00.000Z',
         lastSeenAt: '2026-10-20T00:00:00.000Z',
+        active: true,
         usage: {
           month: '2026-10',
           // The table shows the value limits are evaluated against: the higher of the two months.
@@ -265,6 +266,7 @@ it('shows the deployments, their latest usage, and the current usage warnings', 
         logtoVersion: '1.30.0',
         firstSeenAt: '2026-10-01T00:00:00.000Z',
         lastSeenAt: '2026-10-02T00:00:00.000Z',
+        active: false,
         usage: null,
       },
     ],
@@ -277,8 +279,10 @@ it('shows the deployments, their latest usage, and the current usage warnings', 
   expect(reporting.textContent).toContain('61,000');
   expect(reporting.textContent).toContain('2,500');
   expect(reporting.textContent).not.toContain('12,000');
+  expect(reporting.textContent).not.toContain('self_hosted_licenses.inactive');
   const silent = screen.getByRole('row', { name: /deployment-silent/ });
   expect(silent.textContent).toContain('—');
+  expect(silent.textContent).toContain('self_hosted_licenses.inactive');
   expect(
     screen.getByText('admin_console.cloud.self_hosted_licenses.usage_warning_description')
   ).toBeTruthy();

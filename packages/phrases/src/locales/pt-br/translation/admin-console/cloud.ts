@@ -27,11 +27,12 @@ const cloud = {
     usage_warning_metric: '{{metric}} ({{env}}): {{value}} (limite {{limit}})',
     deployments_title: 'Implantações',
     deployments_description:
-      'Implantações que atualizaram esta licença, com o último uso informado por cada uma. Os valores mensais são o maior entre o mês passado e o mês atual até agora.',
+      'Implantações que atualizaram esta licença, com o último uso informado por cada uma. Os valores mensais são o maior entre o mês passado e o mês atual até agora. Implantações inativas não atualizaram a licença nos últimos 15 dias e não contam para os limites.',
     deployments_empty: 'Nenhuma implantação atualizou esta licença ainda.',
     deployment_id: 'ID da implantação',
     logto_version: 'Versão do Logto',
     last_seen: 'Visto por último',
+    inactive: 'Inativa',
     status: {
       active: 'Ativa',
       past_due: 'Pagamento atrasado',

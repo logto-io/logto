@@ -61,3 +61,14 @@
     white-space: nowrap;
   }
 }
+
+.inactive {
+  color: var(--color-text-secondary);
+}
+
+.lastSeen {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: _.unit(2);
+}
