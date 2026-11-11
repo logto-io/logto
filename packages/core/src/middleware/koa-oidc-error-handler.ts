@@ -175,13 +175,7 @@ export default function koaOidcErrorHandler<StateT, ContextT extends WithI18nCon
         // of 1 KB or more (its default threshold), such as one echoing a long `state`, so this
         // block never sees that error and the browser gets the raw JSON instead of this page. For
         // the same reason, this page itself is sent uncompressed.
-
-        // Dev feature: OIDC error page
-        if (
-          EnvSet.values.isDevFeaturesEnabled &&
-          browserFacingOidcPath.test(ctx.path) &&
-          ctx.accepts('json', 'html') === 'html'
-        ) {
+        if (browserFacingOidcPath.test(ctx.path) && ctx.accepts('json', 'html') === 'html') {
           ctx.set('Content-Security-Policy', oidcErrorPageCsp);
           // Koa keeps the JSON type from the object body when a string replaces it.
           ctx.type = 'html';

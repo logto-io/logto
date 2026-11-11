@@ -2,7 +2,6 @@ import { appInsights } from '@logto/app-insights/node';
 import { type IRouterContext } from 'koa-router';
 import { errors } from 'oidc-provider';
 
-import { resetDevFeaturesEnabled, setDevFeaturesEnabled } from '#src/test-utils/dev-features.js';
 import { i18next } from '#src/utils/i18n.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
@@ -145,12 +144,7 @@ describe('koaOidcErrorHandler middleware', () => {
       'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8';
     const code = 'oidc.invalid_redirect_uri';
 
-    beforeEach(() => {
-      setDevFeaturesEnabled(true);
-    });
-
     afterEach(() => {
-      resetDevFeaturesEnabled();
       jest.restoreAllMocks();
     });
 
@@ -186,14 +180,6 @@ describe('koaOidcErrorHandler middleware', () => {
         expect(ctx.body).toMatchObject({ code });
       }
     );
-
-    it('keeps the JSON body when dev features are disabled', async () => {
-      setDevFeaturesEnabled(false);
-
-      const ctx = await handleRedirectUriError('/oidc/auth', browserAccept);
-
-      expect(ctx.body).toMatchObject({ code });
-    });
 
     it('keeps the raw error body when parse_error is false', async () => {
       const ctx = await handleRedirectUriError('/oidc/auth?parse_error=false', browserAccept);
