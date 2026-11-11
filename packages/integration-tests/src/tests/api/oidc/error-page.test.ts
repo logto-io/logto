@@ -2,7 +2,7 @@ import { ApplicationType } from '@logto/schemas';
 
 import { oidcApi } from '#src/api/api.js';
 import { createApplication, deleteApplication } from '#src/api/application.js';
-import { devFeatureDisabledTest, devFeatureTest, generateTestName } from '#src/utils.js';
+import { generateTestName } from '#src/utils.js';
 
 const requestApi = oidcApi.extend({
   redirect: 'manual',
@@ -68,7 +68,7 @@ describe('OIDC error page', () => {
     await deleteApplication(applicationId);
   });
 
-  devFeatureTest.it('shows a browser the page for an unregistered redirect URI', async () => {
+  it('shows a browser the page for an unregistered redirect URI', async () => {
     const response = await requestWithUnregisteredRedirectUri(
       { accept: browserAccept, 'accept-language': 'en' },
       { state: '<script>alert(1)</script>' }
@@ -84,7 +84,7 @@ describe('OIDC error page', () => {
     expect(response.headers.get('x-frame-options')).toBe('SAMEORIGIN');
   });
 
-  devFeatureTest.it('shows the page for an unknown interaction', async () => {
+  it('shows the page for an unknown interaction', async () => {
     const response = await requestApi.get('auth/unknown-uid', {
       headers: { accept: browserAccept },
     });
@@ -92,7 +92,7 @@ describe('OIDC error page', () => {
     await expectErrorPage(response, 'session.not_found');
   });
 
-  devFeatureTest.it('shows the page for an unregistered post-logout redirect URI', async () => {
+  it('shows the page for an unregistered post-logout redirect URI', async () => {
     const response = await requestApi.get('session/end', {
       headers: { accept: browserAccept },
       searchParams: { client_id: applicationId, post_logout_redirect_uri: unregisteredUri },
@@ -101,7 +101,7 @@ describe('OIDC error page', () => {
     await expectErrorPage(response, 'post_logout_redirect_uri');
   });
 
-  devFeatureTest.it.each([
+  it.each([
     ['de', 'ltr', 'Etwas ist schiefgelaufen'],
     ['ar', 'rtl', 'حدث خطأ ما'],
   ])('shows the page in %s', async (language, direction, title) => {
@@ -146,13 +146,5 @@ describe('OIDC error page', () => {
     });
 
     await expect(expectJsonError(response)).resolves.toMatchObject({ error: 'invalid_client' });
-  });
-
-  devFeatureDisabledTest.it('keeps the JSON body for a browser', async () => {
-    const response = await requestWithUnregisteredRedirectUri({ accept: browserAccept });
-
-    await expect(expectJsonError(response)).resolves.toMatchObject({
-      code: 'oidc.invalid_redirect_uri',
-    });
   });
 });
