@@ -20,9 +20,9 @@
     "//": "# `changeset version` won't run version lifecycle scripts, see https://github.com/changesets/changesets/issues/860",
     "ci:version": "changeset version && pnpm -r run version",
     "ci:build": "pnpm -r build",
-    "ci:lint": "pnpm -r --parallel --workspace-concurrency=0 lint",
-    "ci:stylelint": "pnpm -r --parallel --workspace-concurrency=0 stylelint",
-    "ci:test": "pnpm -r --parallel --workspace-concurrency=0 test:ci && pnpm test:scripts",
+    "ci:lint": "pnpm -r --no-sort --workspace-concurrency=0 lint",
+    "ci:stylelint": "pnpm -r --no-sort --workspace-concurrency=0 stylelint",
+    "ci:test": "pnpm -r --no-sort --workspace-concurrency=0 test:ci && pnpm test:scripts",
     "test:scripts": "node .scripts/compare-database.test.js",
     "test:integration": "./.scripts/integration/run.sh"
   },
