@@ -48,7 +48,8 @@ const cloud = {
     purchase: {
       buy: 'خرید مجوز',
       description: 'با اشتراک سالانه، قابلیت‌های پولی را روی نمونه Logto خودتان فعال کنید.',
-      price_per_year: '{{price}} / سال',
+      price_per_month: '{{price}} در ماه',
+      billed_annually: 'پرداخت سالانه',
       price_unavailable: 'قیمت در دسترس نیست',
       feature_branding: 'پنهان کردن نشان تجاری Logto',
       feature_custom_ui: 'استفاده از رابط ورود اختصاصی',

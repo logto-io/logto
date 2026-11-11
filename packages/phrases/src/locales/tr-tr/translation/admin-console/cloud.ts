@@ -49,7 +49,8 @@ const cloud = {
     purchase: {
       buy: 'Lisans satın al',
       description: 'Yıllık abonelikle kendi Logto örneğinizde ücretli özelliklerin kilidini açın.',
-      price_per_year: '{{price}} / yıl',
+      price_per_month: '{{price}}/ay',
+      billed_annually: 'Yıllık faturalandırılır',
       price_unavailable: 'Fiyat kullanılamıyor',
       feature_branding: 'Logto markasını gizleme',
       feature_custom_ui: 'Kendi oturum açma arayüzünüzü kullanma',

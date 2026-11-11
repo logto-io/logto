@@ -45,7 +45,8 @@ const cloud = {
     purchase: {
       buy: '라이선스 구매',
       description: '연간 구독으로 자체 Logto 인스턴스의 유료 기능을 사용하세요.',
-      price_per_year: '{{price}} / 년',
+      price_per_month: '{{price}}/월',
+      billed_annually: '연간 결제',
       price_unavailable: '가격을 불러올 수 없음',
       feature_branding: 'Logto 브랜딩 숨기기',
       feature_custom_ui: '자체 로그인 UI 사용',

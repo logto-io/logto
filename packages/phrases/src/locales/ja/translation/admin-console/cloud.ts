@@ -47,7 +47,8 @@ const cloud = {
     purchase: {
       buy: 'ライセンスを購入',
       description: '年間サブスクリプションで、独自の Logto インスタンスの有料機能を利用できます。',
-      price_per_year: '{{price}} / 年',
+      price_per_month: '{{price}}/月',
+      billed_annually: '年払い',
       price_unavailable: '価格を取得できません',
       feature_branding: 'Logto ブランディングを非表示',
       feature_custom_ui: '独自のサインイン UI',

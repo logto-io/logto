@@ -46,7 +46,8 @@ const cloud = {
     purchase: {
       buy: 'شراء ترخيص',
       description: 'افتح الميزات المدفوعة على مثيل Logto الخاص بك باشتراك سنوي.',
-      price_per_year: '{{price}} / سنة',
+      price_per_month: '{{price}}/شهريًا',
+      billed_annually: 'يُدفع سنويًا',
       price_unavailable: 'السعر غير متاح',
       feature_branding: 'إخفاء علامة Logto التجارية',
       feature_custom_ui: 'استخدام واجهة تسجيل الدخول الخاصة بك',

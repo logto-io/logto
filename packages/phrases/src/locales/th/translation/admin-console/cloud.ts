@@ -47,7 +47,8 @@ const cloud = {
     purchase: {
       buy: 'ซื้อใบอนุญาต',
       description: 'ปลดล็อกฟีเจอร์แบบชำระเงินบนอินสแตนซ์ Logto ของคุณเองด้วยการสมัครสมาชิกรายปี',
-      price_per_year: '{{price}} / ปี',
+      price_per_month: '{{price}}/เดือน',
+      billed_annually: 'เรียกเก็บเงินรายปี',
       price_unavailable: 'ไม่สามารถแสดงราคาได้',
       feature_branding: 'ซ่อนแบรนด์ Logto',
       feature_custom_ui: 'ใช้ UI การลงชื่อเข้าใช้ของคุณเอง',

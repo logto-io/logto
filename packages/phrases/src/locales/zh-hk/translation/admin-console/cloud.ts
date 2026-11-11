@@ -45,7 +45,8 @@ const cloud = {
     purchase: {
       buy: '購買許可證',
       description: '透過年度訂閱，在你自己的 Logto 實例上解鎖付費功能。',
-      price_per_year: '{{price}} / 年',
+      price_per_month: '{{price}}/月',
+      billed_annually: '按年付費',
       price_unavailable: '價格無法使用',
       feature_branding: '隱藏 Logto 品牌標識',
       feature_custom_ui: '使用自訂登入介面',

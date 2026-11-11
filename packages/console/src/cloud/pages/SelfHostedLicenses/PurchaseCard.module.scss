@@ -27,6 +27,12 @@
   color: var(--color-text-primary);
 }
 
+.priceNote {
+  margin-top: _.unit(1);
+  font: var(--font-body-2);
+  color: var(--color-text-secondary);
+}
+
 .features {
   margin: 0;
   padding: 0;

@@ -50,7 +50,8 @@ const cloud = {
     purchase: {
       buy: 'Buy a license',
       description: 'Unlock paid features on your own Logto instance with a yearly subscription.',
-      price_per_year: '{{price}} / year',
+      price_per_month: '{{price}}/mo',
+      billed_annually: 'Billed annually',
       price_unavailable: 'Price unavailable',
       feature_branding: 'Hide the Logto branding',
       feature_custom_ui: 'Bring your own sign-in UI',

@@ -3,7 +3,6 @@ import { Trans, useTranslation } from 'react-i18next';
 
 import Tick from '@/assets/icons/tick.svg?react';
 import { useSelfHostedLicensePrice } from '@/cloud/hooks/use-self-hosted-licenses';
-import { formatCurrencyAmount } from '@/cloud/pages/UserSubscriptions/utils';
 import SkuName from '@/components/SkuName';
 import { buildOfficialWebsiteContactPageUrl } from '@/consts/external-links';
 import Button from '@/ds-components/Button';
@@ -11,6 +10,7 @@ import Card from '@/ds-components/Card';
 import TextLink from '@/ds-components/TextLink';
 
 import styles from './PurchaseCard.module.scss';
+import { formatMonthlyPrice } from './purchase-price';
 
 const enterpriseContactUrl = buildOfficialWebsiteContactPageUrl('self-hosted-licenses');
 
@@ -43,14 +43,16 @@ function PurchaseCard({ isSubscribing, onSubscribe, onClose }: Props) {
         </div>
         <div className={styles.description}>{t('description')}</div>
       </div>
-      <div className={styles.price}>
-        {price
-          ? t('price_per_year', {
-              price: formatCurrencyAmount(price.unitAmount, price.currency, i18n.language),
-            })
-          : error
-            ? t('price_unavailable')
-            : '…'}
+      <div>
+        <div className={styles.price}>
+          {price
+            ? t('price_per_month', { price: formatMonthlyPrice(price, i18n.language) })
+            : error
+              ? t('price_unavailable')
+              : '…'}
+        </div>
+        {/* Cloud only sells a yearly price; show it per month, like the self-hosted plans page. */}
+        {price && <div className={styles.priceNote}>{t('billed_annually')}</div>}
       </div>
       <ul className={styles.features}>
         {featureKeys.map((key) => (

@@ -52,7 +52,8 @@ const cloud = {
       buy: 'Lizenz kaufen',
       description:
         'Schalte kostenpflichtige Funktionen auf deiner eigenen Logto-Instanz mit einem Jahresabonnement frei.',
-      price_per_year: '{{price}} / Jahr',
+      price_per_month: '{{price}}/Monat',
+      billed_annually: 'Jährliche Abrechnung',
       price_unavailable: 'Preis nicht verfügbar',
       feature_branding: 'Logto-Branding ausblenden',
       feature_custom_ui: 'Eigene Anmelde-UI verwenden',
