@@ -14,6 +14,10 @@ const cloud = {
     non_production_key: 'Chave de não produção',
     keys_unavailable:
       'As chaves desta licença estão indisponíveis. Contacta o suporte se precisares de ajuda.',
+    keys_pending: 'As chaves estarão disponíveis quando a licença estiver ativa.',
+    keys_payment_required:
+      'As chaves ficam indisponíveis até que a fatura em dívida seja paga. Utilize "Gerir pagamento" para a pagar e as chaves voltarão a estar disponíveis.',
+    manage_payment: 'Gerir pagamento',
     issue_keys: 'Obter chaves de licença',
     issue_error: 'Não foi possível emitir as chaves de licença. Tenta novamente.',
     install_title: 'Instala a tua licença',
@@ -33,6 +37,7 @@ const cloud = {
     last_seen: 'Visto pela última vez',
     inactive: 'Inativa',
     status: {
+      pending: 'A ativar',
       active: 'Ativa',
       past_due: 'Pagamento em atraso',
       canceling: 'Cancela no fim do período',
@@ -40,6 +45,35 @@ const cloud = {
       unpaid: 'Não paga',
       expired: 'Expirada',
       revoked: 'Revogada',
+    },
+    purchase: {
+      buy: 'Comprar uma licença',
+      description:
+        'Desbloqueie funcionalidades pagas na sua própria instância Logto com uma subscrição anual.',
+      price_per_year: '{{price}} / ano',
+      price_unavailable: 'Preço indisponível',
+      feature_branding: 'Ocultar a marca Logto',
+      feature_custom_ui: 'Utilizar a sua própria interface de início de sessão',
+      feature_collaboration: 'Colaboração na Consola',
+      feature_saml: 'Aplicações SAML ilimitadas',
+      feature_deployment: 'Uma implementação de produção',
+      subscribe: 'Subscrever',
+      enterprise: 'Precisa do Enterprise? <a>Contacte-nos</a>',
+      activating: 'Pagamento recebido. A ativar a sua licença...',
+      processing:
+        'O seu pagamento ainda está a ser processado. A licença aparecerá aqui quando estiver ativa.',
+      checkout_expired: 'A sessão de pagamento expirou. Subscreva novamente.',
+    },
+    cancel: {
+      action: 'Cancelar subscrição',
+      keep: 'Manter subscrição',
+      confirm_title: 'Cancelar subscrição?',
+      confirm_content:
+        'A licença mantém-se ativa até ao fim do período atual e não será renovada. Depois disso, as suas chaves deixam de poder ser atualizadas.',
+      success: 'A subscrição será cancelada no fim do período atual.',
+      payment_required:
+        'Pague a fatura em dívida antes de cancelar. Utilize "Gerir pagamento" para a pagar.',
+      failed: 'Não foi possível cancelar a subscrição. Tente novamente.',
     },
   },
   console_sso: {

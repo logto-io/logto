@@ -14,6 +14,10 @@ const cloud = {
     non_production_key: 'Chave de não produção',
     keys_unavailable:
       'As chaves desta licença estão indisponíveis. Entre em contato com o suporte se precisar de ajuda.',
+    keys_pending: 'As chaves estarão disponíveis quando a licença estiver ativa.',
+    keys_payment_required:
+      'As chaves ficam indisponíveis até que a fatura em aberto seja paga. Use "Gerenciar pagamento" para pagá-la e as chaves voltarão a ficar disponíveis.',
+    manage_payment: 'Gerenciar pagamento',
     issue_keys: 'Obter chaves de licença',
     issue_error: 'Não foi possível emitir as chaves de licença. Tente novamente.',
     install_title: 'Instale sua licença',
@@ -34,6 +38,7 @@ const cloud = {
     last_seen: 'Visto por último',
     inactive: 'Inativa',
     status: {
+      pending: 'Ativando',
       active: 'Ativa',
       past_due: 'Pagamento atrasado',
       canceling: 'Cancela ao final do período',
@@ -41,6 +46,35 @@ const cloud = {
       unpaid: 'Não paga',
       expired: 'Expirada',
       revoked: 'Revogada',
+    },
+    purchase: {
+      buy: 'Comprar uma licença',
+      description:
+        'Desbloqueie recursos pagos na sua própria instância do Logto com uma assinatura anual.',
+      price_per_year: '{{price}} / ano',
+      price_unavailable: 'Preço indisponível',
+      feature_branding: 'Ocultar a marca Logto',
+      feature_custom_ui: 'Usar sua própria interface de login',
+      feature_collaboration: 'Colaboração no Console',
+      feature_saml: 'Aplicativos SAML ilimitados',
+      feature_deployment: 'Uma implantação de produção',
+      subscribe: 'Assinar',
+      enterprise: 'Precisa do Enterprise? <a>Fale conosco</a>',
+      activating: 'Pagamento recebido. Ativando sua licença...',
+      processing:
+        'Seu pagamento ainda está sendo processado. A licença aparecerá aqui quando estiver ativa.',
+      checkout_expired: 'A sessão de pagamento expirou. Assine novamente.',
+    },
+    cancel: {
+      action: 'Cancelar assinatura',
+      keep: 'Manter assinatura',
+      confirm_title: 'Cancelar assinatura?',
+      confirm_content:
+        'A licença continua ativa até o fim do período atual e não será renovada. Depois disso, suas chaves não poderão mais ser atualizadas.',
+      success: 'A assinatura será cancelada no fim do período atual.',
+      payment_required:
+        'Pague a fatura em aberto antes de cancelar. Use "Gerenciar pagamento" para pagá-la.',
+      failed: 'Não foi possível cancelar a assinatura. Tente novamente.',
     },
   },
   console_sso: {

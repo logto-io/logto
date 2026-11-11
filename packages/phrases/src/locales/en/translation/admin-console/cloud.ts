@@ -14,6 +14,10 @@ const cloud = {
     production_key: 'Production key',
     non_production_key: 'Non-production key',
     keys_unavailable: 'Keys are unavailable for this license. Contact support if you need help.',
+    keys_pending: 'Keys will be available once the license is active.',
+    keys_payment_required:
+      'Keys are unavailable until the outstanding invoice is paid. Use "Manage payment" to pay it, and the keys will be available again.',
+    manage_payment: 'Manage payment',
     issue_keys: 'Get license keys',
     issue_error: 'Unable to issue license keys. Please try again.',
     install_title: 'Install your license',
@@ -34,6 +38,7 @@ const cloud = {
     last_seen: 'Last seen',
     inactive: 'Inactive',
     status: {
+      pending: 'Activating',
       active: 'Active',
       past_due: 'Past due',
       canceling: 'Cancels at period end',
@@ -41,6 +46,34 @@ const cloud = {
       unpaid: 'Unpaid',
       expired: 'Expired',
       revoked: 'Revoked',
+    },
+    purchase: {
+      buy: 'Buy a license',
+      description: 'Unlock paid features on your own Logto instance with a yearly subscription.',
+      price_per_year: '{{price}} / year',
+      price_unavailable: 'Price unavailable',
+      feature_branding: 'Hide the Logto branding',
+      feature_custom_ui: 'Bring your own sign-in UI',
+      feature_collaboration: 'Console collaboration',
+      feature_saml: 'Unlimited SAML applications',
+      feature_deployment: 'One production deployment',
+      subscribe: 'Subscribe',
+      enterprise: 'Need Enterprise? <a>Contact us</a>',
+      activating: 'Payment received. Activating your license...',
+      processing:
+        'Your payment is still being processed. The license will appear here once it is active.',
+      checkout_expired: 'The checkout session has expired. Please subscribe again.',
+    },
+    cancel: {
+      action: 'Cancel subscription',
+      keep: 'Keep subscription',
+      confirm_title: 'Cancel subscription?',
+      confirm_content:
+        'The license stays active until the end of the current period and will not renew. After that, its keys can no longer be refreshed.',
+      success: 'The subscription will be canceled at the end of the current period.',
+      payment_required:
+        'Pay the outstanding invoice before canceling. Use "Manage payment" to pay it.',
+      failed: 'Unable to cancel the subscription. Please try again.',
     },
   },
   console_sso: {

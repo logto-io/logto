@@ -2,7 +2,11 @@ import { type selfHostedLicensesRouter } from '@logto/cloud/routes';
 import useSWR from 'swr';
 
 import { useCloudApi } from '@/cloud/hooks/use-cloud-api';
-import { type SelfHostedLicenseDetails, type SelfHostedLicenseSummary } from '@/cloud/types/router';
+import {
+  type SelfHostedLicenseDetails,
+  type SelfHostedLicensePrice,
+  type SelfHostedLicenseSummary,
+} from '@/cloud/types/router';
 import { isCloud } from '@/consts/env';
 import useCurrentUser from '@/hooks/use-current-user';
 
@@ -35,4 +39,12 @@ export const useSelfHostedLicense = (id: string) => {
     error: userError ?? result.error,
     isLoading: (!user && !userError) || result.isLoading,
   };
+};
+
+export const useSelfHostedLicensePrice = () => {
+  const api = useCloudApi<typeof selfHostedLicensesRouter>({ hideErrorToast: true });
+  return useSWR<SelfHostedLicensePrice, Error>(
+    isCloud && '/api/me/self-hosted-licenses/price',
+    async () => api.get('/api/me/self-hosted-licenses/price')
+  );
 };

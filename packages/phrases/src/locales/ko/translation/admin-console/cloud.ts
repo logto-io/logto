@@ -11,6 +11,10 @@ const cloud = {
     production_key: '프로덕션 키',
     non_production_key: '비프로덕션 키',
     keys_unavailable: '이 라이선스의 키를 사용할 수 없습니다. 도움이 필요하면 지원팀에 문의하세요.',
+    keys_pending: '라이선스가 활성화되면 키를 사용할 수 있습니다.',
+    keys_payment_required:
+      '미결제 청구서가 결제될 때까지 키를 사용할 수 없습니다. "결제 관리"에서 결제하면 키를 다시 사용할 수 있습니다.',
+    manage_payment: '결제 관리',
     issue_keys: '라이선스 키 가져오기',
     issue_error: '라이선스 키를 발급할 수 없습니다. 다시 시도해 주세요.',
     install_title: '라이선스 설치',
@@ -29,6 +33,7 @@ const cloud = {
     last_seen: '마지막 확인',
     inactive: '비활성',
     status: {
+      pending: '활성화 중',
       active: '활성',
       past_due: '결제 연체',
       canceling: '기간 종료 시 취소',
@@ -36,6 +41,33 @@ const cloud = {
       unpaid: '미결제',
       expired: '만료됨',
       revoked: '철회됨',
+    },
+    purchase: {
+      buy: '라이선스 구매',
+      description: '연간 구독으로 자체 Logto 인스턴스의 유료 기능을 사용하세요.',
+      price_per_year: '{{price}} / 년',
+      price_unavailable: '가격을 불러올 수 없음',
+      feature_branding: 'Logto 브랜딩 숨기기',
+      feature_custom_ui: '자체 로그인 UI 사용',
+      feature_collaboration: '콘솔 협업',
+      feature_saml: '무제한 SAML 애플리케이션',
+      feature_deployment: '프로덕션 배포 1개',
+      subscribe: '구독',
+      enterprise: 'Enterprise가 필요하신가요? <a>문의하기</a>',
+      activating: '결제가 완료되었습니다. 라이선스를 활성화하는 중...',
+      processing: '결제가 아직 처리 중입니다. 라이선스가 활성화되면 여기에 표시됩니다.',
+      checkout_expired: '결제 세션이 만료되었습니다. 다시 구독해 주세요.',
+    },
+    cancel: {
+      action: '구독 취소',
+      keep: '구독 유지',
+      confirm_title: '구독을 취소할까요?',
+      confirm_content:
+        '라이선스는 현재 기간이 끝날 때까지 활성 상태로 유지되며 갱신되지 않습니다. 그 이후에는 키를 더 이상 갱신할 수 없습니다.',
+      success: '구독은 현재 기간이 끝날 때 취소됩니다.',
+      payment_required:
+        '취소하기 전에 미결제 청구서를 결제하세요. "결제 관리"에서 결제할 수 있습니다.',
+      failed: '구독을 취소할 수 없습니다. 다시 시도해 주세요.',
     },
   },
   console_sso: {

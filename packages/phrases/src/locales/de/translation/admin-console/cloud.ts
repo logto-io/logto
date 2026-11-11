@@ -15,6 +15,10 @@ const cloud = {
     non_production_key: 'Nichtproduktionsschlüssel',
     keys_unavailable:
       'Für diese Lizenz sind keine Schlüssel verfügbar. Wende dich bei Bedarf an den Support.',
+    keys_pending: 'Die Schlüssel sind verfügbar, sobald die Lizenz aktiv ist.',
+    keys_payment_required:
+      'Die Schlüssel sind nicht verfügbar, bis die offene Rechnung bezahlt ist. Bezahle sie über „Zahlung verwalten“, dann sind die Schlüssel wieder verfügbar.',
+    manage_payment: 'Zahlung verwalten',
     issue_keys: 'Lizenzschlüssel abrufen',
     issue_error: 'Lizenzschlüssel konnten nicht ausgestellt werden. Bitte versuche es erneut.',
     install_title: 'Lizenz installieren',
@@ -35,6 +39,7 @@ const cloud = {
     last_seen: 'Zuletzt gesehen',
     inactive: 'Inaktiv',
     status: {
+      pending: 'Wird aktiviert',
       active: 'Aktiv',
       past_due: 'Überfällig',
       canceling: 'Kündigung zum Periodenende',
@@ -42,6 +47,35 @@ const cloud = {
       unpaid: 'Unbezahlt',
       expired: 'Abgelaufen',
       revoked: 'Widerrufen',
+    },
+    purchase: {
+      buy: 'Lizenz kaufen',
+      description:
+        'Schalte kostenpflichtige Funktionen auf deiner eigenen Logto-Instanz mit einem Jahresabonnement frei.',
+      price_per_year: '{{price}} / Jahr',
+      price_unavailable: 'Preis nicht verfügbar',
+      feature_branding: 'Logto-Branding ausblenden',
+      feature_custom_ui: 'Eigene Anmelde-UI verwenden',
+      feature_collaboration: 'Zusammenarbeit in der Konsole',
+      feature_saml: 'Unbegrenzte SAML-Anwendungen',
+      feature_deployment: 'Eine Produktionsbereitstellung',
+      subscribe: 'Abonnieren',
+      enterprise: 'Brauchst du Enterprise? <a>Kontaktiere uns</a>',
+      activating: 'Zahlung erhalten. Deine Lizenz wird aktiviert...',
+      processing:
+        'Deine Zahlung wird noch verarbeitet. Die Lizenz erscheint hier, sobald sie aktiv ist.',
+      checkout_expired: 'Die Checkout-Sitzung ist abgelaufen. Bitte abonniere erneut.',
+    },
+    cancel: {
+      action: 'Abonnement kündigen',
+      keep: 'Abonnement behalten',
+      confirm_title: 'Abonnement kündigen?',
+      confirm_content:
+        'Die Lizenz bleibt bis zum Ende des aktuellen Zeitraums aktiv und wird nicht verlängert. Danach können ihre Schlüssel nicht mehr aktualisiert werden.',
+      success: 'Das Abonnement wird zum Ende des aktuellen Zeitraums gekündigt.',
+      payment_required:
+        'Bezahle vor der Kündigung die offene Rechnung. Nutze dafür „Zahlung verwalten“.',
+      failed: 'Das Abonnement konnte nicht gekündigt werden. Bitte versuche es erneut.',
     },
   },
   console_sso: {
