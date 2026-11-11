@@ -52,6 +52,8 @@ const summary = {
   currentPeriodEnd: '2027-10-10T00:00:00.000Z',
   lastRefreshedAt: null,
   keyUnavailableReason: null,
+  deployments: [],
+  usageWarnings: [],
 };
 const pair = {
   productionKey: 'fixture-production-not-a-credential',
@@ -237,3 +239,73 @@ it.each(['account', 'license'])(
     expect(api.post).toHaveBeenCalledTimes(1);
   }
 );
+
+it('shows the deployments, their latest usage, and the current usage warnings', async () => {
+  read.mockResolvedValue({
+    ...summary,
+    deployments: [
+      {
+        deploymentId: 'deployment-reporting',
+        env: 'production',
+        logtoVersion: '1.40.0',
+        firstSeenAt: '2026-10-01T00:00:00.000Z',
+        lastSeenAt: '2026-10-20T00:00:00.000Z',
+        active: true,
+        usage: {
+          month: '2026-10',
+          // The table shows the value limits are evaluated against: the higher of the two months.
+          mau: { lastMonth: 61_000, monthToDate: 12_000 },
+          monthlyAccessTokens: { lastMonth: 1000, monthToDate: 2500 },
+          tenants: 3,
+          reportedAt: '2026-10-20T00:00:00.000Z',
+        },
+      },
+      {
+        deploymentId: 'deployment-silent',
+        env: 'non-production',
+        logtoVersion: '1.30.0',
+        firstSeenAt: '2026-10-01T00:00:00.000Z',
+        lastSeenAt: '2026-10-02T00:00:00.000Z',
+        active: false,
+        usage: null,
+      },
+    ],
+    usageWarnings: [{ env: 'production', metric: 'mau', limit: 50_000, value: 61_000 }],
+  });
+  renderDetails();
+
+  const reporting = await screen.findByRole('row', { name: /deployment-reporting/ });
+  expect(reporting.textContent).toContain('1.40.0');
+  expect(reporting.textContent).toContain('61,000');
+  expect(reporting.textContent).toContain('2,500');
+  expect(reporting.textContent).not.toContain('12,000');
+  expect(reporting.textContent).not.toContain('self_hosted_licenses.inactive');
+  const silent = screen.getByRole('row', { name: /deployment-silent/ });
+  expect(silent.textContent).toContain('—');
+  expect(silent.textContent).toContain('self_hosted_licenses.inactive');
+  expect(
+    screen.getByText('admin_console.cloud.self_hosted_licenses.usage_warning_description')
+  ).toBeTruthy();
+  expect(
+    screen.getByText('admin_console.cloud.self_hosted_licenses.usage_warning_metric')
+  ).toBeTruthy();
+});
+
+it('shows no usage warning and an empty deployment list for a license never refreshed', async () => {
+  renderDetails();
+  expect(
+    await screen.findByText('admin_console.cloud.self_hosted_licenses.deployments_empty')
+  ).toBeTruthy();
+  expect(
+    screen.queryByText('admin_console.cloud.self_hosted_licenses.usage_warning_description')
+  ).toBeNull();
+});
+
+it('keeps the license page working when Cloud returns no usage fields', async () => {
+  read.mockResolvedValue({ ...summary, deployments: undefined, usageWarnings: undefined });
+  renderDetails();
+  expect(
+    await screen.findByText('admin_console.cloud.self_hosted_licenses.deployments_empty')
+  ).toBeTruthy();
+  expect(issueButton()).toBeTruthy();
+});

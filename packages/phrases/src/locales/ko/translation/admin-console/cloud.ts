@@ -18,6 +18,16 @@ const cloud = {
       '두 키는 동일한 기능과 할당량을 제공합니다. 주문서에 달리 명시되어 있지 않는 한, 구독은 하나의 프로덕션 배포를 포함합니다.',
     install_copy: '프로덕션 배포에는 프로덕션 키를, 개발 및 테스트에는 비프로덕션 키를 복사하세요.',
     install_paste: '자체 호스팅 콘솔에서 설정 → 라이선스를 열고 키를 붙여 넣어 설치하세요.',
+    usage_warning_description: '이 라이선스는 플랜의 사용량 한도를 초과했습니다:',
+    usage_warning_metric: '{{metric}} ({{env}}): {{value}} (한도 {{limit}})',
+    deployments_title: '배포',
+    deployments_description:
+      '이 라이선스를 갱신한 배포와 각 배포가 마지막으로 보고한 사용량입니다. 월별 수치는 지난달과 이번 달 현재까지 중 더 높은 값입니다. 비활성 배포는 최근 15일 동안 갱신되지 않았으며 한도에 포함되지 않습니다.',
+    deployments_empty: '아직 이 라이선스를 갱신한 배포가 없습니다.',
+    deployment_id: '배포 ID',
+    logto_version: 'Logto 버전',
+    last_seen: '마지막 확인',
+    inactive: '비활성',
     status: {
       active: '활성',
       past_due: '결제 연체',

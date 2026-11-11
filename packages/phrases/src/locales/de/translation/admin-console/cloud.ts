@@ -24,6 +24,16 @@ const cloud = {
       'Kopiere den Produktionsschlüssel für den Produktivbetrieb oder den Nichtproduktionsschlüssel für Entwicklung und Tests.',
     install_paste:
       'Öffne in deiner selbst gehosteten Konsole Einstellungen → Lizenz, füge den Schlüssel ein und installiere ihn.',
+    usage_warning_description: 'Diese Lizenz liegt über den Nutzungslimits ihres Plans:',
+    usage_warning_metric: '{{metric}} ({{env}}): {{value}} (Limit {{limit}})',
+    deployments_title: 'Bereitstellungen',
+    deployments_description:
+      'Bereitstellungen, die diese Lizenz aktualisiert haben, mit der zuletzt gemeldeten Nutzung. Monatswerte sind der höhere Wert aus dem letzten Monat und dem laufenden Monat. Inaktive Bereitstellungen haben sich in den letzten 15 Tagen nicht aktualisiert und zählen nicht zu den Limits.',
+    deployments_empty: 'Noch keine Bereitstellung hat diese Lizenz aktualisiert.',
+    deployment_id: 'Bereitstellungs-ID',
+    logto_version: 'Logto-Version',
+    last_seen: 'Zuletzt gesehen',
+    inactive: 'Inaktiv',
     status: {
       active: 'Aktiv',
       past_due: 'Überfällig',

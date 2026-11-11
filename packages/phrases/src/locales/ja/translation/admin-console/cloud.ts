@@ -20,6 +20,16 @@ const cloud = {
     install_copy: '本番環境には本番環境用キーを、開発・テストには非本番環境用キーをコピーします。',
     install_paste:
       'セルフホストのコンソールで「設定 → ライセンス」を開き、キーを貼り付けてインストールします。',
+    usage_warning_description: 'このライセンスはプランの使用量上限を超えています：',
+    usage_warning_metric: '{{metric}}（{{env}}）：{{value}}（上限 {{limit}}）',
+    deployments_title: 'デプロイ',
+    deployments_description:
+      'このライセンスを更新したデプロイと、それぞれが最後に報告した使用量です。月次の数値は先月と今月これまでのうち高い方です。非アクティブなデプロイは過去 15 日間更新されておらず、上限の計算に含まれません。',
+    deployments_empty: 'このライセンスを更新したデプロイはまだありません。',
+    deployment_id: 'デプロイ ID',
+    logto_version: 'Logto バージョン',
+    last_seen: '最終確認',
+    inactive: '非アクティブ',
     status: {
       active: '有効',
       past_due: '支払い期限超過',

@@ -23,6 +23,16 @@ const cloud = {
       'Copy the production key for a production deployment, or the non-production key for development and testing.',
     install_paste:
       'In your self-hosted Console, open Settings → License, paste the key, and install it.',
+    usage_warning_description: 'This license is above the usage limits of its plan:',
+    usage_warning_metric: '{{metric}} ({{env}}): {{value}} (limit {{limit}})',
+    deployments_title: 'Deployments',
+    deployments_description:
+      'Deployments that refreshed this license, with the latest usage each one reported. Monthly figures are the higher of last month and this month so far. Inactive deployments have not refreshed in the last 15 days and do not count toward the limits.',
+    deployments_empty: 'No deployment has refreshed this license yet.',
+    deployment_id: 'Deployment ID',
+    logto_version: 'Logto version',
+    last_seen: 'Last seen',
+    inactive: 'Inactive',
     status: {
       active: 'Active',
       past_due: 'Past due',

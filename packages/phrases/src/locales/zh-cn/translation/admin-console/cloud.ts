@@ -18,6 +18,16 @@ const cloud = {
       '两种密钥提供相同的功能和配额。除非你的订单另有规定，否则你的订阅涵盖一个生产部署。',
     install_copy: '生产部署请复制生产环境密钥，开发和测试请复制非生产环境密钥。',
     install_paste: '在自托管控制台中打开「设置 → 许可证」，粘贴密钥并安装。',
+    usage_warning_description: '此许可证已超出其方案的用量限制：',
+    usage_warning_metric: '{{metric}}（{{env}}）：{{value}}（上限 {{limit}}）',
+    deployments_title: '部署',
+    deployments_description:
+      '刷新过此许可证的部署，以及每个部署最近上报的用量。月度数值取上月与本月至今中的较大值。不活跃的部署在最近 15 天内未刷新，不计入用量限制。',
+    deployments_empty: '尚无部署刷新过此许可证。',
+    deployment_id: '部署 ID',
+    logto_version: 'Logto 版本',
+    last_seen: '最近活跃',
+    inactive: '不活跃',
     status: {
       active: '有效',
       past_due: '付款逾期',
