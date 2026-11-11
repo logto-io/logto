@@ -179,6 +179,16 @@ jobs:
           node-version: ^26.0.0
           run-install: false
 
+      # Releases before the pnpm 12 upgrade keep their pnpm settings in the `pnpm` field of
+      # package.json, which pnpm 12 ignores, so run their steps with pnpm 10.
+      - name: Setup pnpm for alteration
+        working-directory: ./alteration
+        run: |
+          if jq -e '.pnpm' package.json > /dev/null; then
+            npm i -g --prefix "$RUNNER_TEMP/pnpm-10" pnpm@10
+            echo "ALTERATION_PNPM_BIN=$RUNNER_TEMP/pnpm-10/bin:" >> "$GITHUB_ENV"
+          fi
+
       # ** Prepack packages **
       - name: Prepack fresh
         working-directory: ./fresh
@@ -186,7 +196,9 @@ jobs:
 
       - name: Prepack alteration
         working-directory: ./alteration
-        run: pnpm i && pnpm prepack
+        run: |
+          export PATH="$ALTERATION_PNPM_BIN$PATH"
+          pnpm i && pnpm prepack
       # ** End **
 
       - name: Setup Postgres
@@ -202,6 +214,7 @@ jobs:
       - name: Setup alteration database
         working-directory: ./alteration
         run: |
+          export PATH="$ALTERATION_PNPM_BIN$PATH"
           cd packages/cli
           pnpm start db seed --test
         env:
@@ -223,6 +236,7 @@ jobs:
       - name: Setup old database
         working-directory: ./alteration
         run: |
+          export PATH="$ALTERATION_PNPM_BIN$PATH"
           cd packages/cli
           pnpm start db seed --test
         env:
