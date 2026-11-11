@@ -108,7 +108,7 @@ export const mockResource: Resource = {
   tenantId: 'fake_tenant',
   id: 'logto_api',
   name: 'management api',
-  indicator: 'logto.dev/api',
+  indicator: 'https://logto.dev/api',
   accessTokenTtl: 3600,
   isDefault: false,
 };
