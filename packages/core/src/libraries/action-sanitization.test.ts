@@ -11,6 +11,7 @@ import {
   buildSafeActionErrorSummary,
   toLoggableActionEvent,
   toLoggableActionResult,
+  toLoggableActionResultIssues,
 } from './action-sanitization.js';
 
 describe('toLoggableActionEvent', () => {
@@ -300,5 +301,53 @@ describe('buildActionTelemetryError', () => {
       name: 'ActionExecutionError',
       message: 'Action execution failed.',
     });
+  });
+});
+
+describe('toLoggableActionResultIssues', () => {
+  it('keeps known field paths and drops issue messages and received values', () => {
+    const issues = toLoggableActionResultIssues([
+      {
+        code: 'invalid_type',
+        path: ['mfaVerifications', 2, 'secret'],
+        expected: 'string',
+        received: 'number',
+        message: 'leaked-message',
+      },
+      {
+        code: 'invalid_literal',
+        path: ['passwordVerified'],
+        expected: true,
+        received: 'leaked-received',
+        message: 'Invalid literal value',
+      },
+    ]);
+
+    expect(issues).toEqual([
+      { path: ['mfaVerifications', 2, 'secret'], code: 'invalid_type' },
+      { path: ['passwordVerified'], code: 'invalid_literal' },
+    ]);
+    expect(JSON.stringify(issues)).not.toContain('leaked');
+  });
+
+  it('cuts paths at the first segment authored by the script', () => {
+    expect(
+      toLoggableActionResultIssues(
+        [{ code: 'custom', path: ['customData', 'leaked-key', 'profile', 0], message: '' }],
+        ['user']
+      )
+    ).toEqual([{ path: ['user', 'customData', '*'], code: 'custom' }]);
+  });
+
+  it('caps the number of issues', () => {
+    expect(
+      toLoggableActionResultIssues(
+        Array.from({ length: 12 }, (_, index) => ({
+          code: 'custom' as const,
+          path: ['mfaVerifications', index],
+          message: '',
+        }))
+      )
+    ).toHaveLength(10);
   });
 });

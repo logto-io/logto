@@ -5,8 +5,11 @@ import {
   action as actionLog,
   LogResult,
   LogtoActionKey,
+  loggableActionValidationGuard,
   type ActionExecutionErrorPolicy,
   type ActionExecutionRequestBody,
+  type ActionResultRejection,
+  type LoggableActionValidation,
 } from '@logto/schemas';
 import { got, HTTPError } from 'got';
 
@@ -81,10 +84,33 @@ type ActionEventSource<Event> =
       getEvent: () => Promise<Event>;
     };
 
-type RunActionData<Event> = ActionEventSource<Event> & {
+/**
+ * How the caller handles an Action result: the value to continue with, or the error to fail with.
+ * `rejection` explains, for the audit log, why Logto did not accept what the script returned.
+ */
+export type ActionResultValidation<Result> =
+  | { result: Result; rejection?: ActionResultRejection }
+  | { error: RequestError; rejection: ActionResultRejection };
+
+export const resolveActionResultValidation = <Result>(
+  validation: ActionResultValidation<Result>
+): Result => {
+  if ('error' in validation) {
+    throw validation.error;
+  }
+
+  return validation.result;
+};
+
+type RunActionData<Event, Result> = ActionEventSource<Event> & {
   key: LogtoActionKey;
   auditContext: Pick<LogContext, 'createLog'> &
     Pick<LogPayload, 'applicationId' | 'cimdClientId' | 'sessionId' | 'userId'>;
+  /**
+   * Validate what the script returned. Also called with the error-policy fallback when the script
+   * fails, and with `undefined` when no Action runs, so every path yields a validated result.
+   */
+  validateResult: (result?: unknown) => ActionResultValidation<Result>;
 };
 
 type ActionExecutionErrorHandlingData = {
@@ -156,6 +182,26 @@ const getActionResultActionSummary = (key: LogtoActionKey, result: unknown) => {
   } catch {
     return { decision: 'invalid' };
   }
+};
+
+const toLoggableActionValidation = ({
+  rejection,
+}: ActionResultValidation<unknown>): { validation: LoggableActionValidation } & Pick<
+  LogPayload,
+  'result'
+> => {
+  if (!rejection) {
+    return { validation: { outcome: 'accepted' } };
+  }
+
+  // Parsing strips anything outside the loggable shape, in case a rejection carries more than
+  // its type declares.
+  const parsed = loggableActionValidationGuard.safeParse({ outcome: 'rejected', ...rejection });
+
+  return {
+    result: LogResult.Error,
+    validation: parsed.success ? parsed.data : { outcome: 'rejected', reason: rejection.reason },
+  };
 };
 
 const getActionErrorFallback = (key: LogtoActionKey): ActionExecutionErrorPolicyDecision => {
@@ -339,19 +385,16 @@ export class ActionLibrary {
     return result.value;
   }
 
-  async runAction<Event>({
+  async runAction<Event, Result>({
     key,
     auditContext: { createLog, ...auditContext },
+    validateResult,
     ...eventSource
-  }: RunActionData<Event>): Promise<unknown> {
+  }: RunActionData<Event, Result>): Promise<Result> {
     const action = await this.findEnabledAction(key);
 
-    if (!action) {
-      return;
-    }
-
-    if (!(await this.isActionsEnabledByQuota())) {
-      return;
+    if (!action || !(await this.isActionsEnabledByQuota())) {
+      return resolveActionResultValidation(validateResult());
     }
 
     const event = 'getEvent' in eventSource ? await eventSource.getEvent() : eventSource.event;
@@ -415,7 +458,9 @@ export class ActionLibrary {
           properties: telemetryProperties,
         });
 
-        return applyActionExecutionErrorPolicyDecision(decision);
+        return resolveActionResultValidation(
+          validateResult(applyActionExecutionErrorPolicyDecision(decision))
+        );
       }
 
       const { result } = executionOutcome;
@@ -427,7 +472,10 @@ export class ActionLibrary {
         actionResult: toLoggableActionResult(result),
       });
 
-      return result;
+      const validation = validateResult(result);
+      log.append(toLoggableActionValidation(validation));
+
+      return resolveActionResultValidation(validation);
     } finally {
       trackActionExecutionMetrics({ durationMs, properties: telemetryProperties });
     }

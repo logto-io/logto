@@ -1,6 +1,6 @@
 import {
   type ActionMfaVerification,
-  type ActionUserPatch,
+  type ActionResultRejection,
   type InteractionIdentifier,
   type MfaVerification,
   MfaFactor,
@@ -10,15 +10,17 @@ import {
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, isPlainObject } from '@silverhand/essentials';
+import { ZodError } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { doesActionPreserveSignInIdentifier } from '#src/libraries/action-identifier-validation.js';
+import { toLoggableActionResultIssues } from '#src/libraries/action-sanitization.js';
+import { type ActionResultValidation } from '#src/libraries/action.js';
 import {
   backupCodeCount,
   isValidBackupCode,
 } from '#src/libraries/verification-helpers/backup-code-validation.js';
 import { validateTotpSecret } from '#src/libraries/verification-helpers/totp-validation.js';
-import assertThat from '#src/utils/assert-that.js';
 
 import { type ActionProvisioningProfile } from '../../types.js';
 
@@ -55,45 +57,66 @@ export type ValidatedPostSignInActionResult =
 const isActionResultObject = (result: unknown): result is Record<string, unknown> =>
   isPlainObject(result);
 
-const invalidCredentialsResult = (): ActionRejectInvalidCredentialsResult => ({
-  action: 'rejectInvalidCredentials',
+type PostFirstFactorVerificationActionResultValidation =
+  ActionResultValidation<ValidatedPostFirstFactorVerificationActionResult>;
+
+type PostSignInActionResultValidation = ActionResultValidation<ValidatedPostSignInActionResult>;
+
+type ActionMfaVerificationRejectionReason = NonNullable<
+  ActionResultRejection['mfaVerification']
+>['reason'];
+
+const rejectInvalidCredentials = (
+  rejection: ActionResultRejection
+): PostFirstFactorVerificationActionResultValidation => ({
+  result: { action: 'rejectInvalidCredentials' },
+  rejection,
 });
 
 const continueResult = (): ValidatedPostSignInActionResult => ({
   action: 'continue',
 });
 
-const identityConflictError = () =>
-  new RequestError({ code: 'session.identity_conflict', status: 409 });
+const identityConflict = (): PostFirstFactorVerificationActionResultValidation => ({
+  error: new RequestError({ code: 'session.identity_conflict', status: 409 }),
+  rejection: { reason: 'identity_conflict' },
+});
 
-const verificationFailedError = () =>
-  new RequestError({ code: 'session.verification_failed', status: 400 });
+const signInIdentifierChanged = (
+  identifier: InteractionIdentifier
+): PostFirstFactorVerificationActionResultValidation => ({
+  error: new RequestError(
+    { code: 'action.sign_in_identifier_changed', status: 422 },
+    { identifierType: identifier.type }
+  ),
+  rejection: { reason: 'sign_in_identifier_changed' },
+});
 
-const toActionProvisioningProfileSafe = (user: unknown) => {
+const verificationFailed = (
+  rejection: ActionResultRejection
+): PostSignInActionResultValidation => ({
+  error: new RequestError({ code: 'session.verification_failed', status: 400 }),
+  rejection,
+});
+
+const parseActionProvisioningProfile = (
+  user: unknown
+): { profile: ActionProvisioningProfile } | { rejection: ActionResultRejection } => {
   try {
-    return toActionProvisioningProfile(user);
-  } catch {
-    // eslint-disable-next-line unicorn/no-useless-undefined -- explicit undefined; bare `return` trips no-useless-return
-    return undefined;
+    return { profile: toActionProvisioningProfile(user) };
+  } catch (error: unknown) {
+    return {
+      rejection: {
+        reason: 'invalid_user_patch',
+        ...conditional(
+          error instanceof ZodError && {
+            issues: toLoggableActionResultIssues(error.issues, ['user']),
+          }
+        ),
+      },
+    };
   }
 };
-
-const assertActionPreservesSignInIdentifier = (
-  identifier: InteractionIdentifier,
-  userPatch: ActionUserPatch
-) => {
-  assertThat(
-    doesActionPreserveSignInIdentifier(identifier, userPatch),
-    new RequestError(
-      { code: 'action.sign_in_identifier_changed', status: 422 },
-      { identifierType: identifier.type }
-    )
-  );
-};
-
-type MfaVerificationsResult =
-  | { success: true; mfaVerifications?: MfaVerification[] }
-  | { success: false };
 
 /** WebAuthn credential IDs and public keys are unpadded Base64URL strings. */
 const isBase64Url = (value: string) => /^[\w-]+$/.test(value) && value.length % 4 !== 1;
@@ -114,18 +137,27 @@ const normalizeTotpSecret = (secret: string) => {
  * Migrated users may have used some of their backup codes, so scripts pass only the unused ones:
  * accept up to a full set instead of exactly one.
  */
-const isValidMigratedBackupCodes = (codes: string[]) =>
-  codes.length > 0 &&
-  codes.length <= backupCodeCount &&
-  codes.every((code) => isValidBackupCode(code));
+const getMigratedBackupCodesRejectionReason = (
+  codes: string[]
+): ActionMfaVerificationRejectionReason | undefined => {
+  if (codes.length === 0 || codes.length > backupCodeCount) {
+    return 'invalid_backup_code_count';
+  }
+
+  if (!codes.every((code) => isValidBackupCode(code))) {
+    return 'invalid_backup_code_format';
+  }
+};
 
 /**
  * Convert one script-supplied MFA factor into a stored verification.
  *
- * Returns `undefined` when the factor carries invalid credential material. Format errors never
- * echo the credential, so a malformed secret or backup code cannot leak through an error message.
+ * Returns the rejection reason when the factor carries invalid credential material. The reason
+ * never echoes the credential, so a malformed secret or backup code cannot leak through it.
  */
-const toMfaVerification = (input: ActionMfaVerification): MfaVerification | undefined => {
+const toMfaVerification = (
+  input: ActionMfaVerification
+): { verification: MfaVerification } | { reason: ActionMfaVerificationRejectionReason } => {
   const base = {
     id: generateStandardId(),
     createdAt: new Date().toISOString(),
@@ -136,57 +168,62 @@ const toMfaVerification = (input: ActionMfaVerification): MfaVerification | unde
       const secret = normalizeTotpSecret(input.secret);
 
       return validateTotpSecret(secret)
-        ? {
-            ...base,
-            type: input.type,
-            key: secret,
-          }
-        : undefined;
+        ? { verification: { ...base, type: input.type, key: secret } }
+        : { reason: 'invalid_totp_secret' };
     }
     case MfaFactor.BackupCode: {
-      return isValidMigratedBackupCodes(input.codes)
-        ? {
-            ...base,
-            type: input.type,
-            codes: input.codes.map((code) => ({ code })),
-          }
-        : undefined;
+      const reason = getMigratedBackupCodesRejectionReason(input.codes);
+
+      return reason
+        ? { reason }
+        : {
+            verification: {
+              ...base,
+              type: input.type,
+              codes: input.codes.map((code) => ({ code })),
+            },
+          };
     }
     case MfaFactor.WebAuthn: {
       return isValidWebAuthnCredential(input.credentialId, input.publicKey)
         ? {
-            ...base,
-            type: input.type,
-            credentialId: input.credentialId,
-            publicKey: input.publicKey,
-            counter: input.counter,
-            ...conditional(input.transports !== undefined && { transports: input.transports }),
-            agent: input.agent ?? '',
-            ...conditional(input.name !== undefined && { name: input.name }),
+            verification: {
+              ...base,
+              type: input.type,
+              credentialId: input.credentialId,
+              publicKey: input.publicKey,
+              counter: input.counter,
+              ...conditional(input.transports !== undefined && { transports: input.transports }),
+              agent: input.agent ?? '',
+              ...conditional(input.name !== undefined && { name: input.name }),
+            },
           }
-        : undefined;
+        : { reason: 'invalid_webauthn_credential' };
     }
   }
 };
 
-const toMfaVerifications = (
-  inputs: ActionMfaVerification[] | undefined
-): MfaVerificationsResult => {
-  if (!inputs || inputs.length === 0) {
-    return { success: true };
-  }
+/** Convert every migrated factor, or reject with the index and type of the first invalid one. */
+const toMfaVerifications = (inputs: ActionMfaVerification[] = []) =>
+  inputs.reduce<{ mfaVerifications: MfaVerification[] } | { rejection: ActionResultRejection }>(
+    (converted, input, index) => {
+      if ('rejection' in converted) {
+        return converted;
+      }
 
-  const mfaVerifications = inputs.reduce<MfaVerification[] | undefined>((verifications, input) => {
-    if (!verifications) {
-      return;
-    }
+      const verification = toMfaVerification(input);
 
-    const verification = toMfaVerification(input);
-    return verification ? [...verifications, verification] : undefined;
-  }, []);
-
-  return mfaVerifications ? { success: true, mfaVerifications } : { success: false };
-};
+      return 'reason' in verification
+        ? {
+            rejection: {
+              reason: 'invalid_mfa_verification',
+              mfaVerification: { index, type: input.type, reason: verification.reason },
+            },
+          }
+        : { mfaVerifications: [...converted.mfaVerifications, verification.verification] };
+    },
+    { mfaVerifications: [] }
+  );
 
 export const validatePostFirstFactorVerificationActionResult = ({
   event,
@@ -194,47 +231,59 @@ export const validatePostFirstFactorVerificationActionResult = ({
 }: {
   event: Pick<PostFirstFactorVerificationEvent, 'user' | 'identifier'>;
   result: unknown;
-}): ValidatedPostFirstFactorVerificationActionResult => {
+}): PostFirstFactorVerificationActionResultValidation => {
   const parsed = postFirstFactorVerificationResultGuard.safeParse(result);
 
   if (!parsed.success) {
-    return invalidCredentialsResult();
+    return rejectInvalidCredentials({
+      reason: 'invalid_result',
+      issues: toLoggableActionResultIssues(parsed.error.issues),
+    });
   }
 
-  const profile = toActionProvisioningProfileSafe(parsed.data.user);
+  const parsedProfile = parseActionProvisioningProfile(parsed.data.user);
 
-  if (!profile) {
-    return invalidCredentialsResult();
+  if ('rejection' in parsedProfile) {
+    return rejectInvalidCredentials(parsedProfile.rejection);
   }
 
-  const mfaVerificationsResult = toMfaVerifications(parsed.data.mfaVerifications);
+  const convertedMfaVerifications = toMfaVerifications(parsed.data.mfaVerifications);
 
-  if (!mfaVerificationsResult.success) {
-    return invalidCredentialsResult();
+  if ('rejection' in convertedMfaVerifications) {
+    return rejectInvalidCredentials(convertedMfaVerifications.rejection);
   }
 
-  const { mfaVerifications } = mfaVerificationsResult;
+  const { profile } = parsedProfile;
+  const { mfaVerifications } = convertedMfaVerifications;
 
-  assertActionPreservesSignInIdentifier(event.identifier, profile);
+  if (!doesActionPreserveSignInIdentifier(event.identifier, profile)) {
+    return signInIdentifierChanged(event.identifier);
+  }
+
+  const migratedMfaVerifications = conditional(mfaVerifications.length > 0 && { mfaVerifications });
 
   switch (parsed.data.action) {
     case 'createUser': {
-      assertThat(event.user === null, identityConflictError());
+      if (event.user !== null) {
+        return identityConflict();
+      }
 
       return {
-        action: 'createUser',
-        user: profile,
-        ...conditional(mfaVerifications && { mfaVerifications }),
+        result: { action: 'createUser', user: profile, ...migratedMfaVerifications },
       };
     }
     case 'updateUser': {
-      assertThat(event.user, identityConflictError());
+      if (!event.user) {
+        return identityConflict();
+      }
 
       return {
-        action: 'updateUser',
-        userId: event.user.id,
-        user: profile,
-        ...conditional(mfaVerifications && { mfaVerifications }),
+        result: {
+          action: 'updateUser',
+          userId: event.user.id,
+          user: profile,
+          ...migratedMfaVerifications,
+        },
       };
     }
   }
@@ -246,38 +295,41 @@ export const validatePostSignInActionResult = ({
 }: {
   userId: string;
   result: unknown;
-}): ValidatedPostSignInActionResult => {
+}): PostSignInActionResultValidation => {
   if (result === null || result === undefined) {
-    return continueResult();
+    return { result: continueResult() };
   }
 
   if (!isActionResultObject(result)) {
-    throw verificationFailedError();
+    return verificationFailed({ reason: 'invalid_result' });
   }
 
   if (Object.keys(result).length === 0) {
-    return continueResult();
+    return { result: continueResult() };
   }
 
   const parsed = postSignInResultGuard.safeParse(result);
 
-  assertThat(parsed.success, verificationFailedError());
+  if (!parsed.success) {
+    return verificationFailed({
+      reason: 'invalid_result',
+      issues: toLoggableActionResultIssues(parsed.error.issues),
+    });
+  }
 
   switch (parsed.data.action) {
     case 'updateUser': {
       if (parsed.data.user === undefined) {
-        return continueResult();
+        return { result: continueResult() };
       }
 
-      const profile = toActionProvisioningProfileSafe(parsed.data.user);
+      const parsedProfile = parseActionProvisioningProfile(parsed.data.user);
 
-      assertThat(profile, verificationFailedError());
+      if ('rejection' in parsedProfile) {
+        return verificationFailed(parsedProfile.rejection);
+      }
 
-      return {
-        action: 'updateUser',
-        userId,
-        user: profile,
-      };
+      return { result: { action: 'updateUser', userId, user: parsedProfile.profile } };
     }
   }
 };

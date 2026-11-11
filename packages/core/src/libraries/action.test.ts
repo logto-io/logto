@@ -5,6 +5,7 @@ import {
   InteractionEvent,
   LogResult,
   LogtoActionKey,
+  MfaFactor,
   SignInIdentifier,
   VerificationType,
 } from '@logto/schemas';
@@ -63,11 +64,13 @@ type RunActionInput<Event> = {
   key: LogtoActionKey;
 } & ({ event: Event } | { getEvent: () => Promise<Event> });
 
+const acceptResult = (result: unknown) => ({ result });
+
 describe('ActionLibrary', () => {
   const library = createLibrary();
   const { createLog, mockAppend } = createMockLogContext();
   const runAction = async <Event>(input: RunActionInput<Event>) =>
-    library.runAction({ ...input, auditContext: { createLog } });
+    library.runAction({ ...input, auditContext: { createLog }, validateResult: acceptResult });
 
   beforeEach(() => {
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Provide an AppInsights client for metric assertions.
@@ -176,7 +179,7 @@ describe('ActionLibrary', () => {
 
       await expect(runAction({ key, event: {} })).resolves.toEqual({ action: resultAction });
 
-      expect(mockAppend).toHaveBeenLastCalledWith({
+      expect(mockAppend).toHaveBeenNthCalledWith(2, {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Jest asymmetric matcher is typed as `any`.
         durationMs: expect.any(Number),
         decision,
@@ -371,6 +374,7 @@ describe('ActionLibrary', () => {
           applicationId: 'application-id',
           userId: 'user-id',
         },
+        validateResult: acceptResult,
       })
     ).resolves.toEqual(result);
 
@@ -440,7 +444,8 @@ describe('ActionLibrary', () => {
 
     await runAction({ key: LogtoActionKey.PostSignIn, event: {} });
 
-    expect(mockAppend).toHaveBeenLastCalledWith(
+    expect(mockAppend).toHaveBeenNthCalledWith(
+      2,
       expect.objectContaining({
         decision: 'invalid',
         actionResult: { passwordVerified: false, userFields: [], unknownFieldCount: 0 },
@@ -470,12 +475,82 @@ describe('ActionLibrary', () => {
     jest.spyOn(library, 'executeScript').mockResolvedValueOnce(result);
 
     await expect(runAction({ key: LogtoActionKey.PostSignIn, event: {} })).resolves.toBe(result);
-    expect(mockAppend).toHaveBeenLastCalledWith({
+    expect(mockAppend).toHaveBeenNthCalledWith(2, {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Jest asymmetric matcher is typed as `any`.
       durationMs: expect.any(Number),
       decision: 'noop',
       actionResult: '[unavailable]',
     });
+  });
+
+  it('records accepted results after the result summary', async () => {
+    getAction.mockResolvedValueOnce({
+      enabled: true,
+      script: 'const runAction = () => ({ action: "updateUser", user: { name: "Jane" } });',
+    });
+
+    await runAction({ key: LogtoActionKey.PostSignIn, event: {} });
+
+    expect(mockAppend).toHaveBeenCalledTimes(3);
+    expect(mockAppend).toHaveBeenNthCalledWith(3, { validation: { outcome: 'accepted' } });
+  });
+
+  it('records why a result was rejected while keeping the requested decision', async () => {
+    const leakedSecret = 'leaked-totp-secret';
+    const validationError = new RequestError({ code: 'session.verification_failed', status: 400 });
+    // Not part of the loggable shape: must be stripped before it reaches the log.
+    const extraRejectionField: Record<string, unknown> = { secret: leakedSecret };
+    getAction.mockResolvedValueOnce({
+      enabled: true,
+      script: `const runAction = () => ({ action: "updateUser", user: { name: "${leakedSecret}" } });`,
+    });
+
+    await expect(
+      library.runAction({
+        key: LogtoActionKey.PostSignIn,
+        event: {},
+        auditContext: { createLog },
+        validateResult: () => ({
+          error: validationError,
+          rejection: {
+            reason: 'invalid_mfa_verification',
+            mfaVerification: { index: 1, type: MfaFactor.TOTP, reason: 'invalid_totp_secret' },
+            ...extraRejectionField,
+          },
+        }),
+      })
+    ).rejects.toBe(validationError);
+
+    expect(mockAppend).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({ decision: 'updateUser' })
+    );
+    expect(mockAppend).toHaveBeenNthCalledWith(3, {
+      result: LogResult.Error,
+      validation: {
+        outcome: 'rejected',
+        reason: 'invalid_mfa_verification',
+        mfaVerification: { index: 1, type: MfaFactor.TOTP, reason: 'invalid_totp_secret' },
+      },
+    });
+    expect(JSON.stringify(mockAppend.mock.calls[2])).not.toContain(leakedSecret);
+  });
+
+  it('validates an absent result without writing a log when no action is enabled', async () => {
+    const validateResult = jest.fn(() => ({ result: 'rejected-by-default' }));
+    getAction.mockResolvedValueOnce({ enabled: false, script: '' });
+
+    await expect(
+      library.runAction({
+        key: LogtoActionKey.PostFirstFactorVerification,
+        event: {},
+        auditContext: { createLog },
+        validateResult,
+      })
+    ).resolves.toBe('rejected-by-default');
+
+    expect(validateResult).toHaveBeenCalledWith();
+    expect(createLog).not.toHaveBeenCalled();
   });
 
   it('does not run disabled actions', async () => {

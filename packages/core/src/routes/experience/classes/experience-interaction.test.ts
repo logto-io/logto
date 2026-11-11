@@ -41,6 +41,10 @@ import {
   mockUserWithMfaVerifications,
 } from '#src/__mocks__/user.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import {
+  type ActionResultValidation,
+  resolveActionResultValidation,
+} from '#src/libraries/action.js';
 import { HookContextManager } from '#src/libraries/hook/context-manager.js';
 import { type InsertUserResult } from '#src/libraries/user.js';
 import { LogEntry } from '#src/middleware/koa-audit-log.js';
@@ -215,17 +219,22 @@ const createSignInInteraction = ({
   const runActionHandler = jest.fn(
     async (_input: { event: unknown; key: LogtoActionKey }): Promise<unknown> => undefined
   );
-  const runAction = jest.fn(
-    async <Event>(
-      input: { key: LogtoActionKey; auditContext: unknown } & (
-        | { event: Event }
-        | { getEvent: () => Promise<Event> }
-      )
-    ): Promise<unknown> => {
-      const event = 'getEvent' in input ? await input.getEvent() : input.event;
-      return runActionHandler({ key: input.key, event });
-    }
-  );
+  type RunActionInput<Event, Result> = {
+    key: LogtoActionKey;
+    auditContext: unknown;
+    validateResult: (result: unknown) => ActionResultValidation<Result>;
+  } & ({ event: Event } | { getEvent: () => Promise<Event> });
+  // Records calls; `jest.fn` would drop the generic signature `ActionLibrary.runAction` needs.
+  const runAction = jest.fn<void, [RunActionInput<unknown, unknown>]>();
+  const runActionWithValidation = async <Event, Result>(
+    input: RunActionInput<Event, Result>
+  ): Promise<Result> => {
+    runAction(input);
+    const event = 'getEvent' in input ? await input.getEvent() : input.event;
+    return resolveActionResultValidation(
+      input.validateResult(await runActionHandler({ key: input.key, event }))
+    );
+  };
   const getUserContext = jest.fn().mockResolvedValue(mockJwtCustomizerUserContext);
   const interactionDetailsMock = jest.fn();
   const provider = withPersistedResult
@@ -243,7 +252,7 @@ const createSignInInteraction = ({
     {
       users: userLibraries,
       ssoConnectors,
-      actions: { runAction },
+      actions: { runAction: runActionWithValidation },
       jwtCustomizers: { getUserContext },
     }
   );

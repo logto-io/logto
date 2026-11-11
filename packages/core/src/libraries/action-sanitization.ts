@@ -1,8 +1,12 @@
 import {
+  actionMfaVerificationGuard,
   actionUserPatchFields,
   LogtoActionKey,
   loggablePostFirstFactorVerificationEventGuard,
   loggablePostSignInEventGuard,
+  userProfileAddressKeys,
+  userProfileKeys,
+  type ActionResultRejection,
   type LoggableActionEvent,
   type LoggableActionResult,
 } from '@logto/schemas';
@@ -80,6 +84,48 @@ export const toLoggableActionResult = (
     return unavailableValue;
   }
 };
+
+const maxLoggableResultIssueCount = 10;
+const truncatedPathSegment = '*';
+
+/**
+ * Field names an Action result is defined with. Any other path segment is authored by the
+ * script, such as a `customData` key, and is not logged.
+ */
+const loggableResultPathSegments: ReadonlySet<string> = new Set([
+  'action',
+  'user',
+  'passwordVerified',
+  'mfaVerifications',
+  ...actionUserPatchFields,
+  ...userProfileKeys,
+  ...userProfileAddressKeys,
+  ...actionMfaVerificationGuard.options.flatMap((option) => Object.keys(option.shape)),
+]);
+
+const toLoggableResultPath = (path: Array<string | number>) => {
+  const truncateAt = path.findIndex(
+    (segment) => typeof segment === 'string' && !loggableResultPathSegments.has(segment)
+  );
+
+  return truncateAt === -1 ? path : [...path.slice(0, truncateAt), truncatedPathSegment];
+};
+
+/**
+ * Reduce Zod issues raised while validating an Action result to their code and path.
+ *
+ * Issue messages and fields such as `received` can echo values from the result, including
+ * credentials, so they are dropped. Paths are cut at the first segment that is not a known field
+ * name, and the number of issues is capped to bound the log size.
+ */
+export const toLoggableActionResultIssues = (
+  issues: readonly z.ZodIssue[],
+  pathPrefix: string[] = []
+): NonNullable<ActionResultRejection['issues']> =>
+  issues.slice(0, maxLoggableResultIssueCount).map(({ path, code }) => ({
+    path: toLoggableResultPath([...pathPrefix, ...path]),
+    code,
+  }));
 
 const stringifyUnknownError = (error: unknown) => {
   try {

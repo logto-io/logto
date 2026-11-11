@@ -13,6 +13,10 @@ import { createMockUtils } from '@logto/shared/esm';
 
 import { mockUser } from '#src/__mocks__/user.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import {
+  type ActionResultValidation,
+  resolveActionResultValidation,
+} from '#src/libraries/action.js';
 
 const { jest } = import.meta;
 const { mockEsm } = createMockUtils(jest);
@@ -191,7 +195,10 @@ const registerRoute = () => {
     {
       libraries: {
         actions: {
-          runAction,
+          // `runAction` mocks the raw script result; validation runs as it does in `ActionLibrary`.
+          runAction: async <Result>(input: {
+            validateResult: (result: unknown) => ActionResultValidation<Result>;
+          }) => resolveActionResultValidation(input.validateResult(await runAction(input))),
         },
       },
       queries: {
@@ -305,6 +312,8 @@ describe('password verification route PostFirstFactorVerification fallback', () 
     await expect(getSentinelPromise()).rejects.toBe(invalidCredentialsError);
     expect(runAction).toHaveBeenCalledWith({
       key: LogtoActionKey.PostFirstFactorVerification,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Jest asymmetric matcher is typed as `any`.
+      validateResult: expect.any(Function),
       auditContext: {
         createLog,
         sessionId,
@@ -427,6 +436,8 @@ describe('password verification route PostFirstFactorVerification fallback', () 
 
     expect(runAction).toHaveBeenCalledWith({
       key: LogtoActionKey.PostFirstFactorVerification,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Jest asymmetric matcher is typed as `any`.
+      validateResult: expect.any(Function),
       auditContext: {
         createLog,
         sessionId,

@@ -196,23 +196,22 @@ const verifyIdentifierPassword = async (
           password,
         };
 
-        const actionResult = validatePostFirstFactorVerificationActionResult({
+        const actionResult = await libraries.actions.runAction({
+          key: LogtoActionKey.PostFirstFactorVerification,
           event,
-          result: await libraries.actions.runAction({
-            key: LogtoActionKey.PostFirstFactorVerification,
-            event,
-            auditContext: {
-              createLog: ctx.createLog,
-              sessionId: ctx.interactionDetails.jti,
-              ...getClientIdentifierPayload(
-                conditional(
-                  typeof ctx.interactionDetails.params.client_id === 'string' &&
-                    ctx.interactionDetails.params.client_id
-                )
-              ),
-              userId: existingUser?.id,
-            },
-          }),
+          auditContext: {
+            createLog: ctx.createLog,
+            sessionId: ctx.interactionDetails.jti,
+            ...getClientIdentifierPayload(
+              conditional(
+                typeof ctx.interactionDetails.params.client_id === 'string' &&
+                  ctx.interactionDetails.params.client_id
+              )
+            ),
+            userId: existingUser?.id,
+          },
+          validateResult: (result) =>
+            validatePostFirstFactorVerificationActionResult({ event, result }),
         });
 
         if (actionResult.action === 'rejectInvalidCredentials') {
