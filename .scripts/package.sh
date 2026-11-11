@@ -40,7 +40,8 @@ find . \
 
 # Add official connectors
 cloud_option=$( [[ "$IS_CLOUD" =~ ^(1|true|y|yes|yep|yeah)$ ]] && echo "--cloud" || echo "" )
-pnpm cli connector link $cloud_option -p .
+# The workspace files are removed above, so skip the install pnpm runs before scripts
+pnpm_config_verify_deps_before_run=false pnpm cli connector link $cloud_option -p .
 
 if [[ "${SKIP_TAR:-}" == @(1|true|y|yes|yep|yeah) ]]; then
   echo "Skipping tar creation"
