@@ -240,14 +240,19 @@ const verifyIdentifierPassword = async (
   }
 
   const { actionResult, userProfile } = verificationResult;
+  const mfaVerifications = conditional(
+    actionResult.mfaVerifications && { mfaVerifications: actionResult.mfaVerifications }
+  );
   const verifiedUser =
     actionResult.action === 'createUser'
       ? await experienceInteraction.provisionLibrary.createUser(userProfile, {
           checkIdentifierCollision: true,
           mergeCustomData: true,
+          ...mfaVerifications,
         })
       : await experienceInteraction.provisionLibrary.updateUser(actionResult.userId, userProfile, {
           mergeCustomData: true,
+          ...mfaVerifications,
         });
 
   passwordVerification.markAsVerified();

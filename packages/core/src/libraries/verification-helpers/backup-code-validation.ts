@@ -1,6 +1,6 @@
 import { customAlphabet } from 'nanoid';
 
-const backupCodeCount = 10;
+export const backupCodeCount = 10;
 const alphabet = '0123456789abcdef';
 
 /**
@@ -11,10 +11,12 @@ export const generateBackupCodes = () => {
   return Array.from({ length: backupCodeCount }, () => customAlphabet(alphabet, 10)());
 };
 
+export const isValidBackupCode = (code: string) => /^[\da-f]{10}$/i.test(code);
+
 /**
  * Validates a group of backup codes.
  * @param codes
  */
 export const validateBackupCodes = (codes: string[]) => {
-  return codes.length === backupCodeCount && codes.every((code) => /^[\da-f]{10}$/i.test(code));
+  return codes.length === backupCodeCount && codes.every((code) => isValidBackupCode(code));
 };
