@@ -17,12 +17,15 @@ const tenants = {
     purchase_description:
       'Self-hosted Pro and Enterprise unlock paid features on your own instance, such as hiding the Logto branding, bringing your own UI, Console collaboration, and unlimited SAML applications. Buy a plan to get your license key.',
     purchase_button: 'View self-hosted plans',
+    buy_license_button: 'Buy a license',
     install_title: 'INSTALL LICENSE',
     install_description: 'Paste the license key you got after purchasing a self-hosted plan.',
     install_button: 'Install license',
     key_field: 'License key',
     key_field_description:
       'The key is verified on your instance and sent to Logto when the license refreshes. Contact Logto for a fresh key if the one you have has expired.',
+    key_field_cloud_description:
+      'The key is verified on your instance and sent to Logto when the license refreshes. Get a fresh key from Logto Cloud if the one you have has expired.',
     key_placeholder: 'Paste your license key here',
     installed_toast: 'License installed successfully.',
     details_title: 'LICENSE',
@@ -46,6 +49,8 @@ const tenants = {
     refusal_reason_unknown: 'not available',
     grace_expired_description:
       'The license grace period ended on {{graceEndsAt}}. This deployment has reverted to OSS defaults. Contact Logto for a fresh license key and install it again.',
+    grace_expired_cloud_description:
+      'The license grace period ended on {{graceEndsAt}}. This deployment has reverted to OSS defaults. Get a fresh license key from Logto Cloud and install it again.',
     get_fresh_key_button: 'Get a fresh license key',
     replace_button: 'Replace license',
     usage_banner_description: 'This deployment is above the usage limits of its self-hosted plan:',

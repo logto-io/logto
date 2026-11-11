@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import FormCard from '@/components/FormCard';
 import SkuName from '@/components/SkuName';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { selfHostedLicenseGuideLink } from '@/consts/external-links';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
@@ -109,7 +110,12 @@ function LicenseDetails({ license }: Props) {
           hrefTargetBlank="noopener"
         >
           <DynamicT
-            forKey="tenants.license.grace_expired_description"
+            forKey={
+              // Self-hosted Pro self-serve purchase: fresh keys come from Logto Cloud.
+              isDevFeaturesEnabled
+                ? 'tenants.license.grace_expired_cloud_description'
+                : 'tenants.license.grace_expired_description'
+            }
             interpolation={{ graceEndsAt: formattedGraceEndsAt }}
           />
         </InlineNotification>

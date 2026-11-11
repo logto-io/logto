@@ -16,12 +16,15 @@ const tenants = {
     purchase_description:
       '自託管專業方案與企業方案可在你自己的執行個體上解鎖付費功能，例如隱藏 Logto 品牌標誌、使用自訂 UI、主控台多人協作以及不限數量的 SAML 應用。購買方案即可取得授權金鑰。',
     purchase_button: '查看自託管方案',
+    buy_license_button: '購買授權',
     install_title: '安裝授權',
     install_description: '貼上你購買自託管方案後取得的授權金鑰。',
     install_button: '安裝授權',
     key_field: '授權金鑰',
     key_field_description:
       '金鑰會在你的執行個體上驗證，並在授權更新時傳送給 Logto。如果現有金鑰已過期，請聯絡 Logto 取得新的金鑰。',
+    key_field_cloud_description:
+      '金鑰會在你的執行個體上驗證，並在授權更新時傳送給 Logto。如果現有金鑰已過期，請在 Logto Cloud 取得新的金鑰。',
     key_placeholder: '在此貼上你的授權金鑰',
     installed_toast: '授權安裝成功。',
     details_title: '授權',
@@ -45,6 +48,8 @@ const tenants = {
     refusal_reason_unknown: '不可用',
     grace_expired_description:
       '授權寬限期已於 {{graceEndsAt}} 結束。此執行個體已恢復為 OSS 預設值。請聯絡 Logto 取得新的授權金鑰並重新安裝。',
+    grace_expired_cloud_description:
+      '授權寬限期已於 {{graceEndsAt}} 結束。此執行個體已恢復為 OSS 預設值。請在 Logto Cloud 取得新的授權金鑰並重新安裝。',
     get_fresh_key_button: '取得新的授權金鑰',
     replace_button: '更換授權',
     usage_banner_description: '此部署的用量已超出其自架方案的用量限制：',

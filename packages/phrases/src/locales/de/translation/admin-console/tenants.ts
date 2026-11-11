@@ -17,6 +17,7 @@ const tenants = {
     purchase_description:
       'Self-Hosted Pro und Enterprise schalten kostenpflichtige Funktionen auf deiner eigenen Instanz frei, etwa das Ausblenden des Logto-Brandings, eine eigene UI, Zusammenarbeit in der Konsole und unbegrenzte SAML-Anwendungen. Kaufe einen Plan, um deinen Lizenzschlüssel zu erhalten.',
     purchase_button: 'Self-Hosted-Pläne ansehen',
+    buy_license_button: 'Lizenz kaufen',
     install_title: 'LIZENZ INSTALLIEREN',
     install_description:
       'Füge den Lizenzschlüssel ein, den du nach dem Kauf eines Self-Hosted-Plans erhalten hast.',
@@ -24,6 +25,8 @@ const tenants = {
     key_field: 'Lizenzschlüssel',
     key_field_description:
       'Der Schlüssel wird auf deiner Instanz geprüft und beim Aktualisieren der Lizenz an Logto gesendet. Kontaktiere Logto für einen neuen Schlüssel, wenn der vorhandene abgelaufen ist.',
+    key_field_cloud_description:
+      'Der Schlüssel wird auf deiner Instanz geprüft und beim Aktualisieren der Lizenz an Logto gesendet. Hol dir in Logto Cloud einen neuen Schlüssel, wenn der vorhandene abgelaufen ist.',
     key_placeholder: 'Füge hier deinen Lizenzschlüssel ein',
     installed_toast: 'Lizenz erfolgreich installiert.',
     details_title: 'LIZENZ',
@@ -47,6 +50,8 @@ const tenants = {
     refusal_reason_unknown: 'nicht verfügbar',
     grace_expired_description:
       'Die Kulanzzeit der Lizenz endete am {{graceEndsAt}}. Diese Bereitstellung verwendet wieder die OSS-Standards. Kontaktiere Logto für einen neuen Lizenzschlüssel und installiere ihn erneut.',
+    grace_expired_cloud_description:
+      'Die Kulanzzeit der Lizenz endete am {{graceEndsAt}}. Diese Bereitstellung verwendet wieder die OSS-Standards. Hol dir in Logto Cloud einen neuen Lizenzschlüssel und installiere ihn erneut.',
     get_fresh_key_button: 'Neuen Lizenzschlüssel abrufen',
     replace_button: 'Lizenz ersetzen',
     usage_banner_description:

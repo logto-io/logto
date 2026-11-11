@@ -1,6 +1,8 @@
 import { LicenseEnv } from '@logto/schemas';
 import type { TFuncKey } from 'i18next';
 
+import { type EnvTestUtils, mockEnv, resetMockEnv } from '@/test-utils/env';
+
 import {
   buildLicenseManagementUrl,
   buildLicensePurchaseUrl,
@@ -9,6 +11,10 @@ import {
   isLicenseInstallErrorCode,
   licenseEnvPhraseKeys,
 } from './utils';
+
+jest.mock('@/consts/env', () => jest.requireActual<EnvTestUtils>('@/test-utils/env').mockEnvModule);
+
+beforeEach(resetMockEnv);
 
 const license = {
   expiresAt: '2026-09-20T00:00:00.000Z',
@@ -33,20 +39,48 @@ describe('isLicenseInstallErrorCode', () => {
 });
 
 describe('buildLicensePurchaseUrl', () => {
-  it('points at the self-hosted plans page with its own attribution', () => {
+  it('opens the Self-hosted Pro purchase on the Cloud self-hosted licenses page', () => {
+    mockEnv({ isDevFeaturesEnabled: true });
+
     const url = new URL(buildLicensePurchaseUrl());
 
-    expect(url.origin).toBe('https://logto.io');
-    expect(url.pathname).toBe('/self-hosted-plans');
+    expect(url.origin).toBe('https://cloud.logto.io');
+    expect(url.pathname).toBe('/self-hosted-licenses');
+    expect(url.searchParams.get('checkout')).toBe('self-hosted-pro');
+    expect(url.searchParams.get('signUp')).toBe('true');
     expect(url.searchParams.get('utm_source')).toBe('logto_oss');
     expect(url.searchParams.get('utm_medium')).toBe('console');
     expect(url.searchParams.get('utm_campaign')).toBe('self_hosted_plans');
     expect(url.searchParams.get('utm_content')).toBe('tenant_settings_license_page');
   });
+
+  it('keeps the self-hosted plans page while dev features are off', () => {
+    const url = new URL(buildLicensePurchaseUrl());
+
+    expect(url.origin).toBe('https://logto.io');
+    expect(url.pathname).toBe('/self-hosted-plans');
+    expect(url.searchParams.get('checkout')).toBeNull();
+    expect(url.searchParams.get('signUp')).toBeNull();
+    expect(url.searchParams.get('utm_content')).toBe('tenant_settings_license_page');
+  });
 });
 
 describe('buildLicenseManagementUrl', () => {
-  it('keeps the existing contact flow with refresh attribution until self-service ships', () => {
+  it('points at the Cloud self-hosted licenses page with refresh attribution', () => {
+    mockEnv({ isDevFeaturesEnabled: true });
+
+    const url = new URL(buildLicenseManagementUrl());
+
+    expect(url.origin).toBe('https://cloud.logto.io');
+    expect(url.pathname).toBe('/self-hosted-licenses');
+    expect(url.searchParams.get('checkout')).toBeNull();
+    expect(url.searchParams.get('utm_source')).toBe('logto_oss');
+    expect(url.searchParams.get('utm_medium')).toBe('console');
+    expect(url.searchParams.get('utm_campaign')).toBe('self_hosted_plans');
+    expect(url.searchParams.get('utm_content')).toBe('tenant_settings_license_refresh');
+  });
+
+  it('keeps the existing contact flow while dev features are off', () => {
     const url = new URL(buildLicenseManagementUrl());
 
     expect(url.origin).toBe('https://logto.io');
