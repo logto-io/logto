@@ -17,12 +17,15 @@ const tenants = {
     purchase_description:
       'セルフホストプロおよびエンタープライズプランでは、Logto ブランディングの非表示、独自 UI の利用、コンソールの共同管理、SAML アプリケーションの無制限利用など、有料機能を自分のインスタンスで利用できます。プランを購入してライセンスキーを取得してください。',
     purchase_button: 'セルフホストプランを見る',
+    buy_license_button: 'ライセンスを購入',
     install_title: 'ライセンスのインストール',
     install_description: 'セルフホストプランの購入後に受け取ったライセンスキーを貼り付けます。',
     install_button: 'ライセンスをインストール',
     key_field: 'ライセンスキー',
     key_field_description:
       'キーはインスタンス上で検証され、ライセンスの更新時に Logto へ送信されます。お持ちのキーの有効期限が切れている場合は、新しいキーの発行について Logto にお問い合わせください。',
+    key_field_cloud_description:
+      'キーはインスタンス上で検証され、ライセンスの更新時に Logto へ送信されます。お持ちのキーの有効期限が切れている場合は、Logto Cloud で新しいキーを取得してください。',
     key_placeholder: 'ここにライセンスキーを貼り付けてください',
     installed_toast: 'ライセンスをインストールしました。',
     details_title: 'ライセンス',
@@ -46,6 +49,8 @@ const tenants = {
     refusal_reason_unknown: '利用できない状態',
     grace_expired_description:
       'ライセンスの猶予期間は {{graceEndsAt}} に終了しました。このインスタンスは OSS のデフォルトに戻っています。Logto にお問い合わせのうえ、新しいライセンスキーを取得して再インストールしてください。',
+    grace_expired_cloud_description:
+      'ライセンスの猶予期間は {{graceEndsAt}} に終了しました。このインスタンスは OSS のデフォルトに戻っています。Logto Cloud で新しいライセンスキーを取得して再インストールしてください。',
     get_fresh_key_button: '新しいライセンスキーを取得',
     replace_button: 'ライセンスを差し替える',
     usage_banner_description:

@@ -16,12 +16,15 @@ const tenants = {
     purchase_description:
       '自托管专业计划和企业计划可在你自己的实例上解锁付费功能，例如隐藏 Logto 品牌标识、使用自定义 UI、控制台多人协作以及不限量的 SAML 应用。购买计划即可获得许可证密钥。',
     purchase_button: '查看自托管计划',
+    buy_license_button: '购买许可证',
     install_title: '安装许可证',
     install_description: '粘贴你购买自托管计划后获得的许可证密钥。',
     install_button: '安装许可证',
     key_field: '许可证密钥',
     key_field_description:
       '密钥在你的实例上校验，并在许可证刷新时发送给 Logto。如果现有密钥已过期，请联系 Logto 获取新的密钥。',
+    key_field_cloud_description:
+      '密钥在你的实例上校验，并在许可证刷新时发送给 Logto。如果现有密钥已过期，请在 Logto Cloud 获取新的密钥。',
     key_placeholder: '在此粘贴你的许可证密钥',
     installed_toast: '许可证安装成功。',
     details_title: '许可证',
@@ -45,6 +48,8 @@ const tenants = {
     refusal_reason_unknown: '不可用',
     grace_expired_description:
       '许可证宽限期已于 {{graceEndsAt}} 结束。此实例已恢复为 OSS 默认设置。请联系 Logto 获取新的许可证密钥并重新安装。',
+    grace_expired_cloud_description:
+      '许可证宽限期已于 {{graceEndsAt}} 结束。此实例已恢复为 OSS 默认设置。请在 Logto Cloud 获取新的许可证密钥并重新安装。',
     get_fresh_key_button: '获取新的许可证密钥',
     replace_button: '更换许可证',
     usage_banner_description: '此实例的用量已超出其自托管计划的用量限制：',
