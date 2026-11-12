@@ -59,6 +59,9 @@ const mfa = {
     "Organizasyon MFA'yı etkinleştirdikten sonra kullanıcılardan MFA kurmalarını isteyin",
   prompt_at_sign_in_non_skippable:
     'Bir sonraki girişte kullanıcılardan MFA kurmalarını isteyin (atlanamaz)',
+  additional_factor_suggestion: 'Başka bir MFA faktörü eklemeyi öner',
+  additional_factor_suggestion_description:
+    'Kullanıcının tek MFA faktörü giriş yaptığı e-posta, telefon numarası veya geçiş anahtarı olduğunda, kayıt veya giriş sırasında başka bir faktör eklemeyi öner. Kullanıcılar bunu atlayabilir.',
   email_primary_method_tip:
     'E-posta doğrulama kodu zaten birincil oturum açma yönteminizdir. Güvenliği sağlamak için MFA için tekrar kullanılamaz.',
   phone_primary_method_tip:

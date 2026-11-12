@@ -235,12 +235,23 @@ export type Mfa = {
    * when request for an organization access_token if the user has not set up MFA.
    */
   organizationRequiredMfaPolicy?: OrganizationRequiredMfaPolicy;
+  /**
+   * If the suggestion to add another MFA factor should be skipped.
+   *
+   * @remarks
+   * By default, a user whose only MFA factor is the email, phone number, or passkey they can also
+   * sign in with is suggested to add another factor during sign-up or sign-in.
+   *
+   * Setting this to `true` will bypass that suggestion. Required MFA set-up is not affected.
+   */
+  skipAdditionalBindingSuggestion?: boolean;
 };
 
 export const mfaGuard = z.object({
   factors: mfaFactorsGuard,
   policy: z.nativeEnum(MfaPolicy),
   organizationRequiredMfaPolicy: z.nativeEnum(OrganizationRequiredMfaPolicy).optional(),
+  skipAdditionalBindingSuggestion: z.boolean().optional(),
 }) satisfies ToZodObject<Mfa>;
 
 /**

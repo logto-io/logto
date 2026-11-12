@@ -406,6 +406,36 @@ describe('Mfa.assertMfaFulfilled', () => {
     await expect(mfa.assertMfaFulfilled()).resolves.toBeUndefined();
   });
 
+  it.each([InteractionEvent.Register, InteractionEvent.SignIn])(
+    'skips additional MFA suggestion on %s when the tenant turns it off',
+    async (interactionEvent) => {
+      const { mfa } = createMfa({
+        interactionEvent,
+        mfaSettings: {
+          policy: MfaPolicy.Mandatory,
+          factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
+          organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+          skipAdditionalBindingSuggestion: true,
+        },
+        user: {
+          id: 'user-id',
+          logtoConfig: {},
+          primaryEmail: 'foo@example.com',
+          mfaVerifications: [],
+        },
+      });
+      const { signInExperienceValidator } = mfa as unknown as {
+        signInExperienceValidator: SignInExperienceValidator;
+      };
+      jest.spyOn(signInExperienceValidator, 'getSignInExperienceData').mockResolvedValue({
+        signUp: { identifiers: [SignInIdentifier.Email] },
+        passkeySignIn: { enabled: false },
+      } as never);
+
+      await expect(mfa.assertMfaFulfilled()).resolves.toBeUndefined();
+    }
+  );
+
   it('does not suggest additional MFA on sign-in when existing factors were not verified', async () => {
     const { mfa } = createMfa({
       mfaSettings: {

@@ -57,6 +57,9 @@ const mfa = {
     '組織が MFA を有効にした後のユーザーの MFA 設定プロンプト',
   prompt_at_sign_in_non_skippable:
     '次回サインイン時にユーザーに MFA の設定を依頼します（スキップ不可）',
+  additional_factor_suggestion: '別の MFA 要素の追加を提案する',
+  additional_factor_suggestion_description:
+    'ユーザーの MFA 要素がサインインに使うメールアドレス、電話番号、またはパスキーのみの場合、サインアップまたはサインイン時に別の要素の追加を提案します。ユーザーはスキップできます。',
   email_primary_method_tip:
     'メール認証コードは既にあなたの主要なサインイン方法です。セキュリティを維持するため、それを MFA に再利用することはできません。',
   phone_primary_method_tip:

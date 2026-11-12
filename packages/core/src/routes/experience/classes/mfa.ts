@@ -605,13 +605,16 @@ export class Mfa {
     // may not bind a factor must not ask the user to bind one.
     const canBindMfa = await this.interactionContext.canBindMfa();
 
-    // Optional suggestion: Let Mfa decide whether to suggest additional binding during registration
-    await this.guardAdditionalBindingSuggestion(
-      factorsInUser,
-      configuredFactors,
-      identifiedUser,
-      canBindMfa
-    );
+    // Optional suggestion: Let Mfa decide whether to suggest additional binding during registration,
+    // unless the tenant turned the suggestion off.
+    if (!mfaSettings.skipAdditionalBindingSuggestion) {
+      await this.guardAdditionalBindingSuggestion(
+        factorsInUser,
+        configuredFactors,
+        identifiedUser,
+        canBindMfa
+      );
+    }
 
     // A sign-in that may not bind a factor must not require backup codes it cannot enroll.
     // Assert backup code

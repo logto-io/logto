@@ -150,6 +150,40 @@ describe('Register interaction - optional additional MFA suggestion', () => {
     await deleteUser(userId);
   });
 
+  it('should not suggest additional MFA when the tenant skips the suggestion', async () => {
+    await updateSignInExperience({
+      mfa: { ...emailPrimarySignInExperience.mfa, skipAdditionalBindingSuggestion: true },
+    });
+
+    const { primaryEmail, password } = generateNewUserProfile({
+      primaryEmail: true,
+      password: true,
+    });
+    const client = await initExperienceClient({ interactionEvent: InteractionEvent.Register });
+
+    const { verificationId, code } = await successfullySendVerificationCode(client, {
+      identifier: { type: SignInIdentifier.Email, value: primaryEmail },
+      interactionEvent: InteractionEvent.Register,
+    });
+
+    await successfullyVerifyVerificationCode(client, {
+      identifier: { type: SignInIdentifier.Email, value: primaryEmail },
+      verificationId,
+      code,
+    });
+
+    await client.updateProfile({ type: 'password', value: password });
+    await client.identifyUser({ verificationId });
+
+    // Submit succeeds without the suggestion or a skip
+    const { redirectTo } = await client.submitInteraction();
+    const userId = await processSession(client, redirectTo);
+    await logoutClient(client);
+    await deleteUser(userId);
+
+    await updateSignInExperience({ mfa: emailPrimarySignInExperience.mfa });
+  });
+
   it('should suggest additional MFA when email is required as a secondary identifier', async () => {
     const secondaryEmailExperience = {
       signUp: {

@@ -19,6 +19,7 @@ const baseForm: MfaConfigForm = {
   emailVerificationCodeEnabled: false,
   phoneVerificationCodeEnabled: false,
   organizationRequiredMfaPolicy: undefined,
+  additionalBindingSuggestionEnabled: true,
   adaptiveMfaEnabled: false,
   trustedDeviceEnabled: false,
   trustedDeviceDurationDays: 30,
@@ -76,6 +77,20 @@ test('builds payload with adaptive MFA and trusted-device policy', () => {
     adaptiveMfa: { enabled: true },
     trustedDevice: { enabled: false, durationDays: 30 },
   });
+});
+
+test('round-trips the tenant switch for the additional MFA factor suggestion', () => {
+  const skipped = convertMfaConfigToForm({
+    policy: MfaPolicy.Mandatory,
+    factors: [MfaFactor.TOTP],
+    skipAdditionalBindingSuggestion: true,
+  });
+  expect(skipped.additionalBindingSuggestionEnabled).toBe(false);
+  expect(buildMfaPatchPayload(skipped).mfa.skipAdditionalBindingSuggestion).toBe(true);
+
+  const suggested = convertMfaConfigToForm({ policy: MfaPolicy.Mandatory, factors: [] });
+  expect(suggested.additionalBindingSuggestionEnabled).toBe(true);
+  expect(buildMfaPatchPayload(suggested).mfa).not.toHaveProperty('skipAdditionalBindingSuggestion');
 });
 
 test('includes configured trusted-device policy', () => {
