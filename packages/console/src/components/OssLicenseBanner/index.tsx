@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { TenantSettingsTabs } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import InlineNotification from '@/ds-components/InlineNotification';
 import useTenantPathname from '@/hooks/use-tenant-pathname';
@@ -42,7 +42,13 @@ function OssLicenseBanner() {
         href={licensePage}
       >
         {status === 'grace_expired'
-          ? t('tenants.license.grace_expired_description', { graceEndsAt })
+          ? t(
+              // Self-hosted Pro self-serve purchase: fresh keys come from Logto Cloud.
+              isDevFeaturesEnabled
+                ? 'tenants.license.grace_expired_cloud_description'
+                : 'tenants.license.grace_expired_description',
+              { graceEndsAt }
+            )
           : license.refusalReason
             ? t('tenants.license.refresh_refused_description', {
                 reason: t(getLicenseRefusalReasonPhraseKey(license.refusalReason)),
