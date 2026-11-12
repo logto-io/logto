@@ -8,7 +8,7 @@ const oidc = {
   invalid_grant: '付与リクエストが無効です。',
   invalid_issuer: '無効な発行者です。',
   invalid_redirect_uri:
-    '`` `redirect_uri`` `は、クライアントが登録したいずれのものとも一致しませんでした```redirect_uris`。',
+    '`redirect_uri`は、クライアントに登録されたいずれの`redirect_uris`とも一致しませんでした。',
   access_denied: 'アクセスが拒否されました。',
   invalid_target: '無効なリソース指示子です。',
   unsupported_grant_type: '要求された`grant_type`はサポートされていません。',

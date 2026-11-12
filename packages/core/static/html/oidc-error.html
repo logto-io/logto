@@ -33,8 +33,9 @@
       :root {
         --color-type-primary: #f7f8f8;
         --color-type-secondary: #a9acac;
-        --color-brand-default: #7958ff;
-        --color-brand-hover: #af9eff;
+        /* Lighter than the sign-in experience's `#7958ff` so the details label reaches 4.5:1 on the card. */
+        --color-brand-default: #af9eff;
+        --color-brand-hover: #cabeff;
         --color-bg-float-base: #000;
         --color-bg-float:
           linear-gradient(0deg, rgba(202, 190, 255, 11%), rgba(202, 190, 255, 11%)),
@@ -138,6 +139,8 @@
     .details summary {
       display: inline-flex;
       align-items: center;
+      padding-inline-start: 4px;
+      border-radius: 4px;
       cursor: pointer;
       list-style: none;
       font: var(--font-label-2);
