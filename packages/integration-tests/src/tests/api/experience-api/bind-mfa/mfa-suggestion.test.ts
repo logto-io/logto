@@ -155,33 +155,35 @@ describe('Register interaction - optional additional MFA suggestion', () => {
       mfa: { ...emailPrimarySignInExperience.mfa, skipAdditionalBindingSuggestion: true },
     });
 
-    const { primaryEmail, password } = generateNewUserProfile({
-      primaryEmail: true,
-      password: true,
-    });
-    const client = await initExperienceClient({ interactionEvent: InteractionEvent.Register });
+    try {
+      const { primaryEmail, password } = generateNewUserProfile({
+        primaryEmail: true,
+        password: true,
+      });
+      const client = await initExperienceClient({ interactionEvent: InteractionEvent.Register });
 
-    const { verificationId, code } = await successfullySendVerificationCode(client, {
-      identifier: { type: SignInIdentifier.Email, value: primaryEmail },
-      interactionEvent: InteractionEvent.Register,
-    });
+      const { verificationId, code } = await successfullySendVerificationCode(client, {
+        identifier: { type: SignInIdentifier.Email, value: primaryEmail },
+        interactionEvent: InteractionEvent.Register,
+      });
 
-    await successfullyVerifyVerificationCode(client, {
-      identifier: { type: SignInIdentifier.Email, value: primaryEmail },
-      verificationId,
-      code,
-    });
+      await successfullyVerifyVerificationCode(client, {
+        identifier: { type: SignInIdentifier.Email, value: primaryEmail },
+        verificationId,
+        code,
+      });
 
-    await client.updateProfile({ type: 'password', value: password });
-    await client.identifyUser({ verificationId });
+      await client.updateProfile({ type: 'password', value: password });
+      await client.identifyUser({ verificationId });
 
-    // Submit succeeds without the suggestion or a skip
-    const { redirectTo } = await client.submitInteraction();
-    const userId = await processSession(client, redirectTo);
-    await logoutClient(client);
-    await deleteUser(userId);
-
-    await updateSignInExperience({ mfa: emailPrimarySignInExperience.mfa });
+      // Submit succeeds without the suggestion or a skip
+      const { redirectTo } = await client.submitInteraction();
+      const userId = await processSession(client, redirectTo);
+      await logoutClient(client);
+      await deleteUser(userId);
+    } finally {
+      await updateSignInExperience({ mfa: emailPrimarySignInExperience.mfa });
+    }
   });
 
   it('should suggest additional MFA when email is required as a secondary identifier', async () => {

@@ -406,35 +406,120 @@ describe('Mfa.assertMfaFulfilled', () => {
     await expect(mfa.assertMfaFulfilled()).resolves.toBeUndefined();
   });
 
-  it.each([InteractionEvent.Register, InteractionEvent.SignIn])(
-    'skips additional MFA suggestion on %s when the tenant turns it off',
-    async (interactionEvent) => {
-      const { mfa } = createMfa({
-        interactionEvent,
-        mfaSettings: {
-          policy: MfaPolicy.Mandatory,
-          factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
-          organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
-          skipAdditionalBindingSuggestion: true,
-        },
-        user: {
-          id: 'user-id',
-          logtoConfig: {},
-          primaryEmail: 'foo@example.com',
-          mfaVerifications: [],
-        },
-      });
-      const { signInExperienceValidator } = mfa as unknown as {
-        signInExperienceValidator: SignInExperienceValidator;
-      };
-      jest.spyOn(signInExperienceValidator, 'getSignInExperienceData').mockResolvedValue({
-        signUp: { identifiers: [SignInIdentifier.Email] },
-        passkeySignIn: { enabled: false },
-      } as never);
+  it.each([
+    {
+      trigger: 'sign-up email',
+      interactionEvent: InteractionEvent.Register,
+      factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
+      user: { primaryEmail: 'foo@example.com', mfaVerifications: [] },
+      signUpIdentifier: SignInIdentifier.Email,
+      passkeySignInEnabled: false,
+    },
+    {
+      trigger: 'sign-up email',
+      interactionEvent: InteractionEvent.SignIn,
+      factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
+      user: { primaryEmail: 'foo@example.com', mfaVerifications: [] },
+      signUpIdentifier: SignInIdentifier.Email,
+      passkeySignInEnabled: false,
+    },
+    {
+      trigger: 'sign-up phone',
+      interactionEvent: InteractionEvent.Register,
+      factors: [MfaFactor.PhoneVerificationCode, MfaFactor.TOTP],
+      user: { primaryPhone: '13000000000', mfaVerifications: [] },
+      signUpIdentifier: SignInIdentifier.Phone,
+      passkeySignInEnabled: false,
+    },
+    {
+      trigger: 'passkey sign-in',
+      interactionEvent: InteractionEvent.SignIn,
+      factors: [MfaFactor.WebAuthn, MfaFactor.TOTP],
+      user: {
+        mfaVerifications: [
+          {
+            id: 'webauthn-id',
+            type: MfaFactor.WebAuthn,
+            credentialId: 'credential-id',
+            publicKey: 'public-key',
+            counter: 0,
+            agent: 'agent',
+            createdAt: new Date(0).toISOString(),
+          },
+        ],
+      },
+      signUpIdentifier: SignInIdentifier.Username,
+      passkeySignInEnabled: true,
+    },
+  ] satisfies Array<{
+    trigger: string;
+    interactionEvent: InteractionEvent;
+    factors: MfaFactor[];
+    user: Partial<User>;
+    signUpIdentifier: SignInIdentifier;
+    passkeySignInEnabled: boolean;
+  }>)(
+    'stops suggesting additional MFA after $trigger on $interactionEvent when the tenant skips it',
+    async ({ interactionEvent, factors, user, signUpIdentifier, passkeySignInEnabled }) => {
+      const assertMfaFulfilled = async (skipAdditionalBindingSuggestion: boolean) => {
+        const { mfa } = createMfa({
+          interactionEvent,
+          mfaSettings: {
+            policy: MfaPolicy.Mandatory,
+            factors,
+            organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+            skipAdditionalBindingSuggestion,
+          },
+          user: { id: 'user-id', logtoConfig: {}, ...user },
+        });
+        const { signInExperienceValidator } = mfa as unknown as {
+          signInExperienceValidator: SignInExperienceValidator;
+        };
+        jest.spyOn(signInExperienceValidator, 'getSignInExperienceData').mockResolvedValue({
+          signUp: { identifiers: [signUpIdentifier] },
+          passkeySignIn: { enabled: passkeySignInEnabled },
+        } as never);
 
-      await expect(mfa.assertMfaFulfilled()).resolves.toBeUndefined();
+        return mfa.assertMfaFulfilled();
+      };
+
+      // The same user and settings are suggested another factor while the tenant allows it.
+      await expect(assertMfaFulfilled(false)).rejects.toMatchObject({
+        code: 'session.mfa.suggest_additional_mfa',
+      });
+      await expect(assertMfaFulfilled(true)).resolves.toBeUndefined();
     }
   );
+
+  it('still requires backup codes when the tenant skips the additional MFA suggestion', async () => {
+    const { mfa } = createMfa({
+      interactionEvent: InteractionEvent.Register,
+      mfaSettings: {
+        policy: MfaPolicy.Mandatory,
+        factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP, MfaFactor.BackupCode],
+        organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+        skipAdditionalBindingSuggestion: true,
+      },
+      user: {
+        id: 'user-id',
+        logtoConfig: {},
+        primaryEmail: 'foo@example.com',
+        mfaVerifications: [],
+      },
+    });
+    const { signInExperienceValidator } = mfa as unknown as {
+      signInExperienceValidator: SignInExperienceValidator;
+    };
+    jest.spyOn(signInExperienceValidator, 'getSignInExperienceData').mockResolvedValue({
+      signUp: { identifiers: [SignInIdentifier.Email] },
+      passkeySignIn: { enabled: false },
+    } as never);
+
+    await expect(mfa.assertMfaFulfilled()).rejects.toMatchObject({
+      code: 'session.mfa.backup_code_required',
+      status: 422,
+    });
+  });
 
   it('does not suggest additional MFA on sign-in when existing factors were not verified', async () => {
     const { mfa } = createMfa({
