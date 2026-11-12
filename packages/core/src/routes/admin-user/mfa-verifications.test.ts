@@ -108,8 +108,10 @@ describe('adminUserRoutes', () => {
       Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', isDevFeaturesEnabled);
     });
 
-    it('should include the stored WebAuthn credential', async () => {
-      const response = await userRequest.get(`/users/${mockUser.id}/mfa-verifications`);
+    it('should include the stored WebAuthn credential when requested', async () => {
+      const response = await userRequest.get(
+        `/users/${mockUser.id}/mfa-verifications?includeWebAuthnCredentials=true`
+      );
 
       expect(response.status).toEqual(200);
       expect(response.body).toEqual([
@@ -133,9 +135,12 @@ describe('adminUserRoutes', () => {
       ]);
     });
 
-    it('should omit the credential when dev features are disabled', async () => {
-      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
-      const response = await userRequest.get(`/users/${mockUser.id}/mfa-verifications`);
+    it.each([
+      ['not requested', '', true],
+      ['dev features are disabled', '?includeWebAuthnCredentials=true', false],
+    ])('should omit the credential when %s', async (_, query, devFeaturesEnabled) => {
+      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', devFeaturesEnabled);
+      const response = await userRequest.get(`/users/${mockUser.id}/mfa-verifications${query}`);
 
       expect(response.status).toEqual(200);
       expect(response.body[0]).toMatchObject({ id: webAuthnVerification.id, name: 'MacBook' });
