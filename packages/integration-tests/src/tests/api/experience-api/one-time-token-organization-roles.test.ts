@@ -69,7 +69,9 @@ devFeatureTest.describe('one-time token with organization roles', () => {
       email: userProfile.primaryEmail,
       context: {
         jitOrganizationIds: [organization.id],
-        jitOrganizationRoleIds: [invitedRole.id],
+        jitOrganizationRoles: [
+          { organizationId: organization.id, organizationRoleIds: [invitedRole.id] },
+        ],
       },
     });
 
@@ -88,7 +90,9 @@ devFeatureTest.describe('one-time token with organization roles', () => {
       email,
       context: {
         jitOrganizationIds: [organization.id],
-        jitOrganizationRoleIds: [invitedRole.id],
+        jitOrganizationRoles: [
+          { organizationId: organization.id, organizationRoleIds: [invitedRole.id] },
+        ],
       },
     });
 
@@ -109,7 +113,9 @@ devFeatureTest.describe('one-time token with organization roles', () => {
       email,
       context: {
         jitOrganizationIds: [organization.id],
-        jitOrganizationRoleIds: [invitedRole.id],
+        jitOrganizationRoles: [
+          { organizationId: organization.id, organizationRoleIds: [invitedRole.id] },
+        ],
       },
     });
 
@@ -129,7 +135,12 @@ devFeatureTest.describe('one-time token with organization roles', () => {
       email,
       context: {
         jitOrganizationIds: [organization.id],
-        jitOrganizationRoleIds: [invitedRole.id, deletedRole.id],
+        jitOrganizationRoles: [
+          {
+            organizationId: organization.id,
+            organizationRoleIds: [invitedRole.id, deletedRole.id],
+          },
+        ],
       },
     });
     await organizationApi.roleApi.delete(deletedRole.id);
@@ -137,6 +148,65 @@ devFeatureTest.describe('one-time token with organization roles', () => {
     const userId = await completeOneTimeTokenInteraction(InteractionEvent.Register, email, token);
 
     await expect(getUserRoleIds(organization.id, userId)).resolves.toEqual([invitedRole.id]);
+
+    await deleteOneTimeTokenById(id);
+    await deleteUser(userId);
+  });
+
+  it('should add the given roles to the roles of an existing member', async () => {
+    const { user, userProfile } = await generateNewUser({ primaryEmail: true, password: true });
+    const { organization, invitedRole } = await createOrganizationWithRoles();
+    const existingRole = await organizationApi.roleApi.create({ name: generateTestName() });
+    await organizationApi.addUsers(organization.id, [user.id]);
+    await organizationApi.addUserRoles(organization.id, user.id, [existingRole.id]);
+    const { id, token } = await createOneTimeToken({
+      email: userProfile.primaryEmail,
+      context: {
+        jitOrganizationIds: [organization.id],
+        jitOrganizationRoles: [
+          { organizationId: organization.id, organizationRoleIds: [invitedRole.id] },
+        ],
+      },
+    });
+
+    await completeOneTimeTokenInteraction(InteractionEvent.SignIn, userProfile.primaryEmail, token);
+
+    const roleIds = await getUserRoleIds(organization.id, user.id);
+    expect(roleIds).toHaveLength(2);
+    expect(roleIds).toEqual(expect.arrayContaining([existingRole.id, invitedRole.id]));
+
+    await deleteOneTimeTokenById(id);
+    await deleteUser(user.id);
+  });
+
+  it('should assign different roles in different organizations', async () => {
+    const email = generateEmail();
+    const first = await createOrganizationWithRoles();
+    const second = await createOrganizationWithRoles();
+    const third = await createOrganizationWithRoles();
+    const { id, token } = await createOneTimeToken({
+      email,
+      context: {
+        jitOrganizationIds: [first.organization.id, second.organization.id, third.organization.id],
+        jitOrganizationRoles: [
+          { organizationId: first.organization.id, organizationRoleIds: [first.invitedRole.id] },
+          { organizationId: second.organization.id, organizationRoleIds: [second.invitedRole.id] },
+        ],
+      },
+    });
+
+    const userId = await completeOneTimeTokenInteraction(InteractionEvent.Register, email, token);
+
+    await expect(getUserRoleIds(first.organization.id, userId)).resolves.toEqual([
+      first.invitedRole.id,
+    ]);
+    await expect(getUserRoleIds(second.organization.id, userId)).resolves.toEqual([
+      second.invitedRole.id,
+    ]);
+    // The organization without given roles keeps its default JIT roles.
+    await expect(getUserRoleIds(third.organization.id, userId)).resolves.toEqual([
+      third.defaultRole.id,
+    ]);
 
     await deleteOneTimeTokenById(id);
     await deleteUser(userId);

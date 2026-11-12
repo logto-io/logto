@@ -34,9 +34,9 @@
                     "properties": {
                       "context": {
                         "properties": {
-                          "jitOrganizationRoleIds": {
+                          "jitOrganizationRoles": {
                             "x-logto-dev-feature": true,
-                            "description": "The IDs of the organization roles to assign to the user in `jitOrganizationIds` when the token is used, instead of the default JIT roles of each organization."
+                            "description": "The organization roles to assign to the user when the token is used, instead of the default JIT roles of the given organizations."
                           }
                         }
                       }
@@ -68,9 +68,9 @@
                   "context": {
                     "description": "Additional context to store with the one-time token. Set `interactionEvent` to scope the token to a specific flow, such as `ForgotPassword` for reset-password magic links.",
                     "properties": {
-                      "jitOrganizationRoleIds": {
+                      "jitOrganizationRoles": {
                         "x-logto-dev-feature": true,
-                        "description": "The IDs of the organization roles to assign to the user in `jitOrganizationIds` when the token is used, instead of the default JIT roles of each organization. An empty list assigns no roles. Only organization roles for users are accepted, and `jitOrganizationIds` is required when it is not empty. Roles deleted before the token is used are skipped."
+                        "description": "The organization roles to assign to the user when the token is used, instead of the default JIT roles of the given organizations. Each organization must be in `jitOrganizationIds` and appear only once, and an empty `organizationRoleIds` assigns no roles. Organizations in `jitOrganizationIds` without an entry keep their default JIT roles. Only organization roles for users are accepted, and roles deleted before the token is used are skipped. Existing members keep their current roles; the given roles are added."
                       }
                     }
                   }
@@ -88,9 +88,9 @@
                   "properties": {
                     "context": {
                       "properties": {
-                        "jitOrganizationRoleIds": {
+                        "jitOrganizationRoles": {
                           "x-logto-dev-feature": true,
-                          "description": "The IDs of the organization roles to assign to the user in `jitOrganizationIds` when the token is used, instead of the default JIT roles of each organization."
+                          "description": "The organization roles to assign to the user when the token is used, instead of the default JIT roles of the given organizations."
                         }
                       }
                     }
@@ -115,9 +115,9 @@
                   "properties": {
                     "context": {
                       "properties": {
-                        "jitOrganizationRoleIds": {
+                        "jitOrganizationRoles": {
                           "x-logto-dev-feature": true,
-                          "description": "The IDs of the organization roles to assign to the user in `jitOrganizationIds` when the token is used, instead of the default JIT roles of each organization."
+                          "description": "The organization roles to assign to the user when the token is used, instead of the default JIT roles of the given organizations."
                         }
                       }
                     }
@@ -170,9 +170,9 @@
                   "properties": {
                     "context": {
                       "properties": {
-                        "jitOrganizationRoleIds": {
+                        "jitOrganizationRoles": {
                           "x-logto-dev-feature": true,
-                          "description": "The IDs of the organization roles to assign to the user in `jitOrganizationIds` when the token is used, instead of the default JIT roles of each organization."
+                          "description": "The organization roles to assign to the user when the token is used, instead of the default JIT roles of the given organizations."
                         }
                       }
                     }
@@ -210,9 +210,9 @@
                   "properties": {
                     "context": {
                       "properties": {
-                        "jitOrganizationRoleIds": {
+                        "jitOrganizationRoles": {
                           "x-logto-dev-feature": true,
-                          "description": "The IDs of the organization roles to assign to the user in `jitOrganizationIds` when the token is used, instead of the default JIT roles of each organization."
+                          "description": "The organization roles to assign to the user when the token is used, instead of the default JIT roles of the given organizations."
                         }
                       }
                     }

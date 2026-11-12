@@ -345,7 +345,7 @@ describe('provisionOrganizations()', () => {
     jest.clearAllMocks();
   });
 
-  it('assigns the default JIT roles when no role IDs are given', async () => {
+  it('assigns the default JIT roles when no roles are given', async () => {
     await provisionOrganizations({ userId, organizationIds: [organizationId] });
 
     expect(findRolesByIds).not.toHaveBeenCalled();
@@ -363,7 +363,7 @@ describe('provisionOrganizations()', () => {
       provisionOrganizations({
         userId,
         organizationIds: [organizationId],
-        organizationRoleIds: ['admin'],
+        organizationRoles: [{ organizationId, organizationRoleIds: ['admin'] }],
       })
     ).resolves.toEqual([{ organizationId, organizationRoleIds: ['admin'] }]);
 
@@ -384,7 +384,7 @@ describe('provisionOrganizations()', () => {
     await provisionOrganizations({
       userId,
       organizationIds: [organizationId],
-      organizationRoleIds: ['admin', 'machine', 'deleted'],
+      organizationRoles: [{ organizationId, organizationRoleIds: ['admin', 'machine', 'deleted'] }],
     });
 
     expect(insertUsersRoles).toHaveBeenCalledTimes(1);
@@ -395,13 +395,41 @@ describe('provisionOrganizations()', () => {
     });
   });
 
+  it('keeps the default JIT roles of the organizations without given roles', async () => {
+    getJitOrganizationsByIds.mockResolvedValueOnce([
+      { organizationId, organizationRoleIds: ['default-role'] },
+      { organizationId: 'other-organization-id', organizationRoleIds: ['other-default-role'] },
+    ]);
+    findRolesByIds.mockResolvedValueOnce([{ id: 'admin', type: RoleType.User }]);
+
+    await expect(
+      provisionOrganizations({
+        userId,
+        organizationIds: [organizationId, 'other-organization-id'],
+        organizationRoles: [{ organizationId, organizationRoleIds: ['admin'] }],
+      })
+    ).resolves.toEqual([
+      { organizationId, organizationRoleIds: ['admin'] },
+      { organizationId: 'other-organization-id', organizationRoleIds: ['other-default-role'] },
+    ]);
+
+    expect(insertUsersRoles).toHaveBeenCalledWith(
+      { organizationId, organizationRoleId: 'admin', userId },
+      {
+        organizationId: 'other-organization-id',
+        organizationRoleId: 'other-default-role',
+        userId,
+      }
+    );
+  });
+
   it('adds the membership without roles when none of the given roles remain', async () => {
     findRolesByIds.mockResolvedValueOnce([]);
 
     await provisionOrganizations({
       userId,
       organizationIds: [organizationId],
-      organizationRoleIds: ['deleted'],
+      organizationRoles: [{ organizationId, organizationRoleIds: ['deleted'] }],
     });
 
     expect(insertUsers).toHaveBeenCalledWith({ organizationId, userId });

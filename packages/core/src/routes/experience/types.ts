@@ -5,6 +5,7 @@ import {
   type CreateUser,
   encryptedTokenSetGuard,
   InteractionEvent,
+  type JitOrganizationRoleAssignment,
   type InteractionAuthenticationContext,
   interactionAuthenticationContextGuard,
   type RequestedAuthenticationContext,
@@ -63,9 +64,9 @@ export type InteractionProfile = {
   jitOrganizationIds?: string[];
   /**
    * This is from one-time token verification. When set, the user is assigned these organization
-   * roles in `jitOrganizationIds` instead of each organization's default JIT roles.
+   * roles instead of the default JIT roles of the given organizations in `jitOrganizationIds`.
    */
-  jitOrganizationRoleIds?: string[];
+  jitOrganizationRoles?: JitOrganizationRoleAssignment[];
   // Syncing the existing enterprise SSO identity detail
   syncedEnterpriseSsoIdentity?: Pick<UserSsoIdentity, 'identityId' | 'issuer' | 'detail'>;
   /**
@@ -145,7 +146,9 @@ const interactionProfileGuard = Users.createGuard
       })
       .optional(),
     jitOrganizationIds: z.array(z.string()).optional(),
-    jitOrganizationRoleIds: z.array(z.string()).optional(),
+    jitOrganizationRoles: z
+      .array(z.object({ organizationId: z.string(), organizationRoleIds: z.array(z.string()) }))
+      .optional(),
     socialConnectorTokenSetSecret: z
       .object({
         encryptedTokenSet: encryptedTokenSetGuard,

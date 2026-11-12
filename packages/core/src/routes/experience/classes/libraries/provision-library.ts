@@ -9,6 +9,7 @@ import {
   defaultTenantId,
   getTenantOrganizationId,
   getTenantRole,
+  type JitOrganizationRoleAssignment,
   MfaFactor,
   type MfaVerification,
   OrganizationInvitationStatus,
@@ -54,7 +55,7 @@ type OrganizationProvisionPayload =
   | {
       userId: string;
       organizationIds: string[];
-      organizationRoleIds?: string[];
+      organizationRoles?: JitOrganizationRoleAssignment[];
     };
 
 type ProvisioningCustomDataOptions = {
@@ -261,7 +262,7 @@ export class ProvisionLibrary {
       enterpriseSsoIdentity,
       syncedEnterpriseSsoIdentity,
       jitOrganizationIds,
-      jitOrganizationRoleIds,
+      jitOrganizationRoles,
       socialConnectorTokenSetSecret,
       enterpriseSsoConnectorTokenSetSecret,
       passwordEncrypted,
@@ -679,7 +680,7 @@ export class ProvisionLibrary {
       primaryEmail,
       enterpriseSsoIdentity,
       jitOrganizationIds,
-      jitOrganizationRoleIds,
+      jitOrganizationRoles,
     }: InteractionProfile
   ) {
     const extraJitOrganizations = condArray(
@@ -687,7 +688,7 @@ export class ProvisionLibrary {
         (await this.provisionJitOrganization({
           userId,
           organizationIds: jitOrganizationIds,
-          organizationRoleIds: jitOrganizationRoleIds,
+          organizationRoles: jitOrganizationRoles,
         }))
     );
     if (enterpriseSsoIdentity) {
@@ -705,9 +706,9 @@ export class ProvisionLibrary {
         ...(await this.provisionJitOrganizationByEmailDomain(
           userId,
           primaryEmail,
-          // The one-time token roles replace the default JIT roles of its organizations, so don't
-          // let email-domain JIT add the default roles back.
-          jitOrganizationRoleIds && jitOrganizationIds
+          // The one-time token roles replace the default JIT roles of their organizations, so
+          // don't let email-domain JIT add the default roles back.
+          jitOrganizationRoles?.map(({ organizationId }) => organizationId)
         )),
       ];
     }
