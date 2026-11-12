@@ -45,7 +45,6 @@ const cloud = {
       revoked: 'เพิกถอนแล้ว',
     },
     purchase: {
-      buy: 'ซื้อใบอนุญาต',
       description: 'ปลดล็อกฟีเจอร์แบบชำระเงินบนอินสแตนซ์ Logto ของคุณเองด้วยการสมัครสมาชิกรายปี',
       price_per_month: '{{price}}/เดือน',
       billed_annually: 'เรียกเก็บเงินรายปี',

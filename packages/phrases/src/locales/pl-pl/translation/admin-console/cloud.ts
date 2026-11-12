@@ -47,7 +47,6 @@ const cloud = {
       revoked: 'Cofnięta',
     },
     purchase: {
-      buy: 'Kup licencję',
       description: 'Odblokuj płatne funkcje we własnej instancji Logto dzięki rocznej subskrypcji.',
       price_per_month: '{{price}}/mies.',
       billed_annually: 'Płatność roczna',

@@ -47,7 +47,6 @@ const cloud = {
       revoked: 'Geri alınmış',
     },
     purchase: {
-      buy: 'Lisans satın al',
       description: 'Yıllık abonelikle kendi Logto örneğinizde ücretli özelliklerin kilidini açın.',
       price_per_month: '{{price}}/ay',
       billed_annually: 'Yıllık faturalandırılır',

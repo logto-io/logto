@@ -48,7 +48,6 @@ const cloud = {
       revoked: 'Revoked',
     },
     purchase: {
-      buy: 'Buy a license',
       description: 'Unlock paid features on your own Logto instance with a yearly subscription.',
       price_per_month: '{{price}}/mo',
       billed_annually: 'Billed annually',

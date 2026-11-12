@@ -43,7 +43,6 @@ const cloud = {
       revoked: '已撤銷',
     },
     purchase: {
-      buy: '購買授權',
       description: '透過年度訂閱，在你自己的 Logto 實例上解鎖付費功能。',
       price_per_month: '{{price}}/月',
       billed_annually: '按年付費',

@@ -49,7 +49,6 @@ const cloud = {
       revoked: 'Révoquée',
     },
     purchase: {
-      buy: 'Acheter une licence',
       description:
         'Débloquez les fonctionnalités payantes sur votre propre instance Logto avec un abonnement annuel.',
       price_per_month: '{{price}}/mois',

@@ -48,7 +48,6 @@ const cloud = {
       revoked: 'Отозвана',
     },
     purchase: {
-      buy: 'Купить лицензию',
       description: 'Откройте платные функции на собственном экземпляре Logto с годовой подпиской.',
       price_per_month: '{{price}}/мес.',
       billed_annually: 'Оплата за год',

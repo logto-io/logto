@@ -44,7 +44,6 @@ const cloud = {
       revoked: 'مسحوب',
     },
     purchase: {
-      buy: 'شراء ترخيص',
       description: 'افتح الميزات المدفوعة على مثيل Logto الخاص بك باشتراك سنوي.',
       price_per_month: '{{price}}/شهريًا',
       billed_annually: 'يُدفع سنويًا',

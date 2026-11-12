@@ -47,7 +47,6 @@ const cloud = {
       revoked: 'Revogada',
     },
     purchase: {
-      buy: 'Comprar uma licença',
       description:
         'Desbloqueie funcionalidades pagas na sua própria instância Logto com uma subscrição anual.',
       price_per_month: '{{price}}/mês',

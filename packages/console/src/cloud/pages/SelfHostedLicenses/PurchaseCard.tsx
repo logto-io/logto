@@ -25,11 +25,9 @@ const featureKeys = [
 type Props = {
   readonly isSubscribing: boolean;
   readonly onSubscribe: () => void;
-  /** Shown when the user already holds a license and opened the card to buy another. */
-  readonly onClose?: () => void;
 };
 
-function PurchaseCard({ isSubscribing, onSubscribe, onClose }: Props) {
+function PurchaseCard({ isSubscribing, onSubscribe }: Props) {
   const { t, i18n } = useTranslation(undefined, {
     keyPrefix: 'admin_console.cloud.self_hosted_licenses.purchase',
   });
@@ -71,9 +69,6 @@ function PurchaseCard({ isSubscribing, onSubscribe, onClose }: Props) {
           // Checkout validates the price itself; an unread price only hides the amount here.
           onClick={onSubscribe}
         />
-        {onClose && (
-          <Button title="general.cancel" size="large" disabled={isSubscribing} onClick={onClose} />
-        )}
       </div>
       <div className={styles.enterprise}>
         <Trans

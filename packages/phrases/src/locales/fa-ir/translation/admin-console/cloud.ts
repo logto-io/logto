@@ -46,7 +46,6 @@ const cloud = {
       revoked: 'باطل‌شده',
     },
     purchase: {
-      buy: 'خرید مجوز',
       description: 'با اشتراک سالانه، قابلیت‌های پولی را روی نمونه Logto خودتان فعال کنید.',
       price_per_month: '{{price}} در ماه',
       billed_annually: 'پرداخت سالانه',

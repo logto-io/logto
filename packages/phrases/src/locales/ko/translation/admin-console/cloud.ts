@@ -43,7 +43,6 @@ const cloud = {
       revoked: '철회됨',
     },
     purchase: {
-      buy: '라이선스 구매',
       description: '연간 구독으로 자체 Logto 인스턴스의 유료 기능을 사용하세요.',
       price_per_month: '{{price}}/월',
       billed_annually: '연간 결제',

@@ -49,7 +49,6 @@ const cloud = {
       revoked: 'Widerrufen',
     },
     purchase: {
-      buy: 'Lizenz kaufen',
       description:
         'Schalte kostenpflichtige Funktionen auf deiner eigenen Logto-Instanz mit einem Jahresabonnement frei.',
       price_per_month: '{{price}}/Monat',

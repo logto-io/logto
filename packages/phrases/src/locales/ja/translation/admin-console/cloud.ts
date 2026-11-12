@@ -45,7 +45,6 @@ const cloud = {
       revoked: '取り消し済み',
     },
     purchase: {
-      buy: 'ライセンスを購入',
       description: '年間サブスクリプションで、独自の Logto インスタンスの有料機能を利用できます。',
       price_per_month: '{{price}}/月',
       billed_annually: '年払い',

@@ -130,12 +130,11 @@ it('expires the session when the user leaves Checkout, and keeps other parameter
   expect(result.current.purchase.status).toBe('idle');
 });
 
-it('opens the purchase card from a purchase link and keeps the UTM parameters', async () => {
+it('lands a purchase link on the page and keeps the UTM parameters', async () => {
   const { result } = renderPurchase(
     '/self-hosted-licenses?checkout=self-hosted-pro&utm_source=website'
   );
 
-  expect(result.current.purchase.isCardOpen).toBe(true);
   await waitFor(() => {
     expect(result.current.location.search).toBe('?utm_source=website');
   });

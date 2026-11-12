@@ -39,9 +39,6 @@ export const useLicensePurchase = (userId: string) => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [status, setStatus] = useState<PurchaseStatus>('idle');
-  const [isCardOpen, setIsCardOpen] = useState(
-    () => searchParams.get(checkoutSearchKey) === checkoutEntryValue
-  );
   /** The paid session to retry activation for after a timeout. */
   const [paidSessionId, setPaidSessionId] = useState<string>();
   const busy = useRef(false);
@@ -201,7 +198,7 @@ export const useLicensePurchase = (userId: string) => {
     }
 
     if (checkout === checkoutEntryValue) {
-      setIsCardOpen(true);
+      // The page itself is the purchase entry: its purchase card is a click away from Checkout.
       clearCheckoutSearch();
     }
   }, [
@@ -215,16 +212,5 @@ export const useLicensePurchase = (userId: string) => {
     userId,
   ]);
 
-  return {
-    status,
-    isCardOpen,
-    openCard: useCallback(() => {
-      setIsCardOpen(true);
-    }, []),
-    closeCard: useCallback(() => {
-      setIsCardOpen(false);
-    }, []),
-    subscribe,
-    retryActivation,
-  };
+  return { status, subscribe, retryActivation };
 };
