@@ -2,10 +2,10 @@
 
 /** The organization roles that will be automatically provisioned to users when they join an organization through JIT. */
 create table organization_jit_roles (
-  tenant_id varchar(21) not null
+  tenant_id varchar(64) not null
     references tenants (id) on update cascade on delete cascade,
   /** The ID of the organization. */
-  organization_id varchar(21) not null
+  organization_id varchar(64) not null
     references organizations (id) on update cascade on delete cascade,
   /** The organization role ID that will be automatically provisioned. */
   organization_role_id varchar(21) not null

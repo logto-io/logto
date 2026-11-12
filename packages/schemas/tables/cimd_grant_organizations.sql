@@ -7,13 +7,13 @@
   relation: rows cascade away with the Grant row and with the user's organization membership.
 */
 create table cimd_grant_organizations (
-  tenant_id varchar(21) not null
+  tenant_id varchar(64) not null
     references tenants (id) on update cascade on delete cascade,
   /** The ID of the Grant row in `oidc_model_instances`. */
   grant_id varchar(128) not null,
   /** Fixed discriminator so the composite foreign key can target Grant rows in the polymorphic `oidc_model_instances` table. */
   grant_model_name varchar(64) not null default 'Grant',
-  organization_id varchar(21) not null,
+  organization_id varchar(64) not null,
   /** The user the grant was issued to and the membership FK's target. Must match the Grant payload's `accountId` (unreachable by FK) — the consent write enforces the pairing. */
   user_id varchar(128) not null,
   primary key (tenant_id, grant_id),

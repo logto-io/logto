@@ -1,5 +1,5 @@
 create table subject_tokens (
-  tenant_id varchar(21) not null
+  tenant_id varchar(64) not null
     references tenants (id) on update cascade on delete cascade,
   id varchar(25) not null,
   context jsonb /* @use JsonObject */ not null default '{}'::jsonb,
@@ -9,7 +9,7 @@ create table subject_tokens (
     references users (id) on update cascade on delete cascade,
   created_at timestamptz not null default(now()),
   /* It is intented to not reference to user or application table, it can be userId or applicationId, for audit only */
-  creator_id varchar(32) not null,
+  creator_id varchar(64) not null,
   primary key (id)
 );
 

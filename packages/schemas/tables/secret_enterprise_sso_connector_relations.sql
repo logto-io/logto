@@ -1,7 +1,7 @@
 /* init_order = 3 */
 
 create table secret_enterprise_sso_connector_relations (
-  tenant_id varchar(21) not null
+  tenant_id varchar(64) not null
     references tenants (id) on update cascade on delete cascade,
   secret_id varchar(21) not null
     references secrets (id) on update cascade on delete cascade,

@@ -2,7 +2,7 @@
 
 /** The organization roles that will be assigned to a user when they accept an invitation. */
 create table organization_invitation_role_relations (
-  tenant_id varchar(21) not null
+  tenant_id varchar(64) not null
     references tenants (id) on update cascade on delete cascade,
   /** The ID of the invitation. */
   organization_invitation_id varchar(21) not null

@@ -4,7 +4,7 @@ create type organization_invitation_status as enum ('Pending', 'Accepted', 'Expi
 
 /** The invitation entry defined in RFC 0003. It stores the invitation information for a user to join an organization. */
 create table organization_invitations (
-  tenant_id varchar(21) not null
+  tenant_id varchar(64) not null
     references tenants (id) on update cascade on delete cascade,
   /** The unique identifier of the invitation. */
   id varchar(21) not null,
@@ -17,7 +17,7 @@ create table organization_invitations (
   accepted_user_id varchar(128)
     references users (id) on update cascade on delete cascade,
   /** The ID of the organization to which the invitee is invited. */
-  organization_id varchar(21) not null
+  organization_id varchar(64) not null
     references organizations (id) on update cascade on delete cascade,
   /** The status of the invitation. */
   status organization_invitation_status not null,
