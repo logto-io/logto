@@ -120,8 +120,7 @@ function Details({ id }: Props) {
               <DynamicT forKey="cloud.self_hosted_licenses.cancel.failed" />
             </InlineNotification>
           )}
-          {/* Self-hosted license usage reporting is still in development. */}
-          {isDevFeaturesEnabled && <Usage license={data} />}
+          <Usage license={data} />
           <FormCard
             title="cloud.self_hosted_licenses.keys_title"
             description="cloud.self_hosted_licenses.keys_description"

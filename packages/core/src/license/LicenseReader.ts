@@ -99,9 +99,7 @@ const parseRefreshNotices = (body: unknown): Optional<LicenseUsageWarning[]> => 
  * Whether the license refresh carries the usage of this deployment. Operators opt out with
  * `SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED`; the refresh itself runs either way.
  */
-export const isLicenseUsageReportingEnabled = () =>
-  // Self-hosted license usage reporting is still in development.
-  EnvSet.values.isDevFeaturesEnabled && !EnvSet.values.isLicenseUsageReportingDisabled;
+export const isLicenseUsageReportingEnabled = () => !EnvSet.values.isLicenseUsageReportingDisabled;
 
 /**
  * Integration tests run a production build that trusts a fixture public key (see

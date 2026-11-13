@@ -33,6 +33,9 @@ describe('.well-known openapi.json endpoints', () => {
     expect(json.paths['/api/systems/license']?.put).toMatchObject({
       operationId: 'InstallSystemLicense',
     });
+    expect(json.paths['/api/systems/license/usage-statement']?.get).toMatchObject({
+      operationId: 'GetSystemLicenseUsageStatement',
+    });
 
     if (!isDevFeaturesEnabled) {
       expect(json.paths['/api/sso-connectors/{id}/idp-initiated-auth-config']).toBeUndefined();
