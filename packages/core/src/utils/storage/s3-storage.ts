@@ -4,6 +4,7 @@ import {
   PutObjectCommand,
   S3Client,
   S3ServiceException,
+  ObjectCannedACL,
 } from '@aws-sdk/client-s3';
 
 import type {
@@ -29,6 +30,7 @@ type BuildS3StorageParameters = {
   region?: string;
   endpoint?: string;
   forcePathStyle?: boolean;
+  acl?: ObjectCannedACL | null;
 };
 
 export const buildS3Storage = ({
@@ -38,6 +40,7 @@ export const buildS3Storage = ({
   region,
   endpoint,
   forcePathStyle,
+  acl,
 }: BuildS3StorageParameters) => {
   if (!region && !endpoint) {
     throw new Error('Either region or endpoint must be provided');
@@ -56,6 +59,9 @@ export const buildS3Storage = ({
     },
   });
 
+
+  const resolvedAcl = Object.is(acl, null) ? undefined : (acl ?? 'public-read');
+
   const uploadFile: UploadFile = async (
     data,
     objectKey,
@@ -66,9 +72,7 @@ export const buildS3Storage = ({
       Key: objectKey,
       Body: data,
       ContentType: contentType,
-      // Buckets created with ACLs disabled (the AWS default) reject any ACL, so only send one when
-      // the object has to be publicly readable.
-      ACL: isPublic ? 'public-read' : undefined,
+      ACL: isPublic ? resolvedAcl : undefined,
     });
 
     await client.send(command);
