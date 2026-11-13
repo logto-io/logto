@@ -67,7 +67,7 @@
       },
       "delete": {
         "summary": "Delete logs",
-        "description": "Delete log rows in bounded batches.\n\n`start_time` / `end_time` carry the same inclusive semantics as `GET /api/logs`: a row is deleted when its `createdAt` falls in `[start_time, end_time]`, at millisecond granularity. Note that this operation removes **every** log row in that window, while `GET /api/logs` returns audit logs only.\n\nWebhook delivery logs (`TriggerHook.*`) share the `logs` table but are read through `GET /api/hooks/{id}/recent-logs` rather than by `GET /api/logs`, so `deletedCount` can exceed the number of rows an export returned. A window covering the last 24 hours also removes the deliveries counted by the execution stats on `GET /api/hooks`.\n\n`end_time` is required, so a bare `DELETE /api/logs` never means \"delete everything\". `end_time` must not be in the future and is rejected with `400` otherwise; a common cause is passing microseconds or nanoseconds instead of milliseconds, or a miscomputed timezone offset. Passing seconds instead yields a boundary in the past, which deletes nothing rather than deleting too much.\n\nThis operation is irreversible and reachable by any Management API token. Each call deletes at most `limit` rows in a single statement and reports `hasMore`. Keep both bounds fixed across calls and repeat while `hasMore` is `true`; recomputing a boundary between calls would skip rows. Run one cleanup at a time: a concurrent purge can make `hasMore` under-report.\n\n### Performance\n\n`DELETE` marks rows dead and leaves index cleanup to autovacuum, so writes are dominated by heap tuples and WAL. The statement is matched on `ctid`, so the outer side is a Tid Scan over exactly `limit` rows and the inner select reads those row ids from `logs__created_at_id`; expect the cost of a call to track `limit` rather than the size of the table. Measure with `EXPLAIN (ANALYZE, BUFFERS)` on your own data before running a large purge.\n\nFreed space is reused by later inserts but the table file does not shrink, so disk usage will not drop immediately after a purge.",
+        "description": "Delete log rows in bounded batches.\n\n`start_time` / `end_time` carry the same inclusive semantics as `GET /api/logs`: a row is deleted when its `createdAt` falls in `[start_time, end_time]`, at millisecond granularity. Note that this operation removes **every** log row in that window, while `GET /api/logs` returns audit logs only.\n\nWebhook delivery logs (`TriggerHook.*`) share the `logs` table and are included by `GET /api/logs/export` by default; set `excludeWebhookLogs=true` there to leave them out. With that option, `deletedCount` can exceed the number of rows an export returned. A window covering the last 24 hours also removes the deliveries counted by the execution stats on `GET /api/hooks`.\n\n`end_time` is required, so a bare `DELETE /api/logs` never means \"delete everything\". `end_time` must not be in the future and is rejected with `400` otherwise; a common cause is passing microseconds or nanoseconds instead of milliseconds, or a miscomputed timezone offset. Passing seconds instead yields a boundary in the past, which deletes nothing rather than deleting too much.\n\nThis operation is irreversible and reachable by any Management API token. Each call deletes at most `limit` rows in a single statement and reports `hasMore`. Keep both bounds fixed across calls and repeat while `hasMore` is `true`; recomputing a boundary between calls would skip rows. Run one cleanup at a time: a concurrent purge can make `hasMore` under-report.\n\n### Performance\n\n`DELETE` marks rows dead and leaves index cleanup to autovacuum, so writes are dominated by heap tuples and WAL. The statement is matched on `ctid`, so the outer side is a Tid Scan over exactly `limit` rows and the inner select reads those row ids from `logs__created_at_id`; expect the cost of a call to track `limit` rather than the size of the table. Measure with `EXPLAIN (ANALYZE, BUFFERS)` on your own data before running a large purge.\n\nFreed space is reused by later inserts but the table file does not shrink, so disk usage will not drop immediately after a purge.",
         "parameters": [
           {
             "name": "end_time",
@@ -92,6 +92,86 @@
           },
           "400": {
             "description": "Returned when `end_time` is missing, empty, negative, outside the safe integer range, in the future, or not a finite number; when `start_time` is malformed or after `end_time`; or when `limit` is outside `1..10000`."
+          }
+        }
+      }
+    },
+    "/api/logs/export": {
+      "get": {
+        "tags": ["Dev feature"],
+        "summary": "Export logs",
+        "description": "Export logs as a streamed CSV or JSONL download.\n\nFilters use the same semantics as `GET /api/logs`: `userId`, `applicationId`, `logKey`, and the inclusive `start_time` / `end_time` window in unix milliseconds. By default every matching log row in the window is exported, including webhook delivery logs (`TriggerHook.*`), so an unfiltered export followed by `DELETE /api/logs` is lossless. Set `excludeWebhookLogs=true` to export audit logs only, matching `GET /api/logs`; webhook delivery logs can then be read through `GET /api/hooks/{id}/recent-logs`.\n\nRows are streamed in ascending `createdAt` order. CSV starts with the header `tenantId,id,key,createdAt,payload`; each payload is a JSON string, and cells containing delimiters, quotes, or line breaks are quoted. JSONL emits one object per line with the same five fields. Both formats are UTF-8 with LF line endings.\n\nEvery non-empty export reports the actual range of its rows in the `X-Log-Range-Oldest` and `X-Log-Range-Newest` response headers, in unix milliseconds. The range is measured before streaming starts; with `end_time` in the past and no concurrent writes or deletes, it matches the file. An empty result omits both headers.\n\n`end_time` is required and must not be in the future, so every export has an upper bound. The export is not paginated: one request streams every matching row. It has no `Content-Length` and a mid-stream failure aborts the download instead of appending an error document; discard a truncated file and retry with the same bounds. The pages are not read in a single transaction, so do not delete rows from the same window until the download completes.\n\n### Performance\n\nRows are read one page at a time with a keyset cursor on `createdAt` and `id`, so memory use tracks the page size rather than the number of rows. The range headers come from one extra descending limit-1 query on the same index. Set `start_time` to keep the scan short; omitting it streams the tenant's entire log history up to `end_time`.",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "query",
+            "required": true,
+            "description": "Download format. `csv` returns a header row followed by one row per log; `jsonl` returns one JSON object per line."
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "Filter logs by user ID, with the same semantics as `GET /api/logs`."
+          },
+          {
+            "name": "applicationId",
+            "in": "query",
+            "description": "Filter logs by application ID, with the same semantics as `GET /api/logs`."
+          },
+          {
+            "name": "logKey",
+            "in": "query",
+            "description": "Filter logs by log key, with the same semantics as `GET /api/logs`."
+          },
+          {
+            "name": "excludeWebhookLogs",
+            "in": "query",
+            "description": "When `true`, export audit logs only and omit webhook delivery logs (`TriggerHook.*`), matching `GET /api/logs`. Default `false`: every log row in the window is exported, including webhook delivery logs."
+          },
+          {
+            "name": "start_time",
+            "in": "query",
+            "description": "Inclusive lower bound on `createdAt`, in unix milliseconds. Omit to export everything up to `end_time`. Returns `400` if it is after `end_time`."
+          },
+          {
+            "name": "end_time",
+            "in": "query",
+            "required": true,
+            "description": "Inclusive upper bound on `createdAt`, in unix milliseconds. Only logs with `createdAt <= end_time` are exported. Returns `400` if the value is in the future."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A streamed export of the matching logs, in ascending `createdAt` order. CSV uses the column order `tenantId,id,key,createdAt,payload`; JSONL emits the same fields as an object on each line. `X-Log-Range-Oldest` and `X-Log-Range-Newest` report the actual unix-millisecond range of the rows in the file and are omitted when nothing matches. Before deleting the exported range, make sure the download completed.",
+            "headers": {
+              "X-Log-Range-Oldest": {
+                "description": "Unix-millisecond `createdAt` of the oldest row in the export. Omitted when no rows match.",
+                "schema": { "type": "integer" }
+              },
+              "X-Log-Range-Newest": {
+                "description": "Unix-millisecond `createdAt` of the newest row in the export. Omitted when no rows match.",
+                "schema": { "type": "integer" }
+              },
+              "Content-Disposition": {
+                "description": "Attachment filename for the download, ending in `.csv` or `.jsonl`.",
+                "schema": { "type": "string" }
+              },
+              "Cache-Control": {
+                "description": "Always `no-store`, because the export contains audit data.",
+                "schema": { "type": "string" }
+              }
+            },
+            "content": {
+              "text/csv": {
+                "schema": { "type": "string" }
+              },
+              "application/x-ndjson": {
+                "schema": { "type": "string" }
+              }
+            }
+          },
+          "400": {
+            "description": "Returned when `format` is missing or not `csv` / `jsonl`; when `excludeWebhookLogs` is not `true` or `false`; when `end_time` is missing, empty, negative, outside the safe integer range, in the future, or not a finite number; or when `start_time` is malformed or after `end_time`."
           }
         }
       }

@@ -10,12 +10,19 @@ import {
   type AuditLogPrefix,
 } from '@logto/schemas';
 import { yes } from '@silverhand/essentials';
-import { boolean, number, object, string } from 'zod';
+import { boolean, number, object, string, z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import assertThat from '#src/utils/assert-that.js';
+import {
+  buildLogExportFileName,
+  createLogExportStream,
+  getLogExportContentType,
+  logExportFormats,
+} from '#src/utils/log-export.js';
 import { parseTimestampParam, validateTimeWindow } from '#src/utils/time-window.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
@@ -28,6 +35,10 @@ import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 // callers that would trade a longer call for fewer round trips.
 const defaultDeleteLimit = 1000;
 const maxDeleteLimit = 10_000;
+
+// Page size for the export stream. A larger page cuts round trips; a smaller page keeps memory and
+// the time a single statement holds a connection low. 1000 matches the delete batch default.
+const logExportBatchSize = 1000;
 
 /**
  * The audit log keys exposed by `GET /logs`.
@@ -80,7 +91,7 @@ const parseBound = (raw: string | undefined, type: string): number | undefined =
 export default function logRoutes<T extends ManagementApiRouter>(
   ...[router, { queries }]: RouterInitArgs<T>
 ) {
-  const { findLogById, countLogs, findLogs, deleteLogsInRange } = queries.logs;
+  const { findLogById, countLogs, findLogs, findLogsForExport, deleteLogsInRange } = queries.logs;
 
   router.get(
     '/logs',
@@ -138,6 +149,89 @@ export default function logRoutes<T extends ManagementApiRouter>(
       return next();
     }
   );
+
+  // Dev feature: log export. Remove this guard when the export API is released.
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    router.get(
+      '/logs/export',
+      koaGuard({
+        query: object({
+          format: z.enum(logExportFormats),
+          userId: string().optional(),
+          applicationId: string().optional(),
+          logKey: string().optional(),
+          excludeWebhookLogs: z.enum(['true', 'false']).optional(),
+          end_time: string(),
+          start_time: string().optional(),
+        }),
+        status: [200, 400],
+      }),
+      async (ctx) => {
+        const {
+          query: { format, userId, applicationId, logKey, excludeWebhookLogs },
+        } = ctx.guard;
+
+        const endTime = parseBound(ctx.guard.query.end_time, 'end_time');
+
+        // `end_time` is required by the guard, so `parseBound` only returns `undefined` when the
+        // parameter is absent; throw rather than streaming an unbounded export by accident.
+        if (endTime === undefined) {
+          throw invalidInput('end_time');
+        }
+
+        const startTime = parseBound(ctx.guard.query.start_time, 'start_time');
+
+        // The export uses the same window rules as `GET /logs` and `DELETE /logs`, including the
+        // future-boundary check: a boundary in the future is usually a unit mistake, and exporting
+        // an accidental unbounded range is expensive even though it is read-only.
+        validateTimeWindow(startTime, endTime);
+        assertThat(
+          endTime <= Date.now(),
+          new RequestError({ code: 'log.cleanup_boundary_in_future', status: 400 })
+        );
+
+        const condition = {
+          payload: { userId, applicationId },
+          logKey,
+          startTime,
+          endTime,
+          // Webhook delivery logs share the table and are included by default, so an unfiltered
+          // export of a window can be followed by `DELETE /logs` without losing rows. The opt-out
+          // keeps the audit-only scope of `GET /logs`.
+          includeKeyPrefix: excludeWebhookLogs === 'true' ? auditLogKeyPrefixes : undefined,
+        };
+
+        // Fetch the first page and the newest row before committing response headers, so a
+        // database error on the first queries still becomes a normal JSON error response, and so
+        // the actual exported range can be reported in headers before the body starts.
+        const { stream, range } = await createLogExportStream({
+          format,
+          loadBatch: async (after) =>
+            findLogsForExport(logExportBatchSize, { ...condition, after }),
+          loadLast: async () => {
+            const rows = await findLogsForExport(1, condition, 'desc');
+
+            return rows.at(0);
+          },
+        });
+
+        ctx.status = 200;
+        ctx.set('Content-Type', getLogExportContentType(format));
+        ctx.set('Content-Disposition', `attachment; filename="${buildLogExportFileName(format)}"`);
+        ctx.set('Cache-Control', 'no-store');
+
+        if (range) {
+          ctx.set('X-Log-Range-Oldest', String(range.oldest));
+          ctx.set('X-Log-Range-Newest', String(range.newest));
+        }
+
+        ctx.body = stream;
+
+        // Do not call `next()`: `GET /logs/:id` also matches this path, and continuing would let
+        // that handler overwrite the streamed download with a log lookup.
+      }
+    );
+  }
 
   router.get(
     '/logs/:id',
