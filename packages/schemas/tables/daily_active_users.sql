@@ -1,6 +1,6 @@
 create table daily_active_users (
   id varchar(21) not null,
-  tenant_id varchar(21) not null,
+  tenant_id varchar(64) not null,
   user_id varchar(128) not null,
   date timestamptz not null default (now()),
   primary key (id),

@@ -2,7 +2,7 @@
 
 /** The relations between organization roles and organization scopes. It indicates which organization scopes are available to which organization roles. */
 create table organization_role_scope_relations (
-  tenant_id varchar(21) not null
+  tenant_id varchar(64) not null
     references tenants (id) on update cascade on delete cascade,
   organization_role_id varchar(21) not null
     references organization_roles (id) on update cascade on delete cascade,

@@ -1,6 +1,6 @@
 /* init_order = 2 */
 create table secrets (
-  tenant_id varchar(21) not null 
+  tenant_id varchar(64) not null 
     references tenants (id) on update cascade on delete cascade,
   id varchar(21) not null primary key,
   user_id varchar(128) not null 

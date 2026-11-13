@@ -2,7 +2,7 @@
 
 create table saml_sso_connector_signing_keys (
   id varchar(21) not null,
-  tenant_id varchar(21) not null
+  tenant_id varchar(64) not null
     references tenants (id) on update cascade on delete cascade,
   sso_connector_id varchar(128) not null
     references sso_connectors (id) on update cascade on delete cascade,

@@ -1,5 +1,5 @@
 create table captcha_providers (
-  tenant_id varchar(21) not null 
+  tenant_id varchar(64) not null 
     references tenants (id) on update cascade on delete cascade,
   id varchar(128) not null,
   config jsonb /* @use CaptchaConfig */ not null default '{}'::jsonb,

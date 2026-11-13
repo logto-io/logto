@@ -3,7 +3,7 @@
 create type users_password_encryption_method as enum ('Argon2i', 'Argon2id', 'Argon2d', 'SHA1', 'SHA256', 'MD5', 'Bcrypt', 'Legacy');
 
 create table users (
-  tenant_id varchar(21) not null
+  tenant_id varchar(64) not null
     references tenants (id) on update cascade on delete cascade,
   id varchar(128) not null,
   username varchar(128),
@@ -16,7 +16,7 @@ create table users (
   avatar varchar(2048),
   /** Additional OpenID Connect standard claims that are not included in user's properties. */
   profile jsonb /* @use UserProfile */ not null default '{}'::jsonb,
-  application_id varchar(21),
+  application_id varchar(64),
   cimd_client_id varchar(2048),
   identities jsonb /* @use Identities */ not null default '{}'::jsonb,
   custom_data jsonb /* @use JsonObject */ not null default '{}'::jsonb,
@@ -52,18 +52,6 @@ create index users_mfa_verifications_gin
   on users using gin (mfa_verifications jsonb_path_ops);
 
 /* Supports case-insensitive username lookups and case-flip conflict detection. */
-create index users__tenant_lower_username
-  on users (tenant_id, lower(username))
-  where username is not null;
-
-create index users__primary_email_lower
-  on users (tenant_id, primary_email_lower)
-  where primary_email_lower is not null;
-
-create index users__username_lower
-  on users (tenant_id, username_lower)
-  where username_lower is not null;
-
 /** Copies the lower-cased email and username into their `*_lower` columns, overwriting any direct write to them. */
 create function users__set_lower_columns() returns trigger as
 $$ begin

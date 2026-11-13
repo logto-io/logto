@@ -2,7 +2,7 @@
 
 /** A revocable server-side credential that can fulfill sign-in MFA for a user. */
 create table trusted_devices (
-  tenant_id varchar(21) not null
+  tenant_id varchar(64) not null
     references tenants (id) on update cascade on delete cascade,
   id varchar(21) not null,
   user_id varchar(128) not null

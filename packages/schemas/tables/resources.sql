@@ -1,7 +1,7 @@
 /* init_order = 1 */
 
 create table resources (
-  tenant_id varchar(21) not null
+  tenant_id varchar(64) not null
     references tenants (id) on update cascade on delete cascade,
   id varchar(21) not null,
   name text not null,

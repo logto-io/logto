@@ -2,9 +2,9 @@
 
 create table saml_application_secrets (
   id varchar(21) not null,
-  tenant_id varchar(21) not null
+  tenant_id varchar(64) not null
     references tenants (id) on update cascade on delete cascade,
-  application_id varchar(21) not null
+  application_id varchar(64) not null
     references applications (id) on update cascade on delete cascade,
   private_key text not null,
   certificate text not null,

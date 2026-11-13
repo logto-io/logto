@@ -1,5 +1,5 @@
 create table passcodes (
-  tenant_id varchar(21) not null
+  tenant_id varchar(64) not null
     references tenants (id) on update cascade on delete cascade,
   id varchar(21) not null,
   interaction_jti varchar(128),

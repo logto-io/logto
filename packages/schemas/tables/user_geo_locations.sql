@@ -2,7 +2,7 @@
 
 /** The last known geo coordinates per user for geo-velocity checks. */
 create table user_geo_locations (
-  tenant_id varchar(21) not null
+  tenant_id varchar(64) not null
     references tenants (id) on update cascade on delete cascade,
   user_id varchar(128) not null
     references users (id) on update cascade on delete cascade,

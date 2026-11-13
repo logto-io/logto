@@ -1,13 +1,13 @@
 /* init_order = 2 */
 
 create table oidc_session_extensions (
-  tenant_id varchar(21) not null
+  tenant_id varchar(64) not null
     references tenants (id) on update cascade on delete cascade,
   session_uid varchar(128) not null,
   account_id varchar(128) not null
     references users (id) on update cascade on delete cascade,
   last_submission jsonb /* @use JsonObject */ not null default '{}'::jsonb,
-  client_id varchar(21) null,
+  client_id varchar(64) null,
   cimd_client_id varchar(2048) null,
   created_at timestamptz not null default(now()),
   updated_at timestamptz not null default(now()),
