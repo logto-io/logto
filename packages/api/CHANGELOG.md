@@ -1,5 +1,7 @@
 # @logto/api
 
+## 1.47.0
+
 ## 1.46.0
 
 ### Patch Changes

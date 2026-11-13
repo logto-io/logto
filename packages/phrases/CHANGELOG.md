@@ -1,5 +1,47 @@
 # Change Log
 
+## 1.34.0
+
+### Minor Changes
+
+- 70a58d3: show a friendly error page when an OIDC error can't be sent back to the app
+
+  When a browser hits an OIDC error that can't safely be redirected back to the app, such as a `redirect_uri` that isn't registered or an unknown `client_id`, it now sees a localized page in the style of the sign-in experience instead of raw JSON. Developers can expand "Error details" to see the error response. API clients keep receiving the same JSON.
+
+- 450fa7d: add a refresh token lifetime setting for dynamic apps
+
+  Dynamic app (client ID metadata document) clients previously always used the default 14-day refresh token lifetime, so users had to sign in again every 14 days. Set "Refresh token time to live (TTL) in days" in the dynamic app settings, from 1 to 180 days, to apply one lifetime to all dynamic app clients. Changes apply to the next token issued.
+
+  The lifetime is now fixed from the first issuance for every dynamic app client: rotating a refresh token keeps its original expiration. Previously, dynamic app clients declaring `application_type: native` or a token endpoint authentication method other than `none` got a fresh lifetime on every refresh, up to 180 days; their users now sign in again once the configured lifetime ends.
+
+- f101e4b: add a tenant setting to turn off the "Add another 2-step verification" suggestion
+
+  When a user's only MFA factor is the email, phone number, or passkey they also sign in with, Logto suggests adding another factor during sign-up or sign-in. Turn off "Suggest adding another MFA factor" in Console > Multi-factor authentication > Policy, or set `mfa.skipAdditionalBindingSuggestion` to `true` in the sign-in experience, to never show this suggestion. Required MFA set-up, backup codes, and passkey prompts are not affected.
+
+- 93d3f39: report self-hosted license usage and warn in Console when usage exceeds plan limits
+
+  Self-hosted deployments with an active license evaluate usage locally, warn in Console when limits are exceeded without blocking features, and include aggregated usage counts in license refreshes unless `SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED=1` is set on every Core instance.
+
+### Patch Changes
+
+- 1838646: use dedicated i18n error codes for organization invitation validation errors
+
+  Organization invitation creation and status update errors now return specific, localized codes under the `organization` namespace instead of the generic `request.invalid_input`, so clients can reliably distinguish each failure case and messages render in the user's language. HTTP status codes are unchanged.
+
+  If your integration matches `request.invalid_input` for these responses, update it to match the new codes:
+
+  - `POST /api/organization-invitations`
+    - `organization.expires_at_in_future` (400): the value of `expiresAt` is not in the future.
+    - `organization.invitee_already_member` (422): the invitee is already a member of the organization.
+  - `PUT /api/organization-invitations/{id}/status`
+    - `organization.invitation_status_not_changeable` (422): the invitation is no longer pending.
+    - `organization.accepted_user_id_required` (422): `acceptedUserId` is missing when accepting.
+    - `organization.accepted_user_email_mismatch` (422): the accepted user's primary email does not match the invitee.
+
+- dfbe3d0: delete log rows older than a given timestamp through the Management API
+
+  `DELETE /api/logs` takes an `end_time` boundary, an optional `start_time` boundary, and a `limit`. Both boundaries are unix timestamps in milliseconds with the same inclusive semantics as `GET /api/logs`; `limit` defaults to 1000 and is capped at 10000. Each call deletes at most `limit` log rows, webhook delivery logs included, and reports `hasMore`, so operators can loop it to purge a large backlog while keeping every request bounded.
+
 ## 1.33.0
 
 ### Minor Changes
