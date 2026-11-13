@@ -106,8 +106,7 @@
             "name": "format",
             "in": "query",
             "required": true,
-            "description": "Download format. `csv` returns a header row followed by one row per log; `jsonl` returns one JSON object per line.",
-            "schema": { "type": "string", "enum": ["csv", "jsonl"] }
+            "description": "Download format. `csv` returns a header row followed by one row per log; `jsonl` returns one JSON object per line."
           },
           {
             "name": "userId",
@@ -127,8 +126,7 @@
           {
             "name": "excludeWebhookLogs",
             "in": "query",
-            "description": "When `true`, export audit logs only and omit webhook delivery logs (`TriggerHook.*`), matching `GET /api/logs`. Default `false`: every log row in the window is exported, including webhook delivery logs.",
-            "schema": { "type": "string", "enum": ["true", "false"] }
+            "description": "When `true`, export audit logs only and omit webhook delivery logs (`TriggerHook.*`), matching `GET /api/logs`. Default `false`: every log row in the window is exported, including webhook delivery logs."
           },
           {
             "name": "start_time",
