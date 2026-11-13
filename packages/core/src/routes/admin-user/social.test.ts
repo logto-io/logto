@@ -140,7 +140,6 @@ describe('Admin user social identities APIs', () => {
       ).resolves.toHaveProperty('status', 201);
       expect(updateUserById).toHaveBeenCalledWith('foo', {
         identities: {
-          connectorTarget1: { userId: 'socialIdForTarget1' },
           [newTarget]: newIdentity,
         },
       });
@@ -227,7 +226,6 @@ describe('Admin user social identities APIs', () => {
       ).resolves.toHaveProperty('status', 200);
       expect(updateUserById).toHaveBeenCalledWith('foo', {
         identities: {
-          connectorTarget1: { userId: 'socialIdForTarget1' },
           connector_0: { userId: 'socialId', details: mockedSocialUserInfo },
         },
       });
