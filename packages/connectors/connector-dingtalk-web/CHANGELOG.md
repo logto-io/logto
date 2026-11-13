@@ -1,5 +1,13 @@
 # @logto/connector-dingtalk-web
 
+## 0.5.0
+
+### Minor Changes
+
+- 51564b0: add a `disableEmailSync` switch to the DingTalk web connector
+
+  The connector always synced the `email` field returned by DingTalk to the user profile. This switch makes that configurable, matching the control the Microsoft Azure AD and standard OAuth2 connectors already offer. It is off by default, so existing connectors keep their current behavior.
+
 ## 0.4.8
 
 ### Patch Changes

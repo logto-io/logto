@@ -1,5 +1,17 @@
 # Change Log
 
+## 1.47.0
+
+### Patch Changes
+
+- Updated dependencies [59f7e27]
+- Updated dependencies [0567ce3]
+- Updated dependencies [450fa7d]
+- Updated dependencies [f101e4b]
+- Updated dependencies [805da84]
+- Updated dependencies [93d3f39]
+  - @logto/schemas@1.47.0
+
 ## 1.46.0
 
 ### Patch Changes
