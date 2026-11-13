@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- The one-time token API tests, including the organization role context, belong to one suite. */
 import { InteractionEvent, OneTimeTokenStatus, RoleType } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 
@@ -518,3 +519,4 @@ describe('one-time tokens API', () => {
     ]);
   });
 });
+/* eslint-enable max-lines */
