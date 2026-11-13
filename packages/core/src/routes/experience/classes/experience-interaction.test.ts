@@ -393,7 +393,8 @@ describe('ExperienceInteraction class', () => {
 
       expect(userLibraries.provisionOrganizationsByEmailDomain).toHaveBeenCalledWith(
         'uid',
-        mockEmail
+        mockEmail,
+        []
       );
     });
   });

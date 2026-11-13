@@ -1,6 +1,8 @@
+/* eslint-disable max-lines -- Covers every function of the user library in one place. */
 import {
   defaultTenantId,
   MfaFactor,
+  RoleType,
   type User,
   UsersPasswordEncryptionMethod,
 } from '@logto/schemas';
@@ -315,6 +317,181 @@ describe('findUserRoles()', () => {
   });
 });
 
+describe('provisionOrganizations()', () => {
+  const userId = 'user-id';
+  const organizationId = 'organization-id';
+  const getJitOrganizationsByIds = jest.fn(async () => [
+    { organizationId, organizationRoleIds: ['default-role'] },
+  ]);
+  const findRolesByIds = jest.fn(async (): Promise<Array<{ id: string; type: RoleType }>> => []);
+  const insertUsers = jest.fn();
+  const insertUsersRoles = jest.fn();
+
+  const { provisionOrganizations } = createUserLibrary(
+    defaultTenantId,
+    new MockQueries({
+      organizations: {
+        jit: { getJitOrganizationsByIds },
+        roles: { findByIds: findRolesByIds },
+        relations: {
+          users: { getExistingOrganizationIds: async () => [], insert: insertUsers },
+          usersRoles: { insert: insertUsersRoles },
+        },
+      },
+    } as unknown as ConstructorParameters<typeof MockQueries>[0])
+  );
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('assigns the default JIT roles when no roles are given', async () => {
+    await provisionOrganizations({ userId, organizationIds: [organizationId] });
+
+    expect(findRolesByIds).not.toHaveBeenCalled();
+    expect(insertUsersRoles).toHaveBeenCalledWith({
+      organizationId,
+      organizationRoleId: 'default-role',
+      userId,
+    });
+  });
+
+  it('assigns the given roles instead of the default JIT roles', async () => {
+    findRolesByIds.mockResolvedValueOnce([{ id: 'admin', type: RoleType.User }]);
+
+    await expect(
+      provisionOrganizations({
+        userId,
+        organizationIds: [organizationId],
+        organizationRoles: [{ organizationId, organizationRoleIds: ['admin'] }],
+      })
+    ).resolves.toEqual([{ organizationId, organizationRoleIds: ['admin'] }]);
+
+    expect(insertUsersRoles).toHaveBeenCalledTimes(1);
+    expect(insertUsersRoles).toHaveBeenCalledWith({
+      organizationId,
+      organizationRoleId: 'admin',
+      userId,
+    });
+  });
+
+  it('skips the given roles that can no longer be assigned to a user', async () => {
+    findRolesByIds.mockResolvedValueOnce([
+      { id: 'admin', type: RoleType.User },
+      { id: 'machine', type: RoleType.MachineToMachine },
+    ]);
+
+    await provisionOrganizations({
+      userId,
+      organizationIds: [organizationId],
+      organizationRoles: [{ organizationId, organizationRoleIds: ['admin', 'machine', 'deleted'] }],
+    });
+
+    expect(insertUsersRoles).toHaveBeenCalledTimes(1);
+    expect(insertUsersRoles).toHaveBeenCalledWith({
+      organizationId,
+      organizationRoleId: 'admin',
+      userId,
+    });
+  });
+
+  it('keeps the default JIT roles of the organizations without given roles', async () => {
+    getJitOrganizationsByIds.mockResolvedValueOnce([
+      { organizationId, organizationRoleIds: ['default-role'] },
+      { organizationId: 'other-organization-id', organizationRoleIds: ['other-default-role'] },
+    ]);
+    findRolesByIds.mockResolvedValueOnce([{ id: 'admin', type: RoleType.User }]);
+
+    await expect(
+      provisionOrganizations({
+        userId,
+        organizationIds: [organizationId, 'other-organization-id'],
+        organizationRoles: [{ organizationId, organizationRoleIds: ['admin'] }],
+      })
+    ).resolves.toEqual([
+      { organizationId, organizationRoleIds: ['admin'] },
+      { organizationId: 'other-organization-id', organizationRoleIds: ['other-default-role'] },
+    ]);
+
+    expect(insertUsersRoles).toHaveBeenCalledWith(
+      { organizationId, organizationRoleId: 'admin', userId },
+      {
+        organizationId: 'other-organization-id',
+        organizationRoleId: 'other-default-role',
+        userId,
+      }
+    );
+  });
+
+  it('adds the membership without roles when none of the given roles remain', async () => {
+    findRolesByIds.mockResolvedValueOnce([]);
+
+    await provisionOrganizations({
+      userId,
+      organizationIds: [organizationId],
+      organizationRoles: [{ organizationId, organizationRoleIds: ['deleted'] }],
+    });
+
+    expect(insertUsers).toHaveBeenCalledWith({ organizationId, userId });
+    expect(insertUsersRoles).not.toHaveBeenCalled();
+  });
+});
+
+describe('provisionOrganizationsByEmailDomain()', () => {
+  const userId = 'user-id';
+  const getJitOrganizations = jest.fn(async () => [
+    { organizationId: 'organization-1', organizationRoleIds: ['default-role'] },
+    { organizationId: 'organization-2', organizationRoleIds: ['default-role'] },
+  ]);
+  const insertUsers = jest.fn();
+  const insertUsersRoles = jest.fn();
+
+  const { provisionOrganizationsByEmailDomain } = createUserLibrary(
+    defaultTenantId,
+    new MockQueries({
+      organizations: {
+        jit: { emailDomains: { getJitOrganizations } },
+        relations: {
+          users: { getExistingOrganizationIds: async () => [], insert: insertUsers },
+          usersRoles: { insert: insertUsersRoles },
+        },
+      },
+    } as unknown as ConstructorParameters<typeof MockQueries>[0])
+  );
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('skips the excluded organizations', async () => {
+    await expect(
+      provisionOrganizationsByEmailDomain(userId, 'foo@example.com', ['organization-1'])
+    ).resolves.toEqual([
+      { organizationId: 'organization-2', organizationRoleIds: ['default-role'] },
+    ]);
+
+    expect(getJitOrganizations).toHaveBeenCalledWith('example.com');
+    expect(insertUsers).toHaveBeenCalledWith({ organizationId: 'organization-2', userId });
+    expect(insertUsersRoles).toHaveBeenCalledWith({
+      organizationId: 'organization-2',
+      organizationRoleId: 'default-role',
+      userId,
+    });
+  });
+
+  it('inserts nothing when every organization is excluded', async () => {
+    await expect(
+      provisionOrganizationsByEmailDomain(userId, 'foo@example.com', [
+        'organization-1',
+        'organization-2',
+      ])
+    ).resolves.toEqual([]);
+
+    expect(insertUsers).not.toHaveBeenCalled();
+    expect(insertUsersRoles).not.toHaveBeenCalled();
+  });
+});
+
 describe('addUserMfaVerification()', () => {
   const createdAt = new Date().toISOString();
   const { addUserMfaVerification } = createUserLibrary(defaultTenantId, queries);
@@ -336,3 +513,4 @@ describe('addUserMfaVerification()', () => {
     });
   });
 });
+/* eslint-enable max-lines */

@@ -26,7 +26,25 @@
         ],
         "responses": {
           "200": {
-            "description": "A list of one-time tokens."
+            "description": "A list of one-time tokens.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "properties": {
+                      "context": {
+                        "properties": {
+                          "jitOrganizationRoles": {
+                            "x-logto-dev-feature": true,
+                            "description": "The organization roles to assign to the user when the token is used, instead of the default JIT roles of the given organizations."
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "403": {
             "description": "The request carries the `logto-read-only-access: true` header, which cannot read one-time tokens."
@@ -48,7 +66,13 @@
                     "description": "The expiration time in seconds. If not provided, defaults to 10 mins (600 seconds)."
                   },
                   "context": {
-                    "description": "Additional context to store with the one-time token. Set `interactionEvent` to scope the token to a specific flow, such as `ForgotPassword` for reset-password magic links."
+                    "description": "Additional context to store with the one-time token. Set `interactionEvent` to scope the token to a specific flow, such as `ForgotPassword` for reset-password magic links.",
+                    "properties": {
+                      "jitOrganizationRoles": {
+                        "x-logto-dev-feature": true,
+                        "description": "The organization roles to assign to the user when the token is used, instead of the default JIT roles of the given organizations. Each organization must be in `jitOrganizationIds` and appear only once, and an empty `organizationRoleIds` assigns no roles. Organizations in `jitOrganizationIds` without an entry keep their default JIT roles. Only organization roles for users are accepted, and roles deleted before the token is used are skipped. Existing members keep their current roles; the given roles are added."
+                      }
+                    }
                   }
                 }
               }
@@ -57,7 +81,23 @@
         },
         "responses": {
           "201": {
-            "description": "The one-time token was created successfully."
+            "description": "The one-time token was created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "context": {
+                      "properties": {
+                        "jitOrganizationRoles": {
+                          "x-logto-dev-feature": true,
+                          "description": "The organization roles to assign to the user when the token is used, instead of the default JIT roles of the given organizations."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -68,7 +108,23 @@
         "description": "Get a one-time token by its ID.",
         "responses": {
           "200": {
-            "description": "The one-time token found by ID."
+            "description": "The one-time token found by ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "context": {
+                      "properties": {
+                        "jitOrganizationRoles": {
+                          "x-logto-dev-feature": true,
+                          "description": "The organization roles to assign to the user when the token is used, instead of the default JIT roles of the given organizations."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "403": {
             "description": "The request carries the `logto-read-only-access: true` header, which cannot read one-time tokens."
@@ -107,7 +163,23 @@
         },
         "responses": {
           "200": {
-            "description": "The one-time token was verified successfully."
+            "description": "The one-time token was verified successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "context": {
+                      "properties": {
+                        "jitOrganizationRoles": {
+                          "x-logto-dev-feature": true,
+                          "description": "The organization roles to assign to the user when the token is used, instead of the default JIT roles of the given organizations."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -131,7 +203,23 @@
         },
         "responses": {
           "200": {
-            "description": "The one-time token status was updated successfully."
+            "description": "The one-time token status was updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "context": {
+                      "properties": {
+                        "jitOrganizationRoles": {
+                          "x-logto-dev-feature": true,
+                          "description": "The organization roles to assign to the user when the token is used, instead of the default JIT roles of the given organizations."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }

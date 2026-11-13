@@ -1,4 +1,11 @@
-import type { BindMfa, CreateUser, Scope, User } from '@logto/schemas';
+/* eslint-disable max-lines -- The user library keeps all user-related operations, including JIT provisioning, in one place. */
+import type {
+  BindMfa,
+  CreateUser,
+  JitOrganizationRoleAssignment,
+  Scope,
+  User,
+} from '@logto/schemas';
 import {
   adminTenantId,
   ProductEvent,
@@ -248,10 +255,13 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
         /** The SSO connector ID to determine JIT organizations. */
         ssoConnectorId: string;
         organizationIds?: undefined;
+        organizationRoles?: undefined;
       }
     | {
         userId: string;
         organizationIds: string[];
+        /** When set, assign these roles instead of the default JIT roles of the given organizations. */
+        organizationRoles?: JitOrganizationRoleAssignment[];
         ssoConnectorId?: undefined;
       };
 
@@ -295,6 +305,44 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
   };
 
   /**
+   * Resolve the explicit JIT organizations. When role assignments are given, they replace the
+   * default JIT roles of their organizations, while the other organizations keep the default ones.
+   * The roles may have changed since the assignments were recorded (e.g. in a one-time token), so
+   * only the ones that can still be assigned to a user are kept; assigning the others would
+   * violate the constraints of the relation table and fail the whole sign-in.
+   */
+  const findJitOrganizationsByIds = async (
+    organizationIds: string[],
+    organizationRoles: JitOrganizationRoleAssignment[] = []
+  ): Promise<readonly JitOrganization[]> => {
+    const jitOrganizations = await organizations.jit.getJitOrganizationsByIds(organizationIds);
+
+    if (organizationRoles.length === 0) {
+      return jitOrganizations;
+    }
+
+    const roles = await organizations.roles.findByIds([
+      ...new Set(organizationRoles.flatMap(({ organizationRoleIds }) => organizationRoleIds)),
+    ]);
+    const userRoleIds = new Set(
+      roles.filter(({ type }) => type === RoleType.User).map(({ id }) => id)
+    );
+
+    return jitOrganizations.map((jitOrganization) => {
+      const assignment = organizationRoles.find(
+        ({ organizationId }) => organizationId === jitOrganization.organizationId
+      );
+
+      return assignment
+        ? {
+            organizationId: assignment.organizationId,
+            organizationRoleIds: assignment.organizationRoleIds.filter((id) => userRoleIds.has(id)),
+          }
+        : jitOrganization;
+    });
+  };
+
+  /**
    * Provision the user with JIT organizations and roles based on SSO connector or explicit org IDs.
    * For email-domain JIT, use `provisionOrganizationsByEmailDomain` instead.
    * Returns only the JIT orgs the user was newly added to (i.e. orgs the user was not already a
@@ -305,10 +353,11 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
     userId,
     ssoConnectorId,
     organizationIds,
+    organizationRoles,
   }: ProvisionOrganizationsParams): Promise<readonly JitOrganization[]> => {
     const jitOrganizations = condArray(
       ssoConnectorId && (await organizations.jit.ssoConnectors.getJitOrganizations(ssoConnectorId)),
-      organizationIds && (await organizations.jit.getJitOrganizationsByIds(organizationIds))
+      organizationIds && (await findJitOrganizationsByIds(organizationIds, organizationRoles))
     );
 
     return insertJitMemberships(userId, jitOrganizations);
@@ -318,10 +367,14 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
   /**
    * Provision the user with JIT organizations and roles based on the email domain.
    * Returns only the JIT orgs the user was newly added to.
+   *
+   * @param excludedOrganizationIds Organizations to skip, e.g. the ones already provisioned with
+   * explicit roles that the default JIT roles must not be added to.
    */
   const provisionOrganizationsByEmailDomain = async (
     userId: string,
-    email: string
+    email: string,
+    excludedOrganizationIds: readonly string[] = []
   ): Promise<readonly JitOrganization[]> => {
     const userEmailDomain = email.split('@')[1];
     if (!userEmailDomain) {
@@ -330,7 +383,12 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
     const jitOrganizations =
       await organizations.jit.emailDomains.getJitOrganizations(userEmailDomain);
 
-    return insertJitMemberships(userId, jitOrganizations);
+    return insertJitMemberships(
+      userId,
+      jitOrganizations.filter(
+        ({ organizationId }) => !excludedOrganizationIds.includes(organizationId)
+      )
+    );
   };
 
   return {
@@ -348,3 +406,4 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
     provisionOrganizationsByEmailDomain,
   };
 };
+/* eslint-enable max-lines */
