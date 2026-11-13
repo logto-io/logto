@@ -9,7 +9,6 @@ import {
   mockUserWebAuthnMfaVerification,
   mockUserWithMfaVerifications,
 } from '#src/__mocks__/index.js';
-import { EnvSet } from '#src/env-set/index.js';
 import { type InsertUserResult } from '#src/libraries/user.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
@@ -94,18 +93,12 @@ describe('adminUserRoutes', () => {
       name: 'MacBook',
     } satisfies User['mfaVerifications'][number];
     const credentialFields = ['rpId', 'credentialId', 'publicKey', 'counter', 'transports'];
-    const { isDevFeaturesEnabled } = EnvSet.values;
 
     beforeEach(() => {
-      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
       findUserById.mockResolvedValueOnce({
         ...mockUser,
         mfaVerifications: [webAuthnVerification, mockUserTotpMfaVerification],
       });
-    });
-
-    afterEach(() => {
-      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', isDevFeaturesEnabled);
     });
 
     it('should include the stored WebAuthn credential when requested', async () => {
@@ -135,12 +128,8 @@ describe('adminUserRoutes', () => {
       ]);
     });
 
-    it.each([
-      ['not requested', '', true],
-      ['dev features are disabled', '?includeWebAuthnCredentials=true', false],
-    ])('should omit the credential when %s', async (_, query, devFeaturesEnabled) => {
-      Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', devFeaturesEnabled);
-      const response = await userRequest.get(`/users/${mockUser.id}/mfa-verifications${query}`);
+    it('should omit the credential when not requested', async () => {
+      const response = await userRequest.get(`/users/${mockUser.id}/mfa-verifications`);
 
       expect(response.status).toEqual(200);
       expect(response.body[0]).toMatchObject({ id: webAuthnVerification.id, name: 'MacBook' });
