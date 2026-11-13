@@ -1654,27 +1654,25 @@ export default class ExperienceInteraction {
     const {
       libraries: { actions, jwtCustomizers },
     } = this.tenant;
-    const actionResult = validatePostSignInActionResult({
-      userId,
-      result: await actions.runAction({
+    const actionResult = await actions.runAction({
+      key: LogtoActionKey.PostSignIn,
+      auditContext: {
+        createLog: this.ctx.createLog,
+        sessionId: this.ctx.interactionDetails.jti,
+        ...getClientIdentifierPayload(
+          conditional(
+            typeof this.ctx.interactionDetails.params.client_id === 'string' &&
+              this.ctx.interactionDetails.params.client_id
+          )
+        ),
+        userId,
+      },
+      getEvent: async (): Promise<PostSignInEvent> => ({
         key: LogtoActionKey.PostSignIn,
-        auditContext: {
-          createLog: this.ctx.createLog,
-          sessionId: this.ctx.interactionDetails.jti,
-          ...getClientIdentifierPayload(
-            conditional(
-              typeof this.ctx.interactionDetails.params.client_id === 'string' &&
-                this.ctx.interactionDetails.params.client_id
-            )
-          ),
-          userId,
-        },
-        getEvent: async (): Promise<PostSignInEvent> => ({
-          key: LogtoActionKey.PostSignIn,
-          interactionEvent: InteractionEvent.SignIn,
-          user: await jwtCustomizers.getUserContext(userId),
-        }),
+        interactionEvent: InteractionEvent.SignIn,
+        user: await jwtCustomizers.getUserContext(userId),
       }),
+      validateResult: (result) => validatePostSignInActionResult({ userId, result }),
     });
 
     if (actionResult.action === 'updateUser') {

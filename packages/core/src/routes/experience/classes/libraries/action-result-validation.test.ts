@@ -9,14 +9,22 @@ import {
 
 import { mockUser } from '#src/__mocks__/user.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { resolveActionResultValidation } from '#src/libraries/action.js';
 import { WorkerThreadScriptRunner } from '#src/libraries/script-runner/worker-thread-script-runner.js';
 
 import {
   type ValidatedPostFirstFactorVerificationActionResult,
   type ValidatedPostSignInActionResult,
-  validatePostFirstFactorVerificationActionResult,
-  validatePostSignInActionResult,
+  validatePostFirstFactorVerificationActionResult as validateFirstFactorResult,
+  validatePostSignInActionResult as validateSignInResult,
 } from './action-result-validation.js';
+
+// Resolve validations the way `ActionLibrary.runAction` does: return the result or throw.
+const validatePostFirstFactorVerificationActionResult = (
+  input: Parameters<typeof validateFirstFactorResult>[0]
+) => resolveActionResultValidation(validateFirstFactorResult(input));
+const validatePostSignInActionResult = (input: Parameters<typeof validateSignInResult>[0]) =>
+  resolveActionResultValidation(validateSignInResult(input));
 
 // Jest's asymmetric matcher is typed as `any`; the cast keeps the expected objects typed.
 const anyString = expect.any(String) as string;
@@ -95,9 +103,6 @@ const migratedMfaVerifications: ActionMfaVerification[] = [
 
 describe('validatePostFirstFactorVerificationActionResult', () => {
   it.each([
-    undefined,
-    null,
-    {},
     [],
     { action: 'createUser', user: { name: 'Jane Doe' } },
     { action: 'createUser', passwordVerified: true },
@@ -280,19 +285,25 @@ describe('validatePostFirstFactorVerificationActionResult', () => {
   });
 
   it.each([
-    { type: MfaFactor.TOTP, secret: 'invalid' },
-    { type: MfaFactor.BackupCode, codes: ['invalid'] },
-    { type: MfaFactor.BackupCode, codes: [] },
-    { type: MfaFactor.BackupCode, codes: [...backupCodes, 'abcdef0123'] },
-    {
-      type: MfaFactor.WebAuthn,
-      credentialId: 'AQIDBA',
-      publicKey: 'not base64url!',
-      counter: 0,
-    },
-  ])('rejects malformed MFA credential %#', (mfaVerification) => {
+    [{ type: MfaFactor.TOTP, secret: 'invalid' }, 'invalid_totp_secret'],
+    [{ type: MfaFactor.BackupCode, codes: ['invalid'] }, 'invalid_backup_code_format'],
+    [{ type: MfaFactor.BackupCode, codes: [] }, 'invalid_backup_code_count'],
+    [
+      { type: MfaFactor.BackupCode, codes: [...backupCodes, 'abcdef0123'] },
+      'invalid_backup_code_count',
+    ],
+    [
+      {
+        type: MfaFactor.WebAuthn,
+        credentialId: 'AQIDBA',
+        publicKey: 'not base64url!',
+        counter: 0,
+      },
+      'invalid_webauthn_credential',
+    ],
+  ] as const)('rejects malformed MFA credential %#', (mfaVerification, reason) => {
     expect(
-      validatePostFirstFactorVerificationActionResult({
+      validateFirstFactorResult({
         event: p1Event(null),
         result: {
           action: 'createUser',
@@ -303,7 +314,92 @@ describe('validatePostFirstFactorVerificationActionResult', () => {
           mfaVerifications: [mfaVerification],
         },
       })
-    ).toEqual(invalidCredentialsResult);
+    ).toEqual({
+      result: invalidCredentialsResult,
+      rejection: {
+        reason: 'invalid_mfa_verification',
+        mfaVerification: { index: 0, type: mfaVerification.type, reason },
+      },
+    });
+  });
+
+  it('reports the first invalid MFA factor without echoing credentials', () => {
+    const leakedSecret = 'leaked-totp-secret';
+    const leakedBackupCode = 'leaked-backup-code';
+    const validation = validateFirstFactorResult({
+      event: p1Event(null),
+      result: {
+        action: 'createUser',
+        passwordVerified: true,
+        user: { name: 'Jane Doe' },
+        mfaVerifications: [
+          { type: MfaFactor.TOTP, secret: totpSecret },
+          { type: MfaFactor.TOTP, secret: leakedSecret },
+          { type: MfaFactor.BackupCode, codes: [leakedBackupCode] },
+        ],
+      },
+    });
+
+    expect(validation).toEqual({
+      result: invalidCredentialsResult,
+      rejection: {
+        reason: 'invalid_mfa_verification',
+        mfaVerification: { index: 1, type: MfaFactor.TOTP, reason: 'invalid_totp_secret' },
+      },
+    });
+    expect(JSON.stringify(validation)).not.toContain(leakedSecret);
+    expect(JSON.stringify(validation)).not.toContain(leakedBackupCode);
+  });
+
+  it.each([
+    [
+      { action: 'createUser', passwordVerified: 'leaked-literal', user: { name: 'Jane Doe' } },
+      {
+        reason: 'invalid_result',
+        issues: [{ path: ['passwordVerified'], code: 'invalid_literal' }],
+      },
+    ],
+    [
+      {
+        action: 'createUser',
+        passwordVerified: true,
+        user: { name: 'Jane Doe', passwordEncrypted: 'leaked-literal' },
+      },
+      {
+        reason: 'invalid_user_patch',
+        issues: [{ path: ['user'], code: 'unrecognized_keys', keys: ['passwordEncrypted'] }],
+      },
+    ],
+  ])('reports why a malformed result is rejected without its values %#', (result, rejection) => {
+    const validation = validateFirstFactorResult({ event: p1Event(null), result });
+
+    expect(validation).toEqual({ result: invalidCredentialsResult, rejection });
+    expect(JSON.stringify(validation)).not.toContain('leaked-literal');
+  });
+
+  it.each([undefined, null, {}])('declines without a rejection for no-op result %#', (result) => {
+    expect(validateFirstFactorResult({ event: p1Event(null), result })).toEqual({
+      result: invalidCredentialsResult,
+    });
+  });
+
+  it('reports identity conflicts and identifier changes as rejections', () => {
+    expect(
+      validateFirstFactorResult({
+        event: p1Event(actionUser),
+        result: { action: 'createUser', passwordVerified: true, user: { name: 'Jane Doe' } },
+      })
+    ).toMatchObject({ rejection: { reason: 'identity_conflict' } });
+    expect(
+      validateFirstFactorResult({
+        event: p1Event(actionUser),
+        result: {
+          action: 'updateUser',
+          passwordVerified: true,
+          user: { primaryEmail: 'other@example.com' },
+        },
+      })
+    ).toMatchObject({ rejection: { reason: 'sign_in_identifier_changed' } });
   });
 
   it('throws identity conflict when createUser is returned for an existing event user', () => {
@@ -428,6 +524,21 @@ describe('validatePostFirstFactorVerificationActionResult', () => {
 });
 
 describe('validatePostSignInActionResult', () => {
+  it('reports an invalid user patch with the rejected field path', () => {
+    expect(
+      validateSignInResult({
+        userId: actionUser.id,
+        result: { action: 'updateUser', user: { id: 'not-allowed', scriptOnlyKey: 'value' } },
+      })
+    ).toEqual({
+      error: new RequestError({ code: 'session.verification_failed', status: 400 }),
+      rejection: {
+        reason: 'invalid_user_patch',
+        issues: [{ path: ['user'], code: 'unrecognized_keys', keys: ['id'] }],
+      },
+    });
+  });
+
   it.each([undefined, null, {}, { action: 'updateUser' }])(
     'returns continue for no-op result %#',
     (result) => {
@@ -550,6 +661,9 @@ describe('validatePostSignInActionResult', () => {
     { action: 'updateUser', user: null },
     { action: 'updateUser', user: { id: 'not-allowed' } },
   ])('throws verification failure for invalid result %#', (result) => {
+    expect(validateSignInResult({ userId: actionUser.id, result })).toMatchObject({
+      rejection: { reason: expect.stringMatching(/^invalid_(result|user_patch)$/) as string },
+    });
     expect(() =>
       validatePostSignInActionResult({
         userId: actionUser.id,

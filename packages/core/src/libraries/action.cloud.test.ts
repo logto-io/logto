@@ -68,11 +68,13 @@ type RunActionInput<Event> = {
   key: LogtoActionKey;
 } & ({ event: Event } | { getEvent: () => Promise<Event> });
 
+const acceptResult = (result: unknown) => ({ result });
+
 describe('ActionLibrary Cloud execution routing', () => {
   const library = createLibrary();
   const { createLog, mockAppend } = createMockLogContext();
   const runAction = async <Event>(input: RunActionInput<Event>) =>
-    library.runAction({ ...input, auditContext: { createLog } });
+    library.runAction({ ...input, auditContext: { createLog }, validateResult: acceptResult });
 
   beforeEach(() => {
     jest.spyOn(EnvSet.values, 'scriptRunnerEndpoint', 'get').mockReturnValue(scriptRunnerEndpoint);
@@ -417,7 +419,7 @@ describe('ActionLibrary Cloud execution routing on the Azure Functions fallback'
   const library = createLibrary();
   const { createLog } = createMockLogContext();
   const runAction = async <Event>(input: RunActionInput<Event>) =>
-    library.runAction({ ...input, auditContext: { createLog } });
+    library.runAction({ ...input, auditContext: { createLog }, validateResult: acceptResult });
 
   beforeEach(() => {
     // An unset script runner endpoint is what selects the Azure Functions runtime.

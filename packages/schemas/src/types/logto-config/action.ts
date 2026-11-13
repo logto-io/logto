@@ -206,3 +206,65 @@ export type LoggableActionResult = {
   userFields: Array<keyof ActionUserPatch>;
   unknownFieldCount: number;
 };
+
+export const actionResultRejectionReasons = Object.freeze([
+  /** The result does not match the result shape of the Action type. */
+  'invalid_result',
+  /** The user patch contains a field or value that Logto does not accept. */
+  'invalid_user_patch',
+  /** A migrated MFA factor carries invalid credential material. */
+  'invalid_mfa_verification',
+  /** The user patch changes the identifier the end user signed in with. */
+  'sign_in_identifier_changed',
+  /** The requested action does not match whether the end user exists. */
+  'identity_conflict',
+] as const);
+
+export const actionMfaVerificationRejectionReasons = Object.freeze([
+  'invalid_totp_secret',
+  'invalid_backup_code_count',
+  'invalid_backup_code_format',
+  'invalid_webauthn_credential',
+] as const);
+
+/**
+ * Why Logto rejected an Action result, in a form that is safe to persist in audit logs.
+ *
+ * Results can carry credentials such as TOTP secrets and backup codes, so this only names enum
+ * reasons, Zod issue codes, known field names and paths, and the index and type of a rejected MFA
+ * factor. It never carries a value from the result.
+ */
+export const actionResultRejectionGuard = z.object({
+  reason: z.enum(actionResultRejectionReasons),
+  issues: z
+    .object({
+      path: z.union([z.string(), z.number()]).array(),
+      code: z.nativeEnum(z.ZodIssueCode),
+      /** For `unrecognized_keys`, the rejected keys that are known field names. */
+      keys: z.string().array().optional(),
+    })
+    .array()
+    .optional(),
+  mfaVerification: z
+    .object({
+      index: z.number().int().nonnegative(),
+      type: z.nativeEnum(MfaFactor),
+      reason: z.enum(actionMfaVerificationRejectionReasons),
+    })
+    .optional(),
+});
+
+export type ActionResultRejection = z.infer<typeof actionResultRejectionGuard>;
+
+/**
+ * The audit-log record of whether Logto accepted an Action result.
+ *
+ * `accepted` means the result passed validation, not that it was applied: later steps such as
+ * provisioning can still fail, for example on an MFA factor or email the user store already has.
+ */
+export const loggableActionValidationGuard = z.discriminatedUnion('outcome', [
+  z.object({ outcome: z.literal('accepted') }),
+  actionResultRejectionGuard.extend({ outcome: z.literal('rejected') }),
+]);
+
+export type LoggableActionValidation = z.infer<typeof loggableActionValidationGuard>;

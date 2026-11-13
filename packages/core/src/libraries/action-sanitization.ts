@@ -1,11 +1,17 @@
 import {
+  actionMfaVerificationGuard,
   actionUserPatchFields,
   LogtoActionKey,
   loggablePostFirstFactorVerificationEventGuard,
   loggablePostSignInEventGuard,
+  userProfileAddressKeys,
+  userProfileKeys,
+  Users,
+  type ActionResultRejection,
   type LoggableActionEvent,
   type LoggableActionResult,
 } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import { isArray, isRecord } from '#src/utils/type.js';
@@ -80,6 +86,67 @@ export const toLoggableActionResult = (
     return unavailableValue;
   }
 };
+
+const maxLoggableResultIssueCount = 10;
+const truncatedPathSegment = '*';
+
+/**
+ * Field names an Action result is defined with. Any other path segment is authored by the
+ * script, such as a `customData` key, and is not logged.
+ */
+const loggableResultPathSegments: ReadonlySet<string> = new Set([
+  'action',
+  'user',
+  'passwordVerified',
+  'mfaVerifications',
+  ...actionUserPatchFields,
+  ...userProfileKeys,
+  ...userProfileAddressKeys,
+  ...actionMfaVerificationGuard.options.flatMap((option) => Object.keys(option.shape)),
+]);
+
+/**
+ * Keys an `unrecognized_keys` issue may name in the log: result field names and user columns that
+ * a user patch must not set, such as `id`. Other keys are authored by the script.
+ */
+const loggableUnrecognizedKeys: ReadonlySet<string> = new Set([
+  ...loggableResultPathSegments,
+  ...Users.guard.keyof().options,
+]);
+
+const toLoggableResultPath = (path: Array<string | number>) => {
+  const truncateAt = path.findIndex(
+    (segment) => typeof segment === 'string' && !loggableResultPathSegments.has(segment)
+  );
+
+  return truncateAt === -1 ? path : [...path.slice(0, truncateAt), truncatedPathSegment];
+};
+
+/**
+ * Reduce Zod issues raised while validating an Action result to their code, path, and the known
+ * field names among unrecognized keys.
+ *
+ * Issue messages and fields such as `received` can echo values from the result, including
+ * credentials, so they are dropped. Paths are cut at the first segment that is not a known field
+ * name, unrecognized keys keep only known field names, and the number of issues is capped to bound
+ * the log size.
+ */
+export const toLoggableActionResultIssues = (
+  issues: readonly z.ZodIssue[],
+  pathPrefix: string[] = []
+): NonNullable<ActionResultRejection['issues']> =>
+  issues.slice(0, maxLoggableResultIssueCount).map((issue) => {
+    const keys =
+      issue.code === z.ZodIssueCode.unrecognized_keys
+        ? issue.keys.filter((key) => loggableUnrecognizedKeys.has(key))
+        : [];
+
+    return {
+      path: toLoggableResultPath([...pathPrefix, ...issue.path]),
+      code: issue.code,
+      ...conditional(keys.length > 0 && { keys }),
+    };
+  });
 
 const stringifyUnknownError = (error: unknown) => {
   try {
