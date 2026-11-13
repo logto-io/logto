@@ -458,6 +458,8 @@ export class ActionLibrary {
           properties: telemetryProperties,
         });
 
+        // The fallback is Logto's own value, not a script result, so any rejection it gets
+        // (such as `invalid_result` for `rejectInvalidCredentials`) is meaningless and not logged.
         return resolveActionResultValidation(
           validateResult(applyActionExecutionErrorPolicyDecision(decision))
         );

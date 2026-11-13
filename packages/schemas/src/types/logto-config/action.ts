@@ -231,8 +231,8 @@ export const actionMfaVerificationRejectionReasons = Object.freeze([
  * Why Logto rejected an Action result, in a form that is safe to persist in audit logs.
  *
  * Results can carry credentials such as TOTP secrets and backup codes, so this only names enum
- * reasons, Zod issue codes, field paths, and the index and type of a rejected MFA factor. It never
- * carries a value from the result.
+ * reasons, Zod issue codes, known field names and paths, and the index and type of a rejected MFA
+ * factor. It never carries a value from the result.
  */
 export const actionResultRejectionGuard = z.object({
   reason: z.enum(actionResultRejectionReasons),
@@ -240,6 +240,8 @@ export const actionResultRejectionGuard = z.object({
     .object({
       path: z.union([z.string(), z.number()]).array(),
       code: z.nativeEnum(z.ZodIssueCode),
+      /** For `unrecognized_keys`, the rejected keys that are known field names. */
+      keys: z.string().array().optional(),
     })
     .array()
     .optional(),
@@ -254,7 +256,12 @@ export const actionResultRejectionGuard = z.object({
 
 export type ActionResultRejection = z.infer<typeof actionResultRejectionGuard>;
 
-/** The audit-log record of whether Logto accepted an Action result. */
+/**
+ * The audit-log record of whether Logto accepted an Action result.
+ *
+ * `accepted` means the result passed validation, not that it was applied: later steps such as
+ * provisioning can still fail, for example on an MFA factor or email the user store already has.
+ */
 export const loggableActionValidationGuard = z.discriminatedUnion('outcome', [
   z.object({ outcome: z.literal('accepted') }),
   actionResultRejectionGuard.extend({ outcome: z.literal('rejected') }),

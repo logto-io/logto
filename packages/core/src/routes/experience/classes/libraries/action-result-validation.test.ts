@@ -103,9 +103,6 @@ const migratedMfaVerifications: ActionMfaVerification[] = [
 
 describe('validatePostFirstFactorVerificationActionResult', () => {
   it.each([
-    undefined,
-    null,
-    {},
     [],
     { action: 'createUser', user: { name: 'Jane Doe' } },
     { action: 'createUser', passwordVerified: true },
@@ -368,14 +365,22 @@ describe('validatePostFirstFactorVerificationActionResult', () => {
         passwordVerified: true,
         user: { name: 'Jane Doe', passwordEncrypted: 'leaked-literal' },
       },
-      { reason: 'invalid_user_patch', issues: [{ path: ['user'], code: 'unrecognized_keys' }] },
+      {
+        reason: 'invalid_user_patch',
+        issues: [{ path: ['user'], code: 'unrecognized_keys', keys: ['passwordEncrypted'] }],
+      },
     ],
   ])('reports why a malformed result is rejected without its values %#', (result, rejection) => {
     const validation = validateFirstFactorResult({ event: p1Event(null), result });
 
     expect(validation).toEqual({ result: invalidCredentialsResult, rejection });
     expect(JSON.stringify(validation)).not.toContain('leaked-literal');
-    expect(JSON.stringify(validation)).not.toContain('passwordEncrypted');
+  });
+
+  it.each([undefined, null, {}])('declines without a rejection for no-op result %#', (result) => {
+    expect(validateFirstFactorResult({ event: p1Event(null), result })).toEqual({
+      result: invalidCredentialsResult,
+    });
   });
 
   it('reports identity conflicts and identifier changes as rejections', () => {
@@ -523,13 +528,13 @@ describe('validatePostSignInActionResult', () => {
     expect(
       validateSignInResult({
         userId: actionUser.id,
-        result: { action: 'updateUser', user: { id: 'not-allowed' } },
+        result: { action: 'updateUser', user: { id: 'not-allowed', scriptOnlyKey: 'value' } },
       })
     ).toEqual({
       error: new RequestError({ code: 'session.verification_failed', status: 400 }),
       rejection: {
         reason: 'invalid_user_patch',
-        issues: [{ path: ['user'], code: 'unrecognized_keys' }],
+        issues: [{ path: ['user'], code: 'unrecognized_keys', keys: ['id'] }],
       },
     });
   });

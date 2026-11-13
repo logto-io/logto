@@ -57,6 +57,12 @@ export type ValidatedPostSignInActionResult =
 const isActionResultObject = (result: unknown): result is Record<string, unknown> =>
   isPlainObject(result);
 
+/** `null`, `undefined`, and `{}` are how a script returns no decision. */
+const isEmptyActionResult = (result: unknown) =>
+  result === null ||
+  result === undefined ||
+  (isActionResultObject(result) && Object.keys(result).length === 0);
+
 type PostFirstFactorVerificationActionResultValidation =
   ActionResultValidation<ValidatedPostFirstFactorVerificationActionResult>;
 
@@ -232,6 +238,12 @@ export const validatePostFirstFactorVerificationActionResult = ({
   event: Pick<PostFirstFactorVerificationEvent, 'user' | 'identifier'>;
   result: unknown;
 }): PostFirstFactorVerificationActionResultValidation => {
+  // Returning nothing is how a script declines, as the console's default script does when the
+  // password does not match. That is a valid result, not a malformed one.
+  if (isEmptyActionResult(result)) {
+    return { result: { action: 'rejectInvalidCredentials' } };
+  }
+
   const parsed = postFirstFactorVerificationResultGuard.safeParse(result);
 
   if (!parsed.success) {
@@ -296,16 +308,12 @@ export const validatePostSignInActionResult = ({
   userId: string;
   result: unknown;
 }): PostSignInActionResultValidation => {
-  if (result === null || result === undefined) {
+  if (isEmptyActionResult(result)) {
     return { result: continueResult() };
   }
 
   if (!isActionResultObject(result)) {
     return verificationFailed({ reason: 'invalid_result' });
-  }
-
-  if (Object.keys(result).length === 0) {
-    return { result: continueResult() };
   }
 
   const parsed = postSignInResultGuard.safeParse(result);
