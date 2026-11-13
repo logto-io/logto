@@ -17,12 +17,15 @@ const tenants = {
     purchase_description:
       'Os planos Pro e Empresa self-hosted desbloqueiam funcionalidades pagas na sua própria instância, como ocultar a marca Logto, usar a sua própria interface, colaboração na consola e aplicações SAML ilimitadas. Compre um plano para obter a sua chave de licença.',
     purchase_button: 'Ver planos self-hosted',
+    buy_license_button: 'Comprar uma licença',
     install_title: 'INSTALAR LICENÇA',
     install_description: 'Cole a chave de licença que recebeu ao comprar um plano self-hosted.',
     install_button: 'Instalar licença',
     key_field: 'Chave de licença',
     key_field_description:
       'A chave é verificada na sua instância e enviada para a Logto quando a licença é atualizada. Contacte a Logto para obter uma chave nova se a que tem expirou.',
+    key_field_cloud_description:
+      'A chave é verificada na sua instância e enviada para a Logto quando a licença é atualizada. Obtenha uma chave nova no Logto Cloud se a que tem expirou.',
     key_placeholder: 'Cole aqui a sua chave de licença',
     installed_toast: 'Licença instalada com sucesso.',
     details_title: 'LICENÇA',
@@ -46,6 +49,8 @@ const tenants = {
     refusal_reason_unknown: 'indisponível',
     grace_expired_description:
       'O período de tolerância da licença terminou em {{graceEndsAt}}. Esta implementação reverteu para as predefinições do OSS. Contacte a Logto para obter uma nova chave de licença e instale-a novamente.',
+    grace_expired_cloud_description:
+      'O período de tolerância da licença terminou em {{graceEndsAt}}. Esta implementação reverteu para as predefinições do OSS. Obtenha uma nova chave de licença no Logto Cloud e instale-a novamente.',
     get_fresh_key_button: 'Obter uma nova chave de licença',
     replace_button: 'Substituir licença',
     usage_banner_description:

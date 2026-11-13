@@ -99,7 +99,7 @@
             "description": "The `SignIn` or `Register` interaction is disabled in the experience settings."
           },
           "404": {
-            "description": "Entity not found. <br/>- `session.verification_session_not_found:` The verification record is not found.  <br/>- `user.user_not_exist:` The user account is not found (SignIn and ForgotPassword only).  "
+            "description": "Entity not found. <br/>- `session.verification_session_not_found:` The verification record is not found.  <br/>- `user.user_not_exist:` The user account is not found (SignIn and ForgotPassword only).  <br/>- `user.enterprise_sso_identity_not_exists:` The enterprise SSO identity was linked through a different SAML SSO connector."
           },
           "409": {
             "description": "The interaction has already been identified with a different user account."

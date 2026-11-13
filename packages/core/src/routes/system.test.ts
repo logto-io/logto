@@ -275,12 +275,7 @@ describe('system license route', () => {
 
 describe('system license usage', () => {
   const { isLicenseUsageReportingDisabled } = EnvSet.values;
-
-  // The usage fields and the statement route are still in development.
-  Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
   const systemRequest = createRequester(requesterOptions);
-  Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
-  const releasedSystemRequest = createRequester(requesterOptions);
 
   const productionDeploymentsNotice = {
     metric: LicenseUsageMetric.ProductionDeployments,
@@ -314,12 +309,7 @@ describe('system license usage', () => {
     LicenseReader.shared.invalidate();
   };
 
-  beforeEach(() => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
-  });
-
   afterEach(() => {
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
     Reflect.set(EnvSet.values, 'isLicenseUsageReportingDisabled', isLicenseUsageReportingDisabled);
     jest.clearAllMocks();
     findSystemByKey.mockReset();
@@ -371,18 +361,6 @@ describe('system license usage', () => {
     expect(response.body.usageWarnings).toEqual([productionDeploymentsNotice]);
   });
 
-  it('GET /systems/license should leave the usage out without dev features', async () => {
-    await installWithNotices();
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
-
-    const response = await releasedSystemRequest.get('/systems/license');
-
-    expect(response.status).toEqual(200);
-    for (const field of ['usageLimits', 'usage', 'usageWarnings', 'usageReportingEnabled']) {
-      expect(response.body).not.toHaveProperty(field);
-    }
-  });
-
   it('GET /systems/license/usage-statement should return the statement', async () => {
     await installWithNotices();
 
@@ -397,16 +375,6 @@ describe('system license usage', () => {
 
     expect(response.status).toEqual(404);
     expect(response.body).toMatchObject({ code: 'license.not_installed' });
-    expect(getLicenseUsageStatement).not.toHaveBeenCalled();
-  });
-
-  it('GET /systems/license/usage-statement should not exist without dev features', async () => {
-    await installWithNotices();
-    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
-
-    const response = await releasedSystemRequest.get('/systems/license/usage-statement');
-
-    expect(response.status).toEqual(404);
     expect(getLicenseUsageStatement).not.toHaveBeenCalled();
   });
 });

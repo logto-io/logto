@@ -92,6 +92,7 @@ describe('adminUserRoutes', () => {
       counter: 7,
       name: 'MacBook',
     } satisfies User['mfaVerifications'][number];
+    const credentialFields = ['rpId', 'credentialId', 'publicKey', 'counter', 'transports'];
 
     beforeEach(() => {
       findUserById.mockResolvedValueOnce({
@@ -100,8 +101,10 @@ describe('adminUserRoutes', () => {
       });
     });
 
-    it('should include the stored WebAuthn credential', async () => {
-      const response = await userRequest.get(`/users/${mockUser.id}/mfa-verifications`);
+    it('should include the stored WebAuthn credential when requested', async () => {
+      const response = await userRequest.get(
+        `/users/${mockUser.id}/mfa-verifications?includeWebAuthnCredentials=true`
+      );
 
       expect(response.status).toEqual(200);
       expect(response.body).toEqual([
@@ -123,6 +126,17 @@ describe('adminUserRoutes', () => {
           createdAt: mockUserTotpMfaVerification.createdAt,
         },
       ]);
+    });
+
+    it('should omit the credential when not requested', async () => {
+      const response = await userRequest.get(`/users/${mockUser.id}/mfa-verifications`);
+
+      expect(response.status).toEqual(200);
+      expect(response.body[0]).toMatchObject({ id: webAuthnVerification.id, name: 'MacBook' });
+
+      for (const field of credentialFields) {
+        expect(response.body[0]).not.toHaveProperty(field);
+      }
     });
   });
 

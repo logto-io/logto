@@ -2,6 +2,8 @@
 import {
   adminConsoleApplicationId,
   adminTenantId,
+  MfaFactor,
+  type MfaVerification,
   OrganizationInvitationStatus,
   type CreateUser,
   type User,
@@ -38,6 +40,41 @@ const encryptedTokenSet = {
   },
 };
 
+const mfaVerifications = {
+  totp: {
+    id: 'totp-id',
+    createdAt: '2024-01-01T00:00:00.000Z',
+    type: MfaFactor.TOTP,
+    key: 'JBSWY3DPEHPK3PXP',
+  },
+  backupCode: {
+    id: 'backup-code-id',
+    createdAt: '2024-01-01T00:00:00.000Z',
+    type: MfaFactor.BackupCode,
+    codes: [
+      'd94c2f29ae',
+      '74fa801bb7',
+      '2cbcc9323c',
+      '87299f89aa',
+      '0d95df8598',
+      '78eedbf35d',
+      '0fa4c1fd19',
+      '7384b69eb5',
+      '7bf2481db7',
+      'f00febc9ae',
+    ].map((code) => ({ code })),
+  },
+  webAuthn: {
+    id: 'webauthn-id',
+    createdAt: '2024-01-01T00:00:00.000Z',
+    type: MfaFactor.WebAuthn,
+    credentialId: 'AQIDBA',
+    publicKey: 'AQIDBAUGBwgJ',
+    counter: 0,
+    agent: 'agent',
+  },
+} satisfies Record<string, MfaVerification>;
+
 const createProvisionLibrary = ({
   invitations = [],
   user = mockUser,
@@ -47,6 +84,7 @@ const createProvisionLibrary = ({
 } = {}) => {
   const hasActiveUsers = jest.fn().mockResolvedValue(true);
   const findUserById = jest.fn(async (): Promise<User> => user);
+  const findUserByWebAuthnCredential = jest.fn().mockResolvedValue(null);
   const updateUserById = jest.fn(
     async (userId: string, payload: Partial<CreateUser>): Promise<User> => ({
       ...user,
@@ -73,6 +111,7 @@ const createProvisionLibrary = ({
     {
       users: {
         findUserById,
+        findUserByWebAuthnCredential,
         hasActiveUsers,
         updateUserById,
       },
@@ -120,6 +159,7 @@ const createProvisionLibrary = ({
     provisionLibrary: new ProvisionLibrary(tenant, ctx),
     ctx,
     findUserById,
+    findUserByWebAuthnCredential,
     hasActiveUsers,
     updateUserById,
     checkIdentifierCollision,
@@ -451,6 +491,121 @@ describe('ProvisionLibrary', () => {
 
       expect(insertUser).not.toHaveBeenCalled();
     });
+
+    it('inserts migrated MFA factors and enables MFA', async () => {
+      const { provisionLibrary, insertUser } = createProvisionLibrary();
+
+      await provisionLibrary.createUser(
+        {
+          primaryEmail: 'jane@example.com',
+        },
+        {
+          mfaVerifications: [mfaVerifications.totp, mfaVerifications.backupCode],
+        }
+      );
+
+      expect(insertUser).toHaveBeenCalledWith(
+        expect.objectContaining({
+          mfaVerifications: [mfaVerifications.totp, mfaVerifications.backupCode],
+          logtoConfig: {
+            [userMfaDataKey]: {
+              enabled: true,
+            },
+          },
+        }),
+        expect.anything()
+      );
+    });
+
+    it('rejects backup codes as the only migrated MFA factor', async () => {
+      const { provisionLibrary, insertUser } = createProvisionLibrary();
+
+      await expect(
+        provisionLibrary.createUser(
+          {
+            primaryEmail: 'jane@example.com',
+          },
+          {
+            mfaVerifications: [mfaVerifications.backupCode],
+          }
+        )
+      ).rejects.toMatchObject({
+        code: 'session.mfa.backup_code_can_not_be_alone',
+        status: 422,
+      });
+
+      expect(insertUser).not.toHaveBeenCalled();
+    });
+
+    it('rejects more than one TOTP factor in the migrated factors', async () => {
+      const { provisionLibrary, insertUser } = createProvisionLibrary();
+
+      await expect(
+        provisionLibrary.createUser(
+          {
+            primaryEmail: 'jane@example.com',
+          },
+          {
+            mfaVerifications: [
+              mfaVerifications.totp,
+              { ...mfaVerifications.totp, id: 'another-totp-id' },
+            ],
+          }
+        )
+      ).rejects.toMatchObject({
+        code: 'user.totp_already_in_use',
+        status: 422,
+      });
+
+      expect(insertUser).not.toHaveBeenCalled();
+    });
+
+    it('rejects more than one backup code factor in the migrated factors', async () => {
+      const { provisionLibrary, insertUser } = createProvisionLibrary();
+
+      await expect(
+        provisionLibrary.createUser(
+          {
+            primaryEmail: 'jane@example.com',
+          },
+          {
+            mfaVerifications: [
+              mfaVerifications.totp,
+              mfaVerifications.backupCode,
+              { ...mfaVerifications.backupCode, id: 'another-backup-code-id' },
+            ],
+          }
+        )
+      ).rejects.toMatchObject({
+        code: 'user.backup_code_already_in_use',
+        status: 422,
+      });
+
+      expect(insertUser).not.toHaveBeenCalled();
+    });
+
+    it('rejects duplicate WebAuthn credentials in the migrated factors', async () => {
+      const { provisionLibrary, insertUser } = createProvisionLibrary();
+
+      await expect(
+        provisionLibrary.createUser(
+          {
+            primaryEmail: 'jane@example.com',
+          },
+          {
+            mfaVerifications: [
+              mfaVerifications.webAuthn,
+              { ...mfaVerifications.webAuthn, id: 'another-webauthn-id' },
+            ],
+          }
+        )
+      ).rejects.toMatchObject({
+        code: 'session.mfa.bind_mfa_existed',
+        status: 422,
+      });
+
+      expect(insertUser).not.toHaveBeenCalled();
+    });
   });
 
   describe('updateUser', () => {
@@ -648,6 +803,276 @@ describe('ProvisionLibrary', () => {
       expect(findUserById).not.toHaveBeenCalled();
       expect(updateUserById).not.toHaveBeenCalled();
       expect(ctx.appendDataHookContext).not.toHaveBeenCalled();
+    });
+
+    it('appends migrated MFA factors, enables MFA, and keeps skipMfaOnSignIn', async () => {
+      const existingWebAuthn = {
+        ...mfaVerifications.webAuthn,
+        id: 'existing-webauthn-id',
+        credentialId: 'existing-credential-id',
+      };
+      const { provisionLibrary, updateUserById } = createProvisionLibrary({
+        user: {
+          ...mockUser,
+          id: 'user-id',
+          mfaVerifications: [existingWebAuthn],
+          logtoConfig: {
+            [userMfaDataKey]: {
+              skipMfaOnSignIn: true,
+            },
+            passkey_sign_in: {
+              skipped: true,
+            },
+          },
+        },
+      });
+
+      await provisionLibrary.updateUser(
+        'user-id',
+        {},
+        {
+          mfaVerifications: [mfaVerifications.totp],
+        }
+      );
+
+      expect(updateUserById).toHaveBeenCalledWith(
+        'user-id',
+        expect.objectContaining({
+          mfaVerifications: [existingWebAuthn, mfaVerifications.totp],
+          logtoConfig: {
+            [userMfaDataKey]: {
+              skipMfaOnSignIn: true,
+              enabled: true,
+            },
+            passkey_sign_in: {
+              skipped: true,
+            },
+          },
+        }),
+        'merge'
+      );
+    });
+
+    it('rejects a migrated TOTP when the user already has one', async () => {
+      const { provisionLibrary, updateUserById } = createProvisionLibrary({
+        user: {
+          ...mockUser,
+          id: 'user-id',
+          mfaVerifications: [mfaVerifications.totp],
+        },
+      });
+
+      await expect(
+        provisionLibrary.updateUser(
+          'user-id',
+          {},
+          {
+            mfaVerifications: [
+              { ...mfaVerifications.totp, id: 'new-totp-id', key: 'GEZDGNBVGY3TQOJQ' },
+            ],
+          }
+        )
+      ).rejects.toMatchObject({
+        code: 'user.totp_already_in_use',
+        status: 422,
+      });
+
+      expect(updateUserById).not.toHaveBeenCalled();
+    });
+
+    it('rejects a migrated backup code factor while the existing one has unused codes', async () => {
+      const { provisionLibrary, updateUserById } = createProvisionLibrary({
+        user: {
+          ...mockUser,
+          id: 'user-id',
+          mfaVerifications: [mfaVerifications.totp, mfaVerifications.backupCode],
+        },
+      });
+
+      await expect(
+        provisionLibrary.updateUser(
+          'user-id',
+          {},
+          {
+            mfaVerifications: [
+              {
+                ...mfaVerifications.backupCode,
+                id: 'new-backup-code-id',
+                codes: [{ code: '1a2b3c4d5e' }],
+              },
+            ],
+          }
+        )
+      ).rejects.toMatchObject({
+        code: 'user.backup_code_already_in_use',
+        status: 422,
+      });
+
+      expect(updateUserById).not.toHaveBeenCalled();
+    });
+
+    it('replaces an exhausted backup code factor with a new set', async () => {
+      const exhaustedBackupCodes = {
+        ...mfaVerifications.backupCode,
+        codes: mfaVerifications.backupCode.codes.map((code) => ({
+          ...code,
+          usedAt: '2024-01-01T00:00:00.000Z',
+        })),
+      };
+      const newBackupCodes = {
+        ...mfaVerifications.backupCode,
+        id: 'new-backup-code-id',
+        codes: [{ code: '1a2b3c4d5e' }],
+      };
+      const { provisionLibrary, updateUserById } = createProvisionLibrary({
+        user: {
+          ...mockUser,
+          id: 'user-id',
+          mfaVerifications: [mfaVerifications.totp, exhaustedBackupCodes],
+        },
+      });
+
+      await provisionLibrary.updateUser(
+        'user-id',
+        {},
+        {
+          mfaVerifications: [newBackupCodes],
+        }
+      );
+
+      expect(updateUserById).toHaveBeenCalledWith(
+        'user-id',
+        expect.objectContaining({
+          mfaVerifications: [mfaVerifications.totp, newBackupCodes],
+        }),
+        'merge'
+      );
+    });
+
+    it('rejects a migrated WebAuthn credential that is already registered', async () => {
+      const { provisionLibrary, updateUserById } = createProvisionLibrary({
+        user: {
+          ...mockUser,
+          id: 'user-id',
+          mfaVerifications: [mfaVerifications.webAuthn],
+        },
+      });
+
+      await expect(
+        provisionLibrary.updateUser(
+          'user-id',
+          {},
+          {
+            mfaVerifications: [
+              { ...mfaVerifications.webAuthn, id: 'new-webauthn-id', publicKey: 'CQgHBgUEAwIB' },
+            ],
+          }
+        )
+      ).rejects.toMatchObject({
+        code: 'session.mfa.bind_mfa_existed',
+        status: 422,
+      });
+
+      expect(updateUserById).not.toHaveBeenCalled();
+    });
+
+    it('skips migrated factors identical to existing ones', async () => {
+      const { provisionLibrary, updateUserById } = createProvisionLibrary({
+        user: {
+          ...mockUser,
+          id: 'user-id',
+          mfaVerifications: [mfaVerifications.totp, mfaVerifications.webAuthn],
+        },
+      });
+
+      await provisionLibrary.updateUser(
+        'user-id',
+        {},
+        {
+          mfaVerifications: [
+            { ...mfaVerifications.totp, id: 'new-totp-id' },
+            { ...mfaVerifications.webAuthn, id: 'new-webauthn-id' },
+            mfaVerifications.backupCode,
+          ],
+        }
+      );
+
+      expect(updateUserById).toHaveBeenCalledWith(
+        'user-id',
+        expect.objectContaining({
+          mfaVerifications: [
+            mfaVerifications.totp,
+            mfaVerifications.webAuthn,
+            mfaVerifications.backupCode,
+          ],
+        }),
+        'merge'
+      );
+    });
+
+    it('skips migrated backup codes already in the user set without reviving used codes', async () => {
+      const partlyUsedBackupCodes = {
+        ...mfaVerifications.backupCode,
+        codes: mfaVerifications.backupCode.codes.map((code, index) => ({
+          ...code,
+          ...(index === 0 && { usedAt: '2024-01-01T00:00:00.000Z' }),
+        })),
+      };
+      const { provisionLibrary, updateUserById } = createProvisionLibrary({
+        user: {
+          ...mockUser,
+          id: 'user-id',
+          mfaVerifications: [mfaVerifications.totp, partlyUsedBackupCodes],
+        },
+      });
+
+      await provisionLibrary.updateUser(
+        'user-id',
+        {},
+        {
+          mfaVerifications: [
+            { ...mfaVerifications.totp, id: 'new-totp-id' },
+            {
+              ...mfaVerifications.backupCode,
+              id: 'new-backup-code-id',
+              codes: mfaVerifications.backupCode.codes.slice(0, 3),
+            },
+          ],
+        }
+      );
+
+      expect(updateUserById).toHaveBeenCalledWith(
+        'user-id',
+        expect.objectContaining({
+          mfaVerifications: [mfaVerifications.totp, partlyUsedBackupCodes],
+        }),
+        'merge'
+      );
+    });
+
+    it('rejects a migrated WebAuthn credential that belongs to another user', async () => {
+      const { provisionLibrary, findUserByWebAuthnCredential, updateUserById } =
+        createProvisionLibrary({ user: { ...mockUser, id: 'user-id' } });
+
+      findUserByWebAuthnCredential.mockResolvedValueOnce({ ...mockUser, id: 'another-user-id' });
+
+      await expect(
+        provisionLibrary.updateUser(
+          'user-id',
+          {},
+          {
+            mfaVerifications: [mfaVerifications.totp, mfaVerifications.webAuthn],
+          }
+        )
+      ).rejects.toMatchObject({
+        code: 'session.mfa.bind_mfa_existed',
+        status: 422,
+      });
+
+      expect(findUserByWebAuthnCredential).toHaveBeenCalledWith(
+        mfaVerifications.webAuthn.credentialId
+      );
+      expect(updateUserById).not.toHaveBeenCalled();
     });
   });
 });

@@ -27,6 +27,7 @@ describe('LicenseReader refresh', () => {
   const reader = setUpReader();
 
   it('should refresh an installed key asynchronously on the first read', async () => {
+    Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', false);
     const issuedAt = Math.floor(Date.now() / 1000) - 8 * 24 * 60 * 60;
     const payload = buildLicensePayload({ iat: issuedAt, exp: issuedAt - 1 });
     const refreshedPayload = buildLicensePayload();

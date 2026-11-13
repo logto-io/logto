@@ -55,6 +55,9 @@ const mfa = {
   set_up_organization_required_mfa_prompt:
     'MFA setup prompt for users after organization enables MFA',
   prompt_at_sign_in_non_skippable: 'Ask users to set up MFA on next sign-in (non-skippable)',
+  additional_factor_suggestion: 'Suggest adding another MFA factor',
+  additional_factor_suggestion_description:
+    "When a user's only MFA factor is the email, phone number, or passkey they sign in with, suggest adding another factor at sign-up or sign-in. Users can skip it.",
   email_primary_method_tip:
     "Email verification code is already your primary sign-in method. To maintain security, it can't be reused for MFA.",
   phone_primary_method_tip:

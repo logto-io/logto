@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import FormField from '@/ds-components/FormField';
 import Textarea from '@/ds-components/Textarea';
@@ -51,7 +52,12 @@ function InstallForm({ isReplacing, onCancel, onInstalled }: Props) {
       <FormField
         isRequired
         title="tenants.license.key_field"
-        description="tenants.license.key_field_description"
+        description={
+          // Self-hosted Pro self-serve purchase: fresh keys come from Logto Cloud.
+          isDevFeaturesEnabled
+            ? 'tenants.license.key_field_cloud_description'
+            : 'tenants.license.key_field_description'
+        }
       >
         <Textarea
           {...licenseField}

@@ -54,6 +54,9 @@ const oauth2AuthWithKeyGuard = z.object({
 const oauth2AuthWithTokenGuard = z.object({
   type: z.enum(['oauth2', 'OAuth2', 'OAUTH2']).optional(),
   user: z.string(),
+  // Login auth with undeclared keys fails the strict login guard and lands here. Without a `type`,
+  // nodemailer still treats it as login auth, so it needs the password.
+  pass: z.string().optional(),
   clientId: z.string().optional(),
   clientSecret: z.string().optional(),
   refreshToken: z.string().optional(),
@@ -128,16 +131,30 @@ export const smtpConfigGuard = z.object({
   /**
    * TLS Options
    */
-  secure: z.boolean().default(false),
+  // No default: when this is unset, nodemailer uses implicit TLS on port 465.
+  secure: z.boolean().optional(),
   // See https://nodejs.org/api/tls.html#new-tlstlssocketsocket-options and https://nodemailer.com/smtp/#tls-options for more information.
   tls: z
     .union([z.object({}).catchall(z.unknown()), z.object({})])
+    // `path` would make `tls.connect` use a local socket in place of the declared host and port.
+    .transform(({ path, ...rest }: Record<string, unknown>) => rest)
     .optional()
     .default({}),
   servername: z.string().optional(),
   ignoreTLS: z.boolean().optional(),
   requireTLS: z.boolean().optional(),
   customHeaders: z.record(z.string().or(z.string().array())).optional(),
+  /**
+   * DKIM Options
+   * See https://nodemailer.com/dkim/.
+   */
+  dkim: z
+    .object({
+      domainName: z.string(),
+      keySelector: z.string(),
+      privateKey: z.string(),
+    })
+    .optional(),
 });
 
 export type SmtpConfig = z.infer<typeof smtpConfigGuard>;

@@ -58,6 +58,9 @@ const mfa = {
     'Prompt de configuração do MFA para utilizadores após a ativação do MFA pela organização',
   prompt_at_sign_in_non_skippable:
     'Pedir aos utilizadores para configurar MFA no próximo início de sessão (não pode ser ignorado)',
+  additional_factor_suggestion: 'Sugerir a adição de outro fator de MFA',
+  additional_factor_suggestion_description:
+    'Quando o único fator de MFA de um utilizador for o email, o número de telefone ou a passkey com que inicia sessão, sugerir a adição de outro fator no registo ou no início de sessão. Os utilizadores podem ignorar.',
   email_primary_method_tip:
     'O código de verificação por email já é o seu método principal de início de sessão. Para manter a segurança, ele não pode ser reutilizado para MFA.',
   phone_primary_method_tip:

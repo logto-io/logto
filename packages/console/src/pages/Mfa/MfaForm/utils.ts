@@ -77,7 +77,7 @@ export const normalizeSetUpPrompt = (policy: MfaPolicy, adaptiveMfaEnabled: bool
 };
 
 export const convertMfaConfigToForm = (
-  { policy, factors, organizationRequiredMfaPolicy }: MfaConfig,
+  { policy, factors, organizationRequiredMfaPolicy, skipAdditionalBindingSuggestion }: MfaConfig,
   adaptiveMfa?: AdaptiveMfa,
   trustedDevice?: TrustedDevicePolicy
 ): MfaConfigForm => ({
@@ -89,6 +89,7 @@ export const convertMfaConfigToForm = (
   emailVerificationCodeEnabled: factors.includes(MfaFactor.EmailVerificationCode),
   phoneVerificationCodeEnabled: factors.includes(MfaFactor.PhoneVerificationCode),
   organizationRequiredMfaPolicy,
+  additionalBindingSuggestionEnabled: !skipAdditionalBindingSuggestion,
   adaptiveMfaEnabled: Boolean(adaptiveMfa?.enabled),
   trustedDeviceEnabled: trustedDevice?.enabled ?? defaultTrustedDevicePolicy.enabled,
   trustedDeviceDurationDays: trustedDevice?.durationDays ?? defaultTrustedDevicePolicy.durationDays,
@@ -105,6 +106,7 @@ export const convertMfaFormToConfig = (mfaConfigForm: MfaConfigForm): MfaConfig 
     emailVerificationCodeEnabled,
     phoneVerificationCodeEnabled,
     organizationRequiredMfaPolicy,
+    additionalBindingSuggestionEnabled,
   } = mfaConfigForm;
 
   const factors = [
@@ -125,6 +127,9 @@ export const convertMfaFormToConfig = (mfaConfigForm: MfaConfigForm): MfaConfig 
       : normalizeSetUpPrompt(setUpPrompt, adaptiveMfaEnabled),
     factors,
     ...conditional(shouldIncludeOrganizationRequiredMfaPolicy && { organizationRequiredMfaPolicy }),
+    ...conditional(
+      !additionalBindingSuggestionEnabled && { skipAdditionalBindingSuggestion: true }
+    ),
   };
 };
 

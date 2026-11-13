@@ -58,6 +58,9 @@ const mfa = {
     'MFA-Einrichtungsaufforderung für Benutzer, nachdem die Organisation MFA aktiviert hat',
   prompt_at_sign_in_non_skippable:
     'Benutzer bei der nächsten Anmeldung zur MFA-Einrichtung auffordern (nicht überspringbar)',
+  additional_factor_suggestion: 'Hinzufügen eines weiteren MFA-Faktors vorschlagen',
+  additional_factor_suggestion_description:
+    'Wenn der einzige MFA-Faktor eines Benutzers die E-Mail-Adresse, Telefonnummer oder der Passkey ist, mit der bzw. dem er sich anmeldet, wird bei der Registrierung oder Anmeldung vorgeschlagen, einen weiteren Faktor hinzuzufügen. Benutzer können dies überspringen.',
   email_primary_method_tip:
     'E-Mail-Verifizierungscode ist bereits Ihre primäre Anmeldemethode. Um die Sicherheit zu gewährleisten, kann er nicht erneut für MFA verwendet werden.',
   phone_primary_method_tip:

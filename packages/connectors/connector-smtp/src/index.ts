@@ -75,8 +75,10 @@ const sendMessage =
       )
     );
 
+    // Nodemailer chooses its transport and connection behavior from every key it receives, so it
+    // only gets the options the guard declares.
     // eslint-disable-next-line no-restricted-syntax -- nodemailer's `AuthenticationTypeLogin` types `user`/`pass` as required strings, but at runtime it treats them as optional (skipping auth when absent). Our schema widens these to support relays that authorize by source.
-    const configOptions = config as SMTPTransport.Options;
+    const configOptions = smtpConfigGuard.parse(config) as SMTPTransport.Options;
     const transporter = nodemailer.createTransport(configOptions);
     const mailOptions = buildMailOptions(config, template, payload, to);
 

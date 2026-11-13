@@ -18,7 +18,7 @@ import {
   putSystemLicense,
 } from '#src/api/system.js';
 import { buildTestLicensePayload, signTestLicenseKey } from '#src/helpers/license.js';
-import { devFeatureTest, waitFor } from '#src/utils.js';
+import { waitFor } from '#src/utils.js';
 
 /**
  * Core refreshes against `CLOUD_ENDPOINT` in integration tests, which defaults to this port. The
@@ -135,7 +135,7 @@ const expectLocalWarnings = (usage: LicenseUsage) => {
     : [];
 };
 
-devFeatureTest.describe('self-hosted license usage', () => {
+describe('self-hosted license usage', () => {
   /* eslint-disable @silverhand/fp/no-let */
   let pool: DatabasePool;
   /* eslint-enable @silverhand/fp/no-let */

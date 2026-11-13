@@ -1,5 +1,6 @@
 import ExternalLinkIcon from '@/assets/icons/external-link.svg?react';
 import FormCard from '@/components/FormCard';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import DynamicT from '@/ds-components/DynamicT';
 
@@ -16,7 +17,12 @@ function PurchaseCard() {
       <div className={styles.purchase}>
         <Button
           type="primary"
-          title="tenants.license.purchase_button"
+          title={
+            // Self-hosted Pro self-serve purchase: the button opens the Cloud purchase.
+            isDevFeaturesEnabled
+              ? 'tenants.license.buy_license_button'
+              : 'tenants.license.purchase_button'
+          }
           trailingIcon={<ExternalLinkIcon />}
           onClick={() => {
             window.open(buildLicensePurchaseUrl(), '_blank', 'noopener,noreferrer');

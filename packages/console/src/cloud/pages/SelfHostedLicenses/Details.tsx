@@ -1,5 +1,9 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
+import CardIcon from '@/assets/icons/card.svg?react';
+import Delete from '@/assets/icons/delete.svg?react';
 import { useSelfHostedLicense } from '@/cloud/hooks/use-self-hosted-licenses';
 import DetailsPage from '@/components/DetailsPage';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
@@ -8,19 +12,37 @@ import SkuName from '@/components/SkuName';
 import { isDevFeaturesEnabled } from '@/consts/env';
 import { selfHostedLicenseGuideLink } from '@/consts/external-links';
 import { GlobalRoute } from '@/contexts/TenantsProvider';
+import ConfirmModal from '@/ds-components/ConfirmModal';
 import DynamicT from '@/ds-components/DynamicT';
 import InlineNotification from '@/ds-components/InlineNotification';
 
 import Keys from './Keys';
-import Status from './Status';
+import Status, { getLicenseStatus, isPaymentRequired } from './Status';
 import Usage from './Usage';
 import styles from './index.module.scss';
+import { isCancelable, useCancelSubscription } from './use-cancel-subscription';
 
 type Props = { readonly id: string };
 
 function Details({ id }: Props) {
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error, isLoading, mutate, userId } = useSelfHostedLicense(id);
+  const navigate = useNavigate();
+  const [isCancelConfirmOpen, setIsCancelConfirmOpen] = useState(false);
+  const {
+    cancel,
+    isCanceling,
+    error: cancelError,
+  } = useCancelSubscription(id, async () => mutate());
+  // Self-hosted license self-serve purchase is still in development.
+  const canManageSubscription = isDevFeaturesEnabled && data?.subscriptionStatus;
+  const keysUnavailableKey = data
+    ? getLicenseStatus(data) === 'pending'
+      ? 'cloud.self_hosted_licenses.keys_pending'
+      : canManageSubscription && isPaymentRequired(data)
+        ? 'cloud.self_hosted_licenses.keys_payment_required'
+        : 'cloud.self_hosted_licenses.keys_unavailable'
+    : 'cloud.self_hosted_licenses.keys_unavailable';
 
   return (
     <DetailsPage
@@ -55,9 +77,50 @@ function Details({ id }: Props) {
               </>
             }
             identifier={{ name: 'ID', value: data.id }}
+            additionalActionButton={
+              canManageSubscription
+                ? {
+                    title: 'cloud.self_hosted_licenses.manage_payment',
+                    icon: <CardIcon />,
+                    onClick: () => {
+                      // Each personal subscription opens its own billing portal there.
+                      navigate(GlobalRoute.EnterpriseSubscription);
+                    },
+                  }
+                : undefined
+            }
+            actionMenuItems={
+              canManageSubscription && isCancelable(data)
+                ? [
+                    {
+                      type: 'danger',
+                      title: 'cloud.self_hosted_licenses.cancel.action',
+                      icon: <Delete />,
+                      onClick: () => {
+                        setIsCancelConfirmOpen(true);
+                      },
+                    },
+                  ]
+                : undefined
+            }
           />
-          {/* Self-hosted license usage reporting is still in development. */}
-          {isDevFeaturesEnabled && <Usage license={data} />}
+          {cancelError === 'payment_required' && (
+            <InlineNotification severity="alert">
+              <DynamicT forKey="cloud.self_hosted_licenses.cancel.payment_required" />
+            </InlineNotification>
+          )}
+          {cancelError === 'failed' && (
+            <InlineNotification
+              severity="error"
+              action="general.retry"
+              onClick={() => {
+                void cancel();
+              }}
+            >
+              <DynamicT forKey="cloud.self_hosted_licenses.cancel.failed" />
+            </InlineNotification>
+          )}
+          <Usage license={data} />
           <FormCard
             title="cloud.self_hosted_licenses.keys_title"
             description="cloud.self_hosted_licenses.keys_description"
@@ -67,7 +130,7 @@ function Details({ id }: Props) {
               <Keys key={`${userId}:${id}`} id={id} />
             ) : (
               <InlineNotification severity="alert">
-                <DynamicT forKey="cloud.self_hosted_licenses.keys_unavailable" />
+                <DynamicT forKey={keysUnavailableKey} />
               </InlineNotification>
             )}
           </FormCard>
@@ -85,6 +148,22 @@ function Details({ id }: Props) {
               </li>
             </ol>
           </FormCard>
+          <ConfirmModal
+            isOpen={isCancelConfirmOpen}
+            isLoading={isCanceling}
+            title="cloud.self_hosted_licenses.cancel.confirm_title"
+            confirmButtonText="cloud.self_hosted_licenses.cancel.action"
+            cancelButtonText="cloud.self_hosted_licenses.cancel.keep"
+            onCancel={() => {
+              setIsCancelConfirmOpen(false);
+            }}
+            onConfirm={async () => {
+              await cancel();
+              setIsCancelConfirmOpen(false);
+            }}
+          >
+            <DynamicT forKey="cloud.self_hosted_licenses.cancel.confirm_content" />
+          </ConfirmModal>
         </>
       )}
     </DetailsPage>

@@ -58,6 +58,9 @@ const mfa = {
     'Avisar os usuários para configurar o MFA após a organização ativar o MFA',
   prompt_at_sign_in_non_skippable:
     'Solicitar que os usuários configurem MFA na próxima tentativa de login (não pode ser ignorado)',
+  additional_factor_suggestion: 'Sugerir adicionar outro fator de MFA',
+  additional_factor_suggestion_description:
+    'Quando o único fator de MFA de um usuário for o e-mail, o número de telefone ou a passkey usada para entrar, sugerir adicionar outro fator no cadastro ou no login. Os usuários podem ignorar.',
   email_primary_method_tip:
     'O código de verificação do e-mail já é seu principal método de login. Para manter a segurança, ele não pode ser reutilizado para MFA.',
   phone_primary_method_tip:

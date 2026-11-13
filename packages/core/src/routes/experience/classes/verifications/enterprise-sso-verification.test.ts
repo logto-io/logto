@@ -1,6 +1,6 @@
 import { VerificationType } from '@logto/schemas';
 
-import { wellConfiguredSsoConnector } from '#src/__mocks__/sso.js';
+import { mockSamlSsoConnector, wellConfiguredSsoConnector } from '#src/__mocks__/sso.js';
 import { mockUser } from '#src/__mocks__/user.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -24,11 +24,11 @@ const tenant = new MockTenant(
   { ssoConnectors: { getSsoConnectorById } }
 );
 
-const createVerification = (email: string) =>
+const createVerification = (email: string, connectorId = wellConfiguredSsoConnector.id) =>
   new EnterpriseSsoVerification(tenant.libraries, tenant.queries, {
     id: 'sso-verification-id',
     type: VerificationType.EnterpriseSso,
-    connectorId: wellConfiguredSsoConnector.id,
+    connectorId,
     enterpriseSsoUserInfo: { id: 'sso-user-id', email },
     issuer: 'https://foo.com',
   });
@@ -86,8 +86,49 @@ describe('EnterpriseSsoVerification', () => {
         'https://foo.com',
         'sso-user-id'
       );
-      expect(getSsoConnectorById).not.toHaveBeenCalled();
       expect(findUserByEmail).not.toHaveBeenCalled();
+    });
+
+    it('identifies an OIDC identity linked through another connector', async () => {
+      findUserSsoIdentityBySsoIdentityId.mockResolvedValueOnce({
+        userId: mockUser.id,
+        ssoConnectorId: 'other-connector',
+      });
+      findUserById.mockResolvedValueOnce(mockUser);
+
+      await expect(createVerification('bar@foo.com').identifyUser()).resolves.toBe(mockUser);
+    });
+
+    it('identifies a SAML identity linked through the same connector', async () => {
+      getSsoConnectorById.mockResolvedValueOnce(mockSamlSsoConnector);
+      findUserSsoIdentityBySsoIdentityId.mockResolvedValueOnce({
+        userId: mockUser.id,
+        ssoConnectorId: mockSamlSsoConnector.id,
+      });
+      findUserById.mockResolvedValueOnce(mockUser);
+
+      await expect(
+        createVerification('bar@foo.com', mockSamlSsoConnector.id).identifyUser()
+      ).resolves.toBe(mockUser);
+    });
+
+    it('refuses a SAML identity linked through another connector', async () => {
+      getSsoConnectorById.mockResolvedValueOnce(mockSamlSsoConnector);
+      findUserSsoIdentityBySsoIdentityId.mockResolvedValueOnce({
+        userId: mockUser.id,
+        ssoConnectorId: 'other-connector',
+      });
+
+      await expect(
+        createVerification('bar@foo.com', mockSamlSsoConnector.id).identifyUser()
+      ).rejects.toMatchError(
+        new RequestError({
+          code: 'user.enterprise_sso_identity_not_exists',
+          status: 404,
+          ssoConnectorId: mockSamlSsoConnector.id,
+        })
+      );
+      expect(findUserById).not.toHaveBeenCalled();
     });
   });
 });

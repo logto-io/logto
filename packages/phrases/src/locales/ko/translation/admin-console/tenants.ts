@@ -16,12 +16,15 @@ const tenants = {
     purchase_description:
       '셀프 호스팅 프로 및 엔터프라이즈 요금제는 Logto 브랜딩 숨기기, 자체 UI 사용, 콘솔 공동 관리, 무제한 SAML 애플리케이션 등 유료 기능을 내 인스턴스에서 사용할 수 있게 합니다. 요금제를 구매하고 라이선스 키를 받아보세요.',
     purchase_button: '셀프 호스팅 요금제 보기',
+    buy_license_button: '라이선스 구매',
     install_title: '라이선스 설치',
     install_description: '셀프 호스팅 요금제를 구매한 후 받은 라이선스 키를 붙여넣으세요.',
     install_button: '라이선스 설치',
     key_field: '라이선스 키',
     key_field_description:
       '키는 내 인스턴스에서 검증되며 라이선스가 갱신될 때 Logto로 전송됩니다. 가지고 있는 키가 만료되었다면 Logto에 문의하여 새 키를 받으세요.',
+    key_field_cloud_description:
+      '키는 내 인스턴스에서 검증되며 라이선스가 갱신될 때 Logto로 전송됩니다. 가지고 있는 키가 만료되었다면 Logto Cloud에서 새 키를 받으세요.',
     key_placeholder: '여기에 라이선스 키를 붙여넣으세요',
     installed_toast: '라이선스를 설치했습니다.',
     details_title: '라이선스',
@@ -45,6 +48,8 @@ const tenants = {
     refusal_reason_unknown: '사용할 수 없음',
     grace_expired_description:
       '라이선스 유예 기간이 {{graceEndsAt}}에 끝났습니다. 이 배포는 OSS 기본값으로 되돌아갔습니다. Logto에 문의하여 새 라이선스 키를 받고 다시 설치하세요.',
+    grace_expired_cloud_description:
+      '라이선스 유예 기간이 {{graceEndsAt}}에 끝났습니다. 이 배포는 OSS 기본값으로 되돌아갔습니다. Logto Cloud에서 새 라이선스 키를 받고 다시 설치하세요.',
     get_fresh_key_button: '새 라이선스 키 받기',
     replace_button: '라이선스 교체',
     usage_banner_description: '이 배포의 사용량이 셀프 호스팅 요금제의 사용량 한도를 초과했습니다:',

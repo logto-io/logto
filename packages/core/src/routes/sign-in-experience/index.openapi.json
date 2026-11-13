@@ -84,7 +84,12 @@
                       }
                     },
                     "mfa": {
-                      "description": "MFA settings"
+                      "description": "MFA settings",
+                      "properties": {
+                        "skipAdditionalBindingSuggestion": {
+                          "description": "Whether to skip suggesting another MFA factor to a user whose only MFA factor is the email, phone number, or passkey they can also sign in with. Defaults to `false`. Required MFA set-up is not affected."
+                        }
+                      }
                     },
                     "adaptiveMfa": {
                       "description": "Adaptive MFA settings."
@@ -207,7 +212,12 @@
                     }
                   },
                   "mfa": {
-                    "description": "MFA settings"
+                    "description": "MFA settings",
+                    "properties": {
+                      "skipAdditionalBindingSuggestion": {
+                        "description": "Whether to skip suggesting another MFA factor to a user whose only MFA factor is the email, phone number, or passkey they can also sign in with. Defaults to `false`. Required MFA set-up is not affected."
+                      }
+                    }
                   },
                   "adaptiveMfa": {
                     "description": "Adaptive MFA settings. Only effective when developer features are enabled."

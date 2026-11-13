@@ -1,5 +1,7 @@
+/* eslint-disable max-lines -- Keep key issuance and subscription tests with their shared mocks. */
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ResponseError } from '@withtyped/client';
+import ReactModal from 'react-modal';
 import { MemoryRouter } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
@@ -34,7 +36,11 @@ jest.mock('@/components/FeatureTag', () => ({
 }));
 // The alias mapper resolves this stylesheet before Jest's generic CSS mapper.
 jest.mock('@/scss/modal.module.scss', () => ({}));
-jest.mock('@/cloud/hooks/use-cloud-api', () => ({ useCloudApi: jest.fn() }));
+jest.mock('@/cloud/hooks/use-cloud-api', () => ({
+  useCloudApi: jest.fn(),
+  toastResponseError: jest.fn(),
+  tryReadResponseErrorBody: async (error: ResponseError) => error.response.clone().json(),
+}));
 jest.mock('@/hooks/use-current-user', () => ({ __esModule: true, default: jest.fn() }));
 jest.mock('@/consts/env', () => ({ isCloud: true, isDevFeaturesEnabled: true }));
 jest.mock('@/components/Region', () => ({ defaultRegionName: 'US' }));
@@ -75,9 +81,11 @@ const deferredKeys = () => {
 };
 const read = jest.fn();
 const issue = jest.fn();
+const cancelSubscription = jest.fn();
 const api = {
   get: jest.fn(async (_path: string, { params }: { params: { id: string } }) => read(params.id)),
   post: jest.fn(async () => issue()),
+  delete: jest.fn(async () => cancelSubscription()),
 };
 const issueButton = () =>
   screen.getByRole('button', { name: 'admin_console.cloud.self_hosted_licenses.issue_keys' });
@@ -97,6 +105,7 @@ const renderDetails = () => {
     </MemoryRouter>
   );
   const result = render(page('license-a'));
+  ReactModal.setAppElement(result.container);
   return {
     ...result,
     showLicense: (id: string) => {
@@ -113,6 +122,7 @@ beforeEach(() => {
     .mockReturnValue({ user: { id: 'alice' } } as ReturnType<typeof useCurrentUser>);
   read.mockImplementation(async (id: string) => ({ ...summary, id }));
   issue.mockResolvedValue(pair);
+  cancelSubscription.mockResolvedValue({ ...summary, cancelAtPeriodEnd: true });
 });
 
 it('issues one required pair only on an explicit click, independently of metadata reads', async () => {
@@ -309,3 +319,147 @@ it('keeps the license page working when Cloud returns no usage fields', async ()
   ).toBeTruthy();
   expect(issueButton()).toBeTruthy();
 });
+
+const cancelError = (status: number, code: string, retryable: boolean) =>
+  new ResponseError({
+    status,
+    clone: () => ({
+      json: async () => ({ message: 'Cancellation failed.', error: { code, retryable } }),
+    }),
+  } as unknown as Response);
+
+const openCancelConfirmation = async () => {
+  await screen.findByText('license-a');
+  const more = document.querySelector('.actionMenuButton');
+  if (!more) {
+    throw new Error('The action menu is not rendered.');
+  }
+  fireEvent.click(more);
+  fireEvent.click(
+    await screen.findByText('admin_console.cloud.self_hosted_licenses.cancel.action')
+  );
+  await screen.findByText('admin_console.cloud.self_hosted_licenses.cancel.confirm_content');
+};
+
+const confirmButton = () =>
+  screen.getByRole('button', { name: 'admin_console.cloud.self_hosted_licenses.cancel.action' });
+
+describe('cancel subscription', () => {
+  it('cancels only after confirmation, then shows the license canceling at period end', async () => {
+    renderDetails();
+    await openCancelConfirmation();
+    expect(api.delete).not.toHaveBeenCalled();
+
+    read.mockImplementation(async (id: string) => ({ ...summary, id, cancelAtPeriodEnd: true }));
+    fireEvent.click(confirmButton());
+
+    expect(
+      await screen.findByText('admin_console.cloud.self_hosted_licenses.status.canceling')
+    ).toBeTruthy();
+    expect(api.delete).toHaveBeenCalledTimes(1);
+    expect(api.delete).toHaveBeenCalledWith('/api/me/self-hosted-licenses/:id/subscription', {
+      params: { id: 'license-a' },
+    });
+  });
+
+  it('sends nothing when the confirmation is dismissed', async () => {
+    renderDetails();
+    await openCancelConfirmation();
+    fireEvent.click(
+      screen.getByRole('button', { name: 'admin_console.cloud.self_hosted_licenses.cancel.keep' })
+    );
+    await waitFor(() => {
+      expect(
+        screen.queryByText('admin_console.cloud.self_hosted_licenses.cancel.confirm_content')
+      ).toBeNull();
+    });
+    expect(api.delete).not.toHaveBeenCalled();
+  });
+
+  it('asks to pay the outstanding invoice, without a retry, when payment is required', async () => {
+    cancelSubscription.mockRejectedValueOnce(
+      cancelError(409, 'self_hosted_license.subscription_payment_required', false)
+    );
+    renderDetails();
+    await openCancelConfirmation();
+    fireEvent.click(confirmButton());
+
+    expect(
+      await screen.findByText('admin_console.cloud.self_hosted_licenses.cancel.payment_required')
+    ).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'admin_console.general.retry' })).toBeNull();
+  });
+
+  it('offers a retry when Stripe did not apply the cancellation', async () => {
+    cancelSubscription.mockRejectedValueOnce(
+      cancelError(502, 'self_hosted_license.subscription_cancellation_failed', true)
+    );
+    renderDetails();
+    await openCancelConfirmation();
+    fireEvent.click(confirmButton());
+
+    expect(
+      await screen.findByText('admin_console.cloud.self_hosted_licenses.cancel.failed')
+    ).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'admin_console.general.retry' }));
+    await waitFor(() => {
+      expect(api.delete).toHaveBeenCalledTimes(2);
+    });
+    await waitFor(() => {
+      expect(
+        screen.queryByText('admin_console.cloud.self_hosted_licenses.cancel.failed')
+      ).toBeNull();
+    });
+  });
+
+  it('is not offered for a subscription already canceling', async () => {
+    read.mockImplementation(async (id: string) => ({ ...summary, id, cancelAtPeriodEnd: true }));
+    renderDetails();
+    await screen.findByText('license-a');
+    expect(document.querySelector('.actionMenuButton')).toBeNull();
+  });
+});
+
+describe('status and key availability', () => {
+  it.each([
+    ['past_due', 'unpaid', 'past_due', 'keys_payment_required'],
+    ['unpaid', 'unpaid', 'unpaid', 'keys_payment_required'],
+    ['canceled', 'canceled', 'canceled', 'keys_unavailable'],
+  ])(
+    'shows a %s subscription refused as %s with the %s tag and the %s message',
+    async (subscriptionStatus, keyUnavailableReason, tag, message) => {
+      read.mockResolvedValue({ ...summary, subscriptionStatus, keyUnavailableReason });
+      renderDetails();
+
+      expect(
+        await screen.findByText(`admin_console.cloud.self_hosted_licenses.status.${tag}`)
+      ).toBeTruthy();
+      expect(screen.getByText(`admin_console.cloud.self_hosted_licenses.${message}`)).toBeTruthy();
+      expect(
+        screen.queryByRole('button', {
+          name: 'admin_console.cloud.self_hosted_licenses.issue_keys',
+        })
+      ).toBeNull();
+    }
+  );
+
+  it('shows a license waiting for its payment webhook as activating, not expired', async () => {
+    read.mockResolvedValue({
+      ...summary,
+      status: 'pending',
+      subscriptionStatus: null,
+      currentPeriodEnd: null,
+      keyUnavailableReason: 'expired',
+    });
+    renderDetails();
+
+    expect(
+      await screen.findByText('admin_console.cloud.self_hosted_licenses.status.pending')
+    ).toBeTruthy();
+    expect(screen.getByText('admin_console.cloud.self_hosted_licenses.keys_pending')).toBeTruthy();
+    expect(
+      screen.queryByText('admin_console.cloud.self_hosted_licenses.status.expired')
+    ).toBeNull();
+  });
+});
+/* eslint-enable max-lines */

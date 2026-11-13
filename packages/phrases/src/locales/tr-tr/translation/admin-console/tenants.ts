@@ -17,6 +17,7 @@ const tenants = {
     purchase_description:
       'Self-hosted Pro ve Kurumsal planlar, kendi örneğinizde Logto markasını gizleme, kendi arayüzünüzü kullanma, konsolda iş birliği ve sınırsız SAML uygulaması gibi ücretli özellikleri açar. Lisans anahtarınızı almak için bir plan satın alın.',
     purchase_button: 'Self-hosted planlara göz at',
+    buy_license_button: 'Lisans satın al',
     install_title: 'LİSANS KURULUMU',
     install_description:
       'Self-hosted plan satın aldıktan sonra aldığınız lisans anahtarını yapıştırın.',
@@ -24,6 +25,8 @@ const tenants = {
     key_field: 'Lisans anahtarı',
     key_field_description:
       "Anahtar örneğinizde doğrulanır ve lisans yenilendiğinde Logto'ya gönderilir. Elinizdeki anahtarın süresi dolduysa yeni bir anahtar için Logto ile iletişime geçin.",
+    key_field_cloud_description:
+      "Anahtar örneğinizde doğrulanır ve lisans yenilendiğinde Logto'ya gönderilir. Elinizdeki anahtarın süresi dolduysa Logto Cloud'dan yeni bir anahtar alın.",
     key_placeholder: 'Lisans anahtarınızı buraya yapıştırın',
     installed_toast: 'Lisans başarıyla kuruldu.',
     details_title: 'LİSANS',
@@ -47,6 +50,8 @@ const tenants = {
     refusal_reason_unknown: 'kullanılamıyor',
     grace_expired_description:
       'Lisansın ek süresi {{graceEndsAt}} tarihinde sona erdi. Bu örnek OSS varsayılanlarına döndü. Yeni bir lisans anahtarı almak için Logto ile iletişime geçin ve yeniden kurun.',
+    grace_expired_cloud_description:
+      "Lisansın ek süresi {{graceEndsAt}} tarihinde sona erdi. Bu örnek OSS varsayılanlarına döndü. Logto Cloud'dan yeni bir lisans anahtarı alın ve yeniden kurun.",
     get_fresh_key_button: 'Yeni lisans anahtarı al',
     replace_button: 'Lisansı değiştir',
     usage_banner_description:

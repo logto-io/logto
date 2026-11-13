@@ -5,6 +5,7 @@ import { validateRedirectUrl } from '@logto/core-kit';
 import {
   type EncryptedTokenSet,
   InteractionEvent,
+  SsoProviderType,
   type SupportedSsoConnector,
   type User,
   type UserSsoIdentity,
@@ -283,6 +284,25 @@ export const isEmailInSsoConnectorDomains = (
   return domains.some((item) => item.toLowerCase() === domain);
 };
 
+/**
+ * A SAML connector's issuer is the entity ID its owner configured, so a SAML sign-in may only
+ * resolve an SSO identity that was linked through the same connector.
+ */
+export const assertSsoIdentityMatchesConnector = (
+  { id, providerName }: Pick<SupportedSsoConnector, 'id' | 'providerName'>,
+  { ssoConnectorId }: Pick<UserSsoIdentity, 'ssoConnectorId'>
+) => {
+  assertThat(
+    ssoConnectorFactories[providerName].providerType !== SsoProviderType.SAML ||
+      ssoConnectorId === id,
+    new RequestError({
+      code: 'user.enterprise_sso_identity_not_exists',
+      status: 404,
+      ssoConnectorId: id,
+    })
+  );
+};
+
 // Remark:
 // The following functions are used in the legacy interaction single sign on routes only.
 // The SSO interaction flow will be handled in the latest experience APIs using the SSO verification record.
@@ -327,6 +347,8 @@ export const handleSsoAuthentication = async (
 
   // SignIn
   if (userSsoIdentity) {
+    assertSsoIdentityMatchesConnector(connectorData, userSsoIdentity);
+
     return signInWithSsoAuthentication(ctx, tenant, {
       connectorData,
       userSsoIdentity,

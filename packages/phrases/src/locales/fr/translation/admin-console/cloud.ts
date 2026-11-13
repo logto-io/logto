@@ -15,6 +15,10 @@ const cloud = {
     non_production_key: 'Clé hors production',
     keys_unavailable:
       'Les clés de cette licence sont indisponibles. Contactez le support si nécessaire.',
+    keys_pending: 'Les clés seront disponibles une fois la licence active.',
+    keys_payment_required:
+      "Les clés sont indisponibles tant que la facture impayée n'est pas réglée. Utilisez « Gérer le paiement » pour la régler et les clés seront de nouveau disponibles.",
+    manage_payment: 'Gérer le paiement',
     issue_keys: 'Obtenir les clés de licence',
     issue_error: 'Impossible d’émettre les clés de licence. Veuillez réessayer.',
     install_title: 'Installer votre licence',
@@ -35,6 +39,7 @@ const cloud = {
     last_seen: 'Vu pour la dernière fois',
     inactive: 'Inactif',
     status: {
+      pending: 'Activation en cours',
       active: 'Active',
       past_due: 'Paiement en retard',
       canceling: 'Annulation en fin de période',
@@ -42,6 +47,35 @@ const cloud = {
       unpaid: 'Impayée',
       expired: 'Expirée',
       revoked: 'Révoquée',
+    },
+    purchase: {
+      description:
+        'Débloquez les fonctionnalités payantes sur votre propre instance Logto avec un abonnement annuel.',
+      price_per_month: '{{price}}/mois',
+      billed_annually: 'Facturé annuellement',
+      price_unavailable: 'Prix indisponible',
+      feature_branding: 'Masquer la marque Logto',
+      feature_custom_ui: 'Utiliser votre propre interface de connexion',
+      feature_collaboration: 'Collaboration dans la console',
+      feature_saml: 'Applications SAML illimitées',
+      feature_deployment: 'Un déploiement de production',
+      subscribe: "S'abonner",
+      enterprise: 'Besoin d’Enterprise ? <a>Contactez-nous</a>',
+      activating: 'Paiement reçu. Activation de votre licence...',
+      processing:
+        'Votre paiement est toujours en cours de traitement. La licence apparaîtra ici une fois active.',
+      checkout_expired: 'La session de paiement a expiré. Veuillez vous abonner à nouveau.',
+    },
+    cancel: {
+      action: "Annuler l'abonnement",
+      keep: "Conserver l'abonnement",
+      confirm_title: "Annuler l'abonnement ?",
+      confirm_content:
+        'La licence reste active jusqu’à la fin de la période en cours et ne sera pas renouvelée. Ensuite, ses clés ne pourront plus être actualisées.',
+      success: 'L’abonnement sera annulé à la fin de la période en cours.',
+      payment_required:
+        'Réglez la facture impayée avant d’annuler. Utilisez « Gérer le paiement » pour la régler.',
+      failed: "Impossible d'annuler l'abonnement. Veuillez réessayer.",
     },
   },
   console_sso: {
