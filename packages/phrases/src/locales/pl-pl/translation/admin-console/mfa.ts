@@ -58,6 +58,9 @@ const mfa = {
     'Monit o konfigurację MFA dla organizacji wymagającej MFA',
   prompt_at_sign_in_non_skippable:
     'Wymagaj od użytkowników skonfigurowania MFA przy następnym logowaniu (nie można pominąć)',
+  additional_factor_suggestion: 'Sugeruj dodanie kolejnego czynnika MFA',
+  additional_factor_suggestion_description:
+    'Gdy jedynym czynnikiem MFA użytkownika jest e-mail, numer telefonu lub klucz dostępu, za pomocą którego się loguje, sugeruj dodanie kolejnego czynnika podczas rejestracji lub logowania. Użytkownicy mogą to pominąć.',
   email_primary_method_tip:
     'Kod weryfikacyjny e-mail jest już twoją główną metodą logowania. Aby utrzymać bezpieczeństwo, nie można go ponownie używać do MFA.',
   phone_primary_method_tip:

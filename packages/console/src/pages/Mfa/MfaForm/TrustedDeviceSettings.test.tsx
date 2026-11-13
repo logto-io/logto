@@ -44,6 +44,7 @@ const defaultValues: MfaConfigForm = {
   isMandatory: false,
   setUpPrompt: MfaPolicy.NoPrompt,
   organizationRequiredMfaPolicy: undefined,
+  additionalBindingSuggestionEnabled: true,
   adaptiveMfaEnabled: false,
   trustedDeviceEnabled: false,
   trustedDeviceDurationDays: 30,

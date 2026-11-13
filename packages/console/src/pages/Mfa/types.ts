@@ -23,6 +23,7 @@ export type MfaConfigForm = {
   isMandatory: boolean;
   setUpPrompt: MfaSetUpPrompt;
   organizationRequiredMfaPolicy?: OrganizationRequiredMfaPolicy;
+  additionalBindingSuggestionEnabled: boolean;
   adaptiveMfaEnabled: boolean;
   trustedDeviceEnabled: boolean;
   trustedDeviceDurationDays: number;

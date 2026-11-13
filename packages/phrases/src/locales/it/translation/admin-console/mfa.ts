@@ -58,6 +58,9 @@ const mfa = {
     "Messaggio di configurazione MFA per gli utenti dopo che l'organizzazione abilita MFA",
   prompt_at_sign_in_non_skippable:
     'Chiedi agli utenti di configurare MFA al prossimo accesso (non saltabile)',
+  additional_factor_suggestion: "Suggerisci l'aggiunta di un altro fattore MFA",
+  additional_factor_suggestion_description:
+    "Quando l'unico fattore MFA di un utente è l'email, il numero di telefono o la passkey con cui accede, suggerisci di aggiungere un altro fattore durante la registrazione o l'accesso. Gli utenti possono saltare il suggerimento.",
   email_primary_method_tip:
     'Il codice di verifica email è già il tuo metodo principale di accesso. Per mantenere la sicurezza, non può essere riutilizzato per la MFA.',
   phone_primary_method_tip:

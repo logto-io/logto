@@ -39,6 +39,9 @@ const mfa = {
   prompt_only_at_sign_in_mandatory: '在註冊後的下一次登錄嘗試時要求用戶設置 MFA（不可跳過）',
   set_up_organization_required_mfa_prompt: '組織啟用 MFA 後的用戶 MFA 設置提示',
   prompt_at_sign_in_non_skippable: '在用戶的下次登錄時要求設置 MFA（不可跳過）',
+  additional_factor_suggestion: '建議新增其他 MFA 因素',
+  additional_factor_suggestion_description:
+    '當使用者唯一的 MFA 因素是其用於登入的電子郵件、手機號碼或通行密鑰時，在註冊或登入時建議新增另一個因素。使用者可以略過。',
   email_primary_method_tip: '郵件驗證碼已經是你的主要登錄方式。為了維持安全性，不能重複用作 MFA。',
   phone_primary_method_tip: 'SMS 驗證碼已經是你的主要登錄方式。為了維持安全性，不能重複用作 MFA。',
   no_email_connector_warning:

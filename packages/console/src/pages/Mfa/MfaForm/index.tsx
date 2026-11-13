@@ -454,6 +454,13 @@ function MfaForm({ data, adaptiveMfa, trustedDevice, signInMethods, onMfaUpdated
               />
             </FormField>
           )}
+          <FormField title="mfa.additional_factor_suggestion" headlineSpacing="large">
+            <Switch
+              disabled={isPolicySettingsDisabled}
+              description="mfa.additional_factor_suggestion_description"
+              {...register('additionalBindingSuggestionEnabled')}
+            />
+          </FormField>
         </FormCard>
         <TrustedDeviceSettings
           register={register}
