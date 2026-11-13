@@ -2,6 +2,16 @@
   "paths": {
     "/api/users/{userId}/mfa-verifications": {
       "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "includeWebAuthnCredentials",
+            "schema": {
+              "x-logto-dev-feature": true
+            },
+            "description": "If it's provided with a truthy value (`true`, `1`, `yes`), each WebAuthn verification in the response will include its stored credential: `credentialId`, `publicKey`, `counter`, `transports`, and `rpId`. These fields are omitted by default."
+          }
+        ],
         "responses": {
           "200": {
             "description": "An array of MFA verifications for the user.",
@@ -12,23 +22,23 @@
                     "properties": {
                       "rpId": {
                         "x-logto-dev-feature": true,
-                        "description": "The relying party ID the WebAuthn credential was registered for. Only present for WebAuthn verifications. Absent for credentials registered before it was recorded and not used to sign in since; such a credential is bound to the domain that served the sign-in page at registration, which may not be the current custom domain."
+                        "description": "The relying party ID the WebAuthn credential was registered for. Only present for WebAuthn verifications when `includeWebAuthnCredentials` is provided with a truthy value. Absent for credentials registered before it was recorded and not used to sign in since; such a credential is bound to the domain that served the sign-in page at registration, which may not be the current custom domain."
                       },
                       "credentialId": {
                         "x-logto-dev-feature": true,
-                        "description": "The base64url-encoded WebAuthn credential ID. Only present for WebAuthn verifications. The credential's `userHandle` is the UTF-8 bytes of the path `userId`."
+                        "description": "The base64url-encoded WebAuthn credential ID. Only present for WebAuthn verifications when `includeWebAuthnCredentials` is provided with a truthy value. The credential's `userHandle` is the UTF-8 bytes of the path `userId`."
                       },
                       "publicKey": {
                         "x-logto-dev-feature": true,
-                        "description": "The base64url-encoded COSE public key of the WebAuthn credential. Only present for WebAuthn verifications."
+                        "description": "The base64url-encoded COSE public key of the WebAuthn credential. Only present for WebAuthn verifications when `includeWebAuthnCredentials` is provided with a truthy value."
                       },
                       "counter": {
                         "x-logto-dev-feature": true,
-                        "description": "The last WebAuthn signature counter (`signCount`) seen for the credential. Only present for WebAuthn verifications."
+                        "description": "The last WebAuthn signature counter (`signCount`) seen for the credential. Only present for WebAuthn verifications when `includeWebAuthnCredentials` is provided with a truthy value."
                       },
                       "transports": {
                         "x-logto-dev-feature": true,
-                        "description": "The transports the authenticator reported at registration. Only present for WebAuthn verifications."
+                        "description": "The transports the authenticator reported at registration. Only present for WebAuthn verifications when `includeWebAuthnCredentials` is provided with a truthy value."
                       }
                     }
                   }
