@@ -58,6 +58,11 @@ export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   'get /systems/license': 'GetSystemLicense',
   'put /systems/license': 'InstallSystemLicense',
   'get /systems/license/usage-statement': 'GetSystemLicenseUsageStatement',
+  // Log export is still in development, and its route is only built with dev features, which
+  // `throwByDifference` requires of every entry here.
+  ...(EnvSet.values.isDevFeaturesEnabled && {
+    'get /logs/export': 'ExportLogs',
+  }),
   // Applications
   'post /applications/:applicationId/roles': 'AssignApplicationRoles',
   'get /applications/:id/protected-app-metadata/custom-domains':
