@@ -164,36 +164,32 @@ export default function systemRoutes<T extends ManagementApiRouter>(
         lastRefreshedAt: license.lastRefreshedAt,
         graceEndsAt: license.graceEndsAt,
         ...(license.refusalReason && { refusalReason: license.refusalReason }),
-        // Self-hosted license usage reporting is still in development.
-        ...(EnvSet.values.isDevFeaturesEnabled && (await readLicenseUsage(license, pool))),
+        ...(await readLicenseUsage(license, pool)),
       };
 
       return next();
     }
   );
 
-  // Self-hosted license usage reporting is still in development.
-  if (EnvSet.values.isDevFeaturesEnabled) {
-    router.get(
-      '/systems/license/usage-statement',
-      koaGuard({
-        response: licenseUsageStatementGuard,
-        status: [200, 404, 501],
-      }),
-      async (ctx, next) => {
-        assertNotCloud();
+  router.get(
+    '/systems/license/usage-statement',
+    koaGuard({
+      response: licenseUsageStatementGuard,
+      status: [200, 404, 501],
+    }),
+    async (ctx, next) => {
+      assertNotCloud();
 
-        const pool = await EnvSet.sharedPool;
-        const license = await LicenseReader.shared.read(pool);
+      const pool = await EnvSet.sharedPool;
+      const license = await LicenseReader.shared.read(pool);
 
-        assertThat(license, new RequestError({ code: 'license.not_installed', status: 404 }));
+      assertThat(license, new RequestError({ code: 'license.not_installed', status: 404 }));
 
-        ctx.body = await getLicenseUsageStatement(pool);
+      ctx.body = await getLicenseUsageStatement(pool);
 
-        return next();
-      }
-    );
-  }
+      return next();
+    }
+  );
 
   router.put(
     '/systems/license',

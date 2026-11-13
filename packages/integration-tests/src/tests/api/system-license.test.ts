@@ -1,7 +1,6 @@
 import { LicenseEnv, ReservedPlanId, ossDefaultQuota } from '@logto/schemas';
 
 import { getSystemLicense, putSystemLicense } from '#src/api/system.js';
-import { isDevFeaturesEnabled } from '#src/constants.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { buildTestLicensePayload, signTestLicenseKey } from '#src/helpers/license.js';
 
@@ -41,7 +40,7 @@ describe('self-hosted license', () => {
       installedAt,
       lastRefreshedAt,
       graceEndsAt,
-      // Self-hosted license usage reporting is still in development, and covered on its own.
+      // Usage fields are covered on their own in `system-license-usage.test.ts`.
       usageLimits,
       usage,
       usageWarnings,
@@ -76,10 +75,10 @@ describe('self-hosted license', () => {
         'lastRefreshedAt',
         'plan',
         'quota',
-        // Self-hosted license usage reporting is still in development.
-        ...(isDevFeaturesEnabled
-          ? ['usage', 'usageLimits', 'usageReportingEnabled', 'usageWarnings']
-          : []),
+        'usage',
+        'usageLimits',
+        'usageReportingEnabled',
+        'usageWarnings',
       ]
         .slice()
         .sort()
@@ -130,7 +129,7 @@ describe('self-hosted license', () => {
       installedAt,
       lastRefreshedAt,
       graceEndsAt,
-      // Self-hosted license usage reporting is still in development, and covered on its own.
+      // Usage fields are covered on their own in `system-license-usage.test.ts`.
       usageLimits,
       usage,
       usageWarnings,

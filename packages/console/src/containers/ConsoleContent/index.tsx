@@ -47,8 +47,7 @@ function ConsoleContent() {
           </Fragment>
           <OssTenantMfaBanner />
           <OssLicenseBanner />
-          {/* Self-hosted license usage reporting is still in development. */}
-          {isDevFeaturesEnabled && <LicenseUsageBanner />}
+          <LicenseUsageBanner />
           <Suspense fallback={<DelayedSuspenseFallback />}>{routes}</Suspense>
         </div>
       </OverlayScrollbar>
