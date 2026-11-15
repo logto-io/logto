@@ -1,7 +1,8 @@
-import { act, renderHook, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, renderHook, screen, waitFor } from '@testing-library/react';
 import { type ReactNode } from 'react';
 import { MemoryRouter, useLocation } from 'react-router-dom';
 
+import Purchase from './Purchase';
 import { readPendingPurchase, savePendingPurchase } from './purchase-storage';
 import { useLicensePurchase } from './use-license-purchase';
 
@@ -31,6 +32,20 @@ jest.mock('@/consts/env', () => ({ isCloud: true, isDevFeaturesEnabled: true }))
 jest.mock('@/components/Region', () => ({ defaultRegionName: 'US' }));
 jest.mock('@/hooks/use-billing-customer-choice', () => ({
   useBillingCustomerChoice: () => ({ chooseBillingCustomer: async () => ({}) }),
+}));
+jest.mock('./List', () => ({
+  __esModule: true,
+  default: ({
+    onCreate,
+    isCreating,
+  }: {
+    readonly onCreate: () => void;
+    readonly isCreating: boolean;
+  }) => (
+    <button disabled={isCreating} onClick={onCreate}>
+      Create license
+    </button>
+  ),
 }));
 
 const mockApi = {
@@ -69,6 +84,31 @@ beforeEach(() => {
 
 afterEach(() => {
   jest.useRealTimers();
+  jest.restoreAllMocks();
+});
+
+it('starts Stripe Checkout directly from Create without showing a purchase card', async () => {
+  savePendingPurchase('alice', { key: 'new-key', customerChoice: {} });
+  const redirectUri = 'https://checkout.stripe.com/session-one';
+  const assign = jest.fn();
+  jest.spyOn(window, 'location', 'get').mockReturnValue({ ...window.location, assign });
+  mockApi.post.mockResolvedValue({ ...paidSession, status: 'open', redirectUri });
+  render(
+    <MemoryRouter initialEntries={['/self-hosted-licenses']}>
+      <Purchase userId="alice" />
+    </MemoryRouter>
+  );
+
+  fireEvent.click(screen.getByRole('button', { name: 'Create license' }));
+
+  await waitFor(() => {
+    expect(assign).toHaveBeenCalledWith(redirectUri);
+  });
+  expect(mockApi.post).toHaveBeenCalledTimes(1);
+  expect(mockApi.post).toHaveBeenCalledWith('/api/me/self-hosted-licenses/checkout-session', {
+    body: { plan: 'self-hosted-pro' },
+  });
+  expect(screen.getByRole('button', { name: 'Create license' })).toHaveProperty('disabled', true);
 });
 
 it('opens the license once Checkout returns and the webhook activates it', async () => {

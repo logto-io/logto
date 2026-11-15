@@ -198,7 +198,7 @@ export const useLicensePurchase = (userId: string) => {
     }
 
     if (checkout === checkoutEntryValue) {
-      // The page itself is the purchase entry: its purchase card is a click away from Checkout.
+      // Keep the purchase link on the list; the Create button starts Checkout.
       clearCheckoutSearch();
     }
   }, [
