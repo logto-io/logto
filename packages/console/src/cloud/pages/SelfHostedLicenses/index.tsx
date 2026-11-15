@@ -2,21 +2,15 @@ import { useParams } from 'react-router-dom';
 
 import PageMeta from '@/components/PageMeta';
 import Topbar from '@/components/Topbar';
-import { isDevFeaturesEnabled } from '@/consts/env';
-import { selfHostedLicenseGuideLink } from '@/consts/external-links';
 import AppBoundary from '@/containers/AppBoundary';
-import CardTitle from '@/ds-components/CardTitle';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
-import useCurrentUser from '@/hooks/use-current-user';
 
 import Details from './Details';
 import List from './List';
-import Purchase from './Purchase';
 import styles from './index.module.scss';
 
 function SelfHostedLicenses() {
   const { licenseId } = useParams();
-  const { user, error: userError } = useCurrentUser();
 
   return (
     <AppBoundary>
@@ -25,18 +19,7 @@ function SelfHostedLicenses() {
         <Topbar hideTenantSelector hideTitle />
         <OverlayScrollbar className={styles.scrollable}>
           <div className={styles.wrapper}>
-            {licenseId ? (
-              <Details key={licenseId} id={licenseId} />
-            ) : (
-              <>
-                <CardTitle
-                  title="cloud.self_hosted_licenses.title"
-                  subtitle="cloud.self_hosted_licenses.description"
-                  learnMoreLink={{ href: selfHostedLicenseGuideLink }}
-                />
-                <List />
-              </>
-            )}
+            {licenseId ? <Details key={licenseId} id={licenseId} /> : <List />}
           </div>
         </OverlayScrollbar>
       </div>
