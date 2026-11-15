@@ -4,7 +4,6 @@ const cloud = {
     description: '查看此帳號擁有的授權，並複製用於自託管部署的金鑰。',
     empty_title: '尚無自託管授權',
     empty_description: '如果你已購買授權，請確認登入的是購買時使用的帳號。',
-    create: '訂閱專業版授權',
     load_error: '無法載入授權，請再試一次。',
     period_end: '目前週期結束日期',
     keys_title: '授權金鑰',

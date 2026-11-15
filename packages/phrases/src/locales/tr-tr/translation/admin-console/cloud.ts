@@ -6,7 +6,6 @@ const cloud = {
     empty_title: 'Henüz kendi sunucunda barındırma lisansı yok',
     empty_description:
       'Bir lisans satın aldıysan, satın alırken kullandığın hesapla oturum açtığından emin ol.',
-    create: 'Pro lisansına abone ol',
     load_error: 'Lisanslar yüklenemedi. Lütfen tekrar dene.',
     period_end: 'Geçerli dönem sonu',
     keys_title: 'Lisans anahtarları',

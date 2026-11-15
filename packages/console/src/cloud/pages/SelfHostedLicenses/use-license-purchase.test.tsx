@@ -2,7 +2,7 @@ import { act, fireEvent, render, renderHook, screen, waitFor } from '@testing-li
 import { type ReactNode } from 'react';
 import { MemoryRouter, useLocation } from 'react-router-dom';
 
-import Purchase from './Purchase';
+import List from './List';
 import { readPendingPurchase, savePendingPurchase } from './purchase-storage';
 import { useLicensePurchase } from './use-license-purchase';
 
@@ -26,26 +26,30 @@ jest.mock('@/cloud/hooks/use-cloud-api', () => ({
   tryReadResponseErrorBody: jest.fn(),
 }));
 jest.mock('@/cloud/hooks/use-self-hosted-licenses', () => ({
-  useSelfHostedLicenses: () => ({ mutate: mockMutate }),
+  useSelfHostedLicenses: () => mockLicenses(),
 }));
 jest.mock('@/consts/env', () => ({ isCloud: true, isDevFeaturesEnabled: true }));
 jest.mock('@/components/Region', () => ({ defaultRegionName: 'US' }));
 jest.mock('@/hooks/use-billing-customer-choice', () => ({
   useBillingCustomerChoice: () => ({ chooseBillingCustomer: async () => ({}) }),
 }));
-jest.mock('./List', () => ({
+jest.mock('@/components/FeatureTag', () => ({
+  CombinedAddOnAndFeatureTag: () => null,
+}));
+jest.mock('@/components/LearnMore', () => ({ __esModule: true, default: () => null }));
+// The alias mapper resolves this stylesheet before Jest's generic CSS mapper.
+jest.mock('@/scss/page-layout.module.scss', () => ({}));
+jest.mock('@/hooks/use-tenant-pathname', () => ({
   __esModule: true,
-  default: ({
-    onCreate,
-    isCreating,
-  }: {
-    readonly onCreate: () => void;
-    readonly isCreating: boolean;
-  }) => (
-    <button disabled={isCreating} onClick={onCreate}>
-      Create license
-    </button>
-  ),
+  default: () => ({ getTo: (path: string) => path }),
+}));
+jest.mock('@/hooks/use-theme', () => ({
+  __esModule: true,
+  default: () => 'light',
+}));
+jest.mock('@/ds-components/OverlayScrollbar', () => ({
+  __esModule: true,
+  default: ({ children }: { readonly children: ReactNode }) => <div>{children}</div>,
 }));
 
 const mockApi = {
@@ -55,6 +59,8 @@ const mockApi = {
   delete: jest.fn(),
 };
 const mockMutate = jest.fn(async () => []);
+const mockLicenses = jest.fn();
+const subscribeButtonName = 'admin_console.cloud.self_hosted_licenses.purchase.subscribe';
 
 /** `@types/jest` predates the async fake-timer API that the installed Jest provides. */
 const advanceTimersByTimeAsync = async (milliseconds: number) =>
@@ -79,6 +85,7 @@ const renderPurchase = (entry: string) =>
 beforeEach(() => {
   localStorage.clear();
   jest.clearAllMocks();
+  mockLicenses.mockReturnValue({ data: [], isLoading: false, mutate: mockMutate });
   savePendingPurchase('alice', { key: 'saved-key', customerChoice: {}, sessionId: 'session-one' });
 });
 
@@ -87,7 +94,7 @@ afterEach(() => {
   jest.restoreAllMocks();
 });
 
-it('starts Stripe Checkout directly from Create without showing a purchase card', async () => {
+it('starts Stripe Checkout directly from the empty placeholder Subscribe button', async () => {
   savePendingPurchase('alice', { key: 'new-key', customerChoice: {} });
   const redirectUri = 'https://checkout.stripe.com/session-one';
   const assign = jest.fn();
@@ -95,11 +102,13 @@ it('starts Stripe Checkout directly from Create without showing a purchase card'
   mockApi.post.mockResolvedValue({ ...paidSession, status: 'open', redirectUri });
   render(
     <MemoryRouter initialEntries={['/self-hosted-licenses']}>
-      <Purchase userId="alice" />
+      <List userId="alice" />
     </MemoryRouter>
   );
 
-  fireEvent.click(screen.getByRole('button', { name: 'Create license' }));
+  const button = screen.getByRole('button', { name: subscribeButtonName });
+  expect(button.closest('td')).not.toBeNull();
+  fireEvent.click(button);
 
   await waitFor(() => {
     expect(assign).toHaveBeenCalledWith(redirectUri);
@@ -108,7 +117,35 @@ it('starts Stripe Checkout directly from Create without showing a purchase card'
   expect(mockApi.post).toHaveBeenCalledWith('/api/me/self-hosted-licenses/checkout-session', {
     body: { plan: 'self-hosted-pro' },
   });
-  expect(screen.getByRole('button', { name: 'Create license' })).toHaveProperty('disabled', true);
+  expect(button).toHaveProperty('disabled', true);
+});
+
+it('shows Subscribe only in the header when licenses exist', () => {
+  mockLicenses.mockReturnValue({
+    data: [{ id: 'license-one', plan: 'self-hosted-pro', status: 'active' }],
+    isLoading: false,
+    mutate: mockMutate,
+  });
+  render(
+    <MemoryRouter>
+      <List userId="alice" />
+    </MemoryRouter>
+  );
+
+  const button = screen.getByRole('button', { name: subscribeButtonName });
+  expect(button.closest('td')).toBeNull();
+  expect(screen.queryByText('admin_console.cloud.self_hosted_licenses.empty_title')).toBeNull();
+});
+
+it('does not offer Subscribe or handle Checkout returns before the account is ready', () => {
+  render(
+    <MemoryRouter initialEntries={['/self-hosted-licenses?checkout=success&sessionId=session-one']}>
+      <List />
+    </MemoryRouter>
+  );
+
+  expect(screen.queryByRole('button', { name: subscribeButtonName })).toBeNull();
+  expect(mockApi.get).not.toHaveBeenCalled();
 });
 
 it('opens the license once Checkout returns and the webhook activates it', async () => {

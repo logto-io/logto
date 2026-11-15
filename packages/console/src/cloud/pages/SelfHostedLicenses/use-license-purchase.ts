@@ -29,7 +29,7 @@ type PurchaseStatus = 'idle' | 'subscribing' | 'canceling' | 'activating' | 'pro
 const isAbortError = (error: unknown) =>
   error instanceof DOMException && error.name === 'AbortError';
 
-export const useLicensePurchase = (userId: string) => {
+export const useLicensePurchase = (userId: string | undefined) => {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console.cloud.self_hosted_licenses.purchase',
   });
@@ -98,6 +98,9 @@ export const useLicensePurchase = (userId: string) => {
 
   const activate = useCallback(
     async (sessionId: string, signal: AbortSignal) => {
+      if (!userId) {
+        return;
+      }
       setStatus('activating');
       setPaidSessionId(sessionId);
       try {
@@ -145,6 +148,9 @@ export const useLicensePurchase = (userId: string) => {
   );
 
   const subscribe = useCallback(async () => {
+    if (!userId) {
+      return;
+    }
     await runExclusive(async (signal) => {
       setStatus('subscribing');
       try {
@@ -168,6 +174,9 @@ export const useLicensePurchase = (userId: string) => {
   const handledReturn = useRef<string>();
 
   useEffect(() => {
+    if (!userId) {
+      return;
+    }
     const returnKey = `${checkout ?? ''}:${returnedSessionId ?? ''}`;
     if (handledReturn.current === returnKey) {
       return;
@@ -198,7 +207,7 @@ export const useLicensePurchase = (userId: string) => {
     }
 
     if (checkout === checkoutEntryValue) {
-      // Keep the purchase link on the list; the Create button starts Checkout.
+      // Keep the purchase link on the list; Subscribe starts Checkout.
       clearCheckoutSearch();
     }
   }, [

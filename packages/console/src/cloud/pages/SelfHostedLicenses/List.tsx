@@ -1,4 +1,3 @@
-import { type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,30 +10,34 @@ import { selfHostedLicenseGuideLink } from '@/consts/external-links';
 import { GlobalRoute } from '@/contexts/TenantsProvider';
 import Button from '@/ds-components/Button';
 import CardTitle from '@/ds-components/CardTitle';
+import DynamicT from '@/ds-components/DynamicT';
+import InlineNotification from '@/ds-components/InlineNotification';
 import Table from '@/ds-components/Table';
 import TablePlaceholder from '@/ds-components/Table/TablePlaceholder';
 import pageLayout from '@/scss/page-layout.module.scss';
 
 import Status from './Status';
+import { useLicensePurchase } from './use-license-purchase';
 
 type Props = {
-  readonly onCreate?: () => void;
-  readonly isCreating?: boolean;
-  readonly children?: ReactNode;
+  readonly userId?: string;
 };
 
-function List({ onCreate, isCreating, children }: Props) {
+function List({ userId }: Props) {
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error, isLoading, mutate } = useSelfHostedLicenses();
   const navigate = useNavigate();
+  const { status, subscribe, retryActivation } = useLicensePurchase(userId);
 
-  const createButton = onCreate && (
+  const subscribeButton = userId && (
     <Button
-      title="cloud.self_hosted_licenses.create"
+      title="cloud.self_hosted_licenses.purchase.subscribe"
       type="primary"
       size="large"
-      isLoading={isCreating}
-      onClick={onCreate}
+      isLoading={status !== 'idle'}
+      onClick={() => {
+        void subscribe();
+      }}
     />
   );
 
@@ -46,9 +49,24 @@ function List({ onCreate, isCreating, children }: Props) {
           subtitle="cloud.self_hosted_licenses.description"
           learnMoreLink={{ href: selfHostedLicenseGuideLink }}
         />
-        {Boolean(data?.length) && createButton}
+        {Boolean(data?.length) && subscribeButton}
       </div>
-      {children}
+      {status === 'activating' && (
+        <InlineNotification severity="info">
+          <DynamicT forKey="cloud.self_hosted_licenses.purchase.activating" />
+        </InlineNotification>
+      )}
+      {status === 'processing' && (
+        <InlineNotification
+          severity="alert"
+          action="general.retry"
+          onClick={() => {
+            void retryActivation();
+          }}
+        >
+          <DynamicT forKey="cloud.self_hosted_licenses.purchase.processing" />
+        </InlineNotification>
+      )}
       <Table
         rowGroups={[{ key: 'licenses', data: error ? undefined : data }]}
         rowIndexKey="id"
@@ -90,7 +108,7 @@ function List({ onCreate, isCreating, children }: Props) {
             imageDark={<EmptyDark />}
             title="cloud.self_hosted_licenses.empty_title"
             description="cloud.self_hosted_licenses.empty_description"
-            action={createButton}
+            action={subscribeButton}
           />
         }
         onRetry={() => {

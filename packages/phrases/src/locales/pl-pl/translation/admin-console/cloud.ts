@@ -5,7 +5,6 @@ const cloud = {
     empty_title: 'Nie masz jeszcze licencji self-hosted',
     empty_description:
       'Jeśli masz zakupioną licencję, upewnij się, że logujesz się na konto użyte do jej zakupu.',
-    create: 'Subskrybuj licencję Pro',
     load_error: 'Nie udało się wczytać licencji. Spróbuj ponownie.',
     period_end: 'Koniec bieżącego okresu',
     keys_title: 'Klucze licencyjne',
