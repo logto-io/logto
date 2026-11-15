@@ -27,6 +27,10 @@
   color: var(--color-text-secondary);
 }
 
+.topRightButton {
+  align-self: flex-end;
+}
+
 .keys {
   display: flex;
   flex-direction: column;

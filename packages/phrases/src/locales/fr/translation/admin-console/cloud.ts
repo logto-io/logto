@@ -6,6 +6,7 @@ const cloud = {
     empty_title: 'Aucune licence auto-hébergée pour le moment',
     empty_description:
       "Si vous avez acheté une licence, assurez-vous d'être connecté avec le compte utilisé pour l'achat.",
+    create: 'Souscrire à la licence Pro',
     load_error: 'Impossible de charger les licences. Veuillez réessayer.',
     period_end: 'Fin de la période actuelle',
     keys_title: 'Clés de licence',

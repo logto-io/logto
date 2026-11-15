@@ -6,6 +6,7 @@ const cloud = {
     empty_title: 'Aún no hay licencias autoalojadas',
     empty_description:
       'Si has comprado una licencia, asegúrate de iniciar sesión con la cuenta que usaste para comprarla.',
+    create: 'Suscribirse a la licencia Pro',
     load_error: 'No se pudieron cargar las licencias. Inténtalo de nuevo.',
     period_end: 'Fin del período actual',
     keys_title: 'Claves de licencia',

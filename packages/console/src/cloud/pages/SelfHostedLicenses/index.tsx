@@ -34,11 +34,6 @@ function SelfHostedLicenses() {
                   subtitle="cloud.self_hosted_licenses.description"
                   learnMoreLink={{ href: selfHostedLicenseGuideLink }}
                 />
-                {/* Self-hosted license self-serve purchase is still in development. */}
-                {isDevFeaturesEnabled && user && !userError && (
-                  // Keep a purchase local to its account, including in-flight Checkout requests.
-                  <Purchase key={user.id} userId={user.id} />
-                )}
                 <List />
               </>
             )}

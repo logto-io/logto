@@ -6,6 +6,7 @@ const cloud = {
     empty_title: 'Ainda não há licenças auto-hospedadas',
     empty_description:
       'Se você comprou uma licença, certifique-se de entrar com a conta usada na compra.',
+    create: 'Assinar licença Pro',
     load_error: 'Não foi possível carregar as licenças. Tente novamente.',
     period_end: 'Fim do período atual',
     keys_title: 'Chaves de licença',
