@@ -2,14 +2,20 @@ import { mkdtemp, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 
-import { maxUploadFileSize } from '@logto/schemas';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { maxUploadFileSize, storageProviderDataGuard } from '@logto/schemas';
+import { createMockUtils } from '@logto/shared/esm';
 
-import {
-  detectAvatarMimeType,
-  isAllowedAvatarMimeType,
-  sanitizeFilename,
-  uploadAvatar,
-} from './avatar-upload.js';
+const { jest } = import.meta;
+const { mockEsmWithActual } = createMockUtils(jest);
+const send = jest.fn();
+
+await mockEsmWithActual('@aws-sdk/client-s3', () => ({
+  S3Client: jest.fn(() => ({ send })),
+}));
+
+const { detectAvatarMimeType, isAllowedAvatarMimeType, sanitizeFilename, uploadAvatar } =
+  await import('./avatar-upload.js');
 
 const validPng = Buffer.from(
   '89504E470D0A1A0A0000000D49484452000000010000000108060000001F15C4890000000D4944415478DA63FCFFFFFF1F00040501FE6F1B5F570000000049454E44AE426082',
@@ -55,6 +61,46 @@ describe('avatar-upload validation', () => {
 });
 
 describe('uploadAvatar', () => {
+  afterEach(() => {
+    send.mockReset();
+  });
+
+  it.each([undefined, true, false])(
+    'uploads an avatar with configured isPublic=%s',
+    async (isPublic) => {
+      const directory = await mkdtemp(path.join(tmpdir(), 'avatar-upload-'));
+      const filepath = path.join(directory, 'avatar.png');
+      await writeFile(filepath, validPng);
+
+      const result = await uploadAvatar({
+        file: {
+          filepath,
+          mimetype: 'image/png',
+          originalFilename: 'avatar.png',
+          size: validPng.length,
+        },
+        storageProviderConfig: storageProviderDataGuard.parse({
+          provider: 'S3Storage',
+          region: 'us-east-1',
+          bucket: 'assets',
+          accessKeyId: 'access-key',
+          accessSecretKey: 'secret-key',
+          publicUrl: 'https://cdn.example.com',
+          isPublic,
+        }),
+        objectKeyPrefix: 'tenant/user',
+        logError: noopLogError,
+      });
+
+      expect(send).toHaveBeenCalledTimes(1);
+      const [command] = send.mock.calls[0] as [PutObjectCommand];
+      expect(command).toBeInstanceOf(PutObjectCommand);
+      expect(command.input.ACL).toBe(isPublic === false ? undefined : 'public-read');
+      expect(command.input.Body).toEqual(validPng);
+      expect(result.url).toBe(`https://cdn.example.com/${command.input.Key}`);
+    }
+  );
+
   it('validates mime type before checking storage configuration', async () => {
     const directory = await mkdtemp(path.join(tmpdir(), 'avatar-upload-'));
     const filepath = path.join(directory, 'avatar.png');

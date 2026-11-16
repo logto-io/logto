@@ -79,6 +79,7 @@ export default function userAssetsRoutes<T extends AuthedMeRouter>(...[router]: 
       assertThat(storageProviderConfig, 'storage.not_configured');
 
       const userId = ctx.auth.id;
+      const { publicUrl, isPublic } = storageProviderConfig;
       const uploadFile = buildUploadFile(storageProviderConfig);
       const objectKey = `${adminTenantId}/${userId}/${format(
         new Date(),
@@ -88,7 +89,8 @@ export default function userAssetsRoutes<T extends AuthedMeRouter>(...[router]: 
       try {
         const { url } = await uploadFile(await readFile(file.filepath), objectKey, {
           contentType: file.mimetype,
-          publicUrl: storageProviderConfig.publicUrl,
+          publicUrl,
+          isPublic,
         });
 
         const result: UserAssets = {

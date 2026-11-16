@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { LicenseKey, systemGuards, systemKeys } from './system.js';
+import { LicenseKey, StorageProviderKey, systemGuards, systemKeys } from './system.js';
 
 describe('license system entries', () => {
   it('registers the license key, so the CLI accepts it', () => {
@@ -34,5 +34,28 @@ describe('license system entries', () => {
     expect(systemGuards[LicenseKey.LicenseDeploymentId].parse('deployment_123')).toBe(
       'deployment_123'
     );
+  });
+});
+
+describe('S3 storage configuration', () => {
+  const config = {
+    provider: 'S3Storage',
+    region: 'us-east-1',
+    bucket: 'assets',
+    accessKeyId: 'access-key',
+    accessSecretKey: 'secret-key',
+    publicUrl: 'https://cdn.example.com',
+  };
+
+  it.each([undefined, true, false])('preserves isPublic=%s for CLI configuration', (isPublic) => {
+    const value = { ...config, ...(isPublic === undefined ? {} : { isPublic }) };
+    expect(systemGuards[StorageProviderKey.StorageProvider].parse(value)).toEqual(value);
+  });
+
+  it('rejects a non-boolean isPublic', () => {
+    expect(
+      systemGuards[StorageProviderKey.StorageProvider].safeParse({ ...config, isPublic: 'false' })
+        .success
+    ).toBe(false);
   });
 });

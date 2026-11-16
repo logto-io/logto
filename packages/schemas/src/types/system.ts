@@ -32,6 +32,8 @@ export enum StorageProvider {
 
 const basicConfig = {
   publicUrl: z.string().optional(),
+  /** S3 only: set to false to omit the public-read ACL. Defaults to true. */
+  isPublic: z.boolean().optional(),
 };
 
 export const storageProviderDataGuard = z.discriminatedUnion('provider', [

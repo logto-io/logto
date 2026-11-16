@@ -126,6 +126,7 @@ export const uploadAvatar = async ({
   assertThat(hasValidAvatarEndMarker(fileContent, avatarMimeType), 'guard.mime_type_not_allowed');
   assertThat(storageProviderConfig, 'storage.not_configured');
 
+  const { publicUrl, isPublic } = storageProviderConfig;
   const uploadFile = buildUploadFile(storageProviderConfig);
   const objectKey = `${objectKeyPrefix}/${format(new Date(), 'yyyy/MM/dd')}/${generateStandardId(
     8
@@ -134,7 +135,8 @@ export const uploadAvatar = async ({
   try {
     return await uploadFile(fileContent, objectKey, {
       contentType: avatarMimeType,
-      publicUrl: storageProviderConfig.publicUrl,
+      publicUrl,
+      isPublic,
     });
   } catch (error: unknown) {
     logError(error);
