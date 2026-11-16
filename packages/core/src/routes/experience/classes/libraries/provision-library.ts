@@ -9,6 +9,7 @@ import {
   defaultTenantId,
   getTenantOrganizationId,
   getTenantRole,
+  type JitOrganizationRoleAssignment,
   MfaFactor,
   type MfaVerification,
   OrganizationInvitationStatus,
@@ -54,6 +55,7 @@ type OrganizationProvisionPayload =
   | {
       userId: string;
       organizationIds: string[];
+      organizationRoles?: JitOrganizationRoleAssignment[];
     };
 
 type ProvisioningCustomDataOptions = {
@@ -260,6 +262,7 @@ export class ProvisionLibrary {
       enterpriseSsoIdentity,
       syncedEnterpriseSsoIdentity,
       jitOrganizationIds,
+      jitOrganizationRoles,
       socialConnectorTokenSetSecret,
       enterpriseSsoConnectorTokenSetSecret,
       passwordEncrypted,
@@ -425,14 +428,19 @@ export class ProvisionLibrary {
   /**
    * Provision the user with JIT organizations based on the email domain.
    */
-  private async provisionJitOrganizationByEmailDomain(userId: string, email: string) {
+  private async provisionJitOrganizationByEmailDomain(
+    userId: string,
+    email: string,
+    excludedOrganizationIds: readonly string[] = []
+  ) {
     const {
       libraries: { users: usersLibraries },
     } = this.tenantContext;
 
     const provisionedOrganizations = await usersLibraries.provisionOrganizationsByEmailDomain(
       userId,
-      email
+      email,
+      excludedOrganizationIds
     );
 
     this.appendMembershipUpdatedHooks(userId, provisionedOrganizations);
@@ -668,13 +676,19 @@ export class ProvisionLibrary {
    */
   private async provisionNewUserJitOrganizations(
     userId: string,
-    { primaryEmail, enterpriseSsoIdentity, jitOrganizationIds }: InteractionProfile
+    {
+      primaryEmail,
+      enterpriseSsoIdentity,
+      jitOrganizationIds,
+      jitOrganizationRoles,
+    }: InteractionProfile
   ) {
     const extraJitOrganizations = condArray(
       jitOrganizationIds &&
         (await this.provisionJitOrganization({
           userId,
           organizationIds: jitOrganizationIds,
+          organizationRoles: jitOrganizationRoles,
         }))
     );
     if (enterpriseSsoIdentity) {
@@ -689,7 +703,13 @@ export class ProvisionLibrary {
     if (primaryEmail) {
       return [
         ...extraJitOrganizations,
-        ...(await this.provisionJitOrganizationByEmailDomain(userId, primaryEmail)),
+        ...(await this.provisionJitOrganizationByEmailDomain(
+          userId,
+          primaryEmail,
+          // The one-time token roles replace the default JIT roles of their organizations, so
+          // don't let email-domain JIT add the default roles back.
+          jitOrganizationRoles?.map(({ organizationId }) => organizationId)
+        )),
       ];
     }
   }

@@ -1,13 +1,21 @@
 import { emailRegEx } from '@logto/core-kit';
-import { OneTimeTokens, oneTimeTokenStatusGuard } from '@logto/schemas';
+import {
+  type OneTimeTokenContext,
+  OneTimeTokens,
+  oneTimeTokenContextGuard,
+  oneTimeTokenStatusGuard,
+  RoleType,
+} from '@logto/schemas';
 import { generateStandardId, generateStandardSecret } from '@logto/shared';
 import { cond, trySafe } from '@silverhand/essentials';
 import { addSeconds } from 'date-fns';
 import { z } from 'zod';
 
+import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import { assertNotReadOnly } from '#src/middleware/koa-read-only-access.js';
+import assertThat from '#src/utils/assert-that.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
@@ -27,6 +35,7 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
           getOneTimeTokens,
           getOneTimeTokenById,
         },
+        organizations,
       },
       libraries: {
         oneTimeTokens: { verifyOneTimeToken, updateOneTimeTokenStatusById },
@@ -34,6 +43,54 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
     },
   ]: RouterInitArgs<T>
 ) {
+  /**
+   * Reject the organization roles that can never be assigned when the token is used, so the caller
+   * learns about them now instead of the user being signed in with fewer roles than intended.
+   */
+  const assertJitOrganizationRoles = async ({
+    jitOrganizationIds = [],
+    jitOrganizationRoles = [],
+  }: OneTimeTokenContext = {}) => {
+    if (jitOrganizationRoles.length === 0) {
+      return;
+    }
+
+    const organizationIds = jitOrganizationRoles.map(({ organizationId }) => organizationId);
+    const invalidOrganizationIds = organizationIds.filter((id) => !jitOrganizationIds.includes(id));
+
+    assertThat(
+      invalidOrganizationIds.length === 0,
+      new RequestError({
+        code: 'request.invalid_input',
+        details: `The organizations in \`jitOrganizationRoles\` must be in \`jitOrganizationIds\`: ${invalidOrganizationIds.join(', ')}.`,
+      })
+    );
+    assertThat(
+      new Set(organizationIds).size === organizationIds.length,
+      new RequestError({
+        code: 'request.invalid_input',
+        details: 'Each organization can only appear once in `jitOrganizationRoles`.',
+      })
+    );
+
+    const roleIds = [
+      ...new Set(jitOrganizationRoles.flatMap(({ organizationRoleIds }) => organizationRoleIds)),
+    ];
+    const roles = await organizations.roles.findByIds(roleIds);
+    const userRoleIds = new Set(
+      roles.filter(({ type }) => type === RoleType.User).map(({ id }) => id)
+    );
+    const invalidRoleIds = roleIds.filter((id) => !userRoleIds.has(id));
+
+    assertThat(
+      invalidRoleIds.length === 0,
+      new RequestError({
+        code: 'request.invalid_input',
+        details: `The following role IDs in \`jitOrganizationRoles\` are not organization roles for users: ${invalidRoleIds.join(', ')}.`,
+      })
+    );
+  };
+
   router.get(
     '/one-time-tokens',
     koaPagination({ isOptional: true }),
@@ -86,23 +143,21 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
   router.post(
     '/one-time-tokens',
     koaGuard({
-      body: OneTimeTokens.createGuard
-        .pick({ email: true, context: true })
-        .partial({
-          context: true,
+      body: OneTimeTokens.createGuard.pick({ email: true }).merge(
+        z.object({
+          context: oneTimeTokenContextGuard.optional(),
+          // Expiration time in seconds.
+          expiresIn: z.number().min(1).optional(),
         })
-        .merge(
-          z.object({
-            // Expiration time in seconds.
-            expiresIn: z.number().min(1).optional(),
-          })
-        ),
+      ),
       response: OneTimeTokens.guard,
       status: [201, 400],
     }),
     async (ctx, next) => {
       const { body } = ctx.guard;
       const { expiresIn, ...rest } = body;
+
+      await assertJitOrganizationRoles(rest.context);
 
       void trySafe(async () => updateExpiredOneTimeTokensStatusByEmail(rest.email));
 
