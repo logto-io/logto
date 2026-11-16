@@ -65,7 +65,7 @@ We use the monorepo approach for development. Since pnpm supports monorepo natur
 You'll need these installed to proceed:
 
 - [Node.js](https://nodejs.org/) `^26.12.1`
-- [pnpm](https://pnpm.io/) `^9.0.0 || ^10.0.0`
+- [pnpm](https://pnpm.io/) `^12.0.0`
 - A [Postgres](https://postgresql.org/) `^14.0` instance
 - [Docker](https://www.docker.com/) and Docker Compose, if you want to run integration tests locally
 
@@ -93,7 +93,7 @@ Then run `pnpm cli db seed` to seed data into your database.
 
 If you are upgrading your dev environment from an older version, or facing the `Found undeployed database alterations...` error when starting Logto, you need to deploy the database alteration first.
 
-Run `pnpm alteration deploy` and start Logto again. See [Database alteration](https://docs.logto.io/docs/tutorials/using-cli/database-alteration) for reference of this command.
+Run `pnpm alteration deploy` and start Logto again. See [Database alteration](https://docs.logto.io/logto-oss/using-cli/database-alteration) for reference of this command.
 
 If you are developing something with database alterations, see [packages/schemas/alteration](https://github.com/logto-io/logto/tree/master/packages/schemas/alterations) to learn more.
 
@@ -181,6 +181,6 @@ Please [report a bug](https://github.com/logto-io/logto/issues/new/choose) in is
 
 We require every commit to [be signed](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits), and both the commit message and pull request title follow [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#summary).
 
-You can find repo-specific config in `commitlint.config.js`, if applicable.
+You can find repo-specific config in `commitlint.config.ts`, if applicable.
 
 If the pull request remains empty content, it'll be DIRECTLY CLOSED until it matches our contributing guideline.
