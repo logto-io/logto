@@ -16,15 +16,12 @@ const tenants = {
     purchase_title: 'پلن‌های self-hosted',
     purchase_description:
       'پلن‌های حرفه‌ای و سازمانی self-hosted قابلیت‌های پولی را روی نمونه خودتان باز می‌کنند؛ مانند پنهان کردن برند Logto، استفاده از رابط کاربری خودتان، همکاری در کنسول و برنامه‌های SAML نامحدود. برای دریافت کلید مجوز، یک پلن بخرید.',
-    purchase_button: 'مشاهده پلن‌های self-hosted',
     buy_license_button: 'خرید مجوز',
     install_title: 'نصب مجوز',
     install_description:
       'کلید مجوزی را که پس از خرید پلن self-hosted دریافت کرده‌اید جای‌گذاری کنید.',
     install_button: 'نصب مجوز',
     key_field: 'کلید مجوز',
-    key_field_description:
-      'کلید روی نمونه شما بررسی می‌شود و هنگام به‌روزرسانی مجوز به Logto ارسال می‌شود. اگر کلید فعلی منقضی شده است، برای دریافت کلید تازه با Logto تماس بگیرید.',
     key_field_cloud_description:
       'کلید روی نمونه شما بررسی می‌شود و هنگام به‌روزرسانی مجوز به Logto ارسال می‌شود. اگر کلید فعلی منقضی شده است، کلید تازه را از Logto Cloud دریافت کنید.',
     key_placeholder: 'کلید مجوز خود را اینجا جای‌گذاری کنید',
@@ -48,8 +45,6 @@ const tenants = {
     refusal_reason_expired: 'منقضی‌شده',
     refusal_reason_revoked: 'باطل‌شده',
     refusal_reason_unknown: 'در دسترس نیست',
-    grace_expired_description:
-      'مهلت ارفاقی مجوز در {{graceEndsAt}} پایان یافت. این استقرار به پیش‌فرض‌های OSS بازگشته است. برای دریافت کلید مجوز تازه با Logto تماس بگیرید و دوباره آن را نصب کنید.',
     grace_expired_cloud_description:
       'مهلت ارفاقی مجوز در {{graceEndsAt}} پایان یافت. این استقرار به پیش‌فرض‌های OSS بازگشته است. کلید مجوز تازه را از Logto Cloud دریافت کنید و دوباره آن را نصب کنید.',
     get_fresh_key_button: 'دریافت کلید مجوز تازه',

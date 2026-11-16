@@ -2,7 +2,6 @@ import { useParams } from 'react-router-dom';
 
 import PageMeta from '@/components/PageMeta';
 import Topbar from '@/components/Topbar';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import AppBoundary from '@/containers/AppBoundary';
 import OverlayScrollbar from '@/ds-components/OverlayScrollbar';
 import useCurrentUser from '@/hooks/use-current-user';
@@ -14,8 +13,7 @@ import styles from './index.module.scss';
 function SelfHostedLicenses() {
   const { licenseId } = useParams();
   const { user, error: userError } = useCurrentUser();
-  // Self-hosted license self-serve purchase is still in development.
-  const purchaseUserId = isDevFeaturesEnabled && !userError ? user?.id : undefined;
+  const purchaseUserId = userError ? undefined : user?.id;
 
   return (
     <AppBoundary>

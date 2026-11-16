@@ -1,7 +1,7 @@
 import { LicenseEnv } from '@logto/schemas';
 import type { TFuncKey } from 'i18next';
 
-import { type EnvTestUtils, mockEnv, resetMockEnv } from '@/test-utils/env';
+import { type EnvTestUtils, resetMockEnv } from '@/test-utils/env';
 
 import {
   buildLicenseManagementUrl,
@@ -40,8 +40,6 @@ describe('isLicenseInstallErrorCode', () => {
 
 describe('buildLicensePurchaseUrl', () => {
   it('opens the Self-hosted Pro purchase on the Cloud self-hosted licenses page', () => {
-    mockEnv({ isDevFeaturesEnabled: true });
-
     const url = new URL(buildLicensePurchaseUrl());
 
     expect(url.origin).toBe('https://cloud.logto.io');
@@ -53,22 +51,10 @@ describe('buildLicensePurchaseUrl', () => {
     expect(url.searchParams.get('utm_campaign')).toBe('self_hosted_plans');
     expect(url.searchParams.get('utm_content')).toBe('tenant_settings_license_page');
   });
-
-  it('keeps the self-hosted plans page while dev features are off', () => {
-    const url = new URL(buildLicensePurchaseUrl());
-
-    expect(url.origin).toBe('https://logto.io');
-    expect(url.pathname).toBe('/self-hosted-plans');
-    expect(url.searchParams.get('checkout')).toBeNull();
-    expect(url.searchParams.get('signUp')).toBeNull();
-    expect(url.searchParams.get('utm_content')).toBe('tenant_settings_license_page');
-  });
 });
 
 describe('buildLicenseManagementUrl', () => {
   it('points at the Cloud self-hosted licenses page with refresh attribution', () => {
-    mockEnv({ isDevFeaturesEnabled: true });
-
     const url = new URL(buildLicenseManagementUrl());
 
     expect(url.origin).toBe('https://cloud.logto.io');
@@ -77,14 +63,6 @@ describe('buildLicenseManagementUrl', () => {
     expect(url.searchParams.get('utm_source')).toBe('logto_oss');
     expect(url.searchParams.get('utm_medium')).toBe('console');
     expect(url.searchParams.get('utm_campaign')).toBe('self_hosted_plans');
-    expect(url.searchParams.get('utm_content')).toBe('tenant_settings_license_refresh');
-  });
-
-  it('keeps the existing contact flow while dev features are off', () => {
-    const url = new URL(buildLicenseManagementUrl());
-
-    expect(url.origin).toBe('https://logto.io');
-    expect(url.pathname).toBe('/self-hosted-plans');
     expect(url.searchParams.get('utm_content')).toBe('tenant_settings_license_refresh');
   });
 });
