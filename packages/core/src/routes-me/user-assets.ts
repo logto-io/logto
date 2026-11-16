@@ -9,6 +9,7 @@ import {
   userAssetsGuard,
   adminTenantId,
   uploadFileGuard,
+  StorageProvider,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { format } from 'date-fns';
@@ -79,7 +80,11 @@ export default function userAssetsRoutes<T extends AuthedMeRouter>(...[router]: 
       assertThat(storageProviderConfig, 'storage.not_configured');
 
       const userId = ctx.auth.id;
-      const { publicUrl, isPublic } = storageProviderConfig;
+      const { publicUrl } = storageProviderConfig;
+      const isPublic =
+        storageProviderConfig.provider === StorageProvider.S3Storage
+          ? storageProviderConfig.isPublic
+          : undefined;
       const uploadFile = buildUploadFile(storageProviderConfig);
       const objectKey = `${adminTenantId}/${userId}/${format(
         new Date(),

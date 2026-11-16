@@ -9,6 +9,7 @@ import {
   type uploadFileGuard,
   type UserAssets,
   type StorageProviderData,
+  StorageProvider,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { format } from 'date-fns';
@@ -126,7 +127,11 @@ export const uploadAvatar = async ({
   assertThat(hasValidAvatarEndMarker(fileContent, avatarMimeType), 'guard.mime_type_not_allowed');
   assertThat(storageProviderConfig, 'storage.not_configured');
 
-  const { publicUrl, isPublic } = storageProviderConfig;
+  const { publicUrl } = storageProviderConfig;
+  const isPublic =
+    storageProviderConfig.provider === StorageProvider.S3Storage
+      ? storageProviderConfig.isPublic
+      : undefined;
   const uploadFile = buildUploadFile(storageProviderConfig);
   const objectKey = `${objectKeyPrefix}/${format(new Date(), 'yyyy/MM/dd')}/${generateStandardId(
     8

@@ -2,6 +2,7 @@ import { readFile } from 'node:fs/promises';
 
 import type { UserAssets } from '@logto/schemas';
 import {
+  StorageProvider,
   userAssetsGuard,
   userAssetsServiceStatusGuard,
   allowUploadMimeTypes,
@@ -77,7 +78,11 @@ export default function userAssetsRoutes<T extends ManagementApiRouter>(
       assertThat(storageProviderConfig, 'storage.not_configured');
 
       const userId = ctx.auth.id;
-      const { publicUrl, isPublic } = storageProviderConfig;
+      const { publicUrl } = storageProviderConfig;
+      const isPublic =
+        storageProviderConfig.provider === StorageProvider.S3Storage
+          ? storageProviderConfig.isPublic
+          : undefined;
       const uploadFile = buildUploadFile(storageProviderConfig);
       const objectKey = `${tenantId}/${userId}/${format(
         new Date(),

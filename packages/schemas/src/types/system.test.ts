@@ -59,3 +59,24 @@ describe('S3 storage configuration', () => {
     ).toBe(false);
   });
 });
+
+describe('non-S3 storage configuration', () => {
+  it.each([
+    {
+      provider: 'AzureStorage',
+      connectionString: 'connection-string',
+      container: 'assets',
+    },
+    {
+      provider: 'GoogleStorage',
+      projectId: 'project',
+      keyFilename: 'key.json',
+      bucketName: 'assets',
+    },
+  ])('does not expose isPublic for $provider', (config) => {
+    const value = { ...config, publicUrl: 'https://cdn.example.com' };
+    expect(
+      systemGuards[StorageProviderKey.StorageProvider].parse({ ...value, isPublic: false })
+    ).toEqual(value);
+  });
+});
