@@ -180,7 +180,10 @@ const alteration: AlterationScript = {
       -- bytes, so they are captured from the catalog, never reconstructed from table names.
       create temp table _widening_policies on commit drop as
         select policies.polname as policy_name, classes.relname as table_name,
-          pg_get_expr(policies.polqual, policies.polrelid) as qual
+          pg_get_expr(policies.polqual, policies.polrelid) as qual,
+          (policies.polwithcheck is not null
+            or policies.polroles <> '{0}'::oid[]
+            or policies.polcmd <> '*') as is_customized
         from pg_policy policies
         join pg_class classes on classes.oid = policies.polrelid
         where not policies.polpermissive
@@ -199,6 +202,17 @@ const alteration: AlterationScript = {
           select string_agg(table_name, ', ')
           from _widening_policies
           where qual <> (select qual from _widening_policies group by qual order by count(*) desc limit 1)
+        );
+      end if;
+
+      -- The recreate below rebuilds each policy from the stock template, which carries no
+      -- with check expression, no role list, and no command scope; a policy customized in
+      -- any of those would be silently reset to the template, so reject it instead.
+      if exists (select 1 from _widening_policies where is_customized) then
+        raise exception 'tenant-id widening: restrictive policies carry a with check expression, a role list, or a command scope, which the stock template does not; recreating them would silently reset the customization. Divergent tables: %. Restore the stock policies, deploy, then re-apply the customizations.', (
+          select string_agg(table_name, ', ')
+          from _widening_policies
+          where is_customized
         );
       end if;
 
@@ -341,7 +355,10 @@ const alteration: AlterationScript = {
       begin
       create temp table _narrowing_policies on commit drop as
         select policies.polname as policy_name, classes.relname as table_name,
-          pg_get_expr(policies.polqual, policies.polrelid) as qual
+          pg_get_expr(policies.polqual, policies.polrelid) as qual,
+          (policies.polwithcheck is not null
+            or policies.polroles <> '{0}'::oid[]
+            or policies.polcmd <> '*') as is_customized
         from pg_policy policies
         join pg_class classes on classes.oid = policies.polrelid
         where not policies.polpermissive
@@ -356,6 +373,17 @@ const alteration: AlterationScript = {
           select string_agg(table_name, ', ')
           from _narrowing_policies
           where qual <> (select qual from _narrowing_policies group by qual order by count(*) desc limit 1)
+        );
+      end if;
+
+      -- The recreate below rebuilds each policy from the stock template, which carries no
+      -- with check expression, no role list, and no command scope; a policy customized in
+      -- any of those would be silently reset to the template, so reject it instead.
+      if exists (select 1 from _narrowing_policies where is_customized) then
+        raise exception 'tenant-id widening: restrictive policies carry a with check expression, a role list, or a command scope, which the stock template does not; recreating them would silently reset the customization. Divergent tables: %. Restore the stock policies, deploy, then re-apply the customizations.', (
+          select string_agg(table_name, ', ')
+          from _narrowing_policies
+          where is_customized
         );
       end if;
 
