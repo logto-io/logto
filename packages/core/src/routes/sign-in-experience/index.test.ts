@@ -34,6 +34,7 @@ import {
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import LicenseReader from '#src/license/LicenseReader.js';
+import { setDevFeaturesEnabled } from '#src/test-utils/dev-features.js';
 import { buildLicensePayload } from '#src/test-utils/license.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
@@ -905,8 +906,8 @@ describe('sign-in experience routes with dev features disabled', () => {
     expect(response.status).toEqual(200);
     expect(updateDefaultSignInExperience).toHaveBeenLastCalledWith({ mfa });
 
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Enable dev features for the same requester; `afterEach` restores it.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = true;
+    // `afterEach` restores the flag.
+    setDevFeaturesEnabled(true);
     const devResponse = await requester.patch('/sign-in-exp').send({ mfa: mfaWithMode });
 
     expect(devResponse.status).toEqual(200);
