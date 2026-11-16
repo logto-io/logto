@@ -66,7 +66,8 @@ function FileReader({ onChange, value, attributes, fieldError, setError }: Props
   );
 
   const handleRemove = () => {
-    onChange(undefined);
+    // A React Hook Form `Controller` value falls back to its previous value when set to `undefined`.
+    onChange('');
   };
 
   const { getRootProps, getInputProps } = useDropzone({
