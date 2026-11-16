@@ -286,10 +286,10 @@ const createSecurityHeaderSettings = (tenantId: string): SecurityHeaderSettings 
   // @ts-expect-error: helmet typings has lots of {A?: T, B?: never} | {A?: never, B?: T} options definitions. Optional settings type can not inferred correctly.
   const consoleSecurityHeaderSettings: HelmetOptions = {
     ...basicSecurityHeaderSettings,
-    // The console does not need the opener-less popups of the sign-in flow (see
-    // `basicSecurityHeaderSettings`). It opens links in new tabs and talks to its preview
-    // iframes with `postMessage`, which this policy keeps working.
-    crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },
+    // Unlike the sign-in experience, the console is never opened as a cross-origin popup that
+    // needs `window.opener` (see `basicSecurityHeaderSettings`). COOP does not affect the tabs
+    // it opens or the `postMessage` channel to its preview iframes.
+    crossOriginOpenerPolicy: { policy: CrossOriginOpenerPolicy.SameOriginAllowPopups },
     // Guarded by CSP header below
     frameguard: false,
     contentSecurityPolicy: {
