@@ -11,7 +11,6 @@ import { cond, trySafe } from '@silverhand/essentials';
 import { addSeconds } from 'date-fns';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -44,11 +43,6 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
     },
   ]: RouterInitArgs<T>
 ) {
-  // Dev feature: organization roles of one-time token JIT provisioning.
-  const creationContextGuard: z.ZodType<OneTimeTokenContext> = EnvSet.values.isDevFeaturesEnabled
-    ? oneTimeTokenContextGuard
-    : oneTimeTokenContextGuard.omit({ jitOrganizationRoles: true });
-
   /**
    * Reject the organization roles that can never be assigned when the token is used, so the caller
    * learns about them now instead of the user being signed in with fewer roles than intended.
@@ -151,7 +145,7 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
     koaGuard({
       body: OneTimeTokens.createGuard.pick({ email: true }).merge(
         z.object({
-          context: creationContextGuard.optional(),
+          context: oneTimeTokenContextGuard.optional(),
           // Expiration time in seconds.
           expiresIn: z.number().min(1).optional(),
         })

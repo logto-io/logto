@@ -7,7 +7,7 @@ import { initExperienceClient, logoutClient, processSession } from '#src/helpers
 import { setEmailConnector } from '#src/helpers/connector.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import { generateNewUser } from '#src/helpers/user.js';
-import { devFeatureTest, generateDomain, generateEmail, generateTestName } from '#src/utils.js';
+import { generateDomain, generateEmail, generateTestName } from '#src/utils.js';
 
 const completeOneTimeTokenInteraction = async (
   interactionEvent: InteractionEvent,
@@ -28,7 +28,7 @@ const completeOneTimeTokenInteraction = async (
   return userId;
 };
 
-devFeatureTest.describe('one-time token with organization roles', () => {
+describe('one-time token with organization roles', () => {
   const organizationApi = new OrganizationApiTest();
 
   /** Create an organization with a default JIT role, and a role that isn't one of its defaults. */

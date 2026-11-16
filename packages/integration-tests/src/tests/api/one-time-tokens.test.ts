@@ -13,7 +13,7 @@ import {
 } from '#src/api/one-time-token.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { OrganizationRoleApiTest } from '#src/helpers/organization.js';
-import { devFeatureDisabledTest, devFeatureTest, generateTestName, waitFor } from '#src/utils.js';
+import { generateTestName, waitFor } from '#src/utils.js';
 
 describe('one-time tokens API', () => {
   it('should create one-time token with default 10 mins expiration time', async () => {
@@ -78,7 +78,7 @@ describe('one-time tokens API', () => {
       await roleApi.cleanUp();
     });
 
-    devFeatureTest.it('should create one-time token with organization roles', async () => {
+    it('should create one-time token with organization roles', async () => {
       const role = await roleApi.create({ name: generateTestName() });
       const oneTimeToken = await createOneTimeToken({
         email: `foo${generateStandardId()}@bar.com`,
@@ -96,55 +96,49 @@ describe('one-time tokens API', () => {
       await deleteOneTimeTokenById(oneTimeToken.id);
     });
 
-    devFeatureTest.it(
-      'should reject organization roles of an organization not in the token',
-      async () => {
-        const role = await roleApi.create({ name: generateTestName() });
+    it('should reject organization roles of an organization not in the token', async () => {
+      const role = await roleApi.create({ name: generateTestName() });
 
-        await expectRejects(
-          createOneTimeToken({
-            email: `foo${generateStandardId()}@bar.com`,
-            context: {
-              jitOrganizationIds: ['org-1'],
-              jitOrganizationRoles: [{ organizationId: 'org-2', organizationRoleIds: [role.id] }],
-            },
-          }),
-          { code: 'request.invalid_input', status: 400 }
-        );
-        await expectRejects(
-          createOneTimeToken({
-            email: `foo${generateStandardId()}@bar.com`,
-            context: {
-              jitOrganizationRoles: [{ organizationId: 'org-1', organizationRoleIds: [role.id] }],
-            },
-          }),
-          { code: 'request.invalid_input', status: 400 }
-        );
-      }
-    );
+      await expectRejects(
+        createOneTimeToken({
+          email: `foo${generateStandardId()}@bar.com`,
+          context: {
+            jitOrganizationIds: ['org-1'],
+            jitOrganizationRoles: [{ organizationId: 'org-2', organizationRoleIds: [role.id] }],
+          },
+        }),
+        { code: 'request.invalid_input', status: 400 }
+      );
+      await expectRejects(
+        createOneTimeToken({
+          email: `foo${generateStandardId()}@bar.com`,
+          context: {
+            jitOrganizationRoles: [{ organizationId: 'org-1', organizationRoleIds: [role.id] }],
+          },
+        }),
+        { code: 'request.invalid_input', status: 400 }
+      );
+    });
 
-    devFeatureTest.it(
-      'should reject duplicate organizations in the organization roles',
-      async () => {
-        const role = await roleApi.create({ name: generateTestName() });
+    it('should reject duplicate organizations in the organization roles', async () => {
+      const role = await roleApi.create({ name: generateTestName() });
 
-        await expectRejects(
-          createOneTimeToken({
-            email: `foo${generateStandardId()}@bar.com`,
-            context: {
-              jitOrganizationIds: ['org-1'],
-              jitOrganizationRoles: [
-                { organizationId: 'org-1', organizationRoleIds: [role.id] },
-                { organizationId: 'org-1', organizationRoleIds: [] },
-              ],
-            },
-          }),
-          { code: 'request.invalid_input', status: 400 }
-        );
-      }
-    );
+      await expectRejects(
+        createOneTimeToken({
+          email: `foo${generateStandardId()}@bar.com`,
+          context: {
+            jitOrganizationIds: ['org-1'],
+            jitOrganizationRoles: [
+              { organizationId: 'org-1', organizationRoleIds: [role.id] },
+              { organizationId: 'org-1', organizationRoleIds: [] },
+            ],
+          },
+        }),
+        { code: 'request.invalid_input', status: 400 }
+      );
+    });
 
-    devFeatureTest.it('should reject non-existent organization roles', async () => {
+    it('should reject non-existent organization roles', async () => {
       await expectRejects(
         createOneTimeToken({
           email: `foo${generateStandardId()}@bar.com`,
@@ -159,7 +153,7 @@ describe('one-time tokens API', () => {
       );
     });
 
-    devFeatureTest.it('should reject organization roles for machine-to-machine apps', async () => {
+    it('should reject organization roles for machine-to-machine apps', async () => {
       const role = await roleApi.create({
         name: generateTestName(),
         type: RoleType.MachineToMachine,
@@ -175,20 +169,6 @@ describe('one-time tokens API', () => {
         }),
         { code: 'request.invalid_input', status: 400 }
       );
-    });
-
-    devFeatureDisabledTest.it('should ignore organization roles', async () => {
-      const oneTimeToken = await createOneTimeToken({
-        email: `foo${generateStandardId()}@bar.com`,
-        context: {
-          jitOrganizationIds: ['org-1'],
-          jitOrganizationRoles: [{ organizationId: 'org-1', organizationRoleIds: ['role-1'] }],
-        },
-      });
-
-      expect(oneTimeToken.context).toEqual({ jitOrganizationIds: ['org-1'] });
-
-      await deleteOneTimeTokenById(oneTimeToken.id);
     });
   });
 
