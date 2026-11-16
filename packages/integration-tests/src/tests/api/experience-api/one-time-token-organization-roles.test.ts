@@ -153,6 +153,35 @@ describe('one-time token with organization roles', () => {
     await deleteUser(userId);
   });
 
+  it('should skip organizations deleted after the token is created', async () => {
+    const email = generateEmail();
+    const kept = await createOrganizationWithRoles();
+    const deleted = await createOrganizationWithRoles();
+    const { id, token } = await createOneTimeToken({
+      email,
+      context: {
+        jitOrganizationIds: [kept.organization.id, deleted.organization.id],
+        jitOrganizationRoles: [
+          { organizationId: kept.organization.id, organizationRoleIds: [kept.invitedRole.id] },
+          {
+            organizationId: deleted.organization.id,
+            organizationRoleIds: [deleted.invitedRole.id],
+          },
+        ],
+      },
+    });
+    await organizationApi.delete(deleted.organization.id);
+
+    const userId = await completeOneTimeTokenInteraction(InteractionEvent.Register, email, token);
+
+    await expect(getUserRoleIds(kept.organization.id, userId)).resolves.toEqual([
+      kept.invitedRole.id,
+    ]);
+
+    await deleteOneTimeTokenById(id);
+    await deleteUser(userId);
+  });
+
   it('should add the given roles to the roles of an existing member', async () => {
     const { user, userProfile } = await generateNewUser({ primaryEmail: true, password: true });
     const { organization, invitedRole } = await createOrganizationWithRoles();
