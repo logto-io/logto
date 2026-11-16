@@ -28,7 +28,7 @@ import { cond, conditional, condObject, deduplicate, pick } from '@silverhand/es
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { getAllUserEnabledMfaVerifications, getProfileMfaFactors } from '#src/libraries/mfa.js';
+import { getAllUserEnabledMfaVerifications } from '#src/libraries/mfa.js';
 import {
   isMfaRequiredByUser,
   isNoSkipMfaPolicy,
@@ -807,11 +807,15 @@ export class Mfa {
     const resolvedUser = user ?? (await this.interactionContext.getIdentifiedUser());
     const currentProfile = this.interactionContext.getCurrentProfile();
 
-    const existingFactors = getAllUserEnabledMfaVerifications(resolvedMfaSettings, resolvedUser);
+    // The profile staged in this interaction provides the email and phone factors too.
+    const existingFactors = getAllUserEnabledMfaVerifications(
+      resolvedMfaSettings,
+      resolvedUser,
+      currentProfile
+    );
     const inSessionBoundFactors = [
       ...(this.#totp ? [MfaFactor.TOTP] : []),
       ...(this.#webAuthn?.length ? [MfaFactor.WebAuthn] : []),
-      ...getProfileMfaFactors(resolvedMfaSettings, currentProfile),
     ];
 
     return deduplicate([...existingFactors, ...inSessionBoundFactors]);

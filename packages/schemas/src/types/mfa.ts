@@ -1,6 +1,62 @@
 import { z } from 'zod';
 
-import { webAuthnTransportGuard } from '../foundations/jsonb-types/index.js';
+import {
+  MfaFactor,
+  MfaVerificationCodeEnrollment,
+  webAuthnTransportGuard,
+  type Mfa,
+} from '../foundations/jsonb-types/index.js';
+
+const isVerificationCodeMfaFactor = (factor: MfaFactor) =>
+  factor === MfaFactor.EmailVerificationCode || factor === MfaFactor.PhoneVerificationCode;
+
+/**
+ * The MFA factors a user has: the one rule sign-in, step-up, token issuance, Account Center, and
+ * Console share.
+ *
+ * Only factors the sign-in experience enables count. The email / phone verification code factor
+ * needs the primary identifier its code is sent to; in
+ * {@link MfaVerificationCodeEnrollment.Explicit} mode it also needs a stored record of that type,
+ * while in the default {@link MfaVerificationCodeEnrollment.Implicit} mode the identifier alone
+ * counts and the record is ignored.
+ *
+ * @param storedFactors The types of the user's stored MFA verifications, in the order the caller
+ * wants them; the other stored factors keep that order.
+ * @returns The other stored factors, then phone, then email, then backup codes; each code factor
+ * at most once.
+ */
+export const resolveUserMfaFactors = ({
+  mfaSettings: { factors, verificationCodeEnrollment },
+  storedFactors,
+  hasPrimaryEmail,
+  hasPrimaryPhone,
+}: {
+  mfaSettings: Pick<Mfa, 'factors' | 'verificationCodeEnrollment'>;
+  storedFactors: readonly MfaFactor[];
+  hasPrimaryEmail: boolean;
+  hasPrimaryPhone: boolean;
+}): MfaFactor[] => {
+  const hasCodeFactor = (factor: MfaFactor, hasPrimaryIdentifier: boolean) =>
+    factors.includes(factor) &&
+    hasPrimaryIdentifier &&
+    (verificationCodeEnrollment !== MfaVerificationCodeEnrollment.Explicit ||
+      storedFactors.includes(factor));
+
+  const enabledStoredFactors = storedFactors.filter(
+    (factor) => !isVerificationCodeMfaFactor(factor) && factors.includes(factor)
+  );
+
+  return [
+    ...enabledStoredFactors.filter((factor) => factor !== MfaFactor.BackupCode),
+    ...(hasCodeFactor(MfaFactor.PhoneVerificationCode, hasPrimaryPhone)
+      ? [MfaFactor.PhoneVerificationCode]
+      : []),
+    ...(hasCodeFactor(MfaFactor.EmailVerificationCode, hasPrimaryEmail)
+      ? [MfaFactor.EmailVerificationCode]
+      : []),
+    ...enabledStoredFactors.filter((factor) => factor === MfaFactor.BackupCode),
+  ];
+};
 
 export const webAuthnRegistrationOptionsGuard = z.object({
   rp: z.object({
