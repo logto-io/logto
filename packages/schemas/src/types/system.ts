@@ -47,6 +47,8 @@ export const storageProviderDataGuard = z.discriminatedUnion('provider', [
     region: z.string().optional(),
     bucket: z.string(),
     forcePathStyle: z.boolean().optional(),
+    /** Set to false to omit the public-read ACL. Defaults to true. */
+    isPublic: z.boolean().optional(),
     accessKeyId: z.string(),
     accessSecretKey: z.string(),
     ...basicConfig,
