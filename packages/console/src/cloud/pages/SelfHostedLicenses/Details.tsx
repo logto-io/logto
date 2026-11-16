@@ -9,7 +9,6 @@ import DetailsPage from '@/components/DetailsPage';
 import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import FormCard, { FormCardSkeleton } from '@/components/FormCard';
 import SkuName from '@/components/SkuName';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import { selfHostedLicenseGuideLink } from '@/consts/external-links';
 import { GlobalRoute } from '@/contexts/TenantsProvider';
 import ConfirmModal from '@/ds-components/ConfirmModal';
@@ -34,8 +33,7 @@ function Details({ id }: Props) {
     isCanceling,
     error: cancelError,
   } = useCancelSubscription(id, async () => mutate());
-  // Self-hosted license self-serve purchase is still in development.
-  const canManageSubscription = isDevFeaturesEnabled && data?.subscriptionStatus;
+  const canManageSubscription = data?.subscriptionStatus;
   const keysUnavailableKey = data
     ? getLicenseStatus(data) === 'pending'
       ? 'cloud.self_hosted_licenses.keys_pending'
