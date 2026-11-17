@@ -6,10 +6,10 @@
   is granted by the organization roles.
 */
 create table application_user_consent_organization_resource_scopes (
-  tenant_id varchar(21) not null
+  tenant_id varchar(64) not null
     references tenants (id) on update cascade on delete cascade,
   /** The globally unique identifier of the application. */
-  application_id varchar(21) not null
+  application_id varchar(64) not null
     references applications (id) on update cascade on delete cascade,
   /** The globally unique identifier of the resource scope. */
   scope_id varchar(21) not null

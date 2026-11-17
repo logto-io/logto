@@ -1,7 +1,7 @@
 /* init_order = 1 */
 
 create table oidc_model_instances (
-  tenant_id varchar(21) not null
+  tenant_id varchar(64) not null
     references tenants (id) on update cascade on delete cascade,
   model_name varchar(64) not null,
   id varchar(128) not null,
@@ -21,42 +21,18 @@ create table oidc_model_instances (
     unique (tenant_id, model_name, id)
 );
 
-create index oidc_model_instances__model_name_payload_grant_id_partial
-  on oidc_model_instances (tenant_id, model_name, (payload->>'grantId'))
-  where payload ? 'grantId';
-
 create index oidc_model_instances__expires_at
   on oidc_model_instances (tenant_id, expires_at);
 
-create index oidc_model_instances__session_payload_account_id_expires_at
-  on oidc_model_instances (tenant_id, (payload->>'accountId'), expires_at)
-  WHERE model_name = 'Session';
-
-create index oidc_model_instances__grant_payload_account_id_expires_at
-  on oidc_model_instances (tenant_id, (payload->>'accountId'), expires_at)
-  WHERE model_name = 'Grant';
+/* Stand-in that keeps the session, grant, and revocation lookups seeking within one
+   (tenant, model) partition while the tenant-ID widening drops the payload indexes - unlike the
+   service_logs stand-ins it outlives the concurrent restores, because the restored payload
+   indexes cannot serve queries that still read the payload keys directly, and it is removed only
+   once those queries are migrated to the payload_* columns fleet-wide */
+create index oidc_model_instances__standin_model_name_expires_at
+  on oidc_model_instances (tenant_id, model_name, expires_at);
 
 /* Partial on payload key existence so rows without accountId (e.g. client credentials tokens) stay out of the index. The parameter-free predicate stays provable under generic query plans, but matching queries must include the payload ? 'accountId' clause. */
-create index oidc_model_instances__model_name_payload_account_id_partial
-  on oidc_model_instances (tenant_id, model_name, (payload->>'accountId'))
-  where payload ? 'accountId';
-
-create index oidc_model_instances__model_name_payload_grant_id
-  on oidc_model_instances (tenant_id, model_name, payload_grant_id)
-  where payload_grant_id is not null;
-
-create index oidc_model_instances__model_name_payload_account_id_expires_at
-  on oidc_model_instances (tenant_id, model_name, payload_account_id, expires_at)
-  where payload_account_id is not null;
-
-create index oidc_model_instances__model_name_payload_uid
-  on oidc_model_instances (tenant_id, model_name, payload_uid)
-  where payload_uid is not null;
-
-create index oidc_model_instances__model_name_payload_user_code
-  on oidc_model_instances (tenant_id, model_name, payload_user_code)
-  where payload_user_code is not null;
-
 /** Copies the payload keys used for lookups into their `payload_*` columns. */
 create function oidc_model_instances__set_payload_keys() returns trigger as
 $$ begin

@@ -8,7 +8,7 @@ export const Tenants = createModel(
   /* Sql */ `
   /* init_order = 0 */
   create table tenants (
-    id varchar(21) not null,
+    id varchar(64) not null,
     db_user varchar(128),
     db_user_password varchar(128),
     name varchar(128) not null default 'My Project',

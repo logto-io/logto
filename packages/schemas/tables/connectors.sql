@@ -1,7 +1,7 @@
 /* init_order = 1 */
 
 create table connectors (
-  tenant_id varchar(21) not null 
+  tenant_id varchar(64) not null 
     references tenants (id) on update cascade on delete cascade,
   id varchar(128) not null,
   sync_profile boolean not null default FALSE,

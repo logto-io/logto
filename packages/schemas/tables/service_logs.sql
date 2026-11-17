@@ -1,6 +1,6 @@
 create table service_logs (
   id varchar(21) not null,
-  tenant_id varchar(21) not null,
+  tenant_id varchar(64) not null,
   type varchar(64) not null,
   payload jsonb /* @use JsonObject */ not null default '{}'::jsonb,
   created_at timestamptz not null default(now()),
@@ -22,14 +22,14 @@ create index service_logs__created_at
    (created_at desc, id desc) keyset order (in the composite index above `type` sits between
    `tenant_id` and `created_at`, so a read spanning both email types cannot stream in time order
    and needs a full top-N sort) */
-create index service_logs__email__tenant_id__created_at__id
-  on service_logs (tenant_id, created_at desc, id desc)
-  where type in ('sendEmail', 'sendEmailFailed');
-
 /* Cloud email-logs recipient filter: case-insensitive exact recipient lookups in the same
    keyset order, without inspecting every email-log payload of the tenant */
-create index service_logs__email__tenant_id__recipient__created_at__id
-  on service_logs (tenant_id, lower(payload->'data'->>'to'), created_at desc, id desc)
-  where type in ('sendEmail', 'sendEmailFailed');
-
 /* no_after_each */
+
+/* Temporary replacements for the email-log indexes dropped by the tenant-ID widening - removed when the originals are restored concurrently */
+create index service_logs__standin_tenant_id_created_at_id
+  on service_logs (tenant_id, created_at desc, id desc);
+
+create index service_logs__standin_email_recipient_created_at_id
+  on service_logs (lower(payload->'data'->>'to'), created_at desc, id desc)
+  where type in ('sendEmail', 'sendEmailFailed');
