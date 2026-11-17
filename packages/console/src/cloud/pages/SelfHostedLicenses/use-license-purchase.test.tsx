@@ -114,9 +114,12 @@ it('starts Stripe Checkout directly from the empty placeholder Subscribe button'
     expect(assign).toHaveBeenCalledWith(redirectUri);
   });
   expect(mockApi.post).toHaveBeenCalledTimes(1);
-  expect(mockApi.post).toHaveBeenCalledWith('/api/me/self-hosted-licenses/checkout-session', {
-    body: { plan: 'self-hosted-pro' },
-  });
+  expect(mockApi.post).toHaveBeenCalledWith(
+    '/api/me/self-hosted-license-purchase/checkout-session',
+    {
+      body: { plan: 'self-hosted-pro' },
+    }
+  );
   expect(button).toHaveProperty('disabled', true);
 });
 
@@ -200,7 +203,7 @@ it('expires the session when the user leaves Checkout, and keeps other parameter
     expect(result.current.location.search).toBe('?utm_source=email');
   });
   expect(mockApi.delete).toHaveBeenCalledWith(
-    '/api/me/self-hosted-licenses/checkout-session/:sessionId',
+    '/api/me/self-hosted-license-purchase/checkout-session/:sessionId',
     { params: { sessionId: 'session-one' } }
   );
   expect(readPendingPurchase('alice')).toBeUndefined();
