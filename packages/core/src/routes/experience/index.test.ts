@@ -12,6 +12,7 @@ import {
   LogtoAcr,
   MfaFactor,
   MfaPolicy,
+  MfaVerificationCodeEnrollment,
   SignInIdentifier,
   VerificationType,
   type Mfa,
@@ -984,6 +985,39 @@ describe('POST /experience/profile/mfa', () => {
       expect(response.body).toMatchObject({ code: 'session.mfa.require_mfa_verification' });
     }
   );
+
+  it('rejects email/phone MFA binding when the factor is disabled in sign-in experience', async () => {
+    setDevFeaturesEnabled(true);
+    const user = {
+      ...mockUser,
+      primaryEmail: 'alice@logto.dev',
+      mfaVerifications: [],
+    };
+    const { requester } = createRequesterWithMocks({
+      user,
+      mfa: { policy: MfaPolicy.Mandatory, factors: [MfaFactor.TOTP] },
+      interactionResult: {
+        verificationRecords: [
+          {
+            id: 'email-bind-id',
+            type: VerificationType.EmailVerificationCode,
+            identifier: { type: SignInIdentifier.Email, value: user.primaryEmail },
+            templateType: TemplateType.BindMfa,
+            verified: true,
+          },
+        ],
+      },
+    });
+
+    const response = await requester.post('/experience/profile/mfa').send({
+      type: MfaFactor.EmailVerificationCode,
+      verificationId: 'email-bind-id',
+    });
+
+    expect(response.status).toBe(400);
+    expect(response.body).toMatchObject({ code: 'session.mfa.mfa_factor_not_enabled' });
+    resetDevFeaturesEnabled();
+  });
 });
 
 describe('POST /experience/submit', () => {
@@ -2068,7 +2102,10 @@ describe('POST /experience/submit', () => {
 
       expect(users.updateUserById).toHaveBeenCalledWith(
         user.id,
-        expect.objectContaining(updatePatch)
+        expect.objectContaining({
+          ...updatePatch,
+          mfaVerifications: [expect.objectContaining({ type: factor })],
+        })
       );
       const adaptiveMfaResult = mockAppend.mock.calls
         .map(
@@ -2142,6 +2179,85 @@ describe('POST /experience/submit', () => {
 
     expect(response.status).toBe(200);
   });
+
+  it.each([
+    {
+      name: 'registration verification record without userId',
+      recordUserId: undefined,
+    },
+    {
+      name: 'subject-bound sign-in verification record with matching userId',
+      recordUserId: mockUser.id,
+    },
+  ])(
+    'enrolls existing primary email without rewriting profile and persists MFA record ($name)',
+    async ({ recordUserId }) => {
+      setDevFeaturesEnabled(true);
+      const user = {
+        ...mockUser,
+        primaryEmail: 'existing@logto.dev',
+        mfaVerifications: [],
+      };
+      const { requester, users, createCredential } = createRequesterWithMocks({
+        user,
+        mfa: {
+          policy: MfaPolicy.Mandatory,
+          factors: [MfaFactor.EmailVerificationCode],
+          verificationCodeEnrollment: MfaVerificationCodeEnrollment.Explicit,
+          skipAdditionalBindingSuggestion: true,
+        },
+        interactionResult: {
+          verificationRecords: [
+            {
+              id: 'existing-email-vid',
+              type: VerificationType.EmailVerificationCode,
+              identifier: { type: SignInIdentifier.Email, value: 'EXISTING@logto.dev' },
+              templateType: TemplateType.Register,
+              verified: true,
+              ...conditional(recordUserId && { userId: recordUserId }),
+            },
+          ],
+        },
+        persistInteractionResult: true,
+        trustedDevicePolicy: { enabled: true, durationDays: 30 },
+      });
+
+      const missingMfaResponse = await requester.post('/experience/submit');
+      expect(missingMfaResponse.status).toBe(422);
+      expect(missingMfaResponse.body).toMatchObject({
+        code: 'user.missing_mfa',
+        data: {
+          availableFactors: [MfaFactor.EmailVerificationCode],
+        },
+      });
+
+      const bindResponse = await requester.post('/experience/profile/mfa').send({
+        type: MfaFactor.EmailVerificationCode,
+        verificationId: 'existing-email-vid',
+      });
+      expect(bindResponse.status).toBe(204);
+
+      const interactionResponse = await requester.get('/experience/interaction');
+      expect(interactionResponse.status).toBe(200);
+      expect(interactionResponse.body.mfa).not.toHaveProperty('emailVerificationCode');
+      expect(interactionResponse.body.mfa).not.toHaveProperty('phoneVerificationCode');
+
+      const optInResponse = await requester
+        .post('/experience/profile/trusted-device')
+        .send({ trusted: true });
+      expect(optInResponse.status).toBe(204);
+
+      const submitResponse = await requester.post('/experience/submit');
+      expect(submitResponse.status).toBe(200);
+
+      const updatePayload = users.updateUserById.mock.calls[0]?.[1] as Record<string, unknown>;
+      expect(updatePayload).not.toHaveProperty('primaryEmail');
+      expect(updatePayload.mfaVerifications).toEqual([
+        expect.objectContaining({ type: MfaFactor.EmailVerificationCode }),
+      ]);
+      expect(createCredential).toHaveBeenCalledWith(expect.objectContaining({ userId: user.id }));
+    }
+  );
 });
 
 describe('POST /experience/abort', () => {

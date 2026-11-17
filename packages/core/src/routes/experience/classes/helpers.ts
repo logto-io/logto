@@ -185,17 +185,28 @@ export const identifyUserByVerificationRecord = async (
   }
 };
 
+const singletonMfaFactors = new Set<MfaFactor>([
+  MfaFactor.BackupCode,
+  MfaFactor.EmailVerificationCode,
+  MfaFactor.PhoneVerificationCode,
+]);
+
 /**
- * Should remove the old backup codes verification if the user is binding a new one
+ * Replace existing singleton MFA factor records (backup codes, email/phone verification codes)
+ * when binding a new verification of the same type.
  */
 export const mergeUserMfaVerifications = (
   userMfaVerifications: User['mfaVerifications'],
   newMfaVerifications: User['mfaVerifications']
 ): User['mfaVerifications'] => {
-  if (newMfaVerifications.some((verification) => verification.type === MfaFactor.BackupCode)) {
-    const filteredMfaVerifications = userMfaVerifications.filter(({ type }) => {
-      return type !== MfaFactor.BackupCode;
-    });
+  const typesToReplace = new Set(
+    newMfaVerifications.map(({ type }) => type).filter((type) => singletonMfaFactors.has(type))
+  );
+
+  if (typesToReplace.size > 0) {
+    const filteredMfaVerifications = userMfaVerifications.filter(
+      ({ type }) => !typesToReplace.has(type)
+    );
     return [...filteredMfaVerifications, ...newMfaVerifications];
   }
 

@@ -33,12 +33,14 @@ const filterOutEmptyBackupCodes = (
  * @param mfaSettings - MFA settings from sign-in experience
  * @param user - User object with mfaVerifications and profile data
  * @param currentProfile - Optional profile override (for current interaction contexts), in cases of MFA verification, this is not needed
+ * @param stagedMfaFactors - Optional MFA factors bound in the current interaction before submission
  * @returns Array of all enabled MFA verifications
  */
 export const getAllUserEnabledMfaVerifications = (
   mfaSettings: Mfa,
   user: Pick<User, 'mfaVerifications' | 'primaryEmail' | 'primaryPhone'>,
-  currentProfile?: MfaProfile
+  currentProfile?: MfaProfile,
+  stagedMfaFactors: readonly MfaFactor[] = []
 ): MfaFactor[] => {
   const storedVerifications = filterOutEmptyBackupCodes(user.mfaVerifications)
     .filter((verification) => mfaSettings.factors.includes(verification.type))
@@ -83,7 +85,7 @@ export const getAllUserEnabledMfaVerifications = (
 
   return resolveUserMfaFactors({
     mfaSettings,
-    storedFactors: storedVerifications,
+    storedFactors: [...storedVerifications, ...stagedMfaFactors],
     hasPrimaryEmail: Boolean(currentProfile?.primaryEmail ?? user.primaryEmail),
     hasPrimaryPhone: Boolean(currentProfile?.primaryPhone ?? user.primaryPhone),
   });

@@ -89,6 +89,26 @@ describe('getAllUserEnabledMfaVerifications', () => {
         { primaryPhone: '+123456789' }
       )
     ).not.toContain(MfaFactor.PhoneVerificationCode);
+    // Staging the phone MFA slot makes a newly provided phone active in explicit mode.
+    expect(
+      getAllUserEnabledMfaVerifications(
+        mfaSettings,
+        { ...user, primaryPhone: null },
+        { primaryPhone: '+123456789' },
+        [MfaFactor.PhoneVerificationCode]
+      )
+    ).toEqual([
+      MfaFactor.TOTP,
+      MfaFactor.PhoneVerificationCode,
+      MfaFactor.EmailVerificationCode,
+      MfaFactor.BackupCode,
+    ]);
+    // Staging only an email/phone MFA slot without the corresponding primary identifier is ignored.
+    expect(
+      getAllUserEnabledMfaVerifications(mfaSettings, { ...user, primaryPhone: null }, undefined, [
+        MfaFactor.PhoneVerificationCode,
+      ])
+    ).not.toContain(MfaFactor.PhoneVerificationCode);
     expect(
       getAllUserEnabledMfaVerifications(
         { ...mfaSettings, verificationCodeEnrollment: MfaVerificationCodeEnrollment.Implicit },
