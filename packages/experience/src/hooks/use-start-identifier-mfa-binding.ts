@@ -15,6 +15,7 @@ import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-pres
 import useTrustedDeviceOptInErrorHandler from '@/hooks/use-trusted-device-opt-in-error-handler';
 import { UserMfaFlow } from '@/types';
 import { type MfaFlowState } from '@/types/guard';
+import { isFactorBoundInSuggestion } from '@/utils/mfa';
 import { codeVerificationTypeMap } from '@/utils/sign-in-experience';
 
 type Options = {
@@ -50,6 +51,11 @@ const useStartIdentifierMfaBinding = ({ replace, submitErrorHandlers }: Options 
       factor: MfaFactor.EmailVerificationCode | MfaFactor.PhoneVerificationCode,
       flowState: MfaFlowState
     ) => {
+      if (isFactorBoundInSuggestion(factor, flowState)) {
+        navigate({ pathname: `/${UserMfaFlow.MfaBinding}` }, { replace, state: flowState });
+        return;
+      }
+
       const maskedIdentifier = flowState.maskedIdentifiers?.[factor];
 
       if (!maskedIdentifier) {

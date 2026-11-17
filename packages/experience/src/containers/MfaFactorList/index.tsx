@@ -10,6 +10,7 @@ import useStartTotpBinding from '@/hooks/use-start-totp-binding';
 import useStartWebAuthnProcessing from '@/hooks/use-start-webauthn-processing';
 import { UserMfaFlow } from '@/types';
 import { type MfaFlowState } from '@/types/guard';
+import { isFactorBoundInSuggestion } from '@/utils/mfa';
 
 import styles from './index.module.scss';
 
@@ -26,7 +27,7 @@ const MfaFactorList = ({ flow, flowState }: Props) => {
     submitErrorHandlers: mfaSubmitErrorHandler,
   });
   const navigate = useNavigateWithPreservedSearchParams();
-  const { availableFactors, isWebAuthnUsedAsSignInPasskey } = flowState;
+  const { availableFactors } = flowState;
   const { onSubmit: sendMfaVerificationCode } = useSendMfaVerificationCode();
 
   const handleSelectFactor = useCallback(
@@ -77,12 +78,7 @@ const MfaFactorList = ({ flow, flowState }: Props) => {
         const isEmailOrPhone =
           factor === MfaFactor.EmailVerificationCode || factor === MfaFactor.PhoneVerificationCode;
         const maskedIdentifier = isEmailOrPhone ? flowState.maskedIdentifiers?.[factor] : undefined;
-        const isWebAuthnBound =
-          factor === MfaFactor.WebAuthn && Boolean(isWebAuthnUsedAsSignInPasskey);
-        const isFactorBound = flowState.boundFactors
-          ? flowState.boundFactors.includes(factor) || isWebAuthnBound
-          : Boolean(maskedIdentifier) || isWebAuthnBound;
-        const isDisabled = Boolean(flowState.suggestion) && isFactorBound;
+        const isDisabled = isFactorBoundInSuggestion(factor, flowState);
 
         return (
           <MfaFactorButton

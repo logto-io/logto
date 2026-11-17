@@ -215,4 +215,25 @@ describe('useStartIdentifierMfaBinding', () => {
       'fallback-email-vid'
     );
   });
+
+  it('navigates to the suggestion list instead of re-enrolling an already-bound factor', async () => {
+    const { result } = renderBindingHook({ replace: true });
+    const flowState: MfaFlowState = {
+      ...buildMaskedEmailState(),
+      boundFactors: [MfaFactor.EmailVerificationCode],
+      suggestion: true,
+      skippable: true,
+    };
+
+    await act(async () => {
+      await result.current(MfaFactor.EmailVerificationCode, flowState);
+    });
+
+    expect(mockedNavigate).toHaveBeenCalledWith(
+      { pathname: '/mfa-binding' },
+      { replace: true, state: flowState }
+    );
+    expect(mockedGetVerifiedRegisterCodeRecordId).not.toHaveBeenCalled();
+    expect(mockedSendPrimaryVerificationCode).not.toHaveBeenCalled();
+  });
 });

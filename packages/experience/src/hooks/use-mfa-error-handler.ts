@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { UserMfaFlow } from '@/types';
 import { type MfaFlowState, mfaErrorDataGuard, parseGuard } from '@/types/guard';
+import { isFactorBoundInSuggestion } from '@/utils/mfa';
 import { isNativeWebview } from '@/utils/native-sdk';
 
 import type { ErrorHandlers } from './use-error-handler';
@@ -88,6 +89,15 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
          * This should never happen since we check the available factors' length before handling the redirection.
          */
         setToast(t('error.unknown'));
+        return;
+      }
+
+      if (flow === UserMfaFlow.MfaBinding && isFactorBoundInSuggestion(factor, state)) {
+        /**
+         * Keep suggestions whose only remaining factor is already bound (e.g. after filtering out
+         * WebAuthn in a native WebView) on the factor list / skip screen instead of re-enrolling it.
+         */
+        navigate({ pathname: `/${flow}` }, { replace, state });
         return;
       }
 
