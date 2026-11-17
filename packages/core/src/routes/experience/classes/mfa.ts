@@ -11,6 +11,7 @@ import {
   InteractionEvent,
   type JsonObject,
   MfaPolicy,
+  MfaVerificationCodeEnrollment,
   type OrganizationWithRoles,
   type User,
   VerificationType,
@@ -691,10 +692,26 @@ export class Mfa {
       requiredFactors.length > 0 &&
       !requiredFactors.some((factor) => linkedFactors.includes(factor))
     ) {
+      // Email / SMS MFA explicit enrollment: expose masked existing primary identifiers so the
+      // onboarding list can offer sending a verification code to the user's existing address.
+      const maskedIdentifiers = condObject({
+        [MfaFactor.EmailVerificationCode]:
+          EnvSet.values.isDevFeaturesEnabled &&
+          requiredFactors.includes(MfaFactor.EmailVerificationCode) &&
+          identifiedUser.primaryEmail &&
+          maskEmail(identifiedUser.primaryEmail),
+        [MfaFactor.PhoneVerificationCode]:
+          EnvSet.values.isDevFeaturesEnabled &&
+          requiredFactors.includes(MfaFactor.PhoneVerificationCode) &&
+          identifiedUser.primaryPhone &&
+          maskPhone(identifiedUser.primaryPhone),
+      });
+
       throw new RequestError(
         { code: 'user.missing_mfa', status: 422 },
         {
           availableFactors: requiredFactors,
+          ...conditional(Object.keys(maskedIdentifiers).length > 0 && { maskedIdentifiers }),
           ...conditional(
             !asNoSkipMandatoryPolicy &&
               !isNoSkipMfaPolicy(policy) &&
@@ -713,12 +730,13 @@ export class Mfa {
     // Optional suggestion: Let Mfa decide whether to suggest additional binding during registration,
     // unless the tenant turned the suggestion off.
     if (!mfaSettings.skipAdditionalBindingSuggestion) {
-      await this.guardAdditionalBindingSuggestion(
+      await this.guardAdditionalBindingSuggestion({
+        mfaSettings,
         factorsInUser,
-        configuredFactors,
+        availableFactors: configuredFactors,
         identifiedUser,
-        canBindMfa
-      );
+        canBindMfa,
+      });
     }
 
     // A sign-in that may not bind a factor must not require backup codes it cannot enroll.
@@ -742,12 +760,19 @@ export class Mfa {
    * which can technically be used for both sign-in and MFA verification, not for MFA verification only.
    */
   // eslint-disable-next-line complexity
-  private async guardAdditionalBindingSuggestion(
-    factorsInUser: MfaFactor[],
-    availableFactors: MfaFactor[],
-    identifiedUser: User,
-    canBindMfa: boolean
-  ) {
+  private async guardAdditionalBindingSuggestion({
+    mfaSettings,
+    factorsInUser,
+    availableFactors,
+    identifiedUser,
+    canBindMfa,
+  }: {
+    mfaSettings: MfaSettings;
+    factorsInUser: MfaFactor[];
+    availableFactors: MfaFactor[];
+    identifiedUser: User;
+    canBindMfa: boolean;
+  }) {
     // Respect user's choice to skip suggestion for this interaction.
     if (this.additionalBindingSuggestionSkipped) {
       return;
@@ -777,55 +802,92 @@ export class Mfa {
 
     const { signUp, passkeySignIn } =
       await this.signInExperienceValidator.getSignInExperienceData();
-    // If the user has email, but not registered by email, no suggestion. (Email bound as MFA factor)
-    if (
-      factorsInUser.includes(MfaFactor.EmailVerificationCode) &&
-      !signUp.identifiers.includes(SignInIdentifier.Email) &&
-      !signUp.secondaryIdentifiers?.some(
-        ({ identifier }) =>
-          identifier === SignInIdentifier.Email ||
-          identifier === AlternativeSignUpIdentifier.EmailOrPhone
-      )
-    ) {
-      return;
-    }
-    // If the user has phone, but not registered by phone, no suggestion. (Phone bound as MFA factor)
-    if (
-      factorsInUser.includes(MfaFactor.PhoneVerificationCode) &&
-      !signUp.identifiers.includes(SignInIdentifier.Phone) &&
-      !signUp.secondaryIdentifiers?.some(
-        ({ identifier }) =>
-          identifier === SignInIdentifier.Phone ||
-          identifier === AlternativeSignUpIdentifier.EmailOrPhone
-      )
-    ) {
-      return;
-    }
 
+    // Email / SMS MFA explicit enrollment: suggest another factor only when a dual-purpose factor
+    // was bound in this interaction as the user's sole MFA factor.
     if (
-      factorsInUser.includes(MfaFactor.TOTP) ||
-      factorsInUser.includes(MfaFactor.BackupCode) ||
-      (factorsInUser.includes(MfaFactor.WebAuthn) && !passkeySignIn.enabled)
+      EnvSet.values.isDevFeaturesEnabled &&
+      mfaSettings.verificationCodeEnrollment === MfaVerificationCodeEnrollment.Explicit
     ) {
-      return;
-    }
+      const hasDualPurposeFactorBoundInSession =
+        Boolean(this.#emailVerificationCode) ||
+        Boolean(this.#phoneVerificationCode) ||
+        (Boolean(this.#webAuthn?.length) && passkeySignIn.enabled);
 
-    // Build masked identifiers for bound factors
-    const maskedIdentifiers = condObject({
-      [MfaFactor.EmailVerificationCode]:
+      if (!hasDualPurposeFactorBoundInSession || factorsInUser.length !== 1) {
+        return;
+      }
+    } else {
+      // If the user has email, but not registered by email, no suggestion. (Email bound as MFA factor)
+      if (
         factorsInUser.includes(MfaFactor.EmailVerificationCode) &&
-        primaryEmail &&
-        maskEmail(primaryEmail),
-      [MfaFactor.PhoneVerificationCode]:
+        !signUp.identifiers.includes(SignInIdentifier.Email) &&
+        !signUp.secondaryIdentifiers?.some(
+          ({ identifier }) =>
+            identifier === SignInIdentifier.Email ||
+            identifier === AlternativeSignUpIdentifier.EmailOrPhone
+        )
+      ) {
+        return;
+      }
+      // If the user has phone, but not registered by phone, no suggestion. (Phone bound as MFA factor)
+      if (
         factorsInUser.includes(MfaFactor.PhoneVerificationCode) &&
-        primaryPhone &&
-        maskPhone(primaryPhone),
+        !signUp.identifiers.includes(SignInIdentifier.Phone) &&
+        !signUp.secondaryIdentifiers?.some(
+          ({ identifier }) =>
+            identifier === SignInIdentifier.Phone ||
+            identifier === AlternativeSignUpIdentifier.EmailOrPhone
+        )
+      ) {
+        return;
+      }
+
+      if (
+        factorsInUser.includes(MfaFactor.TOTP) ||
+        factorsInUser.includes(MfaFactor.BackupCode) ||
+        (factorsInUser.includes(MfaFactor.WebAuthn) && !passkeySignIn.enabled)
+      ) {
+        return;
+      }
+    }
+
+    // Build masked identifiers for bound factors (falling back to staged profile values bound
+    // alongside MFA in this interaction) and, under explicit enrollment, any offered verification
+    // code factor whose primary identifier already exists on the user account.
+    const currentProfile = this.interactionContext.getCurrentProfile();
+    const effectiveEmail = currentProfile.primaryEmail ?? primaryEmail;
+    const effectivePhone = currentProfile.primaryPhone ?? primaryPhone;
+    const emailToMask = factorsInUser.includes(MfaFactor.EmailVerificationCode)
+      ? effectiveEmail
+      : conditional(
+          // Email / SMS MFA explicit enrollment: expose unenrolled existing primary email so the
+          // suggestion list enrolls it instead of opening the new-identifier profile form.
+          EnvSet.values.isDevFeaturesEnabled &&
+            sortedFactors.includes(MfaFactor.EmailVerificationCode) &&
+            primaryEmail
+        );
+    const phoneToMask = factorsInUser.includes(MfaFactor.PhoneVerificationCode)
+      ? effectivePhone
+      : conditional(
+          // Email / SMS MFA explicit enrollment: expose unenrolled existing primary phone so the
+          // suggestion list enrolls it instead of opening the new-identifier profile form.
+          EnvSet.values.isDevFeaturesEnabled &&
+            sortedFactors.includes(MfaFactor.PhoneVerificationCode) &&
+            primaryPhone
+        );
+    const maskedIdentifiers = condObject({
+      [MfaFactor.EmailVerificationCode]: emailToMask && maskEmail(emailToMask),
+      [MfaFactor.PhoneVerificationCode]: phoneToMask && maskPhone(phoneToMask),
     });
     throw new RequestError(
       { code: 'session.mfa.suggest_additional_mfa', status: 422 },
       {
         availableFactors: sortedFactors,
         maskedIdentifiers,
+        // Email / SMS MFA explicit enrollment: distinguish already-bound factors from unenrolled
+        // existing primary identifiers that also carry a `maskedIdentifiers` entry.
+        ...conditional(EnvSet.values.isDevFeaturesEnabled && { boundFactors: factorsInUser }),
         isWebAuthnUsedAsSignInPasskey:
           passkeySignIn.enabled && factorsInUser.includes(MfaFactor.WebAuthn),
         skippable: true,
