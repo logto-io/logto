@@ -26,7 +26,11 @@ const mockedUseResendMfaVerificationCode = jest.mocked(useResendMfaVerificationC
 
 const renderVerification = () => {
   const onSubmit = jest.fn().mockResolvedValue(undefined);
-  mockedUseMfaCodeVerification.mockReturnValue({ errorMessage: undefined, onSubmit });
+  mockedUseMfaCodeVerification.mockReturnValue({
+    errorMessage: undefined,
+    clearErrorMessage: jest.fn(),
+    onSubmit,
+  });
   mockedUseResendMfaVerificationCode.mockReturnValue({
     seconds: 30,
     isRunning: true,

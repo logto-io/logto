@@ -6,8 +6,13 @@ import { useTranslation } from 'react-i18next';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
-import { sendVerificationCode } from '@/apis/experience';
+import {
+  bindMfaByVerificationCode,
+  sendSubjectVerificationCode,
+  sendVerificationCode,
+} from '@/apis/experience';
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
+import MfaCodeVerification from '@/containers/MfaCodeVerification';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useMfaFlowState from '@/hooks/use-mfa-factors-state';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
@@ -18,7 +23,6 @@ import ErrorPage from '@/pages/ErrorPage';
 import { UserMfaFlow } from '@/types';
 import { codeVerificationTypeMap } from '@/utils/sign-in-experience';
 
-import ExistingIdentifierCodeVerification from './ExistingIdentifierCodeVerification';
 import styles from './index.module.scss';
 
 type Props = {
@@ -115,9 +119,11 @@ const VerificationCodeMfaBinding = ({
         }}
         onSkip={onSkip}
       >
-        <ExistingIdentifierCodeVerification
+        <MfaCodeVerification
           identifierType={identifierType}
           verificationId={verificationId}
+          verifyCode={bindMfaByVerificationCode}
+          resendCode={sendSubjectVerificationCode}
         />
         {availableFactors.length > 1 && (
           <SwitchMfaFactorsLink

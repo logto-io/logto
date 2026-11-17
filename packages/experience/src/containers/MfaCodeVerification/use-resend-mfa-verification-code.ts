@@ -20,12 +20,13 @@ const getTimeout = () => {
 };
 
 const useResendMfaVerificationCode = (
-  identifierType: SignInIdentifier.Email | SignInIdentifier.Phone
+  identifierType: SignInIdentifier.Email | SignInIdentifier.Phone,
+  sendCode: typeof sendMfaVerificationCode = sendMfaVerificationCode
 ) => {
   const { setToast } = useToast();
   const handleError = useErrorHandler();
   const stepUpErrorHandlers = usePureStepUpErrorHandler();
-  const resend = useApi(sendMfaVerificationCode);
+  const resend = useApi(sendCode);
   const { setVerificationId } = useContext(UserInteractionContext);
 
   const { seconds, isRunning, restart } = useTimer({

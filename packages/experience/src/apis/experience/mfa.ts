@@ -11,8 +11,9 @@ import {
 
 import api from '../api';
 
-import { experienceApiRoutes, type VerificationResponse } from './const';
+import { experienceApiRoutes } from './const';
 import { submitInteraction } from './interaction';
+import { verifySubjectVerificationCode } from './subject-verification-code';
 
 export const addMfa = async (type: MfaFactor, verificationId: string) =>
   api.post(`${experienceApiRoutes.mfa}`, {
@@ -206,32 +207,16 @@ export const verifyMfaByVerificationCode = async (
   return submitInteraction();
 };
 
-export const sendPrimaryVerificationCode = async (
-  identifierType: SignInIdentifier.Email | SignInIdentifier.Phone
-) =>
-  api
-    .post(`${experienceApiRoutes.verification}/verification-code`, {
-      json: {
-        interactionEvent: InteractionEvent.SignIn,
-        identifier: { type: identifierType },
-      },
-    })
-    .json<VerificationResponse>();
-
 export const bindMfaByVerificationCode = async (
   verificationId: string,
   code: string,
   identifierType: SignInIdentifier.Email | SignInIdentifier.Phone
 ) => {
-  const { verificationId: verifiedId } = await api
-    .post(`${experienceApiRoutes.verification}/verification-code/verify`, {
-      json: {
-        verificationId,
-        code,
-        identifier: { type: identifierType },
-      },
-    })
-    .json<VerificationResponse>();
+  const { verificationId: verifiedId } = await verifySubjectVerificationCode({
+    type: identifierType,
+    code,
+    verificationId,
+  });
 
   const factor =
     identifierType === SignInIdentifier.Email

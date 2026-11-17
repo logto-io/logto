@@ -16,7 +16,7 @@ import UserInteractionContext, {
 import {
   addMfa,
   getVerifiedRegisterCodeRecordId,
-  sendPrimaryVerificationCode,
+  sendSubjectVerificationCode,
   submitInteraction,
 } from '@/apis/experience';
 import { isNativeWebview } from '@/utils/native-sdk';
@@ -34,7 +34,7 @@ jest.mock('@/apis/experience', () => ({
   ...jest.requireActual('@/apis/experience'),
   addMfa: jest.fn(),
   getVerifiedRegisterCodeRecordId: jest.fn(),
-  sendPrimaryVerificationCode: jest.fn(),
+  sendSubjectVerificationCode: jest.fn(),
   submitInteraction: jest.fn(),
 }));
 
@@ -80,8 +80,8 @@ jest.mock('./use-toast', () => ({
 const mockedAddMfa = addMfa as jest.MockedFunction<typeof addMfa>;
 const mockedGetVerifiedRegisterCodeRecordId =
   getVerifiedRegisterCodeRecordId as jest.MockedFunction<typeof getVerifiedRegisterCodeRecordId>;
-const mockedSendPrimaryVerificationCode = sendPrimaryVerificationCode as jest.MockedFunction<
-  typeof sendPrimaryVerificationCode
+const mockedSendSubjectVerificationCode = sendSubjectVerificationCode as jest.MockedFunction<
+  typeof sendSubjectVerificationCode
 >;
 const mockedSubmitInteraction = submitInteraction as jest.MockedFunction<typeof submitInteraction>;
 const mockedIsNativeWebview = isNativeWebview as jest.MockedFunction<typeof isNativeWebview>;
@@ -198,7 +198,7 @@ describe('useMfaErrorHandler', () => {
     async ({ factor, identifierType, verificationType, masked }) => {
       const setVerificationId = jest.fn();
       mockedGetVerifiedRegisterCodeRecordId.mockResolvedValue(undefined);
-      mockedSendPrimaryVerificationCode.mockResolvedValue({ verificationId: 'vid-1' });
+      mockedSendSubjectVerificationCode.mockResolvedValue({ verificationId: 'vid-1' });
 
       const { result } = renderMfaErrorHandler({ replace: true, setVerificationId });
       const error: RequestErrorBody = {
@@ -216,7 +216,7 @@ describe('useMfaErrorHandler', () => {
       });
 
       expect(mockedGetVerifiedRegisterCodeRecordId).toHaveBeenCalledWith(verificationType);
-      expect(mockedSendPrimaryVerificationCode).toHaveBeenCalledWith(identifierType);
+      expect(mockedSendSubjectVerificationCode).toHaveBeenCalledWith(identifierType);
       expect(setVerificationId).toHaveBeenCalledWith(verificationType, 'vid-1');
       expect(mockedNavigate).toHaveBeenCalledWith(
         { pathname: `/mfa-binding/${factor}` },
@@ -317,7 +317,7 @@ describe('useMfaErrorHandler', () => {
 
     expect(mockedAddMfa).toHaveBeenCalledTimes(1);
     expect(mockedSubmitInteraction).toHaveBeenCalledTimes(1);
-    expect(mockedSendPrimaryVerificationCode).not.toHaveBeenCalled();
+    expect(mockedSendSubjectVerificationCode).not.toHaveBeenCalled();
     expect(mockedNavigate).toHaveBeenCalledTimes(1);
     expect(mockedNavigate).toHaveBeenCalledWith(
       { pathname: '/mfa-binding' },
@@ -360,7 +360,7 @@ describe('useMfaErrorHandler', () => {
     expect(mockedGetVerifiedRegisterCodeRecordId).not.toHaveBeenCalled();
     expect(mockedAddMfa).not.toHaveBeenCalled();
     expect(mockedSubmitInteraction).not.toHaveBeenCalled();
-    expect(mockedSendPrimaryVerificationCode).not.toHaveBeenCalled();
+    expect(mockedSendSubjectVerificationCode).not.toHaveBeenCalled();
     expect(mockedNavigate).toHaveBeenCalledWith(
       { pathname: '/mfa-binding' },
       {

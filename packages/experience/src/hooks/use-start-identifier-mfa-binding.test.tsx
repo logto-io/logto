@@ -1,4 +1,4 @@
-import { MfaFactor, SignInIdentifier, VerificationType } from '@logto/schemas';
+import { InteractionEvent, MfaFactor, SignInIdentifier, VerificationType } from '@logto/schemas';
 import { noop } from '@silverhand/essentials';
 import { act, renderHook } from '@testing-library/react';
 import { HTTPError } from 'ky';
@@ -11,7 +11,7 @@ import UserInteractionContext, {
 import {
   addMfa,
   getVerifiedRegisterCodeRecordId,
-  sendPrimaryVerificationCode,
+  sendSubjectVerificationCode,
   submitInteraction,
 } from '@/apis/experience';
 import { type MfaFlowState } from '@/types/guard';
@@ -26,7 +26,7 @@ jest.mock('@/apis/experience', () => ({
   ...jest.requireActual('@/apis/experience'),
   addMfa: jest.fn(),
   getVerifiedRegisterCodeRecordId: jest.fn(),
-  sendPrimaryVerificationCode: jest.fn(),
+  sendSubjectVerificationCode: jest.fn(),
   submitInteraction: jest.fn(),
 }));
 
@@ -43,17 +43,17 @@ jest.mock('./use-global-redirect-to', () => ({
 const mockedAddMfa = addMfa as jest.MockedFunction<typeof addMfa>;
 const mockedGetVerifiedRegisterCodeRecordId =
   getVerifiedRegisterCodeRecordId as jest.MockedFunction<typeof getVerifiedRegisterCodeRecordId>;
-const mockedSendPrimaryVerificationCode = sendPrimaryVerificationCode as jest.MockedFunction<
-  typeof sendPrimaryVerificationCode
+const mockedSendSubjectVerificationCode = sendSubjectVerificationCode as jest.MockedFunction<
+  typeof sendSubjectVerificationCode
 >;
 const mockedSubmitInteraction = submitInteraction as jest.MockedFunction<typeof submitInteraction>;
 
-const createHttpError = (code: string, message = code) =>
+const createHttpError = (code: string, message = code, data?: unknown) =>
   new HTTPError(
     {
       status: 422,
       statusText: 'Unprocessable Entity',
-      json: async () => ({ code, message }),
+      json: async () => ({ code, message, ...(data ? { data } : {}) }),
     } as unknown as Response,
     {} as Request,
     {} as never
@@ -123,7 +123,7 @@ describe('useStartIdentifierMfaBinding', () => {
       { replace: true, state: flowState }
     );
     expect(mockedGetVerifiedRegisterCodeRecordId).not.toHaveBeenCalled();
-    expect(mockedSendPrimaryVerificationCode).not.toHaveBeenCalled();
+    expect(mockedSendSubjectVerificationCode).not.toHaveBeenCalled();
   });
 
   it('reuses a verified Register code record without sending a second code', async () => {
@@ -147,7 +147,7 @@ describe('useStartIdentifierMfaBinding', () => {
     );
     expect(mockedSubmitInteraction).toHaveBeenCalledTimes(1);
     expect(mockedRedirectTo).toHaveBeenCalledWith('https://example.com/callback');
-    expect(mockedSendPrimaryVerificationCode).not.toHaveBeenCalled();
+    expect(mockedSendSubjectVerificationCode).not.toHaveBeenCalled();
   });
 
   it('forwards submit errors after reusing a verified Register code record', async () => {
@@ -173,13 +173,13 @@ describe('useStartIdentifierMfaBinding', () => {
       code: 'session.mfa.suggest_additional_mfa',
       message: 'session.mfa.suggest_additional_mfa',
     });
-    expect(mockedSendPrimaryVerificationCode).not.toHaveBeenCalled();
+    expect(mockedSendSubjectVerificationCode).not.toHaveBeenCalled();
   });
 
-  it('sends a primary verification code when there is no reusable register record or addMfa fails', async () => {
+  it('sends a primary verification code when there is no reusable register record or addMfa reports a profile conflict', async () => {
     const setVerificationId = jest.fn();
     mockedGetVerifiedRegisterCodeRecordId.mockResolvedValue(undefined);
-    mockedSendPrimaryVerificationCode.mockResolvedValue({ verificationId: 'primary-email-vid' });
+    mockedSendSubjectVerificationCode.mockResolvedValue({ verificationId: 'primary-email-vid' });
 
     const { result } = renderBindingHook({ replace: true, setVerificationId });
     const flowState = buildMaskedEmailState();
@@ -188,7 +188,7 @@ describe('useStartIdentifierMfaBinding', () => {
       await result.current(MfaFactor.EmailVerificationCode, flowState);
     });
 
-    expect(mockedSendPrimaryVerificationCode).toHaveBeenCalledWith(SignInIdentifier.Email);
+    expect(mockedSendSubjectVerificationCode).toHaveBeenCalledWith(SignInIdentifier.Email);
     expect(setVerificationId).toHaveBeenCalledWith(
       VerificationType.EmailVerificationCode,
       'primary-email-vid'
@@ -203,16 +203,57 @@ describe('useStartIdentifierMfaBinding', () => {
     jest.clearAllMocks();
     mockedGetVerifiedRegisterCodeRecordId.mockResolvedValue('other-email-vid');
     mockedAddMfa.mockRejectedValue(createHttpError('user.email_exists_in_profile'));
-    mockedSendPrimaryVerificationCode.mockResolvedValue({ verificationId: 'fallback-email-vid' });
+    mockedSendSubjectVerificationCode.mockResolvedValue({ verificationId: 'fallback-email-vid' });
 
     await act(async () => {
       await result.current(MfaFactor.EmailVerificationCode, flowState);
     });
 
-    expect(mockedSendPrimaryVerificationCode).toHaveBeenCalledWith(SignInIdentifier.Email);
+    expect(mockedSendSubjectVerificationCode).toHaveBeenCalledWith(SignInIdentifier.Email);
     expect(setVerificationId).toHaveBeenCalledWith(
       VerificationType.EmailVerificationCode,
       'fallback-email-vid'
+    );
+  });
+
+  it('does not fall back to sending a primary code when addMfa fails with a non-profile error', async () => {
+    mockedGetVerifiedRegisterCodeRecordId.mockResolvedValue('register-email-vid');
+    mockedAddMfa.mockRejectedValue(createHttpError('session.mfa.mfa_factor_not_enabled'));
+
+    const { result } = renderBindingHook({ replace: true });
+    const flowState = buildMaskedEmailState();
+
+    await act(async () => {
+      await result.current(MfaFactor.EmailVerificationCode, flowState);
+    });
+
+    expect(mockedSendSubjectVerificationCode).not.toHaveBeenCalled();
+    expect(mockedNavigate).not.toHaveBeenCalled();
+  });
+
+  it('continues trusted-device opt-in prompts as SignIn', async () => {
+    mockedGetVerifiedRegisterCodeRecordId.mockResolvedValue('register-email-vid');
+    mockedAddMfa.mockResolvedValue({} as never);
+    mockedSubmitInteraction.mockRejectedValue(
+      createHttpError('session.trusted_device_suggest_opt_in', 'suggest', { durationDays: 30 })
+    );
+
+    const { result } = renderBindingHook({ replace: true });
+    const flowState = buildMaskedEmailState();
+
+    await act(async () => {
+      await result.current(MfaFactor.EmailVerificationCode, flowState);
+    });
+
+    expect(mockedNavigate).toHaveBeenCalledWith(
+      { pathname: '/trusted-device' },
+      {
+        replace: true,
+        state: {
+          durationDays: 30,
+          interactionEvent: InteractionEvent.SignIn,
+        },
+      }
     );
   });
 
@@ -234,6 +275,6 @@ describe('useStartIdentifierMfaBinding', () => {
       { replace: true, state: flowState }
     );
     expect(mockedGetVerifiedRegisterCodeRecordId).not.toHaveBeenCalled();
-    expect(mockedSendPrimaryVerificationCode).not.toHaveBeenCalled();
+    expect(mockedSendSubjectVerificationCode).not.toHaveBeenCalled();
   });
 });

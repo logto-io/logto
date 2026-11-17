@@ -5,7 +5,7 @@ import UserInteractionContext from '@/Providers/UserInteractionContextProvider/U
 import {
   addMfa,
   getVerifiedRegisterCodeRecordId,
-  sendPrimaryVerificationCode,
+  sendSubjectVerificationCode,
   submitInteraction,
 } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
@@ -41,9 +41,10 @@ const useStartIdentifierMfaBinding = ({ replace, submitErrorHandlers }: Options 
   const asyncGetVerifiedRegisterCodeRecordId = useApi(getVerifiedRegisterCodeRecordId);
   const asyncAddMfa = useApi(addMfa);
   const asyncSubmitInteraction = useApi(submitInteraction);
-  const asyncSendPrimaryVerificationCode = useApi(sendPrimaryVerificationCode);
-  const trustedDeviceRegisterErrorHandler = useTrustedDeviceOptInErrorHandler(
-    InteractionEvent.Register
+  const asyncSendSubjectVerificationCode = useApi(sendSubjectVerificationCode);
+  // MFA binding after registration continues as SignIn, matching useMfaSubmitErrorHandler.
+  const trustedDeviceSignInErrorHandler = useTrustedDeviceOptInErrorHandler(
+    InteractionEvent.SignIn
   );
 
   return useCallback(
@@ -83,7 +84,7 @@ const useStartIdentifierMfaBinding = ({ replace, submitErrorHandlers }: Options 
 
           if (submitError) {
             await handleError(submitError, {
-              ...trustedDeviceRegisterErrorHandler,
+              ...trustedDeviceSignInErrorHandler,
               ...submitErrorHandlers,
             });
             return;
@@ -95,9 +96,24 @@ const useStartIdentifierMfaBinding = ({ replace, submitErrorHandlers }: Options 
 
           return;
         }
+
+        const fallback = { allowed: false };
+        const allowFallback = () => {
+          // eslint-disable-next-line @silverhand/fp/no-mutation -- record expected profile conflict for fallback below
+          fallback.allowed = true;
+        };
+
+        await handleError(bindError, {
+          'user.email_exists_in_profile': allowFallback,
+          'user.phone_exists_in_profile': allowFallback,
+        });
+
+        if (!fallback.allowed) {
+          return;
+        }
       }
 
-      const [sendError, sendResult] = await asyncSendPrimaryVerificationCode(identifierType);
+      const [sendError, sendResult] = await asyncSendSubjectVerificationCode(identifierType);
 
       if (sendError) {
         await handleError(sendError);
@@ -115,7 +131,7 @@ const useStartIdentifierMfaBinding = ({ replace, submitErrorHandlers }: Options 
     [
       asyncAddMfa,
       asyncGetVerifiedRegisterCodeRecordId,
-      asyncSendPrimaryVerificationCode,
+      asyncSendSubjectVerificationCode,
       asyncSubmitInteraction,
       handleError,
       navigate,
@@ -123,7 +139,7 @@ const useStartIdentifierMfaBinding = ({ replace, submitErrorHandlers }: Options 
       replace,
       setVerificationId,
       submitErrorHandlers,
-      trustedDeviceRegisterErrorHandler,
+      trustedDeviceSignInErrorHandler,
     ]
   );
 };

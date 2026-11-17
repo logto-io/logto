@@ -7,7 +7,7 @@ import UserInteractionContext, {
   type UserInteractionContextType,
 } from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import { bindMfaByVerificationCode, sendPrimaryVerificationCode } from '@/apis/experience';
+import { bindMfaByVerificationCode, sendSubjectVerificationCode } from '@/apis/experience';
 import { type MfaFlowState } from '@/types/guard';
 
 import VerificationCodeMfaBinding from '.';
@@ -42,7 +42,7 @@ jest.mock('react-i18next', () => ({
 jest.mock('@/apis/experience', () => ({
   ...jest.requireActual('@/apis/experience'),
   bindMfaByVerificationCode: jest.fn(),
-  sendPrimaryVerificationCode: jest.fn(),
+  sendSubjectVerificationCode: jest.fn(),
 }));
 
 jest.mock('@/hooks/use-global-redirect-to', () => ({
@@ -81,8 +81,8 @@ const mockedUseLocation = useLocation as jest.MockedFunction<typeof useLocation>
 const mockedBindMfaByVerificationCode = bindMfaByVerificationCode as jest.MockedFunction<
   typeof bindMfaByVerificationCode
 >;
-const mockedSendPrimaryVerificationCode = sendPrimaryVerificationCode as jest.MockedFunction<
-  typeof sendPrimaryVerificationCode
+const mockedSendSubjectVerificationCode = sendSubjectVerificationCode as jest.MockedFunction<
+  typeof sendSubjectVerificationCode
 >;
 
 const createUserInteractionValue = (
@@ -156,7 +156,7 @@ describe('<VerificationCodeMfaBinding />', () => {
     expect(screen.queryByRole('button', { name: 'Fill code' })).toBeNull();
   });
 
-  it('renders ExistingIdentifierCodeVerification when maskedIdentifier and verificationId are present', async () => {
+  it('renders MfaCodeVerification when maskedIdentifier and verificationId are present', async () => {
     mockedBindMfaByVerificationCode.mockResolvedValue({
       redirectTo: 'https://example.com/callback',
     });
@@ -198,7 +198,7 @@ describe('<VerificationCodeMfaBinding />', () => {
 
   it('resends a primary verification code and updates verificationId', async () => {
     const setVerificationId = jest.fn();
-    mockedSendPrimaryVerificationCode.mockResolvedValue({ verificationId: 'resent-email-vid' });
+    mockedSendSubjectVerificationCode.mockResolvedValue({ verificationId: 'resent-email-vid' });
 
     renderEmailBinding(
       buildMaskedEmailState([MfaFactor.EmailVerificationCode]),
@@ -209,7 +209,7 @@ describe('<VerificationCodeMfaBinding />', () => {
     fireEvent.click(screen.getByText('description.resend_passcode'));
 
     await waitFor(() => {
-      expect(mockedSendPrimaryVerificationCode).toHaveBeenCalledWith(SignInIdentifier.Email);
+      expect(mockedSendSubjectVerificationCode).toHaveBeenCalledWith(SignInIdentifier.Email);
       expect(setVerificationId).toHaveBeenCalledWith(
         VerificationType.EmailVerificationCode,
         'resent-email-vid'
