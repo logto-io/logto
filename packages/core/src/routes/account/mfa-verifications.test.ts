@@ -9,6 +9,8 @@ import {
   mockUserTotpMfaVerification,
   mockUserWebAuthnMfaVerification,
 } from '#src/__mocks__/index.js';
+import koaErrorHandler from '#src/middleware/koa-error-handler.js';
+import koaI18next from '#src/middleware/koa-i18next.js';
 import type Queries from '#src/tenants/Queries.js';
 import { MockTenant, type Partial2 } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
@@ -68,6 +70,7 @@ const expectUpdatedMfaEnabled = (enabled: boolean) => {
 describe('account mfa verification routes', () => {
   const tenantContext = new MockTenant(undefined, mockedQueries);
   const accountRequest = createRequester({
+    middlewares: [koaI18next(), koaErrorHandler()],
     authedRoutes: [
       (router) => {
         router.use(async (ctx, next) => {
