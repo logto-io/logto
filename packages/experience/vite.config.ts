@@ -60,6 +60,11 @@ const buildConfig = (mode: string): UserConfig => ({
             return 'cap-widget';
           }
 
+          // Keep the Friendly Captcha SDK in its own lazy-loaded chunk so other tenants don't download it.
+          if (id.includes('/node_modules/@friendlycaptcha/sdk/')) {
+            return 'friendly-captcha';
+          }
+
           for (const largePackage of ['libphonenumber-js', 'core-js']) {
             if (id.includes(`/node_modules/${largePackage}/`)) {
               return largePackage;

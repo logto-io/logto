@@ -43,6 +43,10 @@ const security = {
       name: 'GeeTest',
       description: '極驗自適應 CAPTCHA，提供在地化驗證體驗，在中國大陸存取穩定。',
     },
+    friendly_captcha: {
+      name: 'Friendly Captcha',
+      description: '注重隱私且符合 GDPR 的工作量證明 CAPTCHA，不需要視覺拼圖。',
+    },
   },
   captcha_details: {
     back_to_security: '返回安全',
@@ -64,6 +68,7 @@ const security = {
       '此端點使用 HTTP，僅適用於本機開發。瀏覽器會封鎖 HTTPS 登入頁發出的 HTTP 請求，且密鑰將以明文傳輸。正式環境請使用 HTTPS。',
     geetest_captcha_id: '驗證 ID',
     geetest_captcha_key: '驗證金鑰',
+    friendly_captcha_api_key: 'API 金鑰',
     deletion_description: '你確定要刪除此 CAPTCHA 提供商嗎？',
     captcha_deleted: 'CAPTCHA 提供商刪除成功',
     setup_captcha: '設定 CAPTCHA',

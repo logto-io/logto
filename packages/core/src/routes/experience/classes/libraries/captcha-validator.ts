@@ -3,6 +3,7 @@ import { createHmac } from 'node:crypto';
 import {
   type CapConfig,
   CaptchaType,
+  type FriendlyCaptchaConfig,
   type GeetestConfig,
   RecaptchaEnterpriseMode,
   type CaptchaProvider,
@@ -47,6 +48,10 @@ function isTurnstile(config: CaptchaProvider['config']): config is TurnstileConf
   return config.type === CaptchaType.Turnstile;
 }
 
+function isFriendlyCaptcha(config: CaptchaProvider['config']): config is FriendlyCaptchaConfig {
+  return config.type === CaptchaType.FriendlyCaptcha;
+}
+
 type ScorePassParams = {
   valid: boolean;
   score: number;
@@ -87,6 +92,10 @@ export class CaptchaValidator {
 
     if (isGeetest(config)) {
       return this.verifyGeetest(config, captchaToken);
+    }
+
+    if (isFriendlyCaptcha(config)) {
+      return this.verifyFriendlyCaptcha(config, captchaToken);
     }
 
     throw new Error('Invalid captcha provider');
@@ -225,6 +234,61 @@ export class CaptchaValidator {
       this.log.append({
         success: false,
         errorMessage: 'Failed to get the result from Cap',
+      });
+
+      return false;
+    }
+  }
+
+  /**
+   * Verify the token against the Friendly Captcha v2 siteverify API.
+   *
+   * @see https://developer.friendlycaptcha.com/docs/v2/server-side-validation/siteverify
+   */
+  private async verifyFriendlyCaptcha(config: FriendlyCaptchaConfig, captchaToken: string) {
+    try {
+      const result = await ky
+        .post('https://global.frcapi.com/api/v2/captcha/siteverify', {
+          headers: { 'X-API-Key': config.secretKey },
+          json: {
+            response: captchaToken,
+            sitekey: config.siteKey,
+          },
+          // Friendly Captcha returns 4xx JSON error payloads for invalid API keys or sitekeys.
+          throwHttpErrors: false,
+          retry: 0,
+          timeout: 10_000,
+          fetch: ssrfProtectedFetch,
+        })
+        .json();
+
+      const responseGuard = z.object({
+        success: z.boolean(),
+        error: z
+          .object({
+            error_code: z.string(),
+            detail: z.string().optional(),
+          })
+          .optional(),
+      });
+
+      const response = responseGuard.parse(result);
+      const { error } = response;
+      const errorMessage =
+        !response.success && error
+          ? [error.error_code, error.detail].filter(Boolean).join(': ')
+          : undefined;
+
+      this.log.append({
+        success: response.success,
+        errorMessage,
+      });
+
+      return response.success;
+    } catch {
+      this.log.append({
+        success: false,
+        errorMessage: 'Failed to get the result from Friendly Captcha',
       });
 
       return false;

@@ -1,9 +1,12 @@
 import { CaptchaType } from '@logto/schemas';
+import { conditionalArray } from '@silverhand/essentials';
 
 import cap from '@/assets/images/cap.svg?react';
+import friendlyCaptcha from '@/assets/images/friendly-captcha.svg?react';
 import geetest from '@/assets/images/geetest.svg?react';
 import recaptchaEnterprise from '@/assets/images/recaptcha.svg?react';
 import turnstile from '@/assets/images/turnstile.svg?react';
+import { isDevFeaturesEnabled } from '@/consts/env';
 
 import { type CaptchaProviderMetadata } from './types';
 
@@ -145,6 +148,49 @@ const geetestProvider: CaptchaProviderMetadata = {
   ],
 };
 
+const friendlyCaptchaReadme = `
+# Friendly Captcha
+
+[Friendly Captcha](https://friendlycaptcha.com) is a privacy-first, GDPR-compliant CAPTCHA service based on proof-of-work without visual puzzles.
+
+## Prerequisites
+
+- A Friendly Captcha account.
+
+## Get the sitekey and API key
+
+1. Log in to the [Friendly Captcha dashboard](https://app.friendlycaptcha.com) and go to **Applications**.
+2. Click **+ New Application**, select **v2**, and copy the **Sitekey** (starts with \`FC\`).
+3. Open **API Keys** in the dashboard and create an **API key**.
+
+## Configure Logto
+
+- **Site key** and **API key**: The values you copied above.
+
+${enableCaptchaReadme}
+`;
+
+const friendlyCaptchaProvider: CaptchaProviderMetadata = {
+  name: 'security.captcha_providers.friendly_captcha.name',
+  type: CaptchaType.FriendlyCaptcha,
+  logo: friendlyCaptcha,
+  logoDark: friendlyCaptcha,
+  description: 'security.captcha_providers.friendly_captcha.description',
+  readme: friendlyCaptchaReadme,
+  requiredFields: [
+    {
+      field: 'siteKey',
+      label: 'security.captcha_details.site_key',
+      placeholder: 'security.captcha_details.site_key',
+    },
+    {
+      field: 'secretKey',
+      label: 'security.captcha_details.friendly_captcha_api_key',
+      placeholder: 'security.captcha_details.friendly_captcha_api_key',
+    },
+  ],
+};
+
 export const captchaProviders: CaptchaProviderMetadata[] = [
   {
     name: 'security.captcha_providers.recaptcha_enterprise.name',
@@ -234,4 +280,6 @@ export const captchaProviders: CaptchaProviderMetadata[] = [
     ],
   },
   geetestProvider,
+  // Guard the Friendly Captcha provider behind dev features until it is released.
+  ...conditionalArray(isDevFeaturesEnabled && friendlyCaptchaProvider),
 ];

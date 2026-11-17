@@ -46,6 +46,11 @@ const security = {
       description:
         'CAPTCHA adaptativo de GeeTest con desafíos localizados y buen rendimiento en China continental.',
     },
+    friendly_captcha: {
+      name: 'Friendly Captcha',
+      description:
+        'CAPTCHA basado en prueba de trabajo centrado en la privacidad y conforme al RGPD, sin acertijos visuales.',
+    },
   },
   captcha_details: {
     back_to_security: 'Volver a seguridad',
@@ -67,6 +72,7 @@ const security = {
       'Este endpoint usa HTTP, lo que solo es adecuado para el desarrollo local. Los navegadores bloquean las solicitudes HTTP desde una página de inicio de sesión HTTPS y la clave secreta se enviaría sin cifrar. Usa HTTPS en producción.',
     geetest_captcha_id: 'ID de CAPTCHA',
     geetest_captcha_key: 'Clave de CAPTCHA',
+    friendly_captcha_api_key: 'Clave API',
     deletion_description: '¿Estás seguro de que quieres eliminar este proveedor de CAPTCHA?',
     captcha_deleted: 'Proveedor de CAPTCHA eliminado con éxito',
     setup_captcha: 'Configurar CAPTCHA',

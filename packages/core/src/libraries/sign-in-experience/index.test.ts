@@ -514,6 +514,24 @@ describe('findCaptchaPublicConfig', () => {
     });
   });
 
+  it('should return the Friendly Captcha public config without the secret key', async () => {
+    findCaptchaProvider.mockResolvedValueOnce({
+      ...mockCaptchaProvider,
+      config: {
+        type: CaptchaType.FriendlyCaptcha,
+        siteKey: 'site_key',
+        secretKey: 'api_key',
+      },
+    });
+
+    const captchaPublicConfig = await findCaptchaPublicConfig();
+
+    expect(captchaPublicConfig).toEqual({
+      type: CaptchaType.FriendlyCaptcha,
+      siteKey: 'site_key',
+    });
+  });
+
   it('should return undefined if captcha provider is not found', async () => {
     // eslint-disable-next-line unicorn/no-useless-undefined
     findCaptchaProvider.mockResolvedValueOnce(undefined);

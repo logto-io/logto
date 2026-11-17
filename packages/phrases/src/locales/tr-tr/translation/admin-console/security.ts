@@ -46,6 +46,11 @@ const security = {
       description:
         'Yerelleştirilmiş sorgulamalar ve anakara Çin’de güçlü performans sunan GeeTest uyarlanabilir CAPTCHA.',
     },
+    friendly_captcha: {
+      name: 'Friendly Captcha',
+      description:
+        'Görsel bulmaca gerektirmeyen, gizlilik odaklı ve GDPR uyumlu iş kanıtı tabanlı CAPTCHA.',
+    },
   },
   captcha_details: {
     back_to_security: 'Güvenliğe dön',
@@ -67,6 +72,7 @@ const security = {
       'Bu uç nokta HTTP kullanıyor ve yalnızca yerel geliştirme için uygundur. Tarayıcılar HTTPS oturum açma sayfasından yapılan HTTP isteklerini engeller ve gizli anahtar şifrelenmeden gönderilir. Üretimde HTTPS kullanın.',
     geetest_captcha_id: 'CAPTCHA Kimliği',
     geetest_captcha_key: 'CAPTCHA Anahtarı',
+    friendly_captcha_api_key: 'API anahtarı',
     deletion_description: 'Bu CAPTCHA sağlayıcısını silmek istediğinizden emin misiniz?',
     captcha_deleted: 'CAPTCHA sağlayıcısı başarıyla silindi',
     setup_captcha: "CAPTCHA'yı ayarla",

@@ -1,6 +1,14 @@
-import { CaptchaProviders, captchaConfigGuard } from '@logto/schemas';
+import {
+  CaptchaProviders,
+  capConfigGuard,
+  captchaConfigGuard,
+  geetestConfigGuard,
+  recaptchaEnterpriseConfigGuard,
+  turnstileConfigGuard,
+} from '@logto/schemas';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { koaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
 
@@ -16,10 +24,24 @@ export default function captchaProviderRoutes<T extends ManagementApiRouter>(
     queries.captchaProviders;
   const { updateDefaultSignInExperience } = queries.signInExperiences;
 
+  // Guard the Friendly Captcha provider behind dev features until it is released.
+  const routeCaptchaConfigGuard = EnvSet.values.isDevFeaturesEnabled
+    ? captchaConfigGuard
+    : z.discriminatedUnion('type', [
+        turnstileConfigGuard,
+        recaptchaEnterpriseConfigGuard,
+        capConfigGuard,
+        geetestConfigGuard,
+      ]);
+  const routeCaptchaProviderGuard = CaptchaProviders.guard.extend({
+    config: routeCaptchaConfigGuard,
+  });
+
   router.get(
     '/captcha-provider',
     koaGuard({
       response: CaptchaProviders.guard,
+      responseForOpenApi: routeCaptchaProviderGuard,
       status: [200, 404],
     }),
     async (ctx, next) => {
@@ -42,9 +64,10 @@ export default function captchaProviderRoutes<T extends ManagementApiRouter>(
     '/captcha-provider',
     koaGuard({
       body: z.object({
-        config: captchaConfigGuard,
+        config: routeCaptchaConfigGuard,
       }),
       response: CaptchaProviders.guard,
+      responseForOpenApi: routeCaptchaProviderGuard,
       status: [200],
     }),
     koaQuotaGuard({ key: 'securityFeaturesEnabled', quota: libraries.quota }),

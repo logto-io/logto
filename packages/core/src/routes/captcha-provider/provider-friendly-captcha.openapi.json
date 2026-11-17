@@ -1,0 +1,26 @@
+{
+  "tags": [
+    {
+      "name": "Dev feature"
+    }
+  ],
+  "paths": {
+    "/api/captcha-provider": {
+      "put": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "config": {
+                    "description": "The captcha provider config. The `type` must be `RecaptchaEnterprise`, `Turnstile`, `Cap`, `Geetest`, or `FriendlyCaptcha`, together with the provider-specific fields."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
