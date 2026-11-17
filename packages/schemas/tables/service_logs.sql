@@ -26,10 +26,10 @@ create index service_logs__created_at
    keyset order, without inspecting every email-log payload of the tenant */
 /* no_after_each */
 
-/* Temporary replacements for the email-log indexes dropped by the tenant-ID widening - removed when the originals are restored concurrently */
-create index service_logs__standin_tenant_id_created_at_id
-  on service_logs (tenant_id, created_at desc, id desc);
+create index service_logs__email__tenant_id__created_at__id
+  on service_logs (tenant_id, created_at desc, id desc)
+  where type in ('sendEmail', 'sendEmailFailed');
 
-create index service_logs__standin_email_recipient_created_at_id
-  on service_logs (lower(payload->'data'->>'to'), created_at desc, id desc)
+create index service_logs__email__tenant_id__recipient__created_at__id
+  on service_logs (tenant_id, lower(payload->'data'->>'to'), created_at desc, id desc)
   where type in ('sendEmail', 'sendEmailFailed');
