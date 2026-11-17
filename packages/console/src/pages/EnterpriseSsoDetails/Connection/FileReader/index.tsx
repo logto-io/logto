@@ -30,9 +30,10 @@ export type Props = {
   };
   readonly fieldError?: FieldError;
   readonly setError: (error: FieldError) => void;
+  readonly clearError: () => void;
 };
 
-function FileReader({ onChange, value, attributes, fieldError, setError }: Props) {
+function FileReader({ onChange, value, attributes, fieldError, setError, clearError }: Props) {
   const theme = useTheme();
   const isReadOnlyField = useReadOnlyField();
 
@@ -60,9 +61,10 @@ function FileReader({ onChange, value, attributes, fieldError, setError }: Props
       }
 
       const fileContent = await acceptedFile.text();
+      clearError();
       onChange(fileContent);
     },
-    [onChange, setError]
+    [onChange, setError, clearError]
   );
 
   const handleRemove = () => {
@@ -104,19 +106,17 @@ function FileReader({ onChange, value, attributes, fieldError, setError }: Props
           )}
         </div>
       ) : (
-        <>
-          <div {...getRootProps()}>
-            <Button
-              icon={<UploaderIcon />}
-              title={buttonTitle}
-              size="large"
-              disabled={isReadOnlyField}
-            />
-            <input {...getInputProps({ className: styles.fileInput })} />
-          </div>
-          {Boolean(fieldError) && <div className={styles.error}>{fieldError?.message}</div>}
-        </>
+        <div {...getRootProps()}>
+          <Button
+            icon={<UploaderIcon />}
+            title={buttonTitle}
+            size="large"
+            disabled={isReadOnlyField}
+          />
+          <input {...getInputProps({ className: styles.fileInput })} />
+        </div>
       )}
+      {Boolean(fieldError) && <div className={styles.error}>{fieldError?.message}</div>}
     </div>
   );
 }

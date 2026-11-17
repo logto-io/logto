@@ -57,6 +57,7 @@ function SamlMetadataFormFields({
 
   const {
     setError,
+    clearErrors,
     control,
     register,
     formState: { errors },
@@ -109,6 +110,9 @@ function SamlMetadataFormFields({
                     setError={(error) => {
                       setError('x509Certificate', error);
                     }}
+                    clearError={() => {
+                      clearErrors('x509Certificate');
+                    }}
                     onChange={onChange}
                   />
                   {value && identityProviderConfig && (
@@ -138,6 +142,9 @@ function SamlMetadataFormFields({
                   fieldError={errors.metadata}
                   setError={(error) => {
                     setError('metadata', error);
+                  }}
+                  clearError={() => {
+                    clearErrors('metadata');
                   }}
                   onChange={onChange}
                 />
@@ -188,7 +195,7 @@ type SamlMetadataFormProps = {
 // Do not show inline notification and parsed config preview if it is on guide page.
 function SamlMetadataForm({ config, providerConfig }: SamlMetadataFormProps) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { setValue } = useFormContext<SamlConnectorConfig>();
+  const { setValue, clearErrors } = useFormContext<SamlConnectorConfig>();
   const {
     access: { isReadOnly },
   } = useCurrentTenantScopes();
@@ -222,20 +229,23 @@ function SamlMetadataForm({ config, providerConfig }: SamlMetadataFormProps) {
       return;
     }
 
-    // Reset old format form values.
+    // Reset old format form values and errors.
     switch (formFormat) {
       case FormFormat.Url: {
         setValue('metadataUrl', undefined);
+        clearErrors('metadataUrl');
         break;
       }
       case FormFormat.Xml: {
         setValue('metadata', undefined);
+        clearErrors('metadata');
         break;
       }
       case FormFormat.Manual: {
         setValue('entityId', undefined);
         setValue('signInEndpoint', undefined);
         setValue('x509Certificate', undefined);
+        clearErrors(['entityId', 'signInEndpoint', 'x509Certificate']);
         break;
       }
     }
