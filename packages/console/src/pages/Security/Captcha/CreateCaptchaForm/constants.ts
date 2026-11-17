@@ -1,12 +1,10 @@
 import { CaptchaType } from '@logto/schemas';
-import { conditionalArray } from '@silverhand/essentials';
 
 import cap from '@/assets/images/cap.svg?react';
 import friendlyCaptcha from '@/assets/images/friendly-captcha.svg?react';
 import geetest from '@/assets/images/geetest.svg?react';
 import recaptchaEnterprise from '@/assets/images/recaptcha.svg?react';
 import turnstile from '@/assets/images/turnstile.svg?react';
-import { isDevFeaturesEnabled } from '@/consts/env';
 
 import { type CaptchaProviderMetadata } from './types';
 
@@ -280,6 +278,5 @@ export const captchaProviders: CaptchaProviderMetadata[] = [
     ],
   },
   geetestProvider,
-  // Guard the Friendly Captcha provider behind dev features until it is released.
-  ...conditionalArray(isDevFeaturesEnabled && friendlyCaptchaProvider),
+  friendlyCaptchaProvider,
 ];

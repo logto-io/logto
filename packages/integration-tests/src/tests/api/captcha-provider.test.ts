@@ -6,7 +6,6 @@ import {
   updateCaptchaProvider,
 } from '#src/api/captcha-provider.js';
 import { expectRejects } from '#src/helpers/index.js';
-import { devFeatureDisabledTest, devFeatureTest } from '#src/utils.js';
 
 describe('captcha provider', () => {
   it('should update and get captcha provider successfully', async () => {
@@ -89,7 +88,7 @@ describe('captcha provider', () => {
     await expect(getCaptchaProvider()).resolves.toMatchObject({ config });
   });
 
-  devFeatureTest.it('should update and get Friendly Captcha provider successfully', async () => {
+  it('should update and get Friendly Captcha provider successfully', async () => {
     const config = {
       type: CaptchaType.FriendlyCaptcha,
       siteKey: 'site_key',
@@ -100,22 +99,6 @@ describe('captcha provider', () => {
 
     await expect(getCaptchaProvider()).resolves.toMatchObject({ config });
   });
-
-  devFeatureDisabledTest.it(
-    'should reject Friendly Captcha provider when dev features are disabled',
-    async () => {
-      await expectRejects(
-        updateCaptchaProvider({
-          config: {
-            type: CaptchaType.FriendlyCaptcha,
-            siteKey: 'site_key',
-            secretKey: 'api_key',
-          },
-        }),
-        { code: 'guard.invalid_input', status: 400 }
-      );
-    }
-  );
 
   it('should reject an out-of-range score threshold', async () => {
     await expectRejects(
