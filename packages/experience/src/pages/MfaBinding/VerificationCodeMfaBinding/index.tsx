@@ -1,7 +1,8 @@
-import { InteractionEvent, type SignInIdentifier } from '@logto/schemas';
+import { InteractionEvent, MfaFactor, SignInIdentifier } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { type TFuncKey } from 'i18next';
 import { useCallback, useContext, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
@@ -17,6 +18,7 @@ import ErrorPage from '@/pages/ErrorPage';
 import { UserMfaFlow } from '@/types';
 import { codeVerificationTypeMap } from '@/utils/sign-in-experience';
 
+import ExistingIdentifierCodeVerification from './ExistingIdentifierCodeVerification';
 import styles from './index.module.scss';
 
 type Props = {
@@ -32,8 +34,10 @@ const VerificationCodeMfaBinding = ({
   descriptionKey,
   invalidInputErrorKey,
 }: Props) => {
+  const { t } = useTranslation();
   const mfaFlowState = useMfaFlowState(UserMfaFlow.MfaBinding);
-  const { setVerificationId, setIdentifierInputValue } = useContext(UserInteractionContext);
+  const { verificationIdsMap, setVerificationId, setIdentifierInputValue } =
+    useContext(UserInteractionContext);
   const navigate = useNavigateWithPreservedSearchParams();
   const [errorMessage, setErrorMessage] = useState<string>();
 
@@ -84,14 +88,50 @@ const VerificationCodeMfaBinding = ({
     return <ErrorPage title="error.invalid_session" />;
   }
 
-  const { skippable, availableFactors, suggestion } = mfaFlowState;
+  const { skippable, availableFactors, suggestion, maskedIdentifiers } = mfaFlowState;
+  const factor =
+    identifierType === SignInIdentifier.Email
+      ? MfaFactor.EmailVerificationCode
+      : MfaFactor.PhoneVerificationCode;
+  const maskedIdentifier = maskedIdentifiers?.[factor];
+  const onSkip = conditional(skippable && (suggestion ? skipOptionalMfa : skipMfa));
+
+  if (maskedIdentifier) {
+    const verificationId = verificationIdsMap[codeVerificationTypeMap[identifierType]];
+
+    if (!verificationId) {
+      return <ErrorPage title="error.invalid_session" rawMessage="Verification ID not found" />;
+    }
+
+    return (
+      <SecondaryPageLayout
+        title={`description.verify_${identifierType}`}
+        description="description.enter_passcode"
+        descriptionProps={{
+          address: t(
+            `description.${identifierType === SignInIdentifier.Email ? 'email' : 'phone_number'}`
+          ),
+          target: maskedIdentifier,
+        }}
+        onSkip={onSkip}
+      >
+        <ExistingIdentifierCodeVerification
+          identifierType={identifierType}
+          verificationId={verificationId}
+        />
+        {availableFactors.length > 1 && (
+          <SwitchMfaFactorsLink
+            flow={UserMfaFlow.MfaBinding}
+            flowState={mfaFlowState}
+            className={styles.switchLink}
+          />
+        )}
+      </SecondaryPageLayout>
+    );
+  }
 
   return (
-    <SecondaryPageLayout
-      title={titleKey}
-      description={descriptionKey}
-      onSkip={conditional(skippable && (suggestion ? skipOptionalMfa : skipMfa))}
-    >
+    <SecondaryPageLayout title={titleKey} description={descriptionKey} onSkip={onSkip}>
       <IdentifierProfileForm
         autoFocus
         errorMessage={errorMessage}

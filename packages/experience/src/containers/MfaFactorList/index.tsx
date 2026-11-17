@@ -2,8 +2,10 @@ import { MfaFactor, SignInIdentifier } from '@logto/schemas';
 import { useCallback } from 'react';
 
 import MfaFactorButton from '@/components/Button/MfaFactorButton';
+import useMfaSubmitErrorHandler from '@/hooks/use-mfa-submit-error-handler';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import useSendMfaVerificationCode from '@/hooks/use-send-mfa-verification-code';
+import useStartIdentifierMfaBinding from '@/hooks/use-start-identifier-mfa-binding';
 import useStartTotpBinding from '@/hooks/use-start-totp-binding';
 import useStartWebAuthnProcessing from '@/hooks/use-start-webauthn-processing';
 import { UserMfaFlow } from '@/types';
@@ -19,6 +21,10 @@ type Props = {
 const MfaFactorList = ({ flow, flowState }: Props) => {
   const startTotpBinding = useStartTotpBinding();
   const startWebAuthnProcessing = useStartWebAuthnProcessing();
+  const mfaSubmitErrorHandler = useMfaSubmitErrorHandler();
+  const startIdentifierMfaBinding = useStartIdentifierMfaBinding({
+    submitErrorHandlers: mfaSubmitErrorHandler,
+  });
   const navigate = useNavigateWithPreservedSearchParams();
   const { availableFactors, isWebAuthnUsedAsSignInPasskey } = flowState;
   const { onSubmit: sendMfaVerificationCode } = useSendMfaVerificationCode();
@@ -33,6 +39,15 @@ const MfaFactorList = ({ flow, flowState }: Props) => {
         return startWebAuthnProcessing(flow, flowState);
       }
 
+      if (
+        (factor === MfaFactor.EmailVerificationCode ||
+          factor === MfaFactor.PhoneVerificationCode) &&
+        flow === UserMfaFlow.MfaBinding
+      ) {
+        await startIdentifierMfaBinding(factor, flowState);
+        return;
+      }
+
       if (factor === MfaFactor.EmailVerificationCode && flow === UserMfaFlow.MfaVerification) {
         await sendMfaVerificationCode(SignInIdentifier.Email, flowState);
         return;
@@ -45,7 +60,15 @@ const MfaFactorList = ({ flow, flowState }: Props) => {
 
       navigate(`/${flow}/${factor}`, { state: flowState });
     },
-    [flow, flowState, navigate, sendMfaVerificationCode, startTotpBinding, startWebAuthnProcessing]
+    [
+      flow,
+      flowState,
+      navigate,
+      sendMfaVerificationCode,
+      startIdentifierMfaBinding,
+      startTotpBinding,
+      startWebAuthnProcessing,
+    ]
   );
 
   return (
@@ -54,8 +77,12 @@ const MfaFactorList = ({ flow, flowState }: Props) => {
         const isEmailOrPhone =
           factor === MfaFactor.EmailVerificationCode || factor === MfaFactor.PhoneVerificationCode;
         const maskedIdentifier = isEmailOrPhone ? flowState.maskedIdentifiers?.[factor] : undefined;
-        const isWebAuthnBound = factor === MfaFactor.WebAuthn && !!isWebAuthnUsedAsSignInPasskey;
-        const isDisabled = !!flowState.suggestion && (!!maskedIdentifier || isWebAuthnBound);
+        const isWebAuthnBound =
+          factor === MfaFactor.WebAuthn && Boolean(isWebAuthnUsedAsSignInPasskey);
+        const isFactorBound = flowState.boundFactors
+          ? flowState.boundFactors.includes(factor) || isWebAuthnBound
+          : Boolean(maskedIdentifier) || isWebAuthnBound;
+        const isDisabled = Boolean(flowState.suggestion) && isFactorBound;
 
         return (
           <MfaFactorButton
