@@ -220,6 +220,24 @@ describe('adminUserRoutes', () => {
       expect(response.status).toEqual(422);
     });
 
+    it('should fail if user only has an email verification code MFA record', async () => {
+      findUserById.mockResolvedValueOnce({
+        ...mockUser,
+        mfaVerifications: [
+          {
+            id: 'email-mfa',
+            createdAt: '2025-01-01T00:00:00.000Z',
+            type: MfaFactor.EmailVerificationCode,
+          },
+        ],
+      });
+      const response = await userRequest.post(`/users/${mockUser.id}/mfa-verifications`).send({
+        type: MfaFactor.BackupCode,
+      });
+      expect(response.status).toEqual(422);
+      expect(response.body).toMatchObject({ code: 'session.mfa.backup_code_can_not_be_alone' });
+    });
+
     it('should fail for duplicate', async () => {
       findUserById.mockResolvedValueOnce({
         ...mockUser,

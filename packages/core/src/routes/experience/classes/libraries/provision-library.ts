@@ -9,6 +9,7 @@ import {
   defaultTenantId,
   getTenantOrganizationId,
   getTenantRole,
+  isVerificationCodeMfaFactor,
   MfaFactor,
   type MfaVerification,
   OrganizationInvitationStatus,
@@ -179,10 +180,13 @@ const mergeMfaVerifications = (
     new RequestError({ code: 'user.backup_code_already_in_use', status: 422 })
   );
 
+  const isNonBackupCodeAuthenticator = ({ type }: MfaVerification) =>
+    type !== MfaFactor.BackupCode && !isVerificationCodeMfaFactor(type);
+
   assertThat(
     incomingBackupCode.length === 0 ||
-      existing.some(({ type }) => type !== MfaFactor.BackupCode) ||
-      incoming.some(({ type }) => type !== MfaFactor.BackupCode),
+      existing.some((verification) => isNonBackupCodeAuthenticator(verification)) ||
+      incoming.some((verification) => isNonBackupCodeAuthenticator(verification)),
     new RequestError({ code: 'session.mfa.backup_code_can_not_be_alone', status: 422 })
   );
 

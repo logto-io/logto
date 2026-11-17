@@ -237,6 +237,33 @@ describe('account mfa verification routes', () => {
       );
       expectUpdatedMfaEnabled(true);
     });
+
+    it('rejects adding backup codes when user only has an email verification code MFA record', async () => {
+      findUserById.mockResolvedValueOnce({
+        ...mockUser,
+        mfaVerifications: [
+          {
+            id: 'email-mfa',
+            createdAt: '2024-01-01T00:00:00.000Z',
+            type: MfaFactor.EmailVerificationCode,
+          },
+        ],
+      });
+      findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        mfa: { ...mockSignInExperience.mfa, factors: [MfaFactor.BackupCode] },
+      });
+
+      const codes = Array.from({ length: 10 }, (_, index) => index.toString(16).padStart(10, '0'));
+      const response = await accountRequest.post('/my-account/mfa-verifications').send({
+        type: MfaFactor.BackupCode,
+        codes,
+      });
+
+      expect(response.status).toBe(422);
+      expect(response.body).toMatchObject({ code: 'session.mfa.backup_code_can_not_be_alone' });
+      expect(updateUserById).not.toHaveBeenCalled();
+    });
   });
 
   describe('GET /api/my-account/mfa-verifications', () => {

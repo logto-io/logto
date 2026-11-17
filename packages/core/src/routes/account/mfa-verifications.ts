@@ -2,6 +2,7 @@
 import { UserScope } from '@logto/core-kit';
 import {
   VerificationType,
+  isVerificationCodeMfaFactor,
   MfaFactor,
   AccountCenterControlValue,
   userMfaVerificationResponseGuard,
@@ -174,7 +175,9 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
             })
           );
           assertThat(
-            user.mfaVerifications.some(({ type }) => type !== MfaFactor.BackupCode),
+            user.mfaVerifications.some(
+              ({ type }) => type !== MfaFactor.BackupCode && !isVerificationCodeMfaFactor(type)
+            ),
             new RequestError({
               code: 'session.mfa.backup_code_can_not_be_alone',
               status: 422,

@@ -1,6 +1,7 @@
 /* eslint-disable complexity */
 import {
   InteractionEvent,
+  isVerificationCodeMfaFactor,
   MfaFactor,
   MfaPolicy,
   userMfaDataGuard,
@@ -30,6 +31,9 @@ import {
   type VerifiedSignInInteractionResult,
 } from '../types/index.js';
 import { storeInteractionResult } from '../utils/interaction.js';
+
+const filterSupportedMfaVerifications = (mfaVerifications: MfaVerification[]) =>
+  mfaVerifications.filter(({ type }) => !isVerificationCodeMfaFactor(type));
 
 export const verifyBindMfa = async (
   tenant: TenantContext,
@@ -73,7 +77,7 @@ export const verifyMfa = async (
   const { accountId, verifiedMfa } = interaction;
 
   const { mfaVerifications, logtoConfig } = await tenant.queries.users.findUserById(accountId);
-  const availableUserVerifications = mfaVerifications
+  const availableUserVerifications = filterSupportedMfaVerifications(mfaVerifications)
     .filter((verification) => {
       // Only allow MFA that is configured in sign-in experience
       if (!factors.includes(verification.type)) {
@@ -194,7 +198,7 @@ export const validateMandatoryBindMfa = async (
 
     // If the user has linked currently available MFA before
     const hasFactorInUser = availableFactors.some((factor) =>
-      mfaVerifications.some(({ type }) => type === factor)
+      filterSupportedMfaVerifications(mfaVerifications).some(({ type }) => type === factor)
     );
 
     // MFA is bound in current interaction or MFA is bound before, skip check
@@ -245,17 +249,18 @@ export const validateBindMfaBackupCode = async (
   if (event === InteractionEvent.SignIn) {
     const { accountId } = interaction;
     const { mfaVerifications } = await tenant.queries.users.findUserById(accountId);
+    const supportedVerifications = filterSupportedMfaVerifications(mfaVerifications);
 
     // Skip check if there is no new MFA and there is no existing MFA configured
     if (
       !bindMfas.some(({ type }) => type !== MfaFactor.BackupCode) &&
-      !mfaVerifications.some(({ type }) => type !== MfaFactor.BackupCode)
+      !supportedVerifications.some(({ type }) => type !== MfaFactor.BackupCode)
     ) {
       return interaction;
     }
 
     if (
-      mfaVerifications.some((verification) => {
+      supportedVerifications.some((verification) => {
         return (
           verification.type === MfaFactor.BackupCode &&
           verification.codes.some((code) => !code.usedAt)

@@ -7,7 +7,7 @@ import {
   type Mfa,
 } from '../foundations/jsonb-types/index.js';
 
-const isVerificationCodeMfaFactor = (factor: MfaFactor) =>
+export const isVerificationCodeMfaFactor = (factor: MfaFactor) =>
   factor === MfaFactor.EmailVerificationCode || factor === MfaFactor.PhoneVerificationCode;
 
 /**

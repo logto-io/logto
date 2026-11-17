@@ -537,6 +537,33 @@ describe('ProvisionLibrary', () => {
       expect(insertUser).not.toHaveBeenCalled();
     });
 
+    it('rejects backup codes paired only with an email verification code MFA record', async () => {
+      const { provisionLibrary, insertUser } = createProvisionLibrary();
+
+      await expect(
+        provisionLibrary.createUser(
+          {
+            primaryEmail: 'jane@example.com',
+          },
+          {
+            mfaVerifications: [
+              {
+                id: 'email-id',
+                type: MfaFactor.EmailVerificationCode,
+                createdAt: '2025-01-01T00:00:00.000Z',
+              },
+              mfaVerifications.backupCode,
+            ],
+          }
+        )
+      ).rejects.toMatchObject({
+        code: 'session.mfa.backup_code_can_not_be_alone',
+        status: 422,
+      });
+
+      expect(insertUser).not.toHaveBeenCalled();
+    });
+
     it('rejects more than one TOTP factor in the migrated factors', async () => {
       const { provisionLibrary, insertUser } = createProvisionLibrary();
 

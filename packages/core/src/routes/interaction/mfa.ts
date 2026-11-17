@@ -1,5 +1,6 @@
 import {
   InteractionEvent,
+  isVerificationCodeMfaFactor,
   MfaFactor,
   bindMfaPayloadGuard,
   verifyMfaPayloadGuard,
@@ -67,8 +68,12 @@ export default function mfaRoutes<T extends IRouterParamContext>(
           ? await queries.users.findUserById(accountId)
           : { mfaVerifications: [] };
         assertThat(
-          bindMfas.some(({ type }) => type !== MfaFactor.BackupCode) ||
-            mfaVerifications.some(({ type }) => type !== MfaFactor.BackupCode),
+          bindMfas.some(
+            ({ type }) => type !== MfaFactor.BackupCode && !isVerificationCodeMfaFactor(type)
+          ) ||
+            mfaVerifications.some(
+              ({ type }) => type !== MfaFactor.BackupCode && !isVerificationCodeMfaFactor(type)
+            ),
           'session.mfa.backup_code_can_not_be_alone'
         );
       } else {
