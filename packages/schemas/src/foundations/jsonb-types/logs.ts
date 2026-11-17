@@ -81,6 +81,18 @@ export const logContextPayloadGuard = z
     cimdClientId: z.string().optional(),
     sessionId: z.string().optional(),
     params: z.record(z.string(), z.unknown()).optional(),
+    /** Number of delivery attempts made so far (`TriggerHook.*` webhook logs). */
+    attempts: z.number().int().nonnegative().optional(),
+    /**
+     * Scheduled time of the next retry attempt in unix milliseconds (`TriggerHook.*` webhook
+     * logs). Present only while a retry is pending.
+     */
+    nextAttemptAt: z.number().optional(),
+    /**
+     * ID of the permanently failed `TriggerHook.*` log entry that this manual redelivery was
+     * triggered from.
+     */
+    redeliveredFrom: z.string().optional(),
   })
   .catchall(z.unknown());
 
