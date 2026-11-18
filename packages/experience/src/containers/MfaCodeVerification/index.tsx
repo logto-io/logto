@@ -80,8 +80,6 @@ const MfaCodeVerification = ({ identifierType, verificationId, verifyCode, resen
         className={styles.codeInput}
         error={errorMessage}
         onChange={(code) => {
-          setInputErrorMessage(undefined);
-          clearErrorMessage?.();
           setCodeInput(code);
           if (isCodeReady(code)) {
             void handleSubmit(code);
@@ -100,7 +98,7 @@ const MfaCodeVerification = ({ identifierType, verificationId, verifyCode, resen
                 <TextLink
                   className={styles.link}
                   onClick={async () => {
-                    clearErrorMessage?.();
+                    clearErrorMessage();
                     setInputErrorMessage(undefined);
                     setCodeInput([]);
                     const newId = await onResendVerificationCode();

@@ -12,7 +12,7 @@ import useGeneralVerificationCodeErrorHandler from '../VerificationCode/use-gene
 
 type UseMfaCodeVerificationResult = {
   errorMessage?: string;
-  clearErrorMessage?: () => void;
+  clearErrorMessage: () => void;
   onSubmit: (code: string) => Promise<void>;
 };
 

@@ -58,12 +58,6 @@ export const getStepUpContext = async (): Promise<InteractionAuthenticationConte
 };
 
 /**
- * Send a verification code to the pinned subject's primary email or phone. Only the identifier
- * type is sent: Core resolves the value from the subject, and the raw identifier never reaches
- * the browser.
- */
-
-/**
  * Verify the pinned subject's password and complete the interaction.
  *
  * Only the password is sent: Core verifies it against the pinned subject's credential, so no
@@ -88,5 +82,3 @@ export const verifyStepUpVerificationCode = async (payload: SubjectVerificationC
 
   return identifyAndSubmitInteraction({ verificationId: verifiedVerificationId });
 };
-
-export { sendSubjectVerificationCode as sendStepUpVerificationCode } from './subject-verification-code';
