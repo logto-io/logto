@@ -2228,6 +2228,7 @@ describe('POST /experience/submit', () => {
         code: 'user.missing_mfa',
         data: {
           availableFactors: [MfaFactor.EmailVerificationCode],
+          maskedIdentifiers: { [MfaFactor.EmailVerificationCode]: 'exis****@logto.dev' },
         },
       });
 
@@ -2258,6 +2259,88 @@ describe('POST /experience/submit', () => {
       expect(createCredential).toHaveBeenCalledWith(expect.objectContaining({ userId: user.id }));
     }
   );
+
+  it('allows enrolling an existing primary phone from suggest_additional_mfa after enrolling primary email in explicit mode', async () => {
+    setDevFeaturesEnabled(true);
+    const user = {
+      ...mockUser,
+      primaryEmail: 'existing@logto.dev',
+      primaryPhone: '16502530000',
+      mfaVerifications: [],
+    };
+    const { requester, users } = createRequesterWithMocks({
+      user,
+      mfa: {
+        policy: MfaPolicy.Mandatory,
+        factors: [MfaFactor.EmailVerificationCode, MfaFactor.PhoneVerificationCode, MfaFactor.TOTP],
+        verificationCodeEnrollment: MfaVerificationCodeEnrollment.Explicit,
+      },
+      interactionResult: {
+        verificationRecords: [
+          {
+            id: 'existing-email-vid',
+            type: VerificationType.EmailVerificationCode,
+            identifier: { type: SignInIdentifier.Email, value: 'existing@logto.dev' },
+            templateType: TemplateType.BindMfa,
+            verified: true,
+            userId: user.id,
+          },
+          {
+            id: 'existing-phone-vid',
+            type: VerificationType.PhoneVerificationCode,
+            identifier: { type: SignInIdentifier.Phone, value: '16502530000' },
+            templateType: TemplateType.BindMfa,
+            verified: true,
+            userId: user.id,
+          },
+        ],
+      },
+      persistInteractionResult: true,
+    });
+
+    const firstBindResponse = await requester.post('/experience/profile/mfa').send({
+      type: MfaFactor.EmailVerificationCode,
+      verificationId: 'existing-email-vid',
+    });
+    expect(firstBindResponse.status).toBe(204);
+
+    const suggestResponse = await requester.post('/experience/submit');
+    expect(suggestResponse.status).toBe(422);
+    expect(suggestResponse.body).toMatchObject({
+      code: 'session.mfa.suggest_additional_mfa',
+      data: {
+        availableFactors: [
+          MfaFactor.TOTP,
+          MfaFactor.PhoneVerificationCode,
+          MfaFactor.EmailVerificationCode,
+        ],
+        maskedIdentifiers: {
+          [MfaFactor.EmailVerificationCode]: 'exis****@logto.dev',
+          [MfaFactor.PhoneVerificationCode]: '****0000',
+        },
+        boundFactors: [MfaFactor.EmailVerificationCode],
+        skippable: true,
+        suggestion: true,
+      },
+    });
+
+    const secondBindResponse = await requester.post('/experience/profile/mfa').send({
+      type: MfaFactor.PhoneVerificationCode,
+      verificationId: 'existing-phone-vid',
+    });
+    expect(secondBindResponse.status).toBe(204);
+
+    const submitResponse = await requester.post('/experience/submit');
+    expect(submitResponse.status).toBe(200);
+
+    const updatePayload = users.updateUserById.mock.calls[0]?.[1] as Record<string, unknown>;
+    expect(updatePayload).not.toHaveProperty('primaryEmail');
+    expect(updatePayload).not.toHaveProperty('primaryPhone');
+    expect(updatePayload.mfaVerifications).toEqual([
+      expect.objectContaining({ type: MfaFactor.EmailVerificationCode }),
+      expect.objectContaining({ type: MfaFactor.PhoneVerificationCode }),
+    ]);
+  });
 });
 
 describe('POST /experience/abort', () => {

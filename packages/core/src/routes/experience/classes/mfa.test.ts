@@ -5,6 +5,7 @@ import {
   MfaFactor,
   type Mfa as MfaSettings,
   MfaPolicy,
+  MfaVerificationCodeEnrollment,
   type OrganizationWithRoles,
   OrganizationRequiredMfaPolicy,
   SignInIdentifier,
@@ -984,6 +985,324 @@ describe('Email and Phone MFA explicit enrollment', () => {
       code: 'session.verification_session_not_found',
       status: 404,
     });
+  });
+
+  it('includes maskedIdentifiers on user.missing_mfa in explicit mode only when dev features are enabled', async () => {
+    const mfaSettings: MfaSettings = {
+      policy: MfaPolicy.Mandatory,
+      factors: [MfaFactor.TOTP, MfaFactor.EmailVerificationCode, MfaFactor.PhoneVerificationCode],
+      verificationCodeEnrollment: MfaVerificationCodeEnrollment.Explicit,
+      organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+    };
+    const user: Partial<User> = {
+      id: 'user-id',
+      primaryEmail: 'alice@logto.io',
+      primaryPhone: '16502530000',
+      logtoConfig: {},
+      mfaVerifications: [],
+    };
+
+    setDevFeaturesEnabled(true);
+    await expect(createMfa({ mfaSettings, user }).mfa.assertMfaFulfilled()).rejects.toMatchObject({
+      code: 'user.missing_mfa',
+      status: 422,
+      data: {
+        availableFactors: [
+          MfaFactor.TOTP,
+          MfaFactor.EmailVerificationCode,
+          MfaFactor.PhoneVerificationCode,
+        ],
+        maskedIdentifiers: {
+          [MfaFactor.EmailVerificationCode]: 'alic****@logto.io',
+          [MfaFactor.PhoneVerificationCode]: '****0000',
+        },
+      },
+    });
+
+    setDevFeaturesEnabled(false);
+    const disabledAssertion = createMfa({ mfaSettings, user }).mfa.assertMfaFulfilled();
+    await expect(disabledAssertion).rejects.toMatchObject({
+      code: 'user.missing_mfa',
+      status: 422,
+    });
+    await expect(disabledAssertion).rejects.not.toHaveProperty('data.maskedIdentifiers');
+  });
+
+  it('suggests another MFA factor in explicit mode only when a dual-purpose factor was bound in this session', async () => {
+    setDevFeaturesEnabled(true);
+    const explicitSettings: MfaSettings = {
+      policy: MfaPolicy.Mandatory,
+      factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
+      verificationCodeEnrollment: MfaVerificationCodeEnrollment.Explicit,
+      organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+    };
+
+    // Binding EmailVerificationCode for a new address (username sign-up) triggers the suggestion
+    // with the masked staged email even when `signUp.identifiers` does not include Email.
+    const { mfa: enrolledEmailMfa } = createMfa({
+      mfaSettings: explicitSettings,
+      mfaData: { emailVerificationCode: true },
+      user: { id: 'user-id', primaryEmail: null, logtoConfig: {}, mfaVerifications: [] },
+      currentProfile: { primaryEmail: 'new@logto.io' },
+    });
+    jest
+      .spyOn(
+        (
+          enrolledEmailMfa as unknown as {
+            signInExperienceValidator: SignInExperienceValidator;
+          }
+        ).signInExperienceValidator,
+        'getSignInExperienceData'
+      )
+      .mockResolvedValue({
+        signUp: { identifiers: [SignInIdentifier.Username] },
+        passkeySignIn: { enabled: false },
+      } as never);
+
+    await expect(enrolledEmailMfa.assertMfaFulfilled()).rejects.toMatchObject({
+      code: 'session.mfa.suggest_additional_mfa',
+      status: 422,
+      data: {
+        availableFactors: [MfaFactor.TOTP, MfaFactor.EmailVerificationCode],
+        maskedIdentifiers: { [MfaFactor.EmailVerificationCode]: '****@logto.io' },
+        boundFactors: [MfaFactor.EmailVerificationCode],
+        skippable: true,
+        suggestion: true,
+      },
+    });
+
+    // Previously stored EmailVerificationCode without session binding does not re-suggest.
+    const { mfa: previouslyEnrolledMfa } = createMfa({
+      mfaSettings: explicitSettings,
+      user: {
+        id: 'user-id',
+        primaryEmail: 'old@logto.io',
+        logtoConfig: {},
+        mfaVerifications: [
+          {
+            id: 'email-mfa-1',
+            type: MfaFactor.EmailVerificationCode,
+            createdAt: new Date(0).toISOString(),
+          },
+        ],
+      },
+    });
+    jest
+      .spyOn(
+        (
+          previouslyEnrolledMfa as unknown as {
+            signInExperienceValidator: SignInExperienceValidator;
+          }
+        ).signInExperienceValidator,
+        'getSignInExperienceData'
+      )
+      .mockResolvedValue({
+        signUp: { identifiers: [SignInIdentifier.Username] },
+        passkeySignIn: { enabled: false },
+      } as never);
+
+    await expect(previouslyEnrolledMfa.assertMfaFulfilled()).resolves.toBeUndefined();
+
+    // Binding sign-in passkey in explicit mode triggers the suggestion; plain WebAuthn without
+    // passkey sign-in does not.
+    const webAuthnBind = {
+      type: MfaFactor.WebAuthn as const,
+      rpId: 'logto.dev',
+      credentialId: 'cred-1',
+      publicKey: 'pub-1',
+      transports: [],
+      counter: 0,
+      agent: 'agent',
+    };
+    const buildPasskeyExplicit = (passkeyEnabled: boolean) => {
+      const { mfa } = createMfa({
+        mfaSettings: {
+          policy: MfaPolicy.Mandatory,
+          factors: [MfaFactor.WebAuthn, MfaFactor.TOTP],
+          verificationCodeEnrollment: MfaVerificationCodeEnrollment.Explicit,
+          organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+        },
+        mfaData: { webAuthn: [webAuthnBind] },
+      });
+      jest
+        .spyOn(
+          (
+            mfa as unknown as {
+              signInExperienceValidator: SignInExperienceValidator;
+            }
+          ).signInExperienceValidator,
+          'getSignInExperienceData'
+        )
+        .mockResolvedValue({
+          signUp: { identifiers: [SignInIdentifier.Username] },
+          passkeySignIn: { enabled: passkeyEnabled },
+        } as never);
+      return mfa;
+    };
+
+    await expect(buildPasskeyExplicit(true).assertMfaFulfilled()).rejects.toMatchObject({
+      code: 'session.mfa.suggest_additional_mfa',
+      data: { isWebAuthnUsedAsSignInPasskey: true },
+    });
+    await expect(buildPasskeyExplicit(false).assertMfaFulfilled()).resolves.toBeUndefined();
+  });
+
+  it('exposes unenrolled primary identifiers and boundFactors on suggest_additional_mfa in explicit mode when dev features are enabled', async () => {
+    const mockSignInExperience = (
+      mfa: Mfa,
+      { passkeyEnabled = false }: { passkeyEnabled?: boolean } = {}
+    ) => {
+      jest
+        .spyOn(
+          (
+            mfa as unknown as {
+              signInExperienceValidator: SignInExperienceValidator;
+            }
+          ).signInExperienceValidator,
+          'getSignInExperienceData'
+        )
+        .mockResolvedValue({
+          signUp: { identifiers: [SignInIdentifier.Email] },
+          passkeySignIn: { enabled: passkeyEnabled },
+        } as never);
+    };
+
+    const user: Partial<User> = {
+      id: 'user-id',
+      primaryEmail: 'alice@logto.io',
+      primaryPhone: '16502530000',
+      logtoConfig: {},
+      mfaVerifications: [],
+    };
+    const buildExplicitMfa = (
+      factors: MfaFactor[],
+      mfaData: MfaData,
+      options?: { passkeyEnabled?: boolean }
+    ) => {
+      const { mfa } = createMfa({
+        mfaSettings: {
+          policy: MfaPolicy.Mandatory,
+          factors,
+          verificationCodeEnrollment: MfaVerificationCodeEnrollment.Explicit,
+          organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+        },
+        mfaData,
+        user,
+      });
+      mockSignInExperience(mfa, options);
+      return mfa;
+    };
+
+    setDevFeaturesEnabled(true);
+
+    // Enrolling EmailVerificationCode when the user also has an unenrolled primaryPhone exposes
+    // both masked identifiers while marking only EmailVerificationCode as bound.
+    await expect(
+      buildExplicitMfa(
+        [MfaFactor.TOTP, MfaFactor.EmailVerificationCode, MfaFactor.PhoneVerificationCode],
+        { emailVerificationCode: true }
+      ).assertMfaFulfilled()
+    ).rejects.toMatchObject({
+      code: 'session.mfa.suggest_additional_mfa',
+      status: 422,
+      data: {
+        availableFactors: [
+          MfaFactor.TOTP,
+          MfaFactor.PhoneVerificationCode,
+          MfaFactor.EmailVerificationCode,
+        ],
+        maskedIdentifiers: {
+          [MfaFactor.EmailVerificationCode]: 'alic****@logto.io',
+          [MfaFactor.PhoneVerificationCode]: '****0000',
+        },
+        boundFactors: [MfaFactor.EmailVerificationCode],
+      },
+    });
+
+    // Does not expose PhoneVerificationCode in maskedIdentifiers when Phone MFA is not offered.
+    const withoutPhoneAssertion = buildExplicitMfa(
+      [MfaFactor.TOTP, MfaFactor.EmailVerificationCode],
+      { emailVerificationCode: true }
+    ).assertMfaFulfilled();
+    await expect(withoutPhoneAssertion).rejects.toMatchObject({
+      code: 'session.mfa.suggest_additional_mfa',
+      data: {
+        maskedIdentifiers: { [MfaFactor.EmailVerificationCode]: 'alic****@logto.io' },
+        boundFactors: [MfaFactor.EmailVerificationCode],
+      },
+    });
+    await expect(withoutPhoneAssertion).rejects.not.toHaveProperty([
+      'data',
+      'maskedIdentifiers',
+      MfaFactor.PhoneVerificationCode,
+    ]);
+
+    // Binding a sign-in passkey first exposes both unenrolled email and phone primary identifiers.
+    const webAuthnBind = {
+      type: MfaFactor.WebAuthn as const,
+      rpId: 'logto.dev',
+      credentialId: 'cred-1',
+      publicKey: 'pub-1',
+      transports: [],
+      counter: 0,
+      agent: 'agent',
+    };
+    await expect(
+      buildExplicitMfa(
+        [MfaFactor.WebAuthn, MfaFactor.EmailVerificationCode, MfaFactor.PhoneVerificationCode],
+        { webAuthn: [webAuthnBind] },
+        { passkeyEnabled: true }
+      ).assertMfaFulfilled()
+    ).rejects.toMatchObject({
+      code: 'session.mfa.suggest_additional_mfa',
+      status: 422,
+      data: {
+        maskedIdentifiers: {
+          [MfaFactor.EmailVerificationCode]: 'alic****@logto.io',
+          [MfaFactor.PhoneVerificationCode]: '****0000',
+        },
+        boundFactors: [MfaFactor.WebAuthn],
+        isWebAuthnUsedAsSignInPasskey: true,
+      },
+    });
+
+    // When dev features are disabled, boundFactors is omitted from suggest_additional_mfa.
+    setDevFeaturesEnabled(false);
+    const { mfa: implicitMfa } = createMfa({
+      interactionEvent: InteractionEvent.Register,
+      mfaSettings: {
+        policy: MfaPolicy.Mandatory,
+        factors: [MfaFactor.TOTP, MfaFactor.EmailVerificationCode, MfaFactor.PhoneVerificationCode],
+        organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+      },
+      user,
+    });
+    jest
+      .spyOn(
+        (
+          implicitMfa as unknown as {
+            signInExperienceValidator: SignInExperienceValidator;
+          }
+        ).signInExperienceValidator,
+        'getSignInExperienceData'
+      )
+      .mockResolvedValue({
+        signUp: { identifiers: [SignInIdentifier.Email, SignInIdentifier.Phone] },
+        passkeySignIn: { enabled: false },
+      } as never);
+
+    const disabledAssertion = implicitMfa.assertMfaFulfilled();
+    await expect(disabledAssertion).rejects.toMatchObject({
+      code: 'session.mfa.suggest_additional_mfa',
+      status: 422,
+      data: {
+        maskedIdentifiers: {
+          [MfaFactor.EmailVerificationCode]: 'alic****@logto.io',
+          [MfaFactor.PhoneVerificationCode]: '****0000',
+        },
+      },
+    });
+    await expect(disabledAssertion).rejects.not.toHaveProperty('data.boundFactors');
   });
 });
 /* eslint-enable max-lines */
