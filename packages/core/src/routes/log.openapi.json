@@ -61,6 +61,32 @@
                 "description": "Pagination links per RFC 5988. `rel=\"first\"` and `rel=\"prev\"` are emitted as usual. When the response is capped (`Total-Number-Is-Capped: true`), `rel=\"last\"` and `rel=\"next\"` are omitted because the saturated count makes the derived page count unreliable — clients should walk forward by incrementing `page` and stop on an empty response.",
                 "schema": { "type": "string" }
               }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "properties": {
+                      "payload": {
+                        "properties": {
+                          "attempts": {
+                            "x-logto-dev-feature": true,
+                            "description": "The number of delivery attempts made for this webhook event."
+                          },
+                          "nextAttemptAt": {
+                            "x-logto-dev-feature": true,
+                            "description": "The scheduled time of the next retry attempt, in unix milliseconds. Present only while a retry is pending."
+                          },
+                          "redeliveredFrom": {
+                            "x-logto-dev-feature": true,
+                            "description": "The ID of the failed webhook log entry that this manual redelivery was triggered from."
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -102,7 +128,31 @@
         "description": "Get log details by ID.",
         "responses": {
           "200": {
-            "description": "Log details."
+            "description": "Log details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "payload": {
+                      "properties": {
+                        "attempts": {
+                          "x-logto-dev-feature": true,
+                          "description": "The number of delivery attempts made for this webhook event."
+                        },
+                        "nextAttemptAt": {
+                          "x-logto-dev-feature": true,
+                          "description": "The scheduled time of the next retry attempt, in unix milliseconds. Present only while a retry is pending."
+                        },
+                        "redeliveredFrom": {
+                          "x-logto-dev-feature": true,
+                          "description": "The ID of the failed webhook log entry that this manual redelivery was triggered from."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
             "description": "Log not found."
