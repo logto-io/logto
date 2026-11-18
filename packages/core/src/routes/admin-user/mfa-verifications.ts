@@ -1,4 +1,4 @@
-import { MfaFactor } from '@logto/schemas';
+import { isVerificationCodeMfaFactor, MfaFactor } from '@logto/schemas';
 import { getUserDisplayName } from '@logto/shared';
 import { yes } from '@silverhand/essentials';
 import { authenticator } from 'otplib';
@@ -139,7 +139,9 @@ export default function adminUserMfaVerificationsRoutes<T extends ManagementApiR
         })
       );
       assertThat(
-        mfaVerifications.some(({ type }) => type !== MfaFactor.BackupCode),
+        mfaVerifications.some(
+          ({ type }) => type !== MfaFactor.BackupCode && !isVerificationCodeMfaFactor(type)
+        ),
         new RequestError({
           code: 'session.mfa.backup_code_can_not_be_alone',
           status: 422,

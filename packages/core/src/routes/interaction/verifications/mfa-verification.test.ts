@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Legacy interaction MFA verification scenarios share the same suite. */
 import crypto from 'node:crypto';
 
 import { PasswordPolicyChecker } from '@logto/core-kit';
@@ -426,4 +427,35 @@ describe('verifyMfa', () => {
       )
     );
   });
+
+  it('ignores stored email/phone verification code MFA records', async () => {
+    findUserById.mockResolvedValueOnce({
+      ...mockUser,
+      mfaVerifications: [
+        {
+          id: 'email-mfa',
+          type: MfaFactor.EmailVerificationCode,
+          createdAt: '2025-01-01T00:00:00.000Z',
+        },
+      ],
+    });
+    const emailEnabledCtx = {
+      ...baseCtx,
+      signInExperience: {
+        ...mockSignInExperience,
+        mfa: {
+          factors: [MfaFactor.EmailVerificationCode],
+          policy: MfaPolicy.PromptAtSignInAndSignUp,
+        },
+      },
+    };
+
+    await expect(
+      verifyMfa(emailEnabledCtx, tenantContext, {
+        ...signInInteraction,
+        verifiedMfa: undefined,
+      })
+    ).resolves.not.toThrow();
+  });
 });
+/* eslint-enable max-lines */

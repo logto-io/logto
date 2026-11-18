@@ -5,6 +5,7 @@ import {
   ForgotPasswordMethod,
   MfaFactor,
   MfaPolicy,
+  MfaVerificationCodeEnrollment,
   resolveLicenseQuota,
   type AccountCenter,
   type LicenseQuota,
@@ -33,6 +34,7 @@ import {
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import LicenseReader from '#src/license/LicenseReader.js';
+import { resetDevFeaturesEnabled, setDevFeaturesEnabled } from '#src/test-utils/dev-features.js';
 import { buildLicensePayload } from '#src/test-utils/license.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
@@ -96,7 +98,6 @@ const signInExperienceRequester = createRequester({
   authedRoutes: signInExperiencesRoutes,
   tenantContext,
 });
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
 const originalIsCloud = EnvSet.values.isCloud;
 const originalIsProduction = EnvSet.values.isProduction;
 
@@ -105,8 +106,7 @@ const createDevFeaturesDisabledRequester = (
 ) => {
   // Toggle EnvSet in place instead of resetting modules and re-importing the route graph,
   // which is slow enough to hit the default Jest timeout on CI.
-  // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet in this route test without reloading mocked modules.
-  (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = false;
+  setDevFeaturesEnabled(false);
   // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet in this route test without reloading mocked modules.
   (EnvSet.values as { isCloud: boolean }).isCloud = false;
   // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet in this route test without reloading mocked modules.
@@ -198,8 +198,7 @@ const createCustomUiCspRequester = async ({
   isCloud = true,
   isProduction = false,
 } = {}) => {
-  // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet in this route test without reloading mocked modules.
-  (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled = isDevFeaturesEnabled;
+  setDevFeaturesEnabled(isDevFeaturesEnabled);
   // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet in this route test without reloading mocked modules.
   (EnvSet.values as { isCloud: boolean }).isCloud = isCloud;
   // eslint-disable-next-line @silverhand/fp/no-mutation -- Toggle EnvSet in this route test without reloading mocked modules.
@@ -829,9 +828,7 @@ describe('PATCH /sign-in-exp', () => {
 
 describe('sign-in experience routes with dev features disabled', () => {
   afterEach(() => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after each feature-gate test.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
-      originalIsDevFeaturesEnabled;
+    resetDevFeaturesEnabled();
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after each feature-gate test.
     (EnvSet.values as { isCloud: boolean }).isCloud = originalIsCloud;
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after each feature-gate test.
@@ -886,6 +883,30 @@ describe('sign-in experience routes with dev features disabled', () => {
     expect(updateDefaultSignInExperience).toHaveBeenCalledWith({ adaptiveMfa, mfa });
     expect(response.status).toEqual(200);
     expect(response.body).toEqual(expect.objectContaining({ adaptiveMfa, mfa }));
+  });
+
+  it('should store the MFA verification code enrollment mode only with dev features', async () => {
+    const { requester, updateDefaultSignInExperience } = createDevFeaturesDisabledRequester();
+    const mfa = {
+      policy: MfaPolicy.PromptAtSignInAndSignUp,
+      factors: [MfaFactor.TOTP],
+    };
+    const mfaWithMode = {
+      ...mfa,
+      verificationCodeEnrollment: MfaVerificationCodeEnrollment.Explicit,
+    };
+
+    const response = await requester.patch('/sign-in-exp').send({ mfa: mfaWithMode });
+
+    expect(response.status).toEqual(200);
+    expect(updateDefaultSignInExperience).toHaveBeenLastCalledWith({ mfa });
+
+    // `afterEach` restores the flag.
+    setDevFeaturesEnabled(true);
+    const devResponse = await requester.patch('/sign-in-exp').send({ mfa: mfaWithMode });
+
+    expect(devResponse.status).toEqual(200);
+    expect(updateDefaultSignInExperience).toHaveBeenLastCalledWith({ mfa: mfaWithMode });
   });
 
   it('should include custom allowlist in GET response', async () => {
@@ -978,9 +999,7 @@ describe('PATCH /sign-in-exp signUpProfileFields', () => {
 describe('PATCH /sign-in-exp customUiCsp', () => {
   afterEach(() => {
     jest.restoreAllMocks();
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after each feature-gate test.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
-      originalIsDevFeaturesEnabled;
+    resetDevFeaturesEnabled();
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after each feature-gate test.
     (EnvSet.values as { isCloud: boolean }).isCloud = originalIsCloud;
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after each feature-gate test.
@@ -1207,9 +1226,7 @@ describe('PATCH /sign-in-exp crossOriginOpenerPolicy', () => {
 
   afterEach(() => {
     jest.restoreAllMocks();
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after each feature-gate test.
-    (EnvSet.values as { isDevFeaturesEnabled: boolean }).isDevFeaturesEnabled =
-      originalIsDevFeaturesEnabled;
+    resetDevFeaturesEnabled();
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after each feature-gate test.
     (EnvSet.values as { isCloud: boolean }).isCloud = originalIsCloud;
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Restore EnvSet after each feature-gate test.
