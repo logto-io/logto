@@ -463,60 +463,47 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
           await experienceInteraction.mfa.addBackupCodeByVerificationId(verificationId, log);
           break;
         }
-        case MfaFactor.EmailVerificationCode: {
-          await experienceInteraction.profile.setProfileByVerificationId(
-            SignInIdentifier.Email,
-            verificationId,
-            log
-          );
-          const { primaryEmail } = experienceInteraction.profile.data;
-          // If the primary email is set, create a new MFA code verification record
-          // to bypass the MFA verification step.
-          if (primaryEmail) {
-            const codeVerification = createNewMfaCodeVerificationRecord(
-              libraries,
-              queries,
-              {
-                type: SignInIdentifier.Email,
-                value: primaryEmail,
-              },
-              { userId: experienceInteraction.subjectUserId, verified: true }
-            );
-            experienceInteraction.setVerificationRecord(codeVerification);
-            // The email is now an MFA factor of the account: record that `bind` proof next to
-            // the `1fa` one the profile bind recorded for the same mailbox.
-            experienceInteraction.consumeForBindByType(
-              VerificationType.MfaEmailVerificationCode,
-              codeVerification.id
-            );
-          }
-          break;
-        }
+        case MfaFactor.EmailVerificationCode:
         case MfaFactor.PhoneVerificationCode: {
-          await experienceInteraction.profile.setProfileByVerificationId(
-            SignInIdentifier.Phone,
-            verificationId,
-            log
-          );
-          const { primaryPhone } = experienceInteraction.profile.data;
-          // If the primary phone is set, create a new MFA code verification record
-          // to bypass the MFA verification step.
-          if (primaryPhone) {
-            const codeVerification = createNewMfaCodeVerificationRecord(
-              libraries,
-              queries,
-              {
-                type: SignInIdentifier.Phone,
-                value: primaryPhone,
-              },
-              { userId: experienceInteraction.subjectUserId, verified: true }
+          const identifierType =
+            type === MfaFactor.EmailVerificationCode
+              ? SignInIdentifier.Email
+              : SignInIdentifier.Phone;
+          const mfaVerificationType =
+            type === MfaFactor.EmailVerificationCode
+              ? VerificationType.MfaEmailVerificationCode
+              : VerificationType.MfaPhoneVerificationCode;
+
+          const { identifierValue, isExistingPrimaryIdentifier } =
+            await experienceInteraction.mfa.addVerificationCodeByVerificationId(
+              type,
+              verificationId,
+              log
             );
-            experienceInteraction.setVerificationRecord(codeVerification);
-            experienceInteraction.consumeForBindByType(
-              VerificationType.MfaPhoneVerificationCode,
-              codeVerification.id
+
+          if (!isExistingPrimaryIdentifier) {
+            await experienceInteraction.profile.setProfileByVerificationId(
+              identifierType,
+              verificationId,
+              log
             );
           }
+
+          // Create a synthetic MFA code verification record to satisfy the MFA verification
+          // gate, authentication proof pairing, and trusted-device proof eligibility.
+          const codeVerification = createNewMfaCodeVerificationRecord(
+            libraries,
+            queries,
+            {
+              type: identifierType,
+              value: identifierValue,
+            },
+            { userId: experienceInteraction.subjectUserId, verified: true }
+          );
+          experienceInteraction.setVerificationRecord(codeVerification);
+          // The email or phone is now an MFA factor of the account: record that `bind` proof next
+          // to any `1fa` one recorded for the same identifier.
+          experienceInteraction.consumeForBindByType(mfaVerificationType, codeVerification.id);
           break;
         }
       }

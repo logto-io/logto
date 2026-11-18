@@ -1,4 +1,10 @@
-import { MfaFactor, MfaPolicy, type User, VerificationType } from '@logto/schemas';
+import {
+  MfaFactor,
+  MfaPolicy,
+  MfaVerificationCodeEnrollment,
+  type User,
+  VerificationType,
+} from '@logto/schemas';
 
 import { mockUserWithMfaVerifications } from '#src/__mocks__/user.js';
 
@@ -62,4 +68,43 @@ describe('MfaValidator enforced requirements', () => {
       ).toBe(false);
     }
   );
+});
+
+const mfaCodeRecord = (type: VerificationType, userId: string) =>
+  ({
+    type,
+    userId,
+    isVerified: true,
+    isNewBindMfaVerification: false,
+  }) as unknown as VerificationRecord;
+
+describe('MfaValidator.hasEligibleTrustedDeviceVerification', () => {
+  it('requires a stored or staged email/phone MFA factor in explicit enrollment mode', () => {
+    const settings = {
+      policy: MfaPolicy.Mandatory,
+      factors: [MfaFactor.EmailVerificationCode, MfaFactor.PhoneVerificationCode],
+      verificationCodeEnrollment: MfaVerificationCodeEnrollment.Explicit,
+    };
+    const user: User = {
+      ...mockUserWithMfaVerifications,
+      primaryEmail: 'user@example.com',
+      primaryPhone: '16502530000',
+      mfaVerifications: [],
+    };
+    const validator = new MfaValidator(settings, user);
+    const emailRecord = mfaCodeRecord(VerificationType.MfaEmailVerificationCode, user.id);
+    const phoneRecord = mfaCodeRecord(VerificationType.MfaPhoneVerificationCode, user.id);
+
+    expect(validator.hasEligibleTrustedDeviceVerification([emailRecord])).toBe(false);
+    expect(
+      validator.hasEligibleTrustedDeviceVerification([emailRecord], undefined, [
+        MfaFactor.EmailVerificationCode,
+      ])
+    ).toBe(true);
+    expect(
+      validator.hasEligibleTrustedDeviceVerification([phoneRecord], undefined, [
+        MfaFactor.PhoneVerificationCode,
+      ])
+    ).toBe(true);
+  });
 });
