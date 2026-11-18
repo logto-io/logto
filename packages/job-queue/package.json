@@ -1,0 +1,57 @@
+{
+  "name": "@logto/job-queue",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Shared database-agnostic job queue engine and handler contract.",
+  "author": "Silverhand Inc. <contact@silverhand.io>",
+  "license": "MPL-2.0",
+  "type": "module",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.js",
+      "default": "./lib/index.js"
+    }
+  },
+  "scripts": {
+    "precommit": "lint-staged",
+    "build": "rm -rf lib/ && tsc -p tsconfig.build.json",
+    "build:test": "pnpm build",
+    "check": "tsc --noEmit",
+    "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
+    "lint": "eslint --ext .ts src",
+    "lint:report": "pnpm lint --format json --output-file report.json",
+    "prepack": "pnpm build",
+    "test": "vitest run src",
+    "test:watch": "vitest src --watch",
+    "test:ci": "pnpm run test --silent --coverage"
+  },
+  "dependencies": {
+    "@logto/shared": "workspace:^",
+    "@silverhand/essentials": "^2.9.3",
+    "chalk": "^5.3.0"
+  },
+  "devDependencies": {
+    "@silverhand/eslint-config": "^6.1.0",
+    "@silverhand/ts-config": "^6.1.0",
+    "@types/node": "^26.0.0",
+    "@vitest/coverage-v8": "^4.1.12",
+    "eslint": "^8.56.0",
+    "lint-staged": "^15.0.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.12"
+  },
+  "engines": {
+    "node": "^22.23.4 || ^24.22.1 || ^26.12.1"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand"
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc"
+}
