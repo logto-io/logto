@@ -114,7 +114,9 @@ export const executeRegisteredHandler = async <Payload, SettlementMeta>(
   const onExhausted =
     handler.onExhausted &&
     (async (error?: unknown) => {
-      await handler.onExhausted?.(claimedJob, error);
+      await (error === undefined
+        ? handler.onExhausted?.(claimedJob)
+        : handler.onExhausted?.(claimedJob, error));
     });
 
   try {
@@ -248,6 +250,10 @@ export const runAndSettleJob = async <SettlementMeta>({
         log.error(databaseError);
       }
     );
+
+    if (!settleOutcome) {
+      return { shouldWake: false };
+    }
 
     if (settleOutcome === 'stale') {
       log.warn(`Lost lease while settling job ${row.type}/${row.id} (attempt ${row.attempts}).`);
