@@ -90,4 +90,38 @@ describe('sendMessage()', () => {
       expect.anything()
     );
   });
+
+  it('should send the rendered reply-to address of the custom template', async () => {
+    const connector = await createConnector({
+      getConfig,
+      getI18nEmailTemplate: vi.fn().mockResolvedValue({
+        ...mockGenericI18nEmailTemplate,
+        replyTo: 'support-{{applicationName}}@example.com',
+      }),
+    });
+    await connector.sendMessage({
+      to: 'to@email.com',
+      type: TemplateType.Generic,
+      payload: { code: '1234', applicationName: 'bar' },
+    });
+    expect(singleSendMail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        ReplyToAddress: 'true',
+        ReplyAddress: 'support-bar@example.com',
+      }),
+      expect.anything()
+    );
+  });
+
+  it('should not send a reply-to address when the template renders to an invalid one', async () => {
+    const connector = await createConnector({ getConfig, getI18nEmailTemplate });
+    await connector.sendMessage({
+      to: 'to@email.com',
+      type: TemplateType.Generic,
+      payload: { code: '1234', applicationName: 'bar' },
+    });
+    const [parameters] = singleSendMail.mock.calls[0] as unknown as [Record<string, unknown>];
+    expect(parameters).toEqual(expect.objectContaining({ ReplyToAddress: 'false' }));
+    expect(parameters).not.toHaveProperty('ReplyAddress');
+  });
 });
