@@ -42,7 +42,7 @@ jest.mock('@/cloud/hooks/use-cloud-api', () => ({
   tryReadResponseErrorBody: async (error: ResponseError) => error.response.clone().json(),
 }));
 jest.mock('@/hooks/use-current-user', () => ({ __esModule: true, default: jest.fn() }));
-jest.mock('@/consts/env', () => ({ isCloud: true, isDevFeaturesEnabled: true }));
+jest.mock('@/consts/env', () => ({ isCloud: true, isDevFeaturesEnabled: false }));
 jest.mock('@/components/Region', () => ({ defaultRegionName: 'US' }));
 jest.mock('@/hooks/use-theme', () => ({
   __esModule: true,

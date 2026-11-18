@@ -16,14 +16,11 @@ const tenants = {
     purchase_title: 'PLANES AUTOALOJADOS',
     purchase_description:
       'Los planes Pro y Empresa autoalojados desbloquean funciones de pago en tu propia instancia, como ocultar la marca de Logto, usar tu propia interfaz, colaboración en la consola y aplicaciones SAML ilimitadas. Compra un plan para obtener tu clave de licencia.',
-    purchase_button: 'Ver planes autoalojados',
     buy_license_button: 'Comprar una licencia',
     install_title: 'INSTALAR LICENCIA',
     install_description: 'Pega la clave de licencia que recibiste al comprar un plan autoalojado.',
     install_button: 'Instalar licencia',
     key_field: 'Clave de licencia',
-    key_field_description:
-      'La clave se verifica en tu instancia y se envía a Logto cuando se actualiza la licencia. Contacta con Logto para obtener una clave nueva si la que tienes ha caducado.',
     key_field_cloud_description:
       'La clave se verifica en tu instancia y se envía a Logto cuando se actualiza la licencia. Obtén una clave nueva en Logto Cloud si la que tienes ha caducado.',
     key_placeholder: 'Pega aquí tu clave de licencia',
@@ -47,8 +44,6 @@ const tenants = {
     refusal_reason_expired: 'caducada',
     refusal_reason_revoked: 'revocada',
     refusal_reason_unknown: 'no disponible',
-    grace_expired_description:
-      'El periodo de gracia de la licencia terminó el {{graceEndsAt}}. Esta implementación volvió a los valores predeterminados de OSS. Contacta con Logto para obtener una clave de licencia nueva e instálala de nuevo.',
     grace_expired_cloud_description:
       'El periodo de gracia de la licencia terminó el {{graceEndsAt}}. Esta implementación volvió a los valores predeterminados de OSS. Obtén una clave de licencia nueva en Logto Cloud e instálala de nuevo.',
     get_fresh_key_button: 'Obtener una clave nueva',

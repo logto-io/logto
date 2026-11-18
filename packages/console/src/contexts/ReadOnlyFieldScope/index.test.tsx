@@ -258,6 +258,7 @@ describe('inputs in a read-only field scope', () => {
             defaultFileMimeType: 'text/xml',
           }}
           setError={jest.fn()}
+          clearError={jest.fn()}
           onChange={jest.fn()}
         />
       </>

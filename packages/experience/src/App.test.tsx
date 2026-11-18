@@ -4,7 +4,7 @@ import {
   LogtoAcr,
   VerificationType,
 } from '@logto/schemas';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { type ReactNode } from 'react';
 
 import App from '@/App';
@@ -35,11 +35,13 @@ const stepUpContext: InteractionAuthenticationContext = {
   requestedAcrValues: [LogtoAcr.FirstFactor],
   selectedAcr: LogtoAcr.FirstFactor,
   mode: AuthenticationContextMode.StepUp,
-  availableMethods: [VerificationType.Password],
+  // Offer two methods so `/step-up` renders the chooser instead of auto-forwarding to the single
+  // method before the route assertion observes the landing path.
+  availableMethods: [VerificationType.Password, VerificationType.EmailVerificationCode],
   establishableMethods: [],
   enrollableFactors: [],
   subjectProofConnectors: [],
-  maskedIdentifiers: {},
+  maskedIdentifiers: { email: 'f***@example.com' },
 };
 
 beforeEach(() => {
@@ -56,9 +58,8 @@ it.each(['/sign-in', '/register'])(
 
     render(<App />);
 
-    await waitFor(() => {
-      expect(window.location.pathname).toBe('/step-up');
-    });
+    expect(await screen.findByText('step_up.choose_method_description')).not.toBeNull();
+    expect(window.location.pathname).toBe('/step-up');
     expect(screen.queryByText('description.sign_in_to_your_account')).toBeNull();
   }
 );

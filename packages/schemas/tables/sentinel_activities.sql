@@ -3,7 +3,7 @@ create type sentinel_action_result as enum ('Success', 'Failed');
 create type sentinel_decision as enum ('Undecided', 'Allowed', 'Blocked', 'Challenge');
 
 create table sentinel_activities (
-  tenant_id varchar(21) not null
+  tenant_id varchar(64) not null
     references tenants (id) on update cascade on delete cascade,
   id varchar(21) not null,
   /** The target that the action was performed on. */

@@ -17,15 +17,12 @@ const tenants = {
     purchase_title: 'PIANI SELF-HOSTED',
     purchase_description:
       'I piani Pro e Azienda self-hosted sbloccano funzionalità a pagamento sulla tua istanza, come nascondere il branding Logto, usare la tua UI, la collaborazione nella console e applicazioni SAML illimitate. Acquista un piano per ottenere la tua chiave di licenza.',
-    purchase_button: 'Vedi i piani self-hosted',
     buy_license_button: 'Acquista una licenza',
     install_title: 'INSTALLA LICENZA',
     install_description:
       'Incolla la chiave di licenza che hai ricevuto dopo aver acquistato un piano self-hosted.',
     install_button: 'Installa licenza',
     key_field: 'Chiave di licenza',
-    key_field_description:
-      'La chiave viene verificata sulla tua istanza e inviata a Logto quando la licenza si aggiorna. Contatta Logto per ottenere una chiave nuova se quella che hai è scaduta.',
     key_field_cloud_description:
       'La chiave viene verificata sulla tua istanza e inviata a Logto quando la licenza si aggiorna. Ottieni una chiave nuova da Logto Cloud se quella che hai è scaduta.',
     key_placeholder: 'Incolla qui la tua chiave di licenza',
@@ -49,8 +46,6 @@ const tenants = {
     refusal_reason_expired: 'scaduta',
     refusal_reason_revoked: 'revocata',
     refusal_reason_unknown: 'non disponibile',
-    grace_expired_description:
-      'Il periodo di tolleranza della licenza è terminato il {{graceEndsAt}}. Questa distribuzione è tornata ai valori predefiniti OSS. Contatta Logto per ottenere una nuova chiave di licenza e installala di nuovo.',
     grace_expired_cloud_description:
       'Il periodo di tolleranza della licenza è terminato il {{graceEndsAt}}. Questa distribuzione è tornata ai valori predefiniti OSS. Ottieni una nuova chiave di licenza da Logto Cloud e installala di nuovo.',
     get_fresh_key_button: 'Ottieni una nuova chiave',

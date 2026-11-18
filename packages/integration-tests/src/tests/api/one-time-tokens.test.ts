@@ -1,4 +1,5 @@
-import { InteractionEvent, OneTimeTokenStatus } from '@logto/schemas';
+/* eslint-disable max-lines -- The one-time token API tests, including the organization role context, belong to one suite. */
+import { InteractionEvent, OneTimeTokenStatus, RoleType } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 
 import { authedAdminApi } from '#src/api/api.js';
@@ -11,9 +12,22 @@ import {
   getOneTimeTokens,
 } from '#src/api/one-time-token.js';
 import { expectRejects } from '#src/helpers/index.js';
-import { waitFor } from '#src/utils.js';
+import { OrganizationApiTest } from '#src/helpers/organization.js';
+import { generateTestName, waitFor } from '#src/utils.js';
 
 describe('one-time tokens API', () => {
+  const organizationApi = new OrganizationApiTest();
+  const getOrganizationId = () => organizationApi.organizations[0]!.id;
+
+  beforeAll(async () => {
+    await organizationApi.create({ name: generateTestName() });
+  });
+
+  afterAll(async () => {
+    await organizationApi.cleanUp();
+    await organizationApi.roleApi.cleanUp();
+  });
+
   it('should create one-time token with default 10 mins expiration time', async () => {
     const email = `foo${generateStandardId()}@bar.com`;
     const now = Date.now();
@@ -53,7 +67,7 @@ describe('one-time tokens API', () => {
     const oneTimeToken = await createOneTimeToken({
       email,
       context: {
-        jitOrganizationIds: ['org-1'],
+        jitOrganizationIds: [getOrganizationId()],
         interactionEvent: InteractionEvent.ForgotPassword,
       },
     });
@@ -61,7 +75,7 @@ describe('one-time tokens API', () => {
     expect(oneTimeToken.status).toBe(OneTimeTokenStatus.Active);
     expect(oneTimeToken.email).toBe(email);
     expect(oneTimeToken.context).toEqual({
-      jitOrganizationIds: ['org-1'],
+      jitOrganizationIds: [getOrganizationId()],
       interactionEvent: InteractionEvent.ForgotPassword,
     });
     expect(oneTimeToken.token.length).toBe(32);
@@ -69,12 +83,144 @@ describe('one-time tokens API', () => {
     await deleteOneTimeTokenById(oneTimeToken.id);
   });
 
+  it.each([false, true])(
+    'should reject nonexistent organizations, with roles: %p',
+    async (withRoles) => {
+      const role = await organizationApi.roleApi.create({ name: generateTestName() });
+      const missingOrganizationId = generateStandardId();
+
+      await expectRejects(
+        createOneTimeToken({
+          email: `foo${generateStandardId()}@bar.com`,
+          context: {
+            jitOrganizationIds: [getOrganizationId(), missingOrganizationId],
+            ...(withRoles && {
+              jitOrganizationRoles: [
+                { organizationId: missingOrganizationId, organizationRoleIds: [role.id] },
+              ],
+            }),
+          },
+        }),
+        { code: 'request.invalid_input', status: 400 }
+      );
+    }
+  );
+
+  describe('organization roles in the context', () => {
+    const { roleApi } = organizationApi;
+
+    afterAll(async () => {
+      await roleApi.cleanUp();
+    });
+
+    it('should create one-time token with organization roles', async () => {
+      const role = await roleApi.create({ name: generateTestName() });
+      const oneTimeToken = await createOneTimeToken({
+        email: `foo${generateStandardId()}@bar.com`,
+        context: {
+          jitOrganizationIds: [getOrganizationId()],
+          jitOrganizationRoles: [
+            { organizationId: getOrganizationId(), organizationRoleIds: [role.id] },
+          ],
+        },
+      });
+
+      expect(oneTimeToken.context).toEqual({
+        jitOrganizationIds: [getOrganizationId()],
+        jitOrganizationRoles: [
+          { organizationId: getOrganizationId(), organizationRoleIds: [role.id] },
+        ],
+      });
+
+      await deleteOneTimeTokenById(oneTimeToken.id);
+    });
+
+    it('should reject organization roles of an organization not in the token', async () => {
+      const role = await roleApi.create({ name: generateTestName() });
+
+      await expectRejects(
+        createOneTimeToken({
+          email: `foo${generateStandardId()}@bar.com`,
+          context: {
+            jitOrganizationIds: [getOrganizationId()],
+            jitOrganizationRoles: [{ organizationId: 'org-2', organizationRoleIds: [role.id] }],
+          },
+        }),
+        { code: 'request.invalid_input', status: 400 }
+      );
+      await expectRejects(
+        createOneTimeToken({
+          email: `foo${generateStandardId()}@bar.com`,
+          context: {
+            jitOrganizationRoles: [
+              { organizationId: getOrganizationId(), organizationRoleIds: [role.id] },
+            ],
+          },
+        }),
+        { code: 'request.invalid_input', status: 400 }
+      );
+    });
+
+    it('should reject duplicate organizations in the organization roles', async () => {
+      const role = await roleApi.create({ name: generateTestName() });
+
+      await expectRejects(
+        createOneTimeToken({
+          email: `foo${generateStandardId()}@bar.com`,
+          context: {
+            jitOrganizationIds: [getOrganizationId()],
+            jitOrganizationRoles: [
+              { organizationId: getOrganizationId(), organizationRoleIds: [role.id] },
+              { organizationId: getOrganizationId(), organizationRoleIds: [] },
+            ],
+          },
+        }),
+        { code: 'request.invalid_input', status: 400 }
+      );
+    });
+
+    it('should reject non-existent organization roles', async () => {
+      await expectRejects(
+        createOneTimeToken({
+          email: `foo${generateStandardId()}@bar.com`,
+          context: {
+            jitOrganizationIds: [getOrganizationId()],
+            jitOrganizationRoles: [
+              { organizationId: getOrganizationId(), organizationRoleIds: ['non-existent-id'] },
+            ],
+          },
+        }),
+        { code: 'request.invalid_input', status: 400 }
+      );
+    });
+
+    it('should reject organization roles for machine-to-machine apps', async () => {
+      const role = await roleApi.create({
+        name: generateTestName(),
+        type: RoleType.MachineToMachine,
+      });
+
+      await expectRejects(
+        createOneTimeToken({
+          email: `foo${generateStandardId()}@bar.com`,
+          context: {
+            jitOrganizationIds: [getOrganizationId()],
+            jitOrganizationRoles: [
+              { organizationId: getOrganizationId(), organizationRoleIds: [role.id] },
+            ],
+          },
+        }),
+        { code: 'request.invalid_input', status: 400 }
+      );
+    });
+  });
+
   it('should be able to get one-time token by its ID', async () => {
     const email = `foo${generateStandardId()}@bar.com`;
     const oneTimeToken = await createOneTimeToken({
       email,
       context: {
-        jitOrganizationIds: ['org-1'],
+        jitOrganizationIds: [getOrganizationId()],
       },
     });
 
@@ -149,7 +295,7 @@ describe('one-time tokens API', () => {
     const oneTimeToken = await createOneTimeToken({
       email,
       context: {
-        jitOrganizationIds: ['org-1'],
+        jitOrganizationIds: [getOrganizationId()],
       },
     });
 
@@ -183,7 +329,7 @@ describe('one-time tokens API', () => {
     const oneTimeToken = await createOneTimeToken({
       email,
       context: {
-        jitOrganizationIds: ['org-1'],
+        jitOrganizationIds: [getOrganizationId()],
       },
       expiresIn: 1,
     });
@@ -210,7 +356,7 @@ describe('one-time tokens API', () => {
     const oneTimeToken = await createOneTimeToken({
       email,
       context: {
-        jitOrganizationIds: ['org-1'],
+        jitOrganizationIds: [getOrganizationId()],
       },
     });
 
@@ -233,7 +379,7 @@ describe('one-time tokens API', () => {
     const oneTimeToken = await createOneTimeToken({
       email,
       context: {
-        jitOrganizationIds: ['org-1'],
+        jitOrganizationIds: [getOrganizationId()],
       },
     });
 
@@ -396,3 +542,4 @@ describe('one-time tokens API', () => {
     ]);
   });
 });
+/* eslint-enable max-lines */

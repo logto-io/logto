@@ -180,7 +180,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
       sql`
         select ${sql.join(Object.values(fields), sql`,`)}
         from ${table}
-        where ${fields.identities}::json#>>'{${sql.identifier([target])},userId}' = ${userId}
+        where ${fields.identities}::json#>>array[${target}, 'userId'] = ${userId}
       `
     );
 
@@ -301,7 +301,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
       sql`
         select ${fields.id}
         from ${table}
-        where ${fields.identities}::json#>>'{${sql.identifier([target])},userId}' = ${userId}
+        where ${fields.identities}::json#>>array[${target}, 'userId'] = ${userId}
         ${conditionalSql(excludeUserId, (id) => sql`and ${fields.id}<>${id}`)}
       `
     );

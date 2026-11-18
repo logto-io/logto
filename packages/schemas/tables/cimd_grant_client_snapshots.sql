@@ -7,7 +7,7 @@
   grant list renders this snapshot instead of refetching the document.
 */
 create table cimd_grant_client_snapshots (
-  tenant_id varchar(21) not null
+  tenant_id varchar(64) not null
     references tenants (id) on update cascade on delete cascade,
   /** The ID of the Grant row in `oidc_model_instances`. */
   grant_id varchar(128) not null,

@@ -2,9 +2,9 @@
 
 /** The relations between organizations and users. It indicates membership of users in organizations. */
 create table organization_user_relations (
-  tenant_id varchar(21) not null
+  tenant_id varchar(64) not null
     references tenants (id) on update cascade on delete cascade,
-  organization_id varchar(21) not null
+  organization_id varchar(64) not null
     references organizations (id) on update cascade on delete cascade,
   user_id varchar(128) not null
     references users (id) on update cascade on delete cascade,
