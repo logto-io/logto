@@ -123,9 +123,9 @@ export class OneTimeTokenVerification
     );
 
     const { value } = this.identifier;
-    const { jitOrganizationIds } = this.context ?? {};
+    const { jitOrganizationIds, jitOrganizationRoles } = this.context ?? {};
 
-    return { primaryEmail: value, jitOrganizationIds };
+    return { primaryEmail: value, jitOrganizationIds, jitOrganizationRoles };
   }
 
   toJson(): OneTimeTokenVerificationRecordData {

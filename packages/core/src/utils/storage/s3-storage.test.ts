@@ -55,6 +55,18 @@ describe('buildS3Storage()', () => {
       });
     });
 
+    it.each([true, false])('should respect isPublic=%s with a CDN URL', async (isPublic) => {
+      await expect(
+        storage.uploadFile(Buffer.from('foo'), 'foo.txt', {
+          isPublic,
+          publicUrl: 'https://cdn.example.com',
+        })
+      ).resolves.toEqual({ url: 'https://cdn.example.com/foo.txt' });
+
+      const [command] = send.mock.calls[0] as [PutObjectCommand];
+      expect(command.input.ACL).toBe(isPublic ? 'public-read' : undefined);
+    });
+
     it('should not send an ACL for a private object', async () => {
       await storage.uploadFile(Buffer.from('foo'), 'foo.txt', { isPublic: false });
 

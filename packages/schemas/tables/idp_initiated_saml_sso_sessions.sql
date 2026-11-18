@@ -1,6 +1,6 @@
 /* init_order = 2 */
 create table idp_initiated_saml_sso_sessions (
-  tenant_id varchar(21) not null 
+  tenant_id varchar(64) not null 
     references tenants (id) on update cascade on delete cascade,
   /** The globally unique identifier of the assertion record. */
   id varchar(21) not null,

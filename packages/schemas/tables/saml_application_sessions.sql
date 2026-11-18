@@ -1,11 +1,11 @@
 /* init_order = 2 */
 
 create table saml_application_sessions (
-  tenant_id varchar(21) not null 
+  tenant_id varchar(64) not null 
     references tenants (id) on update cascade on delete cascade,
   /** The globally unique identifier of the session. */
   id varchar(32) not null,
-  application_id varchar(21) not null
+  application_id varchar(64) not null
     references applications (id) on update cascade on delete cascade,
   /** The identifier of the SAML SSO auth request ID, SAML request ID is pretty long. */
   saml_request_id varchar(128) not null,

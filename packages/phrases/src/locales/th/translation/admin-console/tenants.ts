@@ -16,14 +16,11 @@ const tenants = {
     purchase_title: 'แผนแบบ SELF-HOSTED',
     purchase_description:
       'แผน Pro และแผนองค์กรแบบ self-hosted จะปลดล็อกฟีเจอร์แบบชำระเงินบนอินสแตนซ์ของคุณเอง เช่น การซ่อนแบรนด์ Logto การใช้ UI ของคุณเอง การทำงานร่วมกันในคอนโซล และแอปพลิเคชัน SAML ไม่จำกัด ซื้อแผนเพื่อรับคีย์ใบอนุญาตของคุณ',
-    purchase_button: 'ดูแผนแบบ self-hosted',
     buy_license_button: 'ซื้อใบอนุญาต',
     install_title: 'ติดตั้งใบอนุญาต',
     install_description: 'วางคีย์ใบอนุญาตที่คุณได้รับหลังจากซื้อแผนแบบ self-hosted',
     install_button: 'ติดตั้งใบอนุญาต',
     key_field: 'คีย์ใบอนุญาต',
-    key_field_description:
-      'คีย์จะถูกตรวจสอบบนอินสแตนซ์ของคุณและส่งไปยัง Logto เมื่อรีเฟรชใบอนุญาต หากคีย์ที่คุณมีหมดอายุแล้ว ให้ติดต่อ Logto เพื่อขอคีย์ใหม่',
     key_field_cloud_description:
       'คีย์จะถูกตรวจสอบบนอินสแตนซ์ของคุณและส่งไปยัง Logto เมื่อรีเฟรชใบอนุญาต หากคีย์ที่คุณมีหมดอายุแล้ว ให้รับคีย์ใหม่จาก Logto Cloud',
     key_placeholder: 'วางคีย์ใบอนุญาตของคุณที่นี่',
@@ -47,8 +44,6 @@ const tenants = {
     refusal_reason_expired: 'หมดอายุ',
     refusal_reason_revoked: 'ถูกเพิกถอน',
     refusal_reason_unknown: 'ไม่พร้อมใช้งาน',
-    grace_expired_description:
-      'ระยะเวลาผ่อนผันของใบอนุญาตสิ้นสุดเมื่อ {{graceEndsAt}} การติดตั้งนี้กลับไปใช้ค่าเริ่มต้นของ OSS แล้ว ติดต่อ Logto เพื่อขอคีย์ใบอนุญาตใหม่และติดตั้งอีกครั้ง',
     grace_expired_cloud_description:
       'ระยะเวลาผ่อนผันของใบอนุญาตสิ้นสุดเมื่อ {{graceEndsAt}} การติดตั้งนี้กลับไปใช้ค่าเริ่มต้นของ OSS แล้ว รับคีย์ใบอนุญาตใหม่จาก Logto Cloud และติดตั้งอีกครั้ง',
     get_fresh_key_button: 'รับคีย์ใบอนุญาตใหม่',
