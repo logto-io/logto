@@ -7,7 +7,7 @@ import UserInteractionContext, {
   type UserInteractionContextType,
 } from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import { sendStepUpVerificationCode, verifyStepUpVerificationCode } from '@/apis/experience';
+import { sendSubjectVerificationCode, verifyStepUpVerificationCode } from '@/apis/experience';
 import { type ErrorHandlers } from '@/hooks/use-error-handler';
 import { type VerificationCodeIdentifier } from '@/types';
 
@@ -98,12 +98,12 @@ jest.mock('react-timer-hook', () => ({
 
 jest.mock('@/apis/experience', () => ({
   ...jest.requireActual('@/apis/experience'),
-  sendStepUpVerificationCode: jest.fn(),
+  sendSubjectVerificationCode: jest.fn(),
   verifyStepUpVerificationCode: jest.fn(),
 }));
 
-const mockedSendStepUpVerificationCode = sendStepUpVerificationCode as jest.MockedFunction<
-  typeof sendStepUpVerificationCode
+const mockedSendSubjectVerificationCode = sendSubjectVerificationCode as jest.MockedFunction<
+  typeof sendSubjectVerificationCode
 >;
 const mockedVerifyStepUpVerificationCode = verifyStepUpVerificationCode as jest.MockedFunction<
   typeof verifyStepUpVerificationCode
@@ -229,7 +229,7 @@ describe('<StepUpCodeVerification />', () => {
   it.each([SignInIdentifier.Email, SignInIdentifier.Phone] as const)(
     'resends the %s code by identifier type only and verifies against the new record',
     async (identifierType) => {
-      mockedSendStepUpVerificationCode.mockResolvedValueOnce({ verificationId: 'resent-id' });
+      mockedSendSubjectVerificationCode.mockResolvedValueOnce({ verificationId: 'resent-id' });
       mockedVerifyStepUpVerificationCode.mockResolvedValueOnce({
         redirectTo: 'https://logto.io/callback',
       });
@@ -239,8 +239,8 @@ describe('<StepUpCodeVerification />', () => {
         fireEvent.click(screen.getByText('description.resend_passcode'));
       });
 
-      expect(mockedSendStepUpVerificationCode).toHaveBeenCalledTimes(1);
-      expect(mockedSendStepUpVerificationCode).toHaveBeenCalledWith(identifierType);
+      expect(mockedSendSubjectVerificationCode).toHaveBeenCalledTimes(1);
+      expect(mockedSendSubjectVerificationCode).toHaveBeenCalledWith(identifierType);
       // The stored id is renewed, so a refresh verifies against the code that was sent last.
       expect(mockedSetVerificationId).toHaveBeenCalledWith(
         identifierType === SignInIdentifier.Email
@@ -271,7 +271,7 @@ describe('<StepUpCodeVerification />', () => {
         data: {},
       });
     });
-    mockedSendStepUpVerificationCode.mockResolvedValueOnce({ verificationId: 'resent-id' });
+    mockedSendSubjectVerificationCode.mockResolvedValueOnce({ verificationId: 'resent-id' });
     renderContainer();
 
     await enterCode();
@@ -284,14 +284,14 @@ describe('<StepUpCodeVerification />', () => {
       fireEvent.click(screen.getByText('description.resend_passcode'));
     });
 
-    expect(mockedSendStepUpVerificationCode).toHaveBeenCalledTimes(1);
+    expect(mockedSendSubjectVerificationCode).toHaveBeenCalledTimes(1);
     // The error described the previous code; the new one must start clean.
     expect(screen.queryByText('The code has expired.')).toBeNull();
   });
 
   it('hands a failed resend to the error handler with the step-up handlers and keeps the old id', async () => {
     const error = new Error('Failed to send the code');
-    mockedSendStepUpVerificationCode.mockRejectedValueOnce(error);
+    mockedSendSubjectVerificationCode.mockRejectedValueOnce(error);
     renderContainer();
 
     await act(async () => {

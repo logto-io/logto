@@ -11,7 +11,7 @@ import UserInteractionContext, {
   type UserInteractionContextType,
 } from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import { sendStepUpVerificationCode } from '@/apis/experience';
+import { sendSubjectVerificationCode } from '@/apis/experience';
 import { type ErrorHandlers } from '@/hooks/use-error-handler';
 import type useSendMfaVerificationCode from '@/hooks/use-send-mfa-verification-code';
 import type useStartWebAuthnProcessing from '@/hooks/use-start-webauthn-processing';
@@ -56,7 +56,7 @@ jest.mock('@/hooks/use-error-handler', () => ({
 
 jest.mock('@/apis/experience', () => ({
   ...jest.requireActual('@/apis/experience'),
-  sendStepUpVerificationCode: jest.fn(),
+  sendSubjectVerificationCode: jest.fn(),
 }));
 
 jest.mock('@/hooks/use-start-webauthn-processing', () => ({
@@ -75,8 +75,8 @@ jest.mock('@/hooks/use-send-mfa-verification-code', () => ({
   },
 }));
 
-const mockedSendStepUpVerificationCode = sendStepUpVerificationCode as jest.MockedFunction<
-  typeof sendStepUpVerificationCode
+const mockedSendSubjectVerificationCode = sendSubjectVerificationCode as jest.MockedFunction<
+  typeof sendSubjectVerificationCode
 >;
 
 const email = 'f***@logto.io';
@@ -185,7 +185,7 @@ const clickMethod = async (nameKey: string) => {
 describe('StepUpMethodList', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockedSendStepUpVerificationCode.mockResolvedValue({ verificationId });
+    mockedSendSubjectVerificationCode.mockResolvedValue({ verificationId });
   });
 
   describe('rendering', () => {
@@ -265,7 +265,7 @@ describe('StepUpMethodList', () => {
 
       expect(mockedNavigate).toHaveBeenCalledTimes(1);
       expect(mockedNavigate).toHaveBeenCalledWith('/step-up/password', { replace: undefined });
-      expect(mockedSendStepUpVerificationCode).not.toHaveBeenCalled();
+      expect(mockedSendSubjectVerificationCode).not.toHaveBeenCalled();
       expect(mockedSetVerificationId).not.toHaveBeenCalled();
     });
 
@@ -293,8 +293,8 @@ describe('StepUpMethodList', () => {
           expect(mockedNavigate).toHaveBeenCalledWith(route, { replace: undefined });
         });
         expect(mockedNavigate).toHaveBeenCalledTimes(1);
-        expect(mockedSendStepUpVerificationCode).toHaveBeenCalledTimes(1);
-        expect(mockedSendStepUpVerificationCode).toHaveBeenCalledWith(identifier);
+        expect(mockedSendSubjectVerificationCode).toHaveBeenCalledTimes(1);
+        expect(mockedSendSubjectVerificationCode).toHaveBeenCalledWith(identifier);
         expect(mockedSetVerificationId).toHaveBeenCalledTimes(1);
         expect(mockedSetVerificationId).toHaveBeenCalledWith(method, verificationId);
         // The next page reads the id from the context, so it must be stored before navigating.
@@ -307,7 +307,7 @@ describe('StepUpMethodList', () => {
 
     it('hands a failed code request to the error handler with the step-up handlers and stays', async () => {
       const error = new Error('Failed to send the code');
-      mockedSendStepUpVerificationCode.mockRejectedValueOnce(error);
+      mockedSendSubjectVerificationCode.mockRejectedValueOnce(error);
       renderList(firstFactorMethods);
 
       await clickMethod('mfa.email_verification_code');
@@ -351,7 +351,7 @@ describe('StepUpMethodList', () => {
         });
         expect(mockedStartWebAuthnProcessing).not.toHaveBeenCalled();
         expect(mockedSendMfaVerificationCode).not.toHaveBeenCalled();
-        expect(mockedSendStepUpVerificationCode).not.toHaveBeenCalled();
+        expect(mockedSendSubjectVerificationCode).not.toHaveBeenCalled();
       }
     );
 
@@ -383,7 +383,7 @@ describe('StepUpMethodList', () => {
         expect(mockedSendMfaVerificationCode).toHaveBeenCalledTimes(1);
         expect(mockedSendMfaVerificationCode).toHaveBeenCalledWith(identifier, mfaFlowState);
         // The pinned-user code API is not used for an enrolled MFA factor.
-        expect(mockedSendStepUpVerificationCode).not.toHaveBeenCalled();
+        expect(mockedSendSubjectVerificationCode).not.toHaveBeenCalled();
         expect(mockedNavigate).not.toHaveBeenCalled();
         expect(mockedStartWebAuthnProcessing).not.toHaveBeenCalled();
       }

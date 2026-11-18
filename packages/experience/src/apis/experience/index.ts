@@ -36,6 +36,7 @@ export * from './social';
 export * from './one-time-token';
 export * from './passkey-sign-in';
 export * from './step-up';
+export * from './subject-verification-code';
 
 /**
  * For sign-in flow user identity not found error handling use.

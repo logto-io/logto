@@ -86,6 +86,8 @@ const mfaErrorDataShape = {
   isStepUp: s.optional(s.boolean()),
   skippable: s.optional(s.boolean()),
   maskedIdentifiers: s.optional(s.record(s.enums(mfaFactorEnumValues), s.string())),
+  // Factors already bound by the user when suggesting an additional MFA factor.
+  boundFactors: s.optional(mfaFactorsGuard),
   // Whether this MFA flow is an optional suggestion (e.g., add another factor after sign-up)
   suggestion: s.optional(s.boolean()),
   // Whether the current WebAuthn factor is used as a sign-in passkey.

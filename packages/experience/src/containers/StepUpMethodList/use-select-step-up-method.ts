@@ -7,7 +7,7 @@ import {
 import { useCallback, useContext, useMemo } from 'react';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
-import { sendStepUpVerificationCode } from '@/apis/experience';
+import { sendSubjectVerificationCode } from '@/apis/experience';
 import { getStepUpVerificationCodeRoute, stepUpRoutes } from '@/constants/step-up';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
@@ -39,7 +39,7 @@ const useSelectStepUpMethod = ({ methods, authenticationContext, replace }: Opti
   const navigate = useNavigateWithPreservedSearchParams();
   const handleError = useErrorHandler();
   const stepUpErrorHandlers = useStepUpErrorHandler();
-  const asyncSendStepUpVerificationCode = useApi(sendStepUpVerificationCode);
+  const asyncSendStepUpVerificationCode = useApi(sendSubjectVerificationCode);
   const { setVerificationId } = useContext(UserInteractionContext);
   const startWebAuthnProcessing = useStartWebAuthnProcessing({
     errorHandlers: stepUpErrorHandlers,
