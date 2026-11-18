@@ -161,11 +161,6 @@ export type SelfHostedLicenseDetails = GuardedResponse<
   RouterRoutes<typeof selfHostedLicensesRouter>['get']['/api/me/self-hosted-licenses/:id']
 >;
 
-/** The yearly Self-hosted Pro price, validated by Cloud, in the smallest currency unit. */
-export type SelfHostedLicensePrice = GuardedResponse<
-  RouterRoutes<typeof selfHostedLicensesRouter>['get']['/api/me/self-hosted-licenses/price']
->;
-
 /** The production and non-production keys returned by explicit issuance. */
 export type SelfHostedLicenseKeys = GuardedResponse<
   RouterRoutes<typeof selfHostedLicensesRouter>['post']['/api/me/self-hosted-licenses/:id/keys']

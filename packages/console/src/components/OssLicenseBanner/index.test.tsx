@@ -98,8 +98,7 @@ describe('OssLicenseBanner', () => {
     expect(screen.queryByText(message)).toBeNull();
   });
 
-  it('points to Logto Cloud for a fresh key once grace ends with dev features on', () => {
-    mockEnv({ isDevFeaturesEnabled: true });
+  it('points to Logto Cloud for a fresh key once grace ends', () => {
     render(<Preview installedLicense={{ ...license, graceEndsAt: '2026-10-09T00:00:00.000Z' }} />);
 
     expect(screen.getByText(/Get a fresh license key from Logto Cloud/)).not.toBeNull();

@@ -82,7 +82,7 @@ describe('startPurchase', () => {
       redirectUri: openSession.redirectUri,
     });
     expect(getApi).toHaveBeenCalledWith('key-one');
-    expect(api.post).toHaveBeenCalledWith('/api/me/self-hosted-licenses/checkout-session', {
+    expect(api.post).toHaveBeenCalledWith('/api/me/self-hosted-license-purchase/checkout-session', {
       body: { plan: 'self-hosted-pro', customerId: 'cus_other' },
     });
     expect(readPendingPurchase('alice')).toEqual({
@@ -100,7 +100,7 @@ describe('startPurchase', () => {
 
     expect(chooseBillingCustomer).not.toHaveBeenCalled();
     expect(getApi.mock.calls).toEqual([['saved-key']]);
-    expect(api.post).toHaveBeenCalledWith('/api/me/self-hosted-licenses/checkout-session', {
+    expect(api.post).toHaveBeenCalledWith('/api/me/self-hosted-license-purchase/checkout-session', {
       body: { plan: 'self-hosted-pro', newCustomer: true },
     });
   });
@@ -118,7 +118,7 @@ describe('startPurchase', () => {
       sessionId: 'session-one',
     });
     expect(api.get).toHaveBeenCalledWith(
-      '/api/me/self-hosted-licenses/checkout-session/:sessionId',
+      '/api/me/self-hosted-license-purchase/checkout-session/:sessionId',
       { params: { sessionId: 'session-one' } }
     );
     expect(api.post).not.toHaveBeenCalled();
@@ -157,9 +157,12 @@ describe('startPurchase', () => {
       await startPurchase('alice', getApi, chooseBillingCustomer);
       expect(chooseBillingCustomer).toHaveBeenCalledTimes(2);
       expect(getApi).toHaveBeenLastCalledWith('key-two');
-      expect(api.post).toHaveBeenLastCalledWith('/api/me/self-hosted-licenses/checkout-session', {
-        body: { plan: 'self-hosted-pro' },
-      });
+      expect(api.post).toHaveBeenLastCalledWith(
+        '/api/me/self-hosted-license-purchase/checkout-session',
+        {
+          body: { plan: 'self-hosted-pro' },
+        }
+      );
     }
   );
 
@@ -196,7 +199,7 @@ describe('cancelPurchase', () => {
 
     await expect(cancelPurchase('alice', getApi)).resolves.toEqual({ status: 'canceled' });
     expect(api.delete).toHaveBeenCalledWith(
-      '/api/me/self-hosted-licenses/checkout-session/:sessionId',
+      '/api/me/self-hosted-license-purchase/checkout-session/:sessionId',
       { params: { sessionId: 'session-one' } }
     );
     expect(readPendingPurchase('alice')).toBeUndefined();

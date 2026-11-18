@@ -82,6 +82,15 @@ const getCrossOriginOpenerPolicy = async (settings: CustomUiSettings) => {
   return ctx.res.getHeader('Cross-Origin-Opener-Policy');
 };
 
+const getAppCrossOriginOpenerPolicy = async (url: string) => {
+  const run = koaSecurityHeaders(['api', 'oidc'], 'default');
+  const ctx = createMockContext({ method: 'GET', url });
+
+  await run(ctx, koaNoop);
+
+  return ctx.res.getHeader('Cross-Origin-Opener-Policy');
+};
+
 describe('koaSecurityHeaders() middleware — experience CSP', () => {
   it('adds Custom UI CSP sources to the matching experience directives', async () => {
     const run = koaExperienceSecurityHeaders(
@@ -344,6 +353,22 @@ describe('koaSecurityHeaders() middleware — experience CSP', () => {
     expect(scriptSource).not.toContain(customScriptSource);
     expect(queries.signInExperiences.findDefaultSignInExperience).not.toHaveBeenCalled();
   });
+});
+
+describe('koaSecurityHeaders() middleware — Cross-Origin-Opener-Policy', () => {
+  it.each(['/console', '/console/applications', '/welcome'])(
+    'sends same-origin-allow-popups for the admin console (%s)',
+    async (url) => {
+      await expect(getAppCrossOriginOpenerPolicy(url)).resolves.toBe('same-origin-allow-popups');
+    }
+  );
+
+  it.each(['/sign-in', '/account', '/oidc/auth'])(
+    'sends no header outside the admin console (%s)',
+    async (url) => {
+      await expect(getAppCrossOriginOpenerPolicy(url)).resolves.toBeUndefined();
+    }
+  );
 });
 
 describe('koaExperienceSecurityHeaders() middleware — Cross-Origin-Opener-Policy', () => {

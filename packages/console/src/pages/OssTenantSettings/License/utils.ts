@@ -1,8 +1,7 @@
 import { type AdminConsoleKey, type LogtoErrorCode } from '@logto/phrases';
 import { LicenseEnv } from '@logto/schemas';
 
-import { isDevFeaturesEnabled } from '@/consts/env';
-import { logtoCloudConsoleLink, selfHostedPlansLink } from '@/consts/external-links';
+import { logtoCloudConsoleLink } from '@/consts/external-links';
 import { type License } from '@/types/license';
 
 /**
@@ -42,11 +41,6 @@ const buildAttributedUrl = (baseUrl: string, content: string) => {
  * own `utm_content`.
  */
 export const buildLicensePurchaseUrl = () => {
-  // Self-hosted Pro self-serve purchase: keep the website plans page until Cloud sells licenses.
-  if (!isDevFeaturesEnabled) {
-    return buildAttributedUrl(selfHostedPlansLink, 'tenant_settings_license_page');
-  }
-
   const url = new URL(selfHostedLicensesUrl);
 
   url.searchParams.set('checkout', 'self-hosted-pro');
@@ -60,11 +54,7 @@ export const buildLicensePurchaseUrl = () => {
  * where the license owner manages the subscription and issues keys.
  */
 export const buildLicenseManagementUrl = () =>
-  buildAttributedUrl(
-    // Self-hosted Pro self-serve purchase: keep the website contact flow until Cloud sells licenses.
-    isDevFeaturesEnabled ? selfHostedLicensesUrl : selfHostedPlansLink,
-    'tenant_settings_license_refresh'
-  );
+  buildAttributedUrl(selfHostedLicensesUrl, 'tenant_settings_license_refresh');
 
 type LicenseStatus = 'active' | 'refresh_required' | 'grace_expired';
 
