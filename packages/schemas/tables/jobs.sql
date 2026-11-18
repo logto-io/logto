@@ -7,7 +7,7 @@ create table jobs (
   type varchar(64) not null,
   /** The unit that concurrency, circuit-breaker, and row caps apply to. For webhooks, `hookId`. */
   group_key varchar(128) not null,
-  /** Optional coalescing or active-uniqueness key. For webhooks, `deliveryId`. */
+  /** Optional active-uniqueness key. For webhooks, `deliveryId`. */
   dedupe_key varchar(128),
   /** Serialized handler input (`text` preserves exact JSON key order for webhook bodies). */
   payload text not null default '',
@@ -29,7 +29,7 @@ create index jobs__next_attempt_at
 create index jobs__type_group_key
   on jobs (tenant_id, type, group_key);
 
-/* Coalesce keyed jobs (Cloud) and reject concurrent redeliveries for the same `deliveryId`. */
+/* Reject concurrent deliveries or redeliveries for the same `deliveryId`. */
 create unique index jobs__type_dedupe_key
   on jobs (tenant_id, type, dedupe_key)
   where dedupe_key is not null;
