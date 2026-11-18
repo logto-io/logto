@@ -71,18 +71,20 @@ const getResponsePayloadProperties = (
   return isSchemaObject(payloadSchema) ? payloadSchema.properties : undefined;
 };
 
+const webhookLogPaths = [
+  ['/api/hooks/{id}/recent-logs', true],
+  ['/api/logs', true],
+  ['/api/logs/{id}', false],
+] as const;
+
 describe('webhook log payload OpenAPI fields', () => {
   afterEach(resetDevFeaturesEnabled);
 
-  it('hides attempts, nextAttemptAt, and redeliveredFrom when dev features are disabled', async () => {
+  it('hides the retry fields without dev features', async () => {
     setDevFeaturesEnabled(false);
     const document = await buildLogOpenApiDocument();
 
-    for (const [path, isArray] of [
-      ['/api/hooks/{id}/recent-logs', true],
-      ['/api/logs', true],
-      ['/api/logs/{id}', false],
-    ] as const) {
+    for (const [path, isArray] of webhookLogPaths) {
       const payloadProperties = getResponsePayloadProperties(document, path, isArray);
       expect(payloadProperties).toBeDefined();
       expect(payloadProperties).not.toHaveProperty('attempts');
@@ -93,15 +95,11 @@ describe('webhook log payload OpenAPI fields', () => {
     expect(JSON.stringify(document)).not.toContain(devFeatureSchemaExtension);
   });
 
-  it('exposes attempts, nextAttemptAt, and redeliveredFrom without markers when dev features are enabled', async () => {
+  it('exposes the retry fields with dev features', async () => {
     setDevFeaturesEnabled(true);
     const document = await buildLogOpenApiDocument();
 
-    for (const [path, isArray] of [
-      ['/api/hooks/{id}/recent-logs', true],
-      ['/api/logs', true],
-      ['/api/logs/{id}', false],
-    ] as const) {
+    for (const [path, isArray] of webhookLogPaths) {
       const payloadProperties = getResponsePayloadProperties(document, path, isArray);
       expect(payloadProperties).toMatchObject({
         attempts: {

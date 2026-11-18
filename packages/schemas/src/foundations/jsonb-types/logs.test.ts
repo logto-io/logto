@@ -12,7 +12,7 @@ describe('logContextPayloadGuard', () => {
     expect(logContextPayloadGuard.parse(basePayload)).toEqual(basePayload);
   });
 
-  it('parses TriggerHook.* log payloads with optional attempts, nextAttemptAt, and redeliveredFrom', () => {
+  it('parses the optional retry fields', () => {
     const retryPayload = {
       ...basePayload,
       attempts: 1,
