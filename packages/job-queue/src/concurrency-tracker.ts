@@ -23,7 +23,7 @@ type TenantTypeCountEntry = {
 };
 
 type GroupCountEntry = {
-  tenantId: string;
+  tenantId?: string;
   type: string;
   groupKey: string;
   count: number;
@@ -32,7 +32,7 @@ type GroupCountEntry = {
 export type ConcurrencyHandlerInfo = {
   type: string;
   leaseMs: number;
-  limits: JobLimitsPolicy;
+  limits?: JobLimitsPolicy;
   circuitBreaker?: JobCircuitBreakerPolicy;
 };
 
@@ -43,7 +43,7 @@ const toTenantTypeKey = (tenantId: string, type: string): string =>
   JSON.stringify([tenantId, type]);
 
 const toGroupKey = ({ tenantId, type, groupKey }: SaturatedGroup): string =>
-  JSON.stringify([tenantId, type, groupKey]);
+  JSON.stringify([tenantId ?? null, type, groupKey]);
 
 /** Tracks active jobs and per-instance, per-`(tenantId, type)`, and per-group slot usage. */
 export class ConcurrencyTracker {
@@ -65,40 +65,22 @@ export class ConcurrencyTracker {
     return this.tenantCounts.get(tenantId) ?? 0;
   }
 
-  getInFlightCountForGroup(tenantId: string, type: string, groupKey: string): number {
+  getInFlightCountForGroup(tenantId: string | undefined, type: string, groupKey: string): number {
     return this.groupEntries.get(toGroupKey({ tenantId, type, groupKey }))?.count ?? 0;
   }
 
   acquire(job: ClaimedJobRow, promise: Promise<void>): void {
-    const jobKey = toJobKey(job);
-    this.inFlightJobs.set(jobKey, { job, promise, released: false });
-
-    this.tenantCounts.set(job.tenantId, (this.tenantCounts.get(job.tenantId) ?? 0) + 1);
-
-    const tenantTypeKey = toTenantTypeKey(job.tenantId, job.type);
-    const tenantTypeEntry = this.tenantTypeEntries.get(tenantTypeKey);
-    this.tenantTypeEntries.set(tenantTypeKey, {
-      tenantId: job.tenantId,
-      type: job.type,
-      count: (tenantTypeEntry?.count ?? 0) + 1,
-    });
-
-    const groupKey = toGroupKey(job);
-    const groupEntry = this.groupEntries.get(groupKey);
-    this.groupEntries.set(groupKey, {
-      tenantId: job.tenantId,
-      type: job.type,
-      groupKey: job.groupKey,
-      count: (groupEntry?.count ?? 0) + 1,
-    });
+    this.inFlightJobs.set(toJobKey(job), { job, promise, released: false });
+    this.#updateTenantCounts(job, 1);
+    this.#updateGroupCount(job, 1);
   }
 
   release(
     job: ClaimedJobRow,
     limits: {
       maxConcurrency: number;
-      perTenantConcurrency: number;
-      perGroupConcurrency: number;
+      perTenantConcurrency?: number;
+      perGroupConcurrency?: number;
     }
   ): { unblockedCap: boolean; wasReleasedInBatch: boolean } {
     const jobKey = toJobKey(job);
@@ -108,23 +90,27 @@ export class ConcurrencyTracker {
       return { unblockedCap: false, wasReleasedInBatch: false };
     }
 
+    const perTenantConcurrency = limits.perTenantConcurrency ?? Number.POSITIVE_INFINITY;
+    const perGroupConcurrency = limits.perGroupConcurrency ?? Number.POSITIVE_INFINITY;
+
     const previousTotal = this.inFlightJobs.size;
-    const previousTenantType = this.getInFlightCountForTenant(job.tenantId, job.type);
+    const previousTenantType =
+      job.tenantId === undefined ? 0 : this.getInFlightCountForTenant(job.tenantId, job.type);
     const previousGroup = this.getInFlightCountForGroup(job.tenantId, job.type, job.groupKey);
 
     this.inFlightJobs.delete(jobKey);
-    this.#decrementTenantCounts(job);
-    this.#decrementGroupCount(job);
+    this.#updateTenantCounts(job, -1);
+    this.#updateGroupCount(job, -1);
 
     const unblockedInstance =
       previousTotal >= limits.maxConcurrency && this.inFlightJobs.size < limits.maxConcurrency;
     const unblockedTenant =
-      previousTenantType >= limits.perTenantConcurrency &&
-      this.getInFlightCountForTenant(job.tenantId, job.type) < limits.perTenantConcurrency;
+      job.tenantId !== undefined &&
+      previousTenantType >= perTenantConcurrency &&
+      this.getInFlightCountForTenant(job.tenantId, job.type) < perTenantConcurrency;
     const unblockedGroup =
-      previousGroup >= limits.perGroupConcurrency &&
-      this.getInFlightCountForGroup(job.tenantId, job.type, job.groupKey) <
-        limits.perGroupConcurrency;
+      previousGroup >= perGroupConcurrency &&
+      this.getInFlightCountForGroup(job.tenantId, job.type, job.groupKey) < perGroupConcurrency;
 
     return {
       unblockedCap: unblockedInstance || unblockedTenant || unblockedGroup,
@@ -186,8 +172,8 @@ export class ConcurrencyTracker {
       ({ type, leaseMs, limits }) => ({
         type,
         leaseMs,
-        perGroupConcurrency: limits.perGroupConcurrency,
-        perTenantConcurrency: limits.perTenantConcurrency,
+        perGroupConcurrency: limits?.perGroupConcurrency,
+        perTenantConcurrency: limits?.perTenantConcurrency,
       })
     );
 
@@ -209,8 +195,12 @@ export class ConcurrencyTracker {
     };
   }
 
-  #decrementTenantCounts(job: Pick<ClaimedJobRow, 'tenantId' | 'type'>): void {
-    const nextTenantCount = (this.tenantCounts.get(job.tenantId) ?? 0) - 1;
+  #updateTenantCounts(job: Pick<ClaimedJobRow, 'tenantId' | 'type'>, delta: 1 | -1): void {
+    if (job.tenantId === undefined) {
+      return;
+    }
+
+    const nextTenantCount = (this.tenantCounts.get(job.tenantId) ?? 0) + delta;
 
     if (nextTenantCount <= 0) {
       this.tenantCounts.delete(job.tenantId);
@@ -219,7 +209,7 @@ export class ConcurrencyTracker {
     }
 
     const tenantTypeKey = toTenantTypeKey(job.tenantId, job.type);
-    const nextTenantTypeCount = (this.tenantTypeEntries.get(tenantTypeKey)?.count ?? 0) - 1;
+    const nextTenantTypeCount = (this.tenantTypeEntries.get(tenantTypeKey)?.count ?? 0) + delta;
 
     if (nextTenantTypeCount <= 0) {
       this.tenantTypeEntries.delete(tenantTypeKey);
@@ -232,9 +222,9 @@ export class ConcurrencyTracker {
     }
   }
 
-  #decrementGroupCount(job: SaturatedGroup): void {
+  #updateGroupCount(job: SaturatedGroup, delta: 1 | -1): void {
     const groupKey = toGroupKey(job);
-    const nextGroupCount = (this.groupEntries.get(groupKey)?.count ?? 0) - 1;
+    const nextGroupCount = (this.groupEntries.get(groupKey)?.count ?? 0) + delta;
 
     if (nextGroupCount <= 0) {
       this.groupEntries.delete(groupKey);
@@ -256,9 +246,9 @@ export class ConcurrencyTracker {
 
     const tenantRemainingSlots = Array.from(this.tenantTypeEntries.values()).flatMap(
       ({ tenantId, type, count }) => {
-        const handler = handlers.get(type);
+        const perTenantConcurrency = handlers.get(type)?.limits?.perTenantConcurrency;
 
-        if (!handler) {
+        if (perTenantConcurrency === undefined) {
           return [];
         }
 
@@ -266,7 +256,7 @@ export class ConcurrencyTracker {
           {
             tenantId,
             type,
-            remainingSlots: Math.max(0, handler.limits.perTenantConcurrency - count),
+            remainingSlots: Math.max(0, perTenantConcurrency - count),
           },
         ];
       }
@@ -274,9 +264,9 @@ export class ConcurrencyTracker {
 
     const saturatedTenants = Array.from(this.tenantCounts.keys()).filter((tenantId) =>
       registeredHandlers.every(
-        (handler) =>
-          this.getInFlightCountForTenant(tenantId, handler.type) >=
-          handler.limits.perTenantConcurrency
+        ({ type, limits }) =>
+          limits?.perTenantConcurrency !== undefined &&
+          this.getInFlightCountForTenant(tenantId, type) >= limits.perTenantConcurrency
       )
     );
 
@@ -320,7 +310,7 @@ export class ConcurrencyTracker {
         now,
       });
 
-      return [{ ...group, remainingSlots }];
+      return Number.isFinite(remainingSlots) ? [{ ...group, remainingSlots }] : [];
     });
 
     const saturatedGroups = groupRemainingSlots
@@ -350,10 +340,8 @@ export class ConcurrencyTracker {
       return 0;
     }
 
-    const cap =
-      constraint === 'probe'
-        ? Math.min(1, handler.limits.perGroupConcurrency)
-        : handler.limits.perGroupConcurrency;
+    const perGroupConcurrency = handler.limits?.perGroupConcurrency ?? Number.POSITIVE_INFINITY;
+    const cap = constraint === 'probe' ? Math.min(1, perGroupConcurrency) : perGroupConcurrency;
 
     return Math.max(0, cap - inFlight);
   }

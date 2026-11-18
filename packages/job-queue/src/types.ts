@@ -46,7 +46,7 @@ type ForbiddenPayloadBrand<Payload> = [ExtractForbiddenPayloadKey<Payload>] exte
  * Timestamps (`nextAttemptAt`, `createdAt`) are represented in unix epoch milliseconds.
  */
 export type ClaimedJobRow = {
-  tenantId: string;
+  tenantId?: string;
   id: string;
   type: string;
   groupKey: string;
@@ -68,23 +68,23 @@ export type ClaimedJob<Payload> = Omit<ClaimedJobRow, 'payload'> & {
 };
 
 /**
- * Per-type retry configuration.
+ * Per-type retry configuration. Requires at least one of `maxAgeMs` or `maxAttempts`.
  *
  * - `backoffMs(attempt)`: delay in milliseconds before the next attempt (`attempt` is 1-based).
- * - `maxAgeMs`: maximum age from `createdAt` before retries stop (`Number.POSITIVE_INFINITY` for no age limit).
- * - `maxAttempts`: optional cap on total claim attempts (`undefined` for age-bounded retries only).
+ * - `maxAgeMs`: maximum age from `createdAt` before retries stop.
+ * - `maxAttempts`: maximum total claim attempts before retries stop.
  */
 export type JobRetryPolicy = {
   backoffMs: (attempt: number) => number;
-  maxAgeMs: number;
+  maxAgeMs?: number;
   maxAttempts?: number;
-};
+} & ({ maxAgeMs: number } | { maxAttempts: number });
 
 /** Per-type concurrency and backlog limits enforced by the worker and enqueue path. */
 export type JobLimitsPolicy = {
-  perGroupConcurrency: number;
-  perTenantConcurrency: number;
-  maxWaitingRowsPerGroup: number;
+  perGroupConcurrency?: number;
+  perTenantConcurrency?: number;
+  maxWaitingRowsPerGroup?: number;
 };
 
 /** Optional per-group circuit breaker configuration. */
@@ -115,7 +115,7 @@ export type JobHandler<Payload, SettlementMeta = never> = {
   parsePayload: (raw: string) => Payload;
   leaseMs: number;
   retry: JobRetryPolicy;
-  limits: JobLimitsPolicy;
+  limits?: JobLimitsPolicy;
   circuitBreaker?: JobCircuitBreakerPolicy;
   handle: (job: ClaimedJob<Payload>) => Promise<JobHandlerResult<SettlementMeta>>;
   onExhausted?: (job: ClaimedJob<Payload>, error?: unknown) => void | Promise<void>;
@@ -130,13 +130,16 @@ export const defineJobHandler = <Payload, SettlementMeta = never>(
 export type RegisteredJobTypeConfig = {
   type: string;
   leaseMs: number;
-  perGroupConcurrency: number;
-  perTenantConcurrency: number;
+  perGroupConcurrency?: number;
+  perTenantConcurrency?: number;
 };
 
-/** Identifies a `(tenantId, type, groupKey)` partition that is saturated or circuit-blocked. */
+/**
+ * Identifies a `(tenantId, type, groupKey)` partition (or `(type, groupKey)` when tenantless)
+ * that is saturated or circuit-blocked.
+ */
 export type SaturatedGroup = {
-  tenantId: string;
+  tenantId?: string;
   type: string;
   groupKey: string;
 };
@@ -150,7 +153,7 @@ export type TenantRemainingSlots = {
 
 /** Remaining in-flight capacity for a `(tenantId, type, groupKey)` partition. */
 export type GroupRemainingSlots = {
-  tenantId: string;
+  tenantId?: string;
   type: string;
   groupKey: string;
   remainingSlots: number;
@@ -182,9 +185,19 @@ export type SettleJobInput<SettlementMeta = unknown> = {
   meta?: SettlementMeta;
 };
 
+/**
+ * Outcome returned by {@link JobQueueQueries.settle}.
+ *
+ * - `'settled'`: fenced transition committed as requested.
+ * - `'rearmed'`: newer work arrived mid-run (e.g. `revision` advanced on a convergence-mode row),
+ *   so the row was re-queued as pending instead of terminating; `onExhausted` must not fire.
+ * - `'stale'`: fencing check matched no row because another worker reclaimed the lease.
+ */
+export type SettleOutcome = 'settled' | 'rearmed' | 'stale';
+
 /** Arguments passed to {@link JobQueueQueries.parkDueGroup} when a group circuit opens or steps. */
 export type ParkDueGroupInput = {
-  tenantId: string;
+  tenantId?: string;
   type: string;
   groupKey: string;
   nextAttemptAt: number;
@@ -200,7 +213,7 @@ export type ReleaseClaimedInput = {
 /** Database-agnostic query adapter implemented by each host (e.g., Core Slonik or Cloud withtyped). */
 export type JobQueueQueries<SettlementMeta = unknown> = {
   claimDue: (input: ClaimDueInput) => Promise<readonly ClaimedJobRow[]>;
-  settle: (input: SettleJobInput<SettlementMeta>) => Promise<boolean>;
+  settle: (input: SettleJobInput<SettlementMeta>) => Promise<SettleOutcome>;
   parkDueGroup?: (input: ParkDueGroupInput) => Promise<number | void>;
   releaseClaimed?: (input: ReleaseClaimedInput) => Promise<number | void>;
 };

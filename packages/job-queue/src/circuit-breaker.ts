@@ -3,7 +3,7 @@ import { type ClaimedJobRow, type SaturatedGroup } from './types.js';
 export type GroupCircuitConstraint = 'closed' | 'blocked' | 'probe';
 
 type CircuitEntry = {
-  tenantId: string;
+  tenantId?: string;
   type: string;
   groupKey: string;
   consecutiveFailures: number;
@@ -18,7 +18,7 @@ export type RecordCircuitFailureInput = {
   job: Pick<ClaimedJobRow, 'id' | 'tenantId' | 'type' | 'groupKey'>;
   threshold: number;
   backoffMs: (attempt: number) => number;
-  maxAgeMs: number;
+  maxAgeMs?: number;
   retryAfterMs?: number;
   now: number;
 };
@@ -31,7 +31,7 @@ export type RecordCircuitFailureResult = {
 const minEntryTtlMs = 60_000;
 
 const toGroupMapKey = ({ tenantId, type, groupKey }: SaturatedGroup): string =>
-  JSON.stringify([tenantId, type, groupKey]);
+  JSON.stringify([tenantId ?? null, type, groupKey]);
 
 /**
  * Tracks per-`(tenantId, type, groupKey)` circuit breaker state in memory.
@@ -129,9 +129,10 @@ export class GroupCircuitBreakerTracker {
   }: RecordCircuitFailureInput): RecordCircuitFailureResult {
     const key = toGroupMapKey(job);
     const current = this.entries.get(key);
-    const expiresAt = Number.isFinite(maxAgeMs)
-      ? now + Math.max(maxAgeMs, minEntryTtlMs)
-      : Number.POSITIVE_INFINITY;
+    const expiresAt =
+      maxAgeMs !== undefined && Number.isFinite(maxAgeMs)
+        ? now + Math.max(maxAgeMs, minEntryTtlMs)
+        : Number.POSITIVE_INFINITY;
 
     if (!current?.isOpen) {
       return this.#recordClosedFailure({

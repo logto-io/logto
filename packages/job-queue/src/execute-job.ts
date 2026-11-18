@@ -183,9 +183,10 @@ const updateCircuitBreakerAfterSettle = async <SettlementMeta>({
 
   if (shouldPark && queries.parkDueGroup) {
     const { parkDueGroup } = queries;
-    const minCreatedAt = Number.isFinite(handler.retry.maxAgeMs)
-      ? Math.max(0, now - handler.retry.maxAgeMs)
-      : 0;
+    const minCreatedAt =
+      handler.retry.maxAgeMs !== undefined && Number.isFinite(handler.retry.maxAgeMs)
+        ? Math.max(0, now - handler.retry.maxAgeMs)
+        : 0;
 
     await trySafe(
       async () =>
@@ -197,7 +198,9 @@ const updateCircuitBreakerAfterSettle = async <SettlementMeta>({
           minCreatedAt,
         }),
       (error) => {
-        log.error(`Failed to park due jobs for ${row.tenantId}/${row.type}/${row.groupKey}.`);
+        log.error(
+          `Failed to park due jobs for ${row.tenantId ?? '<global>'}/${row.type}/${row.groupKey}.`
+        );
         log.error(error);
       }
     );
@@ -223,7 +226,7 @@ export const runAndSettleJob = async <SettlementMeta>({
   circuitBreaker: GroupCircuitBreakerTracker;
   log: Pick<ConsoleLog, 'warn' | 'error'>;
   getNow: () => number;
-}): Promise<boolean> => {
+}): Promise<{ shouldWake: boolean }> => {
   try {
     const outcome = await handler.execute(row, getNow);
 
@@ -232,7 +235,7 @@ export const runAndSettleJob = async <SettlementMeta>({
       log.error(outcome.resolution.error);
     }
 
-    const settled = await trySafe(
+    const settleOutcome = await trySafe(
       async () =>
         queries.settle({
           job: row,
@@ -246,9 +249,9 @@ export const runAndSettleJob = async <SettlementMeta>({
       }
     );
 
-    if (settled === false) {
+    if (settleOutcome === 'stale') {
       log.warn(`Lost lease while settling job ${row.type}/${row.id} (attempt ${row.attempts}).`);
-      return false;
+      return { shouldWake: false };
     }
 
     const closedCircuit = await updateCircuitBreakerAfterSettle({
@@ -261,7 +264,7 @@ export const runAndSettleJob = async <SettlementMeta>({
       now: getNow(),
     });
 
-    if (settled === true && outcome.resolution.status === 'exhausted') {
+    if (settleOutcome === 'settled' && outcome.resolution.status === 'exhausted') {
       const { error } = outcome.resolution;
       await trySafe(
         async () => outcome.onExhausted?.(error),
@@ -272,10 +275,10 @@ export const runAndSettleJob = async <SettlementMeta>({
       );
     }
 
-    return closedCircuit;
+    return { shouldWake: closedCircuit || settleOutcome === 'rearmed' };
   } catch (error: unknown) {
     log.error(`Unexpected error executing job ${row.type}/${row.id}.`);
     log.error(error);
-    return false;
+    return { shouldWake: false };
   }
 };

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { createExponentialBackoff, resolveRetryDecision } from './job-state.js';
+import { type JobRetryPolicy } from './types.js';
 
 describe('createExponentialBackoff', () => {
   it('grows exponentially from baseMs and caps at maxMs', () => {
@@ -160,6 +161,39 @@ describe('resolveRetryDecision', () => {
         createdAt,
         now: createdAt + 1_000_000,
         retry: attemptCappedRetry,
+      })
+    ).toEqual({ status: 'exhausted' });
+  });
+
+  it('supports maxAttempts without maxAgeMs and rejects policies missing both bounds', () => {
+    const attemptOnlyRetry: JobRetryPolicy = {
+      backoffMs: createExponentialBackoff({ baseMs: 1000, maxMs: 300_000 }),
+      maxAttempts: 5,
+    };
+
+    // @ts-expect-error -- JobRetryPolicy requires at least one of maxAgeMs or maxAttempts
+    const invalidRetry: JobRetryPolicy = { backoffMs };
+    expect(invalidRetry).toBeDefined();
+
+    expect(
+      resolveRetryDecision({
+        attempt: 4,
+        createdAt,
+        now: createdAt + 100_000_000,
+        retry: attemptOnlyRetry,
+      })
+    ).toEqual({
+      status: 'retry',
+      delayMs: 8000,
+      nextAttemptAt: createdAt + 100_008_000,
+    });
+
+    expect(
+      resolveRetryDecision({
+        attempt: 5,
+        createdAt,
+        now: createdAt + 100_000_000,
+        retry: attemptOnlyRetry,
       })
     ).toEqual({ status: 'exhausted' });
   });

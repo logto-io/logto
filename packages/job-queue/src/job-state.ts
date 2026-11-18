@@ -44,10 +44,13 @@ export const resolveRetryDecision = ({
 
   const delayMs = Math.max(0, retryAfterMs ?? retry.backoffMs(attempt));
   const nextAttemptAt = now + delayMs;
-  const deadline = createdAt + retry.maxAgeMs;
 
-  if (now >= deadline || nextAttemptAt > deadline) {
-    return { status: 'exhausted' };
+  if (retry.maxAgeMs !== undefined && Number.isFinite(retry.maxAgeMs)) {
+    const deadline = createdAt + retry.maxAgeMs;
+
+    if (now >= deadline || nextAttemptAt > deadline) {
+      return { status: 'exhausted' };
+    }
   }
 
   return { status: 'retry', delayMs, nextAttemptAt };

@@ -135,4 +135,24 @@ describe('GroupCircuitBreakerTracker', () => {
     expect(tracker.getOpenCount(121_000)).toBe(0);
     expect(tracker.getGroupConstraint(group, 121_000)).toBe('closed');
   });
+
+  it('supports tenantless groups without maxAgeMs and distinguishes undefined from empty tenantId', () => {
+    const tracker = new GroupCircuitBreakerTracker();
+    const globalGroup = { type: 'cross_pod', groupKey: 'sync_1' };
+    const emptyTenantGroup = { tenantId: '', type: 'cross_pod', groupKey: 'sync_1' };
+
+    expect(
+      tracker.recordFailure({
+        job: { ...globalGroup, id: 'cp_1' },
+        threshold: 1,
+        backoffMs,
+        now: 1000,
+      })
+    ).toEqual({ shouldPark: true, nextAttemptAt: 11_000 });
+
+    expect(tracker.getOpenCount(1_000_000_000)).toBe(1);
+    expect(tracker.getTrackedGroups(1_000_000_000)).toEqual([globalGroup]);
+    expect(tracker.getGroupConstraint(globalGroup, 10_000)).toBe('blocked');
+    expect(tracker.getGroupConstraint(emptyTenantGroup, 10_000)).toBe('closed');
+  });
 });

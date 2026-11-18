@@ -281,7 +281,7 @@ export class JobQueueWorker<SettlementMeta = unknown> {
     row: ClaimedJobRow,
     handler: RegisteredJobHandler<SettlementMeta>
   ): Promise<void> {
-    const closedCircuit = await runAndSettleJob({
+    const { shouldWake } = await runAndSettleJob({
       row,
       handler,
       workerId: this.workerId,
@@ -294,11 +294,11 @@ export class JobQueueWorker<SettlementMeta = unknown> {
     this.circuitBreaker.releaseProbe(row);
     const { unblockedCap } = this.concurrency.release(row, {
       maxConcurrency: this.maxConcurrency,
-      perTenantConcurrency: handler.limits.perTenantConcurrency,
-      perGroupConcurrency: handler.limits.perGroupConcurrency,
+      perTenantConcurrency: handler.limits?.perTenantConcurrency,
+      perGroupConcurrency: handler.limits?.perGroupConcurrency,
     });
 
-    if (this.#isRunning() && (unblockedCap || closedCircuit || this.dirty)) {
+    if (this.#isRunning() && (unblockedCap || shouldWake || this.dirty)) {
       this.wake();
     }
   }

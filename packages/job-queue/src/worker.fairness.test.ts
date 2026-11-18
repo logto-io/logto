@@ -27,9 +27,22 @@ const buildRow = (overrides: Partial<ClaimedJobRow> = {}): ClaimedJobRow => ({
   ...overrides,
 });
 
+const buildTenantlessRow = (overrides: Partial<ClaimedJobRow> = {}): ClaimedJobRow => ({
+  id: 'cp_1',
+  type: 'cross_pod',
+  groupKey: 'global',
+  dedupeKey: null,
+  payload: '{}',
+  attempts: 1,
+  nextAttemptAt: 910_000,
+  claimedBy: 'worker_1',
+  createdAt: 1000,
+  ...overrides,
+});
+
 const buildQueries = (overrides: Partial<JobQueueQueries> = {}) => ({
   claimDue: vi.fn<JobQueueQueries['claimDue']>(async () => []),
-  settle: vi.fn<JobQueueQueries['settle']>(async () => true),
+  settle: vi.fn<JobQueueQueries['settle']>(async () => 'settled'),
   parkDueGroup: vi.fn<NonNullable<JobQueueQueries['parkDueGroup']>>(async () => 0),
   releaseClaimed: vi.fn<NonNullable<JobQueueQueries['releaseClaimed']>>(async () => 0),
   ...overrides,
@@ -315,6 +328,123 @@ describe('JobQueueWorker concurrency & circuit breaker', () => {
     expect(claimDue).toHaveBeenCalledTimes(9);
     expect(claimDue.mock.calls[8]?.[0].saturatedGroups).toEqual([]);
     expect(claimDue.mock.calls[8]?.[0].groupRemainingSlots).toEqual([]);
+
+    await worker.stop();
+  });
+
+  it('supports tenantless handlers without limits using circuit breaking and maxAttempts', async () => {
+    // eslint-disable-next-line no-use-extend-native/no-use-extend-native -- Promise.withResolvers is available in the required Node.js runtime
+    const holdInFlight = Promise.withResolvers<void>();
+    const probeRow = buildTenantlessRow({ id: 'cp_probe', attempts: 3 });
+
+    const claimDue = vi
+      .fn<JobQueueQueries['claimDue']>()
+      .mockResolvedValueOnce([buildTenantlessRow({ id: 'cp_hold' })])
+      .mockResolvedValueOnce([buildTenantlessRow({ id: 'cp_fail_2' })])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([probeRow])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce([buildTenantlessRow({ id: 'cp_recover', attempts: 1 })])
+      .mockResolvedValue([]);
+    const queries = buildQueries({ claimDue });
+    const onExhausted = vi.fn();
+
+    const worker = new JobQueueWorker(queries, {
+      workerId: 'worker_1',
+      log: silentLog,
+    });
+    worker.register<string>({
+      type: 'cross_pod',
+      parsePayload: (raw) => raw,
+      leaseMs: 900_000,
+      retry: { backoffMs, maxAttempts: 3 },
+      circuitBreaker: { failureThreshold: 2 },
+      handle: async (job) => {
+        if (job.id === 'cp_hold') {
+          await holdInFlight.promise;
+          return { status: 'retry' };
+        }
+        if (job.id === 'cp_recover') {
+          return { status: 'done' };
+        }
+        return { status: 'retry' };
+      },
+      onExhausted,
+    });
+
+    // Claim #1: cp_hold is in flight with closed circuit and no limits -> omitted from groupRemainingSlots.
+    worker.start();
+    await vi.advanceTimersByTimeAsync(0);
+    worker.wake();
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(claimDue.mock.calls[1]?.[0]).toEqual({
+      workerId: 'worker_1',
+      limit: 99,
+      types: [
+        {
+          type: 'cross_pod',
+          leaseMs: 900_000,
+          perGroupConcurrency: undefined,
+          perTenantConcurrency: undefined,
+        },
+      ],
+      saturatedTenants: [],
+      saturatedGroups: [],
+      tenantRemainingSlots: [],
+      groupRemainingSlots: [],
+    });
+
+    // Cp_fail_2 fails (#1), then cp_hold fails (#2) -> circuit opens and parks due jobs.
+    holdInFlight.resolve();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(worker.openCircuitCount).toBe(1);
+    expect(queries.parkDueGroup).toHaveBeenCalledExactlyOnceWith({
+      tenantId: undefined,
+      type: 'cross_pod',
+      groupKey: 'global',
+      nextAttemptAt: 20_000,
+      minCreatedAt: 0,
+    });
+
+    // Claim #3 (15_000): circuit is blocked -> groupRemainingSlots emits 0 and saturatedGroups includes the group.
+    await vi.advanceTimersByTimeAsync(5000);
+    expect(claimDue.mock.calls[2]?.[0].saturatedGroups).toEqual([
+      { tenantId: undefined, type: 'cross_pod', groupKey: 'global' },
+    ]);
+    expect(claimDue.mock.calls[2]?.[0].groupRemainingSlots).toEqual([
+      { tenantId: undefined, type: 'cross_pod', groupKey: 'global', remainingSlots: 0 },
+    ]);
+
+    // Claim #4 (20_000): probe slot (1) is emitted; cp_probe hits maxAttempts (3) -> exhausted + re-parks to 40_000.
+    await vi.advanceTimersByTimeAsync(5000);
+    expect(claimDue.mock.calls[3]?.[0].saturatedGroups).toEqual([]);
+    expect(claimDue.mock.calls[3]?.[0].groupRemainingSlots).toEqual([
+      { tenantId: undefined, type: 'cross_pod', groupKey: 'global', remainingSlots: 1 },
+    ]);
+    expect(queries.settle).toHaveBeenLastCalledWith({
+      job: probeRow,
+      workerId: 'worker_1',
+      resolution: { status: 'exhausted', error: undefined },
+      meta: undefined,
+    });
+    expect(onExhausted).toHaveBeenCalledExactlyOnceWith(
+      expect.objectContaining({ id: 'cp_probe', tenantId: undefined })
+    );
+    expect(queries.parkDueGroup).toHaveBeenLastCalledWith({
+      tenantId: undefined,
+      type: 'cross_pod',
+      groupKey: 'global',
+      nextAttemptAt: 40_000,
+      minCreatedAt: 0,
+    });
+
+    // Advance to 40_000 -> cp_recover succeeds -> circuit closes and immediately wakes next claim.
+    await vi.advanceTimersByTimeAsync(20_000);
+    expect(worker.openCircuitCount).toBe(0);
+    expect(claimDue).toHaveBeenCalledTimes(9);
 
     await worker.stop();
   });

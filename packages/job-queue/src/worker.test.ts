@@ -8,6 +8,7 @@ import {
   type JobQueueQueries,
   type SafeJobPayload,
   type SettleJobInput,
+  type SettleOutcome,
 } from './types.js';
 import { defaultPollIntervalMs, JobQueueWorker } from './worker.js';
 
@@ -42,7 +43,7 @@ const buildRow = (overrides: Partial<ClaimedJobRow> = {}): ClaimedJobRow => ({
 
 const buildQueries = (overrides: Partial<JobQueueQueries<LogMeta>> = {}) => ({
   claimDue: vi.fn<JobQueueQueries<LogMeta>['claimDue']>(async () => []),
-  settle: vi.fn<JobQueueQueries<LogMeta>['settle']>(async () => true),
+  settle: vi.fn<JobQueueQueries<LogMeta>['settle']>(async () => 'settled'),
   parkDueGroup: vi.fn<NonNullable<JobQueueQueries<LogMeta>['parkDueGroup']>>(async () => 0),
   releaseClaimed: vi.fn<NonNullable<JobQueueQueries<LogMeta>['releaseClaimed']>>(async () => 0),
   ...overrides,
@@ -203,7 +204,10 @@ describe('JobQueueWorker', () => {
     });
     const rowBadJson = buildRow({ id: 'job_bad', payload: '{not-json' });
 
-    const settle = vi.fn(async (input: SettleJobInput<LogMeta>) => input.job.id !== 'job_fenced');
+    const settle = vi.fn(
+      async (input: SettleJobInput<LogMeta>): Promise<SettleOutcome> =>
+        input.job.id === 'job_fenced' ? 'stale' : 'settled'
+    );
     const queries = buildQueries({
       claimDue: vi
         .fn<JobQueueQueries<LogMeta>['claimDue']>()
@@ -288,6 +292,47 @@ describe('JobQueueWorker', () => {
       expect.objectContaining({ id: 'job_exhausted', payload: { step: 'throw' } }),
       handleError
     );
+
+    await worker.stop();
+  });
+
+  it('wakes immediately without calling onExhausted or logging lease loss when settle returns rearmed', async () => {
+    const row = buildRow({ id: 'job_rearmed', attempts: 5 });
+    const log = { info: vi.fn(), warn: vi.fn(), error: vi.fn() };
+    const onExhausted = vi.fn();
+    const claimDue = vi
+      .fn<JobQueueQueries<LogMeta>['claimDue']>()
+      .mockResolvedValueOnce([row])
+      .mockResolvedValue([]);
+    const settle = vi.fn<JobQueueQueries<LogMeta>['settle']>(async () => 'rearmed');
+    const queries = buildQueries({ claimDue, settle });
+
+    const worker = new JobQueueWorker<LogMeta>(queries, { workerId: 'worker_1', log });
+    worker.register<string>({
+      type: 'webhook',
+      parsePayload: (raw) => raw,
+      leaseMs: 60_000,
+      retry: {
+        backoffMs: defaultRetry.backoffMs,
+        maxAttempts: 5,
+      },
+      limits: defaultLimits,
+      handle: async () => ({ status: 'retry' }),
+      onExhausted,
+    });
+
+    worker.start();
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(settle).toHaveBeenCalledExactlyOnceWith({
+      job: row,
+      workerId: 'worker_1',
+      resolution: { status: 'exhausted', error: undefined },
+      meta: undefined,
+    });
+    expect(onExhausted).not.toHaveBeenCalled();
+    expect(log.warn).not.toHaveBeenCalled();
+    expect(claimDue).toHaveBeenCalledTimes(2);
 
     await worker.stop();
   });
