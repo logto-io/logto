@@ -1,6 +1,6 @@
 create table daily_token_usage (
   id varchar(21) not null,
-  tenant_id varchar(21) not null,
+  tenant_id varchar(64) not null,
   usage bigint not null default(0),
   user_token_usage bigint not null default(0),
   m2m_token_usage bigint not null default(0),

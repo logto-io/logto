@@ -116,17 +116,17 @@ describe('user query', () => {
   });
 
   it('findUserByIdentity', async () => {
-    const target = 'github';
+    const target = String.raw`a'b"c\d`;
 
     const expectSql = sql`
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
-      where ${fields.identities}::json#>>'{${sql.identifier([target])},userId}' = $1
+      where ${fields.identities}::json#>>array[$1, 'userId'] = $2
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([mockUser.id]);
+      expect(values).toEqual([target, mockUser.id]);
 
       return createMockQueryResult([databaseValue]);
     });
@@ -303,19 +303,19 @@ describe('user query', () => {
   });
 
   it('hasUserWithIdentity', async () => {
-    const target = 'github';
+    const target = String.raw`a'b"c\d`;
 
     const expectSql = sql`
       SELECT EXISTS(
         select ${fields.id}
         from ${table}
-        where ${fields.identities}::json#>>'{${sql.identifier([target])},userId}' = $1
+        where ${fields.identities}::json#>>array[$1, 'userId'] = $2
       )
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([mockUser.id]);
+      expect(values).toEqual([target, mockUser.id]);
 
       return createMockQueryResult([{ exists: true }]);
     });
