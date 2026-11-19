@@ -1,6 +1,7 @@
 import {
   AccountCenterControlValue,
   MfaFactor,
+  MfaVerificationCodeEnrollment,
   type UserMfaVerificationResponse,
 } from '@logto/schemas';
 import { formatToInternationalPhoneNumber } from '@logto/shared/universal';
@@ -23,6 +24,7 @@ import {
   passkeyManageRoute,
   phoneRoute,
 } from '@ac/constants/routes';
+import { type VerificationCodeMfaFactor } from '@ac/utils/pending-step-up';
 import {
   hasVisibleMfaSection,
   isEditableField,
@@ -39,9 +41,15 @@ const factorIcon = {
   [MfaFactor.PhoneVerificationCode]: PhoneIcon,
 };
 
+type VerificationCodeHandlers = {
+  onAddVerificationCode: (factor: VerificationCodeMfaFactor) => Promise<void>;
+  onRemoveVerificationCode: (verification: UserMfaVerificationResponse[number]) => void;
+};
+
 const useMfaRows = (
   mfaVerifications: UserMfaVerificationResponse | undefined,
-  navigateTo: (route: string) => void
+  navigateTo: (route: string) => void,
+  { onAddVerificationCode, onRemoveVerificationCode }: VerificationCodeHandlers
 ): SecurityRowData[] => {
   const { t } = useTranslation();
   const { accountCenterSettings, experienceSettings, userInfo } = useContext(PageContext);
@@ -51,6 +59,8 @@ const useMfaRows = (
   const phoneControl = accountCenterSettings?.fields.phone;
   const enabledFactors = useMemo(() => experienceSettings?.mfa.factors ?? [], [experienceSettings]);
   const isEditable = mfaControl === AccountCenterControlValue.Edit;
+  const isExplicitEnrollment =
+    experienceSettings?.mfa.verificationCodeEnrollment === MfaVerificationCodeEnrollment.Explicit;
 
   return useMemo(() => {
     if (!hasVisibleMfaSection(mfaControl, experienceSettings)) {
@@ -158,49 +168,67 @@ const useMfaRows = (
       ];
     };
 
-    const buildEmailRow = (): SecurityRowData[] => {
-      if (!enabledFactors.includes(MfaFactor.EmailVerificationCode) || !userInfo?.primaryEmail) {
+    const buildVerificationCodeRow = (
+      factor: VerificationCodeMfaFactor,
+      identifier: string | undefined,
+      identifierRoute: string,
+      identifierControl: AccountCenterControlValue | undefined
+    ): SecurityRowData[] => {
+      if (!enabledFactors.includes(factor) || !identifier) {
         return [];
       }
-      return [
-        {
-          key: 'email',
-          icon: factorIcon[MfaFactor.EmailVerificationCode],
-          label: t('account_center.security.email_verification_code'),
-          value: userInfo.primaryEmail,
-          isPlainValue: true,
-          isConfigured: true,
-          action:
-            isEditable && isEditableField(emailControl)
-              ? {
-                  label: t('account_center.security.change'),
-                  handler: () => {
-                    navigateTo(emailRoute);
-                  },
-                }
-              : undefined,
-        },
-      ];
-    };
 
-    const buildPhoneRow = (): SecurityRowData[] => {
-      if (!enabledFactors.includes(MfaFactor.PhoneVerificationCode) || !userInfo?.primaryPhone) {
-        return [];
+      const isEmail = factor === MfaFactor.EmailVerificationCode;
+      const row = {
+        key: isEmail ? 'email' : 'phone',
+        icon: factorIcon[factor],
+        label: t(
+          isEmail
+            ? 'account_center.security.email_verification_code'
+            : 'account_center.security.phone_verification_code'
+        ),
+        value: isEmail ? identifier : formatToInternationalPhoneNumber(identifier),
+        isPlainValue: true,
+      };
+
+      // In explicit enrollment, the factor counts only once the user enrolls it, so the row
+      // manages the enrollment instead of the address.
+      if (isExplicitEnrollment) {
+        const verification = mfaVerifications?.find(({ type }) => type === factor);
+
+        return [
+          {
+            ...row,
+            isConfigured: Boolean(verification),
+            action: isEditable
+              ? verification
+                ? {
+                    label: t('account_center.security.remove'),
+                    handler: () => {
+                      onRemoveVerificationCode(verification);
+                    },
+                  }
+                : {
+                    label: t('account_center.security.add'),
+                    handler: () => {
+                      void onAddVerificationCode(factor);
+                    },
+                  }
+              : undefined,
+          },
+        ];
       }
+
       return [
         {
-          key: 'phone',
-          icon: factorIcon[MfaFactor.PhoneVerificationCode],
-          label: t('account_center.security.phone_verification_code'),
-          value: formatToInternationalPhoneNumber(userInfo.primaryPhone),
-          isPlainValue: true,
+          ...row,
           isConfigured: true,
           action:
-            isEditable && isEditableField(phoneControl)
+            isEditable && isEditableField(identifierControl)
               ? {
                   label: t('account_center.security.change'),
                   handler: () => {
-                    navigateTo(phoneRoute);
+                    navigateTo(identifierRoute);
                   },
                 }
               : undefined,
@@ -212,8 +240,18 @@ const useMfaRows = (
       ...buildWebAuthnRow(),
       ...buildTotpRow(),
       ...buildBackupCodeRow(),
-      ...buildEmailRow(),
-      ...buildPhoneRow(),
+      ...buildVerificationCodeRow(
+        MfaFactor.EmailVerificationCode,
+        userInfo?.primaryEmail ?? undefined,
+        emailRoute,
+        emailControl
+      ),
+      ...buildVerificationCodeRow(
+        MfaFactor.PhoneVerificationCode,
+        userInfo?.primaryPhone ?? undefined,
+        phoneRoute,
+        phoneControl
+      ),
     ];
   }, [
     mfaControl,
@@ -224,8 +262,11 @@ const useMfaRows = (
     enabledFactors,
     userInfo,
     isEditable,
+    isExplicitEnrollment,
     t,
     navigateTo,
+    onAddVerificationCode,
+    onRemoveVerificationCode,
   ]);
 };
 

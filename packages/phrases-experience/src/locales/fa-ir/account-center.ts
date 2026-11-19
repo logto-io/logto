@@ -99,6 +99,12 @@ const account_center = {
     email_removed: 'آدرس ایمیل با موفقیت حذف شد.',
     phone_removed: 'شماره تلفن با موفقیت حذف شد.',
     username_removed: 'نام کاربری با موفقیت حذف شد.',
+    remove_email_verification_code_confirmation_title: 'حذف کد تأیید ایمیل',
+    remove_email_verification_code_confirmation_description:
+      'دیگر کدهای تأیید دو مرحله‌ای را در این آدرس ایمیل دریافت نخواهید کرد. آدرس ایمیل در حساب شما باقی می‌ماند.',
+    remove_phone_verification_code_confirmation_title: 'حذف کد تأیید تلفن',
+    remove_phone_verification_code_confirmation_description:
+      'دیگر کدهای تأیید دو مرحله‌ای را در این شماره تلفن دریافت نخواهید کرد. شماره تلفن در حساب شما باقی می‌ماند.',
     trusted_devices: {
       title: 'دستگاه‌های مورد اعتماد MFA',
       current_device: 'دستگاه فعلی',

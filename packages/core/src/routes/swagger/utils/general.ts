@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- The OpenAPI document helpers are kept together. */
 import assert from 'node:assert';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -403,8 +404,9 @@ const removeDevFeatureSchemaProperty = (
  * **CAUTION**: This function mutates the input value.
  *
  * Recursively prune dev-feature schema properties: when dev features are disabled, properties
- * marked with `x-logto-dev-feature` are removed (including their `required` entries); when
- * enabled, only the internal marker is removed.
+ * and array items (such as `oneOf` variants) marked with `x-logto-dev-feature` are removed
+ * (including the properties' `required` entries); when enabled, only the internal marker is
+ * removed.
  *
  * Run this on the assembled document — the base schema properties generated from the env-free
  * zod guards carry no markers, so pruning supplements alone cannot remove them.
@@ -435,8 +437,16 @@ export const removeDevFeatureSchemaProperties = (value: unknown) => {
 
   Reflect.deleteProperty(schema, devFeatureSchemaExtension);
 
-  for (const item of Object.values(schema)) {
-    removeDevFeatureSchemaProperties(item);
+  for (const [key, item] of Object.entries(schema)) {
+    // Marked array items, such as the `oneOf` variants of a request body, are removed as well.
+    if (Array.isArray(item) && !EnvSet.values.isDevFeaturesEnabled) {
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- Pruning the document is intentionally in-place.
+      schema[key] = item.filter(
+        (element) => !isRecord(element) || element[devFeatureSchemaExtension] !== true
+      );
+    }
+
+    removeDevFeatureSchemaProperties(schema[key]);
   }
 };
 
@@ -479,3 +489,4 @@ export const isManagementApiRouter = ({ stack }: Router) =>
   stack
     .filter(({ path }) => !path.includes('.*'))
     .some(({ stack }) => stack.some((function_) => isKoaAuthMiddleware(function_)));
+/* eslint-enable max-lines */

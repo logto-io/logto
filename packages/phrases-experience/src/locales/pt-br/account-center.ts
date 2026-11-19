@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'Página não encontrada',
@@ -104,6 +105,12 @@ const account_center = {
     email_removed: 'Endereço de e-mail removido com sucesso.',
     phone_removed: 'Número de telefone removido com sucesso.',
     username_removed: 'Nome de usuário removido com sucesso.',
+    remove_email_verification_code_confirmation_title: 'Remover código de verificação por e-mail',
+    remove_email_verification_code_confirmation_description:
+      'Você não receberá mais códigos de verificação em duas etapas neste endereço de e-mail. O endereço de e-mail continua na sua conta.',
+    remove_phone_verification_code_confirmation_title: 'Remover código de verificação por telefone',
+    remove_phone_verification_code_confirmation_description:
+      'Você não receberá mais códigos de verificação em duas etapas neste número de telefone. O número de telefone continua na sua conta.',
     trusted_devices: {
       title: 'Dispositivos confiáveis de MFA',
       current_device: 'Dispositivo atual',
@@ -297,3 +304,4 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
+/* eslint-enable max-lines */

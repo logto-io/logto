@@ -100,6 +100,12 @@ const account_center = {
     email_removed: 'メールアドレスが正常に削除されました。',
     phone_removed: '電話番号が正常に削除されました。',
     username_removed: 'ユーザー名が正常に削除されました。',
+    remove_email_verification_code_confirmation_title: 'メール認証コードを削除',
+    remove_email_verification_code_confirmation_description:
+      'このメールアドレスで2段階認証コードを受け取らなくなります。メールアドレスはアカウントに残ります。',
+    remove_phone_verification_code_confirmation_title: '電話認証コードを削除',
+    remove_phone_verification_code_confirmation_description:
+      'この電話番号で2段階認証コードを受け取らなくなります。電話番号はアカウントに残ります。',
     trusted_devices: {
       title: 'MFA 信頼済みデバイス',
       current_device: '現在のデバイス',
