@@ -149,6 +149,37 @@ describe('friendly-captcha', () => {
     unmount();
   });
 
+  it('recreates the widget on the next solve after the first initialization fails', async () => {
+    const container = document.createElement('div');
+
+    sdkConstructorMock.mockImplementationOnce(() => {
+      throw new Error('Failed to load Friendly Captcha SDK');
+    });
+    createWidgetMock.mockImplementation(
+      (options) =>
+        createMockWidget(options.element, { state: 'completed', response: 'frc_retry_token' })
+          .widget
+    );
+
+    const { mountFriendlyCaptchaWidget, solveFriendlyCaptchaWidget } = await import(
+      './friendly-captcha'
+    );
+    const unmount = mountFriendlyCaptchaWidget(container, {
+      siteKey: 'FC_TEST_SITEKEY',
+      theme: 'light',
+      language: 'en',
+    });
+
+    await expect(solveFriendlyCaptchaWidget(container)).rejects.toThrow(
+      'Failed to load Friendly Captcha SDK'
+    );
+    await expect(solveFriendlyCaptchaWidget(container)).resolves.toBe('frc_retry_token');
+    expect(createWidgetMock).toHaveBeenCalledTimes(1);
+
+    await flush();
+    unmount();
+  });
+
   it('starts an unactivated widget and resolves on frc:widget.complete', async () => {
     const container = document.createElement('div');
     const holder: { widget?: WidgetHandle; element?: HTMLElement } = {};

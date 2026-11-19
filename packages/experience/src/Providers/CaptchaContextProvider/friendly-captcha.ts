@@ -18,7 +18,7 @@ type PendingSolve = {
   cleanup: () => void;
 };
 
-const widgetHandles = new WeakMap<HTMLElement, Promise<WidgetHandle>>();
+const widgetGetters = new WeakMap<HTMLElement, () => Promise<WidgetHandle>>();
 const pendingSolves = new WeakMap<HTMLElement, PendingSolve>();
 
 /** Check that a Friendly Captcha response is an actual token rather than a `.`-prefixed sentinel. */
@@ -90,15 +90,33 @@ export const mountFriendlyCaptchaWidget = (
     });
   };
 
-  const widgetPromise = createWidget();
-  widgetHandles.set(container, widgetPromise);
+  // eslint-disable-next-line @silverhand/fp/no-let -- Memoizes the widget until creation fails
+  let widgetPromise: Promise<WidgetHandle> | undefined;
 
-  // Prevent unhandled rejection if the widget unmounts before solving runs.
+  /** Return the widget, creating it again if an earlier attempt failed. */
+  const getWidget = async () => {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Memoizes the widget until creation fails
+    widgetPromise ??= (async () => {
+      try {
+        return await createWidget();
+      } catch (error: unknown) {
+        // eslint-disable-next-line @silverhand/fp/no-mutation -- Clears failed creation so the next solve can retry
+        widgetPromise = undefined;
+        throw error;
+      }
+    })();
+
+    return widgetPromise;
+  };
+
+  widgetGetters.set(container, getWidget);
+
+  // Create the widget eagerly, and prevent unhandled rejection if it fails before solving runs.
   void (async () => {
     try {
-      await widgetPromise;
+      await getWidget();
     } catch {
-      // Errors are surfaced when solving or handled during unmount.
+      // Errors are surfaced when solving, which retries the creation.
     }
   })();
 
@@ -106,17 +124,19 @@ export const mountFriendlyCaptchaWidget = (
     // eslint-disable-next-line @silverhand/fp/no-mutation -- Marks widget unmounted before async mount resolves
     isCancelled = true;
 
-    if (widgetHandles.get(container) === widgetPromise) {
-      widgetHandles.delete(container);
+    if (widgetGetters.get(container) === getWidget) {
+      widgetGetters.delete(container);
     }
 
     const pending = settlePendingSolve(container);
     pending?.reject(new Error('Friendly Captcha widget was unmounted'));
 
+    const currentWidgetPromise = widgetPromise;
+
     void (async () => {
       try {
-        const widget = await widgetPromise;
-        if (!widget.isDestroyed) {
+        const widget = await currentWidgetPromise;
+        if (widget && !widget.isDestroyed) {
           widget.destroy();
         }
       } catch {
@@ -133,13 +153,13 @@ export const mountFriendlyCaptchaWidget = (
  * Schedules an asynchronous `reset()` after taking a token since tokens are single-use.
  */
 export const solveFriendlyCaptchaWidget = async (container: HTMLElement): Promise<string> => {
-  const widgetPromise = widgetHandles.get(container);
+  const getWidget = widgetGetters.get(container);
 
-  if (!widgetPromise) {
+  if (!getWidget) {
     throw new Error('Friendly Captcha widget is not rendered');
   }
 
-  const widget = await widgetPromise;
+  const widget = await getWidget();
 
   if (widget.isDestroyed) {
     throw new Error('Friendly Captcha widget is destroyed');
