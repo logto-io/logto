@@ -26,6 +26,14 @@ const mfa = {
   phone_verification_code: 'SMS doğrulama kodu',
   phone_verification_code_description:
     'SMS doğrulama kodlarını almak ve doğrulamak için telefon numarasını bağlayın.',
+  verification_code_enrollment: 'E-posta/SMS ile 2 adımlı doğrulama',
+  verification_code_enrollment_implicit:
+    'Doğrulanmış e-posta adresi veya telefon numarası olan her kullanıcı',
+  verification_code_enrollment_explicit: 'Yalnızca bunu ayarlayan kullanıcılar',
+  verification_code_enrollment_explicit_confirmation:
+    'E-posta ve SMS doğrulama kodları yalnızca bunları ayarlayan kullanıcılar için 2 adımlı doğrulama sayılacak. Bunları ayarlamamış kullanıcılar bunları 2 adımlı doğrulama faktörü olarak kaybeder ve başka faktörü olmayan kullanıcılar MFA olmadan kabul edilir. Devam etmek istediğinizden emin misiniz?',
+  verification_code_enrollment_implicit_confirmation:
+    'Doğrulanmış e-posta adresi veya telefon numarası olan her kullanıcı, bunu ayarlamamış olsa bile 2 adımlı doğrulama için kullanacak. Devam etmek istediğinizden emin misiniz?',
   policy: 'Politika',
   policy_description: 'Giriş ve kaydolma akışları için MFA politikasını belirleyin.',
   two_step_sign_in_policy: 'Girişte 2 aşamalı doğrulama politikası',

@@ -1,4 +1,9 @@
-import { MfaFactor, MfaPolicy, OrganizationRequiredMfaPolicy } from '@logto/schemas';
+import {
+  MfaFactor,
+  MfaPolicy,
+  MfaVerificationCodeEnrollment,
+  OrganizationRequiredMfaPolicy,
+} from '@logto/schemas';
 
 import { type MfaConfigForm } from '../types';
 
@@ -18,6 +23,7 @@ const baseForm: MfaConfigForm = {
   backupCodeEnabled: false,
   emailVerificationCodeEnabled: false,
   phoneVerificationCodeEnabled: false,
+  verificationCodeEnrollment: MfaVerificationCodeEnrollment.Implicit,
   organizationRequiredMfaPolicy: undefined,
   additionalBindingSuggestionEnabled: true,
   adaptiveMfaEnabled: false,
@@ -91,6 +97,24 @@ test('round-trips the tenant switch for the additional MFA factor suggestion', (
   const suggested = convertMfaConfigToForm({ policy: MfaPolicy.Mandatory, factors: [] });
   expect(suggested.additionalBindingSuggestionEnabled).toBe(true);
   expect(buildMfaPatchPayload(suggested).mfa).not.toHaveProperty('skipAdditionalBindingSuggestion');
+});
+
+test('round-trips the email and phone MFA enrollment mode', () => {
+  const explicit = convertMfaConfigToForm({
+    policy: MfaPolicy.NoPrompt,
+    factors: [MfaFactor.EmailVerificationCode],
+    verificationCodeEnrollment: MfaVerificationCodeEnrollment.Explicit,
+  });
+  expect(buildMfaPatchPayload(explicit).mfa.verificationCodeEnrollment).toBe(
+    MfaVerificationCodeEnrollment.Explicit
+  );
+
+  const implicit = convertMfaConfigToForm({
+    policy: MfaPolicy.NoPrompt,
+    factors: [MfaFactor.EmailVerificationCode],
+  });
+  expect(implicit.verificationCodeEnrollment).toBe(MfaVerificationCodeEnrollment.Implicit);
+  expect(buildMfaPatchPayload(implicit).mfa).not.toHaveProperty('verificationCodeEnrollment');
 });
 
 test('includes configured trusted-device policy', () => {

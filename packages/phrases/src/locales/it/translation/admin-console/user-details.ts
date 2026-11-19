@@ -80,6 +80,8 @@ const user_details = {
       "Questo utente deve configurare almeno un fattore MFA prima di completare l'accesso. Non può saltare la configurazione.",
     field_description: 'Questo utente ha abilitato fattori di autenticazione a 2 passaggi.',
     name_column: 'Autenticazione a due fattori',
+    implicit_factor_tip:
+      "Questo utente ha un indirizzo email o un numero di telefono verificato, quindi conta per la verifica in 2 passaggi senza averla configurata. Per contare solo gli utenti che l'hanno configurata, modifica “Verifica in 2 passaggi via email/SMS” nella pagina dell'autenticazione a più fattori.",
     field_description_empty:
       'Questo utente non ha abilitato fattori di autenticazione a due fattori.',
     deletion_confirmation:

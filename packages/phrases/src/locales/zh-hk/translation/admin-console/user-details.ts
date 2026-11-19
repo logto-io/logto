@@ -72,6 +72,8 @@ const user_details = {
     require_mfa_description: '此使用者必須至少設定一個 MFA 因素才能完成登入，且無法略過設定。',
     field_description: '這個使用者已啟用 2 步驗證因素。',
     name_column: '多重因素驗證',
+    implicit_factor_tip:
+      '此用戶有已驗證的電郵或電話號碼，因此無需設定即計為兩步驗證。如只想計入已設定的用戶，請在多重要素驗證頁面修改「電郵/SMS 兩步驗證」。',
     field_description_empty: '此用戶尚未啟用兩步驟身份驗證因素。',
     deletion_confirmation: '你正在刪除現有的雙步驗證中的 <name/>。你確定要繼續嗎？',
   },

@@ -80,6 +80,8 @@ const user_details = {
       'Este usuario debe configurar al menos un factor de MFA antes de completar el inicio de sesión. No puede omitir la configuración.',
     field_description: 'Este usuario ha habilitado factores de autenticación de 2 pasos.',
     name_column: 'Autenticación de dos factores',
+    implicit_factor_tip:
+      'Este usuario tiene un email o número de teléfono verificado, por lo que cuenta para la verificación en 2 pasos sin haberla configurado. Para contar solo a los usuarios que la configuraron, cambia "Verificación en 2 pasos por email/SMS" en la página de autenticación multifactor.',
     field_description_empty: 'Este usuario no ha habilitado factores de autenticación de 2 pasos.',
     deletion_confirmation:
       'Estás eliminando la existente <name/> para la verificación en dos pasos. ¿Estás seguro/a de que deseas continuar?',

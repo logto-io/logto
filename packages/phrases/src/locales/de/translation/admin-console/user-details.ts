@@ -80,6 +80,8 @@ const user_details = {
       'Dieser Benutzer muss mindestens einen MFA-Faktor einrichten, bevor er die Anmeldung abschließen kann. Die Einrichtung kann nicht übersprungen werden.',
     field_description: 'Dieser Benutzer hat 2-Stufen-Authentifizierungsfaktoren aktiviert.',
     name_column: 'Zwei-Faktor',
+    implicit_factor_tip:
+      'Dieser Benutzer hat eine verifizierte E-Mail-Adresse oder Telefonnummer, daher zählt sie für die 2-Schritt-Verifizierung, ohne eingerichtet zu sein. Um nur Benutzer zu berücksichtigen, die sie eingerichtet haben, ändern Sie "2-Schritt-Verifizierung per E-Mail/SMS" auf der Seite für die Multi-Faktor-Authentifizierung.',
     field_description_empty:
       'Dieser Benutzer hat keine zweistufigen Authentifizierungsfaktoren aktiviert.',
     deletion_confirmation:

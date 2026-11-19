@@ -78,6 +78,8 @@ const user_details = {
       'This user must set up at least one MFA factor before they can complete sign-in. They cannot skip the setup.',
     field_description: 'This user has enabled 2-step verification factors.',
     name_column: 'Multi-Factor',
+    implicit_factor_tip:
+      'This user has a verified email address or phone number, so it counts for 2-step verification without being set up. To count only users who set it up, change "Email/SMS 2-step verification" on the Multi-factor auth page.',
     field_description_empty: 'This user has not enabled 2-step verification factors.',
     deletion_confirmation:
       'You are removing the existing <name/> for the 2-step verification. Are you sure you want to continue?',

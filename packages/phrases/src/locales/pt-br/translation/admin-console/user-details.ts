@@ -78,6 +78,8 @@ const user_details = {
       'Este usuário deve configurar pelo menos um fator de MFA antes de concluir o login. Ele não pode pular a configuração.',
     field_description: 'Este usuário habilitou fatores de autenticação de 2 etapas.',
     name_column: 'Autenticação de dois fatores',
+    implicit_factor_tip:
+      'Este usuário tem um e-mail ou número de telefone verificado, então ele conta para a verificação em 2 etapas sem ter sido configurado. Para contar apenas usuários que a configuraram, altere "Verificação em 2 etapas por e-mail/SMS" na página de autenticação multifator.',
     field_description_empty: 'Este usuário não habilitou fatores de autenticação em duas etapas.',
     deletion_confirmation:
       'Você está removendo o existente <name/> para a verificação em duas etapas. Tem certeza de que deseja continuar?',

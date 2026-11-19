@@ -45,6 +45,12 @@ const user = {
   missing_mfa: 'Musisz podłączyć dodatkowe MFA przed zalogowaniem.',
   totp_already_in_use: 'TOTP jest już w użyciu.',
   backup_code_already_in_use: 'Kod zapasowy jest już w użyciu.',
+  email_mfa_already_in_use: 'MFA z kodem weryfikacyjnym e-mail jest już w użyciu.',
+  phone_mfa_already_in_use: 'MFA z kodem weryfikacyjnym SMS jest już w użyciu.',
+  email_mfa_requires_primary_email:
+    'Użytkownik musi mieć główny adres e-mail, aby korzystać z MFA z kodem weryfikacyjnym e-mail.',
+  phone_mfa_requires_primary_phone:
+    'Użytkownik musi mieć główny numer telefonu, aby korzystać z MFA z kodem weryfikacyjnym SMS.',
   password_algorithm_required: 'Wymagany jest algorytm hasła.',
   password_and_digest:
     'Nie możesz ustawić zarówno hasła w postaci tekstu jawnego, jak i skrótu hasła.',

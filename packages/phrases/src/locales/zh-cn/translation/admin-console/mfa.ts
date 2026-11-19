@@ -18,6 +18,13 @@ const mfa = {
   email_verification_code_description: '关联电子邮件地址以接收和验证验证码。',
   phone_verification_code: '短信验证码',
   phone_verification_code_description: '关联电话号码以接收和验证短信验证码。',
+  verification_code_enrollment: '邮件/短信两步验证',
+  verification_code_enrollment_implicit: '所有拥有已验证邮箱或手机号码的用户',
+  verification_code_enrollment_explicit: '仅限已设置的用户',
+  verification_code_enrollment_explicit_confirmation:
+    '邮件和短信验证码将只对已设置的用户计为两步验证。未设置的用户将失去这一两步验证因素，没有其他因素的用户将被视为未启用 MFA。确定要继续吗？',
+  verification_code_enrollment_implicit_confirmation:
+    '所有拥有已验证邮箱或手机号码的用户都将使用它进行两步验证，包括未设置的用户。确定要继续吗？',
   policy: '策略',
   policy_description: '为登录和注册流程设置 MFA 策略。',
   two_step_sign_in_policy: '登录时的两步验证策略',

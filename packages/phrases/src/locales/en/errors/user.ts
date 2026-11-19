@@ -43,6 +43,12 @@ const user = {
   missing_mfa: 'You need to bind additional MFA before signing-in.',
   totp_already_in_use: 'TOTP is already in use.',
   backup_code_already_in_use: 'Backup code is already in use.',
+  email_mfa_already_in_use: 'Email verification code MFA is already in use.',
+  phone_mfa_already_in_use: 'SMS verification code MFA is already in use.',
+  email_mfa_requires_primary_email:
+    'The user needs a primary email address to use email verification code MFA.',
+  phone_mfa_requires_primary_phone:
+    'The user needs a primary phone number to use SMS verification code MFA.',
   password_algorithm_required: 'Password algorithm is required.',
   password_and_digest: 'You cannot set both plain text password and password digest.',
   personal_access_token_name_exists: 'Personal access token name already exists.',

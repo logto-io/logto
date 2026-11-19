@@ -77,6 +77,8 @@ const user_details = {
       'Ten użytkownik musi skonfigurować co najmniej jeden czynnik MFA przed ukończeniem logowania. Nie może pominąć konfiguracji.',
     field_description: 'Ten użytkownik włączył autoryzację dwuetapową.',
     name_column: 'Wieloetapowa autoryzacja',
+    implicit_factor_tip:
+      'Ten użytkownik ma zweryfikowany adres e-mail lub numer telefonu, więc liczy się on jako weryfikacja dwuetapowa bez konfiguracji. Aby uwzględniać tylko użytkowników, którzy ją skonfigurowali, zmień "Weryfikacja dwuetapowa przez e-mail/SMS" na stronie uwierzytelniania wieloskładnikowego.',
     field_description_empty: 'Ten użytkownik nie włączył autoryzacji dwuetapowej.',
     deletion_confirmation:
       'Usuwasz istniejące <name/> w celu weryfikacji dwuetapowej. Czy na pewno chcesz kontynuować?',

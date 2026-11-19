@@ -42,6 +42,12 @@ const user = {
   missing_mfa: 'قبل از ورود باید MFA اضافی متصل کنید.',
   totp_already_in_use: 'TOTP از قبل در حال استفاده است.',
   backup_code_already_in_use: 'کد پشتیبان از قبل در حال استفاده است.',
+  email_mfa_already_in_use: 'MFA با کد تأیید ایمیل از قبل در حال استفاده است.',
+  phone_mfa_already_in_use: 'MFA با کد تأیید پیامکی از قبل در حال استفاده است.',
+  email_mfa_requires_primary_email:
+    'کاربر برای استفاده از MFA با کد تأیید ایمیل به یک ایمیل اصلی نیاز دارد.',
+  phone_mfa_requires_primary_phone:
+    'کاربر برای استفاده از MFA با کد تأیید پیامکی به یک شماره تلفن اصلی نیاز دارد.',
   password_algorithm_required: 'الگوریتم رمز عبور الزامی است.',
   password_and_digest: 'نمی‌توانید همزمان رمز عبور متنی و digest رمز عبور تنظیم کنید.',
   personal_access_token_name_exists: 'نام توکن دسترسی شخصی از قبل وجود دارد.',
