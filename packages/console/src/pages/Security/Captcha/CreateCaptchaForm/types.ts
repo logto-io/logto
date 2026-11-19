@@ -8,7 +8,8 @@ type FormField =
   | 'domain'
   | 'mode'
   | 'scoreThreshold'
-  | 'endpoint';
+  | 'endpoint'
+  | 'apiEndpoint';
 
 export type CaptchaProviderMetadata = {
   name: AdminConsoleKey;

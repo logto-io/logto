@@ -9,6 +9,7 @@ type MountOptions = {
   siteKey: string;
   theme: 'light' | 'dark';
   language: string;
+  apiEndpoint?: string;
 };
 
 type PendingSolve = {
@@ -62,7 +63,7 @@ const settlePendingSolve = (container: HTMLElement): PendingSolve | undefined =>
  */
 export const mountFriendlyCaptchaWidget = (
   container: HTMLElement,
-  { siteKey, theme, language }: MountOptions
+  { siteKey, theme, language, apiEndpoint }: MountOptions
 ): (() => void) => {
   // eslint-disable-next-line @silverhand/fp/no-let -- Tracks unmount during async SDK loading
   let isCancelled = false;
@@ -84,6 +85,7 @@ export const mountFriendlyCaptchaWidget = (
       sitekey: siteKey,
       theme,
       language,
+      apiEndpoint,
       formFieldName: null,
     });
   };

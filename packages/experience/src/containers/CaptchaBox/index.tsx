@@ -34,6 +34,7 @@ const CaptchaBox = () => {
       siteKey: captchaConfig.siteKey,
       theme: theme === Theme.Light ? 'light' : 'dark',
       language: i18n.language,
+      apiEndpoint: captchaConfig.apiEndpoint,
     });
   }, [captchaConfig, i18n.language, isCaptchaRequired, theme, widgetRef]);
 

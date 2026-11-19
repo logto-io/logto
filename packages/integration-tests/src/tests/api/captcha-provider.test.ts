@@ -1,4 +1,4 @@
-import { CaptchaType } from '@logto/schemas';
+import { CaptchaType, FriendlyCaptchaApiEndpoint } from '@logto/schemas';
 
 import {
   deleteCaptchaProvider,
@@ -93,6 +93,7 @@ describe('captcha provider', () => {
       type: CaptchaType.FriendlyCaptcha,
       siteKey: 'site_key',
       secretKey: 'api_key',
+      apiEndpoint: FriendlyCaptchaApiEndpoint.Eu,
     } as const;
 
     await updateCaptchaProvider({ config });

@@ -91,6 +91,7 @@ describe('friendly-captcha', () => {
       siteKey: 'FC_TEST_SITEKEY',
       theme: 'dark',
       language: 'de',
+      apiEndpoint: 'eu',
     });
 
     await flush();
@@ -101,6 +102,7 @@ describe('friendly-captcha', () => {
       sitekey: 'FC_TEST_SITEKEY',
       theme: 'dark',
       language: 'de',
+      apiEndpoint: 'eu',
       formFieldName: null,
     });
     expect(captured.options?.element).not.toBe(container);

@@ -12,7 +12,11 @@ import {
   type SignInExperience,
   SignInExperiences,
 } from '../db-entries/index.js';
-import { CaptchaType, RecaptchaEnterpriseMode } from '../foundations/jsonb-types/index.js';
+import {
+  CaptchaType,
+  FriendlyCaptchaApiEndpoint,
+  RecaptchaEnterpriseMode,
+} from '../foundations/jsonb-types/index.js';
 import { type ToZodObject } from '../utils/zod.js';
 
 import { type SsoConnectorMetadata, ssoConnectorMetadataGuard } from './sso-connector.js';
@@ -58,6 +62,8 @@ export type FullSignInExperience = Omit<
     endpoint?: string;
     domain?: string;
     mode?: RecaptchaEnterpriseMode;
+    /** Only available for {@link CaptchaType.FriendlyCaptcha}. */
+    apiEndpoint?: FriendlyCaptchaApiEndpoint;
   };
   /**
    * Custom profile fields selected for the sign-up (Collect user profile) flow.
@@ -100,6 +106,7 @@ export const fullSignInExperienceGuard = SignInExperiences.guard
         endpoint: z.string().optional(),
         domain: z.string().optional(),
         mode: z.nativeEnum(RecaptchaEnterpriseMode).optional(),
+        apiEndpoint: z.nativeEnum(FriendlyCaptchaApiEndpoint).optional(),
       })
       .optional(),
     customProfileFields: CustomProfileFields.guard.array(),

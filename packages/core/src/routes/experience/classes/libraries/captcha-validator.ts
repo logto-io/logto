@@ -3,6 +3,7 @@ import { createHmac } from 'node:crypto';
 import {
   type CapConfig,
   CaptchaType,
+  FriendlyCaptchaApiEndpoint,
   type FriendlyCaptchaConfig,
   type GeetestConfig,
   RecaptchaEnterpriseMode,
@@ -246,9 +247,11 @@ export class CaptchaValidator {
    * @see https://developer.friendlycaptcha.com/docs/v2/server-side-validation/siteverify
    */
   private async verifyFriendlyCaptcha(config: FriendlyCaptchaConfig, captchaToken: string) {
+    const { apiEndpoint = FriendlyCaptchaApiEndpoint.Global } = config;
+
     try {
       const result = await ky
-        .post('https://global.frcapi.com/api/v2/captcha/siteverify', {
+        .post(`https://${apiEndpoint}.frcapi.com/api/v2/captcha/siteverify`, {
           headers: { 'X-API-Key': config.secretKey },
           json: {
             response: captchaToken,

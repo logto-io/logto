@@ -4,6 +4,7 @@ import { builtInLanguages } from '@logto/phrases-experience';
 import {
   CaptchaType,
   ForgotPasswordMethod,
+  FriendlyCaptchaApiEndpoint,
   ossDefaultQuota,
   type CreateSignInExperience,
   type SignInExperience,
@@ -521,6 +522,7 @@ describe('findCaptchaPublicConfig', () => {
         type: CaptchaType.FriendlyCaptcha,
         siteKey: 'site_key',
         secretKey: 'api_key',
+        apiEndpoint: FriendlyCaptchaApiEndpoint.Eu,
       },
     });
 
@@ -529,6 +531,7 @@ describe('findCaptchaPublicConfig', () => {
     expect(captchaPublicConfig).toEqual({
       type: CaptchaType.FriendlyCaptcha,
       siteKey: 'site_key',
+      apiEndpoint: FriendlyCaptchaApiEndpoint.Eu,
     });
   });
 

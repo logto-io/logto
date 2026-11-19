@@ -235,6 +235,8 @@ export const createSignInExperienceLibrary = (
         'mode' in provider.config &&
         provider.config.mode && { mode: provider.config.mode }),
       ...(type === 'Cap' && { endpoint: provider.config.endpoint }),
+      ...(type === 'FriendlyCaptcha' &&
+        provider.config.apiEndpoint && { apiEndpoint: provider.config.apiEndpoint }),
     };
   };
 

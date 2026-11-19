@@ -1,4 +1,9 @@
-import { CaptchaType, RecaptchaEnterpriseMode, type CaptchaProvider } from '@logto/schemas';
+import {
+  CaptchaType,
+  FriendlyCaptchaApiEndpoint,
+  RecaptchaEnterpriseMode,
+  type CaptchaProvider,
+} from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
 import { mockCaptchaProvider } from '#src/__mocks__/captcha.js';
@@ -203,6 +208,25 @@ describe('CaptchaValidator - Friendly Captcha', () => {
       sitekey: 'site_key',
     });
     expect(append).toHaveBeenCalledWith({ success: true, errorMessage: undefined });
+  });
+
+  it('verifies the token against the EU siteverify API when the EU endpoint is configured', async () => {
+    ssrfProtectedFetch.mockResolvedValueOnce(Response.json({ success: true }));
+    const { log } = createLog();
+    const euProvider: CaptchaProvider = {
+      ...mockCaptchaProvider,
+      config: {
+        type: CaptchaType.FriendlyCaptcha,
+        siteKey: 'site_key',
+        secretKey: 'secret_key',
+        apiEndpoint: FriendlyCaptchaApiEndpoint.Eu,
+      },
+    };
+
+    await expect(new CaptchaValidator(euProvider, log).verifyCaptcha('token')).resolves.toBe(true);
+
+    const [request] = ssrfProtectedFetch.mock.calls[0] ?? [];
+    expect((request as Request).url).toBe('https://eu.frcapi.com/api/v2/captcha/siteverify');
   });
 
   it('returns false with the error code and detail when the token is rejected', async () => {

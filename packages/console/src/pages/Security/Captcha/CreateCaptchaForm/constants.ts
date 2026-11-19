@@ -164,6 +164,7 @@ const friendlyCaptchaReadme = `
 ## Configure Logto
 
 - **Site key** and **API key**: The values you copied above.
+- **API endpoint**: Keep **Global** unless you use the [dedicated EU endpoint](https://developer.friendlycaptcha.com/docs/v2/guides/eu-endpoint) (Advanced or Enterprise plan). Choose **EU** only after enabling the EU endpoint for this sitekey in the Friendly Captcha dashboard.
 
 ${enableCaptchaReadme}
 `;
@@ -185,6 +186,11 @@ const friendlyCaptchaProvider: CaptchaProviderMetadata = {
       field: 'secretKey',
       label: 'security.captcha_details.friendly_captcha_api_key',
       placeholder: 'security.captcha_details.friendly_captcha_api_key',
+    },
+    {
+      field: 'apiEndpoint',
+      label: 'security.captcha_details.friendly_captcha_api_endpoint',
+      placeholder: 'security.captcha_details.friendly_captcha_api_endpoint',
     },
   ],
 };
