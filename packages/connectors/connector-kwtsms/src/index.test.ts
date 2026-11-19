@@ -102,6 +102,42 @@ describe('kwtSMS connector', () => {
       expect(scope.isDone()).toBe(true);
     });
 
+    it.each([
+      ['a flag', 'Kuwait \u{1F1F0}\u{1F1FC} code {{code}}', 'Kuwait  code 1234'],
+      ['a keycap', 'Step 1\uFE0F\u20E3 code {{code}}', 'Step  code 1234'],
+      ['a keycap without U+FE0F', 'Step #\u20E3 code {{code}}', 'Step  code 1234'],
+      [
+        'a skin tone and ZWJ sequence',
+        'Hi \u{1F44B}\u{1F3FD} \u{1F468}\u200D\u{1F4BB} {{code}}',
+        'Hi   1234',
+      ],
+      [
+        'a tag sequence flag',
+        'UK \u{1F3F4}\u{E0067}\u{E0062}\u{E0065}\u{E006E}\u{E0067}\u{E007F} {{code}}',
+        'UK  1234',
+      ],
+    ])('should strip %s completely', async (_, content, expected) => {
+      const sendMessage = await createSendMessage();
+      const scope = nock(url.origin)
+        .post(url.pathname, (body: Record<string, string>) => {
+          expect(body.message).toBe(expected);
+          return true;
+        })
+        .reply(200, okBody);
+
+      await sendMessage(
+        { to: '96550000000', type: TemplateType.Generic, payload: { code: '1234' } },
+        {
+          ...mockedConfig,
+          templates: [
+            ...mockedConfig.templates.filter(({ usageType }) => usageType !== 'Generic'),
+            { usageType: 'Generic', content },
+          ],
+        }
+      );
+      expect(scope.isDone()).toBe(true);
+    });
+
     it('should convert Arabic-Indic digits in the number and strip emoji', async () => {
       const sendMessage = await createSendMessage();
       const scope = nock(url.origin)

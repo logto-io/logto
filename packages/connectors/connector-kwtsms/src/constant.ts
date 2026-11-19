@@ -31,6 +31,7 @@ export const defaultMetadata: ConnectorMetadata = {
       label: 'API Password',
       type: ConnectorConfigFormItemType.Text,
       required: true,
+      isConfidential: true,
       placeholder: '<api-password>',
     },
     {

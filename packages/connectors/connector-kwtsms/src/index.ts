@@ -32,9 +32,16 @@ export const normalizeMobile = (phoneNumber: string) =>
     .replaceAll(/\D/g, '')
     .replace(/^00/, '');
 
-/** The kwtSMS API rejects emoji, and zero-width characters inflate the segment count: drop both. */
+/**
+ * The kwtSMS API rejects emoji, and zero-width characters inflate the segment count: drop both.
+ * Whole sequences go: keycaps (digit + U+FE0F + U+20E3), flags (regional indicators), tag
+ * sequences, skin tones and variation selectors, so no half-emoji is left in the message.
+ */
 const cleanMessage = (message: string) =>
-  message.replaceAll(/[\p{Extended_Pictographic}\u200B-\u200D\u2060\uFEFF]/gu, '');
+  message.replaceAll(
+    /[\d#*]\uFE0F?\u20E3|[\p{Extended_Pictographic}\p{Regional_Indicator}\u{E0020}-\u{E007F}\u200B\u200C\u2060\uFEFF]|[\u{1F3FB}-\u{1F3FF}]|\u200D|\u20E3|\uFE0E|\uFE0F/gu,
+    ''
+  );
 
 const sendMessage =
   (getConfig: GetConnectorConfig): SendMessageFunction =>
