@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import type http from 'node:http';
 import http2 from 'node:http2';
 import path from 'node:path';
 
@@ -27,7 +28,10 @@ const logListening = (type: 'core' | 'admin' = 'core') => {
 
 const serverTimeout = 120_000;
 
-export default async function initApp(app: Koa): Promise<void> {
+/** Start the core and admin servers, and return them so shutdown can close them. */
+export default async function initApp(
+  app: Koa
+): Promise<Array<http.Server | http2.Http2SecureServer>> {
   app.use(async (ctx, next) => {
     const requestId = nanoid(16);
     const consoleLog = new ConsoleLog(chalk.blue(requestId));
@@ -112,9 +116,11 @@ export default async function initApp(app: Koa): Promise<void> {
         logListening('admin');
       });
       adminServer.setTimeout(serverTimeout);
+
+      return [coreServer, adminServer];
     }
 
-    return;
+    return [coreServer];
   }
 
   // Chrome doesn't allow insecure HTTP/2 servers, stick with HTTP for localhost.
@@ -129,5 +135,9 @@ export default async function initApp(app: Koa): Promise<void> {
       logListening('admin');
     });
     adminServer.setTimeout(serverTimeout);
+
+    return [coreServer, adminServer];
   }
+
+  return [coreServer];
 }
