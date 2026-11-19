@@ -70,7 +70,7 @@ const createCheckoutSession = async (
 ) => {
   try {
     const session = await getApi(purchase.key).post(
-      '/api/me/self-hosted-licenses/checkout-session',
+      '/api/me/self-hosted-license-purchase/checkout-session',
       { body: { plan: ReservedPlanId.SelfHostedPro, ...purchase.customerChoice } }
     );
     // Persist before navigating to Stripe, so the return and a reload find this session.
@@ -102,7 +102,7 @@ export const startPurchase = async (
 
   if (saved.sessionId) {
     const session = await getApi(saved.key).get(
-      '/api/me/self-hosted-licenses/checkout-session/:sessionId',
+      '/api/me/self-hosted-license-purchase/checkout-session/:sessionId',
       { params: { sessionId: saved.sessionId } }
     );
     const result = toPurchaseResult(session);
@@ -149,7 +149,7 @@ export const cancelPurchase = async (
   }
 
   const session = await getApi(purchase.key).delete(
-    '/api/me/self-hosted-licenses/checkout-session/:sessionId',
+    '/api/me/self-hosted-license-purchase/checkout-session/:sessionId',
     { params: { sessionId: purchase.sessionId } }
   );
 
@@ -215,7 +215,7 @@ export const waitForActivation = async (
 ): Promise<ActivationResult> => {
   const session = await pollUntil(
     async () =>
-      api.get('/api/me/self-hosted-licenses/checkout-session/:sessionId', {
+      api.get('/api/me/self-hosted-license-purchase/checkout-session/:sessionId', {
         params: { sessionId },
       }),
     ({ status }) => status === 'payment_received' || status === 'expired',

@@ -1,7 +1,9 @@
+/* eslint-disable max-lines -- the send-code and MFA-identifier cases share this file's module mocks */
 import {
   defaultMessageRateLimitPolicy,
   InteractionEvent,
   MfaFactor,
+  MfaVerificationCodeEnrollment,
   SentinelActivityAction,
   SignInIdentifier,
 } from '@logto/schemas';
@@ -405,20 +407,29 @@ describe('sendCode parameter passing', () => {
 });
 
 describe('getMfaIdentifier', () => {
-  const findUserById = jest
-    .fn()
-    .mockResolvedValue({ primaryEmail: 'foo@example.com', primaryPhone: '+11234567890' });
+  const findUserById = jest.fn().mockResolvedValue({
+    primaryEmail: 'foo@example.com',
+    primaryPhone: '+11234567890',
+    mfaVerifications: [
+      { id: 'phone', type: MfaFactor.PhoneVerificationCode, createdAt: '2026-01-01T00:00:00Z' },
+    ],
+  });
   const queries = { users: { findUserById } } as unknown as Queries;
 
   beforeEach(() => {
     findUserById.mockClear();
   });
 
-  const buildInteraction = (factors: MfaFactor[]) =>
+  const buildInteraction = (
+    factors: MfaFactor[],
+    verificationCodeEnrollment?: MfaVerificationCodeEnrollment
+  ) =>
     ({
       identifiedUserId: 'identified-user-id',
       subjectUserId: 'identified-user-id',
-      signInExperienceValidator: { getMfaSettings: jest.fn().mockResolvedValue({ factors }) },
+      signInExperienceValidator: {
+        getMfaSettings: jest.fn().mockResolvedValue({ factors, verificationCodeEnrollment }),
+      },
     }) as unknown as Parameters<typeof getMfaIdentifier>[0]['experienceInteraction'];
 
   it('resolves the primary contact of the identified user when the factor is enabled', async () => {
@@ -451,6 +462,27 @@ describe('getMfaIdentifier', () => {
     }
   );
 
+  it('sends codes in explicit enrollment mode only to the factors the user enrolled', async () => {
+    const factors = [MfaFactor.EmailVerificationCode, MfaFactor.PhoneVerificationCode];
+
+    await expect(
+      getMfaIdentifier({
+        identifierType: SignInIdentifier.Phone,
+        experienceInteraction: buildInteraction(factors, MfaVerificationCodeEnrollment.Explicit),
+        queries,
+      })
+    ).resolves.toEqual({ type: SignInIdentifier.Phone, value: '+11234567890' });
+    await expect(
+      getMfaIdentifier({
+        identifierType: SignInIdentifier.Email,
+        experienceInteraction: buildInteraction(factors, MfaVerificationCodeEnrollment.Explicit),
+        queries,
+      })
+    ).rejects.toMatchError(
+      new RequestError({ code: 'session.mfa.mfa_factor_not_enabled', status: 400 })
+    );
+  });
+
   it('refuses a code before any user is identified', async () => {
     await expect(
       getMfaIdentifier({
@@ -463,3 +495,4 @@ describe('getMfaIdentifier', () => {
     ).rejects.toMatchError(new RequestError({ code: 'session.identifier_not_found', status: 400 }));
   });
 });
+/* eslint-enable max-lines */

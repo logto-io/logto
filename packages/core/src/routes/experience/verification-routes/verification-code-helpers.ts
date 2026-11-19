@@ -10,6 +10,7 @@ import {
 import { Action } from '@logto/schemas/lib/types/log/interaction.js';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { getAllUserEnabledMfaVerifications } from '#src/libraries/mfa.js';
 import { type PasscodeLibrary } from '#src/libraries/passcode.js';
 import { type LogContext } from '#src/middleware/koa-audit-log.js';
 import { buildMessageRateGuard, withMessageRateGuard } from '#src/sentinel/message-rate-guard.js';
@@ -291,6 +292,10 @@ type GetMfaIdentifierParams = {
  * Helper to get MFA identifier from user profile. The factor must be enabled in the sign-in
  * experience: otherwise a sign-in could request a second code for the very contact that already
  * identified the user, which is a second proof of the same factor and not a second factor.
+ *
+ * The user must also have the factor by the shared MFA rule: in explicit enrollment mode, an email
+ * or phone the user did not enroll is not an MFA factor, and verifying a code sent to it would
+ * record an `mfa` proof toward a requested ACR.
  * @internal
  */
 export const getMfaIdentifier = async ({
@@ -305,13 +310,13 @@ export const getMfaIdentifier = async ({
     });
   }
 
-  const { factors } = await experienceInteraction.signInExperienceValidator.getMfaSettings();
+  const mfaSettings = await experienceInteraction.signInExperienceValidator.getMfaSettings();
   const factor =
     identifierType === SignInIdentifier.Email
       ? MfaFactor.EmailVerificationCode
       : MfaFactor.PhoneVerificationCode;
 
-  if (!factors.includes(factor)) {
+  if (!mfaSettings.factors.includes(factor)) {
     throw new RequestError({
       code: 'session.mfa.mfa_factor_not_enabled',
       status: 400,
@@ -322,7 +327,7 @@ export const getMfaIdentifier = async ({
   const identifierValue =
     identifierType === SignInIdentifier.Email ? user.primaryEmail : user.primaryPhone;
 
-  if (!identifierValue) {
+  if (!identifierValue || !getAllUserEnabledMfaVerifications(mfaSettings, user).includes(factor)) {
     throw new RequestError({
       code: 'session.mfa.mfa_factor_not_enabled',
       status: 400,

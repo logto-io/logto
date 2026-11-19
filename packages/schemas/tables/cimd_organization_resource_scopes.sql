@@ -6,7 +6,7 @@
   Rows are an allowlist: an empty table allows nothing (deny-all), and an unrestricted state is not expressible.
 */
 create table cimd_organization_resource_scopes (
-  tenant_id varchar(21) not null
+  tenant_id varchar(64) not null
     references tenants (id) on update cascade on delete cascade,
   /** The globally unique identifier of the API resource scope. */
   scope_id varchar(21) not null,

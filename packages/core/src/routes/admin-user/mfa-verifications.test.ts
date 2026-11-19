@@ -10,6 +10,8 @@ import {
   mockUserWithMfaVerifications,
 } from '#src/__mocks__/index.js';
 import { type InsertUserResult } from '#src/libraries/user.js';
+import koaErrorHandler from '#src/middleware/koa-error-handler.js';
+import koaI18next from '#src/middleware/koa-i18next.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import { MockTenant, type Partial2 } from '#src/test-utils/tenant.js';
@@ -71,7 +73,11 @@ const adminUserRoutes = await pickDefault(import('./mfa-verifications.js'));
 
 describe('adminUserRoutes', () => {
   const tenantContext = new MockTenant(undefined, mockedQueries, undefined, mockLibraries);
-  const userRequest = createRequester({ authedRoutes: adminUserRoutes, tenantContext });
+  const userRequest = createRequester({
+    middlewares: [koaI18next(), koaErrorHandler()],
+    authedRoutes: adminUserRoutes,
+    tenantContext,
+  });
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -218,6 +224,24 @@ describe('adminUserRoutes', () => {
         type: MfaFactor.BackupCode,
       });
       expect(response.status).toEqual(422);
+    });
+
+    it('should fail if user only has an email verification code MFA record', async () => {
+      findUserById.mockResolvedValueOnce({
+        ...mockUser,
+        mfaVerifications: [
+          {
+            id: 'email-mfa',
+            createdAt: '2025-01-01T00:00:00.000Z',
+            type: MfaFactor.EmailVerificationCode,
+          },
+        ],
+      });
+      const response = await userRequest.post(`/users/${mockUser.id}/mfa-verifications`).send({
+        type: MfaFactor.BackupCode,
+      });
+      expect(response.status).toEqual(422);
+      expect(response.body).toMatchObject({ code: 'session.mfa.backup_code_can_not_be_alone' });
     });
 
     it('should fail for duplicate', async () => {

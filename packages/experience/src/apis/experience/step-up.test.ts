@@ -16,10 +16,10 @@ import { identifyAndSubmitInteraction } from './interaction';
 import {
   getStepUpContext,
   initStepUp,
-  sendStepUpVerificationCode,
   verifyStepUpPassword,
   verifyStepUpVerificationCode,
 } from './step-up';
+import { sendSubjectVerificationCode } from './subject-verification-code';
 
 jest.mock('./interaction', () => ({
   __esModule: true,
@@ -181,7 +181,7 @@ describe('step-up experience APIs', () => {
     });
   });
 
-  describe('sendStepUpVerificationCode', () => {
+  describe('sendSubjectVerificationCode', () => {
     it.each([SignInIdentifier.Email, SignInIdentifier.Phone] as const)(
       'sends the %s verification code by identifier type only and returns the verification ID',
       async (type) => {
@@ -189,7 +189,7 @@ describe('step-up experience APIs', () => {
         const json = jest.fn().mockResolvedValue(response);
         mockedApiPost.mockReturnValueOnce({ json } as unknown as ReturnType<typeof api.post>);
 
-        await expect(sendStepUpVerificationCode(type)).resolves.toEqual(response);
+        await expect(sendSubjectVerificationCode(type)).resolves.toEqual(response);
 
         expect(mockedApiPost).toBeCalledTimes(1);
         expect(mockedApiPost).toBeCalledWith(

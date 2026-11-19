@@ -2,7 +2,7 @@
 
 /** Tracks per-user sign-in countries for adaptive MFA rules. */
 create table user_sign_in_countries (
-  tenant_id varchar(21) not null
+  tenant_id varchar(64) not null
     references tenants (id) on update cascade on delete cascade,
   user_id varchar(128) not null
     references users (id) on update cascade on delete cascade,

@@ -2,6 +2,7 @@ import type { SignInIdentifier } from '@logto/schemas';
 import { useCallback, useEffect, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
+import { type sendMfaVerificationCode, type verifyMfaByVerificationCode } from '@/apis/experience';
 import TextLink from '@/components/TextLink';
 import Button from '@/shared/components/Button';
 import VerificationCodeInput from '@/shared/components/VerificationCode';
@@ -19,9 +20,11 @@ const isCodeReady = (code: string[]) => {
 type Props = {
   readonly identifierType: SignInIdentifier.Email | SignInIdentifier.Phone;
   readonly verificationId: string;
+  readonly verifyCode?: typeof verifyMfaByVerificationCode;
+  readonly resendCode?: typeof sendMfaVerificationCode;
 };
 
-const MfaCodeVerification = ({ identifierType, verificationId }: Props) => {
+const MfaCodeVerification = ({ identifierType, verificationId, verifyCode, resendCode }: Props) => {
   const { t } = useTranslation();
   const [codeInput, setCodeInput] = useState<string[]>([]);
   const [inputErrorMessage, setInputErrorMessage] = useState<string>();
@@ -36,18 +39,20 @@ const MfaCodeVerification = ({ identifierType, verificationId }: Props) => {
     setInputErrorMessage(undefined);
   }, []);
 
-  const { errorMessage: submitErrorMessage, onSubmit } = useMfaCodeVerification(
-    identifierType,
-    currentVerificationId,
-    errorCallback
-  );
+  const {
+    errorMessage: submitErrorMessage,
+    clearErrorMessage,
+    onSubmit,
+  } = useMfaCodeVerification(identifierType, currentVerificationId, errorCallback, verifyCode);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const errorMessage = inputErrorMessage ?? submitErrorMessage;
 
-  const { seconds, isRunning, onResendVerificationCode } =
-    useResendMfaVerificationCode(identifierType);
+  const { seconds, isRunning, onResendVerificationCode } = useResendMfaVerificationCode(
+    identifierType,
+    resendCode
+  );
 
   const handleSubmit = useCallback(
     async (code: string[]) => {
@@ -58,8 +63,11 @@ const MfaCodeVerification = ({ identifierType, verificationId }: Props) => {
       setInputErrorMessage(undefined);
       setIsSubmitting(true);
 
-      await onSubmit(code.join(''));
-      setIsSubmitting(false);
+      try {
+        await onSubmit(code.join(''));
+      } finally {
+        setIsSubmitting(false);
+      }
     },
     [onSubmit, isSubmitting]
   );
@@ -90,6 +98,7 @@ const MfaCodeVerification = ({ identifierType, verificationId }: Props) => {
                 <TextLink
                   className={styles.link}
                   onClick={async () => {
+                    clearErrorMessage();
                     setInputErrorMessage(undefined);
                     setCodeInput([]);
                     const newId = await onResendVerificationCode();

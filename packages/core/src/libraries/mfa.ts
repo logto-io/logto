@@ -1,13 +1,14 @@
 /**
  * @overview The MFA factors a user has configured, i.e. the stored MFA verifications and the
- * implicit email and phone factors, as enabled in the sign-in experience. Sign-in, organization
- * token issuance, and the tenant MFA status share this rule.
+ * email and phone factors, as enabled in the sign-in experience. Sign-in, organization token
+ * issuance, step-up, and the tenant MFA status share this rule; whether the email and phone
+ * factors need a stored record is decided by `resolveUserMfaFactors` in `@logto/schemas`.
  */
 
-import { MfaFactor, type Mfa, type User } from '@logto/schemas';
+import { MfaFactor, resolveUserMfaFactors, type Mfa, type User } from '@logto/schemas';
 import { type Nullable } from '@silverhand/essentials';
 
-/** The profile that provides the implicit email and phone MFA factors. */
+/** The profile that provides the primary identifiers of the email and phone MFA factors. */
 type MfaProfile = {
   primaryEmail?: Nullable<string>;
   primaryPhone?: Nullable<string>;
@@ -27,33 +28,19 @@ const filterOutEmptyBackupCodes = (
   });
 
 /**
- * Resolve implicit profile-based MFA factors (Email/Phone) from the provided profile source.
- */
-export const getProfileMfaFactors = (
-  mfaSettings: Mfa,
-  { primaryEmail, primaryPhone }: MfaProfile
-): MfaFactor[] => {
-  return [
-    ...(mfaSettings.factors.includes(MfaFactor.PhoneVerificationCode) && primaryPhone
-      ? [MfaFactor.PhoneVerificationCode]
-      : []),
-    ...(mfaSettings.factors.includes(MfaFactor.EmailVerificationCode) && primaryEmail
-      ? [MfaFactor.EmailVerificationCode]
-      : []),
-  ];
-};
-
-/**
- * Get all enabled MFA verifications for a user (stored + implicit)
+ * Get all enabled MFA verifications for a user: the stored factors, then the email and phone
+ * factors, then backup codes.
  * @param mfaSettings - MFA settings from sign-in experience
  * @param user - User object with mfaVerifications and profile data
  * @param currentProfile - Optional profile override (for current interaction contexts), in cases of MFA verification, this is not needed
+ * @param stagedMfaFactors - Optional MFA factors bound in the current interaction before submission
  * @returns Array of all enabled MFA verifications
  */
 export const getAllUserEnabledMfaVerifications = (
   mfaSettings: Mfa,
   user: Pick<User, 'mfaVerifications' | 'primaryEmail' | 'primaryPhone'>,
-  currentProfile?: MfaProfile
+  currentProfile?: MfaProfile,
+  stagedMfaFactors: readonly MfaFactor[] = []
 ): MfaFactor[] => {
   const storedVerifications = filterOutEmptyBackupCodes(user.mfaVerifications)
     .filter((verification) => mfaSettings.factors.includes(verification.type))
@@ -69,6 +56,8 @@ export const getAllUserEnabledMfaVerifications = (
     // 1) WebAuthn always first if available
     // 2) Backup code always last
     // 3) Otherwise by last used time (desc)
+    // Email and phone records are placed after the other stored factors by
+    // `resolveUserMfaFactors`, so they never take part in this order.
     .sort((verificationA, verificationB) => {
       // WebAuthn to the front whenever present
       if (verificationA.type === MfaFactor.WebAuthn && verificationB.type !== MfaFactor.WebAuthn) {
@@ -94,19 +83,10 @@ export const getAllUserEnabledMfaVerifications = (
     })
     .map(({ type }) => type);
 
-  const implicitVerifications = getProfileMfaFactors(mfaSettings, {
-    primaryEmail: currentProfile?.primaryEmail ?? user.primaryEmail,
-    primaryPhone: currentProfile?.primaryPhone ?? user.primaryPhone,
-  });
-
-  return [...storedVerifications, ...implicitVerifications].slice().sort((factorA, factorB) => {
-    // Backup code always comes last
-    if (factorA === MfaFactor.BackupCode) {
-      return 1;
-    }
-    if (factorB === MfaFactor.BackupCode) {
-      return -1;
-    }
-    return 0;
+  return resolveUserMfaFactors({
+    mfaSettings,
+    storedFactors: [...storedVerifications, ...stagedMfaFactors],
+    hasPrimaryEmail: Boolean(currentProfile?.primaryEmail ?? user.primaryEmail),
+    hasPrimaryPhone: Boolean(currentProfile?.primaryPhone ?? user.primaryPhone),
   });
 };

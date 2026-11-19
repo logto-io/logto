@@ -113,10 +113,38 @@ export const mfaVerificationBackupCode = z.object({
 
 export type MfaVerificationBackupCode = z.infer<typeof mfaVerificationBackupCode>;
 
+/**
+ * The user's enrollment in email verification code MFA. The code is sent to the primary email,
+ * which is not stored here, so the record is ignored while the user has no primary email.
+ */
+export const mfaVerificationEmailVerificationCode = z.object({
+  type: z.literal(MfaFactor.EmailVerificationCode),
+  ...baseMfaVerification,
+});
+
+export type MfaVerificationEmailVerificationCode = z.infer<
+  typeof mfaVerificationEmailVerificationCode
+>;
+
+/**
+ * The user's enrollment in SMS verification code MFA. The code is sent to the primary phone,
+ * which is not stored here, so the record is ignored while the user has no primary phone.
+ */
+export const mfaVerificationPhoneVerificationCode = z.object({
+  type: z.literal(MfaFactor.PhoneVerificationCode),
+  ...baseMfaVerification,
+});
+
+export type MfaVerificationPhoneVerificationCode = z.infer<
+  typeof mfaVerificationPhoneVerificationCode
+>;
+
 export const mfaVerificationGuard = z.discriminatedUnion('type', [
   mfaVerificationTotp,
   mfaVerificationWebAuthn,
   mfaVerificationBackupCode,
+  mfaVerificationEmailVerificationCode,
+  mfaVerificationPhoneVerificationCode,
 ]);
 
 export type MfaVerification = z.infer<typeof mfaVerificationGuard>;

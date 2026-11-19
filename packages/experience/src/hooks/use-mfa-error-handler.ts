@@ -1,15 +1,17 @@
 import { MfaFactor, SignInIdentifier, type RequestErrorBody } from '@logto/schemas';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import { UserMfaFlow } from '@/types';
 import { type MfaFlowState, mfaErrorDataGuard, parseGuard } from '@/types/guard';
+import { isFactorBoundInSuggestion } from '@/utils/mfa';
 import { isNativeWebview } from '@/utils/native-sdk';
 
 import type { ErrorHandlers } from './use-error-handler';
 import useSendMfaVerificationCode from './use-send-mfa-verification-code';
 import useStartBackupCodeBinding from './use-start-backup-code-binding';
+import useStartIdentifierMfaBinding from './use-start-identifier-mfa-binding';
 import useStartTotpBinding from './use-start-totp-binding';
 import useStartWebAuthnProcessing from './use-start-webauthn-processing';
 import useToast from './use-toast';
@@ -27,6 +29,25 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
   const startWebAuthnProcessing = useStartWebAuthnProcessing();
   const startBackupCodeBinding = useStartBackupCodeBinding();
   const { onSubmit: startMfaVerificationCodeProcessing } = useSendMfaVerificationCode({ replace });
+
+  const mfaErrorHandlerRef = useRef<ErrorHandlers>({});
+  const recursiveMfaErrorHandlers = useMemo<ErrorHandlers>(
+    () => ({
+      'user.suggest_mfa': async (error) => mfaErrorHandlerRef.current['user.suggest_mfa']?.(error),
+      'user.missing_mfa': async (error) => mfaErrorHandlerRef.current['user.missing_mfa']?.(error),
+      'session.mfa.require_mfa_verification': async (error) =>
+        mfaErrorHandlerRef.current['session.mfa.require_mfa_verification']?.(error),
+      'session.mfa.suggest_additional_mfa': async (error) =>
+        mfaErrorHandlerRef.current['session.mfa.suggest_additional_mfa']?.(error),
+      'session.mfa.backup_code_required': async (error) =>
+        mfaErrorHandlerRef.current['session.mfa.backup_code_required']?.(error),
+    }),
+    []
+  );
+  const startIdentifierMfaBinding = useStartIdentifierMfaBinding({
+    replace,
+    submitErrorHandlers: recursiveMfaErrorHandlers,
+  });
 
   /**
    * Redirect the user to the corresponding MFA page.
@@ -71,6 +92,15 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
         return;
       }
 
+      if (flow === UserMfaFlow.MfaBinding && isFactorBoundInSuggestion(factor, state)) {
+        /**
+         * Keep suggestions whose only remaining factor is already bound (e.g. after filtering out
+         * WebAuthn in a native WebView) on the factor list / skip screen instead of re-enrolling it.
+         */
+        navigate({ pathname: `/${flow}` }, { replace, state });
+        return;
+      }
+
       if (factor === MfaFactor.TOTP && flow === UserMfaFlow.MfaBinding) {
         /**
          * Start TOTP binding process if only TOTP is available.
@@ -83,6 +113,14 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
          * Start WebAuthn processing if only TOTP is available.
          */
         return startWebAuthnProcessing(flow, state, replace);
+      }
+
+      if (
+        (factor === MfaFactor.EmailVerificationCode ||
+          factor === MfaFactor.PhoneVerificationCode) &&
+        flow === UserMfaFlow.MfaBinding
+      ) {
+        return startIdentifierMfaBinding(factor, state);
       }
 
       if (factor === MfaFactor.EmailVerificationCode && flow === UserMfaFlow.MfaVerification) {
@@ -102,6 +140,7 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
       navigate,
       replace,
       setToast,
+      startIdentifierMfaBinding,
       startMfaVerificationCodeProcessing,
       startTotpBinding,
       startWebAuthnProcessing,
@@ -121,6 +160,7 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
         const factors = data?.availableFactors ?? [];
         const skippable = data?.skippable;
         const maskedIdentifiers = data?.maskedIdentifiers;
+        const boundFactors = data?.boundFactors;
         const suggestion = data?.suggestion;
         const isWebAuthnUsedAsSignInPasskey = data?.isWebAuthnUsedAsSignInPasskey;
 
@@ -139,6 +179,7 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
           availableFactors,
           skippable,
           maskedIdentifiers,
+          boundFactors,
           suggestion,
           isWebAuthnUsedAsSignInPasskey,
         });
@@ -158,6 +199,9 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
     }),
     [handleMfaError, replace, startBackupCodeBinding]
   );
+
+  // eslint-disable-next-line @silverhand/fp/no-mutation -- break circular dependency between MFA redirect and direct submission error handling
+  mfaErrorHandlerRef.current = mfaVerificationErrorHandler;
 
   return mfaVerificationErrorHandler;
 };

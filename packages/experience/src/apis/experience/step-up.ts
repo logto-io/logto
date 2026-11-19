@@ -4,12 +4,14 @@ import {
   interactionAuthenticationContextGuard,
 } from '@logto/schemas';
 
-import { type VerificationCodeIdentifier } from '@/types';
-
 import api from '../api';
 
 import { experienceApiRoutes, type VerificationResponse } from './const';
 import { identifyAndSubmitInteraction } from './interaction';
+import {
+  verifySubjectVerificationCode,
+  type SubjectVerificationCodePayload,
+} from './subject-verification-code';
 
 type StepUpInitResult = {
   /**
@@ -56,18 +58,6 @@ export const getStepUpContext = async (): Promise<InteractionAuthenticationConte
 };
 
 /**
- * Send a verification code to the pinned subject's primary email or phone. Only the identifier
- * type is sent: Core resolves the value from the subject, and the raw identifier never reaches
- * the browser.
- */
-export const sendStepUpVerificationCode = async (type: VerificationCodeIdentifier) =>
-  api
-    .post(`${experienceApiRoutes.verification}/verification-code`, {
-      json: { interactionEvent: InteractionEvent.SignIn, identifier: { type } },
-    })
-    .json<VerificationResponse>();
-
-/**
  * Verify the pinned subject's password and complete the interaction.
  *
  * Only the password is sent: Core verifies it against the pinned subject's credential, so no
@@ -82,27 +72,13 @@ export const verifyStepUpPassword = async (password: string) => {
   return identifyAndSubmitInteraction({ verificationId });
 };
 
-type StepUpVerificationCodePayload = {
-  type: VerificationCodeIdentifier;
-  code: string;
-  verificationId: string;
-};
-
 /**
  * Verify a code sent to the pinned subject's primary email or phone, and complete the
  * interaction. As when sending it, only the identifier type travels; Core reads the value it
  * challenged from the verification record.
  */
-export const verifyStepUpVerificationCode = async ({
-  type,
-  code,
-  verificationId,
-}: StepUpVerificationCodePayload) => {
-  const { verificationId: verifiedVerificationId } = await api
-    .post(`${experienceApiRoutes.verification}/verification-code/verify`, {
-      json: { identifier: { type }, code, verificationId },
-    })
-    .json<VerificationResponse>();
+export const verifyStepUpVerificationCode = async (payload: SubjectVerificationCodePayload) => {
+  const { verificationId: verifiedVerificationId } = await verifySubjectVerificationCode(payload);
 
   return identifyAndSubmitInteraction({ verificationId: verifiedVerificationId });
 };

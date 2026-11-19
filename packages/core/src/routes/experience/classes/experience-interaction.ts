@@ -1626,7 +1626,8 @@ export default class ExperienceInteraction {
     const mfaValidator = new MfaValidator(mfaSettings, user);
     const hasEligibleVerification = mfaValidator.hasEligibleTrustedDeviceVerification(
       this.verificationRecordsArray,
-      this.profile.data
+      this.profile.data,
+      this.mfa.stagedVerificationCodeFactors
     );
 
     const hasEligibleBinding = this.mfa.bindMfaFactorsArray.some(

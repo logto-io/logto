@@ -147,21 +147,26 @@ export class MfaValidator {
 
   hasEligibleTrustedDeviceVerification(
     verificationRecords: VerificationRecord[],
-    currentProfile?: InteractionProfile
+    currentProfile?: InteractionProfile,
+    stagedMfaFactors?: readonly MfaFactor[]
   ) {
-    return this.getVerifiedMfaVerificationRecords(verificationRecords, currentProfile).some(
-      ({ type }) => type !== VerificationType.BackupCode
-    );
+    return this.getVerifiedMfaVerificationRecords(
+      verificationRecords,
+      currentProfile,
+      stagedMfaFactors
+    ).some(({ type }) => type !== VerificationType.BackupCode);
   }
 
   private getVerifiedMfaVerificationRecords(
     verificationRecords: VerificationRecord[],
-    currentProfile?: InteractionProfile
+    currentProfile?: InteractionProfile,
+    stagedMfaFactors?: readonly MfaFactor[]
   ) {
     const userEnabledMfaVerifications = getAllUserEnabledMfaVerifications(
       this.mfaSettings,
       this.user,
-      currentProfile
+      currentProfile,
+      stagedMfaFactors
     );
 
     return verificationRecords.filter(

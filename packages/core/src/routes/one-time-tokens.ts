@@ -44,13 +44,30 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
   ]: RouterInitArgs<T>
 ) {
   /**
-   * Reject the organization roles that can never be assigned when the token is used, so the caller
+   * Reject organizations and roles that cannot be assigned when the token is created, so the caller
    * learns about them now instead of the user being signed in with fewer roles than intended.
    */
-  const assertJitOrganizationRoles = async ({
+  const assertJitOrganizationContext = async ({
     jitOrganizationIds = [],
     jitOrganizationRoles = [],
   }: OneTimeTokenContext = {}) => {
+    const requestedOrganizationIds = [...new Set(jitOrganizationIds)];
+    if (requestedOrganizationIds.length > 0) {
+      const existingOrganizations = await organizations.findByIds(requestedOrganizationIds);
+      const existingOrganizationIds = new Set(existingOrganizations.map(({ id }) => id));
+      const missingOrganizationIds = requestedOrganizationIds.filter(
+        (id) => !existingOrganizationIds.has(id)
+      );
+
+      assertThat(
+        missingOrganizationIds.length === 0,
+        new RequestError({
+          code: 'request.invalid_input',
+          details: `The following organization IDs in \`jitOrganizationIds\` do not exist: ${missingOrganizationIds.join(', ')}.`,
+        })
+      );
+    }
+
     if (jitOrganizationRoles.length === 0) {
       return;
     }
@@ -157,7 +174,7 @@ export default function oneTimeTokenRoutes<T extends ManagementApiRouter>(
       const { body } = ctx.guard;
       const { expiresIn, ...rest } = body;
 
-      await assertJitOrganizationRoles(rest.context);
+      await assertJitOrganizationContext(rest.context);
 
       void trySafe(async () => updateExpiredOneTimeTokensStatusByEmail(rest.email));
 

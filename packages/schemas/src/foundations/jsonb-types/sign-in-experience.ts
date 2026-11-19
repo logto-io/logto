@@ -213,6 +213,14 @@ export enum OrganizationRequiredMfaPolicy {
   Mandatory = 'Mandatory',
 }
 
+/** Which users count as enrolled in the email and phone verification code MFA factors. */
+export enum MfaVerificationCodeEnrollment {
+  /** Every user with a primary email / phone, i.e. the behavior before enrollment was stored. */
+  Implicit = 'Implicit',
+  /** Only users with a stored email / phone MFA verification record and the primary identifier. */
+  Explicit = 'Explicit',
+}
+
 export type Mfa = {
   /** Enabled MFA factors */
   factors: MfaFactor[];
@@ -245,6 +253,14 @@ export type Mfa = {
    * Setting this to `true` will bypass that suggestion. Required MFA set-up is not affected.
    */
   skipAdditionalBindingSuggestion?: boolean;
+  /**
+   * Which users count as enrolled in the email and phone verification code factors.
+   *
+   * @remarks
+   * Absent means {@link MfaVerificationCodeEnrollment.Implicit}, so existing sign-in experiences
+   * keep their behavior.
+   */
+  verificationCodeEnrollment?: MfaVerificationCodeEnrollment;
 };
 
 export const mfaGuard = z.object({
@@ -252,6 +268,7 @@ export const mfaGuard = z.object({
   policy: z.nativeEnum(MfaPolicy),
   organizationRequiredMfaPolicy: z.nativeEnum(OrganizationRequiredMfaPolicy).optional(),
   skipAdditionalBindingSuggestion: z.boolean().optional(),
+  verificationCodeEnrollment: z.nativeEnum(MfaVerificationCodeEnrollment).optional(),
 }) satisfies ToZodObject<Mfa>;
 
 /**
