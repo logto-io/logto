@@ -35,8 +35,7 @@ const seedRows = async (connection: DatabasePoolConnection) => {
 const hasSortNode = (plan: readonly string[]) =>
   plan.some((line) => /^(->\s+)?(Incremental )?Sort\b/.test(line.trimStart()));
 
-// #9996 drops the payload lookup indexes to widen the tenant ids and #9998 recreates them; skipped in between.
-describe.skip('logs query plans under the tenant role', () => {
+describe('logs query plans under the tenant role', () => {
   /* eslint-disable @silverhand/fp/no-let -- pool handle assigned in beforeAll */
   let pool: DatabasePool;
   /* eslint-enable @silverhand/fp/no-let */
