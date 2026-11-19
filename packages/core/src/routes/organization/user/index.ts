@@ -7,7 +7,6 @@ import {
 } from '@logto/schemas';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import { buildManagementApiContext, truncateMembershipDelta } from '#src/libraries/hook/utils.js';
 import { type QuotaLibrary } from '#src/libraries/quota.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -32,13 +31,7 @@ export default function userRoutes(
       query: z.object({
         q: z.string().optional(),
         organizationRoleId: z.string().min(1).optional(),
-        // Organization member filtering by tenant-level user role.
-        roleId: z
-          .preprocess(
-            (value) => (EnvSet.values.isDevFeaturesEnabled ? value : undefined),
-            z.string().min(1).optional()
-          )
-          .optional(),
+        roleId: z.string().min(1).optional(),
       }),
       params: z.object({ id: z.string().min(1) }),
       response: userWithOrganizationRolesGuard.array(),

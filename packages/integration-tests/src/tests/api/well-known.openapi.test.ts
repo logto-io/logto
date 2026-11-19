@@ -42,7 +42,7 @@ describe('.well-known openapi.json endpoints', () => {
     }
   });
 
-  it('documents the organization member roleId filter only when dev features are enabled', async () => {
+  it('documents the optional roleId filter for organization members', async () => {
     const json = await adminTenantApi
       .get('.well-known/management.openapi.json')
       .json<OpenAPIV3.Document>();
@@ -52,11 +52,7 @@ describe('.well-known openapi.json endpoints', () => {
       (parameter) => 'name' in parameter && parameter.name === 'roleId'
     );
 
-    if (isDevFeaturesEnabled) {
-      expect(roleIdParameter).toMatchObject({ in: 'query', required: false });
-    } else {
-      expect(roleIdParameter).toBeUndefined();
-    }
+    expect(roleIdParameter).toMatchObject({ in: 'query', required: false });
   });
 
   // Arbitrary JSON object fields must declare `additionalProperties` so that

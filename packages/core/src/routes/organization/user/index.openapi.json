@@ -90,11 +90,7 @@
           {
             "name": "roleId",
             "in": "query",
-            "description": "Only include members assigned this tenant-level user role. If `organizationRoleId` or `q` is also provided, members must match all supplied filters.",
-            "schema": {
-              "type": "string",
-              "x-logto-dev-feature": true
-            }
+            "description": "Only include members assigned this tenant-level user role. If `organizationRoleId` or `q` is also provided, members must match all supplied filters."
           }
         ],
         "responses": {

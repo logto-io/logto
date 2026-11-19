@@ -3,7 +3,6 @@ import assert from 'node:assert';
 import { HTTPError } from 'ky';
 
 import { assignUsersToRole, createRole, deleteRole } from '#src/api/role.js';
-import { isDevFeaturesEnabled } from '#src/constants.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import { UserApiTest } from '#src/helpers/user.js';
 import { generatePassword, generateTestName } from '#src/utils.js';
@@ -141,13 +140,6 @@ describe('organization user APIs', () => {
           roleId: userRole.id,
           page_size: 1,
         });
-
-        if (!isDevFeaturesEnabled) {
-          const unfiltered = await organizationApi.getUsers(organization.id, { page_size: 1 });
-          expect([firstPage, firstTotal]).toEqual(unfiltered);
-          return;
-        }
-
         const [secondPage, secondTotal] = await organizationApi.getUsers(organization.id, {
           roleId: userRole.id,
           page: 2,
