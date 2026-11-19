@@ -124,4 +124,22 @@ describe('sendMessage()', () => {
     expect(parameters).toEqual(expect.objectContaining({ ReplyToAddress: 'false' }));
     expect(parameters).not.toHaveProperty('ReplyAddress');
   });
+
+  it('should not send a reply-to address containing characters Aliyun does not accept', async () => {
+    const connector = await createConnector({
+      getConfig,
+      getI18nEmailTemplate: vi.fn().mockResolvedValue({
+        ...mockGenericI18nEmailTemplate,
+        replyTo: 'support+app@example.com',
+      }),
+    });
+    await connector.sendMessage({
+      to: 'to@email.com',
+      type: TemplateType.Generic,
+      payload: { code: '1234', applicationName: 'bar' },
+    });
+    const [parameters] = singleSendMail.mock.calls[0] as unknown as [Record<string, unknown>];
+    expect(parameters).toEqual(expect.objectContaining({ ReplyToAddress: 'false' }));
+    expect(parameters).not.toHaveProperty('ReplyAddress');
+  });
 });
