@@ -27,7 +27,9 @@ import {
   sendMailErrorResponseGuard,
 } from './types.js';
 
-const emailGuard = z.string().email();
+// Aliyun rejects a `ReplyAddress` with characters outside letters, digits, `_`, `.` and `-`
+// (e.g. `+`) as `InvalidReplyAddress.Malformed`, so validate it before sending.
+const replyAddressGuard = z.string().regex(/^[\w.-]+@[\w-]+(\.[\w-]+)+$/);
 
 const sendMessage =
   (
@@ -59,11 +61,11 @@ const sendMessage =
     );
 
     // The i18n email template may customize the reply-to address. Skip it unless it renders to a
-    // valid address (e.g. an unresolved placeholder is not one).
+    // valid address for Aliyun (e.g. an unresolved placeholder or a `+` alias is not one).
     const renderedReplyTo = customTemplate?.replyTo
       ? replaceSendMessageHandlebars(customTemplate.replyTo, payload).trim()
       : '';
-    const replyAddress = emailGuard.safeParse(renderedReplyTo).success
+    const replyAddress = replyAddressGuard.safeParse(renderedReplyTo).success
       ? renderedReplyTo
       : undefined;
 
