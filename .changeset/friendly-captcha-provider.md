@@ -11,5 +11,3 @@ support Friendly Captcha as a CAPTCHA provider
 [Friendly Captcha](https://friendlycaptcha.com) v2 is a privacy-first, GDPR-compliant CAPTCHA service based on proof-of-work without visual puzzles.
 
 To use it, create a v2 application and API key in the Friendly Captcha dashboard, then go to Console > Security > CAPTCHA and add Friendly Captcha with its site key and API key. The same configuration is available through the `PUT /api/captcha-provider` Management API with `type: "FriendlyCaptcha"`.
-
-While Friendly Captcha is enabled as the CAPTCHA provider, the sign-in page's Content Security Policy allows Friendly Captcha's API hosts (`https://*.frcapi.com`), WebAssembly evaluation (`'wasm-unsafe-eval'`), and blob workers.

@@ -252,70 +252,6 @@ describe('koaSecurityHeaders() middleware — experience CSP', () => {
     expect(getCspDirective(ctx, 'connect-src')).not.toContain('https://gcaptcha4.geetest.com/');
   });
 
-  it('allows Friendly Captcha sources when Friendly Captcha is the captcha provider', async () => {
-    const run = koaExperienceSecurityHeaders(
-      'default',
-      createQueries({ captchaProviderType: CaptchaType.FriendlyCaptcha })
-    );
-    const ctx = createMockContext({ method: 'GET', url: '/sign-in' });
-
-    await run(ctx, koaNoop);
-
-    expect(getCspDirective(ctx, 'script-src')).toContain("'wasm-unsafe-eval'");
-    expect(getCspDirective(ctx, 'connect-src')).toContain('https://*.frcapi.com');
-    expect(getCspDirective(ctx, 'worker-src')).toBe("worker-src 'self' blob:");
-  });
-
-  it('keeps Custom UI CSP sources along with the Friendly Captcha sources', async () => {
-    const run = koaExperienceSecurityHeaders(
-      'default',
-      createQueries({
-        customUiAssets,
-        customUiCsp: { connectSrc: [customConnectSource] },
-        captchaProviderType: CaptchaType.FriendlyCaptcha,
-      })
-    );
-    const ctx = createMockContext({ method: 'GET', url: '/sign-in' });
-
-    await run(ctx, koaNoop);
-
-    const connectSource = getCspDirective(ctx, 'connect-src');
-
-    expect(connectSource).toContain(customConnectSource);
-    expect(connectSource).toContain('https://*.frcapi.com');
-  });
-
-  it('does not allow Friendly Captcha sources when Friendly Captcha is not the captcha provider', async () => {
-    const run = koaExperienceSecurityHeaders(
-      'default',
-      createQueries({ captchaProviderType: CaptchaType.Turnstile })
-    );
-    const ctx = createMockContext({ method: 'GET', url: '/sign-in' });
-
-    await run(ctx, koaNoop);
-
-    expect(getCspDirective(ctx, 'script-src')).not.toContain("'wasm-unsafe-eval'");
-    expect(getCspDirective(ctx, 'connect-src')).not.toContain('https://*.frcapi.com');
-    expect(getCspDirective(ctx, 'worker-src')).toBeUndefined();
-  });
-
-  it('does not allow Friendly Captcha sources when CAPTCHA is disabled', async () => {
-    const run = koaExperienceSecurityHeaders(
-      'default',
-      createQueries({
-        captchaProviderType: CaptchaType.FriendlyCaptcha,
-        isCaptchaEnabled: false,
-      })
-    );
-    const ctx = createMockContext({ method: 'GET', url: '/sign-in' });
-
-    await run(ctx, koaNoop);
-
-    expect(getCspDirective(ctx, 'script-src')).not.toContain("'wasm-unsafe-eval'");
-    expect(getCspDirective(ctx, 'connect-src')).not.toContain('https://*.frcapi.com');
-    expect(getCspDirective(ctx, 'worker-src')).toBeUndefined();
-  });
-
   it('does not add Custom UI CSP sources when Custom UI assets are not configured', async () => {
     const run = koaExperienceSecurityHeaders(
       'default',
@@ -433,7 +369,6 @@ describe('koaExperienceSecurityHeaders() middleware — Cross-Origin-Opener-Poli
     {},
     { capEndpoint: 'https://cap.example.com' },
     { captchaProviderType: CaptchaType.Geetest },
-    { captchaProviderType: CaptchaType.FriendlyCaptcha },
   ])('sends no header without Custom UI assets (%o)', async (settings) => {
     await expect(
       getCrossOriginOpenerPolicy({

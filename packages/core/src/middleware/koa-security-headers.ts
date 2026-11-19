@@ -2,7 +2,7 @@ import { type IncomingMessage, type ServerResponse } from 'node:http';
 import { promisify } from 'node:util';
 
 import { CaptchaType, CrossOriginOpenerPolicy, type CustomUiCsp } from '@logto/schemas';
-import { conditional, conditionalArray, type Nullable } from '@silverhand/essentials';
+import { conditional, conditionalArray } from '@silverhand/essentials';
 import helmet, { type HelmetOptions } from 'helmet';
 import type { MiddlewareType } from 'koa';
 
@@ -37,19 +37,24 @@ const getOssServerOrigins = (): string[] => {
   }
 };
 
-const getActiveCspCaptchaType = (
-  enabled: boolean | undefined,
-  type: Nullable<CaptchaType>
-): CaptchaType | undefined =>
-  enabled && (type === CaptchaType.Geetest || type === CaptchaType.FriendlyCaptcha)
-    ? type
-    : undefined;
+type SecurityHeaderSettings = {
+  readonly basicSecurityHeaderSettings: HelmetOptions;
+  readonly consoleSecurityHeaderSettings: HelmetOptions;
+  readonly accountCenterSecurityHeaderSettings: HelmetOptions;
+  readonly defaultExperienceSecurityHeaderSettings: HelmetOptions;
+  readonly getExperienceSecurityHeaderSettings: (
+    customUiCsp?: CustomUiCsp,
+    capEndpoint?: string,
+    isGeetest?: boolean,
+    crossOriginOpenerPolicy?: CrossOriginOpenerPolicy
+  ) => HelmetOptions;
+};
 
 const appendCustomSources = (sources: string[], customSources: string[] = []) => [
   ...new Set([...sources, ...customSources]),
 ];
 
-const createSecurityHeaderSettings = (tenantId: string) => {
+const createSecurityHeaderSettings = (tenantId: string): SecurityHeaderSettings => {
   const { isProduction, isCloud, urlSet, adminUrlSet, cloudUrlSet } = EnvSet.values;
 
   const tenantEndpointOrigin = getTenantEndpoint(tenantId, EnvSet.values).origin;
@@ -192,20 +197,18 @@ const createSecurityHeaderSettings = (tenantId: string) => {
    * WebAssembly, and runs the instance's instrumentation challenge (which evaluates scripts to
    * fingerprint the browser) in a sandboxed `srcdoc` iframe that inherits this policy. These
    * sources are only allowed while Cap is configured.
-   * @param captchaProviderType Active captcha provider requiring provider-specific CSP rules
-   * (GeeTest or Friendly Captcha).
+   * @param isGeetest Whether GeeTest is the configured captcha provider. The GeeTest widget loads
+   * its SDK and challenge from GeeTest-owned hosts, so they are only allowed while GeeTest is
+   * configured.
    * @param crossOriginOpenerPolicy The Cross-Origin-Opener-Policy for the Bring your UI assets.
    */
   const getExperienceSecurityHeaderSettings = (
     customUiCsp: CustomUiCsp = {},
     capEndpoint?: string,
-    captchaProviderType?: CaptchaType,
+    isGeetest?: boolean,
     crossOriginOpenerPolicy: CrossOriginOpenerPolicy = CrossOriginOpenerPolicy.UnsafeNone
   ) => {
     const capOrigin = capEndpoint && new URL(capEndpoint).origin;
-    const isGeetest = captchaProviderType === CaptchaType.Geetest;
-    const isFriendlyCaptcha = captchaProviderType === CaptchaType.FriendlyCaptcha;
-    const allowWasmAndWorkers = Boolean(capOrigin) || isFriendlyCaptcha;
 
     // @ts-expect-error: helmet typings has lots of {A?: T, B?: never} | {A?: never, B?: T} options definitions. Optional settings type can not inferred correctly.
     const settings: HelmetOptions = {
@@ -227,8 +230,7 @@ const createSecurityHeaderSettings = (tenantId: string) => {
           scriptSrc: appendCustomSources(
             [
               ...experienceScriptSource,
-              ...conditionalArray(allowWasmAndWorkers && "'wasm-unsafe-eval'"),
-              ...conditionalArray(capOrigin && "'unsafe-eval'"),
+              ...conditionalArray(capOrigin && ["'wasm-unsafe-eval'", "'unsafe-eval'"]),
               ...conditionalArray(isGeetest && geetestScriptSources),
             ],
             customUiCsp.scriptSrc
@@ -239,11 +241,10 @@ const createSecurityHeaderSettings = (tenantId: string) => {
               ...experienceConnectSource,
               ...conditionalArray(capOrigin),
               ...conditionalArray(isGeetest && geetestConnectSources),
-              ...conditionalArray(isFriendlyCaptcha && 'https://*.frcapi.com'),
             ],
             customUiCsp.connectSrc
           ),
-          ...(allowWasmAndWorkers && { workerSrc: ["'self'", 'blob:'] }),
+          ...(capOrigin && { workerSrc: ["'self'", 'blob:'] }),
           // WARNING (high risk): Need to allow self-hosted terms of use page loaded in an iframe
           frameSrc: ["'self'", 'https:', gsiOrigin],
           // Allow being loaded by console preview iframe
@@ -345,17 +346,14 @@ export const koaExperienceSecurityHeaders = <StateT, ContextT, ResponseBodyT>(
     ]);
     // Captcha assets are only loaded when CAPTCHA is enabled, so only relax the CSP in that case
     const capEndpoint = captchaPolicy.enabled ? configuredCapEndpoint : null;
-    const captchaProviderType = getActiveCspCaptchaType(
-      captchaPolicy.enabled,
-      configuredCaptchaType
-    );
+    const isGeetest = captchaPolicy.enabled && configuredCaptchaType === CaptchaType.Geetest;
 
     await helmetPromise(
-      (customUiAssets ?? capEndpoint ?? captchaProviderType)
+      (customUiAssets ?? capEndpoint ?? isGeetest)
         ? getExperienceSecurityHeaderSettings(
             conditional(customUiAssets && customUiCsp),
             capEndpoint ?? undefined,
-            captchaProviderType,
+            isGeetest,
             conditional(customUiAssets && crossOriginOpenerPolicy)
           )
         : defaultExperienceSecurityHeaderSettings,
