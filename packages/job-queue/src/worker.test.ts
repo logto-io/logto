@@ -69,7 +69,7 @@ describe('JobQueueWorker', () => {
     expect(workerA.workerId).not.toBe(String(process.pid));
   });
 
-  it('enforces the handler contract rule against secret and mutable config fields in payloads', () => {
+  it('flags common top-level secret and configuration keys in typed payloads', () => {
     const queries = buildQueries();
     const worker = new JobQueueWorker<LogMeta>(queries, { workerId: 'worker_1', log: silentLog });
 
@@ -386,7 +386,7 @@ describe('JobQueueWorker', () => {
     expect(queries.claimDue).toHaveBeenCalledTimes(3);
   });
 
-  it('survives claimDue errors and releases remaining jobs on shutdown timeout or late claim resolution', async () => {
+  it('recovers from claim errors and releases remaining jobs during shutdown', async () => {
     // eslint-disable-next-line no-use-extend-native/no-use-extend-native -- Promise.withResolvers is available in the required Node.js runtime
     const slowJob = Promise.withResolvers<void>();
     // eslint-disable-next-line no-use-extend-native/no-use-extend-native -- Promise.withResolvers is available in the required Node.js runtime
@@ -400,6 +400,7 @@ describe('JobQueueWorker', () => {
         .mockRejectedValueOnce(new Error('transient db failure'))
         .mockResolvedValueOnce([row1])
         .mockImplementationOnce(async () => lateClaim.promise),
+      releaseClaimed: vi.fn(async ({ jobs }) => jobs.length),
     });
 
     const handle = vi.fn(async () => {
@@ -426,28 +427,23 @@ describe('JobQueueWorker', () => {
     expect(queries.claimDue).toHaveBeenCalledTimes(2);
     expect(worker.inFlightCount).toBe(1);
 
-    // Shutdown times out after 4s while row1 is still in flight -> releases row1 in batch.
-    const stopPromise = worker.stop({ drainTimeoutMs: 4000 });
-    await vi.advanceTimersByTimeAsync(4000);
-    const stopResult = await stopPromise;
-
-    expect(stopResult).toEqual({ drained: false, releasedCount: 1 });
+    // The host can release still-active claims when its drain deadline expires.
+    const stopPromise = worker.stop();
+    await expect(worker.releaseClaimed()).resolves.toBe(1);
     expect(queries.releaseClaimed).toHaveBeenCalledExactlyOnceWith({
       workerId: 'worker_1',
       jobs: [row1],
     });
 
     slowJob.resolve();
-    await vi.advanceTimersByTimeAsync(0);
+    await expect(stopPromise).resolves.toBe(0);
 
     // Restart and test late claim resolution arriving after stop() starts.
     worker.start();
     await vi.advanceTimersByTimeAsync(0);
     const secondStop = worker.stop();
     lateClaim.resolve([row2]);
-    const secondStopResult = await secondStop;
-
-    expect(secondStopResult).toEqual({ drained: true, releasedCount: 1 });
+    await expect(secondStop).resolves.toBe(1);
     expect(handle).toHaveBeenCalledTimes(1);
     expect(queries.releaseClaimed).toHaveBeenLastCalledWith({
       workerId: 'worker_1',

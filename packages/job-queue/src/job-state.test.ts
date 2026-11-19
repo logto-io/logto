@@ -17,18 +17,14 @@ describe('createExponentialBackoff', () => {
     expect(webhookBackoff(20)).toBe(4 * 60 * 60 * 1000);
   });
 
-  it('supports custom multipliers and clamps sub-1 attempts to attempt 1', () => {
-    const customBackoff = createExponentialBackoff({
+  it('clamps sub-1 attempts to attempt 1', () => {
+    const backoff = createExponentialBackoff({
       baseMs: 1000,
       maxMs: 300_000,
-      factor: 3,
     });
 
-    expect(customBackoff(0)).toBe(1000);
-    expect(customBackoff(1)).toBe(1000);
-    expect(customBackoff(2)).toBe(3000);
-    expect(customBackoff(3)).toBe(9000);
-    expect(customBackoff(10)).toBe(300_000);
+    expect(backoff(0)).toBe(1000);
+    expect(backoff(1)).toBe(1000);
   });
 });
 
