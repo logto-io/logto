@@ -7,6 +7,7 @@ import {
 } from '@logto/schemas';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import { buildManagementApiContext, truncateMembershipDelta } from '#src/libraries/hook/utils.js';
 import { type QuotaLibrary } from '#src/libraries/quota.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -31,6 +32,13 @@ export default function userRoutes(
       query: z.object({
         q: z.string().optional(),
         organizationRoleId: z.string().min(1).optional(),
+        // Organization member filtering by tenant-level user role.
+        roleId: z
+          .preprocess(
+            (value) => (EnvSet.values.isDevFeaturesEnabled ? value : undefined),
+            z.string().min(1).optional()
+          )
+          .optional(),
       }),
       params: z.object({ id: z.string().min(1) }),
       response: userWithOrganizationRolesGuard.array(),
@@ -38,14 +46,13 @@ export default function userRoutes(
     }),
     async (ctx, next) => {
       const search = parseSearchOptions(userSearchKeys, ctx.guard.query);
-      const { organizationRoleId } = ctx.guard.query;
-      const organizationRoleFilter = organizationRoleId ? { organizationRoleId } : {};
+      const { organizationRoleId, roleId } = ctx.guard.query;
 
       const [totalCount, entities] = await organizations.relations.users.getUsersByOrganizationId(
         ctx.guard.params.id,
         ctx.pagination,
         search,
-        organizationRoleFilter
+        { organizationRoleId, roleId }
       );
 
       ctx.pagination.totalCount = totalCount;

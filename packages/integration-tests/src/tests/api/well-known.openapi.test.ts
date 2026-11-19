@@ -42,6 +42,23 @@ describe('.well-known openapi.json endpoints', () => {
     }
   });
 
+  it('documents the organization member roleId filter only when dev features are enabled', async () => {
+    const json = await adminTenantApi
+      .get('.well-known/management.openapi.json')
+      .json<OpenAPIV3.Document>();
+
+    const parameters = json.paths['/api/organizations/{id}/users']?.get?.parameters ?? [];
+    const roleIdParameter = parameters.find(
+      (parameter) => 'name' in parameter && parameter.name === 'roleId'
+    );
+
+    if (isDevFeaturesEnabled) {
+      expect(roleIdParameter).toMatchObject({ in: 'query', required: false });
+    } else {
+      expect(roleIdParameter).toBeUndefined();
+    }
+  });
+
   // Arbitrary JSON object fields must declare `additionalProperties` so that
   // openapi-typescript emits `{ [k: string]: unknown }` instead of
   // `Record<string, never>`, which would forbid all properties at the type level.

@@ -2,6 +2,7 @@ import {
   Organizations,
   OrganizationRoles,
   Users,
+  UsersRoles,
   OrganizationUserRelations,
   OrganizationRoleUserRelations,
   type OrganizationWithRoles,
@@ -189,10 +190,11 @@ export class UserRelationQueries extends TwoRelationsQueries<typeof Organization
     organizationId: string,
     { limit, offset }: GetEntitiesOptions,
     search?: SearchOptions<(typeof userSearchKeys)[number]>,
-    { organizationRoleId }: { organizationRoleId?: string } = {}
+    { organizationRoleId, roleId }: { organizationRoleId?: string; roleId?: string } = {}
   ): Promise<[totalNumber: number, entities: Readonly<UserWithOrganizationRoles[]>]> {
     const roles = convertToIdentifiers(OrganizationRoles, true);
     const users = convertToIdentifiers(Users, true);
+    const usersRoles = convertToIdentifiers(UsersRoles, true);
     const { fields } = convertToIdentifiers(OrganizationUserRelations, true);
     const relations = convertToIdentifiers(OrganizationRoleUserRelations, true);
     const organizationRoleFilterSql = organizationRoleId
@@ -206,6 +208,17 @@ export class UserRelationQueries extends TwoRelationsQueries<typeof Organization
         )
       `
       : sql``;
+    const userRoleFilterSql = roleId
+      ? sql`
+        and exists (
+          select 1
+          from ${usersRoles.table}
+          where ${usersRoles.fields.tenantId} = ${fields.tenantId}
+            and ${usersRoles.fields.userId} = ${fields.userId}
+            and ${usersRoles.fields.roleId} = ${roleId}
+        )
+      `
+      : sql``;
 
     const [{ count }, entities] = await Promise.all([
       this.pool.one<{ count: string }>(sql`
@@ -215,6 +228,7 @@ export class UserRelationQueries extends TwoRelationsQueries<typeof Organization
           on ${fields.userId} = ${users.fields.id}
         where ${fields.organizationId} = ${organizationId}
         ${organizationRoleFilterSql}
+        ${userRoleFilterSql}
         ${buildSearchSql(Users, search, sql`and `)}
       `),
       // Aggregate roles via LATERAL so the per-user role lookup runs at most `limit` times
@@ -251,6 +265,7 @@ export class UserRelationQueries extends TwoRelationsQueries<typeof Organization
         ) as user_roles on true
         where ${fields.organizationId} = ${organizationId}
         ${organizationRoleFilterSql}
+        ${userRoleFilterSql}
         ${buildSearchSql(Users, search, sql`and `)}
         order by ${fields.userId}
         limit ${limit}

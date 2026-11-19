@@ -2,6 +2,8 @@ import assert from 'node:assert';
 
 import { HTTPError } from 'ky';
 
+import { assignUsersToRole, createRole, deleteRole } from '#src/api/role.js';
+import { isDevFeaturesEnabled } from '#src/constants.js';
 import { OrganizationApiTest } from '#src/helpers/organization.js';
 import { UserApiTest } from '#src/helpers/user.js';
 import { generatePassword, generateTestName } from '#src/utils.js';
@@ -98,6 +100,81 @@ describe('organization user APIs', () => {
       expect(usersWithRoles[0]!.organizationRoles).toEqual(
         expect.arrayContaining(roles.map(({ id }) => expect.objectContaining({ id })))
       );
+    });
+  });
+
+  describe('organization member filtering by user role', () => {
+    const organizationApi = new OrganizationApiTest();
+    const userApi = new UserApiTest();
+
+    afterEach(async () => {
+      await Promise.all([organizationApi.cleanUp(), userApi.cleanUp()]);
+    });
+
+    it('paginates matching organization members and intersects the filters', async () => {
+      const organization = await organizationApi.create({ name: generateTestName() });
+      const organizationRole = await organizationApi.roleApi.create({ name: generateTestName() });
+      const userRole = await createRole({});
+
+      try {
+        const [bothRoles, userRoleOnly, organizationRoleOnly, nonMember] = await Promise.all([
+          userApi.create({ username: generateTestName() }),
+          userApi.create({ username: generateTestName() }),
+          userApi.create({ username: generateTestName() }),
+          userApi.create({ username: generateTestName() }),
+        ]);
+        await organizationApi.addUsers(organization.id, [
+          bothRoles.id,
+          userRoleOnly.id,
+          organizationRoleOnly.id,
+        ]);
+        await Promise.all([
+          assignUsersToRole([bothRoles.id, userRoleOnly.id, nonMember.id], userRole.id),
+          organizationApi.addUsersRoles(
+            organization.id,
+            [bothRoles.id, organizationRoleOnly.id],
+            [organizationRole.id]
+          ),
+        ]);
+
+        const [firstPage, firstTotal] = await organizationApi.getUsers(organization.id, {
+          roleId: userRole.id,
+          page_size: 1,
+        });
+
+        if (!isDevFeaturesEnabled) {
+          const unfiltered = await organizationApi.getUsers(organization.id, { page_size: 1 });
+          expect([firstPage, firstTotal]).toEqual(unfiltered);
+          return;
+        }
+
+        const [secondPage, secondTotal] = await organizationApi.getUsers(organization.id, {
+          roleId: userRole.id,
+          page: 2,
+          page_size: 1,
+        });
+        expect(firstTotal).toBe(2);
+        expect(secondTotal).toBe(2);
+        expect(firstPage).toHaveLength(1);
+        expect(secondPage).toHaveLength(1);
+        expect(new Set([...firstPage, ...secondPage].map(({ id }) => id))).toEqual(
+          new Set([bothRoles.id, userRoleOnly.id])
+        );
+
+        const roleFilters = { roleId: userRole.id, organizationRoleId: organizationRole.id };
+        const [intersection, intersectionTotal] = await organizationApi.getUsers(
+          organization.id,
+          roleFilters
+        );
+        expect(intersection.map(({ id }) => id)).toEqual([bothRoles.id]);
+        expect(intersectionTotal).toBe(1);
+
+        await expect(
+          organizationApi.getUsers(organization.id, { ...roleFilters, q: userRoleOnly.id })
+        ).resolves.toEqual([[], 0]);
+      } finally {
+        await deleteRole(userRole.id);
+      }
     });
   });
 
