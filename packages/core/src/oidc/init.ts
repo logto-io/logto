@@ -16,7 +16,8 @@ import {
   ExtraParamsKey,
   type Json,
 } from '@logto/schemas';
-import { conditional, trySafe, tryThat } from '@silverhand/essentials';
+import { conditional, trySafe } from '@silverhand/essentials';
+import { NotFoundError } from '@silverhand/slonik';
 import { type i18n } from 'i18next';
 import { type KoaContextWithOIDC, Provider, type ResourceServer, errors } from 'oidc-provider';
 import getRawBody from 'raw-body';
@@ -85,6 +86,14 @@ import { getAcceptedUserClaims, getUserClaimsData } from './scope.js';
 
 // Temporarily removed 'EdDSA' since it's not supported by browser yet
 const supportedSigningAlgs = Object.freeze(['RS256', 'PS256', 'ES256', 'ES384', 'ES512'] as const);
+
+// These are the routes that call findAccount from oidc-provider's session loader.
+const sessionAccountRoutes = new Set([
+  'authorization',
+  'resume',
+  'code_verification',
+  'device_resume',
+]);
 
 export default function initOidc(
   tenantId: string,
@@ -493,16 +502,27 @@ export default function initOidc(
     // built-in `acr` claim to `claims_supported` once at least one value is configured.
     acrValues: [...logtoAcrValues],
     // https://github.com/panva/node-oidc-provider/tree/main/docs#findaccount
-    findAccount: async (_ctx, sub) => {
-      // The user may be deleted after the token is issued
-      const user = await tryThat(findUserById(sub), () => {
-        throw new errors.InvalidGrant('user not found');
+    findAccount: async ({ oidc }, sub) => {
+      const user = await findUserById(sub).catch((error: unknown) => {
+        if (!(error instanceof NotFoundError)) {
+          throw new errors.InvalidGrant('user not found');
+        }
       });
 
-      // Suspension revokes the user's sessions and tokens; reject here as well so any token
-      // that survives a partial revocation still cannot be used.
-      if (user.isSuspended) {
-        throw new errors.InvalidGrant('user is suspended');
+      if (!user || user.isSuspended) {
+        const { route, session, provider } = oidc;
+        if (sessionAccountRoutes.has(route) && session?.accountId === sub) {
+          // Returning undefined skips grant loading, but the login policy still checks the
+          // session's accountId. Replace the whole session so no stale grant or ACR is reused.
+          await session.destroy();
+          const anonymousSession = new provider.Session();
+          // eslint-disable-next-line @silverhand/fp/no-mutating-assign -- replace the provider's mutable session for the rest of this request
+          Object.assign(oidc, { session: anonymousSession });
+          oidc.entity('Session', anonymousSession);
+          return;
+        }
+
+        throw new errors.InvalidGrant(user ? 'user is suspended' : 'user not found');
       }
 
       return {
