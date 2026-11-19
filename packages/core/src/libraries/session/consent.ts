@@ -44,7 +44,7 @@ const identifyClient = (envSet: EnvSet, clientId: string): ClientIdentifiers =>
 /**
  * `users.application_id` and `users.cimd_client_id` form a single first-consent attribution,
  * so a user already attributed through either column is never written again. The columns stay
- * separate because `application_id` (varchar(21)) only ever holds registered application ids —
+ * separate because `application_id` (varchar(64)) only ever holds registered application ids —
  * a CIMD client identifier URL must never reach it.
  */
 const saveUserFirstConsentedClient = async (
