@@ -146,8 +146,16 @@ export class JobQueueWorker<SettlementMeta = unknown> {
     return { drained, releasedCount };
   }
 
-  /** Batch-release all currently tracked unreleased claimed jobs for this worker. */
+  /**
+   * Batch-release all currently tracked unreleased claimed jobs for this worker. Once stopped,
+   * rows from a claim still in flight are released as soon as it resolves, such as when the host
+   * gave up on a drain that never finished.
+   */
   async releaseClaimed(): Promise<number> {
+    if (!this.running) {
+      this.stopCompleted = true;
+    }
+
     return this.#releaseJobs(this.concurrency.takeJobsToRelease());
   }
 
@@ -190,7 +198,14 @@ export class JobQueueWorker<SettlementMeta = unknown> {
       await this.#claimNextBatch();
     } finally {
       this.claimInFlight = undefined;
-      this.#schedulePoll();
+
+      // A wake that landed after the last dirty check only set `dirty`; claim for it now rather
+      // than at the next poll. A full worker sets `dirty` itself and waits for a job to finish.
+      if (this.running && this.dirty && this.concurrency.inFlightCount < this.maxConcurrency) {
+        this.wake();
+      } else {
+        this.#schedulePoll();
+      }
     }
   }
 
