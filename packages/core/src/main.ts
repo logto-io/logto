@@ -5,7 +5,7 @@ import { trySafe } from '@silverhand/essentials';
 import chalk from 'chalk';
 import Koa from 'koa';
 
-import initApp from './app/init.js';
+import initApp, { closeHttp2Sessions } from './app/init.js';
 import { redisCache } from './caches/index.js';
 import { EnvSet } from './env-set/index.js';
 import { checkPreconditions } from './env-set/preconditions.js';
@@ -94,19 +94,21 @@ if (EnvSet.values.isIntegrationTest) {
 /** Stop accepting connections and resolve once every open request has finished. */
 const closeServer = async (server: (typeof servers)[number]) =>
   new Promise<void>((resolve) => {
-    // `close()` drops only connections idle at that moment; a keep-alive connection whose
-    // response finishes later would hold the server open until its keep-alive timeout.
-    const idleSweep =
-      'closeIdleConnections' in server
-        ? setInterval(() => {
-            server.closeIdleConnections();
-          }, idleConnectionSweepMs)
-        : undefined;
+    // `close()` drops only connections idle at that moment; a keep-alive connection or HTTP/2
+    // session that connected or finished its response later would hold the server open.
+    const sweep = () => {
+      if ('closeIdleConnections' in server) {
+        server.closeIdleConnections();
+      }
+      closeHttp2Sessions(server);
+    };
+    const idleSweep = setInterval(sweep, idleConnectionSweepMs);
 
     server.close(() => {
       clearInterval(idleSweep);
       resolve();
     });
+    sweep();
   });
 
 // Durable job queue: graceful shutdown replaces the integration-test-only exit once released.
