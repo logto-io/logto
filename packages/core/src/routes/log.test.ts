@@ -266,6 +266,19 @@ describe('logRoutes', () => {
       });
     });
 
+    it('exports when the optional filters are omitted', async () => {
+      const response = await logRequest.get('/logs/export?format=jsonl&end_time=5000');
+
+      expect(response.status).toEqual(200);
+      expect(findLogsForExport).toHaveBeenCalledWith(
+        1000,
+        expect.objectContaining({
+          payload: { userId: undefined, applicationId: undefined },
+          logKey: undefined,
+        })
+      );
+    });
+
     it('passes the GET /logs filters and the delete-style window validation through', async () => {
       await logRequest.get(
         '/logs/export?format=jsonl&end_time=5000&start_time=1000&userId=user&applicationId=app&logKey=Key'
@@ -360,6 +373,9 @@ describe('logRoutes', () => {
       ['negative end_time', '/logs/export?format=csv&end_time=-1'],
       ['fractional end_time', '/logs/export?format=csv&end_time=1.5'],
       ['invalid webhook exclusion', '/logs/export?format=csv&end_time=5000&excludeWebhookLogs=yes'],
+      ['empty userId', '/logs/export?format=csv&end_time=5000&userId='],
+      ['empty applicationId', '/logs/export?format=csv&end_time=5000&applicationId='],
+      ['empty logKey', '/logs/export?format=csv&end_time=5000&logKey='],
     ])('returns 400 for %s', async (_name, path) => {
       const response = await logRequest.get(path);
 

@@ -157,9 +157,9 @@ export default function logRoutes<T extends ManagementApiRouter>(
       koaGuard({
         query: object({
           format: z.enum(logExportFormats),
-          userId: string().optional(),
-          applicationId: string().optional(),
-          logKey: string().optional(),
+          userId: string().min(1).optional(),
+          applicationId: string().min(1).optional(),
+          logKey: string().min(1).optional(),
           excludeWebhookLogs: z.enum(['true', 'false']).optional(),
           end_time: string(),
           start_time: string().optional(),
@@ -195,9 +195,9 @@ export default function logRoutes<T extends ManagementApiRouter>(
           logKey,
           startTime,
           endTime,
-          // Webhook delivery logs share the table and are included by default, so an unfiltered
-          // export of a window can be followed by `DELETE /logs` without losing rows. The opt-out
-          // keeps the audit-only scope of `GET /logs`.
+          // Webhook delivery logs share the table and are included by default, so the export
+          // covers the same key scope as `DELETE /logs`. Deleting by the same time window is only
+          // safe after the window stops changing; see the OpenAPI description.
           includeKeyPrefix: excludeWebhookLogs === 'true' ? auditLogKeyPrefixes : undefined,
         };
 
