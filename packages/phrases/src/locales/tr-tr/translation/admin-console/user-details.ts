@@ -78,6 +78,10 @@ const user_details = {
       'Bu kullanıcı oturum açmayı tamamlamadan önce en az bir MFA faktörü kurmalıdır. Kurulum atlanamaz.',
     field_description: 'Bu kullanıcı 2 adımlı kimlik doğrulama faktörlerini etkinleştirdi.',
     name_column: 'Çok Faktörlü Kimlik Doğrulama',
+    implicit_factor_tip:
+      'Bu kullanıcının doğrulanmış bir e-posta adresi veya telefon numarası olduğundan, ayarlanmadan 2 adımlı doğrulama sayılır. Yalnızca bunu ayarlayan kullanıcıları saymak için çok faktörlü kimlik doğrulama sayfasında "E-posta/SMS ile 2 adımlı doğrulama" ayarını değiştirin.',
+    not_counted_factor_tip:
+      'Bu faktör 2 adımlı doğrulama için sayılmaz, çünkü kullanıcının eşleşen bir birincil e-posta adresi veya telefon numarası yok ya da faktör çok faktörlü kimlik doğrulama sayfasında kapalı. Bunu kaldırabilirsiniz.',
     field_description_empty:
       'Bu kullanıcı 2 aşamalı kimlik doğrulama faktörlerini etkinleştirmedi.',
     deletion_confirmation:

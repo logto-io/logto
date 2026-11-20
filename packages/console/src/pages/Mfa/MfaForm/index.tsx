@@ -4,6 +4,7 @@ import {
   ConnectorType,
   MfaFactor,
   MfaPolicy,
+  MfaVerificationCodeEnrollment,
   OrganizationRequiredMfaPolicy,
   SignInIdentifier,
   type SignInExperience,
@@ -20,7 +21,7 @@ import FormCard from '@/components/FormCard';
 import InlineUpsell from '@/components/InlineUpsell';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { mfa } from '@/consts';
-import { isCloud } from '@/consts/env';
+import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
@@ -30,6 +31,7 @@ import Select from '@/ds-components/Select';
 import Switch from '@/ds-components/Switch';
 import TextLink from '@/ds-components/TextLink';
 import useApi from '@/hooks/use-api';
+import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useEnabledConnectorTypes from '@/hooks/use-enabled-connector-types';
 import { trySubmitSafe } from '@/utils/form';
 import { isPaidPlan } from '@/utils/subscription';
@@ -89,6 +91,7 @@ function MfaForm({ data, adaptiveMfa, trustedDevice, signInMethods, onMfaUpdated
     mode: 'onChange',
   });
   const api = useApi();
+  const { show: showConfirm } = useConfirmModal();
 
   const formValues = watch();
 
@@ -193,6 +196,20 @@ function MfaForm({ data, adaptiveMfa, trustedDevice, signInMethods, onMfaUpdated
     [t]
   );
 
+  const verificationCodeEnrollmentOptions = useMemo(
+    () => [
+      {
+        value: MfaVerificationCodeEnrollment.Implicit,
+        title: t('mfa.verification_code_enrollment_implicit'),
+      },
+      {
+        value: MfaVerificationCodeEnrollment.Explicit,
+        title: t('mfa.verification_code_enrollment_explicit'),
+      },
+    ],
+    [t]
+  );
+
   const mfaRequirementOptions = useMemo(
     () => [
       {
@@ -262,6 +279,23 @@ function MfaForm({ data, adaptiveMfa, trustedDevice, signInMethods, onMfaUpdated
       if (formData.phoneVerificationCodeEnabled && !hasSmsConnector) {
         toast.error(t('mfa.no_sms_connector_error'));
         return;
+      }
+
+      if (
+        dirtyFields.verificationCodeEnrollment &&
+        (formData.emailVerificationCodeEnabled || formData.phoneVerificationCodeEnabled)
+      ) {
+        const [confirmed] = await showConfirm({
+          ModalContent: t(
+            formData.verificationCodeEnrollment === MfaVerificationCodeEnrollment.Explicit
+              ? 'mfa.verification_code_enrollment_explicit_confirmation'
+              : 'mfa.verification_code_enrollment_implicit_confirmation'
+          ),
+        });
+
+        if (!confirmed) {
+          return;
+        }
       }
 
       const payload = buildMfaPatchPayload(formData);
@@ -371,6 +405,26 @@ function MfaForm({ data, adaptiveMfa, trustedDevice, signInMethods, onMfaUpdated
               </div>
             </div>
           </FormField>
+          {/* Email / SMS MFA explicit enrollment */}
+          {isDevFeaturesEnabled &&
+            (formValues.emailVerificationCodeEnabled ||
+              formValues.phoneVerificationCodeEnabled) && (
+              <FormField title="mfa.verification_code_enrollment" headlineSpacing="large">
+                <Controller
+                  control={control}
+                  name="verificationCodeEnrollment"
+                  render={({ field: { onChange, value } }) => (
+                    <Select
+                      hasSelectedOptionIndicator
+                      value={value}
+                      options={verificationCodeEnrollmentOptions}
+                      isReadOnly={isMfaDisabled}
+                      onChange={onChange}
+                    />
+                  )}
+                />
+              </FormField>
+            )}
           {isMfaDisabled && (
             <InlineUpsell
               for="mfa"

@@ -25,6 +25,14 @@ const mfa = {
   phone_verification_code: 'SMS認証コード',
   phone_verification_code_description:
     'SMS認証コードを受信して確認するために電話番号をリンクします。',
+  verification_code_enrollment: 'メール/SMS による2段階認証',
+  verification_code_enrollment_implicit:
+    '確認済みのメールアドレスまたは電話番号を持つすべてのユーザー',
+  verification_code_enrollment_explicit: '設定したユーザーのみ',
+  verification_code_enrollment_explicit_confirmation:
+    'メールおよび SMS の認証コードは、設定したユーザーに対してのみ2段階認証として扱われます。設定していないユーザーは2段階認証の要素としてこれらを使えなくなり、他の要素を持たないユーザーは MFA を持たないものとして扱われます。続行してもよろしいですか？',
+  verification_code_enrollment_implicit_confirmation:
+    '確認済みのメールアドレスまたは電話番号を持つすべてのユーザーが、設定していなくてもそれを2段階認証に使用します。続行してもよろしいですか？',
   policy: 'ポリシー',
   policy_description: 'サインインおよびサインアップフローのためのMFAポリシーを設定します。',
   two_step_sign_in_policy: 'サインイン時の2段階認証ポリシー',

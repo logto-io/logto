@@ -1,4 +1,11 @@
-import { MfaFactor, type SignInExperience, type UserMfaVerificationResponse } from '@logto/schemas';
+import {
+  isVerificationCodeMfaFactor,
+  MfaFactor,
+  resolveUserMfaFactors,
+  type SignInExperience,
+  type UserMfaVerificationResponse,
+} from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { useCallback, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
@@ -7,6 +14,7 @@ import useSWRImmutable from 'swr/immutable';
 
 import MfaFactorName from '@/components/MfaFactorName';
 import MfaFactorTitle from '@/components/MfaFactorTitle';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import Switch from '@/ds-components/Switch';
 import Table from '@/ds-components/Table';
@@ -55,46 +63,58 @@ function UserMfaVerifications({ userId }: Props) {
   } = useCurrentTenantScopes();
   const [isUpdatingMfaRequirement, setIsUpdatingMfaRequirement] = useState(false);
 
-  // Create Email and Phone MFA entries when conditions are met
+  const countedFactors = useMemo(
+    () =>
+      signInExperience &&
+      mfaVerifications &&
+      resolveUserMfaFactors({
+        mfaSettings: signInExperience.mfa,
+        storedFactors: mfaVerifications.map(({ type }) => type),
+        hasPrimaryEmail: Boolean(user.primaryEmail),
+        hasPrimaryPhone: Boolean(user.primaryPhone),
+      }),
+    [mfaVerifications, signInExperience, user]
+  );
+
+  // Email and phone MFA the user has without a stored record, which only implicit enrollment gives
   const emailPhoneMfaVerifications = useMemo(() => {
-    if (!signInExperience?.mfa.factors) {
+    if (!countedFactors || !mfaVerifications) {
       return [];
     }
 
-    // Add Email MFA if enabled and user has email
-    const emailFactor =
-      signInExperience.mfa.factors.includes(MfaFactor.EmailVerificationCode) && user.primaryEmail
-        ? [
-            {
-              id: 'email-factor',
-              type: MfaFactor.EmailVerificationCode,
-              createdAt: new Date().toISOString(),
-            },
-          ]
-        : [];
+    return countedFactors
+      .filter(
+        (type) =>
+          isVerificationCodeMfaFactor(type) &&
+          mfaVerifications.every((verification) => verification.type !== type)
+      )
+      .map((type) => ({
+        id: type === MfaFactor.EmailVerificationCode ? 'email-factor' : 'phone-factor',
+        type,
+        createdAt: new Date().toISOString(),
+      }));
+  }, [countedFactors, mfaVerifications]);
 
-    // Add Phone MFA if enabled and user has phone
-    const phoneFactor =
-      signInExperience.mfa.factors.includes(MfaFactor.PhoneVerificationCode) && user.primaryPhone
-        ? [
-            {
-              id: 'phone-factor',
-              type: MfaFactor.PhoneVerificationCode,
-              createdAt: new Date().toISOString(),
-            },
-          ]
-        : [];
+  const getFactorTip = useCallback(
+    ({ id, type }: UserMfaVerification) => {
+      if (id === 'email-factor' || id === 'phone-factor') {
+        return t('implicit_factor_tip');
+      }
 
-    return [...emailFactor, ...phoneFactor];
-  }, [signInExperience?.mfa.factors, user]);
+      if (isVerificationCodeMfaFactor(type) && countedFactors && !countedFactors.includes(type)) {
+        return t('not_counted_factor_tip');
+      }
+    },
+    [countedFactors, t]
+  );
 
   // Helper function to determine sort order for MFA factors
-  const getOrder = useCallback((type: MfaFactor, id: string) => {
+  const getOrder = useCallback((type: MfaFactor) => {
     if (type === MfaFactor.BackupCode) {
       return 3; // Last
     }
-    if (type === MfaFactor.EmailVerificationCode || type === MfaFactor.PhoneVerificationCode) {
-      return id === 'email-factor' || id === 'phone-factor' ? 2 : 1; // Email/Phone factors after regular
+    if (isVerificationCodeMfaFactor(type)) {
+      return 2; // Email/Phone factors after regular
     }
     return 1; // Regular factors first
   }, []);
@@ -108,7 +128,7 @@ function UserMfaVerifications({ userId }: Props) {
 
     // Sort: regular factors first, then Email/Phone factors, then backup code last
     return combined.slice().sort((first, second) => {
-      return getOrder(first.type, first.id) - getOrder(second.type, second.id);
+      return getOrder(first.type) - getOrder(second.type);
     });
   }, [mfaVerifications, emailPhoneMfaVerifications, getOrder]);
 
@@ -186,7 +206,14 @@ function UserMfaVerifications({ userId }: Props) {
               title: t('name_column'),
               dataIndex: 'name',
               colSpan: 13,
-              render: (mfaVerification) => <MfaFactorTitle {...mfaVerification} />,
+              render: (mfaVerification) => (
+                <MfaFactorTitle
+                  {...mfaVerification}
+                  // Email / SMS MFA explicit enrollment: explain email and phone rows that differ
+                  // from what sign-in counts
+                  tooltip={conditional(isDevFeaturesEnabled && getFactorTip(mfaVerification))}
+                />
+              ),
             },
             {
               title: null,

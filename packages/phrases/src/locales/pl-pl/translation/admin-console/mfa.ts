@@ -26,6 +26,14 @@ const mfa = {
   phone_verification_code: 'Kod weryfikacyjny SMS',
   phone_verification_code_description:
     'Połącz numer telefonu, aby otrzymywać i weryfikować kody weryfikacyjne SMS.',
+  verification_code_enrollment: 'Weryfikacja dwuetapowa przez e-mail/SMS',
+  verification_code_enrollment_implicit:
+    'Każdy użytkownik ze zweryfikowanym adresem e-mail lub numerem telefonu',
+  verification_code_enrollment_explicit: 'Tylko użytkownicy, którzy ją skonfigurowali',
+  verification_code_enrollment_explicit_confirmation:
+    'Kody weryfikacyjne e-mail i SMS będą liczyć się jako weryfikacja dwuetapowa tylko dla użytkowników, którzy je skonfigurowali. Użytkownicy, którzy ich nie skonfigurowali, utracą je jako czynnik weryfikacji dwuetapowej, a użytkownicy bez innego czynnika będą traktowani jak użytkownicy bez MFA. Czy na pewno chcesz kontynuować?',
+  verification_code_enrollment_implicit_confirmation:
+    'Każdy użytkownik ze zweryfikowanym adresem e-mail lub numerem telefonu będzie go używać do weryfikacji dwuetapowej, także jeśli jej nie skonfigurował. Czy na pewno chcesz kontynuować?',
   policy: 'Polityka',
   policy_description: 'Ustaw politykę MFA dla procesów logowania i rejestracji.',
   two_step_sign_in_policy: 'Polityka weryfikacji dwuetapowej podczas logowania',

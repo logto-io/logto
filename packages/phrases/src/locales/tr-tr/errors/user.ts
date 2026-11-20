@@ -45,6 +45,12 @@ const user = {
   missing_mfa: 'Oturum açmadan önce ekstra MFA bağlamanız gerekiyor.',
   totp_already_in_use: 'TOTP zaten kullanımda.',
   backup_code_already_in_use: 'Yedek kod zaten kullanımda.',
+  email_mfa_already_in_use: 'E-posta doğrulama kodu MFA zaten kullanımda.',
+  phone_mfa_already_in_use: 'SMS doğrulama kodu MFA zaten kullanımda.',
+  email_mfa_requires_primary_email:
+    'E-posta doğrulama kodu MFA kullanmak için kullanıcının birincil e-posta adresi olmalıdır.',
+  phone_mfa_requires_primary_phone:
+    'SMS doğrulama kodu MFA kullanmak için kullanıcının birincil telefon numarası olmalıdır.',
   password_algorithm_required: 'Şifre algoritması gereklidir.',
   password_and_digest: 'Düz metin şifresini ve şifre özetini aynı anda belirleyemezsiniz.',
   personal_access_token_name_exists: 'Kişisel erişim belirteci adı zaten mevcut.',

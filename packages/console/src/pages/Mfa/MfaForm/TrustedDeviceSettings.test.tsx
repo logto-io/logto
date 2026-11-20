@@ -1,4 +1,4 @@
-import { MfaPolicy } from '@logto/schemas';
+import { MfaPolicy, MfaVerificationCodeEnrollment } from '@logto/schemas';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import type * as React from 'react';
 import { useForm } from 'react-hook-form';
@@ -41,6 +41,7 @@ const defaultValues: MfaConfigForm = {
   backupCodeEnabled: false,
   emailVerificationCodeEnabled: false,
   phoneVerificationCodeEnabled: false,
+  verificationCodeEnrollment: MfaVerificationCodeEnrollment.Implicit,
   isMandatory: false,
   setUpPrompt: MfaPolicy.NoPrompt,
   organizationRequiredMfaPolicy: undefined,

@@ -26,6 +26,14 @@ const mfa = {
   phone_verification_code: 'SMS-Verifizierungscode',
   phone_verification_code_description:
     'Verknüpfen Sie die Telefonnummer, um SMS-Verifizierungscodes zu erhalten und zu überprüfen.',
+  verification_code_enrollment: '2-Schritt-Verifizierung per E-Mail/SMS',
+  verification_code_enrollment_implicit:
+    'Jeder Benutzer mit einer verifizierten E-Mail-Adresse oder Telefonnummer',
+  verification_code_enrollment_explicit: 'Nur Benutzer, die sie eingerichtet haben',
+  verification_code_enrollment_explicit_confirmation:
+    'E-Mail- und SMS-Verifizierungscodes zählen nur noch für Benutzer als 2-Schritt-Verifizierung, die sie eingerichtet haben. Benutzer, die sie nicht eingerichtet haben, verlieren sie als Faktor der 2-Schritt-Verifizierung, und Benutzer ohne weiteren Faktor werden so behandelt, als hätten sie keine MFA. Möchtest du wirklich fortfahren?',
+  verification_code_enrollment_implicit_confirmation:
+    'Jeder Benutzer mit einer verifizierten E-Mail-Adresse oder Telefonnummer verwendet diese für die 2-Schritt-Verifizierung, auch Benutzer, die sie nicht eingerichtet haben. Möchtest du wirklich fortfahren?',
   policy: 'Richtlinie',
   policy_description: 'Legen Sie die MFA-Richtlinie für Anmelde- und Anmeldevorgänge fest.',
   two_step_sign_in_policy: 'Zwei-Schritt-Verifizierungspolitik bei der Anmeldung',

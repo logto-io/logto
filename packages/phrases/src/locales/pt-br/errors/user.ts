@@ -46,6 +46,12 @@ const user = {
   missing_mfa: 'Você precisa vincular MFA adicional antes de fazer login.',
   totp_already_in_use: 'TOTP já está em uso.',
   backup_code_already_in_use: 'O código de backup já está em uso.',
+  email_mfa_already_in_use: 'A MFA por código de verificação de e-mail já está em uso.',
+  phone_mfa_already_in_use: 'A MFA por código de verificação por SMS já está em uso.',
+  email_mfa_requires_primary_email:
+    'O usuário precisa de um e-mail principal para usar a MFA por código de verificação de e-mail.',
+  phone_mfa_requires_primary_phone:
+    'O usuário precisa de um número de telefone principal para usar a MFA por código de verificação por SMS.',
   password_algorithm_required: 'Algoritmo de senha é necessário.',
   password_and_digest: 'Você não pode definir tanto senha de texto simples quanto digest de senha.',
   personal_access_token_name_exists: 'O nome do token de acesso pessoal já existe.',

@@ -80,6 +80,10 @@ const user_details = {
       'Cet utilisateur doit configurer au moins un facteur MFA avant de pouvoir terminer la connexion. Il ne peut pas ignorer la configuration.',
     field_description: "Cet utilisateur a activé des facteurs d'authentification à 2 étapes.",
     name_column: 'Authentification à deux facteurs',
+    implicit_factor_tip:
+      "Cet utilisateur a une adresse e-mail ou un numéro de téléphone vérifié, qui compte donc pour la vérification en 2 étapes sans avoir été configuré. Pour ne compter que les utilisateurs qui l'ont configurée, modifiez « Vérification en 2 étapes par e-mail/SMS » sur la page d'authentification multifacteur.",
+    not_counted_factor_tip:
+      "Ce facteur ne compte pas pour la vérification en 2 étapes, car l'utilisateur n'a pas d'adresse e-mail ou de numéro de téléphone principal correspondant, ou le facteur est désactivé sur la page d'authentification multifacteur. Vous pouvez le supprimer.",
     field_description_empty:
       "Cet utilisateur n'a pas activé les facteurs d'authentification à deux étapes.",
     deletion_confirmation:

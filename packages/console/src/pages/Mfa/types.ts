@@ -1,6 +1,7 @@
 import {
   type OrganizationRequiredMfaPolicy,
   type MfaPolicy,
+  type MfaVerificationCodeEnrollment,
   type SignInExperience,
 } from '@logto/schemas';
 
@@ -20,6 +21,7 @@ export type MfaConfigForm = {
   backupCodeEnabled: boolean;
   emailVerificationCodeEnabled: boolean;
   phoneVerificationCodeEnabled: boolean;
+  verificationCodeEnrollment: MfaVerificationCodeEnrollment;
   isMandatory: boolean;
   setUpPrompt: MfaSetUpPrompt;
   organizationRequiredMfaPolicy?: OrganizationRequiredMfaPolicy;
