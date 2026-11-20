@@ -26,7 +26,7 @@ Fill out the `username` and `password` fields with your API credentials.
 
 `senderId` is optional and defaults to `KWT-SMS`. `KWT-SMS` is a shared Sender ID meant for testing only (delivery is throttled). Register a private Sender ID in your kwtSMS account and enter it here for production.
 
-`testMode` defaults to `true`. In test mode the gateway queues the message but never delivers it, so no SMS reaches a phone. The credits for a queued test message are held until you delete it from the queue in your kwtSMS account. Set `testMode` to `false` to send real messages.
+`testMode` defaults to `false`. Turn it on only while you set up: in test mode the gateway queues the message but never delivers it and still answers `OK`, so no verification code reaches the user. The credits for a queued test message are held until you delete it from the queue in your kwtSMS account.
 
 You can add multiple SMS connector templates for different cases. Here is an example of adding a single template:
 
@@ -48,7 +48,7 @@ That's it. Don't forget to [Enable connector in sign-in experience](https://docs
 | username  | string      |           |
 | password  | string      |           |
 | senderId  | string      | `KWT-SMS` |
-| testMode  | boolean     | `true`    |
+| testMode  | boolean     | `false`   |
 | templates | Templates[] |           |
 
 | Template Properties | Type        | Enum values                                             |

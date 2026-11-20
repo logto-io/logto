@@ -48,9 +48,9 @@ export const defaultMetadata: ConnectorMetadata = {
       label: 'Test mode',
       type: ConnectorConfigFormItemType.Switch,
       required: false,
-      defaultValue: true,
+      defaultValue: false,
       description:
-        'When on, messages are queued but never delivered (test=1). Turn it off to send real SMS.',
+        'When on, messages are queued but never delivered (test=1), so no verification code reaches the user. Use it only while you set up.',
     },
     {
       key: 'templates',

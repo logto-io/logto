@@ -57,7 +57,7 @@ describe('kwtSMS connector', () => {
     const { templates } = mockedConfig;
     const parsed = kwtSmsConfigGuard.parse({ username: 'u', password: 'p', templates });
     expect(parsed.senderId).toBe('KWT-SMS');
-    expect(parsed.testMode).toBe(true);
+    expect(parsed.testMode).toBe(false);
   });
 
   it('config guard requires the four basic templates', () => {
@@ -98,6 +98,23 @@ describe('kwtSMS connector', () => {
       await sendMessage(
         { to: '96550000000', type: TemplateType.SignIn, payload: { code: '1234' } },
         { ...mockedConfig, senderId: 'MYAPP', testMode: false }
+      );
+      expect(scope.isDone()).toBe(true);
+    });
+
+    it('should send real messages when testMode is not set', async () => {
+      const sendMessage = await createSendMessage();
+      const scope = nock(url.origin)
+        .post(url.pathname, (body: Record<string, string>) => {
+          expect(body).toMatchObject({ test: '0' });
+          return true;
+        })
+        .reply(200, okBody);
+
+      const { username, password, templates } = mockedConfig;
+      await sendMessage(
+        { to: '96550000000', type: TemplateType.SignIn, payload: { code: '1234' } },
+        { username, password, templates }
       );
       expect(scope.isDone()).toBe(true);
     });

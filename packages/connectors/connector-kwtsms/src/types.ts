@@ -40,7 +40,7 @@ export const kwtSmsConfigGuard = z.object({
   username: z.string(),
   password: z.string(),
   senderId: z.string().default('KWT-SMS'),
-  testMode: z.boolean().default(true),
+  testMode: z.boolean().default(false),
   templates: z.array(templateGuard).refine(
     (templates) =>
       requiredTemplateUsageTypes.every((requiredType) =>
