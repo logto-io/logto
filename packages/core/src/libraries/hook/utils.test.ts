@@ -1,6 +1,6 @@
 import { type HookEvent, InteractionHookEvent } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
-import ky from 'ky';
+import ky, { type KyResponse } from 'ky';
 
 import { ssrfProtectedFetch } from '#src/utils/outbound-request.js';
 
@@ -14,12 +14,14 @@ const post = jest
   .mockImplementation(jest.fn(async () => ({ statusCode: 200, body: '{"message":"ok"}' })));
 
 const mockSignature = 'mockSignature';
+const sign = jest.fn(() => mockSignature);
 mockEsm('#src/utils/sign.js', () => ({
-  sign: () => mockSignature,
+  sign,
 }));
 
 const {
   generateHookTestPayload,
+  parseResponse,
   sendWebhookRequest,
   truncateMembershipDelta,
   MEMBERSHIP_DELTA_CAP,
@@ -103,6 +105,137 @@ describe('sendWebhookRequest', () => {
         },
       })
     );
+  });
+
+  it('sends and signs a pre-serialized body string with default content-type', async () => {
+    const rawBody = '{"b":1,"a":2}';
+
+    await sendWebhookRequest({
+      hookConfig: {
+        url: 'https://logto.gg',
+        headers: { foo: 'bar' },
+      },
+      body: rawBody,
+      signingKey: 'mockSigningKey',
+    });
+
+    expect(sign).toHaveBeenLastCalledWith('mockSigningKey', rawBody);
+    expect(post.mock.lastCall?.[1]).toMatchObject({
+      body: rawBody,
+      headers: {
+        'user-agent': 'Logto (https://logto.io/)',
+        'content-type': 'application/json',
+        foo: 'bar',
+        'logto-signature-sha-256': mockSignature,
+      },
+    });
+    expect(post.mock.lastCall?.[1]).not.toHaveProperty('json');
+  });
+
+  it('preserves a custom Content-Type header when sending a raw body string', async () => {
+    const rawBody = '{"b":1,"a":2}';
+
+    await sendWebhookRequest({
+      hookConfig: {
+        url: 'https://logto.gg',
+        headers: { 'Content-Type': 'application/cloudevents+json' },
+      },
+      body: rawBody,
+      signingKey: 'mockSigningKey',
+    });
+
+    const requestOptions = post.mock.lastCall?.[1] as { headers?: Record<string, string> };
+    expect(requestOptions.headers).toEqual({
+      'user-agent': 'Logto (https://logto.io/)',
+      'Content-Type': 'application/cloudevents+json',
+      'logto-signature-sha-256': mockSignature,
+    });
+    expect(requestOptions.headers).not.toHaveProperty('content-type');
+  });
+
+  it('forwards signal to ky when supplied and omits it otherwise', async () => {
+    await sendWebhookRequest({
+      hookConfig: { url: 'https://logto.gg' },
+      body: '{"ok":true}',
+      signingKey: 'mockSigningKey',
+    });
+    expect(post.mock.lastCall?.[1]).not.toHaveProperty('signal');
+
+    const controller = new AbortController();
+    await sendWebhookRequest({
+      hookConfig: { url: 'https://logto.gg' },
+      body: '{"ok":true}',
+      signingKey: 'mockSigningKey',
+      signal: controller.signal,
+    });
+    expect(post.mock.lastCall?.[1]).toMatchObject({ signal: controller.signal });
+  });
+
+  it('throws immediately without calling ky when signal is already aborted', async () => {
+    const controller = new AbortController();
+    controller.abort(new Error('deadline exceeded'));
+    const callCountBefore = post.mock.calls.length;
+
+    await expect(
+      sendWebhookRequest({
+        hookConfig: { url: 'https://logto.gg' },
+        body: '{"ok":true}',
+        signingKey: 'mockSigningKey',
+        signal: controller.signal,
+      })
+    ).rejects.toThrow('deadline exceeded');
+    expect(post).toHaveBeenCalledTimes(callCountBefore);
+  });
+});
+
+describe('parseResponse', () => {
+  it('parses JSON and plain text normally when signal is active', async () => {
+    const controller = new AbortController();
+
+    await expect(
+      parseResponse(new Response('{"ok":true}', { status: 200 }) as KyResponse, controller.signal)
+    ).resolves.toEqual({ statusCode: 200, body: { ok: true } });
+
+    await expect(
+      parseResponse(new Response('plain text', { status: 502 }) as KyResponse, controller.signal)
+    ).resolves.toEqual({ statusCode: 502, body: 'plain text' });
+  });
+
+  it('cancels response body and rejects immediately when signal is already aborted', async () => {
+    const cancel = jest.fn(async () => {
+      await Promise.resolve();
+    });
+    const stream = new ReadableStream({
+      cancel,
+    });
+    const controller = new AbortController();
+    controller.abort(new Error('already aborted'));
+
+    await expect(
+      parseResponse(new Response(stream, { status: 200 }) as KyResponse, controller.signal)
+    ).rejects.toThrow('already aborted');
+    expect(cancel).toHaveBeenCalledTimes(1);
+  });
+
+  it('cancels response body and rejects when signal aborts while response.text() is pending', async () => {
+    const cancel = jest.fn(async () => {
+      await Promise.resolve();
+    });
+    const pendingResponse = {
+      status: 200,
+      body: { cancel },
+      text: async () =>
+        new Promise<string>((resolve) => {
+          void resolve;
+        }),
+    } as unknown as KyResponse;
+    const controller = new AbortController();
+
+    const parsedPromise = parseResponse(pendingResponse, controller.signal);
+    controller.abort(new Error('body read timed out'));
+
+    await expect(parsedPromise).rejects.toThrow('body read timed out');
+    expect(cancel).toHaveBeenCalledTimes(1);
   });
 });
 

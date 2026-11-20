@@ -4,6 +4,7 @@ import { ConsoleLog } from '@logto/shared';
 import { createMockUtils } from '@logto/shared/esm';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { resetDevFeaturesEnabled, setDevFeaturesEnabled } from '#src/test-utils/dev-features.js';
 import { mockId, mockIdGenerators } from '#src/test-utils/nanoid.js';
 
 import { generateHookTestPayload, parseResponse } from './utils.js';
@@ -83,8 +84,16 @@ const { triggerInteractionHooks, triggerTestHook, triggerDataHooks } = createHoo
 const { HookContextManager, InteractionHookContextManager } = await import('./context-manager.js');
 
 describe('triggerInteractionHooks()', () => {
+  beforeEach(() => {
+    setDevFeaturesEnabled(false);
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
+  });
+
+  afterAll(() => {
+    resetDevFeaturesEnabled();
   });
 
   it('should set correct payload when hook triggered', async () => {
@@ -303,8 +312,16 @@ describe('triggerTestHook', () => {
 });
 
 describe('triggerDataHooks()', () => {
+  beforeEach(() => {
+    setDevFeaturesEnabled(false);
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
+  });
+
+  afterAll(() => {
+    resetDevFeaturesEnabled();
   });
 
   it('should set correct payload when hook triggered by management API', async () => {

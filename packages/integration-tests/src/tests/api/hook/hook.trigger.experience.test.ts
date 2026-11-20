@@ -256,10 +256,6 @@ describe('experience api hook trigger', () => {
       await processSession(client, redirectTo);
       await logoutClient(client);
 
-      expect(await getHookLogs(interactionHook.id, InteractionHookEvent.PostSignIn)).toHaveLength(
-        1
-      );
-
       await assertHookLogResult(interactionHook, InteractionHookEvent.PostSignIn, {
         hookPayload: {
           event: InteractionHookEvent.PostSignIn,
@@ -268,6 +264,10 @@ describe('experience api hook trigger', () => {
           user: expect.objectContaining({ id: user.id, username }),
         },
       });
+
+      expect(await getHookLogs(interactionHook.id, InteractionHookEvent.PostSignIn)).toHaveLength(
+        1
+      );
     } finally {
       await updateSignInExperience({
         mfa: {

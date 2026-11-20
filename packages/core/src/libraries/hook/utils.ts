@@ -17,8 +17,58 @@ import ky, { HTTPError, type KyResponse } from 'ky';
 import { ssrfProtectedFetch } from '#src/utils/outbound-request.js';
 import { sign } from '#src/utils/sign.js';
 
-export const parseResponse = async (response: KyResponse) => {
-  const body = await response.text();
+const toAbortError = (signal: AbortSignal): Error => {
+  if (signal.reason instanceof Error) {
+    return signal.reason;
+  }
+
+  return new Error(
+    typeof signal.reason === 'string' && signal.reason.length > 0
+      ? signal.reason
+      : 'Webhook request aborted'
+  );
+};
+
+const cancelResponseBody = (response: KyResponse) => {
+  // Mocked responses in unit tests may omit `body`; cancel safely when a stream is locked or absent.
+  void trySafe(async () => {
+    await response.body?.cancel();
+  });
+};
+
+const readResponseText = async (response: KyResponse, signal?: AbortSignal): Promise<string> => {
+  if (!signal) {
+    return response.text();
+  }
+
+  if (signal.aborted) {
+    cancelResponseBody(response);
+    throw toAbortError(signal);
+  }
+
+  const listenerCleanup = new AbortController();
+
+  try {
+    return await Promise.race([
+      response.text(),
+      new Promise<never>((_resolve, reject) => {
+        signal.addEventListener(
+          'abort',
+          () => {
+            cancelResponseBody(response);
+            reject(toAbortError(signal));
+          },
+          { once: true, signal: listenerCleanup.signal }
+        );
+      }),
+    ]);
+  } finally {
+    listenerCleanup.abort();
+  }
+};
+
+export const parseResponse = async (response: KyResponse, signal?: AbortSignal) => {
+  const body = await readResponseText(response, signal);
   return {
     statusCode: response.status,
     // eslint-disable-next-line no-restricted-syntax
@@ -28,14 +78,15 @@ export const parseResponse = async (response: KyResponse) => {
 
 type SendWebhookRequest = {
   hookConfig: HookConfig;
-  payload: HookEventPayload;
   signingKey: string;
-};
+  signal?: AbortSignal;
+} & ({ payload: HookEventPayload; body?: never } | { body: string; payload?: never });
 
 const rangeInclusive = (start: number, end: number) =>
   Array.from({ length: end - start + 1 }, (_, index) => start + index);
 
 const webhookRetryLimit = 3;
+const webhookRequestTimeoutMs = 10_000;
 /** Ky only accepts `statusCodes` as a number list; HTTP 5xx class is 500–599. */
 const webhookRetryStatusCodes = rangeInclusive(500, 599);
 
@@ -84,22 +135,33 @@ const abortRetryOnNonHttpError = ({ error }: { error: Error }) => {
   }
 };
 
-export const sendWebhookRequest = async ({
-  hookConfig,
-  payload,
-  signingKey,
-}: SendWebhookRequest) => {
+export const sendWebhookRequest = async (request: SendWebhookRequest) => {
+  const { hookConfig, signingKey, signal } = request;
+  if (signal?.aborted) {
+    throw toAbortError(signal);
+  }
+
   const { url, headers, retries } = hookConfig;
+  const hasContentType = Object.keys(headers ?? {}).some(
+    (key) => key.toLowerCase() === 'content-type'
+  );
+  const rawOrObjectPayload = request.body ?? request.payload;
 
   return ky.post(url, {
     headers: {
       'user-agent': 'Logto (https://logto.io/)',
+      ...conditional(
+        request.body !== undefined && !hasContentType && { 'content-type': 'application/json' }
+      ),
       ...headers,
-      ...conditional(signingKey && { 'logto-signature-sha-256': sign(signingKey, payload) }),
+      ...conditional(
+        signingKey && { 'logto-signature-sha-256': sign(signingKey, rawOrObjectPayload) }
+      ),
     },
-    json: payload,
+    ...(request.body === undefined ? { json: request.payload } : { body: request.body }),
     // The hook URL is tenant-supplied; keep delivery off the deployment's private network.
     fetch: ssrfProtectedFetch,
+    ...conditional(signal && { signal }),
     // Public webhook delivery contract: retry POST requests on HTTP 5xx only.
     // 408 and 429 are intentionally excluded so receivers cannot control this short retry window.
     retry: {
@@ -108,7 +170,7 @@ export const sendWebhookRequest = async ({
       statusCodes: webhookRetryStatusCodes,
       // `afterStatusCodes: []` is ignored on ky 1.2.3; see dropRetryAfterHeader.
     },
-    timeout: 10_000,
+    timeout: webhookRequestTimeoutMs,
     hooks: {
       afterResponse: [dropRetryAfterHeader],
       beforeRetry: [abortRetryOnNonHttpError],
