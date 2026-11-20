@@ -327,9 +327,16 @@ export const getMfaIdentifier = async ({
   const identifierValue =
     identifierType === SignInIdentifier.Email ? user.primaryEmail : user.primaryPhone;
 
-  if (!identifierValue || !getAllUserEnabledMfaVerifications(mfaSettings, user).includes(factor)) {
+  if (!identifierValue) {
     throw new RequestError({
       code: 'session.mfa.mfa_factor_not_enabled',
+      status: 400,
+    });
+  }
+
+  if (!getAllUserEnabledMfaVerifications(mfaSettings, user).includes(factor)) {
+    throw new RequestError({
+      code: 'session.mfa.mfa_factor_not_enrolled',
       status: 400,
     });
   }

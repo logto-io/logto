@@ -6,7 +6,6 @@ import {
   MfaFactor,
   AccountCenterControlValue,
   userMfaVerificationResponseGuard,
-  type User,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
@@ -28,40 +27,15 @@ import { buildVerificationRecordByIdAndType } from '#src/libraries/verification.
 import koaGuard from '#src/middleware/koa-guard.js';
 import { assertFirstPartyClient } from '#src/utils/assert-first-party-client.js';
 import assertThat from '#src/utils/assert-that.js';
-import { transpileUserMfaVerifications } from '#src/utils/user.js';
+import {
+  createVerificationCodeMfaVerification,
+  transpileUserMfaVerifications,
+} from '#src/utils/user.js';
 
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
 import { accountApiPrefix } from './constants.js';
 import { assertIdentityVerified } from './utils/identity-verification.js';
-
-/**
- * Enroll the user's primary email or phone in verification code MFA. The code is sent to the
- * primary identifier, so the user must have one, and can enroll each factor once.
- */
-const appendVerificationCodeMfa = (
-  user: User,
-  type: MfaFactor.EmailVerificationCode | MfaFactor.PhoneVerificationCode
-): User['mfaVerifications'] => {
-  const isEmail = type === MfaFactor.EmailVerificationCode;
-
-  assertThat(
-    isEmail ? user.primaryEmail : user.primaryPhone,
-    new RequestError({
-      code: isEmail ? 'user.email_not_exist' : 'user.phone_not_exist',
-      status: 422,
-    })
-  );
-  assertThat(
-    user.mfaVerifications.every((verification) => verification.type !== type),
-    new RequestError({ code: 'session.mfa.bind_mfa_existed', status: 422 })
-  );
-
-  return [
-    ...user.mfaVerifications,
-    { id: generateStandardId(), createdAt: new Date().toISOString(), type },
-  ];
-};
 
 export default function mfaVerificationsRoutes<T extends UserRouter>(
   ...[router, { queries, libraries }]: RouterInitArgs<T>
@@ -285,7 +259,10 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
         }
         default: {
           const updatedUser = await updateUserById(userId, {
-            mfaVerifications: appendVerificationCodeMfa(user, ctx.guard.body.type),
+            mfaVerifications: [
+              ...user.mfaVerifications,
+              createVerificationCodeMfaVerification(user, ctx.guard.body.type),
+            ],
             logtoConfig: buildUpdatedUserLogtoConfig(user, { mfa: { enabled: true } }),
           });
 

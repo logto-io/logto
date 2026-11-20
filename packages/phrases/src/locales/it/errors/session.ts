@@ -45,6 +45,7 @@ const session = {
     invalid_backup_code: 'Codice di backup non valido.',
     mfa_policy_not_user_controlled: "La politica MFA non è controllata dall'utente.",
     mfa_factor_not_enabled: 'Il fattore MFA non è abilitato.',
+    mfa_factor_not_enrolled: "L'utente non ha configurato questo fattore MFA.",
     suggest_additional_mfa:
       'Per una protezione maggiore, considera di aggiungere un altro metodo MFA. Puoi saltare questo passaggio e continuare.',
   },

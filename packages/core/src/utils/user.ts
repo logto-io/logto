@@ -10,6 +10,7 @@ import {
   type UserSsoIdentity,
   type User,
 } from '@logto/schemas';
+import { generateStandardId } from '@logto/shared';
 import { PhoneNumberParser } from '@logto/shared/universal';
 import { pick } from '@silverhand/essentials';
 import { type z } from 'zod';
@@ -176,4 +177,41 @@ export const assertCanDeleteSocialIdentity = (user: User, target: string, ssoIde
 
   const { [target]: _deletedIdentity, ...identities } = user.identities;
   assertUserHasRemainingIdentifier(user, { identities }, ssoIdentityCount);
+};
+
+const verificationCodeMfaRequirements = Object.freeze({
+  [MfaFactor.EmailVerificationCode]: {
+    identifier: 'primaryEmail',
+    missingIdentifierCode: 'user.email_mfa_requires_primary_email',
+    duplicateCode: 'user.email_mfa_already_in_use',
+  },
+  [MfaFactor.PhoneVerificationCode]: {
+    identifier: 'primaryPhone',
+    missingIdentifierCode: 'user.phone_mfa_requires_primary_phone',
+    duplicateCode: 'user.phone_mfa_already_in_use',
+  },
+} as const);
+
+/**
+ * Create an email or phone verification code MFA record for the user. The code is sent to the
+ * primary identifier, so the user must have one (a record without it would be ignored), and can
+ * enroll each factor once.
+ */
+export const createVerificationCodeMfaVerification = (
+  { primaryEmail, primaryPhone, mfaVerifications }: User,
+  type: MfaFactor.EmailVerificationCode | MfaFactor.PhoneVerificationCode
+) => {
+  const { identifier, missingIdentifierCode, duplicateCode } =
+    verificationCodeMfaRequirements[type];
+
+  assertThat(
+    { primaryEmail, primaryPhone }[identifier],
+    new RequestError({ code: missingIdentifierCode, status: 422 })
+  );
+  assertThat(
+    mfaVerifications.every((verification) => verification.type !== type),
+    new RequestError({ code: duplicateCode, status: 422 })
+  );
+
+  return { id: generateStandardId(), createdAt: new Date().toISOString(), type };
 };
