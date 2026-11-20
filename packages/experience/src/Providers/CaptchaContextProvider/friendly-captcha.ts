@@ -32,17 +32,19 @@ let sdkLoader: Promise<FriendlyCaptchaSDK> | undefined;
  * Creating multiple SDK instances logs warnings and duplicates background agent iframes.
  */
 export const loadFriendlyCaptchaSdk = async () => {
-  // eslint-disable-next-line @silverhand/fp/no-mutation -- Memoizes the single SDK instance promise per page
-  sdkLoader ??= (async () => {
-    try {
-      const { FriendlyCaptchaSDK } = await import('@friendlycaptcha/sdk');
-      return new FriendlyCaptchaSDK();
-    } catch (error: unknown) {
-      // eslint-disable-next-line @silverhand/fp/no-mutation -- Clears failed load so later attempts can retry
-      sdkLoader = undefined;
-      throw error;
-    }
-  })();
+  if (sdkLoader === undefined) {
+    // eslint-disable-next-line @silverhand/fp/no-mutation -- Memoizes the single SDK instance promise per page
+    sdkLoader = (async () => {
+      try {
+        const { FriendlyCaptchaSDK } = await import('@friendlycaptcha/sdk');
+        return new FriendlyCaptchaSDK();
+      } catch (error: unknown) {
+        // eslint-disable-next-line @silverhand/fp/no-mutation -- Clears failed load so later attempts can retry
+        sdkLoader = undefined;
+        throw error;
+      }
+    })();
+  }
 
   return sdkLoader;
 };
@@ -95,16 +97,18 @@ export const mountFriendlyCaptchaWidget = (
 
   /** Return the widget, creating it again if an earlier attempt failed. */
   const getWidget = async () => {
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- Memoizes the widget until creation fails
-    widgetPromise ??= (async () => {
-      try {
-        return await createWidget();
-      } catch (error: unknown) {
-        // eslint-disable-next-line @silverhand/fp/no-mutation -- Clears failed creation so the next solve can retry
-        widgetPromise = undefined;
-        throw error;
-      }
-    })();
+    if (widgetPromise === undefined) {
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- Memoizes the widget until creation fails
+      widgetPromise = (async () => {
+        try {
+          return await createWidget();
+        } catch (error: unknown) {
+          // eslint-disable-next-line @silverhand/fp/no-mutation -- Clears failed creation so the next solve can retry
+          widgetPromise = undefined;
+          throw error;
+        }
+      })();
+    }
 
     return widgetPromise;
   };
