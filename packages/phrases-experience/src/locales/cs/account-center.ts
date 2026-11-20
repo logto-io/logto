@@ -101,6 +101,12 @@ const account_center = {
     email_removed: 'E-mailová adresa byla úspěšně odstraněna.',
     phone_removed: 'Telefonní číslo bylo úspěšně odstraněno.',
     username_removed: 'Uživatelské jméno bylo úspěšně odstraněno.',
+    remove_email_verification_code_confirmation_title: 'Odebrat ověřovací kód z e-mailu',
+    remove_email_verification_code_confirmation_description:
+      'Na tuto e-mailovou adresu už nebudete dostávat kódy pro dvoufázové ověření. E-mailová adresa zůstane ve vašem účtu.',
+    remove_phone_verification_code_confirmation_title: 'Odebrat ověřovací kód z telefonu',
+    remove_phone_verification_code_confirmation_description:
+      'Na toto telefonní číslo už nebudete dostávat kódy pro dvoufázové ověření. Telefonní číslo zůstane ve vašem účtu.',
     trusted_devices: {
       title: 'Důvěryhodná zařízení MFA',
       current_device: 'Aktuální zařízení',

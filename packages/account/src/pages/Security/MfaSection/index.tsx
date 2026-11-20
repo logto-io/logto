@@ -27,6 +27,7 @@ import { SecuritySkeleton } from '../components/SecuritySkeleton';
 import MfaSkeleton from './MfaSkeleton';
 import styles from './index.module.scss';
 import useMfaRows from './use-mfa-rows';
+import { useVerificationCodeMfa } from './use-verification-code-mfa';
 
 /** MFA policies where users cannot skip MFA verification */
 const mandatoryMfaPolicies = new Set<MfaPolicy>([
@@ -226,7 +227,8 @@ const MfaSection = () => {
     [navigate]
   );
 
-  const rows = useMfaRows(mfaVerifications, navigateTo);
+  const verificationCodeMfa = useVerificationCodeMfa(retryMfa);
+  const rows = useMfaRows(mfaVerifications, navigateTo, verificationCodeMfa);
   const shouldShowMfaCard = showToggle || rows.length > 0;
 
   const updateSkipMfaOnSignIn = useCallback(
@@ -337,6 +339,7 @@ const MfaSection = () => {
       >
         {t('account_center.security.turn_off_2_step_verification_description')}
       </ConfirmModal>
+      {verificationCodeMfa.removeConfirmModal}
     </>
   );
 };

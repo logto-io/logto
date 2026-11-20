@@ -185,6 +185,31 @@ describe('swagger general utils', () => {
     expect(JSON.stringify(document)).not.toContain(devFeatureSchemaExtension);
   });
 
+  it.each([
+    [false, ['Stable']],
+    [true, ['Stable', 'Beta']],
+  ])(
+    'should prune dev feature oneOf variants when dev features enabled is %s',
+    (enabled, expectedTypes) => {
+      setDevFeaturesEnabled(enabled);
+
+      const schema = {
+        oneOf: [
+          { type: 'object', properties: { type: { enum: ['Stable'] } } },
+          {
+            type: 'object',
+            [devFeatureSchemaExtension]: true,
+            properties: { type: { enum: ['Beta'] } },
+          },
+        ],
+      };
+      removeDevFeatureSchemaProperties(schema);
+
+      expect(schema.oneOf.map(({ properties }) => properties.type.enum[0])).toEqual(expectedTypes);
+      expect(JSON.stringify(schema)).not.toContain(devFeatureSchemaExtension);
+    }
+  );
+
   it('should remove dev feature operations when dev features are disabled', () => {
     Reflect.set(EnvSet.values, 'isCloud', true);
     setDevFeaturesEnabled(false);
