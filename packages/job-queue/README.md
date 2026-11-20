@@ -9,7 +9,7 @@ Shared, database-agnostic job queue engine and handler contract used by Logto se
 - **Settlement outcomes (`SettleOutcome`)**: `queries.settle` returns `'settled' | 'rearmed' | 'stale'`. `'settled'` commits the requested transition (allowing `onExhausted` when exhausted); `'rearmed'` indicates newer work arrived mid-run (e.g., a `revision` advance on `cross_pod_jobs`) so the row was re-queued as pending instead of terminating, suppresses `onExhausted`, and immediately wakes the worker; `'stale'` indicates another worker reclaimed the lease.
 - **Tenantless & multi-tenant queues**: `ClaimedJobRow.tenantId` and `limits` (`perGroupConcurrency`, `perTenantConcurrency`, `maxWaitingRowsPerGroup`) are optional so tenantless adapters such as Cloud's `cross_pod_jobs` share the same engine alongside tenant-scoped queues.
 - **Fencing**: Settlement carries the claimed row and `workerId` so adapters fence updates and deletes on `(id, claimed_by, attempts)` (plus `tenant_id` where applicable, coupling auxiliary writes such as audit log upserts into the same CTE).
-- **Consumer & shutdown**: Single-flight wake coalescing (`wake()`), 5-second default poll interval, per-instance / per-tenant / per-group concurrency tracking, per-process `workerId` via `generateStandardId()` (never `process.pid`), `stop()` drain + batch release, and `installGracefulShutdown`.
+- **Consumer & shutdown**: Single-flight wake coalescing (`wake()`), an independent 5-second default poll, per-instance / per-tenant / per-group concurrency tracking, and per-process `workerId` via `generateStandardId()` (never `process.pid`). Call `stop()` to drain and release claims. Set the drain deadline in `installGracefulShutdown` and call `releaseClaimed()` from `onDrainTimeout` before closing database pools.
 
 ## Handler Contract Rule: No Secrets or Mutable Config in Payloads
 
@@ -17,4 +17,4 @@ Handlers **must** read secrets and mutable configuration (signing keys, endpoint
 
 - Keeping secrets out of `jobs.payload` avoids persisting sensitive credentials in queue rows.
 - Reading configuration at execution time ensures disabling, deleting, or rotating a target takes effect immediately for pending retries.
-- `SafeJobPayload<Payload>` enforces this rule at compile time for common secret/configuration property names (`ForbiddenJobPayloadKey`).
+- `SafeJobPayload<Payload>` catches common top-level secret/configuration keys on typed object payloads. It cannot check nested fields, strings, or what is stored; the enqueue path must enforce the rule for the actual persisted payload.

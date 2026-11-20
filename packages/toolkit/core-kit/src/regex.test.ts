@@ -87,8 +87,8 @@ describe('Regular expressions should work as expected', () => {
     });
   });
 
-  it('should limit custom tenant IDs to 19 characters', () => {
-    expect(isValidCustomTenantId('a'.repeat(19))).toBe(true);
-    expect(isValidCustomTenantId('a'.repeat(20))).toBe(false);
+  it('should limit custom tenant IDs to 36 characters', () => {
+    expect(isValidCustomTenantId('a'.repeat(36))).toBe(true);
+    expect(isValidCustomTenantId('a'.repeat(37))).toBe(false);
   });
 });

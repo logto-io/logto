@@ -17,6 +17,7 @@ export type ExecutionOutcome<SettlementMeta> = {
   resolution: SettleResolution;
   meta?: SettlementMeta;
   parseFailed?: boolean;
+  attemptBudgetExceeded?: boolean;
   retryAfterMs?: number;
   onExhausted?: (error?: unknown) => void | Promise<void>;
 };
@@ -119,6 +120,10 @@ export const executeRegisteredHandler = async <Payload, SettlementMeta>(
         : handler.onExhausted?.(claimedJob, error));
     });
 
+  if (handler.retry.maxAttempts !== undefined && row.attempts > handler.retry.maxAttempts) {
+    return { resolution: { status: 'exhausted' }, attemptBudgetExceeded: true, onExhausted };
+  }
+
   try {
     const result = await handler.handle(claimedJob);
 
@@ -166,7 +171,11 @@ const updateCircuitBreakerAfterSettle = async <SettlementMeta>({
   log: Pick<ConsoleLog, 'error'>;
   now: number;
 }): Promise<boolean> => {
-  if (outcome.parseFailed === true || !handler.circuitBreaker) {
+  if (
+    outcome.parseFailed === true ||
+    outcome.attemptBudgetExceeded === true ||
+    !handler.circuitBreaker
+  ) {
     return false;
   }
 

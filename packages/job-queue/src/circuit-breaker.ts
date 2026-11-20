@@ -1,4 +1,4 @@
-import { type ClaimedJobRow, type SaturatedGroup } from './types.js';
+import { type ClaimedJobRow, type JobGroup } from './types.js';
 
 export type GroupCircuitConstraint = 'closed' | 'blocked' | 'probe';
 
@@ -30,8 +30,11 @@ export type RecordCircuitFailureResult = {
 
 const minEntryTtlMs = 60_000;
 
-const toGroupMapKey = ({ tenantId, type, groupKey }: SaturatedGroup): string =>
+const toGroupMapKey = ({ tenantId, type, groupKey }: JobGroup): string =>
   JSON.stringify([tenantId ?? null, type, groupKey]);
+
+const isExpired = (entry: CircuitEntry, now: number): boolean =>
+  entry.probeJobId === undefined && now >= entry.expiresAt;
 
 /**
  * Tracks per-`(tenantId, type, groupKey)` circuit breaker state in memory.
@@ -43,9 +46,14 @@ const toGroupMapKey = ({ tenantId, type, groupKey }: SaturatedGroup): string =>
 export class GroupCircuitBreakerTracker {
   private readonly entries = new Map<string, CircuitEntry>();
 
-  getGroupConstraint(group: SaturatedGroup, now: number): GroupCircuitConstraint {
-    this.#pruneExpired(now);
-    const entry = this.entries.get(toGroupMapKey(group));
+  getGroupConstraint(group: JobGroup, now: number): GroupCircuitConstraint {
+    const key = toGroupMapKey(group);
+    const entry = this.entries.get(key);
+
+    if (entry && isExpired(entry, now)) {
+      this.entries.delete(key);
+      return 'closed';
+    }
 
     if (!entry?.isOpen) {
       return 'closed';
@@ -58,7 +66,7 @@ export class GroupCircuitBreakerTracker {
     return 'probe';
   }
 
-  getTrackedGroups(now: number): SaturatedGroup[] {
+  getTrackedGroups(now: number): JobGroup[] {
     this.#pruneExpired(now);
 
     return Array.from(this.entries.values())
@@ -111,7 +119,7 @@ export class GroupCircuitBreakerTracker {
    * Reset circuit state after a successful job in `group`.
    * Returns `true` when an open circuit just closed.
    */
-  recordSuccess(group: SaturatedGroup): boolean {
+  recordSuccess(group: JobGroup): boolean {
     const key = toGroupMapKey(group);
     const entry = this.entries.get(key);
     this.entries.delete(key);
@@ -253,7 +261,7 @@ export class GroupCircuitBreakerTracker {
 
   #pruneExpired(now: number): void {
     for (const [key, entry] of this.entries) {
-      if (entry.probeJobId === undefined && now >= entry.expiresAt) {
+      if (isExpired(entry, now)) {
         this.entries.delete(key);
       }
     }

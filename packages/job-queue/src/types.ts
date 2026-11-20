@@ -1,7 +1,7 @@
 import { type Nullable } from '@silverhand/essentials';
 
 /**
- * Property names that must never appear in a persisted job payload.
+ * Common secret and configuration field names checked on typed payloads.
  *
  * Handlers must read secrets and mutable delivery configuration (signing keys, endpoint URLs,
  * custom auth headers, credentials, enabled status) from the database at execution time rather
@@ -27,8 +27,8 @@ type ExtractForbiddenPayloadKey<Member> =
   Member extends Record<string, unknown> ? Extract<keyof Member, ForbiddenJobPayloadKey> : never;
 
 /**
- * Compile-time guard enforcing the handler contract rule: secrets and mutable configuration are
- * read at execution time and never stored in `jobs.payload`.
+ * Rejects the listed top-level keys on typed object payloads. It does not inspect nested fields,
+ * string payloads, or what the enqueue path persists.
  */
 export type SafeJobPayload<Payload> = [ExtractForbiddenPayloadKey<Payload>] extends [never]
   ? Payload
@@ -52,6 +52,7 @@ export type ClaimedJobRow = {
   groupKey: string;
   dedupeKey: Nullable<string>;
   payload: string;
+  /** The 1-based attempt number for this claim, including the current claim. */
   attempts: number;
   nextAttemptAt: number;
   claimedBy: Nullable<string>;
@@ -72,7 +73,7 @@ export type ClaimedJob<Payload> = Omit<ClaimedJobRow, 'payload'> & {
  *
  * - `backoffMs(attempt)`: delay in milliseconds before the next attempt (`attempt` is 1-based).
  * - `maxAgeMs`: maximum age from `createdAt` before retries stop.
- * - `maxAttempts`: maximum total claim attempts before retries stop.
+ * - `maxAttempts`: maximum claim attempt number allowed to run the handler.
  */
 export type JobRetryPolicy = {
   backoffMs: (attempt: number) => number;
@@ -108,7 +109,8 @@ export type JobHandlerResult<SettlementMeta = never> =
  *
  * **Contract rule:** handlers must read secrets and mutable configuration (signing keys, endpoint
  * URLs, custom auth headers, enabled status) at execution time and never store them in
- * `jobs.payload`.
+ * `jobs.payload`. The type check flags common top-level keys; the enqueue path must ensure the
+ * actual persisted payload obeys this rule.
  */
 export type JobHandler<Payload, SettlementMeta = never> = {
   type: string;
@@ -135,10 +137,9 @@ export type RegisteredJobTypeConfig = {
 };
 
 /**
- * Identifies a `(tenantId, type, groupKey)` partition (or `(type, groupKey)` when tenantless)
- * that is saturated or circuit-blocked.
+ * Identifies a `(tenantId, type, groupKey)` partition (or `(type, groupKey)` when tenantless).
  */
-export type SaturatedGroup = {
+export type JobGroup = {
   tenantId?: string;
   type: string;
   groupKey: string;
@@ -152,20 +153,19 @@ export type TenantRemainingSlots = {
 };
 
 /** Remaining in-flight capacity for a `(tenantId, type, groupKey)` partition. */
-export type GroupRemainingSlots = {
-  tenantId?: string;
-  type: string;
-  groupKey: string;
+export type GroupRemainingSlots = JobGroup & {
   remainingSlots: number;
 };
 
-/** Parameters supplied to {@link JobQueueQueries.claimDue} for fair batch claiming. */
+/**
+ * Parameters supplied to {@link JobQueueQueries.claimDue} for fair batch claiming. Skip entries
+ * with zero remaining slots before limiting the candidate window. Partitions absent from these
+ * arrays use their handler's configured limits, or have no partition cap if unconfigured.
+ */
 export type ClaimDueInput = {
   workerId: string;
   limit: number;
   types: readonly RegisteredJobTypeConfig[];
-  saturatedTenants: readonly string[];
-  saturatedGroups: readonly SaturatedGroup[];
   tenantRemainingSlots: readonly TenantRemainingSlots[];
   groupRemainingSlots: readonly GroupRemainingSlots[];
 };
@@ -201,6 +201,11 @@ export type ParkDueGroupInput = {
   type: string;
   groupKey: string;
   nextAttemptAt: number;
+  /**
+   * Earliest creation timestamp still in the retry window, or `0` if there is no cutoff. Mark
+   * older waiting rows as permanently failed instead of parking them. Do not touch live leases.
+   * The adapter is responsible for any logs or metrics because bulk expiry skips `onExhausted`.
+   */
   minCreatedAt: number;
 };
 
@@ -215,5 +220,6 @@ export type JobQueueQueries<SettlementMeta = unknown> = {
   claimDue: (input: ClaimDueInput) => Promise<readonly ClaimedJobRow[]>;
   settle: (input: SettleJobInput<SettlementMeta>) => Promise<SettleOutcome>;
   parkDueGroup?: (input: ParkDueGroupInput) => Promise<number | void>;
+  /** Return the number of rows actually released when the adapter can report it. */
   releaseClaimed?: (input: ReleaseClaimedInput) => Promise<number | void>;
 };

@@ -132,8 +132,8 @@ describe('GroupCircuitBreakerTracker', () => {
     expect(tracker.getGroupConstraint(group, 11_000)).toBe('probe');
 
     // Idle circuit expires after maxAgeMs (1000 + 120_000 = 121_000).
+    expect(tracker.tryAcquireProbe(makeJob('after_expiry'), 121_000)).toBe('normal');
     expect(tracker.getOpenCount(121_000)).toBe(0);
-    expect(tracker.getGroupConstraint(group, 121_000)).toBe('closed');
   });
 
   it('supports tenantless groups without maxAgeMs and distinguishes undefined from empty tenantId', () => {

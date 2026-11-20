@@ -21,10 +21,11 @@ export const numberAndAlphabetRegEx = /^[\dA-Za-z]+$/;
  */
 
 /**
- * Maximum length for custom tenant ID. Cloud derives admin tenant IDs such as `m-<tenantId>` and
- * `t-<tenantId>` from it, which must fit the 21-character ID columns.
+ * Maximum length for custom tenant ID. Set to 36 so a canonical UUID fits. Cloud derives admin
+ * tenant IDs such as `m-<tenantId>` and `t-<tenantId>` from it, which then reach 38 characters —
+ * within the 64-character ID columns.
  */
-export const customTenantIdMaxLength = 19;
+export const customTenantIdMaxLength = 36;
 
 /** Pattern for custom tenant ID: lowercase letters, numbers, and hyphens only */
 export const customTenantIdRegEx = /^[\da-z-]+$/;

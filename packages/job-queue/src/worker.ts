@@ -9,7 +9,6 @@ import {
   type RegisteredJobHandler,
   runAndSettleJob,
 } from './execute-job.js';
-import { withTimeout } from './promise.js';
 import { type ClaimedJobRow, type JobHandler, type JobQueueQueries } from './types.js';
 
 export const defaultPollIntervalMs = 5000;
@@ -23,8 +22,6 @@ export type JobQueueWorkerOptions = {
   /** Periodic poll interval in milliseconds for retries and work enqueued by other instances (default: 5000). */
   pollIntervalMs?: number;
   log?: Pick<ConsoleLog, 'info' | 'warn' | 'error'>;
-  /** Clock provider for deterministic testing (default: `Date.now`). */
-  now?: () => number;
 };
 
 /**
@@ -37,7 +34,6 @@ export class JobQueueWorker<SettlementMeta = unknown> {
   private readonly maxConcurrency: number;
   private readonly pollIntervalMs: number;
   private readonly log: Pick<ConsoleLog, 'info' | 'warn' | 'error'>;
-  private readonly now: () => number;
   private readonly handlers = new Map<string, RegisteredJobHandler<SettlementMeta>>();
   private readonly concurrency = new ConcurrencyTracker();
   private readonly circuitBreaker = new GroupCircuitBreakerTracker();
@@ -47,6 +43,7 @@ export class JobQueueWorker<SettlementMeta = unknown> {
   private dirty = false;
   private timer?: NodeJS.Timeout;
   private claimInFlight?: Promise<void>;
+  private releaseInFlight?: { promise: Promise<number>; includesActive: boolean };
 
   constructor(
     private readonly queries: JobQueueQueries<SettlementMeta>,
@@ -57,7 +54,6 @@ export class JobQueueWorker<SettlementMeta = unknown> {
     this.maxConcurrency = options?.maxConcurrency ?? defaultMaxConcurrency;
     this.pollIntervalMs = options?.pollIntervalMs ?? defaultPollIntervalMs;
     this.log = options?.log ?? new ConsoleLog(chalk.magenta('job-queue'));
-    this.now = options?.now ?? Date.now;
   }
 
   get inFlightCount(): number {
@@ -65,7 +61,7 @@ export class JobQueueWorker<SettlementMeta = unknown> {
   }
 
   get openCircuitCount(): number {
-    return this.circuitBreaker.getOpenCount(this.now());
+    return this.circuitBreaker.getOpenCount(Date.now());
   }
 
   /** Register a typed {@link JobHandler}. Calling again for the same `type` replaces it. */
@@ -88,6 +84,9 @@ export class JobQueueWorker<SettlementMeta = unknown> {
 
     this.running = true;
     this.stopCompleted = false;
+    this.timer = setInterval(() => {
+      this.wake();
+    }, this.pollIntervalMs);
     this.wake();
   }
 
@@ -105,92 +104,102 @@ export class JobQueueWorker<SettlementMeta = unknown> {
       return;
     }
 
-    if (this.timer) {
-      clearTimeout(this.timer);
-      this.timer = undefined;
-    }
-
     this.claimInFlight = this.#runClaimCycle();
   }
 
   /**
-   * Stop claiming new jobs, optionally drain in-flight work up to `drainTimeoutMs`, and release
-   * any remaining claimed jobs in one batch.
+   * Stop claiming, drain in-flight work, then batch-release any remaining claims. The shutdown
+   * coordinator owns the drain deadline and can call {@link releaseClaimed} if it expires.
    */
-  async stop(options?: {
-    drainTimeoutMs?: number;
-  }): Promise<{ drained: boolean; releasedCount: number }> {
+  async stop(): Promise<number> {
     this.running = false;
     this.dirty = false;
 
-    if (this.timer) {
-      clearTimeout(this.timer);
-      this.timer = undefined;
-    }
+    clearInterval(this.timer);
+    this.timer = undefined;
 
-    const drain = async (): Promise<boolean> => {
-      await this.#waitForInFlight();
-      return true;
-    };
-
-    const drained =
-      options?.drainTimeoutMs === undefined
-        ? await drain()
-        : ((await trySafe(
-            withTimeout(drain(), options.drainTimeoutMs, 'Job queue worker drain timed out.')
-          )) ?? false);
-
-    this.stopCompleted = true;
-    const releasedCount = await this.releaseClaimed();
-
-    return { drained, releasedCount };
+    await this.#waitForInFlight();
+    return this.releaseClaimed();
   }
 
   /**
    * Batch-release all currently tracked unreleased claimed jobs for this worker. Once stopped,
    * rows from a claim still in flight are released as soon as it resolves, such as when the host
-   * gave up on a drain that never finished.
+   * gave up on a drain that never finished. Returns the adapter's affected row count, or the
+   * batch size on success if the adapter doesn't report a count. Failed batches return zero.
    */
   async releaseClaimed(): Promise<number> {
     if (!this.running) {
       this.stopCompleted = true;
     }
 
-    return this.#releaseJobs(this.concurrency.takeJobsToRelease());
+    return this.#releaseJobs(true);
   }
 
-  async #releaseStagedRows(): Promise<number> {
-    return this.#releaseJobs(this.concurrency.takeStagedJobsToRelease());
+  async #releaseJobs(includesActive: boolean): Promise<number> {
+    while (this.releaseInFlight) {
+      if (includesActive && this.releaseInFlight.includesActive) {
+        return this.releaseInFlight.promise;
+      }
+
+      // eslint-disable-next-line no-await-in-loop -- serialize batches before taking the next snapshot
+      await this.releaseInFlight.promise;
+    }
+
+    const promise = this.#releaseBatch(includesActive);
+    this.releaseInFlight = { promise, includesActive };
+
+    try {
+      return await promise;
+    } finally {
+      this.releaseInFlight = undefined;
+    }
   }
 
-  async #releaseJobs(jobs: readonly ClaimedJobRow[]): Promise<number> {
-    for (const job of jobs) {
-      this.circuitBreaker.releaseProbe(job);
-    }
-
-    if (jobs.length === 0 || !this.queries.releaseClaimed) {
-      return jobs.length;
-    }
-
+  async #releaseBatch(includesActive: boolean): Promise<number> {
     const { releaseClaimed } = this.queries;
 
-    await trySafe(
-      async () => releaseClaimed({ workerId: this.workerId, jobs }),
+    if (!releaseClaimed) {
+      return 0;
+    }
+
+    const staged = this.concurrency.takeStagedJobsToRelease();
+    const active = includesActive ? this.concurrency.getActiveJobsToRelease() : [];
+    const jobs = [...staged, ...active];
+
+    if (jobs.length === 0) {
+      return 0;
+    }
+
+    const releasedCount = await trySafe(
+      async () => {
+        const count = await releaseClaimed({ workerId: this.workerId, jobs });
+        return typeof count === 'number' ? count : jobs.length;
+      },
       (error) => {
         this.log.error('Failed to batch-release claimed jobs.');
         this.log.error(error);
       }
     );
 
-    return jobs.length;
+    if (releasedCount === undefined) {
+      for (const job of staged) {
+        this.concurrency.stageForRelease(job);
+      }
+
+      return 0;
+    }
+
+    this.concurrency.markReleased(active);
+    for (const job of jobs) {
+      this.circuitBreaker.releaseProbe(job);
+    }
+
+    return releasedCount;
   }
 
   #isRunning(): boolean {
     return this.running;
-  }
-
-  #isDirty(): boolean {
-    return this.dirty;
   }
 
   async #runClaimCycle(): Promise<void> {
@@ -199,12 +208,9 @@ export class JobQueueWorker<SettlementMeta = unknown> {
     } finally {
       this.claimInFlight = undefined;
 
-      // A wake that landed after the last dirty check only set `dirty`; claim for it now rather
-      // than at the next poll. A full worker sets `dirty` itself and waits for a job to finish.
+      // A full worker keeps the pending wake until a job frees a slot.
       if (this.running && this.dirty && this.concurrency.inFlightCount < this.maxConcurrency) {
         this.wake();
-      } else {
-        this.#schedulePoll();
       }
     }
   }
@@ -221,7 +227,7 @@ export class JobQueueWorker<SettlementMeta = unknown> {
       maxConcurrency: this.maxConcurrency,
       handlers: this.handlers,
       circuitBreaker: this.circuitBreaker,
-      now: this.now(),
+      now: Date.now(),
     });
 
     if (!claimInput) {
@@ -249,10 +255,6 @@ export class JobQueueWorker<SettlementMeta = unknown> {
     }
 
     this.#dispatchClaimedRows(claimedRows);
-
-    if (this.#isDirty() && this.concurrency.inFlightCount < this.maxConcurrency) {
-      await this.#claimNextBatch();
-    }
   }
 
   #stageLateClaimedRows(rows: readonly ClaimedJobRow[]): void {
@@ -261,7 +263,7 @@ export class JobQueueWorker<SettlementMeta = unknown> {
     }
 
     if (this.stopCompleted && rows.length > 0) {
-      void this.#releaseStagedRows();
+      void this.#releaseJobs(false);
     }
   }
 
@@ -276,7 +278,7 @@ export class JobQueueWorker<SettlementMeta = unknown> {
 
       if (
         handler.circuitBreaker &&
-        this.circuitBreaker.tryAcquireProbe(row, this.now()) === 'reject'
+        this.circuitBreaker.tryAcquireProbe(row, Date.now()) === 'reject'
       ) {
         this.concurrency.stageForRelease(row);
         return true;
@@ -288,7 +290,7 @@ export class JobQueueWorker<SettlementMeta = unknown> {
     });
 
     if (excessRows.length > 0) {
-      void this.#releaseStagedRows();
+      void this.#releaseJobs(false);
     }
   }
 
@@ -303,30 +305,19 @@ export class JobQueueWorker<SettlementMeta = unknown> {
       queries: this.queries,
       circuitBreaker: this.circuitBreaker,
       log: this.log,
-      getNow: this.now,
+      getNow: Date.now,
     });
 
     this.circuitBreaker.releaseProbe(row);
-    const { unblockedCap } = this.concurrency.release(row, {
+    const unblockedCap = this.concurrency.release(row, {
       maxConcurrency: this.maxConcurrency,
       perTenantConcurrency: handler.limits?.perTenantConcurrency,
       perGroupConcurrency: handler.limits?.perGroupConcurrency,
     });
 
-    if (this.#isRunning() && (unblockedCap || shouldWake || this.dirty)) {
+    if (this.#isRunning() && (unblockedCap || shouldWake || this.dirty || this.claimInFlight)) {
       this.wake();
     }
-  }
-
-  #schedulePoll(): void {
-    if (!this.running || this.timer) {
-      return;
-    }
-
-    this.timer = setTimeout(() => {
-      this.timer = undefined;
-      this.wake();
-    }, this.pollIntervalMs);
   }
 
   async #waitForInFlight(): Promise<void> {

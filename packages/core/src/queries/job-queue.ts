@@ -60,8 +60,6 @@ export const createJobQueueQueries = (
     workerId,
     limit,
     types,
-    saturatedTenants,
-    saturatedGroups,
     tenantRemainingSlots,
     groupRemainingSlots,
   }: ClaimDueInput): Promise<readonly ClaimedJobRow[]> => {
@@ -134,7 +132,6 @@ export const createJobQueueQueries = (
             types.map(({ type }) => type),
             'varchar'
           )})
-          and j.tenant_id <> all(${sql.array(saturatedTenants, 'varchar')})
           and jsonb_build_array(j.tenant_id, j.type) <> all(${sql.array(
             tenantRemainingSlots
               .filter(({ remainingSlots }) => remainingSlots <= 0)
@@ -142,9 +139,11 @@ export const createJobQueueQueries = (
             'jsonb'
           )})
           and jsonb_build_array(j.tenant_id, j.type, j.group_key) <> all(${sql.array(
-            saturatedGroups.map(({ tenantId, type, groupKey }) =>
-              JSON.stringify([tenantId ?? null, type, groupKey])
-            ),
+            groupRemainingSlots
+              .filter(({ remainingSlots }) => remainingSlots <= 0)
+              .map(({ tenantId, type, groupKey }) =>
+                JSON.stringify([tenantId ?? null, type, groupKey])
+              ),
             'jsonb'
           )})
         order by j.next_attempt_at asc

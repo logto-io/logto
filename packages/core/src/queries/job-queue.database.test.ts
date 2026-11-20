@@ -35,8 +35,6 @@ type SeedJob = {
 const claimInput = (input: Partial<ClaimDueInput> & Pick<ClaimDueInput, 'workerId'>) => ({
   limit: 100,
   types: [{ type: jobType, leaseMs: 60_000 }],
-  saturatedTenants: [],
-  saturatedGroups: [],
   tenantRemainingSlots: [],
   groupRemainingSlots: [],
   ...input,
@@ -245,7 +243,10 @@ describeWithDatabase('job queue queries on Postgres', () => {
       ]);
 
       const rows = await queries().claimDue(
-        claimInput({ workerId: 'worker-1', saturatedTenants: [defaultTenantId] })
+        claimInput({
+          workerId: 'worker-1',
+          tenantRemainingSlots: [{ tenantId: defaultTenantId, type: jobType, remainingSlots: 0 }],
+        })
       );
 
       expect(ids(rows)).toEqual(['admin-1']);
@@ -264,7 +265,6 @@ describeWithDatabase('job queue queries on Postgres', () => {
           workerId: 'worker-1',
           limit: 1,
           tenantRemainingSlots: [{ tenantId: adminTenantId, type: jobType, remainingSlots: 0 }],
-          saturatedGroups: [{ tenantId: defaultTenantId, type: jobType, groupKey: 'busy' }],
           groupRemainingSlots: [
             { tenantId: defaultTenantId, type: jobType, groupKey: 'busy', remainingSlots: 0 },
           ],

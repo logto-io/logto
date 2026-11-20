@@ -3,17 +3,16 @@ import { type JobRetryPolicy } from './types.js';
 export type ExponentialBackoffOptions = {
   baseMs: number;
   maxMs: number;
-  factor?: number;
 };
 
 /**
- * Create an exponential backoff function (`baseMs * factor^(attempt - 1)`) capped at `maxMs`.
+ * Create an exponential backoff function (`baseMs * 2^(attempt - 1)`) capped at `maxMs`.
  * `attempt` is 1-based.
  */
 export const createExponentialBackoff =
-  ({ baseMs, maxMs, factor = 2 }: ExponentialBackoffOptions) =>
+  ({ baseMs, maxMs }: ExponentialBackoffOptions) =>
   (attempt: number): number =>
-    Math.min(baseMs * factor ** Math.max(0, attempt - 1), maxMs);
+    Math.min(baseMs * 2 ** Math.max(0, attempt - 1), maxMs);
 
 export type ResolveRetryDecisionInput = {
   attempt: number;

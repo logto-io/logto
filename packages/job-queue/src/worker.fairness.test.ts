@@ -120,8 +120,6 @@ describe('JobQueueWorker concurrency & circuit breaker', () => {
           perTenantConcurrency: 3,
         },
       ],
-      saturatedTenants: [],
-      saturatedGroups: [{ tenantId: 't1', type: 'webhook', groupKey: 'hook_1' }],
       tenantRemainingSlots: [{ tenantId: 't1', type: 'webhook', remainingSlots: 1 }],
       groupRemainingSlots: [
         { tenantId: 't1', type: 'webhook', groupKey: 'hook_1', remainingSlots: 0 },
@@ -129,13 +127,12 @@ describe('JobQueueWorker concurrency & circuit breaker', () => {
     });
     expect(worker.inFlightCount).toBe(3);
 
-    // Tenant t1 is now at 3/3 (saturatedTenants includes t1).
+    // Tenant t1 is now at 3/3 for the webhook type.
     worker.wake();
     await vi.advanceTimersByTimeAsync(0);
     expect(claimDue.mock.calls[2]?.[0]).toEqual(
       expect.objectContaining({
         limit: 1,
-        saturatedTenants: ['t1'],
         tenantRemainingSlots: [{ tenantId: 't1', type: 'webhook', remainingSlots: 0 }],
       })
     );
@@ -147,8 +144,6 @@ describe('JobQueueWorker concurrency & circuit breaker', () => {
     expect(claimDue.mock.calls[3]?.[0]).toEqual(
       expect.objectContaining({
         limit: 2,
-        saturatedTenants: [],
-        saturatedGroups: [],
         tenantRemainingSlots: [{ tenantId: 't1', type: 'webhook', remainingSlots: 1 }],
         groupRemainingSlots: [
           { tenantId: 't1', type: 'webhook', groupKey: 'hook_1', remainingSlots: 1 },
@@ -166,7 +161,7 @@ describe('JobQueueWorker concurrency & circuit breaker', () => {
     await worker.stop();
   });
 
-  it('scopes saturatedTenants across multiple registered types using per-type tenant caps', async () => {
+  it('scopes tenant capacity to the job type', async () => {
     // eslint-disable-next-line no-use-extend-native/no-use-extend-native -- Promise.withResolvers is available in the required Node.js runtime
     const holdA = Promise.withResolvers<void>();
     const claimDue = vi
@@ -203,9 +198,8 @@ describe('JobQueueWorker concurrency & circuit breaker', () => {
     worker.wake();
     await vi.advanceTimersByTimeAsync(0);
 
-    // Tenant t1 is saturated for typeA only, so saturatedTenants stays empty while typeA has 0 remaining slots.
+    // Tenant t1 is saturated for typeA only; typeB retains its configured capacity.
     const secondInput: ClaimDueInput | undefined = claimDue.mock.calls[1]?.[0];
-    expect(secondInput?.saturatedTenants).toEqual([]);
     expect(secondInput?.tenantRemainingSlots).toEqual([
       { tenantId: 't1', type: 'typeA', remainingSlots: 0 },
     ]);
@@ -282,18 +276,14 @@ describe('JobQueueWorker concurrency & circuit breaker', () => {
       minCreatedAt: 0,
     });
 
-    // Claim #2 (15_000): group is blocked in saturatedGroups with 0 remaining slots.
+    // Claim #2 (15_000): group is blocked with 0 remaining slots.
     await vi.advanceTimersByTimeAsync(5000);
-    expect(claimDue.mock.calls[1]?.[0].saturatedGroups).toEqual([
-      { tenantId: 't1', type: 'webhook', groupKey: 'hook_1' },
-    ]);
     expect(claimDue.mock.calls[1]?.[0].groupRemainingSlots).toEqual([
       { tenantId: 't1', type: 'webhook', groupKey: 'hook_1', remainingSlots: 0 },
     ]);
 
     // Claim #3 (20_000): single probe admitted (`remainingSlots: 1`); excess_2 is released immediately.
     await vi.advanceTimersByTimeAsync(5000);
-    expect(claimDue.mock.calls[2]?.[0].saturatedGroups).toEqual([]);
     expect(claimDue.mock.calls[2]?.[0].groupRemainingSlots).toEqual([
       { tenantId: 't1', type: 'webhook', groupKey: 'hook_1', remainingSlots: 1 },
     ]);
@@ -305,8 +295,8 @@ describe('JobQueueWorker concurrency & circuit breaker', () => {
 
     // Claim #4 (25_000): while probe_1 is in flight, hook_1 stays blocked.
     await vi.advanceTimersByTimeAsync(5000);
-    expect(claimDue.mock.calls[3]?.[0].saturatedGroups).toEqual([
-      { tenantId: 't1', type: 'webhook', groupKey: 'hook_1' },
+    expect(claimDue.mock.calls[3]?.[0].groupRemainingSlots).toEqual([
+      { tenantId: 't1', type: 'webhook', groupKey: 'hook_1', remainingSlots: 0 },
     ]);
 
     // Probe_1 fails at 25_000 -> re-parks at step 2 (20_000 ms from now = 45_000).
@@ -326,7 +316,6 @@ describe('JobQueueWorker concurrency & circuit breaker', () => {
     await vi.advanceTimersByTimeAsync(20_000);
     expect(worker.openCircuitCount).toBe(0);
     expect(claimDue).toHaveBeenCalledTimes(9);
-    expect(claimDue.mock.calls[8]?.[0].saturatedGroups).toEqual([]);
     expect(claimDue.mock.calls[8]?.[0].groupRemainingSlots).toEqual([]);
 
     await worker.stop();
@@ -391,8 +380,6 @@ describe('JobQueueWorker concurrency & circuit breaker', () => {
           perTenantConcurrency: undefined,
         },
       ],
-      saturatedTenants: [],
-      saturatedGroups: [],
       tenantRemainingSlots: [],
       groupRemainingSlots: [],
     });
@@ -409,18 +396,14 @@ describe('JobQueueWorker concurrency & circuit breaker', () => {
       minCreatedAt: 0,
     });
 
-    // Claim #3 (15_000): circuit is blocked -> groupRemainingSlots emits 0 and saturatedGroups includes the group.
+    // Claim #3 (15_000): the blocked circuit has 0 remaining slots.
     await vi.advanceTimersByTimeAsync(5000);
-    expect(claimDue.mock.calls[2]?.[0].saturatedGroups).toEqual([
-      { tenantId: undefined, type: 'cross_pod', groupKey: 'global' },
-    ]);
     expect(claimDue.mock.calls[2]?.[0].groupRemainingSlots).toEqual([
       { tenantId: undefined, type: 'cross_pod', groupKey: 'global', remainingSlots: 0 },
     ]);
 
     // Claim #4 (20_000): probe slot (1) is emitted; cp_probe hits maxAttempts (3) -> exhausted + re-parks to 40_000.
     await vi.advanceTimersByTimeAsync(5000);
-    expect(claimDue.mock.calls[3]?.[0].saturatedGroups).toEqual([]);
     expect(claimDue.mock.calls[3]?.[0].groupRemainingSlots).toEqual([
       { tenantId: undefined, type: 'cross_pod', groupKey: 'global', remainingSlots: 1 },
     ]);

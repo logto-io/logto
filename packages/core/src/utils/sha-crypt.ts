@@ -33,6 +33,7 @@ const roundsMin = 1000;
 const roundsMax = 1_000_000;
 const roundsDefault = 5000;
 const saltMaxBytes = 16;
+const passwordMaxBytes = 4096;
 const itoa64 = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
 type Variant = {
@@ -234,6 +235,9 @@ const shaCrypt = (
 /**
  * Compute the complete SHA-crypt string for `inputPassword` using the prefix, rounds, and salt of
  * the stored `encryptedPassword`. Verification succeeds when the result equals the stored string.
+ *
+ * A password over 4,096 bytes (UTF-8) is not hashed and yields an empty string, which matches no
+ * stored string. Hashing time grows with the square of the password length.
  */
 export const executeShaCryptHash = async (
   algorithm: ShaCryptAlgorithm,
@@ -242,12 +246,13 @@ export const executeShaCryptHash = async (
 ): Promise<string> => {
   const variant = variants[algorithm];
   const { rounds, salt } = parseShaCryptDigest(algorithm, encryptedPassword);
-  const digest = shaCrypt(
-    variant,
-    Buffer.from(inputPassword, 'utf8'),
-    Buffer.from(salt, 'utf8'),
-    rounds ?? roundsDefault
-  );
+  const password = Buffer.from(inputPassword, 'utf8');
+
+  if (password.length > passwordMaxBytes) {
+    return '';
+  }
+
+  const digest = shaCrypt(variant, password, Buffer.from(salt, 'utf8'), rounds ?? roundsDefault);
   const roundsField = rounds === undefined ? '' : `rounds=${rounds}$`;
 
   return `${variant.prefix}${roundsField}${salt}$${encode(digest, variant.groups)}`;

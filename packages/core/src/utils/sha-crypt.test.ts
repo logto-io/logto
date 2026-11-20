@@ -207,6 +207,25 @@ describe('executeShaCryptHash', () => {
     await expect(executeShaCryptHash(algorithm, hash, 'Hello world!')).resolves.toBe(hash);
   });
 
+  it('should verify a password of 4,096 bytes', async () => {
+    const password = 'ř'.repeat(2048);
+    const hash = await executeShaCryptHash(
+      'sha512-crypt',
+      '$6$saltstring$' + 'a'.repeat(86),
+      password
+    );
+    expect(hash).not.toBe('');
+    await expect(executeShaCryptHash('sha512-crypt', hash, password)).resolves.toBe(hash);
+  });
+
+  it('should not hash a password over 4,096 bytes', async () => {
+    // 2,049 characters, 4,097 bytes
+    const password = 'ř'.repeat(2048) + 'a';
+    await expect(
+      executeShaCryptHash('sha512-crypt', '$6$saltstring$' + 'a'.repeat(86), password)
+    ).resolves.toBe('');
+  });
+
   it('should throw for an invalid stored string', async () => {
     await expect(
       executeShaCryptHash('sha512-crypt', '$6$rounds=1$salt$' + 'a'.repeat(86), 'x')
