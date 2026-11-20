@@ -6,7 +6,12 @@ set -euo pipefail
 
 cd /etc/logto
 
-npm run cli db seed -- --test --swe
+seed_args=(--swe)
+# The console suite creates its own first admin through the welcome flow.
+if [[ "${INTEGRATION_TEST_TARGET:-api}" != "console" ]]; then
+  seed_args+=(--test)
+fi
+npm run cli db seed -- "${seed_args[@]}"
 npm run cli connector list -- -p . | grep OFFICIAL
 npm run cli connector link -- --mock -p .
 npm run cli db system set cloudflareHostnameProvider '{"zoneId":"mock-zone-id","apiToken":""}'

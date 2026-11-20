@@ -53,6 +53,7 @@ services:
       s3mock:
         condition: service_started
     environment:
+      INTEGRATION_TEST_TARGET: ${INTEGRATION_TEST_TARGET:-api}
       DB_URL: postgres://postgres:p0stgr3s@postgres:5432/postgres
       REDIS_URL: redis://redis:6379
       SECRET_VAULT_KEK: DtPWS09unRXGuRScB60qXqCSsrjd22dUlXt/0oZgxSo=
