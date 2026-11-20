@@ -20,6 +20,8 @@ const user = {
   sso_identity_not_exist: 'Das Unternehmens-SSO-Konto wurde noch nicht registriert.',
   identity_already_in_use: 'Die Identität wurde registriert.',
   social_account_exists_in_profile: 'Sie haben diesen Social-Media-Account bereits verknüpft.',
+  social_provider_already_linked:
+    'Ein anderes Konto dieses Anbieters ist bereits verknüpft. Melden Sie sich mit dem verknüpften Konto oder einer anderen Methode an.',
   cannot_delete_self: 'Du kannst dich nicht selbst löschen.',
   sign_up_method_not_enabled: 'Diese Anmeldeart ist nicht aktiviert.',
   sign_in_method_not_enabled: 'Diese Anmeldemethode ist nicht aktiviert.',

@@ -19,6 +19,8 @@ const user = {
   sso_identity_not_exist: 'Kurumsal SSO hesabı henüz kaydedilmedi.',
   identity_already_in_use: 'Sosyal platform hesabı kaydedildi.',
   social_account_exists_in_profile: 'Bu sosyal hesap zaten ilişkilendirilmiş.',
+  social_provider_already_linked:
+    'Bu sağlayıcıya ait başka bir hesap zaten bağlı. O hesapla veya başka bir yöntemle oturum açın.',
   cannot_delete_self: 'Kendinizi silemezsiniz.',
   sign_up_method_not_enabled: 'Bu kayıt yöntemi etkin değil.',
   sign_in_method_not_enabled: 'Bu oturum açma yöntemi etkin değil.',

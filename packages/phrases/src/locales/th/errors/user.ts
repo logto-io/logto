@@ -19,6 +19,8 @@ const user = {
   sso_identity_not_exist: 'บัญชี SSO ขององค์กรยังไม่ได้ลงทะเบียน',
   identity_already_in_use: 'บัญชีโซเชียลนี้ถูกเชื่อมโยงกับบัญชีที่มีอยู่แล้ว',
   social_account_exists_in_profile: 'คุณได้เชื่อมโยงบัญชีโซเชียลนี้แล้ว',
+  social_provider_already_linked:
+    'มีบัญชีอื่นจากผู้ให้บริการนี้เชื่อมโยงอยู่แล้ว โปรดเข้าสู่ระบบด้วยบัญชีนั้นหรือวิธีอื่น',
   cannot_delete_self: 'คุณไม่สามารถลบบัญชีของตัวเองได้',
   sign_up_method_not_enabled: 'ยังไม่ได้เปิดใช้งานวิธีสมัครนี้',
   sign_in_method_not_enabled: 'ยังไม่ได้เปิดใช้งานวิธีเข้าสู่ระบบนี้',

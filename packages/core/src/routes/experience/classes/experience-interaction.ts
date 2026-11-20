@@ -456,6 +456,7 @@ export default class ExperienceInteraction {
    * @throws {RequestError} with 400 if the verification record is not verified or not valid for identifying a user
    * @throws {RequestError} with 403 if the interaction event is not allowed
    * @throws {RequestError} with 404 if the user is not found
+   * @throws {RequestError} with 422 if the social account matches a user who already linked its provider
    * @throws {RequestError} with 401 if the user is suspended
    * @throws {RequestError} with 409 if the current session has already identified a different user
    * @throws {RequestError} with 403 if a pure step-up identifies someone other than the pinned subject
@@ -2164,7 +2165,9 @@ export default class ExperienceInteraction {
     const user = await verificationRecord.identifyUser().catch((error: unknown) => {
       if (
         error instanceof RequestError &&
-        (error.code === 'user.identity_not_exist' || error.code === 'user.sso_identity_not_exist')
+        (error.code === 'user.identity_not_exist' ||
+          error.code === 'user.sso_identity_not_exist' ||
+          error.code === 'user.social_provider_already_linked')
       ) {
         throw mismatch;
       }

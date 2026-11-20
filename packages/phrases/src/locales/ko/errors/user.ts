@@ -19,6 +19,8 @@ const user = {
   sso_identity_not_exist: '엔터프라이즈 SSO 계정이 아직 등록되지 않았어요.',
   identity_already_in_use: '소셜 계정이 이미 등록되어 있어요.',
   social_account_exists_in_profile: '이 소셜 계정은 이미 연동되어 있습니다.',
+  social_provider_already_linked:
+    '이 제공업체의 다른 계정이 이미 연동되어 있어요. 해당 계정이나 다른 방법으로 로그인해 주세요.',
   cannot_delete_self: '자기 자신을 삭제할 수 없어요.',
   sign_up_method_not_enabled: '이 회원가입 방법은 활성화되어있지 않아요.',
   sign_in_method_not_enabled: '이 로그인 방법은 활성화되어있지 않아요.',

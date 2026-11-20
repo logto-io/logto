@@ -21,6 +21,8 @@ const user = {
   identity_already_in_use: 'Konto społecznościowe zostało już powiązane z istniejącym kontem.',
   social_account_exists_in_profile:
     'To konto społecznościowe zostało już powiązane z Twoim profilem.',
+  social_provider_already_linked:
+    'Inne konto tego dostawcy jest już powiązane. Zaloguj się za pomocą powiązanego konta lub innej metody.',
   cannot_delete_self: 'Nie możesz usunąć swojego konta.',
   sign_up_method_not_enabled: 'Rejestracja tym sposobem jest wyłączona.',
   sign_in_method_not_enabled: 'Logowanie tym sposobem jest wyłączone.',
