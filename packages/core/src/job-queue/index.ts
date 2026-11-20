@@ -5,9 +5,16 @@ import { trySafe } from '@silverhand/essentials';
 import type { CommonQueryMethods } from '@silverhand/slonik';
 import chalk from 'chalk';
 
-import { createJobQueueQueries, type JobQueueGauges } from '#src/queries/job-queue.js';
+import {
+  type CoreJobSettlementMeta,
+  createJobQueueQueries,
+  type JobQueueGauges,
+} from '#src/queries/job-queue.js';
+
+import { createWebhookJobHandler } from './webhook-handler.js';
 
 const jobQueueMetricsIntervalMs = 60_000;
+const maxConcurrentJobsPerInstance = 100;
 
 export const jobQueueMetricNames = Object.freeze({
   depth: 'job_queue.depth',
@@ -22,23 +29,27 @@ const consoleLog = new ConsoleLog(chalk.magenta('job-queue'));
  * enqueues still in flight, and the queue metrics.
  */
 export class CoreJobQueue {
-  #worker?: JobQueueWorker;
+  #worker?: JobQueueWorker<CoreJobSettlementMeta>;
   #metricsTimer?: NodeJS.Timeout;
   #failedEnqueues = 0;
   readonly #pendingEnqueues = new Set<Promise<void>>();
 
-  get worker(): JobQueueWorker | undefined {
+  get worker(): JobQueueWorker<CoreJobSettlementMeta> | undefined {
     return this.#worker;
   }
 
   /** Start claiming due jobs and reporting metrics. Handlers registered later are picked up. */
-  start(pool: CommonQueryMethods): JobQueueWorker {
+  start(pool: CommonQueryMethods): JobQueueWorker<CoreJobSettlementMeta> {
     if (this.#worker) {
       return this.#worker;
     }
 
     const queries = createJobQueueQueries(pool);
-    const worker = new JobQueueWorker(queries, { log: consoleLog });
+    const worker = new JobQueueWorker<CoreJobSettlementMeta>(queries, {
+      log: consoleLog,
+      maxConcurrency: maxConcurrentJobsPerInstance,
+    });
+    worker.register(createWebhookJobHandler(queries));
 
     this.#worker = worker;
     worker.start();
@@ -51,19 +62,23 @@ export class CoreJobQueue {
     return worker;
   }
 
+  /** Log and count an enqueue failure (either a pre-insert lookup or the insert itself). */
+  recordFailedEnqueue(error: unknown): void {
+    this.#failedEnqueues += 1;
+    consoleLog.error('Failed to enqueue job.');
+    consoleLog.error(error);
+  }
+
   /**
-   * Run a fire-and-forget insert into `jobs`. Shutdown waits for it before closing pools, and a
-   * failure is logged and counted instead of thrown. Wakes the local worker once the row exists.
+   * Track an async enqueue workflow in `#pendingEnqueues` synchronously before its first `await`,
+   * so graceful shutdown waits for pre-insert lookups as well as the `jobs` insert itself.
    */
-  async enqueue(insert: () => Promise<unknown>): Promise<void> {
+  async trackEnqueue(task: () => Promise<void>): Promise<void> {
     const pending = (async () => {
       try {
-        await insert();
-        this.#worker?.wake();
+        await task();
       } catch (error: unknown) {
-        this.#failedEnqueues += 1;
-        consoleLog.error('Failed to enqueue job.');
-        consoleLog.error(error);
+        this.recordFailedEnqueue(error);
       }
     })();
 
@@ -74,6 +89,17 @@ export class CoreJobQueue {
     } finally {
       this.#pendingEnqueues.delete(pending);
     }
+  }
+
+  /**
+   * Run a fire-and-forget insert into `jobs`. Shutdown waits for it before closing pools, and a
+   * failure is logged and counted instead of thrown. Wakes the local worker once the row exists.
+   */
+  async enqueue(insert: () => Promise<unknown>): Promise<void> {
+    return this.trackEnqueue(async () => {
+      await insert();
+      this.#worker?.wake();
+    });
   }
 
   /**

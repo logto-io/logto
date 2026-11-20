@@ -60,10 +60,19 @@ export const createDataHookFixture = (port: number, hookName: string): DataHookF
     }
   };
 
-  /** Webhook delivery is async; sleeps 100ms before reading to let the request land. */
-  const getWebhookResult = async (key: string) => {
+  /** Poll for async webhook delivery so queued jobs do not flake under load. */
+  const getWebhookResult = async (
+    key: string,
+    retriesLeft = 50
+  ): Promise<MockHookResponse | undefined> => {
+    const result = webhookResults.get(key);
+
+    if (result !== undefined || retriesLeft <= 1) {
+      return result;
+    }
+
     await waitFor(100);
-    return webhookResults.get(key);
+    return getWebhookResult(key, retriesLeft - 1);
   };
 
   const webhookServer = new WebhookMockServer(port, webhookResponseHandler);

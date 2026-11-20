@@ -14,8 +14,9 @@ const post = jest
   .mockImplementation(jest.fn(async () => ({ statusCode: 200, body: '{"message":"ok"}' })));
 
 const mockSignature = 'mockSignature';
+const sign = jest.fn(() => mockSignature);
 mockEsm('#src/utils/sign.js', () => ({
-  sign: () => mockSignature,
+  sign,
 }));
 
 const {
@@ -103,6 +104,52 @@ describe('sendWebhookRequest', () => {
         },
       })
     );
+  });
+
+  it('sends and signs a pre-serialized body string with default content-type', async () => {
+    const rawBody = '{"b":1,"a":2}';
+
+    await sendWebhookRequest({
+      hookConfig: {
+        url: 'https://logto.gg',
+        headers: { foo: 'bar' },
+      },
+      body: rawBody,
+      signingKey: 'mockSigningKey',
+    });
+
+    expect(sign).toHaveBeenLastCalledWith('mockSigningKey', rawBody);
+    expect(post.mock.lastCall?.[1]).toMatchObject({
+      body: rawBody,
+      headers: {
+        'user-agent': 'Logto (https://logto.io/)',
+        'content-type': 'application/json',
+        foo: 'bar',
+        'logto-signature-sha-256': mockSignature,
+      },
+    });
+    expect(post.mock.lastCall?.[1]).not.toHaveProperty('json');
+  });
+
+  it('preserves a custom Content-Type header when sending a raw body string', async () => {
+    const rawBody = '{"b":1,"a":2}';
+
+    await sendWebhookRequest({
+      hookConfig: {
+        url: 'https://logto.gg',
+        headers: { 'Content-Type': 'application/cloudevents+json' },
+      },
+      body: rawBody,
+      signingKey: 'mockSigningKey',
+    });
+
+    const requestOptions = post.mock.lastCall?.[1] as { headers?: Record<string, string> };
+    expect(requestOptions.headers).toEqual({
+      'user-agent': 'Logto (https://logto.io/)',
+      'Content-Type': 'application/cloudevents+json',
+      'logto-signature-sha-256': mockSignature,
+    });
+    expect(requestOptions.headers).not.toHaveProperty('content-type');
   });
 });
 

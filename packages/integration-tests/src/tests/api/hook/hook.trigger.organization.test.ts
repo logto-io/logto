@@ -86,6 +86,9 @@ describe('organization data hook events', () => {
         await setup(setupContext);
       }
 
+      // Clear prior deliveries for the same route key so consecutive cases wait for the fresh event.
+      webhookResults.delete(route);
+
       await authedAdminApi[method](
         endpoint
           .replace('{organizationId}', organizationId)

@@ -28,9 +28,8 @@ export const parseResponse = async (response: KyResponse) => {
 
 type SendWebhookRequest = {
   hookConfig: HookConfig;
-  payload: HookEventPayload;
   signingKey: string;
-};
+} & ({ payload: HookEventPayload; body?: never } | { body: string; payload?: never });
 
 const rangeInclusive = (start: number, end: number) =>
   Array.from({ length: end - start + 1 }, (_, index) => start + index);
@@ -84,20 +83,26 @@ const abortRetryOnNonHttpError = ({ error }: { error: Error }) => {
   }
 };
 
-export const sendWebhookRequest = async ({
-  hookConfig,
-  payload,
-  signingKey,
-}: SendWebhookRequest) => {
+export const sendWebhookRequest = async (request: SendWebhookRequest) => {
+  const { hookConfig, signingKey } = request;
   const { url, headers, retries } = hookConfig;
+  const hasContentType = Object.keys(headers ?? {}).some(
+    (key) => key.toLowerCase() === 'content-type'
+  );
+  const rawOrObjectPayload = request.body ?? request.payload;
 
   return ky.post(url, {
     headers: {
       'user-agent': 'Logto (https://logto.io/)',
+      ...conditional(
+        request.body !== undefined && !hasContentType && { 'content-type': 'application/json' }
+      ),
       ...headers,
-      ...conditional(signingKey && { 'logto-signature-sha-256': sign(signingKey, payload) }),
+      ...conditional(
+        signingKey && { 'logto-signature-sha-256': sign(signingKey, rawOrObjectPayload) }
+      ),
     },
-    json: payload,
+    ...(request.body === undefined ? { json: request.payload } : { body: request.body }),
     // The hook URL is tenant-supplied; keep delivery off the deployment's private network.
     fetch: ssrfProtectedFetch,
     // Public webhook delivery contract: retry POST requests on HTTP 5xx only.
