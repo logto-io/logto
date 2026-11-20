@@ -5,7 +5,7 @@ import { CoreJobQueue, jobQueueMetricNames } from './index.js';
 
 const { jest } = import.meta;
 
-const gauges = { depth: 7, oldestWaitingAgeMs: 1200, expiredLeases: 2 };
+const gauges = { depth: 7, oldestWaitingAgeMs: 1200 };
 
 describe('CoreJobQueue', () => {
   const originalClient = appInsights.client;
@@ -34,7 +34,6 @@ describe('CoreJobQueue', () => {
     expect(trackMetric.mock.calls.map(([metric]) => metric)).toEqual([
       { name: jobQueueMetricNames.depth, value: 7 },
       { name: jobQueueMetricNames.oldestWaitingAgeMs, value: 1200 },
-      { name: jobQueueMetricNames.expiredLeases, value: 2 },
       { name: jobQueueMetricNames.failedEnqueues, value: 2 },
     ]);
 

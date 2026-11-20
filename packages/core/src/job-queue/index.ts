@@ -12,7 +12,6 @@ const jobQueueMetricsIntervalMs = 60_000;
 export const jobQueueMetricNames = Object.freeze({
   depth: 'job_queue.depth',
   oldestWaitingAgeMs: 'job_queue.oldest_waiting_age_ms',
-  expiredLeases: 'job_queue.expired_leases',
   failedEnqueues: 'job_queue.failed_enqueues',
 } as const);
 
@@ -114,7 +113,6 @@ export class CoreJobQueue {
       ...(gauges && {
         [jobQueueMetricNames.depth]: gauges.depth,
         [jobQueueMetricNames.oldestWaitingAgeMs]: gauges.oldestWaitingAgeMs,
-        [jobQueueMetricNames.expiredLeases]: gauges.expiredLeases,
       }),
       [jobQueueMetricNames.failedEnqueues]: failedEnqueues,
     };

@@ -17,8 +17,6 @@ export type JobQueueGauges = {
    * and not rows still under a lease or backoff. `0` when no row is due.
    */
   oldestWaitingAgeMs: number;
-  /** Claimed rows whose lease ran out before their worker settled them. */
-  expiredLeases: number;
 };
 
 /**
@@ -260,9 +258,7 @@ export const createJobQueueQueries = (
         greatest(
           coalesce(floor(extract(epoch from now() - min(next_attempt_at)) * 1000), 0),
           0
-        )::int8 as oldest_waiting_age_ms,
-        (count(*) filter (where claimed_by is not null and next_attempt_at <= now()))::int4
-          as expired_leases
+        )::int8 as oldest_waiting_age_ms
       from jobs
     `);
 

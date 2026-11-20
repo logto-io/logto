@@ -406,7 +406,7 @@ describeWithDatabase('job queue queries on Postgres', () => {
 
       const gauges = await queries().getGauges();
 
-      expect(gauges).toMatchObject({ depth: 4, expiredLeases: 1 });
+      expect(gauges.depth).toBe(4);
       expect(gauges.oldestWaitingAgeMs).toBeGreaterThanOrEqual(600_000);
       expect(gauges.oldestWaitingAgeMs).toBeLessThan(660_000);
     });
@@ -415,7 +415,6 @@ describeWithDatabase('job queue queries on Postgres', () => {
       await expect(queries().getGauges()).resolves.toEqual({
         depth: 0,
         oldestWaitingAgeMs: 0,
-        expiredLeases: 0,
       });
 
       await seed([{ id: 'later', dueIn: 3600 }]);
@@ -423,7 +422,6 @@ describeWithDatabase('job queue queries on Postgres', () => {
       await expect(queries().getGauges()).resolves.toEqual({
         depth: 1,
         oldestWaitingAgeMs: 0,
-        expiredLeases: 0,
       });
     });
   });
