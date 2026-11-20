@@ -46,6 +46,11 @@ const security = {
       description:
         '中国本土で安定して利用できる、ローカライズされたチャレンジを備えた GeeTest の適応型 CAPTCHA です。',
     },
+    friendly_captcha: {
+      name: 'Friendly Captcha',
+      description:
+        '視覚的パズルを使わず、プライバシー重視で GDPR 準拠のプルーフ・オブ・ワーク型 CAPTCHA です。',
+    },
   },
   captcha_details: {
     back_to_security: 'セキュリティへ戻る',
@@ -67,6 +72,10 @@ const security = {
       'このエンドポイントは HTTP を使用しており、ローカル開発にのみ適しています。ブラウザーは HTTPS のサインインページからの HTTP リクエストをブロックし、シークレットキーは暗号化されずに送信されます。本番環境では HTTPS を使用してください。',
     geetest_captcha_id: 'CAPTCHA ID',
     geetest_captcha_key: 'CAPTCHA キー',
+    friendly_captcha_api_key: 'API キー',
+    friendly_captcha_api_endpoint: 'API エンドポイント',
+    friendly_captcha_api_endpoint_global: 'グローバル',
+    friendly_captcha_api_endpoint_eu: 'EU',
     deletion_description: 'この CAPTCHA プロバイダーを削除してもよろしいですか？',
     captcha_deleted: 'CAPTCHA プロバイダーが正常に削除されました',
     setup_captcha: 'CAPTCHA をセットアップ',

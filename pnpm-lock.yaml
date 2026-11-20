@@ -4728,6 +4728,9 @@ importers:
       '@cap.js/wasm':
         specifier: 0.0.7
         version: 0.0.7
+      '@friendlycaptcha/sdk':
+        specifier: 1.1.5
+        version: 1.1.5
       '@jest/types':
         specifier: ^29.5.0
         version: 29.6.3
@@ -6472,6 +6475,9 @@ packages:
 
   '@fontsource/roboto-mono@5.0.0':
     resolution: {integrity: sha512-PNxomCUy0blr1gNkc2TXfm8zMqnTVAtYfVYKBss6pgjex7lHENhqdDslCPNLwJDDqqPsWgpQ6TrMWEh4OTAVxQ==}
+
+  '@friendlycaptcha/sdk@1.1.5':
+    resolution: {integrity: sha512-ymxSul0fdQQj9c/qNuxHRRFxb5rTw+FjIP4Aw/Ip8A+upHbPFcIkq3LSuArUgc2tc5Q/VhMBAJOKB4SbayiXAQ==}
 
   '@google-cloud/paginator@5.0.0':
     resolution: {integrity: sha512-87aeg6QQcEPxGCOthnpUjvw4xAZ57G7pL8FS0C4e/81fr3FjkpUpibf1s2v5XGyGhUVGF4Jfg7yEcxqn2iUw1w==}
@@ -17388,6 +17394,8 @@ snapshots:
   '@floating-ui/utils@0.2.9': {}
 
   '@fontsource/roboto-mono@5.0.0': {}
+
+  '@friendlycaptcha/sdk@1.1.5': {}
 
   '@google-cloud/paginator@5.0.0':
     dependencies:

@@ -5,6 +5,7 @@ export enum CaptchaType {
   Turnstile = 'Turnstile',
   Cap = 'Cap',
   Geetest = 'Geetest',
+  FriendlyCaptcha = 'FriendlyCaptcha',
 }
 
 export enum RecaptchaEnterpriseMode {
@@ -67,11 +68,39 @@ export const geetestConfigGuard = z.object({
 
 export type GeetestConfig = z.infer<typeof geetestConfigGuard>;
 
+/**
+ * The Friendly Captcha API endpoint used by both the widget and siteverify.
+ *
+ * @see https://developer.friendlycaptcha.com/docs/v2/guides/eu-endpoint
+ */
+export enum FriendlyCaptchaApiEndpoint {
+  Global = 'global',
+  Eu = 'eu',
+}
+
+/**
+ * Config of Friendly Captcha v2.
+ *
+ * @see https://developer.friendlycaptcha.com/docs/v2/getting-started/setup
+ */
+export const friendlyCaptchaConfigGuard = z.object({
+  type: z.literal(CaptchaType.FriendlyCaptcha),
+  /** The sitekey from the Friendly Captcha dashboard. */
+  siteKey: z.string(),
+  /** The API key from the Friendly Captcha dashboard. */
+  secretKey: z.string(),
+  /** Defaults to {@link FriendlyCaptchaApiEndpoint.Global}. */
+  apiEndpoint: z.nativeEnum(FriendlyCaptchaApiEndpoint).optional(),
+});
+
+export type FriendlyCaptchaConfig = z.infer<typeof friendlyCaptchaConfigGuard>;
+
 export const captchaConfigGuard = z.discriminatedUnion('type', [
   turnstileConfigGuard,
   recaptchaEnterpriseConfigGuard,
   capConfigGuard,
   geetestConfigGuard,
+  friendlyCaptchaConfigGuard,
 ]);
 
 export type CaptchaConfig = z.infer<typeof captchaConfigGuard>;
