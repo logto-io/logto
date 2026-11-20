@@ -1,5 +1,7 @@
 import { deflateRawSync } from 'node:zlib';
 
+import saml from 'samlify';
+
 import RequestError from '#src/errors/RequestError/index.js';
 import { LogEntry } from '#src/middleware/koa-audit-log.js';
 
@@ -9,10 +11,16 @@ import {
 } from './__mocks__/saml-application.js';
 import { SamlApplication } from './index.js';
 
+const { jest } = import.meta;
+
 const createRequestXml = (extensions = '') =>
   `<?xml version="1.0" encoding="UTF-8"?><samlp:AuthnRequest xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="request-id" Version="2.0" IssueInstant="2026-11-02T00:00:00Z"><saml:Issuer>sp-entity-id</saml:Issuer>${extensions}</samlp:AuthnRequest>`;
 
 describe.each(['post', 'redirect'] as const)('SAML request XML format (%s binding)', (binding) => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
   const parse = async (xml: string, log: LogEntry) =>
     new SamlApplication(
       createMockSamlApplicationDetails(),
@@ -55,6 +63,15 @@ describe.each(['post', 'redirect'] as const)('SAML request XML format (%s bindin
           "Expected closing tag 'x:Note' (opened in line 1, col 284) instead of closing tag 'x:Other'.",
       },
     },
+    {
+      name: 'an attribute without a value',
+      extensions: '<samlp:Extensions><x:Note xmlns:x="urn:x" flag/></samlp:Extensions>',
+      error: {
+        code: 'InvalidAttr',
+        column: 308,
+        message: "boolean attribute 'flag' is not allowed.",
+      },
+    },
   ])('rejects XML with $name and logs the format error', async ({ extensions, error }) => {
     const log = new LogEntry('SamlApplication.AuthnRequest');
 
@@ -62,6 +79,33 @@ describe.each(['post', 'redirect'] as const)('SAML request XML format (%s bindin
       new RequestError('application.saml.invalid_saml_request')
     );
     expect(log.payload.samlRequestError).toEqual({ category: 'xml_format', line: 1, ...error });
+  });
+
+  it.each([
+    {
+      name: 'a request over 16 KiB',
+      xml: createRequestXml(`<samlp:Extensions>${'a'.repeat(16 * 1024)}</samlp:Extensions>`),
+    },
+    {
+      name: 'too many elements',
+      xml: createRequestXml(`<samlp:Extensions>${'<a/>'.repeat(128)}</samlp:Extensions>`),
+    },
+    {
+      name: 'too many attributes',
+      xml: createRequestXml(
+        `<samlp:Extensions><a${Array.from({ length: 256 }, (_, index) => ` a${index}=""`).join('')}/></samlp:Extensions>`
+      ),
+    },
+  ])('rejects $name before samlify parses it', async ({ xml }) => {
+    const parseLoginRequest = jest.spyOn(
+      saml.IdentityProviderInstance.prototype,
+      'parseLoginRequest'
+    );
+
+    await expect(parse(xml, new LogEntry('SamlApplication.AuthnRequest'))).rejects.toMatchError(
+      new RequestError('application.saml.invalid_saml_request')
+    );
+    expect(parseLoginRequest).not.toHaveBeenCalled();
   });
 
   const prefix = 'a'.repeat(250);

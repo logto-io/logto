@@ -51,6 +51,7 @@ import {
   generateSamlAttributeTag,
   getSamlUserAttributeNames,
   assertSamlAuthnRequestSignatureScope,
+  assertSamlRequestWithinLimits,
   type SamlTagValue,
 } from './utils.js';
 
@@ -212,6 +213,9 @@ export class SamlApplication {
     loginRequest: Parameters<typeof saml.IdentityProviderInstance.prototype.parseLoginRequest>[2],
     log: LogEntry
   ) {
+    const source = binding === 'redirect' ? loginRequest.query : loginRequest.body;
+    assertSamlRequestWithinLimits(binding, String(source?.SAMLRequest));
+
     const result = await tryThat(this.idp.parseLoginRequest(this.sp, binding, loginRequest), () => {
       if (this.xmlFormatError) {
         const { code, line, col, msg } = this.xmlFormatError;
@@ -625,7 +629,8 @@ export class SamlApplication {
       // Samlify ignores the resolved value and fails the request only when this throws.
       validate: async (xmlContent: string) => {
         const result = XMLValidator.validate(xmlContent, {
-          allowBooleanAttributes: true,
+          // `assertSamlRequestWithinLimits` counts attributes by their `=`.
+          allowBooleanAttributes: false,
         });
 
         if (result !== true) {

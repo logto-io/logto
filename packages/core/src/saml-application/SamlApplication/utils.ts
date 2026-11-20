@@ -1,6 +1,8 @@
+import { inflateRawSync } from 'node:zlib';
+
 import { NameIdFormat, type SamlAttributeMapping } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { appendPath, type Nullable } from '@silverhand/essentials';
+import { appendPath, trySafe, type Nullable } from '@silverhand/essentials';
 import saml from 'samlify';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -212,6 +214,39 @@ export const getSamlRedirectSignatureInput = (querystring: string): string => {
     .map((name) => parameters.find((parameter) => parameter.startsWith(`${name}=`)))
     .filter(Boolean)
     .join('&');
+};
+
+const samlRequestLimits = { bytes: 16 * 1024, elements: 128, attributes: 256 };
+
+const countOccurrences = (text: string, search: string | RegExp) => text.split(search).length - 1;
+
+/**
+ * Decodes the request as samlify does, so the limits apply to the XML it parses. The `<` and `=`
+ * counts are upper bounds on elements and attributes; the schema validator rejects attributes
+ * without a value, which `=` would miss.
+ */
+export const assertSamlRequestWithinLimits = (
+  binding: 'post' | 'redirect',
+  samlRequest: string
+): void => {
+  const decoded = trySafe(() =>
+    binding === 'redirect'
+      ? inflateRawSync(Buffer.from(decodeURIComponent(samlRequest), 'base64'), {
+          maxOutputLength: samlRequestLimits.bytes,
+        })
+      : Buffer.from(samlRequest, 'base64')
+  );
+  assertThat(
+    decoded !== undefined && decoded.length <= samlRequestLimits.bytes,
+    'application.saml.invalid_saml_request'
+  );
+
+  const xml = decoded.toString();
+  assertThat(
+    countOccurrences(xml, /<(?!\/)/) <= samlRequestLimits.elements &&
+      countOccurrences(xml, '=') <= samlRequestLimits.attributes,
+    'application.saml.invalid_saml_request'
+  );
 };
 
 /** SAML POST signatures must cover the enclosing AuthnRequest, not a different XML element. */
