@@ -20,7 +20,7 @@ const mfa = {
   send_to_phone: 'Poslat na {{identifier}}',
   onboarding: 'Zapnout dvoufázové ověření',
   onboarding_description:
-    'Chraň svůj účet pomocí dvoufázového ověření. Vyber jednu nebo více metod: Přístupový klíč, autentizační aplikace (OTP), ověřovací kód SMS nebo záložní kódy.',
+    'Chraň svůj účet pomocí dvoufázového ověření. Vyber jednu nebo více metod, kterými ověříš svou identitu při přihlášení.',
   enable_mfa: 'Zapnout dvoufázové ověření',
   add_mfa_factors: 'Přidat dvoufázové ověření',
   add_mfa_description:

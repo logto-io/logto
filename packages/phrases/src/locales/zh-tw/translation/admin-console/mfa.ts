@@ -22,7 +22,7 @@ const mfa = {
   verification_code_enrollment_implicit: '所有擁有已驗證電子郵件或電話號碼的使用者',
   verification_code_enrollment_explicit: '僅限已設定的使用者',
   verification_code_enrollment_explicit_confirmation:
-    '郵件和 SMS 驗證碼將只對已設定的使用者計為兩步驟驗證。未設定的使用者將失去這個兩步驟驗證因素，沒有其他因素的使用者將被視為未啟用 MFA。確定要繼續嗎？',
+    '郵件和 SMS 驗證碼將只對已設定的使用者計為兩步驟驗證。未設定的使用者將失去這個兩步驟驗證因素，沒有其他因素的使用者將被視為未啟用 MFA。之前僅憑電子郵件或手機號碼開啟兩步驟驗證的使用者，在新增驗證方式之前，會在帳戶中心看到「設定未完成」的提示。確定要繼續嗎？',
   verification_code_enrollment_implicit_confirmation:
     '所有擁有已驗證電子郵件或電話號碼的使用者都會用它進行兩步驟驗證，包括未設定的使用者。確定要繼續嗎？',
   policy: '策略',

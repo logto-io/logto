@@ -20,7 +20,7 @@ const mfa = {
   send_to_phone: '{{identifier}}로 전송',
   onboarding: '2단계 인증 켜기',
   onboarding_description:
-    '2단계 인증으로 계정을 보호하세요. 하나 이상의 방법을 선택하세요: 패스키, 인증 앱(OTP), SMS 인증 코드 또는 백업 코드.',
+    '2단계 인증으로 계정을 보호하세요. 로그인할 때 본인 확인에 사용할 방법을 하나 이상 선택하세요.',
   enable_mfa: '2단계 인증 활성화',
   add_mfa_factors: '2단계 인증 추가',
   add_mfa_description:
