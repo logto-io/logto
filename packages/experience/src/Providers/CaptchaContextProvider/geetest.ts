@@ -42,12 +42,8 @@ const getErrorMessage = (error: unknown) => {
 let scriptLoader: Promise<void> | undefined;
 
 const loadScript = async () => {
-  if (scriptLoader !== undefined) {
-    return scriptLoader;
-  }
-
   // eslint-disable-next-line @silverhand/fp/no-mutation -- Memoizes the single script loading promise
-  scriptLoader = new Promise<void>((resolve, reject) => {
+  scriptLoader ??= new Promise<void>((resolve, reject) => {
     if (window.initGeetest4) {
       resolve();
       return;

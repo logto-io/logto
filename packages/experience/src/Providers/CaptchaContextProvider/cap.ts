@@ -28,12 +28,8 @@ const getEventDetail = (event: Event, key: string): string | undefined => {
 let capWidgetLoader: Promise<void> | undefined;
 
 export const loadCapWidget = async () => {
-  if (capWidgetLoader !== undefined) {
-    return capWidgetLoader;
-  }
-
   // eslint-disable-next-line @silverhand/fp/no-mutation -- Memoizes the single widget loading promise
-  capWidgetLoader = (async () => {
+  capWidgetLoader ??= (async () => {
     // eslint-disable-next-line @silverhand/fp/no-mutation -- The widget reads the WASM URL from this global
     window.CAP_CUSTOM_WASM_URL = wasmUrl;
     await import('cap-widget');

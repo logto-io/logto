@@ -39,7 +39,7 @@ const buildConfig = (mode: string): UserConfig => ({
     },
   },
   esbuild: {
-    // Lower logical assignment in bundled workspace packages and dependencies as well.
+    // Lower logical assignment across the bundle for older browsers.
     supported: { 'logical-assignment': false },
   },
   build: {
