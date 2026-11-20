@@ -23,7 +23,7 @@ services:
   # An S3-compatible storage for the self-hosted Bring your UI tests, configured as the experience
   # blobs provider through `EXPERIENCE_BLOBS_PROVIDER` below.
   s3mock:
-    image: adobe/s3mock:4.7.0
+    image: adobe/s3mock:4.12.4
     environment:
       COM_ADOBE_TESTING_S3MOCK_STORE_INITIAL_BUCKETS: experience-blobs
 
