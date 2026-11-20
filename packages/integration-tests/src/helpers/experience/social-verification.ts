@@ -39,3 +39,21 @@ export const successfullyVerifySocialAuthorization = async (
 
   return verifiedVerificationId;
 };
+
+export const successfullyVerifySocialAccount = async (
+  client: ExperienceClient,
+  connectorId: string,
+  connectorData: Record<string, unknown>
+) => {
+  const state = 'state';
+  const redirectUri = 'http://localhost:3000';
+  const { verificationId } = await successfullyCreateSocialVerification(client, connectorId, {
+    redirectUri,
+    state,
+  });
+
+  return successfullyVerifySocialAuthorization(client, connectorId, {
+    verificationId,
+    connectorData: { state, redirectUri, code: 'fake_code', ...connectorData },
+  });
+};

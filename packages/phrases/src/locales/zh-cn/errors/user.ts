@@ -19,6 +19,7 @@ const user = {
   sso_identity_not_exist: '企业级 SSO 账户尚未注册。',
   identity_already_in_use: '该社交帐号已被注册。',
   social_account_exists_in_profile: '你已绑定当前社交账号，无需重复操作。',
+  social_provider_already_linked: '已绑定该社交平台的其他账号，请使用该账号或其他方式登录。',
   cannot_delete_self: '无法删除自己的账户。',
   sign_up_method_not_enabled: '注册方式尚未启用。',
   sign_in_method_not_enabled: '登录方式尚未启用。',

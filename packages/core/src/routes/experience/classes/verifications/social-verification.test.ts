@@ -3,6 +3,7 @@ import { VerificationType, type SocialVerificationRecordData } from '@logto/sche
 import { createMockUtils } from '@logto/shared/esm';
 
 import { mockConnector } from '#src/__mocks__/connector.js';
+import { mockUser } from '#src/__mocks__/user.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -395,6 +396,49 @@ describe('SocialVerification', () => {
       ).resolves.toBe('siwe://authorize?nonce=nonce');
 
       expect(connector.getAuthorizationUri).toHaveBeenCalled();
+    });
+  });
+
+  describe('related user lookup', () => {
+    const socialUserInfo = { id: 'social-account-b', email: 'foo@example.com' };
+    const relatedUserHint = { type: 'email', value: socialUserInfo.email } as const;
+    const findSocialRelatedUser = jest.fn();
+    const relatedUserTenant = new MockTenant(
+      undefined,
+      { users: { findUserByIdentity: jest.fn().mockResolvedValue(null) } },
+      undefined,
+      { socials: { getConnector, findSocialRelatedUser } }
+    );
+
+    const createVerifiedSocialVerification = () =>
+      new SocialVerification(relatedUserTenant.libraries, relatedUserTenant.queries, {
+        id: 'verification-id',
+        connectorId: 'google-connector',
+        type: VerificationType.Social,
+        socialUserInfo,
+      });
+
+    it('should suggest a related user without the provider linked', async () => {
+      findSocialRelatedUser.mockResolvedValue([relatedUserHint, mockUser]);
+      const verification = createVerifiedSocialVerification();
+
+      await expect(verification.identifyUser()).rejects.toMatchObject({
+        code: 'user.identity_not_exist',
+        data: { relatedUser: relatedUserHint },
+      });
+      await expect(verification.identifyRelatedUser()).resolves.toBe(mockUser);
+    });
+
+    it('should reject a related user with the provider linked', async () => {
+      findSocialRelatedUser.mockResolvedValue([
+        relatedUserHint,
+        { ...mockUser, identities: { google: { userId: 'social-account-a' } } },
+      ]);
+      const verification = createVerifiedSocialVerification();
+      const error = new RequestError({ code: 'user.social_provider_already_linked', status: 422 });
+
+      await expect(verification.identifyUser()).rejects.toMatchError(error);
+      await expect(verification.identifyRelatedUser()).rejects.toMatchError(error);
     });
   });
 });

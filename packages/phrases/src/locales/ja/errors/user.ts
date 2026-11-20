@@ -20,6 +20,8 @@ const user = {
   sso_identity_not_exist: 'エンタープライズ SSO アカウントはまだ登録されていません。',
   identity_already_in_use: 'このソーシャルアカウントはすでに別のアカウントに関連付けされています。',
   social_account_exists_in_profile: 'このソーシャルアカウントはすでに関連付けられています。',
+  social_provider_already_linked:
+    'このプロバイダーの別のアカウントがすでに関連付けられています。そのアカウントまたは別の方法でサインインしてください。',
   cannot_delete_self: '自分自身を削除することはできません。',
   sign_up_method_not_enabled: 'このサインアップ方法は有効化されていません。',
   sign_in_method_not_enabled: 'このサインイン方法は有効化されていません。',

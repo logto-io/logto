@@ -19,6 +19,8 @@ const user = {
   sso_identity_not_exist: 'لم يتم تسجيل حساب SSO المؤسسي بعد.',
   identity_already_in_use: 'تم ربط الحساب الاجتماعي بحساب موجود بالفعل.',
   social_account_exists_in_profile: 'لقد قمت بربط هذا الحساب الاجتماعي بالفعل.',
+  social_provider_already_linked:
+    'تم ربط حساب آخر من هذا المزوّد بالفعل. سجّل الدخول باستخدام ذلك الحساب أو بطريقة أخرى.',
   cannot_delete_self: 'لا يمكنك حذف نفسك.',
   sign_up_method_not_enabled: 'طريقة التسجيل هذه غير ممكّنة.',
   sign_in_method_not_enabled: 'طريقة تسجيل الدخول هذه غير ممكّنة.',

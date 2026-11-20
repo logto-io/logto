@@ -19,6 +19,8 @@ const user = {
   sso_identity_not_exist: 'حساب SSO سازمانی هنوز ثبت نشده است.',
   identity_already_in_use: 'حساب اجتماعی به حساب موجودی متصل شده است.',
   social_account_exists_in_profile: 'این حساب اجتماعی را از قبل متصل کرده‌اید.',
+  social_provider_already_linked:
+    'حساب دیگری از این ارائه‌دهنده قبلاً متصل شده است. با همان حساب یا روش دیگری وارد شوید.',
   cannot_delete_self: 'نمی‌توانید خودتان را حذف کنید.',
   sign_up_method_not_enabled: 'این روش ثبت‌نام فعال نیست.',
   sign_in_method_not_enabled: 'این روش ورود فعال نیست.',

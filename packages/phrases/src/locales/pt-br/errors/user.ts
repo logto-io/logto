@@ -19,6 +19,8 @@ const user = {
   sso_identity_not_exist: 'A conta corporate SSO ainda não foi registrada.',
   identity_already_in_use: 'A conta social foi associada a uma conta existente.',
   social_account_exists_in_profile: 'A conta social já está associada ao seu perfil.',
+  social_provider_already_linked:
+    'Outra conta deste provedor já está associada. Entre com essa conta ou use outro método.',
   cannot_delete_self: 'Você não pode excluir a si mesmo.',
   sign_up_method_not_enabled: 'Este método de inscrição não está ativado',
   sign_in_method_not_enabled: 'Este método de login não está habilitado.',
