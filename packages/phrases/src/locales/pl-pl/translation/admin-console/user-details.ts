@@ -79,6 +79,8 @@ const user_details = {
     name_column: 'Wieloetapowa autoryzacja',
     implicit_factor_tip:
       'Ten użytkownik ma zweryfikowany adres e-mail lub numer telefonu, więc liczy się on jako weryfikacja dwuetapowa bez konfiguracji. Aby uwzględniać tylko użytkowników, którzy ją skonfigurowali, zmień "Weryfikacja dwuetapowa przez e-mail/SMS" na stronie uwierzytelniania wieloskładnikowego.',
+    not_counted_factor_tip:
+      'Ten składnik nie liczy się jako weryfikacja dwuetapowa, ponieważ użytkownik nie ma odpowiedniego głównego adresu e-mail lub numeru telefonu albo składnik jest wyłączony na stronie uwierzytelniania wieloskładnikowego. Możesz go usunąć.',
     field_description_empty: 'Ten użytkownik nie włączył autoryzacji dwuetapowej.',
     deletion_confirmation:
       'Usuwasz istniejące <name/> w celu weryfikacji dwuetapowej. Czy na pewno chcesz kontynuować?',

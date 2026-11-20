@@ -80,6 +80,8 @@ const user_details = {
     name_column: 'Multi-Factor',
     implicit_factor_tip:
       'This user has a verified email address or phone number, so it counts for 2-step verification without being set up. To count only users who set it up, change "Email/SMS 2-step verification" on the Multi-factor auth page.',
+    not_counted_factor_tip:
+      'This factor does not count for 2-step verification, because the user has no matching primary email address or phone number, or the factor is turned off on the Multi-factor auth page. You can remove it.',
     field_description_empty: 'This user has not enabled 2-step verification factors.',
     deletion_confirmation:
       'You are removing the existing <name/> for the 2-step verification. Are you sure you want to continue?',

@@ -74,6 +74,8 @@ const user_details = {
     name_column: '多重因素驗證',
     implicit_factor_tip:
       '此用戶有已驗證的電郵或電話號碼，因此無需設定即計為兩步驗證。如只想計入已設定的用戶，請在多重要素驗證頁面修改「電郵/SMS 兩步驗證」。',
+    not_counted_factor_tip:
+      '此用戶沒有對應的主要電郵或電話號碼，或此因素已在多重要素驗證頁面關閉，因此它不計為兩步驗證。你可以移除它。',
     field_description_empty: '此用戶尚未啟用兩步驟身份驗證因素。',
     deletion_confirmation: '你正在刪除現有的雙步驗證中的 <name/>。你確定要繼續嗎？',
   },

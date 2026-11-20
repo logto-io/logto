@@ -74,6 +74,8 @@ const user_details = {
     name_column: '多因素认证',
     implicit_factor_tip:
       '该用户有已验证的邮箱或手机号码，因此无需设置即计为两步验证。如需仅计入已设置的用户，请在多因素认证页面修改“邮件/短信两步验证”。',
+    not_counted_factor_tip:
+      '该用户没有对应的主邮箱或主手机号码，或者此因素已在多因素认证页面关闭，因此它不计为两步验证。你可以移除它。',
     field_description_empty: '此用户尚未启用两步身份验证因素。',
     deletion_confirmation: '你正在删除现有的两步验证中的 <name/>。你确定要继续吗？',
   },

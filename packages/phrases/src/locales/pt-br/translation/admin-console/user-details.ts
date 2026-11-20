@@ -80,6 +80,8 @@ const user_details = {
     name_column: 'Autenticação de dois fatores',
     implicit_factor_tip:
       'Este usuário tem um e-mail ou número de telefone verificado, então ele conta para a verificação em 2 etapas sem ter sido configurado. Para contar apenas usuários que a configuraram, altere "Verificação em 2 etapas por e-mail/SMS" na página de autenticação multifator.',
+    not_counted_factor_tip:
+      'Este fator não conta para a verificação em 2 etapas, porque o usuário não tem um e-mail ou número de telefone principal correspondente, ou o fator está desativado na página de autenticação multifator. Você pode removê-lo.',
     field_description_empty: 'Este usuário não habilitou fatores de autenticação em duas etapas.',
     deletion_confirmation:
       'Você está removendo o existente <name/> para a verificação em duas etapas. Tem certeza de que deseja continuar?',

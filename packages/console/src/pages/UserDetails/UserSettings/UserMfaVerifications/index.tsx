@@ -63,27 +63,50 @@ function UserMfaVerifications({ userId }: Props) {
   } = useCurrentTenantScopes();
   const [isUpdatingMfaRequirement, setIsUpdatingMfaRequirement] = useState(false);
 
+  const countedFactors = useMemo(
+    () =>
+      signInExperience &&
+      mfaVerifications &&
+      resolveUserMfaFactors({
+        mfaSettings: signInExperience.mfa,
+        storedFactors: mfaVerifications.map(({ type }) => type),
+        hasPrimaryEmail: Boolean(user.primaryEmail),
+        hasPrimaryPhone: Boolean(user.primaryPhone),
+      }),
+    [mfaVerifications, signInExperience, user]
+  );
+
   // Email and phone MFA the user has without a stored record, which only implicit enrollment gives
   const emailPhoneMfaVerifications = useMemo(() => {
-    if (!signInExperience || !mfaVerifications) {
+    if (!countedFactors || !mfaVerifications) {
       return [];
     }
 
-    const storedFactors = mfaVerifications.map(({ type }) => type);
-
-    return resolveUserMfaFactors({
-      mfaSettings: signInExperience.mfa,
-      storedFactors,
-      hasPrimaryEmail: Boolean(user.primaryEmail),
-      hasPrimaryPhone: Boolean(user.primaryPhone),
-    })
-      .filter((type) => isVerificationCodeMfaFactor(type) && !storedFactors.includes(type))
+    return countedFactors
+      .filter(
+        (type) =>
+          isVerificationCodeMfaFactor(type) &&
+          mfaVerifications.every((verification) => verification.type !== type)
+      )
       .map((type) => ({
         id: type === MfaFactor.EmailVerificationCode ? 'email-factor' : 'phone-factor',
         type,
         createdAt: new Date().toISOString(),
       }));
-  }, [mfaVerifications, signInExperience, user]);
+  }, [countedFactors, mfaVerifications]);
+
+  const getFactorTip = useCallback(
+    ({ id, type }: UserMfaVerification) => {
+      if (id === 'email-factor' || id === 'phone-factor') {
+        return t('implicit_factor_tip');
+      }
+
+      if (isVerificationCodeMfaFactor(type) && countedFactors && !countedFactors.includes(type)) {
+        return t('not_counted_factor_tip');
+      }
+    },
+    [countedFactors, t]
+  );
 
   // Helper function to determine sort order for MFA factors
   const getOrder = useCallback((type: MfaFactor) => {
@@ -186,13 +209,9 @@ function UserMfaVerifications({ userId }: Props) {
               render: (mfaVerification) => (
                 <MfaFactorTitle
                   {...mfaVerification}
-                  // Email / SMS MFA explicit enrollment: explain why an implicit factor stays
-                  tooltip={conditional(
-                    isDevFeaturesEnabled &&
-                      (mfaVerification.id === 'email-factor' ||
-                        mfaVerification.id === 'phone-factor') &&
-                      t('implicit_factor_tip')
-                  )}
+                  // Email / SMS MFA explicit enrollment: explain email and phone rows that differ
+                  // from what sign-in counts
+                  tooltip={conditional(isDevFeaturesEnabled && getFactorTip(mfaVerification))}
                 />
               ),
             },
