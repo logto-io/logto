@@ -3,7 +3,7 @@ import { hookEventGuard, LogResult, type HookEvent } from '@logto/schemas';
 import { ConsoleLog, normalizeError } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
 import chalk from 'chalk';
-import { HTTPError } from 'ky';
+import { HTTPError, type KyResponse } from 'ky';
 import { z } from 'zod';
 
 import { parseResponse, sendWebhookRequest } from '#src/libraries/hook/utils.js';
@@ -12,6 +12,10 @@ import { type CoreJobSettlementMeta, type createJobQueueQueries } from '#src/que
 
 export const webhookJobType = 'webhook';
 export const webhookJobLeaseMs = 60_000;
+/** Total wall-clock budget for headers, in-call retries, and body read, well below `webhookJobLeaseMs`. */
+export const webhookDeliveryTimeoutMs = 45_000;
+/** Cap on reading a single response body after headers arrive, clamped by remaining delivery time. */
+export const webhookBodyReadTimeoutMs = 10_000;
 export const webhookPerTenantConcurrency = 20;
 export const webhookPerHookConcurrency = 5;
 
@@ -35,6 +39,11 @@ export const parseWebhookJobPayload = (raw: string): WebhookJobPayload => {
   return { event: body.event, body };
 };
 
+type CreateWebhookJobHandlerOptions = {
+  deliveryTimeoutMs?: number;
+  bodyReadTimeoutMs?: number;
+};
+
 /**
  * Create the `webhook` job handler for Core's worker.
  *
@@ -43,9 +52,15 @@ export const parseWebhookJobPayload = (raw: string): WebhookJobPayload => {
  * pending deliveries. M1 keeps the existing in-call 5xx retry behavior and settles in one attempt.
  */
 export const createWebhookJobHandler = (
-  queries: Pick<ReturnType<typeof createJobQueueQueries>, 'findHookForDelivery'>
-) =>
-  defineJobHandler<WebhookJobPayload, CoreJobSettlementMeta>({
+  queries: Pick<ReturnType<typeof createJobQueueQueries>, 'findHookForDelivery'>,
+  options?: CreateWebhookJobHandlerOptions
+) => {
+  const {
+    deliveryTimeoutMs = webhookDeliveryTimeoutMs,
+    bodyReadTimeoutMs = webhookBodyReadTimeoutMs,
+  } = options ?? {};
+
+  return defineJobHandler<WebhookJobPayload, CoreJobSettlementMeta>({
     type: webhookJobType,
     parsePayload: parseWebhookJobPayload,
     leaseMs: webhookJobLeaseMs,
@@ -79,15 +94,49 @@ export const createWebhookJobHandler = (
       const logEntry = new LogEntry(`TriggerHook.${job.payload.event}`);
       logEntry.append({ hookId: job.groupKey, hookRequest: { body: job.payload.body } });
 
+      const abortController = new AbortController();
+      const deadlineAt = Date.now() + deliveryTimeoutMs;
+      const deliveryTimer = setTimeout(() => {
+        abortController.abort(new Error(`Webhook delivery timed out after ${deliveryTimeoutMs}ms`));
+      }, deliveryTimeoutMs);
+
+      const parseBoundedResponse = async (response: KyResponse) => {
+        if (abortController.signal.aborted) {
+          return parseResponse(response, abortController.signal);
+        }
+
+        const remainingMs = deadlineAt - Date.now();
+        if (remainingMs <= 0) {
+          abortController.abort(
+            new Error(`Webhook delivery timed out after ${deliveryTimeoutMs}ms`)
+          );
+          return parseResponse(response, abortController.signal);
+        }
+
+        const bodyTimeoutMs = Math.min(remainingMs, bodyReadTimeoutMs);
+        const bodyTimer = setTimeout(() => {
+          abortController.abort(
+            new Error(`Webhook response body read timed out after ${bodyTimeoutMs}ms`)
+          );
+        }, bodyTimeoutMs);
+
+        try {
+          return await parseResponse(response, abortController.signal);
+        } finally {
+          clearTimeout(bodyTimer);
+        }
+      };
+
       try {
         const response = await sendWebhookRequest({
           hookConfig: hook.config,
           body: job.rawPayload,
           signingKey: hook.signingKey,
+          signal: abortController.signal,
         });
 
         logEntry.append({
-          response: await parseResponse(response),
+          response: await parseBoundedResponse(response),
         });
         consoleLog.info(`\tHook ${job.groupKey} succeeded`);
 
@@ -99,7 +148,7 @@ export const createWebhookJobHandler = (
         logEntry.append({
           result: LogResult.Error,
           response: conditional(
-            error instanceof HTTPError && (await trySafe(parseResponse(error.response)))
+            error instanceof HTTPError && (await trySafe(parseBoundedResponse(error.response)))
           ),
           error: String(normalizeError(error)),
         });
@@ -109,6 +158,9 @@ export const createWebhookJobHandler = (
           status: 'fail',
           meta: { log: { key: logEntry.key, payload: logEntry.payload } },
         };
+      } finally {
+        clearTimeout(deliveryTimer);
       }
     },
   });
+};

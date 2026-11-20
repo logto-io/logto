@@ -22,6 +22,8 @@ const { EnvSet } = await import('#src/env-set/index.js');
 const {
   createWebhookJobHandler,
   parseWebhookJobPayload,
+  webhookBodyReadTimeoutMs,
+  webhookDeliveryTimeoutMs,
   webhookJobLeaseMs,
   webhookJobType,
   webhookPerHookConcurrency,
@@ -79,6 +81,8 @@ describe('webhook job handler', () => {
 
       expect(handler.type).toBe(webhookJobType);
       expect(handler.leaseMs).toBe(webhookJobLeaseMs);
+      expect(webhookDeliveryTimeoutMs).toBeLessThan(webhookJobLeaseMs);
+      expect(webhookBodyReadTimeoutMs).toBeLessThanOrEqual(webhookDeliveryTimeoutMs);
       expect(handler.limits).toEqual({
         perTenantConcurrency: webhookPerTenantConcurrency,
         perGroupConcurrency: webhookPerHookConcurrency,
@@ -124,6 +128,7 @@ describe('webhook job handler', () => {
       hookConfig: hook.config,
       body: rawPayload,
       signingKey: hook.signingKey,
+      signal: expect.any(AbortSignal) as AbortSignal,
     });
     expect(result.status).toBe('done');
     expect(result.meta?.log?.key).toBe(`TriggerHook.${InteractionHookEvent.PostSignIn}`);
@@ -197,5 +202,29 @@ describe('webhook job handler', () => {
 
     findHookForDelivery.mockRejectedValueOnce(new Error('connection reset'));
     await expect(handler.handle(createClaimedJob())).rejects.toThrow('connection reset');
+  });
+
+  it('aborts and fails when response body read exceeds bodyReadTimeoutMs', async () => {
+    findHookForDelivery.mockResolvedValueOnce(createHookRecord());
+    sendWebhookRequest.mockResolvedValueOnce({
+      status: 200,
+      text: async () =>
+        new Promise<string>((resolve) => {
+          void resolve;
+        }),
+    });
+
+    const handler = createWebhookJobHandler({ findHookForDelivery }, { bodyReadTimeoutMs: 50 });
+    const result = await handler.handle(createClaimedJob());
+
+    const sentRequest = sendWebhookRequest.mock.calls[0]?.[0] as { signal?: AbortSignal };
+    expect(sentRequest.signal?.aborted).toBe(true);
+    expect(result.status).toBe('fail');
+    expect(result.meta?.log?.payload).toMatchObject({
+      result: LogResult.Error,
+      hookId: 'hook-1',
+    });
+    expect(result.meta?.log?.payload.error).toContain('body read timed out after 50ms');
+    expect(result.meta?.log?.payload).not.toHaveProperty('response');
   });
 });
