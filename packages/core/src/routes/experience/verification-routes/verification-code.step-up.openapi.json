@@ -10,6 +10,10 @@
                 "properties": {
                   "identifier": {
                     "description": "The identifier (email address or phone number) to send the verification code to. Once the interaction carries a subject, `{ \"type\": \"email\" }` or `{ \"type\": \"phone\" }` without a `value` sends the code to that user's primary email or phone."
+                  },
+                  "templateType": {
+                    "description": "Only for an identifier with only its `type`. `BindMfa` sends the code with the `BindMfa` template, to enroll the user's primary email or phone as an MFA factor. Defaults to the `SignIn` template.",
+                    "x-logto-dev-feature": true
                   }
                 }
               }

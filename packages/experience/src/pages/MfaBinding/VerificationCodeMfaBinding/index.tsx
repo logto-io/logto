@@ -8,7 +8,7 @@ import SecondaryPageLayout from '@/Layout/SecondaryPageLayout';
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import {
   bindMfaByVerificationCode,
-  sendSubjectVerificationCode,
+  sendSubjectBindMfaVerificationCode,
   sendVerificationCode,
 } from '@/apis/experience';
 import SwitchMfaFactorsLink from '@/components/SwitchMfaFactorsLink';
@@ -123,7 +123,7 @@ const VerificationCodeMfaBinding = ({
           identifierType={identifierType}
           verificationId={verificationId}
           verifyCode={bindMfaByVerificationCode}
-          resendCode={sendSubjectVerificationCode}
+          resendCode={sendSubjectBindMfaVerificationCode}
         />
         {availableFactors.length > 1 && (
           <SwitchMfaFactorsLink
