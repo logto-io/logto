@@ -154,7 +154,7 @@ describe('webhook job handler delivery and body-read bounds', () => {
     jest.clearAllMocks();
   });
 
-  it('aborts and fails when 200 headers arrive immediately but body stalls', async () => {
+  it('aborts and retries when 200 headers arrive immediately but body stalls', async () => {
     await withHttpServer(
       (_request, response) => {
         response.writeHead(200, { 'content-type': 'text/plain' });
@@ -170,10 +170,11 @@ describe('webhook job handler delivery and body-read bounds', () => {
         const elapsedMs = Date.now() - startedAt;
 
         expect(elapsedMs).toBeLessThan(350);
-        expect(result.status).toBe('fail');
+        expect(result.status).toBe('retry');
         expect(result.meta?.log?.payload).toMatchObject({
           result: LogResult.Error,
           hookId: 'hook-1',
+          attempts: 1,
         });
         expect(result.meta?.log?.payload.error).toContain('body read timed out after 150ms');
         expect(result.meta?.log?.payload).not.toHaveProperty('response');
@@ -182,7 +183,7 @@ describe('webhook job handler delivery and body-read bounds', () => {
     );
   });
 
-  it('aborts and fails when 200 response continuously trickles bytes', async () => {
+  it('aborts and retries when 200 response continuously trickles bytes', async () => {
     await withHttpServer(
       (_request, response, _attempt, trackTimer) => {
         response.writeHead(200, { 'content-type': 'text/plain' });
@@ -206,7 +207,11 @@ describe('webhook job handler delivery and body-read bounds', () => {
         const elapsedMs = Date.now() - startedAt;
 
         expect(elapsedMs).toBeLessThan(350);
-        expect(result.status).toBe('fail');
+        expect(result.status).toBe('retry');
+        expect(result.meta?.log?.payload).toMatchObject({
+          result: LogResult.Error,
+          attempts: 1,
+        });
         expect(result.meta?.log?.payload.error).toContain('body read timed out after 150ms');
         expect(result.meta?.log?.payload).not.toHaveProperty('response');
         await expect(waitForClosedConnections(1)).resolves.toBeGreaterThanOrEqual(1);
@@ -214,7 +219,7 @@ describe('webhook job handler delivery and body-read bounds', () => {
     );
   });
 
-  it('aborts stalled error body read on HTTPError without hanging', async () => {
+  it('aborts stalled error body read on HTTPError without hanging and marks it retryable', async () => {
     await withHttpServer(
       (_request, response) => {
         response.writeHead(500, { 'content-type': 'text/plain' });
@@ -230,10 +235,11 @@ describe('webhook job handler delivery and body-read bounds', () => {
         const elapsedMs = Date.now() - startedAt;
 
         expect(elapsedMs).toBeLessThan(350);
-        expect(result.status).toBe('fail');
+        expect(result.status).toBe('retry');
         expect(result.meta?.log?.payload).toMatchObject({
           result: LogResult.Error,
           hookId: 'hook-1',
+          attempts: 1,
         });
         expect(result.meta?.log?.payload.error).toContain('500');
         expect(result.meta?.log?.payload).not.toHaveProperty('response');
@@ -242,15 +248,15 @@ describe('webhook job handler delivery and body-read bounds', () => {
     );
   });
 
-  it('aborts slow 500 retry sequences at the overall deliveryTimeoutMs', async () => {
+  it('aborts slow response headers at deliveryTimeoutMs and returns retry', async () => {
     await withHttpServer(
       (_request, response, _attempt, trackTimer) => {
         const timer = setTimeout(() => {
           if (!response.destroyed) {
             response.writeHead(500);
-            response.end('retry later');
+            response.end('too late');
           }
-        }, 150);
+        }, 500);
         trackTimer(timer);
         response.on('close', () => {
           clearTimeout(timer);
@@ -259,20 +265,48 @@ describe('webhook job handler delivery and body-read bounds', () => {
       async ({ endpoint, getAttempts, waitForClosedConnections }) => {
         const handler = createWebhookJobHandler(
           { findHookForDelivery: async () => createHook(endpoint, 3) },
-          { deliveryTimeoutMs: 350, bodyReadTimeoutMs: 150 }
+          { deliveryTimeoutMs: 200, bodyReadTimeoutMs: 100 }
         );
         const startedAt = Date.now();
         const result = await handler.handle(createClaimedJob());
         const elapsedMs = Date.now() - startedAt;
 
-        expect(elapsedMs).toBeLessThan(600);
-        expect(getAttempts()).toBeLessThan(4);
-        expect(result.status).toBe('fail');
-        expect(result.meta?.log?.payload.error).toContain('Webhook delivery timed out after 350ms');
+        expect(elapsedMs).toBeLessThan(400);
+        expect(getAttempts()).toBe(1);
+        expect(result.status).toBe('retry');
+        expect(result.meta?.log?.payload).toMatchObject({
+          result: LogResult.Error,
+          attempts: 1,
+        });
+        expect(result.meta?.log?.payload.error).toContain('Webhook delivery timed out after 200ms');
         expect(result.meta?.log?.payload).not.toHaveProperty('response');
-        await expect(waitForClosedConnections(getAttempts())).resolves.toBeGreaterThanOrEqual(
-          getAttempts()
-        );
+        await expect(waitForClosedConnections(1)).resolves.toBeGreaterThanOrEqual(1);
+      }
+    );
+  });
+
+  it('sends a single HTTP attempt ignoring hook retries and preserves Retry-After on 503', async () => {
+    await withHttpServer(
+      (_request, response) => {
+        response.writeHead(503, { 'Retry-After': '120', 'content-type': 'text/plain' });
+        response.end('maintenance');
+      },
+      async ({ endpoint, getAttempts }) => {
+        const handler = createWebhookJobHandler({
+          findHookForDelivery: async () => createHook(endpoint, 3),
+        });
+        const result = await handler.handle(createClaimedJob());
+
+        expect(getAttempts()).toBe(1);
+        expect(result).toMatchObject({
+          status: 'retry',
+          retryAfterMs: 120_000,
+        });
+        expect(result.meta?.log?.payload).toMatchObject({
+          result: LogResult.Error,
+          attempts: 1,
+          response: { statusCode: 503, body: 'maintenance' },
+        });
       }
     );
   });

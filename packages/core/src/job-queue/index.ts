@@ -11,7 +11,7 @@ import {
   type JobQueueGauges,
 } from '#src/queries/job-queue.js';
 
-import { createWebhookJobHandler } from './webhook-handler.js';
+import { buildExpiredWebhookLog, createWebhookJobHandler } from './webhook-handler.js';
 
 const jobQueueMetricsIntervalMs = 60_000;
 const maxConcurrentJobsPerInstance = 100;
@@ -19,7 +19,9 @@ const maxConcurrentJobsPerInstance = 100;
 export const jobQueueMetricNames = Object.freeze({
   depth: 'job_queue.depth',
   oldestWaitingAgeMs: 'job_queue.oldest_waiting_age_ms',
+  openCircuits: 'job_queue.open_circuits',
   failedEnqueues: 'job_queue.failed_enqueues',
+  exhaustedDeliveries: 'job_queue.exhausted_deliveries',
 } as const);
 
 const consoleLog = new ConsoleLog(chalk.magenta('job-queue'));
@@ -32,6 +34,7 @@ export class CoreJobQueue {
   #worker?: JobQueueWorker<CoreJobSettlementMeta>;
   #metricsTimer?: NodeJS.Timeout;
   #failedEnqueues = 0;
+  #exhaustedDeliveries = 0;
   readonly #pendingEnqueues = new Set<Promise<void>>();
 
   get worker(): JobQueueWorker<CoreJobSettlementMeta> | undefined {
@@ -44,12 +47,23 @@ export class CoreJobQueue {
       return this.#worker;
     }
 
-    const queries = createJobQueueQueries(pool);
+    const queries = createJobQueueQueries(pool, {
+      buildExpiredLog: buildExpiredWebhookLog,
+      onBulkExpired: (count) => {
+        this.recordExhaustedDeliveries(count);
+      },
+    });
     const worker = new JobQueueWorker<CoreJobSettlementMeta>(queries, {
       log: consoleLog,
       maxConcurrency: maxConcurrentJobsPerInstance,
     });
-    worker.register(createWebhookJobHandler(queries));
+    worker.register(
+      createWebhookJobHandler(queries, {
+        onExhausted: () => {
+          this.recordExhaustedDeliveries();
+        },
+      })
+    );
 
     this.#worker = worker;
     worker.start();
@@ -67,6 +81,11 @@ export class CoreJobQueue {
     this.#failedEnqueues += 1;
     consoleLog.error('Failed to enqueue job.');
     consoleLog.error(error);
+  }
+
+  /** Count deliveries that permanently exhausted their retry window. */
+  recordExhaustedDeliveries(count = 1): void {
+    this.#exhaustedDeliveries += count;
   }
 
   /**
@@ -134,13 +153,17 @@ export class CoreJobQueue {
 
     const failedEnqueues = this.#failedEnqueues;
     this.#failedEnqueues = 0;
+    const exhaustedDeliveries = this.#exhaustedDeliveries;
+    this.#exhaustedDeliveries = 0;
 
     const metrics: Record<string, number> = {
       ...(gauges && {
         [jobQueueMetricNames.depth]: gauges.depth,
         [jobQueueMetricNames.oldestWaitingAgeMs]: gauges.oldestWaitingAgeMs,
       }),
+      [jobQueueMetricNames.openCircuits]: this.#worker?.openCircuitCount ?? 0,
       [jobQueueMetricNames.failedEnqueues]: failedEnqueues,
+      [jobQueueMetricNames.exhaustedDeliveries]: exhaustedDeliveries,
     };
 
     const { client } = appInsights;
