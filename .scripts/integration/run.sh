@@ -6,6 +6,7 @@ set -euo pipefail
 # To enable code coverage collection, set the `COVERAGE=1` environment variable before running this script.
 
 TARGET="${1:-api}"
+export INTEGRATION_TEST_TARGET="$TARGET"
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd -- "${SCRIPT_DIR}/../.." && pwd)"
 COMPOSE_FILE="${REPO_ROOT}/docker-compose.integration.yml"
