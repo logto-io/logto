@@ -8,6 +8,7 @@ import {
   saml,
   trustedDevice,
   type AuditLogPrefix,
+  type LogResponse,
 } from '@logto/schemas';
 import { yes } from '@silverhand/essentials';
 import { boolean, number, object, string, z } from 'zod';
@@ -16,13 +17,8 @@ import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
+import type { LogExportCursor, LogExportRow } from '#src/queries/log.js';
 import assertThat from '#src/utils/assert-that.js';
-import {
-  buildLogExportFileName,
-  createLogExportStream,
-  getLogExportContentType,
-  logExportFormats,
-} from '#src/utils/log-export.js';
 import { parseTimestampParam, validateTimeWindow } from '#src/utils/time-window.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
@@ -36,9 +32,16 @@ import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 const defaultDeleteLimit = 1000;
 const maxDeleteLimit = 10_000;
 
-// Page size for the export stream. A larger page cuts round trips; a smaller page keeps memory and
-// the time a single statement holds a connection low. 1000 matches the delete batch default.
-const logExportBatchSize = 1000;
+// Export batches are bounded like delete batches: the default keeps interactive calls small, and
+// the ceiling caps the work one request can do. 1000 matches the delete batch default.
+const defaultExportLimit = 1000;
+const maxExportLimit = 10_000;
+
+const exportCursorPattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}Z$/u;
+const exportCursorGuard = object({
+  createdAt: string().regex(exportCursorPattern),
+  id: string().min(1),
+});
 
 /**
  * The audit log keys exposed by `GET /logs`.
@@ -87,6 +90,42 @@ const parseBound = (raw: string | undefined, type: string): number | undefined =
 
   return value;
 };
+
+const encodeExportCursor = ({ createdAt, id }: LogExportCursor) =>
+  Buffer.from(JSON.stringify({ createdAt, id }), 'utf8').toString('base64url');
+
+const decodeExportCursor = (raw: string): unknown => {
+  try {
+    const decoded: unknown = JSON.parse(Buffer.from(raw, 'base64url').toString('utf8'));
+
+    return decoded;
+  } catch {
+    throw invalidInput('cursor');
+  }
+};
+
+const parseExportCursor = (raw: string | undefined): LogExportCursor | undefined => {
+  if (raw === undefined) {
+    return undefined;
+  }
+
+  if (raw.trim() === '') {
+    throw invalidInput('cursor');
+  }
+
+  const result = exportCursorGuard.safeParse(decodeExportCursor(raw));
+  assertThat(result.success, invalidInput('cursor'));
+
+  return result.data;
+};
+
+const toLogResponse = (log: LogExportRow): LogResponse => ({
+  tenantId: log.tenantId,
+  id: log.id,
+  key: log.key,
+  payload: log.payload,
+  createdAt: log.createdAt,
+});
 
 export default function logRoutes<T extends ManagementApiRouter>(
   ...[router, { queries }]: RouterInitArgs<T>
@@ -156,25 +195,37 @@ export default function logRoutes<T extends ManagementApiRouter>(
       '/logs/export',
       koaGuard({
         query: object({
-          format: z.enum(logExportFormats),
           userId: string().min(1).optional(),
           applicationId: string().min(1).optional(),
           logKey: string().min(1).optional(),
           excludeWebhookLogs: z.enum(['true', 'false']).optional(),
+          cursor: string().max(512).optional(),
+          limit: string().optional(),
           end_time: string(),
           start_time: string().optional(),
+        }),
+        response: object({
+          items: logResponseGuard.array(),
+          nextCursor: string().nullable(),
         }),
         status: [200, 400],
       }),
       async (ctx) => {
         const {
-          query: { format, userId, applicationId, logKey, excludeWebhookLogs },
+          query: {
+            userId,
+            applicationId,
+            logKey,
+            excludeWebhookLogs,
+            cursor: rawCursor,
+            limit: rawLimit,
+          },
         } = ctx.guard;
 
         const endTime = parseBound(ctx.guard.query.end_time, 'end_time');
 
         // `end_time` is required by the guard, so `parseBound` only returns `undefined` when the
-        // parameter is absent; throw rather than streaming an unbounded export by accident.
+        // parameter is absent; throw rather than reading an unbounded range by accident.
         if (endTime === undefined) {
           throw invalidInput('end_time');
         }
@@ -182,53 +233,54 @@ export default function logRoutes<T extends ManagementApiRouter>(
         const startTime = parseBound(ctx.guard.query.start_time, 'start_time');
 
         // The export uses the same window rules as `GET /logs` and `DELETE /logs`, including the
-        // future-boundary check: a boundary in the future is usually a unit mistake, and exporting
-        // an accidental unbounded range is expensive even though it is read-only.
+        // future-boundary check: a boundary in the future is usually a unit mistake.
         validateTimeWindow(startTime, endTime);
         assertThat(
           endTime <= Date.now(),
           new RequestError({ code: 'log.cleanup_boundary_in_future', status: 400 })
         );
 
-        const condition = {
+        const limit = rawLimit === undefined ? defaultExportLimit : Number(rawLimit);
+        assertThat(
+          Number.isInteger(limit) && limit >= 1 && limit <= maxExportLimit,
+          invalidInput('limit')
+        );
+
+        const cursor = parseExportCursor(rawCursor);
+
+        // Read one extra row so a page that is exactly full is still reported as the last page.
+        // The cursor is the exact PostgreSQL timestamp plus the id, so rows that share a
+        // millisecond can cross a page boundary without being duplicated or skipped.
+        const rows = await findLogsForExport(limit + 1, {
           payload: { userId, applicationId },
           logKey,
           startTime,
           endTime,
           // Webhook delivery logs share the table and are included by default, so the export
-          // covers the same key scope as `DELETE /logs`. Deleting by the same time window is only
-          // safe after the window stops changing; see the OpenAPI description.
+          // covers the same key scope as `DELETE /logs`. The cursor only tracks read progress;
+          // deleting by the same time window is only safe after the window stops changing.
           includeKeyPrefix: excludeWebhookLogs === 'true' ? auditLogKeyPrefixes : undefined,
-        };
-
-        // Fetch the first page and the newest row before committing response headers, so a
-        // database error on the first queries still becomes a normal JSON error response, and so
-        // the actual exported range can be reported in headers before the body starts.
-        const { stream, range } = await createLogExportStream({
-          format,
-          loadBatch: async (after) =>
-            findLogsForExport(logExportBatchSize, { ...condition, after }),
-          loadLast: async () => {
-            const rows = await findLogsForExport(1, condition, 'desc');
-
-            return rows.at(0);
-          },
+          after: cursor,
         });
 
-        ctx.status = 200;
-        ctx.set('Content-Type', getLogExportContentType(format));
-        ctx.set('Content-Disposition', `attachment; filename="${buildLogExportFileName(format)}"`);
+        const items = rows.length > limit ? rows.slice(0, limit) : rows;
+        const lastItem = items.at(-1);
+        const nextCursor =
+          rows.length > limit && lastItem
+            ? encodeExportCursor({
+                createdAt: lastItem.createdAtCursor,
+                id: lastItem.id,
+              })
+            : null;
+
         ctx.set('Cache-Control', 'no-store');
-
-        if (range) {
-          ctx.set('X-Log-Range-Oldest', String(range.oldest));
-          ctx.set('X-Log-Range-Newest', String(range.newest));
-        }
-
-        ctx.body = stream;
+        ctx.body = {
+          items: items.map((item) => toLogResponse(item)),
+          nextCursor,
+        };
 
         // Do not call `next()`: `GET /logs/:id` also matches this path, and continuing would let
-        // that handler overwrite the streamed download with a log lookup.
+        // that handler overwrite the batch response with a log lookup.
       }
     );
   }

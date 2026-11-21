@@ -206,86 +206,102 @@ describe('logRoutes', () => {
       ...mockLog,
       createdAtCursor: '2026-11-11T04:40:45.123456Z',
     };
+    const nextRow = {
+      ...mockLog,
+      id: '2',
+      createdAtCursor: exportRow.createdAtCursor,
+    };
+
+    const toItem = ({ tenantId, id, key, payload, createdAt }: typeof exportRow) => ({
+      tenantId,
+      id,
+      key,
+      payload,
+      createdAt,
+    });
+
+    const cursorOf = (row: typeof exportRow) =>
+      Buffer.from(JSON.stringify({ createdAt: row.createdAtCursor, id: row.id }), 'utf8').toString(
+        'base64url'
+      );
 
     beforeEach(() => {
       findLogsForExport.mockReset();
       findLogsForExport.mockResolvedValue([]);
     });
 
-    // The route asks for an ascending first page and a descending newest row before it starts
-    // streaming. Keep both probes consistent so page-resume assertions are not confused by the
-    // range probe.
-    const mockExportRows = (rows: Array<typeof exportRow>) => {
-      findLogsForExport.mockImplementation(async (_limit, condition, order) => {
-        if (order === 'desc') {
-          const last = rows.at(-1);
-          return last ? [last] : [];
-        }
-
-        return condition.after === undefined ? rows : [];
-      });
-    };
-
-    it('streams CSV rows instead of resolving /logs/:id', async () => {
-      mockExportRows([exportRow]);
-
-      const response = await logRequest.get('/logs/export?format=csv&end_time=5000');
+    it('returns an empty page with nextCursor null', async () => {
+      const response = await logRequest.get('/logs/export?end_time=5000');
 
       expect(response.status).toEqual(200);
-      expect(response.header['content-type']).toContain('text/csv');
-      expect(response.header['content-disposition']).toMatch(
-        /^attachment; filename="logs-.+\.csv"$/
-      );
-      expect(response.header['x-log-range-oldest']).toBe('123');
-      expect(response.header['x-log-range-newest']).toBe('123');
-      expect(findLogById).not.toHaveBeenCalled();
-
-      const [header, csvRow] = response.text.split('\n');
-      expect(header).toBe('tenantId,id,key,createdAt,payload');
-      const match = /^fake_tenant,1,a,123,"(.*)"$/.exec(csvRow ?? '');
-      expect(match).not.toBeNull();
-      expect(JSON.parse((match?.[1] ?? '').replaceAll('""', '"'))).toEqual(mockLog.payload);
-    });
-
-    it('streams JSONL rows', async () => {
-      mockExportRows([exportRow]);
-
-      const response = await logRequest.get('/logs/export?format=jsonl&end_time=5000');
-
-      expect(response.status).toEqual(200);
-      expect(response.header['content-type']).toContain('application/x-ndjson');
-      expect(response.header['content-disposition']).toMatch(
-        /^attachment; filename="logs-.+\.jsonl"$/
-      );
-      expect(JSON.parse(response.text.trim())).toEqual({
-        tenantId: mockLog.tenantId,
-        id: mockLog.id,
-        key: mockLog.key,
-        createdAt: mockLog.createdAt,
-        payload: mockLog.payload,
-      });
-    });
-
-    it('exports when the optional filters are omitted', async () => {
-      const response = await logRequest.get('/logs/export?format=jsonl&end_time=5000');
-
-      expect(response.status).toEqual(200);
+      expect(response.body).toEqual({ items: [], nextCursor: null });
       expect(findLogsForExport).toHaveBeenCalledWith(
-        1000,
+        1001,
+        expect.objectContaining({ after: undefined })
+      );
+      expect(findLogById).not.toHaveBeenCalled();
+    });
+
+    it('returns a page and a cursor when more rows exist', async () => {
+      findLogsForExport.mockResolvedValueOnce([exportRow, nextRow]);
+
+      const response = await logRequest.get('/logs/export?end_time=5000&limit=1');
+
+      expect(response.status).toEqual(200);
+      expect(response.body).toEqual({
+        items: [toItem(exportRow)],
+        nextCursor: cursorOf(exportRow),
+      });
+      expect(findLogsForExport).toHaveBeenCalledWith(
+        2,
+        expect.objectContaining({ after: undefined })
+      );
+    });
+
+    it('passes the cursor back as the exact insertion point for the next page', async () => {
+      findLogsForExport
+        .mockResolvedValueOnce([exportRow, nextRow])
+        .mockResolvedValueOnce([nextRow]);
+
+      const first = await logRequest.get('/logs/export?end_time=5000&limit=1');
+      const cursor = first.body.nextCursor as string;
+      const second = await logRequest.get(
+        `/logs/export?end_time=5000&limit=1&cursor=${encodeURIComponent(cursor)}`
+      );
+
+      expect(second.status).toEqual(200);
+      expect(second.body).toEqual({
+        items: [toItem(nextRow)],
+        nextCursor: null,
+      });
+      expect(findLogsForExport).toHaveBeenNthCalledWith(
+        2,
+        2,
         expect.objectContaining({
-          payload: { userId: undefined, applicationId: undefined },
-          logKey: undefined,
+          after: { createdAt: exportRow.createdAtCursor, id: exportRow.id },
         })
       );
     });
 
+    it('ends with nextCursor null when the page is exactly full', async () => {
+      findLogsForExport.mockResolvedValueOnce([exportRow]);
+
+      const response = await logRequest.get('/logs/export?end_time=5000&limit=1');
+
+      expect(response.status).toEqual(200);
+      expect(response.body).toEqual({
+        items: [toItem(exportRow)],
+        nextCursor: null,
+      });
+    });
+
     it('passes the GET /logs filters and the delete-style window validation through', async () => {
       await logRequest.get(
-        '/logs/export?format=jsonl&end_time=5000&start_time=1000&userId=user&applicationId=app&logKey=Key'
+        '/logs/export?end_time=5000&start_time=1000&userId=user&applicationId=app&logKey=Key&excludeWebhookLogs=true'
       );
 
       expect(findLogsForExport).toHaveBeenCalledWith(
-        1000,
+        1001,
         expect.objectContaining({
           payload: { userId: 'user', applicationId: 'app' },
           logKey: 'Key',
@@ -299,83 +315,77 @@ describe('logRoutes', () => {
         number,
         { includeKeyPrefix?: unknown[] },
       ];
-      // Webhook delivery logs are included by default; only the explicit opt-out narrows the
-      // export to the audit-log key prefixes.
-      expect(condition.includeKeyPrefix).toBeUndefined();
-    });
-
-    it('excludes webhook delivery logs when excludeWebhookLogs=true', async () => {
-      await logRequest.get('/logs/export?format=jsonl&end_time=5000&excludeWebhookLogs=true');
-
-      const [, condition] = findLogsForExport.mock.calls[0] as [
-        number,
-        { includeKeyPrefix?: unknown[] },
-      ];
       expect(condition.includeKeyPrefix).toContain(interaction.prefix);
     });
 
-    it('reports the actual exported range in headers', async () => {
-      findLogsForExport.mockImplementation(async (_limit, condition, order) => {
-        if (order === 'desc') {
-          return [{ ...exportRow, createdAt: 900 }];
-        }
+    it('exports when the optional filters are omitted', async () => {
+      const response = await logRequest.get('/logs/export?end_time=5000');
 
-        return condition.after === undefined ? [{ ...exportRow, createdAt: 123 }] : [];
-      });
-
-      const response = await logRequest.get('/logs/export?format=jsonl&end_time=5000');
-
-      expect(response.header['x-log-range-oldest']).toBe('123');
-      expect(response.header['x-log-range-newest']).toBe('900');
-    });
-
-    it('resumes after the last row of the previous page', async () => {
-      mockExportRows([exportRow]);
-
-      await logRequest.get('/logs/export?format=jsonl&end_time=5000');
-
+      expect(response.status).toEqual(200);
       expect(findLogsForExport).toHaveBeenCalledWith(
-        1000,
+        1001,
         expect.objectContaining({
-          after: { createdAt: exportRow.createdAtCursor, id: exportRow.id },
+          payload: { userId: undefined, applicationId: undefined },
+          logKey: undefined,
         })
       );
     });
 
     it('accepts end_time=0 and start_time=0 as real bounds', async () => {
-      const response = await logRequest.get('/logs/export?format=csv&end_time=0&start_time=0');
+      const response = await logRequest.get('/logs/export?end_time=0&start_time=0');
 
       expect(response.status).toEqual(200);
       expect(findLogsForExport).toHaveBeenCalledWith(
-        1000,
+        1001,
         expect.objectContaining({ startTime: 0, endTime: 0 })
       );
-      expect(response.text).toBe('tenantId,id,key,createdAt,payload\n');
-      expect(response.header['x-log-range-oldest']).toBeUndefined();
     });
 
-    it('returns 500 before sending the download when the first page fails', async () => {
+    it('accepts the maximum limit and requests one extra row', async () => {
+      const response = await logRequest.get('/logs/export?end_time=5000&limit=10000');
+
+      expect(response.status).toEqual(200);
+      expect(findLogsForExport).toHaveBeenCalledWith(
+        10_001,
+        expect.objectContaining({ after: undefined })
+      );
+    });
+
+    it('returns 500 when the page query fails', async () => {
       findLogsForExport.mockRejectedValueOnce(new Error('database unavailable'));
 
-      const response = await logRequest.get('/logs/export?format=csv&end_time=5000');
+      const response = await logRequest.get('/logs/export?end_time=5000');
 
       expect(response.status).toEqual(500);
-      expect(response.header['content-disposition']).toBeUndefined();
+      expect(response.body).not.toHaveProperty('nextCursor');
     });
 
     it.each([
-      ['missing format', '/logs/export?end_time=5000'],
-      ['unknown format', '/logs/export?format=xml&end_time=5000'],
-      ['missing end_time', '/logs/export?format=csv'],
-      ['future end_time', `/logs/export?format=csv&end_time=${Date.now() + 3_600_000}`],
-      ['inverted window', '/logs/export?format=csv&end_time=5000&start_time=6000'],
-      ['empty start_time', '/logs/export?format=csv&end_time=5000&start_time='],
-      ['negative end_time', '/logs/export?format=csv&end_time=-1'],
-      ['fractional end_time', '/logs/export?format=csv&end_time=1.5'],
-      ['invalid webhook exclusion', '/logs/export?format=csv&end_time=5000&excludeWebhookLogs=yes'],
-      ['empty userId', '/logs/export?format=csv&end_time=5000&userId='],
-      ['empty applicationId', '/logs/export?format=csv&end_time=5000&applicationId='],
-      ['empty logKey', '/logs/export?format=csv&end_time=5000&logKey='],
+      ['missing end_time', '/logs/export'],
+      ['future end_time', `/logs/export?end_time=${Date.now() + 3_600_000}`],
+      ['inverted window', '/logs/export?end_time=5000&start_time=6000'],
+      ['empty start_time', '/logs/export?end_time=5000&start_time='],
+      ['negative end_time', '/logs/export?end_time=-1'],
+      ['fractional end_time', '/logs/export?end_time=1.5'],
+      ['invalid webhook exclusion', '/logs/export?end_time=5000&excludeWebhookLogs=yes'],
+      ['empty userId', '/logs/export?end_time=5000&userId='],
+      ['empty applicationId', '/logs/export?end_time=5000&applicationId='],
+      ['empty logKey', '/logs/export?end_time=5000&logKey='],
+      ['empty cursor', '/logs/export?end_time=5000&cursor='],
+      ['invalid cursor', '/logs/export?end_time=5000&cursor=not-a-cursor'],
+      [
+        'invalid cursor timestamp',
+        `/logs/export?end_time=5000&cursor=${encodeURIComponent(
+          Buffer.from(
+            JSON.stringify({ createdAt: 'not-a-timestamp', id: 'log-id' }),
+            'utf8'
+          ).toString('base64url')
+        )}`,
+      ],
+      ['zero limit', '/logs/export?end_time=5000&limit=0'],
+      ['limit above the cap', '/logs/export?end_time=5000&limit=10001'],
+      ['fractional limit', '/logs/export?end_time=5000&limit=1.5'],
+      ['non-numeric limit', '/logs/export?end_time=5000&limit=abc'],
     ])('returns 400 for %s', async (_name, path) => {
       const response = await logRequest.get(path);
 

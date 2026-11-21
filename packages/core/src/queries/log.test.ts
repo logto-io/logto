@@ -37,8 +37,7 @@ describe('findLogsForExport()', () => {
       expect(statement).toContain("at time zone 'UTC'");
       expect(statement).toContain('YYYY-MM-DD"T"HH24:MI:SS.US"Z"');
       expect(statement).toContain('as "created_at_cursor"');
-      expect(statement).toContain('order by "created_at" asc');
-      expect(statement).toContain('"id" asc');
+      expect(statement).toContain('order by "created_at", "id"');
       expect(statement).toContain('limit');
       expect(statement).not.toContain('payload_user_id');
       expect(statement).not.toContain('"key" like');
@@ -90,20 +89,6 @@ describe('findLogsForExport()', () => {
         after: { createdAt: '2020-09-13T12:26:40.123456Z', id: 'previous-log' },
       })
     ).resolves.toEqual([]);
-  });
-
-  it('orders descending for the newest-row range probe', async () => {
-    mockQuery.mockImplementationOnce(async (query) => {
-      const statement = String(query);
-
-      expect(statement).toContain('order by "created_at" desc');
-      expect(statement).toContain('"id" desc');
-      expect(statement).toContain('limit');
-
-      return createMockQueryResult([]);
-    });
-
-    await findLogsForExport(1, { endTime: 5000 }, 'desc');
   });
 
   it('keeps the inclusive upper bound and drops the cursor on the first page', async () => {

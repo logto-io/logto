@@ -155,14 +155,10 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
    *
    * Ascending order matches the cursor comparator, so the composite
    * `(tenant_id, created_at, id)` index can satisfy both the range filter and the ordering.
-   *
-   * The descending variant is used once per export to find the newest matching row for the
-   * response's range headers; it deliberately passes no `after` cursor.
    */
   const findLogsForExport = async (
     limit: number,
-    logCondition: LogCondition,
-    order: 'asc' | 'desc' = 'asc'
+    logCondition: LogCondition
   ): Promise<readonly LogExportRow[]> =>
     pool.any<LogExportRow>(sql`
       select
@@ -177,8 +173,7 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
         ) as ${sql.identifier(['created_at_cursor'])}
       from ${table}
       ${buildLogConditionSql(logCondition)}
-      order by ${fields.createdAt} ${order === 'asc' ? sql`asc` : sql`desc`},
-        ${fields.id} ${order === 'asc' ? sql`asc` : sql`desc`}
+      order by ${fields.createdAt}, ${fields.id}
       limit ${limit}
     `);
 
