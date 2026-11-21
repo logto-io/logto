@@ -1,5 +1,13 @@
 # @logto/connector-facebook
 
+## 1.7.0
+
+### Minor Changes
+
+- 51564b0: add a `disableEmailSync` switch to the Facebook connector
+
+  The connector always synced the `email` field returned by Facebook to the user profile. This switch makes that configurable, matching the control the Microsoft Azure AD and standard OAuth2 connectors already offer. It is off by default, so existing connectors keep their current behavior.
+
 ## 1.6.7
 
 ### Patch Changes

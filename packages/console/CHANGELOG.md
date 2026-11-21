@@ -1,5 +1,49 @@
 # Change Log
 
+## 1.44.0
+
+### Minor Changes
+
+- 108dc00: support Friendly Captcha as a CAPTCHA provider
+
+  [Friendly Captcha](https://friendlycaptcha.com) v2 is a privacy-first, GDPR-compliant CAPTCHA service based on proof-of-work without visual puzzles.
+
+  To use it, create a v2 application and API key in the Friendly Captcha dashboard, then go to Console > Security > CAPTCHA and add Friendly Captcha with its site key and API key. The same configuration is available through the `PUT /api/captcha-provider` Management API with `type: "FriendlyCaptcha"`.
+
+  Customers on Friendly Captcha's Advanced or Enterprise plan can set the API endpoint to EU (`apiEndpoint: "eu"`) so that both the sign-in widget and token verification use Friendly Captcha's dedicated EU endpoint.
+
+- 450fa7d: add a refresh token lifetime setting for dynamic apps
+
+  Dynamic app (client ID metadata document) clients previously always used the default 14-day refresh token lifetime, so users had to sign in again every 14 days. Set "Refresh token time to live (TTL) in days" in the dynamic app settings, from 1 to 180 days, to apply one lifetime to all dynamic app clients. Changes apply to the next token issued.
+
+  The lifetime is now fixed from the first issuance for every dynamic app client: rotating a refresh token keeps its original expiration. Previously, dynamic app clients declaring `application_type: native` or a token endpoint authentication method other than `none` got a fresh lifetime on every refresh, up to 180 days; their users now sign in again once the configured lifetime ends.
+
+- f101e4b: add a tenant setting to turn off the "Add another 2-step verification" suggestion
+
+  When a user's only MFA factor is the email, phone number, or passkey they also sign in with, Logto suggests adding another factor during sign-up or sign-in. Turn off "Suggest adding another MFA factor" in Console > Multi-factor authentication > Policy, or set `mfa.skipAdditionalBindingSuggestion` to `true` in the sign-in experience, to never show this suggestion. Required MFA set-up, backup codes, and passkey prompts are not affected.
+
+- 93d3f39: report self-hosted license usage and warn in Console when usage exceeds plan limits
+
+  Self-hosted deployments with an active license evaluate usage locally, warn in Console when limits are exceeded without blocking features, and include aggregated usage counts in license refreshes unless `SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED=1` is set on every Core instance.
+
+### Patch Changes
+
+- 02549b2: fix redirect URI mismatches caused by the Console decoding URIs on save
+
+  The Console percent-decoded redirect URIs and post sign-out redirect URIs when saving application settings, so `https://example.com/a%2Fb` was stored as `https://example.com/a/b` and no longer matched the URI sent by the client. These URIs are now saved exactly as entered.
+
+  CORS allowed origins are no longer percent-decoded either, and a literal `%` in any of these fields, such as `https://example.com/100%`, no longer causes the save to fail. Trailing slashes are still removed from CORS allowed origins.
+
+- 7df1f0e: show save errors for uploaded files in SAML enterprise SSO connector settings
+
+  When saving a SAML enterprise SSO connector fails because the uploaded IdP metadata XML is rejected, for example metadata without an HTTP-Redirect sign-in endpoint or service provider metadata uploaded by mistake, the error now appears below the uploaded file. Previously nothing was shown and the save silently failed.
+
+- 9d694fd: fix the delete button for uploaded files in SAML enterprise SSO connector settings
+
+  Clicking the delete icon next to an uploaded IdP metadata XML file or signing certificate on a SAML enterprise SSO connector now removes the file. Previously the file stayed in place.
+
+- 897bc2c: allow drag-and-drop avatar uploads in user management when file storage is configured
+
 ## 1.43.0
 
 ### Minor Changes
