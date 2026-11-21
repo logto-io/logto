@@ -31,7 +31,7 @@ const mfa = {
     'Doğrulanmış e-posta adresi veya telefon numarası olan her kullanıcı',
   verification_code_enrollment_explicit: 'Yalnızca bunu ayarlayan kullanıcılar',
   verification_code_enrollment_explicit_confirmation:
-    'E-posta ve SMS doğrulama kodları yalnızca bunları ayarlayan kullanıcılar için 2 adımlı doğrulama sayılacak. Bunları ayarlamamış kullanıcılar bunları 2 adımlı doğrulama faktörü olarak kaybeder ve başka faktörü olmayan kullanıcılar MFA olmadan kabul edilir. Devam etmek istediğinizden emin misiniz?',
+    'E-posta ve SMS doğrulama kodları yalnızca bunları ayarlayan kullanıcılar için 2 adımlı doğrulama sayılacak. Bunları ayarlamamış kullanıcılar bunları 2 adımlı doğrulama faktörü olarak kaybeder ve başka faktörü olmayan kullanıcılar MFA olmadan kabul edilir. 2 adımlı doğrulamayı yalnızca e-posta adresi veya telefon numarasıyla açmış kullanıcılar, bir doğrulama yöntemi ekleyene kadar Hesap merkezinde "Kurulum tamamlanmadı" uyarısını görür. Devam etmek istediğinizden emin misiniz?',
   verification_code_enrollment_implicit_confirmation:
     'Doğrulanmış e-posta adresi veya telefon numarası olan her kullanıcı, bunu ayarlamamış olsa bile 2 adımlı doğrulama için kullanacak. Devam etmek istediğinizden emin misiniz?',
   policy: 'Politika',

@@ -31,7 +31,7 @@ const mfa = {
     'Todos os utilizadores com email ou número de telefone verificado',
   verification_code_enrollment_explicit: 'Apenas utilizadores que a configuraram',
   verification_code_enrollment_explicit_confirmation:
-    'Os códigos de verificação por email e SMS contarão como verificação em 2 passos apenas para os utilizadores que os configuraram. Os utilizadores que não os configuraram perdem-nos como fator de verificação em 2 passos, e os utilizadores sem outro fator serão tratados como não tendo MFA. Tem a certeza de que pretende continuar?',
+    'Os códigos de verificação por email e SMS contarão como verificação em 2 passos apenas para os utilizadores que os configuraram. Os utilizadores que não os configuraram perdem-nos como fator de verificação em 2 passos, e os utilizadores sem outro fator serão tratados como não tendo MFA. Os utilizadores que ativaram a verificação em 2 passos apenas com um email ou número de telefone verão o aviso "Configuração incompleta" no Centro de contas até adicionarem um método de verificação. Tem a certeza de que pretende continuar?',
   verification_code_enrollment_implicit_confirmation:
     'Todos os utilizadores com email ou número de telefone verificado irão usá-lo para a verificação em 2 passos, incluindo utilizadores que não a configuraram. Tem a certeza de que pretende continuar?',
   policy: 'Política',

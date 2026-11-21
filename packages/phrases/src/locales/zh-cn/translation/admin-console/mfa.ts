@@ -22,7 +22,7 @@ const mfa = {
   verification_code_enrollment_implicit: '所有拥有已验证邮箱或手机号码的用户',
   verification_code_enrollment_explicit: '仅限已设置的用户',
   verification_code_enrollment_explicit_confirmation:
-    '邮件和短信验证码将只对已设置的用户计为两步验证。未设置的用户将失去这一两步验证因素，没有其他因素的用户将被视为未启用 MFA。确定要继续吗？',
+    '邮件和短信验证码将只对已设置的用户计为两步验证。未设置的用户将失去这一两步验证因素，没有其他因素的用户将被视为未启用 MFA。之前仅凭邮箱或手机号开启两步验证的用户，在添加验证方式之前，会在账户中心看到“设置未完成”的提示。确定要继续吗？',
   verification_code_enrollment_implicit_confirmation:
     '所有拥有已验证邮箱或手机号码的用户都将使用它进行两步验证，包括未设置的用户。确定要继续吗？',
   policy: '策略',
