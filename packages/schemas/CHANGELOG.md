@@ -1,5 +1,61 @@
 # Change Log
 
+## 1.47.0
+
+### Minor Changes
+
+- f2caf27: support per-organization role assignments in one-time token context
+- 108dc00: support Friendly Captcha as a CAPTCHA provider
+
+  [Friendly Captcha](https://friendlycaptcha.com) v2 is a privacy-first, GDPR-compliant CAPTCHA service based on proof-of-work without visual puzzles.
+
+  To use it, create a v2 application and API key in the Friendly Captcha dashboard, then go to Console > Security > CAPTCHA and add Friendly Captcha with its site key and API key. The same configuration is available through the `PUT /api/captcha-provider` Management API with `type: "FriendlyCaptcha"`.
+
+  Customers on Friendly Captcha's Advanced or Enterprise plan can set the API endpoint to EU (`apiEndpoint: "eu"`) so that both the sign-in widget and token verification use Friendly Captcha's dedicated EU endpoint.
+
+- 0567ce3: support migrating MFA factors in the post first-factor verification action
+
+  The action result now accepts an optional `mfaVerifications` field to carry over TOTP, backup codes, and WebAuthn factors when a user is migrated just in time. Migrated factors are challenged in the same sign-in when MFA is required. A factor identical to an existing one is skipped, and a conflicting factor fails the sign-in instead of being replaced.
+
+- 450fa7d: add a refresh token lifetime setting for dynamic apps
+
+  Dynamic app (client ID metadata document) clients previously always used the default 14-day refresh token lifetime, so users had to sign in again every 14 days. Set "Refresh token time to live (TTL) in days" in the dynamic app settings, from 1 to 180 days, to apply one lifetime to all dynamic app clients. Changes apply to the next token issued.
+
+  The lifetime is now fixed from the first issuance for every dynamic app client: rotating a refresh token keeps its original expiration. Previously, dynamic app clients declaring `application_type: native` or a token endpoint authentication method other than `none` got a fresh lifetime on every refresh, up to 180 days; their users now sign in again once the configured lifetime ends.
+
+- f101e4b: add a tenant setting to turn off the "Add another 2-step verification" suggestion
+
+  When a user's only MFA factor is the email, phone number, or passkey they also sign in with, Logto suggests adding another factor during sign-up or sign-in. Turn off "Suggest adding another MFA factor" in Console > Multi-factor authentication > Policy, or set `mfa.skipAdditionalBindingSuggestion` to `true` in the sign-in experience, to never show this suggestion. Required MFA set-up, backup codes, and passkey prompts are not affected.
+
+- 93d3f39: report self-hosted license usage and warn in Console when usage exceeds plan limits
+
+  Self-hosted deployments with an active license evaluate usage locally, warn in Console when limits are exceeded without blocking features, and include aggregated usage counts in license refreshes unless `SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED=1` is set on every Core instance.
+
+- 34d5ffc: widen `tenants.id` and every tenant-ID-bearing column (118 columns across 78 tables) to `varchar(64)`
+
+  The widening runs online: catalog-only `alter` statements under briefly-held, timeout-bounded locks, with the dependent check constraints re-validated without blocking writes and no table data rewritten. To keep the migration bounded, the large partial and expression indexes on `logs`, `oidc_model_instances`, `users`, and `service_logs` are dropped, with temporary covering indexes standing in until follow-up releases rebuild the live ones concurrently; eight legacy expression indexes that row-level security already made unusable for tenant queries are removed for good. The maximum length of a custom tenant ID is unchanged in this release.
+
+### Patch Changes
+
+- 59f7e27: record why Logto rejected an action result in the action audit log
+
+  When a post first-factor verification or post sign-in action returns a result that Logto does not accept, such as an invalid user patch, a malformed migrated MFA factor, a changed sign-in identifier, or an identity conflict, the action audit log entry is now marked as an error and carries a `validation` field with the rejection reason. It names the failing field paths, or the index, type, and reason of the rejected MFA factor, and never includes values from the result such as secrets or backup codes. Accepted results are recorded with `validation: { outcome: 'accepted' }`.
+
+- e1f121e: fix S3 file uploads to buckets with ACLs disabled by supporting `isPublic: false` in storage provider configuration
+- 805da84: prevent users who are required to use MFA from turning off MFA verification on sign-in
+
+  Users who are required to use MFA by an admin or by an organization that requires MFA are now always asked for MFA verification on sign-in, even if they previously turned off 2-step verification. The Account Center hides the 2-step verification toggle for these users, and `GET /api/my-account/mfa-settings` returns a new `required` field that indicates whether MFA verification on sign-in is required for the user.
+
+- Updated dependencies [108dc00]
+- Updated dependencies [70a58d3]
+- Updated dependencies [c69b87e]
+- Updated dependencies [1838646]
+- Updated dependencies [450fa7d]
+- Updated dependencies [dfbe3d0]
+- Updated dependencies [f101e4b]
+- Updated dependencies [93d3f39]
+  - @logto/phrases@1.34.0
+
 ## 1.46.0
 
 ### Minor Changes

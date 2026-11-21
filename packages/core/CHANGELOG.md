@@ -1,5 +1,167 @@
 # Change Log
 
+## 1.47.0
+
+### Minor Changes
+
+- f2caf27: support per-organization role assignments in one-time token context
+- 3d45eba: filter organization members by tenant-level user role
+
+  Pass `roleId` to `GET /api/organizations/{id}/users` to list only members assigned that tenant-level user role. The filter applies before pagination and can be combined with `organizationRoleId` and `q`.
+
+- 108dc00: support Friendly Captcha as a CAPTCHA provider
+
+  [Friendly Captcha](https://friendlycaptcha.com) v2 is a privacy-first, GDPR-compliant CAPTCHA service based on proof-of-work without visual puzzles.
+
+  To use it, create a v2 application and API key in the Friendly Captcha dashboard, then go to Console > Security > CAPTCHA and add Friendly Captcha with its site key and API key. The same configuration is available through the `PUT /api/captcha-provider` Management API with `type: "FriendlyCaptcha"`.
+
+  Customers on Friendly Captcha's Advanced or Enterprise plan can set the API endpoint to EU (`apiEndpoint: "eu"`) so that both the sign-in widget and token verification use Friendly Captcha's dedicated EU endpoint.
+
+- 70a58d3: show a friendly error page when an OIDC error can't be sent back to the app
+
+  When a browser hits an OIDC error that can't safely be redirected back to the app, such as a `redirect_uri` that isn't registered or an unknown `client_id`, it now sees a localized page in the style of the sign-in experience instead of raw JSON. Developers can expand "Error details" to see the error response. API clients keep receiving the same JSON.
+
+- 0567ce3: support migrating MFA factors in the post first-factor verification action
+
+  The action result now accepts an optional `mfaVerifications` field to carry over TOTP, backup codes, and WebAuthn factors when a user is migrated just in time. Migrated factors are challenged in the same sign-in when MFA is required. A factor identical to an existing one is skipped, and a conflicting factor fails the sign-in instead of being replaced.
+
+- 1838646: use dedicated i18n error codes for organization invitation validation errors
+
+  Organization invitation creation and status update errors now return specific, localized codes under the `organization` namespace instead of the generic `request.invalid_input`, so clients can reliably distinguish each failure case and messages render in the user's language. HTTP status codes are unchanged.
+
+  If your integration matches `request.invalid_input` for these responses, update it to match the new codes:
+
+  - `POST /api/organization-invitations`
+    - `organization.expires_at_in_future` (400): the value of `expiresAt` is not in the future.
+    - `organization.invitee_already_member` (422): the invitee is already a member of the organization.
+  - `PUT /api/organization-invitations/{id}/status`
+    - `organization.invitation_status_not_changeable` (422): the invitation is no longer pending.
+    - `organization.accepted_user_id_required` (422): `acceptedUserId` is missing when accepting.
+    - `organization.accepted_user_email_mismatch` (422): the accepted user's primary email does not match the invitee.
+
+- 450fa7d: add a refresh token lifetime setting for dynamic apps
+
+  Dynamic app (client ID metadata document) clients previously always used the default 14-day refresh token lifetime, so users had to sign in again every 14 days. Set "Refresh token time to live (TTL) in days" in the dynamic app settings, from 1 to 180 days, to apply one lifetime to all dynamic app clients. Changes apply to the next token issued.
+
+  The lifetime is now fixed from the first issuance for every dynamic app client: rotating a refresh token keeps its original expiration. Previously, dynamic app clients declaring `application_type: native` or a token endpoint authentication method other than `none` got a fresh lifetime on every refresh, up to 180 days; their users now sign in again once the configured lifetime ends.
+
+- dfbe3d0: delete log rows older than a given timestamp through the Management API
+
+  `DELETE /api/logs` takes an `end_time` boundary, an optional `start_time` boundary, and a `limit`. Both boundaries are unix timestamps in milliseconds with the same inclusive semantics as `GET /api/logs`; `limit` defaults to 1000 and is capped at 10000. Each call deletes at most `limit` log rows, webhook delivery logs included, and reports `hasMore`, so operators can loop it to purge a large backlog while keeping every request bounded.
+
+- f101e4b: add a tenant setting to turn off the "Add another 2-step verification" suggestion
+
+  When a user's only MFA factor is the email, phone number, or passkey they also sign in with, Logto suggests adding another factor during sign-up or sign-in. Turn off "Suggest adding another MFA factor" in Console > Multi-factor authentication > Policy, or set `mfa.skipAdditionalBindingSuggestion` to `true` in the sign-in experience, to never show this suggestion. Required MFA set-up, backup codes, and passkey prompts are not affected.
+
+- 93d3f39: report self-hosted license usage and warn in Console when usage exceeds plan limits
+
+  Self-hosted deployments with an active license evaluate usage locally, warn in Console when limits are exceeded without blocking features, and include aggregated usage counts in license refreshes unless `SELF_HOSTED_LICENSE_USAGE_REPORTING_DISABLED=1` is set on every Core instance.
+
+- 006a765: export WebAuthn credentials from the user MFA verifications Management API
+
+  `GET /api/users/{userId}/mfa-verifications` now accepts an `includeWebAuthnCredentials` query parameter. When it is provided with a truthy value (`true`, `1`, `yes`), each WebAuthn verification includes its stored credential: `credentialId`, `publicKey` (base64url COSE), `counter` (`signCount`), `transports`, and `rpId`. These fields are omitted by default, so existing callers get the same response. Tenants can use them to migrate passkeys on the same domain. The user binding is the path `userId`, whose UTF-8 bytes Logto registers as the WebAuthn `userHandle`. The parameter is also honored under read-only access, since a WebAuthn public key and credential ID cannot be used to sign in. The Account API response is unchanged.
+
+### Patch Changes
+
+- 59f7e27: record why Logto rejected an action result in the action audit log
+
+  When a post first-factor verification or post sign-in action returns a result that Logto does not accept, such as an invalid user patch, a malformed migrated MFA factor, a changed sign-in identifier, or an identity conflict, the action audit log entry is now marked as an error and carries a `validation` field with the rejection reason. It names the failing field paths, or the index, type, and reason of the rejected MFA factor, and never includes values from the result such as secrets or backup codes. Accepted results are recorded with `validation: { outcome: 'accepted' }`.
+
+- 06d68ff: reject nonexistent organizations when creating one-time tokens
+- e553ce8: send `Cross-Origin-Opener-Policy: same-origin-allow-popups` for the Admin Console
+
+  The Admin Console and the welcome page no longer keep an opener relationship with cross-origin windows that open them. Links and popups the console opens itself keep working, and the sign-in experience keeps its current policy, so popup-based sign-in flows are unaffected.
+
+- e1f121e: fix S3 file uploads to buckets with ACLs disabled by supporting `isPublic: false` in storage provider configuration
+- 0049b89: issue access tokens with only the API resource permissions that still exist
+
+  When an app exchanged an authorization code or a device code for an access token for an API resource, the token could still include permissions (scopes) that had been removed from that API resource after the user granted them. Logto now issues these tokens, both opaque and JWT, with only the granted permissions that the API resource still has. If all of them have been removed, the token's `scope` is empty. The refresh token grant already behaved this way.
+
+- 51ca514: accept empty display URLs in client ID metadata documents
+
+  Some MCP clients that use a client ID metadata document (CIMD) set the optional `client_uri`, `policy_uri`, `tos_uri`, or `logo_uri` properties to an empty string. Logto rejected these documents before the authorization flow started. Logto now treats these empty values as omitted. Non-empty invalid URLs are still rejected.
+
+- 4885ab7: handle social identity targets that contain special characters
+- c69b87e: keep a user's linked social account when another account from the same provider matches their email or phone
+
+  Signing in with a different account from a social provider the user had already linked, matched by email or phone, used to replace the existing link and its stored provider tokens. The sign-in is now rejected with `user.social_provider_already_linked`, asking the user to sign in with the linked account or another method; for custom sign-in UIs, identification returns this 422 instead of 404 `user.identity_not_exist`. To switch to another account from the same provider, unlink the existing one first.
+
+- bab5464: return 400 instead of 500 when a Management API request contains a NUL character
+
+  A NUL character (`\u0000` in a JSON body or `%00` in a query or path) in a text value, for example `GET /api/users?search=%00` or `POST /api/roles` with a `name` containing `\u0000`, made PostgreSQL reject the query with `invalid byte sequence for encoding "UTF8": 0x00` and the API responded with `500 Internal server error`. It now responds with `400 request.invalid_input`.
+
+- c5399e3: sign in a SAML SSO user only through the connector that linked their identity
+
+  An enterprise SSO identity linked through a SAML connector no longer signs in through a different connector that reports the same IdP entity ID. That sign-in now fails with `user.enterprise_sso_identity_not_exists`. OIDC connectors are unchanged. If two SAML connectors in a tenant use the same IdP entity ID, each user keeps signing in through the connector they were first linked through.
+
+- 7ba0206: count email and phone MFA factors when issuing organization tokens for organizations that require MFA
+
+  Users whose only MFA factor is the email verification code or SMS verification code enabled in the sign-in experience were always denied organization tokens for organizations that require MFA, even after completing MFA at sign-in. Organization token issuance now uses the same MFA factors as sign-in, and the Console's tenant MFA status and list of members without MFA follow the same rule.
+
+  This also means MFA factors that are not enabled in the sign-in experience, and backup codes that have all been used, no longer count as configured MFA. Users in an organization that requires MFA whose only MFA is such a factor (for example, a TOTP added through the Management API while TOTP is not enabled, or a factor that was later disabled) are denied organization tokens until they set up an enabled MFA factor. With the organization MFA policy set to mandatory in the sign-in experience, they are asked to do so at their next sign-in.
+
+- 805da84: prevent users who are required to use MFA from turning off MFA verification on sign-in
+
+  Users who are required to use MFA by an admin or by an organization that requires MFA are now always asked for MFA verification on sign-in, even if they previously turned off 2-step verification. The Account Center hides the 2-step verification toggle for these users, and `GET /api/my-account/mfa-settings` returns a new `required` field that indicates whether MFA verification on sign-in is required for the user.
+
+- 268be66: reject API resource indicators that are not valid URIs in `POST /api/resources`
+
+  The Management API accepted any string as the indicator of a new API resource, for example `not a uri`, and saved it. The Console already requires a valid URI, and OIDC rejects authorization requests for a resource indicator that is not an absolute URI, so a resource created this way could never be requested. The API now responds with `400 guard.invalid_input` instead.
+
+- 08b8a0e: emit one `AttributeValue` per item for multi-valued SAML attributes
+
+  A mapped claim that holds an array, such as `roles` or `organizations`, was written into the SAML assertion as one JSON-encoded string (`["Development","Employees"]`). Service providers expect one `saml:AttributeValue` element per value, as the SAML core specification describes, so role-based rules on the SP side could not match. Each item is now emitted as its own `AttributeValue`.
+
+  Object items, such as those of `organization_data` and `sso_identities`, stay JSON-encoded, one per `AttributeValue`.
+
+  This changes the assertion shape for existing integrations. A service provider that parses the JSON-encoded string of an array claim now receives one `AttributeValue` per item and should read them as a list, and an empty array yields the attribute without a value instead of `[]`.
+
+- 4b6b3c6: limit the size of SAML authentication requests sent to SAML applications
+
+  `GET` and `POST /api/saml/:id/authn` now reject a `SAMLRequest` whose decoded XML is larger than 16 KiB, has more than 128 elements or 256 attributes, or has an attribute without a value, with a 400 `application.saml.invalid_saml_request` error.
+
+- 880bf80: limit the length of passwords verified against `sha256-crypt` and `sha512-crypt` legacy password digests
+
+  A password longer than 4,096 bytes (UTF-8) never matches these digests, so verifying it fails as with a wrong password.
+
+- d7dc627: let users sign in again when their browser session belongs to a deleted account
+
+  Users no longer need to clear their browser cookies to sign in again. Deleting an account also revokes its authorization grants alongside its sessions and tokens.
+
+- 426f4dc: count every attempt at a verification code toward its retry limit, and accept a correct code from at most one request
+
+  An attempt after the limit is reached gets `verification_code.exceed_max_try`, and any other request that presents a code already used gets `verification_code.not_found`.
+
+- 9b4106d: link enterprise SSO sign-ins to existing accounts by email only on the connector's email domains
+
+  Upgrade note: an enterprise SSO sign-in is linked automatically to an existing account with the same email only when the email's domain is listed in the connector's "Enterprise email domains", so list every email domain the connector serves.
+
+- Updated dependencies [59f7e27]
+- Updated dependencies [e1f121e]
+- Updated dependencies [faf9161]
+- Updated dependencies [02549b2]
+- Updated dependencies [f2caf27]
+- Updated dependencies [108dc00]
+- Updated dependencies [70a58d3]
+- Updated dependencies [c69b87e]
+- Updated dependencies [0567ce3]
+- Updated dependencies [1838646]
+- Updated dependencies [450fa7d]
+- Updated dependencies [dfbe3d0]
+- Updated dependencies [f101e4b]
+- Updated dependencies [7df1f0e]
+- Updated dependencies [805da84]
+- Updated dependencies [93d3f39]
+- Updated dependencies [9d694fd]
+- Updated dependencies [897bc2c]
+- Updated dependencies [34d5ffc]
+  - @logto/schemas@1.47.0
+  - @logto/experience@1.25.0
+  - @logto/console@1.44.0
+  - @logto/phrases@1.34.0
+  - @logto/account@0.8.1
+  - @logto/cli@1.47.0
+
 ## 1.46.0
 
 ### Minor Changes
