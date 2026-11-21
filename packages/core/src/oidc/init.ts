@@ -87,13 +87,9 @@ import { getAcceptedUserClaims, getUserClaimsData } from './scope.js';
 // Temporarily removed 'EdDSA' since it's not supported by browser yet
 const supportedSigningAlgs = Object.freeze(['RS256', 'PS256', 'ES256', 'ES384', 'ES512'] as const);
 
-// These are the routes that call findAccount from oidc-provider's session loader.
-const sessionAccountRoutes = new Set([
-  'authorization',
-  'resume',
-  'code_verification',
-  'device_resume',
-]);
+// Routes where findAccount loads the browser session's account without rotating the session ID, so
+// destroying the session removes its stored row. `resume` and `device_resume` rotate it first.
+const sessionAccountRoutes = new Set(['authorization', 'code_verification']);
 
 export default function initOidc(
   tenantId: string,
