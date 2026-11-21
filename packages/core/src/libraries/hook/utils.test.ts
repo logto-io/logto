@@ -186,6 +186,25 @@ describe('sendWebhookRequest', () => {
     ).rejects.toThrow('deadline exceeded');
     expect(post).toHaveBeenCalledTimes(callCountBefore);
   });
+
+  it('disables in-call retries and omits ky hooks when disableRetries is true', async () => {
+    await sendWebhookRequest({
+      hookConfig: {
+        url: 'https://logto.gg',
+        retries: 3,
+      },
+      body: '{"ok":true}',
+      signingKey: 'mockSigningKey',
+      disableRetries: true,
+    });
+
+    const requestOptions = post.mock.lastCall?.[1];
+    expect(requestOptions).toMatchObject({
+      retry: 0,
+      timeout: 10_000,
+    });
+    expect(requestOptions).not.toHaveProperty('hooks');
+  });
 });
 
 describe('parseResponse', () => {
