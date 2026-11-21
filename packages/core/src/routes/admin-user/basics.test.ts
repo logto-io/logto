@@ -585,7 +585,7 @@ describe('adminUserRoutes', () => {
     const userId = 'fooUser';
     const response = await userRequest.delete(`/users/${userId}`);
     expect(response.status).toEqual(204);
-    expect(signOutUser).toHaveBeenCalledWith(userId);
+    expect(signOutUser).toHaveBeenCalledWith(userId, { revokeGrants: true });
   });
 
   it('DELETE /users/:userId should proceed with deletion when revocation times out', async () => {
