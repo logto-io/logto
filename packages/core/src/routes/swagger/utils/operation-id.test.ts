@@ -16,6 +16,10 @@ describe('buildOperationId', () => {
     );
   });
 
+  it('should use the custom operation id for the static log export path', () => {
+    expect(buildOperationId(OpenAPIV3.HttpMethods.GET, '/logs/export')).toBe('ExportLogs');
+  });
+
   it('should throw if the path is invalid', () => {
     expect(() =>
       buildOperationId(OpenAPIV3.HttpMethods.GET, '/footballs/:footballId/bar/baz')

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- The GET /logs, export, detail and delete suites share one requester and mock set. */
 import {
   LogResult,
   token,
@@ -11,12 +12,21 @@ import {
 import type { Log, LogResponse } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
+import { EnvSet } from '#src/env-set/index.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
+
+// The export route is registered only while the log export dev feature is enabled.
+const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
+Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
+
+afterAll(() => {
+  Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
+});
 
 const mockBody = { key: 'a', payload: { key: 'a', result: LogResult.Success }, createdAt: 123 };
 const mockLog: LogResponse = { tenantId: 'fake_tenant', id: '1', ...mockBody };
@@ -35,10 +45,11 @@ const logs = {
     count: mockLogs.length,
   }),
   findLogs: jest.fn().mockResolvedValue(mockLogs.map((log) => toRow(log))),
+  findLogsForExport: jest.fn().mockResolvedValue([]),
   findLogById: jest.fn().mockResolvedValue(toRow(mockLog)),
   deleteLogsInRange: jest.fn().mockResolvedValue({ deletedCount: 0 }),
 };
-const { countLogs, findLogs, findLogById, deleteLogsInRange } = logs;
+const { countLogs, findLogs, findLogsForExport, findLogById, deleteLogsInRange } = logs;
 const logRoutes = await pickDefault(import('./log.js'));
 
 describe('logRoutes', () => {
@@ -190,6 +201,160 @@ describe('logRoutes', () => {
     });
   });
 
+  describe('GET /logs/export', () => {
+    const exportRow = {
+      ...mockLog,
+      createdAtCursor: '2026-11-11T04:40:45.123456Z',
+    };
+    const nextRow = {
+      ...mockLog,
+      id: '2',
+      createdAtCursor: exportRow.createdAtCursor,
+    };
+
+    const toItem = ({ tenantId, id, key, payload, createdAt }: typeof exportRow) => ({
+      tenantId,
+      id,
+      key,
+      payload,
+      createdAt,
+    });
+
+    const cursorOf = (row: typeof exportRow) =>
+      Buffer.from(JSON.stringify({ createdAt: row.createdAtCursor, id: row.id }), 'utf8').toString(
+        'base64url'
+      );
+
+    beforeEach(() => {
+      findLogsForExport.mockReset();
+      findLogsForExport.mockResolvedValue([]);
+    });
+
+    it('returns an empty page with nextCursor null', async () => {
+      const response = await logRequest.get('/logs/export?end_time=5000');
+
+      expect(response.status).toEqual(200);
+      expect(response.body).toEqual({ items: [], nextCursor: null });
+      expect(findLogsForExport).toHaveBeenCalledWith(
+        1001,
+        expect.objectContaining({ after: undefined })
+      );
+      expect(findLogById).not.toHaveBeenCalled();
+    });
+
+    it('returns a page and a cursor when more rows exist', async () => {
+      findLogsForExport.mockResolvedValueOnce([exportRow, nextRow]);
+
+      const response = await logRequest.get('/logs/export?end_time=5000&limit=1');
+
+      expect(response.status).toEqual(200);
+      expect(response.body).toEqual({
+        items: [toItem(exportRow)],
+        nextCursor: cursorOf(exportRow),
+      });
+      expect(findLogsForExport).toHaveBeenCalledWith(
+        2,
+        expect.objectContaining({ after: undefined })
+      );
+    });
+
+    it('passes the cursor back as the exact insertion point for the next page', async () => {
+      findLogsForExport
+        .mockResolvedValueOnce([exportRow, nextRow])
+        .mockResolvedValueOnce([nextRow]);
+
+      const first = await logRequest.get('/logs/export?end_time=5000&limit=1');
+      const cursor = first.body.nextCursor as string;
+      const second = await logRequest.get(
+        `/logs/export?end_time=5000&limit=1&cursor=${encodeURIComponent(cursor)}`
+      );
+
+      expect(second.status).toEqual(200);
+      expect(second.body).toEqual({
+        items: [toItem(nextRow)],
+        nextCursor: null,
+      });
+      expect(findLogsForExport).toHaveBeenNthCalledWith(
+        2,
+        2,
+        expect.objectContaining({
+          after: { createdAt: exportRow.createdAtCursor, id: exportRow.id },
+        })
+      );
+    });
+
+    it('ends with nextCursor null when the page is exactly full', async () => {
+      findLogsForExport.mockResolvedValueOnce([exportRow]);
+
+      const response = await logRequest.get('/logs/export?end_time=5000&limit=1');
+
+      expect(response.status).toEqual(200);
+      expect(response.body).toEqual({
+        items: [toItem(exportRow)],
+        nextCursor: null,
+      });
+    });
+
+    it('accepts end_time=0 and start_time=0 as real bounds', async () => {
+      const response = await logRequest.get('/logs/export?end_time=0&start_time=0');
+
+      expect(response.status).toEqual(200);
+      expect(findLogsForExport).toHaveBeenCalledWith(
+        1001,
+        expect.objectContaining({ startTime: 0, endTime: 0 })
+      );
+    });
+
+    it('accepts the maximum limit and requests one extra row', async () => {
+      const response = await logRequest.get('/logs/export?end_time=5000&limit=10000');
+
+      expect(response.status).toEqual(200);
+      expect(findLogsForExport).toHaveBeenCalledWith(
+        10_001,
+        expect.objectContaining({ after: undefined })
+      );
+    });
+
+    it('returns 500 when the page query fails', async () => {
+      findLogsForExport.mockRejectedValueOnce(new Error('database unavailable'));
+
+      const response = await logRequest.get('/logs/export?end_time=5000');
+
+      expect(response.status).toEqual(500);
+      expect(response.body).not.toHaveProperty('nextCursor');
+    });
+
+    it.each([
+      ['missing end_time', '/logs/export'],
+      ['future end_time', `/logs/export?end_time=${Date.now() + 3_600_000}`],
+      ['inverted window', '/logs/export?end_time=5000&start_time=6000'],
+      ['empty start_time', '/logs/export?end_time=5000&start_time='],
+      ['negative end_time', '/logs/export?end_time=-1'],
+      ['fractional end_time', '/logs/export?end_time=1.5'],
+      ['invalid webhook exclusion', '/logs/export?end_time=5000&excludeWebhookLogs=yes'],
+      ['empty cursor', '/logs/export?end_time=5000&cursor='],
+      ['invalid cursor', '/logs/export?end_time=5000&cursor=not-a-cursor'],
+      [
+        'invalid cursor timestamp',
+        `/logs/export?end_time=5000&cursor=${encodeURIComponent(
+          Buffer.from(
+            JSON.stringify({ createdAt: 'not-a-timestamp', id: 'log-id' }),
+            'utf8'
+          ).toString('base64url')
+        )}`,
+      ],
+      ['zero limit', '/logs/export?end_time=5000&limit=0'],
+      ['limit above the cap', '/logs/export?end_time=5000&limit=10001'],
+      ['fractional limit', '/logs/export?end_time=5000&limit=1.5'],
+      ['non-numeric limit', '/logs/export?end_time=5000&limit=abc'],
+    ])('returns 400 for %s', async (_name, path) => {
+      const response = await logRequest.get(path);
+
+      expect(response.status).toEqual(400);
+      expect(findLogsForExport).not.toHaveBeenCalled();
+    });
+  });
+
   describe('GET /logs/:id', () => {
     const logId = 'logIdValue';
 
@@ -338,3 +503,5 @@ describe('logRoutes', () => {
     });
   });
 });
+
+/* eslint-enable max-lines */
