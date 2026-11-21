@@ -35,6 +35,7 @@ const session = {
     invalid_backup_code: '無效的備用碼。',
     mfa_policy_not_user_controlled: 'MFA 政策不受使用者控制。',
     mfa_factor_not_enabled: 'MFA 因素未啟用。',
+    mfa_factor_not_enrolled: '用戶未設定此 MFA 因素。',
     suggest_additional_mfa: '為更強的保護，建議新增另一種多重驗證方式。你可略過此步驟並繼續。',
   },
   trusted_device_suggest_opt_in: '請選擇是否信任此裝置。',

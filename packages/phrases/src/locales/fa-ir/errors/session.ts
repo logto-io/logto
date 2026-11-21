@@ -39,6 +39,7 @@ const session = {
     invalid_backup_code: 'کد پشتیبان نامعتبر است.',
     mfa_policy_not_user_controlled: 'سیاست MFA تحت کنترل کاربر نیست.',
     mfa_factor_not_enabled: 'عامل MFA فعال نیست.',
+    mfa_factor_not_enrolled: 'کاربر این عامل MFA را راه‌اندازی نکرده است.',
     suggest_additional_mfa:
       'برای محافظت قوی‌تر، افزودن روش MFA دیگر را در نظر بگیرید. می‌توانید این مرحله را رد کنید و ادامه دهید.',
   },
