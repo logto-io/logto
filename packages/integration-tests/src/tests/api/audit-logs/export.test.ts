@@ -1,6 +1,6 @@
 import { defaultTenantId, hook, interaction, LogResult, type LogResponse } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { assertEnv } from '@silverhand/essentials';
+import { assertEnv, type Nullable } from '@silverhand/essentials';
 import { createInterceptorsPreset, createPool, sql, type DatabasePool } from '@silverhand/slonik';
 
 import { authedAdminApi } from '#src/api/api.js';
@@ -8,16 +8,17 @@ import { devFeatureTest } from '#src/utils.js';
 
 type LogPage = {
   items: LogResponse[];
-  nextCursor: string | undefined;
+  nextCursor: Nullable<string>;
 };
 
 // Integration coverage for `GET /api/logs/export`.
 //
 // Like `cleanup.test.ts`, the rows are seeded directly with SQL: the boundary and payload
 // fixtures need timestamps far in the past and exact millisecond values, which the Management API
-// cannot create. The window is far enough back that other suites do not write into it.
+// cannot create. The window is far enough back and disjoint from other suites that the export can
+// be scoped by time alone, without content filters.
 devFeatureTest.describe('GET /logs/export', () => {
-  const startTime = 1_600_000_000_000;
+  const startTime = 1_600_000_200_000;
   const endTime = startTime + 60_000;
 
   const logKey = `${interaction.prefix}.Export.${generateStandardId()}`;
@@ -127,25 +128,32 @@ devFeatureTest.describe('GET /logs/export', () => {
     });
   };
 
-  const readAllIds = async (cursor?: string): Promise<string[]> => {
-    const response = await exportLogs({ logKey, limit: '1', ...(cursor ? { cursor } : {}) });
+  const readAllAuditIds = async (cursor?: string): Promise<string[]> => {
+    const response = await exportLogs({
+      excludeWebhookLogs: 'true',
+      limit: '1',
+      ...(cursor ? { cursor } : {}),
+    });
     expect(response.status).toBe(200);
 
     const page = await response.json<LogPage>();
     const ids = page.items.map(({ id }) => id);
 
-    return [...ids, ...(page.nextCursor ? await readAllIds(page.nextCursor) : [])];
+    return [...ids, ...(page.nextCursor ? await readAllAuditIds(page.nextCursor) : [])];
   };
 
   it('paginates rows that share a timestamp without dropping or duplicating them', async () => {
-    const ids = await readAllIds();
+    const ids = await readAllAuditIds();
 
     expect(ids.slice().sort()).toEqual([sameTimeIdA, sameTimeIdB, laterId].slice().sort());
     expect(new Set(ids).size).toBe(3);
   });
 
   it('returns nextCursor null when the page is exactly full', async () => {
-    const response = await exportLogs({ logKey, limit: '3' });
+    const response = await exportLogs({
+      excludeWebhookLogs: 'true',
+      limit: '3',
+    });
 
     expect(response.status).toBe(200);
     const page = await response.json<LogPage>();
@@ -159,44 +167,38 @@ devFeatureTest.describe('GET /logs/export', () => {
   });
 
   it('includes webhook delivery logs by default', async () => {
-    const response = await exportLogs({ logKey: webhookLogKey, limit: '10' });
+    const response = await exportLogs({ limit: '10' });
 
     expect(response.status).toBe(200);
     const page = await response.json<LogPage>();
-    expect(page.items).toEqual([
-      {
-        tenantId: defaultTenantId,
-        id: webhookLogId,
-        key: webhookLogKey,
-        createdAt: firstCreatedAt,
-        payload: webhookPayload,
-      },
-    ]);
+    expect(
+      page.items
+        .map(({ id }) => id)
+        .slice()
+        .sort()
+    ).toEqual([sameTimeIdA, sameTimeIdB, laterId, webhookLogId].slice().sort());
     expect(page.nextCursor).toBeNull();
   });
 
   it('excludes webhook delivery logs when excludeWebhookLogs=true', async () => {
-    const response = await exportLogs({
-      logKey: webhookLogKey,
-      excludeWebhookLogs: 'true',
-      limit: '10',
-    });
+    const response = await exportLogs({ excludeWebhookLogs: 'true', limit: '10' });
 
     expect(response.status).toBe(200);
-    await expect(response.json<LogPage>()).resolves.toEqual({
-      items: [],
-      nextCursor: null,
+    const page = await response.json<LogPage>();
+    expect(
+      page.items
+        .map(({ id }) => id)
+        .slice()
+        .sort()
+    ).toEqual([sameTimeIdA, sameTimeIdB, laterId].slice().sort());
+    expect(page.nextCursor).toBeNull();
+  });
+
+  it('returns an empty page with nextCursor null when the window has no rows', async () => {
+    const response = await exportLogs({
+      start_time: String(startTime + 120_000),
+      end_time: String(startTime + 180_000),
     });
-  });
-
-  it('rejects an explicitly empty filter value', async () => {
-    const response = await exportLogs({ logKey, userId: '' });
-
-    expect(response.status).toBe(400);
-  });
-
-  it('returns an empty page with nextCursor null when no rows match', async () => {
-    const response = await exportLogs({ logKey, userId: 'someone-else' });
 
     expect(response.status).toBe(200);
     await expect(response.json<LogPage>()).resolves.toEqual({

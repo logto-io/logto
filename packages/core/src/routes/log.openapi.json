@@ -126,23 +126,8 @@
       "get": {
         "tags": ["Dev feature"],
         "summary": "Export logs",
-        "description": "Return one JSON page of logs. `items` contains up to `limit` logs in ascending `createdAt` order, and `nextCursor` is the opaque cursor for the next page. It is `null` on the last page and for an empty result. To continue, pass `nextCursor` back as `cursor` and keep `end_time` and every filter unchanged. The cursor carries PostgreSQL's exact timestamp and the log id, so rows that share a millisecond are not duplicated or skipped at a page boundary.\n\nBy default the page includes webhook delivery logs (`TriggerHook.*`). Set `excludeWebhookLogs=true` to return audit logs only, matching `GET /api/logs`; webhook delivery logs can then be read through `GET /api/hooks/{id}/recent-logs`.\n\nThe cursor only records read progress. It does not make deleting the same time window lossless: a row whose transaction commits after the export has passed its position is absent from the export, but a later time-window `DELETE /api/logs` removes it. Delete a window by time only after its data has stopped changing.\n\nThe client owns the output format. Write CSV or JSONL from `items`, and persist `nextCursor` only after the batch has been written successfully so an interrupted download can resume from the last completed page.",
+        "description": "Return one JSON page of logs in a time window. `items` contains up to `limit` logs in ascending `createdAt` order, and `nextCursor` is the opaque cursor for the next page. It is `null` on the last page and for an empty result. To continue, pass `nextCursor` back as `cursor` and keep `start_time`, `end_time`, and `excludeWebhookLogs` unchanged. The cursor carries PostgreSQL's exact timestamp and the log id, so rows that share a millisecond are not duplicated or skipped at a page boundary.\n\nThis endpoint is for time-window archival and does not support content filters. Use `GET /api/logs` for filtered browsing.\n\nBy default the page includes webhook delivery logs (`TriggerHook.*`). Set `excludeWebhookLogs=true` to return audit logs only, matching `GET /api/logs`; webhook delivery logs can then be read through `GET /api/hooks/{id}/recent-logs`.\n\nThe cursor only records read progress. It does not make deleting the same time window lossless: a row whose transaction commits after the export has passed its position is absent from the export, but a later time-window `DELETE /api/logs` removes it. Delete a window by time only after its data has stopped changing.\n\nThe client owns the output format. Write CSV or JSONL from `items`, and persist `nextCursor` only after the batch has been written successfully so an interrupted download can resume from the last completed page.",
         "parameters": [
-          {
-            "name": "userId",
-            "in": "query",
-            "description": "Filter logs by user ID, with the same semantics as `GET /api/logs`. An empty value is rejected with `400`."
-          },
-          {
-            "name": "applicationId",
-            "in": "query",
-            "description": "Filter logs by application ID, with the same semantics as `GET /api/logs`. An empty value is rejected with `400`."
-          },
-          {
-            "name": "logKey",
-            "in": "query",
-            "description": "Filter logs by log key, with the same semantics as `GET /api/logs`. An empty value is rejected with `400`."
-          },
           {
             "name": "excludeWebhookLogs",
             "in": "query",
@@ -151,7 +136,7 @@
           {
             "name": "cursor",
             "in": "query",
-            "description": "Opaque cursor taken from the previous response's `nextCursor`. Pass it back unchanged with the same `end_time` and filters. Do not construct or modify it. An invalid or empty cursor returns `400`."
+            "description": "Opaque cursor taken from the previous response's `nextCursor`. Pass it back unchanged with the same time window and `excludeWebhookLogs` value. Do not construct or modify it. An invalid or empty cursor returns `400`."
           },
           {
             "name": "limit",
@@ -175,7 +160,7 @@
             "description": "One page of matching logs. `items` uses the `LogResponse` shape. `nextCursor` is a non-null opaque string when another page may exist, and `null` when this is the last page or no rows match. The cursor is generated from the exact timestamp and id of the last item."
           },
           "400": {
-            "description": "Returned when `userId`, `applicationId`, or `logKey` is present but empty; when `cursor` is empty, malformed, or not produced by this endpoint; when `limit` is outside `1..10000`; when `end_time` is missing, empty, negative, outside the safe integer range, in the future, or not a finite number; or when `start_time` is malformed or after `end_time`."
+            "description": "Returned when `cursor` is empty, malformed, or not produced by this endpoint; when `limit` is outside `1..10000`; when `end_time` is missing, empty, negative, outside the safe integer range, in the future, or not a finite number; or when `start_time` is malformed or after `end_time`."
           }
         }
       }

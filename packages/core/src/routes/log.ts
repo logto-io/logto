@@ -195,9 +195,6 @@ export default function logRoutes<T extends ManagementApiRouter>(
       '/logs/export',
       koaGuard({
         query: object({
-          userId: string().min(1).optional(),
-          applicationId: string().min(1).optional(),
-          logKey: string().min(1).optional(),
           excludeWebhookLogs: z.enum(['true', 'false']).optional(),
           cursor: string().max(512).optional(),
           limit: string().optional(),
@@ -212,14 +209,7 @@ export default function logRoutes<T extends ManagementApiRouter>(
       }),
       async (ctx) => {
         const {
-          query: {
-            userId,
-            applicationId,
-            logKey,
-            excludeWebhookLogs,
-            cursor: rawCursor,
-            limit: rawLimit,
-          },
+          query: { excludeWebhookLogs, cursor: rawCursor, limit: rawLimit },
         } = ctx.guard;
 
         const endTime = parseBound(ctx.guard.query.end_time, 'end_time');
@@ -252,8 +242,6 @@ export default function logRoutes<T extends ManagementApiRouter>(
         // The cursor is the exact PostgreSQL timestamp plus the id, so rows that share a
         // millisecond can cross a page boundary without being duplicated or skipped.
         const rows = await findLogsForExport(limit + 1, {
-          payload: { userId, applicationId },
-          logKey,
           startTime,
           endTime,
           // Webhook delivery logs share the table and are included by default, so the export

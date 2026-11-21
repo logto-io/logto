@@ -295,42 +295,6 @@ describe('logRoutes', () => {
       });
     });
 
-    it('passes the GET /logs filters and the delete-style window validation through', async () => {
-      await logRequest.get(
-        '/logs/export?end_time=5000&start_time=1000&userId=user&applicationId=app&logKey=Key&excludeWebhookLogs=true'
-      );
-
-      expect(findLogsForExport).toHaveBeenCalledWith(
-        1001,
-        expect.objectContaining({
-          payload: { userId: 'user', applicationId: 'app' },
-          logKey: 'Key',
-          startTime: 1000,
-          endTime: 5000,
-          after: undefined,
-        })
-      );
-
-      const [, condition] = findLogsForExport.mock.calls[0] as [
-        number,
-        { includeKeyPrefix?: unknown[] },
-      ];
-      expect(condition.includeKeyPrefix).toContain(interaction.prefix);
-    });
-
-    it('exports when the optional filters are omitted', async () => {
-      const response = await logRequest.get('/logs/export?end_time=5000');
-
-      expect(response.status).toEqual(200);
-      expect(findLogsForExport).toHaveBeenCalledWith(
-        1001,
-        expect.objectContaining({
-          payload: { userId: undefined, applicationId: undefined },
-          logKey: undefined,
-        })
-      );
-    });
-
     it('accepts end_time=0 and start_time=0 as real bounds', async () => {
       const response = await logRequest.get('/logs/export?end_time=0&start_time=0');
 
@@ -368,9 +332,6 @@ describe('logRoutes', () => {
       ['negative end_time', '/logs/export?end_time=-1'],
       ['fractional end_time', '/logs/export?end_time=1.5'],
       ['invalid webhook exclusion', '/logs/export?end_time=5000&excludeWebhookLogs=yes'],
-      ['empty userId', '/logs/export?end_time=5000&userId='],
-      ['empty applicationId', '/logs/export?end_time=5000&applicationId='],
-      ['empty logKey', '/logs/export?end_time=5000&logKey='],
       ['empty cursor', '/logs/export?end_time=5000&cursor='],
       ['invalid cursor', '/logs/export?end_time=5000&cursor=not-a-cursor'],
       [
