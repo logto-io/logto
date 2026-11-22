@@ -4,7 +4,6 @@ import { assertEnv, type Nullable } from '@silverhand/essentials';
 import { createInterceptorsPreset, createPool, sql, type DatabasePool } from '@silverhand/slonik';
 
 import { authedAdminApi } from '#src/api/api.js';
-import { devFeatureTest } from '#src/utils.js';
 
 type LogPage = {
   items: LogResponse[];
@@ -17,7 +16,7 @@ type LogPage = {
 // fixtures need timestamps far in the past and exact millisecond values, which the Management API
 // cannot create. The window is far enough back and disjoint from other suites that the export can
 // be scoped by time alone, without content filters.
-devFeatureTest.describe('GET /logs/export', () => {
+describe('GET /logs/export', () => {
   const startTime = 1_600_000_200_000;
   const endTime = startTime + 60_000;
 

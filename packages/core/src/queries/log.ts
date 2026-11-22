@@ -13,18 +13,12 @@ import { subDays } from 'date-fns';
 
 import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
+import type { LogExportCursor } from '#src/utils/log-export.js';
 import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(Logs);
 
 type AllowedKeyPrefix = AuditLogPrefix | WebhookLogPrefix;
-
-/** A keyset cursor carrying the exact timestamp stored in PostgreSQL. */
-export type LogExportCursor = {
-  /** Exact `createdAt` text in UTC, with microsecond precision. */
-  createdAt: string;
-  id: string;
-};
 
 /** A log row plus the exact timestamp needed to resume an export after it. */
 export type LogExportRow = LogResponse & { createdAtCursor: string };

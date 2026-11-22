@@ -12,21 +12,12 @@ import {
 import type { Log, LogResponse } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 
-import { EnvSet } from '#src/env-set/index.js';
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
-
-// The export route is registered only while the log export dev feature is enabled.
-const originalIsDevFeaturesEnabled = EnvSet.values.isDevFeaturesEnabled;
-Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', true);
-
-afterAll(() => {
-  Reflect.set(EnvSet.values, 'isDevFeaturesEnabled', originalIsDevFeaturesEnabled);
-});
 
 const mockBody = { key: 'a', payload: { key: 'a', result: LogResult.Success }, createdAt: 123 };
 const mockLog: LogResponse = { tenantId: 'fake_tenant', id: '1', ...mockBody };
@@ -295,6 +286,22 @@ describe('logRoutes', () => {
       });
     });
 
+    it('uses yes() semantics for excludeWebhookLogs', async () => {
+      await logRequest.get('/logs/export?end_time=5000');
+
+      const firstCondition = findLogsForExport.mock.calls[0]?.[1] as {
+        includeKeyPrefix?: unknown[];
+      };
+      expect(firstCondition.includeKeyPrefix).toBeUndefined();
+
+      await logRequest.get('/logs/export?end_time=5000&excludeWebhookLogs=1');
+
+      const secondCondition = findLogsForExport.mock.calls[1]?.[1] as {
+        includeKeyPrefix?: unknown[];
+      };
+      expect(secondCondition.includeKeyPrefix).toContain(interaction.prefix);
+    });
+
     it('accepts end_time=0 and start_time=0 as real bounds', async () => {
       const response = await logRequest.get('/logs/export?end_time=0&start_time=0');
 
@@ -331,7 +338,6 @@ describe('logRoutes', () => {
       ['empty start_time', '/logs/export?end_time=5000&start_time='],
       ['negative end_time', '/logs/export?end_time=-1'],
       ['fractional end_time', '/logs/export?end_time=1.5'],
-      ['invalid webhook exclusion', '/logs/export?end_time=5000&excludeWebhookLogs=yes'],
       ['empty cursor', '/logs/export?end_time=5000&cursor='],
       ['invalid cursor', '/logs/export?end_time=5000&cursor=not-a-cursor'],
       [

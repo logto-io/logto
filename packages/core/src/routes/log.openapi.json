@@ -124,14 +124,13 @@
     },
     "/api/logs/export": {
       "get": {
-        "tags": ["Dev feature"],
         "summary": "Export logs",
         "description": "Return one JSON page of logs in a time window. `items` contains up to `limit` logs in ascending `createdAt` order, and `nextCursor` is the opaque cursor for the next page. It is `null` on the last page and for an empty result. To continue, pass `nextCursor` back as `cursor` and keep `start_time`, `end_time`, and `excludeWebhookLogs` unchanged. The cursor carries PostgreSQL's exact timestamp and the log id, so rows that share a millisecond are not duplicated or skipped at a page boundary.\n\nThis endpoint is for time-window archival and does not support content filters. Use `GET /api/logs` for filtered browsing.\n\nBy default the page includes webhook delivery logs (`TriggerHook.*`). Set `excludeWebhookLogs=true` to return audit logs only, matching `GET /api/logs`; webhook delivery logs can then be read through `GET /api/hooks/{id}/recent-logs`.\n\nThe cursor only records read progress. It does not make deleting the same time window lossless: a row whose transaction commits after the export has passed its position is absent from the export, but a later time-window `DELETE /api/logs` removes it. Delete a window by time only after its data has stopped changing.\n\nThe client owns the output format. Write CSV or JSONL from `items`, and persist `nextCursor` only after the batch has been written successfully so an interrupted download can resume from the last completed page.",
         "parameters": [
           {
             "name": "excludeWebhookLogs",
             "in": "query",
-            "description": "When `true`, return audit logs only and omit webhook delivery logs (`TriggerHook.*`), matching `GET /api/logs`. Default `false`."
+            "description": "When truthy (for example `true` or `1`), return audit logs only and omit webhook delivery logs (`TriggerHook.*`), matching `GET /api/logs`. Default `false`."
           },
           {
             "name": "cursor",
