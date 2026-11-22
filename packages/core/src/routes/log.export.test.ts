@@ -48,6 +48,17 @@ describe('GET /logs/export', () => {
       1001,
       expect.objectContaining({ after: undefined })
     );
+  });
+
+  it('does not fall through to GET /logs/:id', async () => {
+    findLogsForExport.mockResolvedValueOnce([exportRow]);
+
+    const response = await logRequest.get('/logs/export?end_time=5000&limit=1');
+
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual({
+      items: [toItem(exportRow)],
+    });
     expect(findLogById).not.toHaveBeenCalled();
   });
 
