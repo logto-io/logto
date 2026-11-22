@@ -1,10 +1,40 @@
-import { interaction } from '@logto/schemas';
+import { interaction, LogResult } from '@logto/schemas';
+import type { Log, LogResponse } from '@logto/schemas';
+import { pickDefault } from '@logto/shared/esm';
 
-import { createLogTestContext, mockLog } from './log.test-utils.js';
+import koaErrorHandler from '#src/middleware/koa-error-handler.js';
+import koaI18next from '#src/middleware/koa-i18next.js';
+import { MockTenant } from '#src/test-utils/tenant.js';
+import { createRequester } from '#src/utils/test-utils.js';
 
 const { jest } = import.meta;
-const { logs, logRequest } = await createLogTestContext();
+
+const mockBody = { key: 'a', payload: { key: 'a', result: LogResult.Success }, createdAt: 123 };
+const mockLog: LogResponse = { tenantId: 'fake_tenant', id: '1', ...mockBody };
+
+// Rows as the queries return them: the trigger-kept lookup columns must not reach the response.
+const toRow = (log: LogResponse): Log => ({
+  ...log,
+  payloadUserId: 'user',
+  payloadApplicationId: 'application',
+  payloadHookId: 'hook',
+});
+
+const logs = {
+  countLogs: jest.fn(),
+  findLogs: jest.fn(),
+  findLogsForExport: jest.fn().mockResolvedValue([]),
+  findLogById: jest.fn(),
+  deleteLogsInRange: jest.fn(),
+};
 const { findLogsForExport, findLogById } = logs;
+const logRoutes = await pickDefault(import('./log.js'));
+const logRequest = createRequester({
+  // The error handler and i18n middleware expose `RequestError` codes in the response body.
+  middlewares: [koaI18next(), koaErrorHandler()],
+  authedRoutes: logRoutes,
+  tenantContext: new MockTenant(undefined, { logs }),
+});
 
 afterEach(() => {
   jest.clearAllMocks();
