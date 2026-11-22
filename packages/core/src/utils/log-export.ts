@@ -1,3 +1,4 @@
+import type { Optional } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -20,7 +21,7 @@ const logExportCursorGuard = z.object({
 export const encodeLogExportCursor = ({ createdAt, id }: LogExportCursor) =>
   Buffer.from(JSON.stringify({ createdAt, id }), 'utf8').toString('base64url');
 
-export const decodeLogExportCursor = (raw?: string): LogExportCursor | undefined => {
+export const decodeLogExportCursor = (raw?: string): Optional<LogExportCursor> => {
   if (raw === undefined) {
     return undefined;
   }

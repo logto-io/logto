@@ -10,7 +10,7 @@ import {
   type AuditLogPrefix,
   type LogResponse,
 } from '@logto/schemas';
-import { yes } from '@silverhand/essentials';
+import { conditional, yes } from '@silverhand/essentials';
 import { boolean, number, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -160,7 +160,7 @@ export default function logRoutes<T extends ManagementApiRouter>(
       }),
       response: object({
         items: logResponseGuard.array(),
-        nextCursor: string().nullable(),
+        nextCursor: string().optional(),
       }),
       status: [200, 400],
     }),
@@ -204,7 +204,7 @@ export default function logRoutes<T extends ManagementApiRouter>(
         // Webhook delivery logs share the table and are included by default, so the export
         // covers the same key scope as `DELETE /logs`. The cursor only tracks read progress;
         // deleting by the same time window is only safe after the window stops changing.
-        includeKeyPrefix: yes(excludeWebhookLogs) ? auditLogKeyPrefixes : undefined,
+        includeKeyPrefix: conditional(yes(excludeWebhookLogs) && auditLogKeyPrefixes),
         after: cursor,
       });
 
@@ -216,12 +216,12 @@ export default function logRoutes<T extends ManagementApiRouter>(
               createdAt: lastItem.createdAtCursor,
               id: lastItem.id,
             })
-          : null;
+          : undefined;
 
       ctx.set('Cache-Control', 'no-store');
       ctx.body = {
         items: items.map((item) => toLogResponse(item)),
-        nextCursor,
+        ...conditional(nextCursor && { nextCursor }),
       };
 
       // Do not call `next()`: `GET /logs/:id` also matches this path, and continuing would let

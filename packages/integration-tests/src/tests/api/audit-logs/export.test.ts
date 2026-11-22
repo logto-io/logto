@@ -1,13 +1,13 @@
 import { defaultTenantId, hook, interaction, LogResult, type LogResponse } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { assertEnv, type Nullable } from '@silverhand/essentials';
+import { assertEnv } from '@silverhand/essentials';
 import { createInterceptorsPreset, createPool, sql, type DatabasePool } from '@silverhand/slonik';
 
 import { authedAdminApi } from '#src/api/api.js';
 
 type LogPage = {
   items: LogResponse[];
-  nextCursor: Nullable<string>;
+  nextCursor?: string;
 };
 
 // Integration coverage for `GET /api/logs/export`.
@@ -148,7 +148,7 @@ describe('GET /logs/export', () => {
     expect(new Set(ids).size).toBe(3);
   });
 
-  it('returns nextCursor null when the page is exactly full', async () => {
+  it('omits nextCursor when the page is exactly full', async () => {
     const response = await exportLogs({
       excludeWebhookLogs: 'true',
       limit: '3',
@@ -162,7 +162,7 @@ describe('GET /logs/export', () => {
         .slice()
         .sort()
     ).toEqual([sameTimeIdA, sameTimeIdB, laterId].slice().sort());
-    expect(page.nextCursor).toBeNull();
+    expect(page.nextCursor).toBeUndefined();
   });
 
   it('includes webhook delivery logs by default', async () => {
@@ -176,7 +176,7 @@ describe('GET /logs/export', () => {
         .slice()
         .sort()
     ).toEqual([sameTimeIdA, sameTimeIdB, laterId, webhookLogId].slice().sort());
-    expect(page.nextCursor).toBeNull();
+    expect(page.nextCursor).toBeUndefined();
   });
 
   it('excludes webhook delivery logs when excludeWebhookLogs=true', async () => {
@@ -190,10 +190,10 @@ describe('GET /logs/export', () => {
         .slice()
         .sort()
     ).toEqual([sameTimeIdA, sameTimeIdB, laterId].slice().sort());
-    expect(page.nextCursor).toBeNull();
+    expect(page.nextCursor).toBeUndefined();
   });
 
-  it('returns an empty page with nextCursor null when the window has no rows', async () => {
+  it('returns an empty page without nextCursor when the window has no rows', async () => {
     const response = await exportLogs({
       start_time: String(startTime + 120_000),
       end_time: String(startTime + 180_000),
@@ -202,7 +202,6 @@ describe('GET /logs/export', () => {
     expect(response.status).toBe(200);
     await expect(response.json<LogPage>()).resolves.toEqual({
       items: [],
-      nextCursor: null,
     });
   });
 });
