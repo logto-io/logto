@@ -23,10 +23,11 @@ import { parseTimestampParam, validateTimeWindow } from '#src/utils/time-window.
 
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
-// `limit` bounds how many rows one delete call or export page processes. The default keeps
-// interactive calls small, and the ceiling caps the work one request can do. For delete, each call
-// is a single `delete ... where ctid = any(array(select ... limit N))` statement, so the bound
-// also keeps a call clear of the pool's `statement_timeout` and avoids a burst of dead tuples/WAL.
+// `limit` bounds the page size for delete batches and export pages. The default keeps interactive
+// calls small, and the ceiling caps the work one request can do. Export reads one extra row only
+// to detect whether another page exists. For delete, each call is a single
+// `delete ... where ctid = any(array(select ... limit N))` statement, so the bound also keeps a
+// call clear of the pool's `statement_timeout` and avoids a burst of dead tuples/WAL.
 const defaultLogBatchLimit = 1000;
 const maxLogBatchLimit = 10_000;
 
@@ -78,6 +79,7 @@ const parseBound = (raw: string | undefined, type: string): number | undefined =
   return value;
 };
 
+// Drop the internal cursor timestamp before returning the public log shape.
 const toLogResponse = (log: LogExportRow): LogResponse => ({
   tenantId: log.tenantId,
   id: log.id,
@@ -179,8 +181,9 @@ export default function logRoutes<T extends ManagementApiRouter>(
 
       const startTime = parseBound(ctx.guard.query.start_time, 'start_time');
 
-      // The export uses the same window rules as `GET /logs` and `DELETE /logs`, including the
-      // future-boundary check: a boundary in the future is usually a unit mistake.
+      // The export uses the same inclusive window semantics as `GET /logs` and `DELETE /logs`.
+      // Like `DELETE /logs`, it also rejects a future `end_time` because that is usually a unit
+      // mistake.
       validateTimeWindow(startTime, endTime);
       assertThat(
         endTime <= Date.now(),
@@ -196,14 +199,16 @@ export default function logRoutes<T extends ManagementApiRouter>(
       const cursor = decodeLogExportCursor(rawCursor);
 
       // Read one extra row so a page that is exactly full is still reported as the last page.
-      // The cursor is the exact PostgreSQL timestamp plus the id, so rows that share a
-      // millisecond can cross a page boundary without being duplicated or skipped.
+      // `nextCursor` is set only when that extra row exists. It is the exact PostgreSQL timestamp
+      // plus the id, so rows that share a millisecond can cross a page boundary without being
+      // duplicated or skipped.
       const rows = await findLogsForExport(limit + 1, {
         startTime,
         endTime,
-        // Webhook delivery logs share the table and are included by default, so the export
-        // covers the same key scope as `DELETE /logs`. The cursor only tracks read progress;
-        // deleting by the same time window is only safe after the window stops changing.
+        // By default, include webhook delivery logs so the export matches the key scope of
+        // `DELETE /logs`. With `excludeWebhookLogs`, the export is audit-only and is not a
+        // complete archive. The cursor only tracks read progress; deleting by the same time
+        // window is only safe after the window stops changing.
         includeKeyPrefix: conditional(yes(excludeWebhookLogs) && auditLogKeyPrefixes),
         after: cursor,
       });

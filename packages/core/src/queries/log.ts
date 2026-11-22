@@ -149,6 +149,8 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
    *
    * Ascending order matches the cursor comparator, so the composite
    * `(tenant_id, created_at, id)` index can satisfy both the range filter and the ordering.
+   * The route requests `limit + 1` rows, then returns the first `limit` and uses the extra row
+   * only to decide whether `nextCursor` should be present.
    */
   const findLogsForExport = async (
     limit: number,

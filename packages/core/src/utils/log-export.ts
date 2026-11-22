@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 
+/** Payload encoded into an opaque log export cursor. */
 export type LogExportCursor = {
   /** Exact `createdAt` text in UTC, with microsecond precision. */
   createdAt: string;
@@ -18,9 +19,14 @@ const logExportCursorGuard = z.object({
   id: z.string().min(1),
 });
 
+/** Encode the cursor payload as base64url JSON. */
 export const encodeLogExportCursor = ({ createdAt, id }: LogExportCursor) =>
   Buffer.from(JSON.stringify({ createdAt, id }), 'utf8').toString('base64url');
 
+/**
+ * Decode an opaque cursor. An omitted cursor is allowed; empty or malformed cursors throw a
+ * `400` validation error.
+ */
 export const decodeLogExportCursor = (raw?: string): Optional<LogExportCursor> => {
   if (raw === undefined) {
     return undefined;
