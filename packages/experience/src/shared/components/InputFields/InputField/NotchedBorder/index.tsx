@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import styles from './index.module.scss';
 
 type Props = {
+  readonly htmlFor?: string;
   readonly label: string;
   readonly isActive: boolean;
   readonly isDanger: boolean;
@@ -23,9 +24,10 @@ type Props = {
  * 2. Utilizes the fieldset's legend for the label, allowing it to overlap the border:
  *    - This creates a "floating" label effect.
  *    - The legend's background becomes transparent, preventing it from blocking the background.
+ * 3. The fieldsets are decorative and hidden from assistive technologies; the `<label>` names the input.
  *
  */
-const NotchedBorder = ({ label, isActive, isDanger, isFocused }: Props) => {
+const NotchedBorder = ({ htmlFor, label, isActive, isDanger, isFocused }: Props) => {
   return (
     <div
       className={classNames(
@@ -36,17 +38,21 @@ const NotchedBorder = ({ label, isActive, isDanger, isFocused }: Props) => {
         !label && styles.noLabel
       )}
     >
-      <fieldset className={styles.border}>
+      <fieldset aria-hidden className={styles.border}>
         <legend>
           <span>{label}</span>
         </legend>
       </fieldset>
-      <fieldset className={styles.outline}>
+      <fieldset aria-hidden className={styles.outline}>
         <legend>
           <span>{label}</span>
         </legend>
       </fieldset>
-      {Boolean(label) && <label className={styles.label}>{label}</label>}
+      {Boolean(label) && (
+        <label htmlFor={htmlFor} className={styles.label}>
+          {label}
+        </label>
+      )}
     </div>
   );
 };

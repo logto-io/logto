@@ -36,24 +36,36 @@ describe('Input Field UI Component', () => {
   });
 
   test('click on toggle visibility button', () => {
-    const { container } = render(
+    const { container, getByRole } = render(
       <PasswordInputField name="foo" value={text} onChange={onChange} />
     );
 
     const inputElement = container.querySelector('input');
+    const toggle = getByRole('button', { name: 'action.show_password' });
 
-    if (!inputElement) {
-      return;
-    }
+    expect(inputElement?.type).toEqual('password');
+    expect(toggle.getAttribute('aria-pressed')).toEqual('false');
 
-    expect(inputElement.type).toEqual('password');
+    fireEvent.click(toggle);
+    expect(inputElement?.type).toEqual('text');
+    expect(toggle.getAttribute('aria-pressed')).toEqual('true');
 
-    const visibilityButton = container.querySelector('svg');
-    expect(visibilityButton).not.toBeNull();
+    fireEvent.click(toggle);
+    expect(inputElement?.type).toEqual('password');
+    expect(toggle.getAttribute('aria-pressed')).toEqual('false');
+  });
 
-    if (visibilityButton) {
-      fireEvent.mouseDown(visibilityButton);
-      expect(inputElement.type).toEqual('text');
-    }
+  test('pressing the toggle keeps focus in the input', () => {
+    const { container, getByRole } = render(
+      <PasswordInputField name="foo" value={text} onChange={onChange} />
+    );
+
+    const inputElement = container.querySelector('input');
+    const toggle = getByRole('button', { name: 'action.show_password' });
+
+    // `fireEvent` returns false when the default action was prevented
+    expect(fireEvent.mouseDown(toggle)).toBe(false);
+    // The mouse down alone does not toggle; the following click does
+    expect(inputElement?.type).toEqual('password');
   });
 });
