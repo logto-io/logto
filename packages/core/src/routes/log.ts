@@ -229,8 +229,12 @@ export default function logRoutes<T extends ManagementApiRouter>(
         ...conditional(nextCursor && { nextCursor }),
       };
 
-      // Do not call `next()`: `GET /logs/:id` also matches this path, and continuing would let
-      // that handler overwrite the batch response with a log lookup.
+      // Terminal route: `GET /logs/:id` also matches this path. Keep this route registered
+      // before `/logs/:id` and do not call `next()`, or the `/:id` handler would look up the
+      // id "export" and overwrite this response. Upstream middleware still post-processes after
+      // this handler returns; only middleware registered after the router would be skipped.
+      // eslint-disable-next-line no-useless-return -- Explicitly mark this route as terminal.
+      return;
     }
   );
 
