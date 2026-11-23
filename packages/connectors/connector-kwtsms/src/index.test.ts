@@ -227,6 +227,24 @@ describe('kwtSMS connector', () => {
       ).rejects.toMatchObject({ code: ConnectorErrorCodes.InvalidResponse });
     });
 
+    it('should throw InvalidResponse on a 200 with a non-JSON body', async () => {
+      const sendMessage = await createSendMessage();
+      nock(url.origin).post(url.pathname).reply(200, '<html>blocked</html>');
+
+      await expect(
+        sendMessage({ to: '96550000000', type: TemplateType.Generic, payload: { code: '1234' } })
+      ).rejects.toMatchObject({ code: ConnectorErrorCodes.InvalidResponse });
+    });
+
+    it('should wrap network errors in a ConnectorError', async () => {
+      const sendMessage = await createSendMessage();
+      nock(url.origin).post(url.pathname).replyWithError('socket hang up');
+
+      await expect(
+        sendMessage({ to: '96550000000', type: TemplateType.Generic, payload: { code: '1234' } })
+      ).rejects.toMatchObject({ code: ConnectorErrorCodes.General });
+    });
+
     it('should throw InvalidConfig when credentials are missing', async () => {
       const sendMessage = await createSendMessage();
 

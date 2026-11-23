@@ -3,6 +3,8 @@ import { ConnectorConfigFormItemType } from '@logto/connector-kit';
 
 export const endpoint = 'https://www.kwtsms.com/API/send/';
 
+export const defaultTimeout = 5000;
+
 export const defaultMetadata: ConnectorMetadata = {
   id: 'kwtsms-short-message-service',
   target: 'kwtsms',

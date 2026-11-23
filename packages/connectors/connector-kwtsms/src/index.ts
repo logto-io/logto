@@ -1,5 +1,5 @@
 import { assert } from '@silverhand/essentials';
-import { got, HTTPError } from 'got';
+import { got, HTTPError, ParseError, RequestError } from 'got';
 
 import type {
   GetConnectorConfig,
@@ -16,7 +16,7 @@ import {
   getConfigTemplateByType,
 } from '@logto/connector-kit';
 
-import { defaultMetadata, endpoint } from './constant.js';
+import { defaultMetadata, defaultTimeout, endpoint } from './constant.js';
 import type { PublicParameters } from './types.js';
 import { kwtSmsConfigGuard, kwtSmsErrorGuard, kwtSmsSuccessGuard } from './types.js';
 
@@ -41,6 +41,58 @@ const cleanMessage = (message: string) =>
     /[\d#*]\uFE0F?\u20E3|[\p{Extended_Pictographic}\p{Regional_Indicator}\u{E0020}-\u{E007F}\u200B\u200C\u2060\uFEFF]|[\u{1F3FB}-\u{1F3FF}]|\u200D|\u20E3|\uFE0E|\uFE0F/gu,
     ''
   );
+
+const toError = (body: unknown) => {
+  const error = kwtSmsErrorGuard.safeParse(body);
+
+  return error.success
+    ? new ConnectorError(
+        ConnectorErrorCodes.General,
+        `${error.data.code}: ${error.data.description ?? 'Unknown error'}`
+      )
+    : new ConnectorError(ConnectorErrorCodes.InvalidResponse, JSON.stringify(body));
+};
+
+/** Maps any failure of the send request to a ConnectorError. */
+const toConnectorError = (error: unknown): ConnectorError => {
+  if (error instanceof ConnectorError) {
+    return error;
+  }
+
+  if (error instanceof HTTPError) {
+    const { body: rawBody } = error.response;
+
+    if (typeof rawBody !== 'string') {
+      return new ConnectorError(
+        ConnectorErrorCodes.InvalidResponse,
+        `Invalid response raw body type: ${typeof rawBody}`
+      );
+    }
+
+    try {
+      return toError(JSON.parse(rawBody));
+    } catch {
+      return new ConnectorError(ConnectorErrorCodes.InvalidResponse, rawBody);
+    }
+  }
+
+  // A 200 with a non-JSON body (e.g. a proxy or WAF page).
+  if (error instanceof ParseError) {
+    return new ConnectorError(ConnectorErrorCodes.InvalidResponse, String(error.response.body));
+  }
+
+  if (error instanceof RequestError) {
+    return new ConnectorError(
+      ConnectorErrorCodes.General,
+      `kwtSMS request failed: ${error.message}`
+    );
+  }
+
+  return new ConnectorError(
+    ConnectorErrorCodes.General,
+    error instanceof Error ? error.message : String(error)
+  );
+};
 
 const sendMessage =
   (getConfig: GetConnectorConfig): SendMessageFunction =>
@@ -68,20 +120,14 @@ const sendMessage =
       test: testMode ? '1' : '0',
     };
 
-    const toError = (body: unknown) => {
-      const error = kwtSmsErrorGuard.safeParse(body);
-
-      return error.success
-        ? new ConnectorError(
-            ConnectorErrorCodes.General,
-            `${error.data.code}: ${error.data.description ?? 'Unknown error'}`
-          )
-        : new ConnectorError(ConnectorErrorCodes.InvalidResponse, JSON.stringify(body));
-    };
-
     try {
       const body: unknown = await got
-        .post(endpoint, { json: parameters, headers: { Accept: 'application/json' } })
+        .post(endpoint, {
+          json: parameters,
+          headers: { Accept: 'application/json' },
+          retry: { limit: 0 },
+          timeout: { request: defaultTimeout },
+        })
         .json();
 
       // The gateway answers errors with HTTP 4XX, but never trust a 200 without `result: OK`.
@@ -91,28 +137,7 @@ const sendMessage =
 
       return body;
     } catch (error: unknown) {
-      if (error instanceof HTTPError) {
-        const { body: rawBody } = error.response;
-        assert(
-          typeof rawBody === 'string',
-          new ConnectorError(
-            ConnectorErrorCodes.InvalidResponse,
-            `Invalid response raw body type: ${typeof rawBody}`
-          )
-        );
-
-        try {
-          throw toError(JSON.parse(rawBody));
-        } catch (parseError: unknown) {
-          if (parseError instanceof ConnectorError) {
-            throw parseError;
-          }
-
-          throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, rawBody);
-        }
-      }
-
-      throw error;
+      throw toConnectorError(error);
     }
   };
 
