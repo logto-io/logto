@@ -14,17 +14,17 @@
           {
             "name": "userId",
             "in": "query",
-            "description": "Filter logs by user ID."
+            "description": "Page mode only; rejected in cursor pagination mode. Filter logs by user ID."
           },
           {
             "name": "applicationId",
             "in": "query",
-            "description": "Filter logs by application ID."
+            "description": "Page mode only; rejected in cursor pagination mode. Filter logs by application ID."
           },
           {
             "name": "logKey",
             "in": "query",
-            "description": "Filter logs by log key."
+            "description": "Page mode only; rejected in cursor pagination mode. Filter logs by log key."
           },
           {
             "name": "start_time",
@@ -55,6 +55,16 @@
             "name": "limit",
             "in": "query",
             "description": "Cursor mode only. Maximum number of logs returned by this page. Default `500`; maximum `1000`. Rejected in page mode and when outside that range."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page mode only. Page number, starting from 1. Rejected in cursor pagination mode."
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "Page mode only. Number of logs per page. Default `20`; maximum `100`. Rejected in cursor pagination mode."
           }
         ],
         "responses": {
