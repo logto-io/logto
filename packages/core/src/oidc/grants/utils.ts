@@ -39,12 +39,12 @@ type OrganizationAccessOptions = {
  * The CIMD test must come first: CIMD organization access is grant-scoped, not the
  * application-keyed consent relation the third-party branch checks.
  */
-const isOrganizationGrantedToClient = async (
+const checkOrganizationGrantedToClient = async (
   ctx: KoaContextWithOIDC,
   clientId: string,
   organizationId: string,
   { envSet, queries, account, isThirdParty }: OrganizationAccessOptions
-): Promise<boolean> => {
+): Promise<{ granted: boolean; isThirdParty?: boolean }> => {
   /**
    * CIMD organization access is grant-scoped, keyed on the grant behind the current refresh
    * token. Caller contract: organization tokens are only obtainable through the refresh grant —
@@ -58,21 +58,30 @@ const isOrganizationGrantedToClient = async (
   if (shouldTreatAsCimdClient(envSet, clientId)) {
     const grantId = ctx.oidc.entities.RefreshToken?.grantId;
 
-    return grantId !== undefined && queries.cimd.grantOrganizations.exists(grantId, organizationId);
+    return {
+      granted:
+        grantId !== undefined &&
+        (await queries.cimd.grantOrganizations.exists(grantId, organizationId)),
+    };
   }
 
+  const resolvedIsThirdParty = isThirdParty ?? (await isThirdPartyApplication(queries, clientId));
+
   // Registered third-party applications carry the cross-grant consent relation.
-  if (isThirdParty ?? (await isThirdPartyApplication(queries, clientId))) {
-    return isOrganizationConsentedToApplication(
-      queries,
-      clientId,
-      account.accountId,
-      organizationId
-    );
+  if (resolvedIsThirdParty) {
+    return {
+      granted: await isOrganizationConsentedToApplication(
+        queries,
+        clientId,
+        account.accountId,
+        organizationId
+      ),
+      isThirdParty: true,
+    };
   }
 
   // First-party applications are implicitly granted every organization the user belongs to.
-  return true;
+  return { granted: true, isThirdParty: false };
 };
 
 /**
@@ -81,7 +90,7 @@ const isOrganizationGrantedToClient = async (
 export const checkOrganizationAccess = async (
   ctx: KoaContextWithOIDC,
   options: OrganizationAccessOptions
-): Promise<{ organizationId?: string }> => {
+): Promise<{ organizationId?: string; isThirdParty?: boolean }> => {
   const { queries, account } = options;
   const { client, params } = ctx.oidc;
 
@@ -90,39 +99,47 @@ export const checkOrganizationAccess = async (
 
   const organizationId = cond(Boolean(params.organization_id) && String(params.organization_id));
 
-  if (organizationId) {
-    // Check membership
-    if (
-      !(await queries.organizations.relations.users.exists({
-        organizationId,
-        userId: account.accountId,
-      }))
-    ) {
-      throw accessDenied('user is not a member of the organization');
-    }
+  if (!organizationId) {
+    return {};
+  }
 
-    // Check if the organization is granted to the client by the user
-    if (!(await isOrganizationGrantedToClient(ctx, client.clientId, organizationId, options))) {
-      throw accessDenied('organization access is not granted to the application');
-    }
+  // Check membership
+  if (
+    !(await queries.organizations.relations.users.exists({
+      organizationId,
+      userId: account.accountId,
+    }))
+  ) {
+    throw accessDenied('user is not a member of the organization');
+  }
 
-    // Check if the organization requires MFA and the user has MFA configured. "Configured" follows
-    // sign-in: any factor enabled in the sign-in experience counts, including the implicit email
-    // and phone factors of the user's primary email and phone.
-    const { isMfaRequired } = await queries.organizations.findById(organizationId);
-    if (isMfaRequired) {
-      const [{ mfa }, user] = await Promise.all([
-        queries.signInExperiences.findDefaultSignInExperience(),
-        queries.users.findUserById(account.accountId),
-      ]);
+  // Check if the organization is granted to the client by the user
+  const { granted, isThirdParty } = await checkOrganizationGrantedToClient(
+    ctx,
+    client.clientId,
+    organizationId,
+    options
+  );
+  if (!granted) {
+    throw accessDenied('organization access is not granted to the application');
+  }
 
-      if (getAllUserEnabledMfaVerifications(mfa, user).length === 0) {
-        throw accessDenied('organization requires MFA but user has no MFA configured');
-      }
+  // Check if the organization requires MFA and the user has MFA configured. "Configured" follows
+  // sign-in: any factor enabled in the sign-in experience counts, including the implicit email
+  // and phone factors of the user's primary email and phone.
+  const { isMfaRequired } = await queries.organizations.findById(organizationId);
+  if (isMfaRequired) {
+    const [{ mfa }, user] = await Promise.all([
+      queries.signInExperiences.findDefaultSignInExperience(),
+      queries.users.findUserById(account.accountId),
+    ]);
+
+    if (getAllUserEnabledMfaVerifications(mfa, user).length === 0) {
+      throw accessDenied('organization requires MFA but user has no MFA configured');
     }
   }
 
-  return { organizationId };
+  return { organizationId, isThirdParty };
 };
 
 /**

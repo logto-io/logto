@@ -60,6 +60,7 @@ import {
   validateGrant,
   validatePresence,
 } from '#src/oidc/oidc-provider-internals.js';
+import { isThirdPartyApplication } from '#src/oidc/resource.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -103,6 +104,21 @@ const requiredParameters = Object.freeze(['refresh_token']) satisfies ReadonlyAr
   (typeof parameters)[number]
 >;
 
+const boundOrganizationScopes = (
+  roleScopeNames: readonly string[],
+  allowedScopes: ReadonlyArray<{ name: string }>,
+  grant: InstanceType<Provider['Grant']>
+) => {
+  const allowedNames = new Set(allowedScopes.map(({ name }) => name));
+  // `getResourceScope` returns `''` when the Grant carries no record for the resource.
+  const grantedOrganizationScopes = new Set(
+    grant.getResourceScope(ReservedResource.Organization).split(' ').filter(Boolean)
+  );
+  return roleScopeNames.filter(
+    (name) => allowedNames.has(name) && grantedOrganizationScopes.has(name)
+  );
+};
+
 // We have to disable the rules because the original implementation is written in JavaScript and
 // uses mutable variables.
 /* eslint-disable complexity, @silverhand/fp/no-let, @typescript-eslint/no-non-null-assertion, @silverhand/fp/no-mutation, unicorn/no-array-method-this-argument */
@@ -114,10 +130,10 @@ const rarSupported = (token: WidenedRefreshToken) => {
 type Handler = (
   envSet: EnvSet,
   queries: Queries,
-  applicationAccessControl: Libraries['applicationAccessControl']
+  libraries: Pick<Libraries, 'applicationAccessControl' | 'applications'>
 ) => GrantTypeHandler;
 
-export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx) => {
+export const buildHandler: Handler = (envSet, queries, libraries) => async (ctx) => {
   const { client, params, requestParamScopes, provider } = ctx.oidc;
 
   assertThat(params, new InvalidGrant('parameters must be available'));
@@ -219,14 +235,16 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx)
     throw new InvalidRequest('authorization_details is unsupported for this refresh token');
   }
 
+  const isCimdClient = shouldTreatAsCimdClient(envSet, client.clientId);
+
   /**
    * Application-level access control only applies to registered applications; the
    * access-control library's fallback lookup would query the applications table with the CIMD
    * identifier URL and deny on not-found.
    */
-  if (!shouldTreatAsCimdClient(envSet, client.clientId)) {
+  if (!isCimdClient) {
     await assertUserHasApplicationAccessForOidc(
-      appAccess,
+      libraries.applicationAccessControl,
       client.clientId,
       account.accountId,
       client.metadata().appLevelAccessControlEnabled
@@ -234,7 +252,11 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx)
   }
 
   /* === RFC 0001 === */
-  const { organizationId } = await checkOrganizationAccess(ctx, { envSet, queries, account });
+  const { organizationId, isThirdParty } = await checkOrganizationAccess(ctx, {
+    envSet,
+    queries,
+    account,
+  });
 
   if (
     organizationId && // Validate if the refresh token has the required scope from RFC 0001.
@@ -341,27 +363,36 @@ export const buildHandler: Handler = (envSet, queries, appAccess) => async (ctx)
       .getUserScopes(organizationId, account.accountId)
       .then((scopes) => scopes.map(({ name }) => name));
     /**
-     * CIMD clients bound organization role scopes twice: by the Grant's organization-resource
-     * record and by the tenant-wide `cimd_organization_scopes` ceiling (the organization-scope
-     * counterpart of the resource-server ceiling filter in `init.ts`). The Grant intersection is
+     * CIMD clients and registered third-party applications bound organization role scopes twice:
+     * by the Grant's organization-resource record and by their live allowed organization scopes
+     * (the tenant-wide `cimd_organization_scopes` ceiling for CIMD, or the application's enabled
+     * `organizationScopes` for registered third-party apps). The Grant intersection is
      * load-bearing — scope names are not unique across resources, and the flat refresh-token
      * scope set passed to `handleOrganizationToken` cannot carry the organization resource's
-     * boundary, so without it a name granted for an unrelated API resource would issue the
-     * same-named organization scope. Registered applications are governed by their own consent
-     * configuration.
+     * boundary, so without it a name granted for an unrelated API resource or OIDC scope would
+     * issue the same-named organization scope. First-party applications remain unbounded here.
      */
-    const availableScopes = shouldTreatAsCimdClient(envSet, client.clientId)
-      ? await queries.cimd.organizationScopes.findAll().then((ceiling) => {
-          const ceilingNames = new Set(ceiling.map(({ name }) => name));
-          // `getResourceScope` returns `''` when the Grant carries no record for the resource.
-          const grantedOrganizationScopes = new Set(
-            grant.getResourceScope(ReservedResource.Organization).split(' ').filter(Boolean)
-          );
-          return roleScopeNames.filter(
-            (name) => ceilingNames.has(name) && grantedOrganizationScopes.has(name)
-          );
-        })
-      : roleScopeNames;
+    const getAvailableScopes = async (): Promise<string[]> => {
+      if (isCimdClient) {
+        return boundOrganizationScopes(
+          roleScopeNames,
+          await queries.cimd.organizationScopes.findAll(),
+          grant
+        );
+      }
+
+      if (isThirdParty ?? (await isThirdPartyApplication(queries, client.clientId))) {
+        return boundOrganizationScopes(
+          roleScopeNames,
+          await libraries.applications.getApplicationUserConsentOrganizationScopes(client.clientId),
+          grant
+        );
+      }
+
+      return roleScopeNames;
+    };
+
+    const availableScopes = await getAvailableScopes();
     await handleOrganizationToken({
       envSet,
       availableScopes,
