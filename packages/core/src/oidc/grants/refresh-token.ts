@@ -234,14 +234,14 @@ export const buildHandler: Handler = (envSet, queries, libraries) => async (ctx)
     throw new InvalidRequest('authorization_details is unsupported for this refresh token');
   }
 
-  const isCimdClient = shouldTreatAsCimdClient(envSet, client.clientId);
+  const treatAsCimdClient = shouldTreatAsCimdClient(envSet, client.clientId);
 
   /**
    * Application-level access control only applies to registered applications; the
    * access-control library's fallback lookup would query the applications table with the CIMD
    * identifier URL and deny on not-found.
    */
-  if (!isCimdClient) {
+  if (!treatAsCimdClient) {
     await assertUserHasApplicationAccessForOidc(
       libraries.applicationAccessControl,
       client.clientId,
@@ -372,7 +372,7 @@ export const buildHandler: Handler = (envSet, queries, libraries) => async (ctx)
      * issue the same-named organization scope. First-party applications remain unbounded here.
      */
     const getAvailableScopes = async (): Promise<string[]> => {
-      if (isCimdClient) {
+      if (treatAsCimdClient) {
         return boundOrganizationScopes(
           roleScopeNames,
           await queries.cimd.organizationScopes.findAll(),
