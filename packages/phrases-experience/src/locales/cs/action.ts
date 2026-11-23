@@ -38,6 +38,8 @@ const action = {
   use_another_account: 'Použít jiný účet',
   back_to_current_account: 'Zpět k aktuálnímu účtu',
   done: 'Hotovo',
+  close: 'Zavřít',
+  clear: 'Vymazat',
 };
 
 export default Object.freeze(action);

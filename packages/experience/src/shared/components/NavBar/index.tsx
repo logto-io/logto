@@ -55,6 +55,7 @@ const NavBar = ({ title, type = 'back', isHidden, onClose, onBack, onSkip }: Pro
         role="button"
         tabIndex={0}
         className={styles.navButton}
+        aria-label={isClosable ? t('action.close') : undefined}
         onKeyDown={onKeyDownHandler(clickHandler)}
         onClick={clickHandler}
       >

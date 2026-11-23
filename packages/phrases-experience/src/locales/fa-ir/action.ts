@@ -38,6 +38,8 @@ const action = {
   use_another_account: 'استفاده از حساب دیگر',
   back_to_current_account: 'بازگشت به حساب فعلی',
   done: 'انجام شد',
+  close: 'بستن',
+  clear: 'پاک کردن',
 };
 
 export default Object.freeze(action);

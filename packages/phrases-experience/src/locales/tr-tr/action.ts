@@ -38,6 +38,8 @@ const action = {
   use_another_account: 'Başka bir hesap kullan',
   back_to_current_account: 'Mevcut hesaba geri dön',
   done: 'Bitti',
+  close: 'Kapat',
+  clear: 'Temizle',
 };
 
 export default Object.freeze(action);

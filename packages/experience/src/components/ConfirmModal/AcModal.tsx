@@ -58,7 +58,7 @@ const AcModal = ({
       >
         <div className={styles.header}>
           {t('description.reminder')}
-          <IconButton onClick={onClose}>
+          <IconButton aria-label={t('action.close')} onClick={onClose}>
             <CloseIcon />
           </IconButton>
         </div>

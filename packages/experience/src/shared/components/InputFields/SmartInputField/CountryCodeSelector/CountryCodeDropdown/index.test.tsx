@@ -51,6 +51,24 @@ describe('CountryCodeDropdown', () => {
     expect(onClose).toBeCalled();
   });
 
+  it('selects a country code with Space', () => {
+    const { getByRole } = render(
+      <CountryCodeDropdown
+        isOpen
+        countryCode="1"
+        countryList={countryList}
+        onClose={onClose}
+        onChange={onChange}
+      />
+    );
+
+    // The test setup uses `document.body` as the modal app element, so react-modal marks it `aria-hidden`
+    fireEvent.keyDown(getByRole('button', { name: '+86', hidden: true }), { key: ' ' });
+
+    expect(onChange).toBeCalledWith('86');
+    expect(onClose).toBeCalled();
+  });
+
   it('should render search results properly and auto focus ', async () => {
     const initialCountryCode = '1';
     const search = '8';

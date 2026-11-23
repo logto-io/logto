@@ -161,6 +161,19 @@ describe('SmartInputField Component', () => {
         value: `${defaultCountryCallingCode}7`,
       });
     });
+
+    test('clears the input from the named clear button', () => {
+      const { container, getByRole } = renderInputField({
+        enabledTypes: [SignInIdentifier.Username],
+      });
+      const input = container.querySelector('input');
+      assert(input, new Error('input should not be null'));
+
+      fireEvent.change(input, { target: { value: 'foo' } });
+      fireEvent.click(getByRole('button', { name: 'action.clear' }));
+
+      expect(input.value).toBe('');
+    });
   });
 
   describe('username with email', () => {
