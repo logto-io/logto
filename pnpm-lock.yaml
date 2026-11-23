@@ -5321,6 +5321,9 @@ importers:
       '@withtyped/server':
         specifier: ^0.14.0
         version: 0.14.0(zod@3.24.3)
+      ky:
+        specifier: ^1.2.3
+        version: 1.2.3
     devDependencies:
       '@silverhand/eslint-config':
         specifier: ^6.1.0
@@ -5337,9 +5340,6 @@ importers:
       eslint:
         specifier: ^8.56.0
         version: 8.57.0(supports-color@10.0.0)
-      ky:
-        specifier: ^1.2.3
-        version: 1.2.3
       lint-staged:
         specifier: ^15.0.0
         version: 15.0.2(supports-color@10.0.0)
