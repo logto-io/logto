@@ -1,9 +1,17 @@
 import { ReservedResource, UserScope } from '@logto/core-kit';
-import { type Application, ApplicationType, SignInIdentifier } from '@logto/schemas';
+import {
+  type Application,
+  ApplicationType,
+  ApplicationUserConsentScopeType,
+  SignInIdentifier,
+} from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 
 import { deleteUser } from '#src/api/admin-user.js';
-import { assignUserConsentScopes } from '#src/api/application-user-consent-scope.js';
+import {
+  assignUserConsentScopes,
+  deleteUserConsentScopes,
+} from '#src/api/application-user-consent-scope.js';
 import { createApplicationWithSecret, deleteApplication } from '#src/api/application.js';
 import { consent, getConsentInfo } from '#src/api/interaction.js';
 import { OrganizationScopeApi } from '#src/api/organization-scope.js';
@@ -280,6 +288,57 @@ describe('consent api', () => {
       await client.manualConsent(consentRedirectTo);
 
       await deleteUser(user.id);
+    });
+
+    it('issues only consented organization scopes and honors app scope removal on refresh', async () => {
+      const application = applications.get(thirdPartyApplicationName);
+      assert(application, new Error('application.not_found'));
+
+      const organizationApi = new OrganizationApiTest();
+      const { userProfile, user } = await generateNewUser({ username: true, password: true });
+
+      try {
+        const retained = await organizationApi.scopeApi.create({ name: generateScopeName() });
+        const removed = await organizationApi.scopeApi.create({ name: generateScopeName() });
+        const role = await organizationApi.roleApi.create({
+          name: generateRoleName(),
+          organizationScopeIds: [retained.id, removed.id],
+        });
+        const organization = await organizationApi.create({ name: 'test_org' });
+        await organizationApi.addUsers(organization.id, [user.id]);
+        await organizationApi.addUserRoles(organization.id, user.id, [role.id]);
+        await assignUserConsentScopes(application.id, {
+          organizationScopes: [retained.id, removed.id],
+        });
+
+        const client = await initClientAndSignIn(application, userProfile, {
+          scopes: [UserScope.Organizations, UserScope.Profile, retained.name, removed.name],
+          resources: [ReservedResource.Organization],
+        });
+        const { redirectTo } = await client.submitInteraction();
+        await client.processSession(redirectTo, false);
+        const { redirectTo: consentRedirectTo } = await client.send(consent, {
+          organizationIds: [organization.id],
+        });
+        await client.manualConsent(consentRedirectTo);
+
+        const claims = await client.getOrganizationTokenClaims(organization.id);
+        expect(claims.aud).toBe(`urn:logto:organization:${organization.id}`);
+        expect(new Set(claims.scope?.split(' '))).toEqual(new Set([retained.name, removed.name]));
+
+        await deleteUserConsentScopes(
+          application.id,
+          ApplicationUserConsentScopeType.OrganizationScopes,
+          removed.id
+        );
+        await client.clearAccessToken();
+        await expect(client.getOrganizationTokenClaims(organization.id)).resolves.toMatchObject({
+          scope: retained.name,
+        });
+      } finally {
+        await organizationApi.cleanUp();
+        await deleteUser(user.id);
+      }
     });
 
     it('consent with organization id and verify access token scope', async () => {

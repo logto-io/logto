@@ -1,5 +1,5 @@
 /* eslint-disable max-lines -- the CIMD grant scenarios push the suite over the limit */
-import { UserScope } from '@logto/core-kit';
+import { ReservedResource, UserScope } from '@logto/core-kit';
 import { MfaFactor, type Organization } from '@logto/schemas';
 import { type KoaContextWithOIDC, errors, type Adapter } from 'oidc-provider';
 import Sinon from 'sinon';
@@ -19,8 +19,11 @@ const assertUserHasApplicationAccess = jest.fn(async () => {
   await Promise.resolve();
 });
 
-const mockHandler = (tenant = new MockTenant()) => {
-  return buildHandler(tenant.envSet, tenant.queries, { assertUserHasApplicationAccess });
+const mockHandler = (tenant = new MockTenant(), envSet = tenant.envSet) => {
+  return buildHandler(envSet, tenant.queries, {
+    applications: tenant.libraries.applications,
+    applicationAccessControl: { assertUserHasApplicationAccess },
+  });
 };
 
 /**
@@ -549,6 +552,52 @@ describe('refresh token grant', () => {
     });
   });
 
+  it('should issue only enabled and granted organization scopes for a third-party application', async () => {
+    const ctx = createOidcContext({
+      ...validOidcContext,
+      params: { ...validOidcContext.params, scope: undefined },
+    });
+    const tenant = new MockTenant();
+    const roleScopes = ['read', 'write', UserScope.Email].map((name) => ({
+      tenantId: 'default',
+      id: name,
+      name,
+      description: null,
+    }));
+    const refreshScopes = [UserScope.Organizations, ...roleScopes.map(({ name }) => name)];
+    stubRefreshToken(ctx, { scope: refreshScopes.join(' '), scopes: new Set(refreshScopes) });
+    stubGrant(ctx, {
+      // The flat refresh scope contains email, but the organization resource grant does not.
+      getResourceScope: (resource) =>
+        resource === ReservedResource.Organization ? 'read write' : '',
+    });
+    stubAccount(ctx);
+    Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(true);
+    Sinon.stub(tenant.queries.applications, 'findApplicationById').resolves({
+      ...mockApplication,
+      isThirdParty: true,
+    });
+    Sinon.stub(tenant.queries.applications.userConsentOrganizations, 'exists').resolves(true);
+    Sinon.stub(tenant.queries.organizations.relations.usersRoles, 'getUserScopes').resolves(
+      roleScopes
+    );
+    stubOrganizationMfa(tenant);
+    const getEnabledScopes = Sinon.stub(
+      tenant.libraries.applications,
+      'getApplicationUserConsentOrganizationScopes'
+    )
+      .withArgs(clientId)
+      .resolves(roleScopes);
+
+    const handler = mockHandler(tenant);
+    await handler(ctx);
+    expect(ctx.body).toMatchObject({ scope: 'read write' });
+
+    getEnabledScopes.resolves(roleScopes.filter(({ name }) => name !== 'write'));
+    await handler(ctx);
+    expect(ctx.body).toMatchObject({ scope: 'read' });
+  });
+
   it('should reject an organization token when the client no longer allows the organizations scope', async () => {
     const requested = [UserScope.Organizations, UserScope.Email];
     const ctx = createOidcContext({
@@ -634,7 +683,7 @@ describe('refresh token grant for CIMD clients', () => {
   } as unknown as Client;
 
   const buildCimdHandler = (tenant: MockTenant, envSet: EnvSet = cimdEnvSet) =>
-    buildHandler(envSet, tenant.queries, { assertUserHasApplicationAccess });
+    mockHandler(tenant, envSet);
 
   const createCimdPreparedContext = (
     params = validOidcContext.params,
