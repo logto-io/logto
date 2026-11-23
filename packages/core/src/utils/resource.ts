@@ -4,11 +4,12 @@ import type Queries from '#src/tenants/Queries.js';
 
 export const attachScopesToResources = async (
   resources: readonly Resource[],
-  scopeQueries: Queries['scopes']
+  scopeQueries: Queries['scopes'],
+  excludeRoleId?: string
 ): Promise<ResourceResponse[]> => {
   const { findScopesByResourceIds } = scopeQueries;
   const resourceIds = resources.map(({ id }) => id);
-  const scopes = await findScopesByResourceIds(resourceIds);
+  const scopes = await findScopesByResourceIds(resourceIds, excludeRoleId);
   // eslint-disable-next-line no-use-extend-native/no-use-extend-native -- `Map.groupBy` is standard since ES2024; the rule's built-in method list predates it
   const scopesByResourceId = Map.groupBy(scopes, ({ resourceId }) => resourceId);
 
