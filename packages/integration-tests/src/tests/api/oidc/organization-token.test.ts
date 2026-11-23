@@ -233,7 +233,7 @@ describe('third-party application organization token scope isolation', () => {
       expect(initialClaims).toMatchObject({
         aud: buildOrganizationUrn(organization.id),
       });
-      expect(new Set(initialClaims?.scope?.split(' '))).toEqual(
+      expect(new Set(initialClaims.scope?.split(' '))).toEqual(
         new Set([enabledOrgScopeName, removableOrgScopeName])
       );
 
