@@ -38,13 +38,12 @@ RUN pnpm cli connector link $ADDITIONAL_CONNECTOR_ARGS -p .
 
 ### Prune dependencies for production ###
 # `pnpm install` only skips devDependencies with an explicit `--prod` flag; `NODE_ENV=production`
-# alone does not prune them.
-# Only the direct `packages/*/node_modules` folders are removed here: nested workspace
-# `node_modules` (e.g. `packages/toolkit/*`) keep peer dependency links such as `ky` that are
-# resolved from the package itself at runtime.
+# alone does not prune them. Every workspace `node_modules` (including the nested ones under
+# `packages/*/*`) is removed so the production install rebuilds them from production dependencies.
 # Keep prune + production install in one layer to avoid extra transient disk usage.
 RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
-  rm -rf node_modules packages/*/node_modules && pnpm i --prod --frozen-lockfile
+  rm -rf node_modules packages/*/node_modules packages/*/*/node_modules \
+  && pnpm i --prod --frozen-lockfile
 
 ### Clean up ###
 # The SPA packages are only served from their built `dist` folders, so their TypeScript sources,
