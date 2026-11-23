@@ -1,18 +1,18 @@
 import RequestError from '#src/errors/RequestError/index.js';
-import { decodeLogExportCursor, encodeLogExportCursor } from '#src/utils/log-export.js';
+import { decodeLogCursor, encodeLogCursor } from '#src/utils/log-cursor.js';
 
-describe('log export cursor', () => {
+describe('log cursor', () => {
   const cursor = {
     createdAt: '2026-11-11T04:40:45.123456Z',
     id: 'log-id',
   };
 
   it('round-trips the exact timestamp and id', () => {
-    expect(decodeLogExportCursor(encodeLogExportCursor(cursor))).toEqual(cursor);
+    expect(decodeLogCursor(encodeLogCursor(cursor))).toEqual(cursor);
   });
 
   it('returns undefined when the cursor is omitted', () => {
-    expect(decodeLogExportCursor()).toBeUndefined();
+    expect(decodeLogCursor()).toBeUndefined();
   });
 
   it.each([
@@ -38,7 +38,7 @@ describe('log export cursor', () => {
   ])('rejects a %s cursor', (_name, value) => {
     const getError = () => {
       try {
-        decodeLogExportCursor(value);
+        decodeLogCursor(value);
       } catch (error) {
         return error;
       }

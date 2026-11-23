@@ -13,15 +13,15 @@ import { subDays } from 'date-fns';
 
 import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
-import type { LogExportCursor } from '#src/utils/log-export.js';
+import type { LogCursor } from '#src/utils/log-cursor.js';
 import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(Logs);
 
 type AllowedKeyPrefix = AuditLogPrefix | WebhookLogPrefix;
 
-/** A log row plus the exact timestamp needed to resume an export after it. */
-export type LogExportRow = LogResponse & { createdAtCursor: string };
+/** A log row plus the exact timestamp needed to resume a cursor read after it. */
+export type LogCursorRow = LogResponse & { createdAtCursor: string };
 
 type LogCondition = {
   logKey?: string;
@@ -36,8 +36,8 @@ type LogCondition = {
    */
   endTime?: number;
   includeKeyPrefix?: AllowedKeyPrefix[];
-  /** Resume an export after this row. */
-  after?: LogExportCursor;
+  /** Resume a cursor read after this row. */
+  after?: LogCursor;
 };
 
 /**
@@ -140,7 +140,7 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
     `);
 
   /**
-   * Read one keyset page for `GET /logs/export`.
+   * Read one keyset page for the cursor mode of `GET /logs`.
    *
    * `createdAt` is selected twice: once as the unix-millisecond value the Management API
    * exposes, and once as exact UTC text for the next page's cursor. The default `timestamptz`
@@ -150,13 +150,13 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
    * Ascending order matches the cursor comparator, so the composite
    * `(tenant_id, created_at, id)` index can satisfy both the range filter and the ordering.
    * The route requests `limit + 1` rows, then returns the first `limit` and uses the extra row
-   * only to decide whether `nextCursor` should be present.
+   * only to decide whether the `Next-Cursor` response header should be set.
    */
-  const findLogsForExport = async (
+  const findLogsForCursor = async (
     limit: number,
     logCondition: LogCondition
-  ): Promise<readonly LogExportRow[]> =>
-    pool.any<LogExportRow>(sql`
+  ): Promise<readonly LogCursorRow[]> =>
+    pool.any<LogCursorRow>(sql`
       select
         ${fields.tenantId},
         ${fields.id},
@@ -259,7 +259,7 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
     insertLogIfNotExists,
     countLogs,
     findLogs,
-    findLogsForExport,
+    findLogsForCursor,
     findLogById,
     deleteLogsInRange,
     getHookExecutionStatsByHookId,

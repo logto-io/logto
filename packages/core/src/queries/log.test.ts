@@ -12,9 +12,9 @@ const pool = createMockPool({
 });
 
 const { createLogQueries } = await import('./log.js');
-const { deleteLogsInRange, findLogsForExport } = createLogQueries(pool);
+const { deleteLogsInRange, findLogsForCursor } = createLogQueries(pool);
 
-describe('findLogsForExport()', () => {
+describe('findLogsForCursor()', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockQuery.mockReset();
@@ -48,7 +48,7 @@ describe('findLogsForExport()', () => {
       return createMockQueryResult([row as unknown as QueryResultRow]);
     });
 
-    await expect(findLogsForExport(100, { endTime: 5000 })).resolves.toEqual([row]);
+    await expect(findLogsForCursor(100, { endTime: 5000 })).resolves.toEqual([row]);
   });
 
   it('applies every filter and the keyset cursor in parameter order', async () => {
@@ -80,7 +80,7 @@ describe('findLogsForExport()', () => {
     });
 
     await expect(
-      findLogsForExport(10, {
+      findLogsForCursor(10, {
         payload: { userId: 'user-id', applicationId: 'application-id' },
         logKey: 'Interaction.SignIn',
         includeKeyPrefix: ['Interaction'],
@@ -104,7 +104,7 @@ describe('findLogsForExport()', () => {
       return createMockQueryResult([]);
     });
 
-    await findLogsForExport(10, { endTime: 5000 });
+    await findLogsForCursor(10, { endTime: 5000 });
   });
 });
 

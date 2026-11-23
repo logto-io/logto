@@ -10,26 +10,29 @@ import {
   type AuditLogPrefix,
   type LogResponse,
 } from '@logto/schemas';
-import { conditional, yes } from '@silverhand/essentials';
+import { yes } from '@silverhand/essentials';
 import { boolean, number, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
-import type { LogExportRow } from '#src/queries/log.js';
+import type { LogCursorRow } from '#src/queries/log.js';
 import assertThat from '#src/utils/assert-that.js';
-import { decodeLogExportCursor, encodeLogExportCursor } from '#src/utils/log-export.js';
+import { decodeLogCursor, encodeLogCursor } from '#src/utils/log-cursor.js';
 import { parseTimestampParam, validateTimeWindow } from '#src/utils/time-window.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
-// `limit` bounds the page size for delete batches and export pages. The default keeps interactive
-// calls small, and the ceiling caps the work one request can do. Export reads one extra row only
-// to detect whether another page exists. For delete, each call is a single
-// `delete ... where ctid = any(array(select ... limit N))` statement, so the bound also keeps a
-// call clear of the pool's `statement_timeout` and avoids a burst of dead tuples/WAL.
-const defaultLogBatchLimit = 1000;
-const maxLogBatchLimit = 10_000;
+// `limit` bounds how many rows one delete call processes. Each call is a single
+// `delete ... where ctid = any(array(select ... limit N))` statement, so the bound keeps a call
+// clear of the pool's `statement_timeout` and avoids a burst of dead tuples/WAL.
+const defaultDeleteLimit = 1000;
+const maxDeleteLimit = 10_000;
+
+// Cursor mode on `GET /logs` uses a smaller page than delete batches because it is exposed to
+// shared Logto Cloud instances.
+const defaultLogCursorLimit = 500;
+const maxLogCursorLimit = 1000;
 
 /**
  * The audit log keys exposed by `GET /logs`.
@@ -80,7 +83,7 @@ const parseBound = (raw: string | undefined, type: string): number | undefined =
 };
 
 // Drop the internal cursor timestamp before returning the public log shape.
-const toLogResponse = (log: LogExportRow): LogResponse => ({
+const toLogResponse = (log: LogCursorRow): LogResponse => ({
   tenantId: log.tenantId,
   id: log.id,
   key: log.key,
@@ -91,17 +94,22 @@ const toLogResponse = (log: LogExportRow): LogResponse => ({
 export default function logRoutes<T extends ManagementApiRouter>(
   ...[router, { queries }]: RouterInitArgs<T>
 ) {
-  const { findLogById, countLogs, findLogs, findLogsForExport, deleteLogsInRange } = queries.logs;
+  const { findLogById, countLogs, findLogs, findLogsForCursor, deleteLogsInRange } = queries.logs;
 
   router.get(
     '/logs',
-    koaPagination(),
+    koaPagination({
+      skip: (context) => context.request.query.pagination === 'cursor',
+    }),
     koaGuard({
       query: object({
         userId: string().optional(),
         applicationId: string().optional(),
         logKey: string().optional(),
         enableCap: string().optional(),
+        pagination: string().optional(),
+        cursor: string().max(512).optional(),
+        limit: string().optional(),
         start_time: string().optional(),
         end_time: string().optional(),
       }),
@@ -109,11 +117,84 @@ export default function logRoutes<T extends ManagementApiRouter>(
       status: [200, 400],
     }),
     async (ctx, next) => {
-      const { limit, offset } = ctx.pagination;
       const {
-        query: { userId, applicationId, logKey, enableCap, start_time, end_time },
+        query: {
+          userId,
+          applicationId,
+          logKey,
+          enableCap,
+          pagination,
+          cursor: rawCursor,
+          limit: rawLimit,
+          start_time,
+          end_time,
+        },
       } = ctx.guard;
 
+      const cursorMode = pagination === 'cursor';
+      assertThat(pagination === undefined || cursorMode, invalidInput('pagination'));
+
+      if (cursorMode) {
+        assertThat(!('page' in ctx.request.query), invalidInput('page'));
+        assertThat(!('page_size' in ctx.request.query), invalidInput('page_size'));
+        assertThat(enableCap === undefined, invalidInput('enableCap'));
+        assertThat(userId === undefined, invalidInput('userId'));
+        assertThat(applicationId === undefined, invalidInput('applicationId'));
+        assertThat(logKey === undefined, invalidInput('logKey'));
+
+        const cursorEndTime = parseBound(end_time, 'end_time');
+
+        if (cursorEndTime === undefined) {
+          throw invalidInput('end_time');
+        }
+
+        const cursorStartTime = parseBound(start_time, 'start_time');
+        validateTimeWindow(cursorStartTime, cursorEndTime);
+        assertThat(
+          cursorEndTime <= Date.now(),
+          new RequestError({ code: 'log.cleanup_boundary_in_future', status: 400 })
+        );
+
+        const cursorLimit = rawLimit === undefined ? defaultLogCursorLimit : Number(rawLimit);
+        assertThat(
+          Number.isInteger(cursorLimit) && cursorLimit >= 1 && cursorLimit <= maxLogCursorLimit,
+          invalidInput('limit')
+        );
+
+        const cursor = decodeLogCursor(rawCursor);
+
+        // Read one extra row so an exactly full page is distinguishable from the last page.
+        // Cursor mode is audit-only and deliberately does not run the page-mode count query.
+        const rows = await findLogsForCursor(cursorLimit + 1, {
+          startTime: cursorStartTime,
+          endTime: cursorEndTime,
+          includeKeyPrefix: auditLogKeyPrefixes,
+          after: cursor,
+        });
+
+        const items = rows.length > cursorLimit ? rows.slice(0, cursorLimit) : rows;
+        const lastItem = items.at(-1);
+        const nextCursor =
+          rows.length > cursorLimit && lastItem
+            ? encodeLogCursor({
+                createdAt: lastItem.createdAtCursor,
+                id: lastItem.id,
+              })
+            : undefined;
+
+        ctx.body = items.map((item) => toLogResponse(item));
+
+        if (nextCursor) {
+          ctx.set('Next-Cursor', nextCursor);
+        }
+
+        return next();
+      }
+
+      assertThat(rawCursor === undefined, invalidInput('cursor'));
+      assertThat(rawLimit === undefined, invalidInput('limit'));
+
+      const { limit, offset } = ctx.pagination;
       const startTime = parseTimestampParam(start_time, 'start_time');
       const endTime = parseTimestampParam(end_time, 'end_time');
       validateTimeWindow(startTime, endTime);
@@ -147,94 +228,6 @@ export default function logRoutes<T extends ManagementApiRouter>(
       ctx.body = logs;
 
       return next();
-    }
-  );
-
-  router.get(
-    '/logs/export',
-    koaGuard({
-      query: object({
-        excludeWebhookLogs: string().optional(),
-        cursor: string().max(512).optional(),
-        limit: string().optional(),
-        end_time: string(),
-        start_time: string().optional(),
-      }),
-      response: object({
-        items: logResponseGuard.array(),
-        nextCursor: string().optional(),
-      }),
-      status: [200, 400],
-    }),
-    async (ctx) => {
-      const {
-        query: { excludeWebhookLogs, cursor: rawCursor, limit: rawLimit },
-      } = ctx.guard;
-
-      const endTime = parseBound(ctx.guard.query.end_time, 'end_time');
-
-      // `end_time` is required by the guard, so `parseBound` only returns `undefined` when the
-      // parameter is absent; throw rather than reading an unbounded range by accident.
-      if (endTime === undefined) {
-        throw invalidInput('end_time');
-      }
-
-      const startTime = parseBound(ctx.guard.query.start_time, 'start_time');
-
-      // The export uses the same inclusive window semantics as `GET /logs` and `DELETE /logs`.
-      // Like `DELETE /logs`, it also rejects a future `end_time` because that is usually a unit
-      // mistake.
-      validateTimeWindow(startTime, endTime);
-      assertThat(
-        endTime <= Date.now(),
-        new RequestError({ code: 'log.cleanup_boundary_in_future', status: 400 })
-      );
-
-      const limit = rawLimit === undefined ? defaultLogBatchLimit : Number(rawLimit);
-      assertThat(
-        Number.isInteger(limit) && limit >= 1 && limit <= maxLogBatchLimit,
-        invalidInput('limit')
-      );
-
-      const cursor = decodeLogExportCursor(rawCursor);
-
-      // Read one extra row so a page that is exactly full is still reported as the last page.
-      // `nextCursor` is set only when that extra row exists. It is the exact PostgreSQL timestamp
-      // plus the id, so rows that share a millisecond can cross a page boundary without being
-      // duplicated or skipped.
-      const rows = await findLogsForExport(limit + 1, {
-        startTime,
-        endTime,
-        // By default, include webhook delivery logs so the export matches the key scope of
-        // `DELETE /logs`. With `excludeWebhookLogs`, the export is audit-only and is not a
-        // complete archive. The cursor only tracks read progress; deleting by the same time
-        // window is only safe after the window stops changing.
-        includeKeyPrefix: conditional(yes(excludeWebhookLogs) && auditLogKeyPrefixes),
-        after: cursor,
-      });
-
-      const items = rows.length > limit ? rows.slice(0, limit) : rows;
-      const lastItem = items.at(-1);
-      const nextCursor =
-        rows.length > limit && lastItem
-          ? encodeLogExportCursor({
-              createdAt: lastItem.createdAtCursor,
-              id: lastItem.id,
-            })
-          : undefined;
-
-      ctx.set('Cache-Control', 'no-store');
-      ctx.body = {
-        items: items.map((item) => toLogResponse(item)),
-        ...conditional(nextCursor && { nextCursor }),
-      };
-
-      // Terminal route: `GET /logs/:id` also matches this path. Keep this route registered
-      // before `/logs/:id` and do not call `next()`, or the `/:id` handler would look up the
-      // id "export" and overwrite this response. Upstream middleware still post-processes after
-      // this handler returns; only middleware registered after the router would be skipped.
-      // eslint-disable-next-line no-useless-return -- Explicitly mark this route as terminal.
-      return;
     }
   );
 
@@ -284,9 +277,9 @@ export default function logRoutes<T extends ManagementApiRouter>(
 
       const startTime = parseBound(query.start_time, 'start_time');
 
-      const limit = query.limit === undefined ? defaultLogBatchLimit : Number(query.limit);
+      const limit = query.limit === undefined ? defaultDeleteLimit : Number(query.limit);
       assertThat(
-        Number.isInteger(limit) && limit >= 1 && limit <= maxLogBatchLimit,
+        Number.isInteger(limit) && limit >= 1 && limit <= maxDeleteLimit,
         invalidInput('limit')
       );
 

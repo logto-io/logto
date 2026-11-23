@@ -5,22 +5,17 @@ import { createInterceptorsPreset, createPool, sql, type DatabasePool } from '@s
 
 import { authedAdminApi } from '#src/api/api.js';
 
-type LogPage = {
-  items: LogResponse[];
-  nextCursor?: string;
-};
-
-// Integration coverage for `GET /api/logs/export`.
+// Integration coverage for the audit-log cursor mode of `GET /api/logs`.
 //
 // Like `cleanup.test.ts`, the rows are seeded directly with SQL: the boundary and payload
 // fixtures need timestamps far in the past and exact millisecond values, which the Management API
-// cannot create. The window is far enough back and disjoint from other suites that the export can
-// be scoped by time alone, without content filters.
-describe('GET /logs/export', () => {
+// cannot create. The window is far enough back and disjoint from other suites that the read can
+// be scoped by time alone.
+describe('GET /logs cursor mode', () => {
   const startTime = 1_600_000_200_000;
   const endTime = startTime + 60_000;
 
-  const logKey = `${interaction.prefix}.Export.${generateStandardId()}`;
+  const logKey = `${interaction.prefix}.Cursor.${generateStandardId()}`;
   const sameTimeIdA = generateStandardId();
   const sameTimeIdB = generateStandardId();
   const laterId = generateStandardId();
@@ -30,31 +25,29 @@ describe('GET /logs/export', () => {
   const firstPayloadA = {
     key: logKey,
     result: LogResult.Success,
-    userId: 'export-user',
-    applicationId: 'export-app',
-    note: 'comma, quote " and newline\n',
+    userId: 'cursor-user',
+    applicationId: 'cursor-app',
   };
   const firstPayloadB = {
     key: logKey,
     result: LogResult.Success,
-    userId: 'export-user',
-    applicationId: 'export-app',
+    userId: 'cursor-user',
+    applicationId: 'cursor-app',
   };
   const laterPayload = {
     key: logKey,
     result: LogResult.Success,
-    userId: 'export-user',
-    applicationId: 'export-app',
+    userId: 'cursor-user',
+    applicationId: 'cursor-app',
   };
 
-  // Webhook delivery logs share the table and are included unless the caller opts out with
-  // `excludeWebhookLogs=true`.
-  const webhookLogKey = `${hook.Type.TriggerHook}.Export.${generateStandardId()}`;
+  // Cursor mode is audit-only; this row must never appear in its results.
+  const webhookLogKey = `${hook.Type.TriggerHook}.Cursor.${generateStandardId()}`;
   const webhookLogId = generateStandardId();
   const webhookPayload = {
     key: webhookLogKey,
     result: LogResult.Success,
-    hookId: 'export-probe',
+    hookId: 'cursor-probe',
   };
 
   /* eslint-disable @silverhand/fp/no-let -- Jest lifecycle initializes the shared database pool */
@@ -91,18 +84,14 @@ describe('GET /logs/export', () => {
           ${logKey},
           ${sql.jsonb(laterPayload)},
           to_timestamp(${secondCreatedAt}::double precision / 1000)
+        ),
+        (
+          ${defaultTenantId},
+          ${webhookLogId},
+          ${webhookLogKey},
+          ${sql.jsonb(webhookPayload)},
+          to_timestamp(${firstCreatedAt}::double precision / 1000)
         )
-    `);
-
-    await pool.query(sql`
-      insert into logs (tenant_id, id, key, payload, created_at)
-      values (
-        ${defaultTenantId},
-        ${webhookLogId},
-        ${webhookLogKey},
-        ${sql.jsonb(webhookPayload)},
-        to_timestamp(${firstCreatedAt}::double precision / 1000)
-      )
     `);
   });
 
@@ -114,31 +103,32 @@ describe('GET /logs/export', () => {
     await pool.end();
   });
 
-  const exportLogs = async (extra?: Record<string, string>) => {
+  const getCursorPage = async (extra?: Record<string, string>) => {
     const searchParams = new URLSearchParams({
+      pagination: 'cursor',
       start_time: String(startTime),
       end_time: String(endTime),
       ...extra,
     });
 
-    return authedAdminApi.get('logs/export', {
+    return authedAdminApi.get('logs', {
       searchParams,
       throwHttpErrors: false,
     });
   };
 
   const readAllAuditIds = async (cursor?: string): Promise<string[]> => {
-    const response = await exportLogs({
-      excludeWebhookLogs: 'true',
+    const response = await getCursorPage({
       limit: '1',
       ...(cursor ? { cursor } : {}),
     });
     expect(response.status).toBe(200);
 
-    const page = await response.json<LogPage>();
-    const ids = page.items.map(({ id }) => id);
+    const logs = await response.json<LogResponse[]>();
+    const ids = logs.map(({ id }) => id);
+    const nextCursor = response.headers.get('next-cursor') ?? undefined;
 
-    return [...ids, ...(page.nextCursor ? await readAllAuditIds(page.nextCursor) : [])];
+    return [...ids, ...(nextCursor ? await readAllAuditIds(nextCursor) : [])];
   };
 
   it('paginates rows that share a timestamp without dropping or duplicating them', async () => {
@@ -146,62 +136,49 @@ describe('GET /logs/export', () => {
 
     expect(ids.slice().sort()).toEqual([sameTimeIdA, sameTimeIdB, laterId].slice().sort());
     expect(new Set(ids).size).toBe(3);
+    expect(ids).not.toContain(webhookLogId);
   });
 
-  it('omits nextCursor when the page is exactly full', async () => {
-    const response = await exportLogs({
-      excludeWebhookLogs: 'true',
-      limit: '3',
-    });
+  it('omits Next-Cursor when the page is exactly full', async () => {
+    const response = await getCursorPage({ limit: '3' });
 
     expect(response.status).toBe(200);
-    const page = await response.json<LogPage>();
+    const logs = await response.json<LogResponse[]>();
     expect(
-      page.items
+      logs
         .map(({ id }) => id)
         .slice()
         .sort()
     ).toEqual([sameTimeIdA, sameTimeIdB, laterId].slice().sort());
-    expect(page.nextCursor).toBeUndefined();
+    expect(response.headers.get('next-cursor')).toBeNull();
   });
 
-  it('includes webhook delivery logs by default', async () => {
-    const response = await exportLogs({ limit: '10' });
-
-    expect(response.status).toBe(200);
-    const page = await response.json<LogPage>();
-    expect(
-      page.items
-        .map(({ id }) => id)
-        .slice()
-        .sort()
-    ).toEqual([sameTimeIdA, sameTimeIdB, laterId, webhookLogId].slice().sort());
-    expect(page.nextCursor).toBeUndefined();
-  });
-
-  it('excludes webhook delivery logs when excludeWebhookLogs=true', async () => {
-    const response = await exportLogs({ excludeWebhookLogs: 'true', limit: '10' });
-
-    expect(response.status).toBe(200);
-    const page = await response.json<LogPage>();
-    expect(
-      page.items
-        .map(({ id }) => id)
-        .slice()
-        .sort()
-    ).toEqual([sameTimeIdA, sameTimeIdB, laterId].slice().sort());
-    expect(page.nextCursor).toBeUndefined();
-  });
-
-  it('returns an empty page without nextCursor when the window has no rows', async () => {
-    const response = await exportLogs({
+  it('returns an empty cursor page when the window has no rows', async () => {
+    const response = await getCursorPage({
       start_time: String(startTime + 120_000),
       end_time: String(startTime + 180_000),
     });
 
     expect(response.status).toBe(200);
-    await expect(response.json<LogPage>()).resolves.toEqual({
-      items: [],
-    });
+    await expect(response.json<LogResponse[]>()).resolves.toEqual([]);
+    expect(response.headers.get('next-cursor')).toBeNull();
+  });
+
+  it('rejects a future end_time', async () => {
+    const response = await getCursorPage({ end_time: String(Date.now() + 3_600_000) });
+
+    expect(response.status).toBe(400);
+  });
+
+  it('rejects page-mode parameters in cursor mode', async () => {
+    const response = await getCursorPage({ page: '1' });
+
+    expect(response.status).toBe(400);
+  });
+
+  it('rejects a limit above the cursor cap', async () => {
+    const response = await getCursorPage({ limit: '1001' });
+
+    expect(response.status).toBe(400);
   });
 });

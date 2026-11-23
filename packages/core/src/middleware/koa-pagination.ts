@@ -25,10 +25,16 @@ export type WithPaginationContext<ContextT, IsOptional extends boolean> = Contex
   pagination: IsOptional extends true ? Pagination | DisabledPagination : Pagination;
 };
 
+type PaginationSkipContext = {
+  request: { query: Record<string, unknown> };
+};
+
 type PaginationConfig<IsOptional extends boolean> = {
   defaultPageSize?: number;
   maxPageSize?: number;
   isOptional?: IsOptional;
+  /** Skip pagination processing for requests that use another pagination mode. */
+  skip?: (ctx: PaginationSkipContext) => boolean;
 };
 
 export const isPaginationMiddleware = <Type extends IMiddleware>(
@@ -52,6 +58,7 @@ function koaPagination<StateT, ContextT, ResponseBodyT, IsOptional extends boole
   defaultPageSize = fallbackDefaultPageSize,
   maxPageSize = 100,
   isOptional,
+  skip,
 }: PaginationConfig<IsOptional> = {}): MiddlewareType<
   StateT,
   WithPaginationContext<ContextT, true>,
@@ -64,6 +71,11 @@ function koaPagination<StateT, ContextT, ResponseBodyT, IsOptional extends boole
     ResponseBodyT
     // eslint-disable-next-line complexity -- maybe refactor me
   > = async (ctx, next) => {
+    if (skip?.(ctx)) {
+      await next();
+      return;
+    }
+
     try {
       const {
         request: {

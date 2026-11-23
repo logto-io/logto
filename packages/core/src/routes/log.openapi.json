@@ -9,7 +9,7 @@
     "/api/logs": {
       "get": {
         "summary": "Get logs",
-        "description": "Get logs that match the given query with pagination.\n\n### Pagination on large result sets\n\nFor tenants with very large log volumes, the default exact `count(*)` may exceed Postgres `statement_timeout`. Pass `enableCap=true` to short-circuit the count query: any tenant with more than 10,000 matching logs saturates `Total-Number` at the sentinel value `10001` and the response includes `Total-Number-Is-Capped: true`. In capped responses the `Link` header omits `rel=\"last\"` and `rel=\"next\"`; walk forward by incrementing `page` and stop on an empty response.",
+        "description": "Get logs that match the given query with pagination.\n\n### Page mode\n\nThe default page-based mode uses `page` / `page_size`, returns `Total-Number` and `Link` headers, and includes audit logs only. For tenants with very large log volumes, the default exact `count(*)` may exceed Postgres `statement_timeout`. Pass `enableCap=true` to short-circuit the count query: any tenant with more than 10,000 matching logs saturates `Total-Number` at the sentinel value `10001` and the response includes `Total-Number-Is-Capped: true`. In capped responses the `Link` header omits `rel=\"last\"` and `rel=\"next\"`; walk forward by incrementing `page` and stop on an empty response.\n\n### Cursor mode\n\nPass `pagination=cursor` to opt into cursor-based reading. Cursor mode returns the same `LogResponse[]` body and reads audit logs only. `end_time` is required and must not be in the future; `start_time` is optional. The page size is controlled by `limit`, which defaults to `500` and is capped at `1000`, and the next page cursor is returned in the `Next-Cursor` response header. Omit `cursor` from the first request to start at the beginning; pass the `Next-Cursor` header value back as `cursor` to continue. The header is omitted on the last or empty page. Keep `start_time`, `end_time`, and the cursor unchanged while paging.\n\nCursor mode does not run the page-mode count query and does not emit `Total-Number` or `Link` headers. It rejects `page`, `page_size`, `enableCap`, `userId`, `applicationId`, and `logKey` with `400`. The pages are not a consistent snapshot and do not make deleting the same time window lossless: a row whose transaction commits after the cursor has passed its position is absent from the result but would still be removed by a later time-window `DELETE /api/logs`.",
         "parameters": [
           {
             "name": "userId",
@@ -29,25 +29,40 @@
           {
             "name": "start_time",
             "in": "query",
-            "description": "Inclusive lower bound on `createdAt`, in unix milliseconds. When set, returns only logs where `createdAt >= start_time`. Recommended for clients paginating across very large log ranges to keep query latency consistent. Because the bound is inclusive, when resuming pagination from the last fetched log, pass its `createdAt + 1` as `start_time` (or de-duplicate by log `id`) to avoid re-fetching the boundary log."
+            "description": "Inclusive lower bound on `createdAt`, in unix milliseconds. When set, returns only logs where `createdAt >= start_time`. Applies to both page and cursor modes. Because the bound is inclusive, when resuming pagination from the last fetched log, pass its `createdAt + 1` as `start_time` (or de-duplicate by log `id`) to avoid re-fetching the boundary log."
           },
           {
             "name": "end_time",
             "in": "query",
-            "description": "Inclusive upper bound on `createdAt`, in unix milliseconds. When set, returns only logs where `createdAt <= end_time`. Returns `400` if `start_time > end_time` when both are present."
+            "description": "Inclusive upper bound on `createdAt`, in unix milliseconds. When set, returns only logs where `createdAt <= end_time`. In cursor mode this parameter is required and values in the future are rejected with `400`. In page mode it remains optional."
           },
           {
             "name": "enableCap",
             "in": "query",
-            "description": "When `true`, short-circuits the underlying `count(*)` query: any tenant with more than 10,000 matching logs saturates `Total-Number` at the sentinel value `10001` and the response emits `Total-Number-Is-Capped: true`. The `Link` header then omits `rel=\"last\"` and `rel=\"next\"` because the real total is unknown. Default `false`; recommended `true` for any client whose tenant volume may exceed 10,000 matching logs to avoid `statement_timeout`."
+            "description": "Page mode only. When `true`, short-circuits the underlying `count(*)` query: any tenant with more than 10,000 matching logs saturates `Total-Number` at the sentinel value `10001` and the response emits `Total-Number-Is-Capped: true`. The `Link` header then omits `rel=\"last\"` and `rel=\"next\"` because the real total is unknown. Default `false`; rejected in cursor mode."
+          },
+          {
+            "name": "pagination",
+            "in": "query",
+            "description": "Set to `cursor` to opt into cursor mode. Omit this parameter for the default page mode. Other values return `400`."
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Opaque cursor from a previous response's `Next-Cursor` header. Pass it back unchanged with the same `start_time` and `end_time`. Only valid with `pagination=cursor`; empty, malformed, or too-long values return `400`."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Cursor mode only. Maximum number of logs returned by this page. Default `500`; maximum `1000`. Rejected in page mode and when outside that range."
           }
         ],
         "responses": {
           "400": {
-            "description": "Returned when `start_time` or `end_time` is not a finite number, or when `start_time > end_time`."
+            "description": "Returned when `start_time` or `end_time` is not a finite number, when `start_time > end_time`, or when a page-mode or cursor-mode parameter is invalid or incompatible. Cursor mode requires `end_time`, rejects a future `end_time`, rejects `page`, `page_size`, `enableCap`, `userId`, `applicationId`, and `logKey`, and rejects `cursor` or `limit` without `pagination=cursor`."
           },
           "200": {
-            "description": "An array of logs that match the given query.",
+            "description": "An array of logs that match the given query. In page mode, `Total-Number` and `Link` describe the page-based result set. In cursor mode, a non-empty page includes a `Next-Cursor` header when more rows were found; the header is omitted on the last or empty page.",
             "headers": {
               "Total-Number": {
                 "description": "When `enableCap=false`: exact match count. When `enableCap=true`: either the exact count (≤ 10,000) or the saturation sentinel `10001`; inspect `Total-Number-Is-Capped` to distinguish.",
@@ -59,6 +74,10 @@
               },
               "Link": {
                 "description": "Pagination links per RFC 5988. `rel=\"first\"` and `rel=\"prev\"` are emitted as usual. When the response is capped (`Total-Number-Is-Capped: true`), `rel=\"last\"` and `rel=\"next\"` are omitted because the saturated count makes the derived page count unreliable — clients should walk forward by incrementing `page` and stop on an empty response.",
+                "schema": { "type": "string" }
+              },
+              "Next-Cursor": {
+                "description": "Cursor mode only. Opaque cursor for the next page, present only when more rows were found. Pass it as the `cursor` query parameter with the same time window. It is omitted on the last page and for an empty result.",
                 "schema": { "type": "string" }
               }
             },
@@ -93,7 +112,7 @@
       },
       "delete": {
         "summary": "Delete logs",
-        "description": "Delete log rows in bounded batches.\n\n`start_time` / `end_time` carry the same inclusive semantics as `GET /api/logs`: a row is deleted when its `createdAt` falls in `[start_time, end_time]`, at millisecond granularity. Note that this operation removes **every** log row in that window, while `GET /api/logs` returns audit logs only. Rows whose transactions commit after an export read the window are also removed, so purge a window by time only after its data has stopped changing.\n\nWebhook delivery logs (`TriggerHook.*`) share the `logs` table and are included by `GET /api/logs/export` by default; set `excludeWebhookLogs=true` there to leave them out. With that option, `deletedCount` can exceed the number of rows a complete export returned. A window covering the last 24 hours also removes the deliveries counted by the execution stats on `GET /api/hooks`.\n\n`end_time` is required, so a bare `DELETE /api/logs` never means \"delete everything\". `end_time` must not be in the future and is rejected with `400` otherwise; a common cause is passing microseconds or nanoseconds instead of milliseconds, or a miscomputed timezone offset. Passing seconds instead yields a boundary in the past, which deletes nothing rather than deleting too much.\n\nThis operation is irreversible and reachable by any Management API token. Each call deletes at most `limit` rows in a single statement and reports `hasMore`. Keep both bounds fixed across calls and repeat while `hasMore` is `true`; recomputing a boundary between calls would skip rows. Run one cleanup at a time: a concurrent purge can make `hasMore` under-report.\n\n### Performance\n\n`DELETE` marks rows dead and leaves index cleanup to autovacuum, so writes are dominated by heap tuples and WAL. The statement is matched on `ctid`, so the outer side is a Tid Scan over exactly `limit` rows and the inner select reads those row ids from `logs__created_at_id`; expect the cost of a call to track `limit` rather than the size of the table. Measure with `EXPLAIN (ANALYZE, BUFFERS)` on your own data before running a large purge.\n\nFreed space is reused by later inserts but the table file does not shrink, so disk usage will not drop immediately after a purge.",
+        "description": "Delete log rows in bounded batches.\n\n`start_time` / `end_time` carry the same inclusive semantics as `GET /api/logs`: a row is deleted when its `createdAt` falls in `[start_time, end_time]`, at millisecond granularity. Note that this operation removes **every** log row in that window, while `GET /api/logs` returns audit logs only. Rows whose transactions commit after a read passes their position are also removed, so purge a window by time only after its data has stopped changing.\n\nWebhook delivery logs (`TriggerHook.*`) share the `logs` table but are not returned by `GET /api/logs`; `DELETE /api/logs` still removes them. `deletedCount` can therefore exceed the number of audit log rows a complete read returned. A window covering the last 24 hours also removes the deliveries counted by the execution stats on `GET /api/hooks`.\n\n`end_time` is required, so a bare `DELETE /api/logs` never means \"delete everything\". `end_time` must not be in the future and is rejected with `400` otherwise; a common cause is passing microseconds or nanoseconds instead of milliseconds, or a miscomputed timezone offset. Passing seconds instead yields a boundary in the past, which deletes nothing rather than deleting too much.\n\nThis operation is irreversible and reachable by any Management API token. Each call deletes at most `limit` rows in a single statement and reports `hasMore`. Keep both bounds fixed across calls and repeat while `hasMore` is `true`; recomputing a boundary between calls would skip rows. Run one cleanup at a time: a concurrent purge can make `hasMore` under-report.\n\n### Performance\n\n`DELETE` marks rows dead and leaves index cleanup to autovacuum, so writes are dominated by heap tuples and WAL. The statement is matched on `ctid`, so the outer side is a Tid Scan over exactly `limit` rows and the inner select reads those row ids from `logs__created_at_id`; expect the cost of a call to track `limit` rather than the size of the table. Measure with `EXPLAIN (ANALYZE, BUFFERS)` on your own data before running a large purge.\n\nFreed space is reused by later inserts but the table file does not shrink, so disk usage will not drop immediately after a purge.",
         "parameters": [
           {
             "name": "end_time",
@@ -118,48 +137,6 @@
           },
           "400": {
             "description": "Returned when `end_time` is missing, empty, negative, outside the safe integer range, in the future, or not a finite number; when `start_time` is malformed or after `end_time`; or when `limit` is outside `1..10000`."
-          }
-        }
-      }
-    },
-    "/api/logs/export": {
-      "get": {
-        "summary": "Export a page of logs",
-        "description": "Return one JSON page of logs in a time window. `items` contains up to `limit` logs in ascending `createdAt` order, and `nextCursor` is the opaque cursor for the next page. It is only present when more rows were found; it is omitted on the last page and for an empty result. To continue, pass `nextCursor` back as `cursor` and keep `start_time`, `end_time`, and `excludeWebhookLogs` unchanged. The cursor carries PostgreSQL's exact timestamp and the log id, so rows that share a millisecond are not duplicated or skipped at a page boundary.\n\nThis endpoint is for time-window archival and does not support content filters. Use `GET /api/logs` for filtered browsing.\n\nBy default the page includes webhook delivery logs (`TriggerHook.*`). Set `excludeWebhookLogs=true` to return audit logs only, matching `GET /api/logs`; webhook delivery logs can then be read through `GET /api/hooks/{id}/recent-logs`.\n\nThe cursor only records a read position; the pages are not a consistent snapshot and do not make deleting the same time window lossless: a row whose transaction commits after the export has passed its position is absent from the export, but a later time-window `DELETE /api/logs` removes it. Delete a window by time only after its data has stopped changing.\n\nThe client owns the output format. Write CSV or JSONL from `items`, and persist `nextCursor` only after the batch has been written successfully so an interrupted download can resume from the last completed page.",
-        "parameters": [
-          {
-            "name": "excludeWebhookLogs",
-            "in": "query",
-            "description": "Set to `true` (or `1`) to return audit logs only and omit webhook delivery logs (`TriggerHook.*`), matching `GET /api/logs`. Default `false`."
-          },
-          {
-            "name": "cursor",
-            "in": "query",
-            "description": "Opaque cursor taken from the previous response's `nextCursor`. Pass it back unchanged with the same time window and `excludeWebhookLogs` value. Do not construct or modify it. An invalid or empty cursor returns `400`."
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "Maximum number of items returned by this page. Default `1000`; maximum `10000`. Returns `400` for values outside that range."
-          },
-          {
-            "name": "start_time",
-            "in": "query",
-            "description": "Inclusive lower bound on `createdAt`, in unix milliseconds. Omit to start from the beginning of the tenant's log history. Returns `400` if it is after `end_time`."
-          },
-          {
-            "name": "end_time",
-            "in": "query",
-            "required": true,
-            "description": "Inclusive upper bound on `createdAt`, in unix milliseconds. Only logs with `createdAt <= end_time` are returned. Returns `400` if the value is in the future."
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "One page of matching logs. `items` uses the `LogResponse` shape. `nextCursor` is an opaque string only when more rows were found; it is omitted when this is the last page or no rows match. The cursor is generated from the exact timestamp and id of the last item."
-          },
-          "400": {
-            "description": "Returned when `cursor` is empty, too long, malformed, or does not match the expected cursor format; when `limit` is not an integer or is outside `1..10000`; when `end_time` is missing, empty, negative, fractional, outside the safe integer range, in the future, or not a finite number; or when `start_time` is malformed, not a safe non-negative integer, or after `end_time`."
           }
         }
       }

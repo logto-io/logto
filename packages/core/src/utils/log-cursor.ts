@@ -3,8 +3,8 @@ import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 
-/** Payload encoded into an opaque log export cursor. */
-export type LogExportCursor = {
+/** Payload encoded into an opaque log cursor. */
+export type LogCursor = {
   /** Exact `createdAt` text in UTC, with microsecond precision. */
   createdAt: string;
   id: string;
@@ -12,22 +12,22 @@ export type LogExportCursor = {
 
 const invalidCursor = () => new RequestError({ code: 'guard.invalid_input', type: 'cursor' });
 
-const logExportCursorGuard = z.object({
-  // `findLogsForExport` writes this exact format with `to_char(created_at at time zone 'UTC',
+const logCursorGuard = z.object({
+  // `findLogsForCursor` writes this exact format with `to_char(created_at at time zone 'UTC',
   // 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"')`. Zod validates the ISO-8601 shape and the calendar date.
   createdAt: z.string().datetime({ offset: true, precision: 6 }),
   id: z.string().min(1),
 });
 
 /** Encode the cursor payload as base64url JSON. */
-export const encodeLogExportCursor = ({ createdAt, id }: LogExportCursor) =>
+export const encodeLogCursor = ({ createdAt, id }: LogCursor) =>
   Buffer.from(JSON.stringify({ createdAt, id }), 'utf8').toString('base64url');
 
 /**
  * Decode an opaque cursor. An omitted cursor is allowed; empty or malformed cursors throw a
  * `400` validation error.
  */
-export const decodeLogExportCursor = (raw?: string): Optional<LogExportCursor> => {
+export const decodeLogCursor = (raw?: string): Optional<LogCursor> => {
   if (raw === undefined) {
     return undefined;
   }
@@ -38,7 +38,7 @@ export const decodeLogExportCursor = (raw?: string): Optional<LogExportCursor> =
 
   try {
     const decoded: unknown = JSON.parse(Buffer.from(raw, 'base64url').toString('utf8'));
-    const result = logExportCursorGuard.safeParse(decoded);
+    const result = logCursorGuard.safeParse(decoded);
 
     if (!result.success) {
       throw invalidCursor();

@@ -58,7 +58,6 @@ export const customRoutes: Readonly<RouteDictionary> = Object.freeze({
   'get /systems/license': 'GetSystemLicense',
   'put /systems/license': 'InstallSystemLicense',
   'get /systems/license/usage-statement': 'GetSystemLicenseUsageStatement',
-  'get /logs/export': 'ExportLogs',
   // Applications
   'post /applications/:applicationId/roles': 'AssignApplicationRoles',
   'get /applications/:id/protected-app-metadata/custom-domains':
