@@ -26,6 +26,24 @@ describe('log cursor', () => {
       ),
     ],
     [
+      'zero year',
+      Buffer.from(JSON.stringify({ createdAt: '0000-01-01T00:00:00.000000Z', id: 'id' })).toString(
+        'base64url'
+      ),
+    ],
+    [
+      'non-UTC offset',
+      Buffer.from(
+        JSON.stringify({ createdAt: '2026-11-11T04:40:45.123456+00:00', id: 'id' })
+      ).toString('base64url'),
+    ],
+    [
+      'invalid offset',
+      Buffer.from(
+        JSON.stringify({ createdAt: '2026-11-11T04:40:45.123456+99:99', id: 'id' })
+      ).toString('base64url'),
+    ],
+    [
       'missing microseconds',
       Buffer.from(JSON.stringify({ createdAt: '2026-11-11T04:40:45Z', id: 'id' })).toString(
         'base64url'

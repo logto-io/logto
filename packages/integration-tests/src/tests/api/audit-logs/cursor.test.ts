@@ -19,8 +19,12 @@ describe('GET /logs cursor mode', () => {
   const sameTimeIdA = generateStandardId();
   const sameTimeIdB = generateStandardId();
   const laterId = generateStandardId();
+  const microsecondIdA = generateStandardId();
+  const microsecondIdB = generateStandardId();
   const firstCreatedAt = startTime + 1000;
   const secondCreatedAt = startTime + 2000;
+  // Outside the default window, so the main pagination assertions stay unaffected.
+  const microsecondCreatedAt = endTime + 30_000;
 
   const firstPayloadA = {
     key: logKey,
@@ -91,6 +95,20 @@ describe('GET /logs cursor mode', () => {
           ${webhookLogKey},
           ${sql.jsonb(webhookPayload)},
           to_timestamp(${firstCreatedAt}::double precision / 1000)
+        ),
+        (
+          ${defaultTenantId},
+          ${microsecondIdA},
+          ${logKey},
+          ${sql.jsonb(laterPayload)},
+          to_timestamp(${microsecondCreatedAt}::double precision / 1000)
+        ),
+        (
+          ${defaultTenantId},
+          ${microsecondIdB},
+          ${logKey},
+          ${sql.jsonb(laterPayload)},
+          to_timestamp(${microsecondCreatedAt}::double precision / 1000) + interval '1 microsecond'
         )
     `);
   });
@@ -151,6 +169,33 @@ describe('GET /logs cursor mode', () => {
         .sort()
     ).toEqual([sameTimeIdA, sameTimeIdB, laterId].slice().sort());
     expect(response.headers.get('next-cursor')).toBeNull();
+  });
+
+  it('keeps microsecond ordering within one millisecond', async () => {
+    const first = await getCursorPage({
+      start_time: String(microsecondCreatedAt),
+      end_time: String(microsecondCreatedAt),
+      limit: '1',
+    });
+
+    expect(first.status).toBe(200);
+    const firstLogs = await first.json<LogResponse[]>();
+    expect(firstLogs.map(({ id }) => id)).toEqual([microsecondIdA]);
+
+    const nextCursor = first.headers.get('next-cursor');
+    expect(nextCursor).toEqual(expect.any(String));
+
+    const second = await getCursorPage({
+      start_time: String(microsecondCreatedAt),
+      end_time: String(microsecondCreatedAt),
+      limit: '1',
+      cursor: nextCursor!,
+    });
+
+    expect(second.status).toBe(200);
+    const secondLogs = await second.json<LogResponse[]>();
+    expect(secondLogs.map(({ id }) => id)).toEqual([microsecondIdB]);
+    expect(second.headers.get('next-cursor')).toBeNull();
   });
 
   it('returns an empty cursor page when the window has no rows', async () => {

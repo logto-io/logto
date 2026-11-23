@@ -14,8 +14,12 @@ const invalidCursor = () => new RequestError({ code: 'guard.invalid_input', type
 
 const logCursorGuard = z.object({
   // `findLogsForCursor` writes this exact format with `to_char(created_at at time zone 'UTC',
-  // 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"')`. Zod validates the ISO-8601 shape and the calendar date.
-  createdAt: z.string().datetime({ offset: true, precision: 6 }),
+  // 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"')`. `offset: false` enforces the UTC `Z` suffix, `precision: 6`
+  // enforces microseconds, and the refinement rejects year 0000, which the server never emits.
+  createdAt: z
+    .string()
+    .datetime({ offset: false, precision: 6 })
+    .refine((value) => !value.startsWith('0000-')),
   id: z.string().min(1),
 });
 
