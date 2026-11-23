@@ -60,7 +60,6 @@ import {
   validateGrant,
   validatePresence,
 } from '#src/oidc/oidc-provider-internals.js';
-import { isThirdPartyApplication } from '#src/oidc/resource.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -381,7 +380,7 @@ export const buildHandler: Handler = (envSet, queries, libraries) => async (ctx)
         );
       }
 
-      if (isThirdParty ?? (await isThirdPartyApplication(queries, client.clientId))) {
+      if (isThirdParty) {
         return boundOrganizationScopes(
           roleScopeNames,
           await libraries.applications.getApplicationUserConsentOrganizationScopes(client.clientId),

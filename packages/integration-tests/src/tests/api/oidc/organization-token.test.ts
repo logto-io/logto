@@ -200,7 +200,7 @@ describe('third-party application organization token scope isolation', () => {
 
       // Enable the colliding scope on the API resource, but omit it from organizationScopes.
       await assignUserConsentScopes(app.id, {
-        userScopes: [UserScope.Organizations],
+        userScopes: [UserScope.Profile, UserScope.Organizations],
         resourceScopes: [apiScope.id],
         organizationScopes: [enabledOrgScope.id, removableOrgScope.id],
       });
