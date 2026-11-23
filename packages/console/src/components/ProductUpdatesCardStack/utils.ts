@@ -1,5 +1,9 @@
 export const maxVisibleCards = 3;
-export const gradientVariantCount = 4;
+
+const gradientVariantCount = 4;
+
+export const getCardGradientIndex = (id: string): number =>
+  [...id].reduce((sum, char) => (sum + (char.codePointAt(0) ?? 0)) % gradientVariantCount, 0);
 
 const isSameLocalDate = (left: Date, right: Date) =>
   left.getFullYear() === right.getFullYear() &&

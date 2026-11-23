@@ -1,6 +1,6 @@
 import { useLogto } from '@logto/react';
 import { appendPath, condString, trySafe } from '@silverhand/essentials';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import useSWR from 'swr';
 import { z } from 'zod';
 
@@ -31,6 +31,14 @@ export type UseProductUpdatesResult = {
   readonly dismissItem: (id: string) => void;
   readonly dismissAll: () => void;
   readonly markInteracted: () => void;
+};
+
+type SessionState = {
+  readonly userId: string;
+  readonly initialLastReadUpdateAt?: string;
+  readonly dismissedIds: readonly string[];
+  readonly isDismissedAll: boolean;
+  readonly hasPersistedWatermark: boolean;
 };
 
 export const productUpdatesMaxAgeMs = 30 * 24 * 60 * 60 * 1000;
@@ -132,34 +140,20 @@ export const useProductUpdates = (): UseProductUpdatesResult => {
     }
   );
 
-  const [items, setItems] = useState<readonly ProductUpdateItem[]>([]);
-  const initializedUserIdRef = useRef<string>();
-  const batchLatestPublishedDateRef = useRef<string>();
-  const hasPersistedWatermarkRef = useRef(false);
-  const updateUserPreferencesRef = useRef(updateUserPreferences);
+  const [session, setSession] = useState<SessionState>();
+  const activeSession = user && session?.userId === user.id ? session : undefined;
+  const effectiveLastReadUpdateAt = activeSession
+    ? activeSession.initialLastReadUpdateAt
+    : userPreferences.lastReadUpdateAt;
 
-  // eslint-disable-next-line @silverhand/fp/no-mutation -- keep latest update callback in React ref
-  updateUserPreferencesRef.current = updateUserPreferences;
-
-  useEffect(() => {
-    if (!isReady || !user) {
-      // eslint-disable-next-line @silverhand/fp/no-mutation -- reset session state in React ref
-      initializedUserIdRef.current = undefined;
-      // eslint-disable-next-line @silverhand/fp/no-mutation -- reset session watermark in React ref
-      batchLatestPublishedDateRef.current = undefined;
-      // eslint-disable-next-line @silverhand/fp/no-mutation -- reset persistence flag in React ref
-      hasPersistedWatermarkRef.current = false;
-      setItems([]);
-      return;
+  const initialUnread = useMemo(() => {
+    if (!isReady || !user || !feedItems) {
+      return [];
     }
 
-    if (feedItems === undefined || initializedUserIdRef.current === user.id) {
-      return;
-    }
-
-    const initialUnread = filterUnreadProductUpdates(feedItems, {
+    return filterUnreadProductUpdates(feedItems, {
       userCreatedAt: user.createdAt,
-      lastReadUpdateAt: userPreferences.lastReadUpdateAt,
+      lastReadUpdateAt: effectiveLastReadUpdateAt,
     }).flatMap((item): ProductUpdateItem[] => {
       const url = getProductUpdatesUrl(userPreferences.language, [
         'updates',
@@ -168,46 +162,84 @@ export const useProductUpdates = (): UseProductUpdatesResult => {
 
       return url ? [{ ...item, url }] : [];
     });
+  }, [effectiveLastReadUpdateAt, feedItems, isReady, user, userPreferences.language]);
 
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- lock session batch per user in React ref
-    initializedUserIdRef.current = user.id;
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- capture batch newest publishedDate in React ref
-    batchLatestPublishedDateRef.current = initialUnread[0]?.publishedDate;
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- reset persistence flag for new session batch
-    hasPersistedWatermarkRef.current = false;
-    setItems(initialUnread);
-  }, [feedItems, isReady, user, userPreferences.language, userPreferences.lastReadUpdateAt]);
+  const items = useMemo(() => {
+    if (!activeSession) {
+      return initialUnread;
+    }
+
+    if (activeSession.isDismissedAll) {
+      return [];
+    }
+
+    return initialUnread.filter(({ id }) => !activeSession.dismissedIds.includes(id));
+  }, [activeSession, initialUnread]);
+
+  const applySessionInteraction = useCallback(
+    (updater: (current: SessionState) => SessionState) => {
+      if (!user) {
+        return;
+      }
+
+      const latestPublishedDate = initialUnread[0]?.publishedDate;
+      const shouldPersist = Boolean(latestPublishedDate && !activeSession?.hasPersistedWatermark);
+
+      setSession((current) => {
+        const base: SessionState =
+          current?.userId === user.id
+            ? current
+            : {
+                userId: user.id,
+                initialLastReadUpdateAt: userPreferences.lastReadUpdateAt,
+                dismissedIds: [],
+                isDismissedAll: false,
+                hasPersistedWatermark: false,
+              };
+
+        return updater({
+          ...base,
+          hasPersistedWatermark: base.hasPersistedWatermark || shouldPersist,
+        });
+      });
+
+      if (shouldPersist && latestPublishedDate) {
+        void trySafe(async () => {
+          await updateUserPreferences({ lastReadUpdateAt: latestPublishedDate });
+        });
+      }
+    },
+    [
+      activeSession?.hasPersistedWatermark,
+      initialUnread,
+      updateUserPreferences,
+      user,
+      userPreferences.lastReadUpdateAt,
+    ]
+  );
 
   const markInteracted = useCallback(() => {
-    if (hasPersistedWatermarkRef.current) {
-      return;
-    }
-
-    const latestPublishedDate = batchLatestPublishedDateRef.current;
-
-    if (!latestPublishedDate) {
-      return;
-    }
-
-    // eslint-disable-next-line @silverhand/fp/no-mutation -- ensure watermark write runs once per session
-    hasPersistedWatermarkRef.current = true;
-    void trySafe(async () => {
-      await updateUserPreferencesRef.current({ lastReadUpdateAt: latestPublishedDate });
-    });
-  }, []);
+    applySessionInteraction((current) => current);
+  }, [applySessionInteraction]);
 
   const dismissItem = useCallback(
     (id: string) => {
-      markInteracted();
-      setItems((current) => current.filter((item) => item.id !== id));
+      applySessionInteraction((current) => ({
+        ...current,
+        dismissedIds: current.dismissedIds.includes(id)
+          ? current.dismissedIds
+          : [...current.dismissedIds, id],
+      }));
     },
-    [markInteracted]
+    [applySessionInteraction]
   );
 
   const dismissAll = useCallback(() => {
-    markInteracted();
-    setItems([]);
-  }, [markInteracted]);
+    applySessionInteraction((current) => ({
+      ...current,
+      isDismissedAll: true,
+    }));
+  }, [applySessionInteraction]);
 
   return {
     items,

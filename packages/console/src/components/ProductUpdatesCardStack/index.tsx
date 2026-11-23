@@ -1,6 +1,7 @@
 import { Theme } from '@logto/schemas';
+import { type Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
-import { type KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { type KeyboardEvent, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import CloseIcon from '@/assets/icons/close.svg?react';
@@ -12,7 +13,7 @@ import { type ProductUpdateItem, type ProductUpdatesCardStackProps } from './typ
 import {
   formatFullPublishedDate,
   formatShortPublishedDate,
-  gradientVariantCount,
+  getCardGradientIndex,
   maxVisibleCards,
 } from './utils';
 
@@ -37,57 +38,28 @@ export function ProductUpdatesCardStack({
 }: ProductUpdatesCardStackProps) {
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const theme = useTheme();
-  const containerRef = useRef<HTMLElement>(null);
-  const primaryLinkRef = useRef<HTMLAnchorElement>(null);
   const [shouldRestoreFocus, setShouldRestoreFocus] = useState(false);
-  const [lastNotifiedId, setLastNotifiedId] = useState<string>();
-
-  const [gradientById, setGradientById] = useState<Readonly<Record<string, number>>>(() =>
-    Object.fromEntries(items.map((item, index) => [item.id, index % gradientVariantCount]))
-  );
-
-  useEffect(() => {
-    setGradientById((previous) => {
-      const missingItems = items.filter((item) => !(item.id in previous));
-
-      if (missingItems.length === 0) {
-        return previous;
-      }
-
-      const startIndex = Object.keys(previous).length;
-
-      return {
-        ...previous,
-        ...Object.fromEntries(
-          missingItems.map((item, index) => [item.id, (startIndex + index) % gradientVariantCount])
-        ),
-      };
-    });
-  }, [items]);
 
   const topItem = items[0];
 
-  useEffect(() => {
-    if (!topItem) {
-      if (lastNotifiedId !== undefined) {
-        setLastNotifiedId(undefined);
+  const activeCardRef = useCallback(
+    (element: Nullable<HTMLElement>) => {
+      if (element && topItem) {
+        onActiveItemChange?.(topItem);
       }
-      if (shouldRestoreFocus) {
-        setShouldRestoreFocus(false);
-      }
-      return;
-    }
+    },
+    [onActiveItemChange, topItem]
+  );
 
-    if (lastNotifiedId !== topItem.id) {
-      setLastNotifiedId(topItem.id);
-      onActiveItemChange?.(topItem);
-
-      if (shouldRestoreFocus) {
+  const primaryLinkRef = useCallback(
+    (element: Nullable<HTMLAnchorElement>) => {
+      if (element && shouldRestoreFocus) {
         setShouldRestoreFocus(false);
-        primaryLinkRef.current?.focus();
+        element.focus();
       }
-    }
-  }, [lastNotifiedId, onActiveItemChange, shouldRestoreFocus, topItem]);
+    },
+    [shouldRestoreFocus]
+  );
 
   if (items.length === 0 || !topItem) {
     return null;
@@ -102,8 +74,8 @@ export function ProductUpdatesCardStack({
   const todayLabel = t('general.today');
   const locale = i18n.language || 'en';
 
-  const handleDismiss = (item: ProductUpdateItem) => {
-    if (containerRef.current?.contains(document.activeElement)) {
+  const handleDismiss = (item: ProductUpdateItem, triggerElement: HTMLElement) => {
+    if (totalCount > 1 && triggerElement.closest('section')?.contains(document.activeElement)) {
       setShouldRestoreFocus(true);
     }
 
@@ -113,13 +85,12 @@ export function ProductUpdatesCardStack({
   const handleEscapeKeyDown = (event: KeyboardEvent<HTMLElement>) => {
     if (event.key === 'Escape') {
       event.preventDefault();
-      handleDismiss(topItem);
+      handleDismiss(topItem, event.currentTarget);
     }
   };
 
   return (
     <section
-      ref={containerRef}
       aria-label={t('product_updates.title')}
       className={classNames(styles.container, theme === Theme.Dark && styles.dark)}
     >
@@ -127,8 +98,8 @@ export function ProductUpdatesCardStack({
         <div className={styles.cards}>
           {stackedItems.map(({ item, stackIndex }) => {
             const isTop = stackIndex === 0;
-            const gradientIndex = gradientById[item.id] ?? stackIndex % gradientVariantCount;
-            const gradientClassName = gradientClassNames[gradientIndex] ?? styles.gradient0;
+            const gradientClassName =
+              gradientClassNames[getCardGradientIndex(item.id)] ?? styles.gradient0;
             const layerClassName = layerClassNames[stackIndex] ?? styles.layer2;
             const shortDate = formatShortPublishedDate(item.publishedDate, locale, todayLabel);
             const fullDate = formatFullPublishedDate(item.publishedDate, locale);
@@ -163,6 +134,7 @@ export function ProductUpdatesCardStack({
             return (
               <article
                 key={item.id}
+                ref={activeCardRef}
                 data-testid="product-update-front-card"
                 className={classNames(styles.card, gradientClassName, layerClassName)}
               >
@@ -205,8 +177,8 @@ export function ProductUpdatesCardStack({
                   type="button"
                   aria-label={t('product_updates.dismiss')}
                   className={styles.closeButton}
-                  onClick={() => {
-                    handleDismiss(item);
+                  onClick={(event) => {
+                    handleDismiss(item, event.currentTarget);
                   }}
                   onKeyDown={handleEscapeKeyDown}
                 >
