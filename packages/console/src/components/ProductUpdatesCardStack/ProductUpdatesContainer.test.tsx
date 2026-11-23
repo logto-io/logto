@@ -94,18 +94,7 @@ describe('ProductUpdatesContainer', () => {
   });
 
   it('is a complete no-op in OSS builds (isCloud = false)', () => {
-    mockEnv({ isCloud: false, isDevFeaturesEnabled: true });
-
-    const { container } = render(<ProductUpdatesContainer />, { wrapper: createSwrWrapper() });
-
-    expect(container.firstChild).toBeNull();
-    expect(mockFetch).not.toHaveBeenCalled();
-    expect(mockCapture).not.toHaveBeenCalled();
-    expect(mockUpdateCustomData).not.toHaveBeenCalled();
-  });
-
-  it('is gated off when isCloud = true and isDevFeaturesEnabled = false', () => {
-    mockEnv({ isCloud: true, isDevFeaturesEnabled: false });
+    mockEnv({ isCloud: false });
 
     const { container } = render(<ProductUpdatesContainer />, { wrapper: createSwrWrapper() });
 

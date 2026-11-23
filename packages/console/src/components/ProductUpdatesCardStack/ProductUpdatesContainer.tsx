@@ -1,7 +1,6 @@
 import { usePostHog } from 'posthog-js/react';
 import { useCallback, useRef } from 'react';
 
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { useProductUpdates } from '@/hooks/use-product-updates';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
@@ -11,7 +10,7 @@ type Props = {
   readonly isHidden?: boolean;
 };
 
-function ProductUpdatesContent({ isHidden = false }: Props) {
+function ProductUpdatesContainer({ isHidden = false }: Props) {
   const { items, dismissItem, dismissAll } = useProductUpdates();
   const {
     data: { language },
@@ -78,15 +77,6 @@ function ProductUpdatesContent({ isHidden = false }: Props) {
       onActiveItemChange={handleActiveItemChange}
     />
   );
-}
-
-function ProductUpdatesContainer({ isHidden = false }: Props) {
-  // Product Updates for Logto Cloud
-  if (!isCloud || !isDevFeaturesEnabled) {
-    return null;
-  }
-
-  return <ProductUpdatesContent isHidden={isHidden} />;
 }
 
 export default ProductUpdatesContainer;
