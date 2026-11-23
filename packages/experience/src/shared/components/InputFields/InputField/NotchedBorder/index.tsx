@@ -4,6 +4,7 @@ import styles from './index.module.scss';
 
 type Props = {
   readonly label: string;
+  readonly htmlFor?: string;
   readonly isActive: boolean;
   readonly isDanger: boolean;
   readonly isFocused: boolean;
@@ -25,7 +26,7 @@ type Props = {
  *    - The legend's background becomes transparent, preventing it from blocking the background.
  *
  */
-const NotchedBorder = ({ label, isActive, isDanger, isFocused }: Props) => {
+const NotchedBorder = ({ label, htmlFor, isActive, isDanger, isFocused }: Props) => {
   return (
     <div
       className={classNames(
@@ -46,7 +47,11 @@ const NotchedBorder = ({ label, isActive, isDanger, isFocused }: Props) => {
           <span>{label}</span>
         </legend>
       </fieldset>
-      {Boolean(label) && <label className={styles.label}>{label}</label>}
+      {Boolean(label) && (
+        <label htmlFor={htmlFor} className={styles.label}>
+          {label}
+        </label>
+      )}
     </div>
   );
 };
