@@ -885,13 +885,13 @@ describe('refresh token grant for registered third-party applications', () => {
     });
   });
 
-  it('should not leak a same-named OIDC scope when absent from Grant[Org] or disabled in app organizationScopes', async () => {
-    // Contrast with first-party behavior: even when `email` is in RT.scope (from OIDC scope) and
-    // in the user's organization role, a registered third-party app must not receive it unless
-    // enabled in organizationScopes and consented under Grant[urn:logto:resource:organizations].
+  it('should not leak a same-named OIDC scope when absent from Grant[Org] even if enabled in app organizationScopes', async () => {
+    // Contrast with first-party behavior: even when `email` is in RT.scope (from OIDC scope),
+    // enabled in app organizationScopes, and held in the user's organization role, a registered
+    // third-party app must not receive it unless consented under Grant[urn:logto:resource:organizations].
     const { tenant } = createThirdPartyTenant({
       roleScopes: ['invite:member', UserScope.Email],
-      enabledOrganizationScopes: ['invite:member'],
+      enabledOrganizationScopes: ['invite:member', UserScope.Email],
     });
     const { ctx } = createThirdPartyContext({
       refreshTokenScopes: [UserScope.Organizations, UserScope.Email, 'invite:member'],
