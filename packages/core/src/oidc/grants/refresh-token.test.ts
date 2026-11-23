@@ -750,83 +750,83 @@ describe('refresh token grant for CIMD clients', () => {
   });
 });
 
+const createThirdPartyTenant = ({
+  roleScopes,
+  enabledOrganizationScopes,
+}: {
+  roleScopes: string[];
+  enabledOrganizationScopes: string[];
+}) => {
+  const tenant = new MockTenant();
+  Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(true);
+  const findApplicationById = Sinon.stub(
+    tenant.queries.applications,
+    'findApplicationById'
+  ).resolves({
+    ...mockApplication,
+    id: clientId,
+    isThirdParty: true,
+  });
+  Sinon.stub(tenant.queries.applications.userConsentOrganizations, 'exists').resolves(true);
+  Sinon.stub(tenant.queries.organizations.relations.usersRoles, 'getUserScopes').resolves(
+    roleScopes.map((name) => ({ tenantId: 'default', id: name, name, description: null }))
+  );
+  const getApplicationUserConsentOrganizationScopes = Sinon.stub(
+    tenant.libraries.applications,
+    'getApplicationUserConsentOrganizationScopes'
+  ).resolves(
+    enabledOrganizationScopes.map((name) => ({
+      tenantId: 'default',
+      id: name,
+      name,
+      description: null,
+    }))
+  );
+  stubOrganizationMfa(tenant);
+  return { tenant, findApplicationById, getApplicationUserConsentOrganizationScopes };
+};
+
+const createThirdPartyContext = ({
+  refreshTokenScopes,
+  grantedOrganizationScopes,
+  clientScope,
+}: {
+  refreshTokenScopes: string[];
+  grantedOrganizationScopes: string;
+  clientScope?: string;
+}) => {
+  const client = {
+    ...validClient,
+    ...(clientScope ? { scope: clientScope } : {}),
+  } as unknown as Client;
+  const ctx = createOidcContext({
+    ...validOidcContext,
+    requestParamScopes: new Set(),
+    params: {
+      refresh_token: 'some_refresh_token',
+      organization_id: 'some_org_id',
+    },
+    entities: { ...validOidcContext.entities, Client: client },
+    client,
+  });
+  stubRefreshToken(ctx, {
+    scope: refreshTokenScopes.join(' '),
+    scopes: new Set(refreshTokenScopes),
+  });
+  const getResourceScope = jest.fn((resource: string) =>
+    resource === ReservedResource.Organization ? grantedOrganizationScopes : ''
+  );
+  stubGrant(ctx, {
+    getResourceScope,
+    getOIDCScopeFiltered: jest.fn((filter: Set<string>) =>
+      refreshTokenScopes.filter((scope) => filter.has(scope)).join(' ')
+    ),
+  });
+  stubAccount(ctx);
+  return { ctx, getResourceScope };
+};
+
 describe('refresh token grant for registered third-party applications', () => {
-  const createThirdPartyTenant = ({
-    roleScopes,
-    enabledOrganizationScopes,
-  }: {
-    roleScopes: string[];
-    enabledOrganizationScopes: string[];
-  }) => {
-    const tenant = new MockTenant();
-    Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(true);
-    const findApplicationById = Sinon.stub(
-      tenant.queries.applications,
-      'findApplicationById'
-    ).resolves({
-      ...mockApplication,
-      id: clientId,
-      isThirdParty: true,
-    });
-    Sinon.stub(tenant.queries.applications.userConsentOrganizations, 'exists').resolves(true);
-    Sinon.stub(tenant.queries.organizations.relations.usersRoles, 'getUserScopes').resolves(
-      roleScopes.map((name) => ({ tenantId: 'default', id: name, name, description: null }))
-    );
-    const getApplicationUserConsentOrganizationScopes = Sinon.stub(
-      tenant.libraries.applications,
-      'getApplicationUserConsentOrganizationScopes'
-    ).resolves(
-      enabledOrganizationScopes.map((name) => ({
-        tenantId: 'default',
-        id: name,
-        name,
-        description: null,
-      }))
-    );
-    stubOrganizationMfa(tenant);
-    return { tenant, findApplicationById, getApplicationUserConsentOrganizationScopes };
-  };
-
-  const createThirdPartyContext = ({
-    refreshTokenScopes,
-    grantedOrganizationScopes,
-    clientScope,
-  }: {
-    refreshTokenScopes: string[];
-    grantedOrganizationScopes: string;
-    clientScope?: string;
-  }) => {
-    const client = {
-      ...validClient,
-      ...(clientScope ? { scope: clientScope } : {}),
-    } as unknown as Client;
-    const ctx = createOidcContext({
-      ...validOidcContext,
-      requestParamScopes: new Set(),
-      params: {
-        refresh_token: 'some_refresh_token',
-        organization_id: 'some_org_id',
-      },
-      entities: { ...validOidcContext.entities, Client: client },
-      client,
-    });
-    stubRefreshToken(ctx, {
-      scope: refreshTokenScopes.join(' '),
-      scopes: new Set(refreshTokenScopes),
-    });
-    const getResourceScope = jest.fn((resource: string) =>
-      resource === ReservedResource.Organization ? grantedOrganizationScopes : ''
-    );
-    stubGrant(ctx, {
-      getResourceScope,
-      getOIDCScopeFiltered: jest.fn((filter: Set<string>) =>
-        refreshTokenScopes.filter((scope) => filter.has(scope)).join(' ')
-      ),
-    });
-    stubAccount(ctx);
-    return { ctx, getResourceScope };
-  };
-
   afterEach(() => {
     assertUserHasApplicationAccess.mockClear();
   });
