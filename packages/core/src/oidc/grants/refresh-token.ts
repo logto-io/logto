@@ -371,14 +371,19 @@ export const buildHandler: Handler = (envSet, queries, libraries) => async (ctx)
      * boundary, so without it a name granted for an unrelated API resource or OIDC scope would
      * issue the same-named organization scope. First-party applications remain unbounded here.
      */
-    let availableScopes = roleScopeNames;
+    const getAvailableScopes = async (): Promise<string[]> => {
+      if (!treatAsCimdClient && !isThirdParty) {
+        return roleScopeNames;
+      }
 
-    if (treatAsCimdClient || isThirdParty) {
       const allowedScopes = treatAsCimdClient
         ? await queries.cimd.organizationScopes.findAll()
         : await libraries.applications.getApplicationUserConsentOrganizationScopes(client.clientId);
-      availableScopes = boundOrganizationScopes(roleScopeNames, allowedScopes, grant);
-    }
+
+      return boundOrganizationScopes(roleScopeNames, allowedScopes, grant);
+    };
+
+    const availableScopes = await getAvailableScopes();
     await handleOrganizationToken({
       envSet,
       availableScopes,
