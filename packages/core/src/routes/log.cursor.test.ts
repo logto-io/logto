@@ -172,6 +172,29 @@ describe('GET /logs cursor mode', () => {
     expect(findLogsForCursor).toHaveBeenCalled();
   });
 
+  it('returns a mode-specific error for an unsupported cursor-mode parameter', async () => {
+    const response = await getCursorPage('page=1');
+
+    expect(response.status).toEqual(400);
+    expect(response.body).toMatchObject({
+      code: 'guard.unsupported_pagination_parameter',
+      message: "Query parameter 'page' is not supported in cursor pagination mode.",
+    });
+    expect(findLogsForCursor).not.toHaveBeenCalled();
+  });
+
+  it('returns a mode-specific error for cursor parameters in page mode', async () => {
+    const response = await logRequest.get('/logs?limit=1');
+
+    expect(response.status).toEqual(400);
+    expect(response.body).toMatchObject({
+      code: 'guard.unsupported_pagination_parameter',
+      message: "Query parameter 'limit' is not supported in page pagination mode.",
+    });
+    expect(countLogs).not.toHaveBeenCalled();
+    expect(findLogs).not.toHaveBeenCalled();
+  });
+
   it.each([
     ['missing end_time', '/logs?pagination=cursor'],
     ['future end_time', `/logs?pagination=cursor&end_time=${Date.now() + 3_600_000}`],
@@ -196,6 +219,7 @@ describe('GET /logs cursor mode', () => {
     ['non-numeric limit', '/logs?pagination=cursor&end_time=5000&limit=abc'],
     ['page', '/logs?pagination=cursor&end_time=5000&page=1'],
     ['page_size', '/logs?pagination=cursor&end_time=5000&page_size=10'],
+    ['empty page', '/logs?pagination=cursor&end_time=5000&page='],
     ['enableCap', '/logs?pagination=cursor&end_time=5000&enableCap=true'],
     ['userId', '/logs?pagination=cursor&end_time=5000&userId=user'],
     ['applicationId', '/logs?pagination=cursor&end_time=5000&applicationId=app'],

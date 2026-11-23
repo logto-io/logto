@@ -1,6 +1,8 @@
 const guard = {
   invalid_input: "La requête {{type}} n'est pas valide.",
   invalid_pagination: "La valeur de la pagination de la requête n'est pas valide.",
+  unsupported_pagination_parameter:
+    "Le paramètre de requête « {{parameter}} » n'est pas pris en charge en mode de pagination {{mode}}.",
   can_not_get_tenant_id:
     "Impossible de récupérer l'identifiant du locataire à partir de la demande.",
   file_size_exceeded: 'Taille du fichier dépassée.',

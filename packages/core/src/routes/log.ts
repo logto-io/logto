@@ -106,6 +106,34 @@ const logQueryGuard = object({
 
 type LogQuery = z.infer<typeof logQueryGuard>;
 
+type PaginationMode = 'page' | 'cursor';
+
+type PaginationParameter =
+  | 'page'
+  | 'page_size'
+  | 'enableCap'
+  | 'userId'
+  | 'applicationId'
+  | 'logKey'
+  | 'cursor'
+  | 'limit';
+
+const rejectUnsupportedPaginationParams = (
+  query: Record<string, unknown>,
+  mode: PaginationMode,
+  parameters: readonly PaginationParameter[]
+) => {
+  for (const parameter of parameters) {
+    if (parameter in query) {
+      throw new RequestError({
+        code: 'guard.unsupported_pagination_parameter',
+        parameter,
+        mode,
+      });
+    }
+  }
+};
+
 const parseLogTimeWindow = (
   query: LogQuery,
   mode: 'page' | 'cursor'
@@ -221,12 +249,14 @@ export default function logRoutes<T extends ManagementApiRouter>(
       assertThat(query.pagination === undefined || cursorMode, invalidInput('pagination'));
 
       if (cursorMode) {
-        assertThat(!('page' in ctx.request.query), invalidInput('page'));
-        assertThat(!('page_size' in ctx.request.query), invalidInput('page_size'));
-        assertThat(query.enableCap === undefined, invalidInput('enableCap'));
-        assertThat(query.userId === undefined, invalidInput('userId'));
-        assertThat(query.applicationId === undefined, invalidInput('applicationId'));
-        assertThat(query.logKey === undefined, invalidInput('logKey'));
+        rejectUnsupportedPaginationParams(ctx.request.query, 'cursor', [
+          'page',
+          'page_size',
+          'enableCap',
+          'userId',
+          'applicationId',
+          'logKey',
+        ]);
 
         const timeWindow = parseLogTimeWindow(query, 'cursor');
         const { logs, nextCursor } = await listLogsByCursor(query, timeWindow);
@@ -240,8 +270,7 @@ export default function logRoutes<T extends ManagementApiRouter>(
         return next();
       }
 
-      assertThat(query.cursor === undefined, invalidInput('cursor'));
-      assertThat(query.limit === undefined, invalidInput('limit'));
+      rejectUnsupportedPaginationParams(ctx.request.query, 'page', ['cursor', 'limit']);
 
       const timeWindow = parseLogTimeWindow(query, 'page');
       const { count, isCapped, logs } = await listLogsByPage(query, ctx.pagination, timeWindow);

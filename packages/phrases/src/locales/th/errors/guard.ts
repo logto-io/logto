@@ -1,6 +1,8 @@
 const guard = {
   invalid_input: 'The request {{type}} is invalid.',
   invalid_pagination: 'The request pagination value is invalid.',
+  unsupported_pagination_parameter:
+    "ไม่รองรับพารามิเตอร์คิวรี '{{parameter}}' ในโหมดการแบ่งหน้า {{mode}}",
   can_not_get_tenant_id: 'Unable to get tenant id from request.',
   file_size_exceeded: 'ขนาดไฟล์เกินกำหนด',
   mime_type_not_allowed: 'ประเภท MIME ไม่ได้รับอนุญาต',
