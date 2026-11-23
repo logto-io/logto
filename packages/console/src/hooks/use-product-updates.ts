@@ -84,6 +84,18 @@ export const buildProductUpdatesFeedUrl = (
   return `${normalizedBaseUrl}/${trimmedLanguage}/updates.json`;
 };
 
+export const isProductUpdatesFeedUrl = (
+  key: string,
+  baseUrl: string = productUpdatesBaseUrl
+): boolean => {
+  const normalizedBaseUrl = baseUrl.trim().replace(/\/+$/, '');
+  return (
+    normalizedBaseUrl !== '' &&
+    key.startsWith(`${normalizedBaseUrl}/`) &&
+    key.endsWith('/updates.json')
+  );
+};
+
 export const filterUnreadProductUpdates = (
   items: readonly ProductUpdateItem[],
   { userCreatedAt, lastReadUpdateAt, now = Date.now() }: FilterUnreadProductUpdatesOptions

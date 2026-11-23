@@ -10,6 +10,7 @@ import useCurrentUser from './use-current-user';
 import {
   buildProductUpdatesFeedUrl,
   filterUnreadProductUpdates,
+  isProductUpdatesFeedUrl,
   productUpdateItemGuard,
   productUpdatesFeedGuard,
   productUpdatesMaxAgeMs,
@@ -74,6 +75,26 @@ describe('buildProductUpdatesFeedUrl', () => {
     expect(buildProductUpdatesFeedUrl('pt-BR', 'https://staging.logto.io///')).toBe(
       'https://staging.logto.io/pt-BR/updates.json'
     );
+  });
+
+  it('matches product updates feed URLs and rejects unrelated keys', () => {
+    expect(isProductUpdatesFeedUrl('https://logto.io/updates.json', 'https://logto.io')).toBe(true);
+    expect(isProductUpdatesFeedUrl('https://logto.io/zh-CN/updates.json', 'https://logto.io')).toBe(
+      true
+    );
+    expect(
+      isProductUpdatesFeedUrl(
+        'https://staging.logto.io/pt-BR/updates.json',
+        'https://staging.logto.io///'
+      )
+    ).toBe(true);
+    expect(isProductUpdatesFeedUrl('https://other.example/updates.json', 'https://logto.io')).toBe(
+      false
+    );
+    expect(isProductUpdatesFeedUrl('/api/tenants/123/subscription', 'https://logto.io')).toBe(
+      false
+    );
+    expect(isProductUpdatesFeedUrl('https://logto.io/updates.json', '')).toBe(false);
   });
 });
 
