@@ -1,4 +1,3 @@
-// 2026-11-16 02:10 +03: kwtSMS connector unit tests, nock only, no live calls (task: integration kwtsms_logto)
 import nock from 'nock';
 
 import { ConnectorError, ConnectorErrorCodes, TemplateType } from '@logto/connector-kit';
@@ -66,8 +65,30 @@ describe('kwtSMS connector', () => {
     ).toThrow();
   });
 
+  it('config guard rejects an empty senderId', () => {
+    const { templates } = mockedConfig;
+    expect(() =>
+      kwtSmsConfigGuard.parse({ username: 'u', password: 'p', senderId: '', templates })
+    ).toThrow();
+  });
+
+  it('config guard rejects an empty username', () => {
+    const { templates } = mockedConfig;
+    expect(() => kwtSmsConfigGuard.parse({ username: '', password: 'p', templates })).toThrow();
+  });
+
+  it('config guard rejects an unknown usageType', () => {
+    expect(() =>
+      kwtSmsConfigGuard.parse({
+        username: 'u',
+        password: 'p',
+        templates: [...mockedConfig.templates, { usageType: 'Bogus', content: 'x {{code}}' }],
+      })
+    ).toThrow();
+  });
+
   describe('sendMessage()', () => {
-    it('should send the documented JSON body with test=1 by default', async () => {
+    it('should send the documented JSON body with test=1 when testMode is on', async () => {
       const sendMessage = await createSendMessage();
       const scope = nock(url.origin)
         .post(url.pathname, {

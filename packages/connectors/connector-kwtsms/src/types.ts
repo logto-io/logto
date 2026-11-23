@@ -1,5 +1,6 @@
-// 2026-11-16 02:10 +03: kwtSMS connector config types, new connector for Logto (task: integration kwtsms_logto)
 import { z } from 'zod';
+
+import { templateTypeGuard, TemplateType } from '@logto/connector-kit';
 
 /**
  * @doc https://www.kwtsms.com/api-documentation.html
@@ -29,17 +30,22 @@ export const kwtSmsErrorGuard = z.object({
  * UsageType here is used to specify the use case of the template, can be either
  * 'Register', 'SignIn', 'ForgotPassword', 'Generic' or 'Test'.
  */
-const requiredTemplateUsageTypes = ['Register', 'SignIn', 'ForgotPassword', 'Generic'];
+const requiredTemplateUsageTypes: TemplateType[] = [
+  TemplateType.Register,
+  TemplateType.SignIn,
+  TemplateType.ForgotPassword,
+  TemplateType.Generic,
+];
 
 const templateGuard = z.object({
-  usageType: z.string(),
-  content: z.string(),
+  usageType: templateTypeGuard,
+  content: z.string().min(1),
 });
 
 export const kwtSmsConfigGuard = z.object({
-  username: z.string(),
-  password: z.string(),
-  senderId: z.string().default('KWT-SMS'),
+  username: z.string().min(1),
+  password: z.string().min(1),
+  senderId: z.string().min(1).default('KWT-SMS'),
   testMode: z.boolean().default(false),
   templates: z.array(templateGuard).refine(
     (templates) =>

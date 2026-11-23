@@ -1,4 +1,5 @@
-// 2026-11-16 02:10 +03: kwtSMS connector test fixtures, placeholder credentials only (task: integration kwtsms_logto)
+import { TemplateType } from '@logto/connector-kit';
+
 import type { KwtSmsConfig } from './types.js';
 
 export const mockedConfig: KwtSmsConfig = {
@@ -8,20 +9,20 @@ export const mockedConfig: KwtSmsConfig = {
   testMode: true,
   templates: [
     {
-      usageType: 'SignIn',
+      usageType: TemplateType.SignIn,
       content: 'This is for testing purposes only. Your sign-in verification code is {{code}}.',
     },
     {
-      usageType: 'Register',
+      usageType: TemplateType.Register,
       content: 'This is for testing purposes only. Your sign-up verification code is {{code}}.',
     },
     {
-      usageType: 'ForgotPassword',
+      usageType: TemplateType.ForgotPassword,
       content:
         'This is for testing purposes only. Your password change verification code is {{code}}.',
     },
     {
-      usageType: 'Generic',
+      usageType: TemplateType.Generic,
       content: 'This is for testing purposes only. Your verification code is {{code}}.',
     },
   ],

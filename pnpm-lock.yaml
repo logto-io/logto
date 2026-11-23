@@ -1836,9 +1836,6 @@ importers:
       got:
         specifier: ^14.0.0
         version: 14.0.0
-      snakecase-keys:
-        specifier: ^8.0.1
-        version: 8.0.1
       zod:
         specifier: 3.24.3
         version: 3.24.3

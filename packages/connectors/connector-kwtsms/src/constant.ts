@@ -1,4 +1,3 @@
-// 2026-11-16 02:10 +03: kwtSMS connector metadata and form items (task: integration kwtsms_logto)
 import type { ConnectorMetadata } from '@logto/connector-kit';
 import { ConnectorConfigFormItemType } from '@logto/connector-kit';
 
@@ -11,7 +10,7 @@ export const defaultMetadata: ConnectorMetadata = {
   name: {
     en: 'kwtSMS',
   },
-  logo: './logo.svg',
+  logo: './logo.png',
   logoDark: null,
   description: {
     en: 'kwtSMS is an SMS gateway in Kuwait with a simple JSON API, Arabic and Unicode support, and a free test mode.',

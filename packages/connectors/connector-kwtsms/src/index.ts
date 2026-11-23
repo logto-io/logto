@@ -1,4 +1,3 @@
-// 2026-11-16 02:10 +03: kwtSMS SMS connector for Logto (task: integration kwtsms_logto)
 import { assert } from '@silverhand/essentials';
 import { got, HTTPError } from 'got';
 
