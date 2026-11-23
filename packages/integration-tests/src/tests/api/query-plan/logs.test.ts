@@ -55,7 +55,7 @@ describe('logs query plans under the tenant role', () => {
     await pool.end();
   });
 
-  // The shape `findLogs` runs once it filters on the column: one key, newest first.
+  // Mirrors `findLogs` with one payload filter: newest first.
   it.each([
     ['user', 'payload_user_id', 'query-plan-seed-user-1'],
     ['application', 'payload_application_id', 'query-plan-seed-app-1'],
@@ -90,7 +90,7 @@ describe('logs query plans under the tenant role', () => {
   });
 
   it('seeks the webhook execution stats by hook id and time', async () => {
-    // The shape `getHookExecutionStatsByHookId` runs once it filters on the column.
+    // Mirrors the query in `getHookExecutionStatsByHookId`.
     const startTimeExclusive = Date.now() - 24 * 60 * 60 * 1000;
     const plan = await explain(sql`
       select count(*) as request_count,
