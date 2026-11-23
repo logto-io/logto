@@ -8,9 +8,9 @@ import { mockEnv, resetMockEnv, type EnvTestUtils } from '@/test-utils/env';
 
 import useCurrentUser from './use-current-user';
 import {
-  buildProductUpdatesFeedUrl,
-  buildProductUpdateUrl,
   filterUnreadProductUpdates,
+  getProductUpdatesUrl,
+  isProductUpdatesFeedUrl,
   productUpdateFeedItemGuard,
   productUpdatesFeedGuard,
   productUpdatesMaxAgeMs,
@@ -47,7 +47,7 @@ const withUrl = (
   baseUrl = 'https://logto.io'
 ): ProductUpdateItem => ({
   ...item,
-  url: buildProductUpdateUrl(item.id, language, baseUrl),
+  url: getProductUpdatesUrl(language, ['updates', encodeURIComponent(item.id)], baseUrl) ?? '',
 });
 
 const createSwrWrapper =
@@ -61,39 +61,50 @@ const filterIds = (
   options: FilterUnreadProductUpdatesOptions
 ) => filterUnreadProductUpdates(items, options).map(({ id }) => id);
 
-describe('buildProductUpdatesFeedUrl', () => {
+describe('getProductUpdatesUrl & isProductUpdatesFeedUrl', () => {
   it.each([
-    ['en', 'https://logto.io', 'https://logto.io/updates.json'],
-    ['EN', 'https://logto.io', 'https://logto.io/updates.json'],
-    ['', 'https://logto.io', 'https://logto.io/updates.json'],
-    ['zh-CN', 'https://logto.io', 'https://logto.io/zh-CN/updates.json'],
-    ['fa-IR', 'https://logto.io', 'https://logto.io/fa-IR/updates.json'],
-    ['en', 'https://staging.logto.io/', 'https://staging.logto.io/updates.json'],
-    ['pt-BR', 'https://staging.logto.io///', 'https://staging.logto.io/pt-BR/updates.json'],
-  ])('builds feed URL for language "%s" and base "%s"', (language, baseUrl, expected) => {
-    expect(buildProductUpdatesFeedUrl(language, baseUrl)).toBe(expected);
-  });
-});
-
-describe('buildProductUpdateUrl', () => {
-  it.each([
-    ['custom-domain', 'en', 'https://logto.io', 'https://logto.io/updates/custom-domain'],
-    ['custom-domain', 'EN', 'https://logto.io', 'https://logto.io/updates/custom-domain'],
-    ['custom-domain', '', 'https://logto.io', 'https://logto.io/updates/custom-domain'],
-    ['custom-domain', 'zh-CN', 'https://logto.io', 'https://logto.io/zh-CN/updates/custom-domain'],
+    ['en', ['updates.json'], 'https://logto.io', 'https://logto.io/updates.json'],
+    ['EN', ['updates.json'], 'https://logto.io', 'https://logto.io/updates.json'],
+    ['', ['updates.json'], 'https://logto.io', 'https://logto.io/updates.json'],
+    ['zh-CN', ['updates.json'], 'https://logto.io', 'https://logto.io/zh-CN/updates.json'],
     [
-      'custom-domain',
       'fa-IR',
+      ['updates.json'],
       'https://staging.logto.io///',
-      'https://staging.logto.io/fa-IR/updates/custom-domain',
+      'https://staging.logto.io/fa-IR/updates.json',
     ],
-    ['a/b c', 'en', 'https://staging.logto.io/', 'https://staging.logto.io/updates/a%2Fb%20c'],
-  ])(
-    'builds detail URL for id "%s", language "%s", base "%s"',
-    (id, language, baseUrl, expected) => {
-      expect(buildProductUpdateUrl(id, language, baseUrl)).toBe(expected);
-    }
-  );
+    [
+      'en',
+      ['updates', 'custom-domain'],
+      'https://logto.io',
+      'https://logto.io/updates/custom-domain',
+    ],
+    [
+      'zh-CN',
+      ['updates', 'custom-domain'],
+      'https://logto.io/',
+      'https://logto.io/zh-CN/updates/custom-domain',
+    ],
+    [
+      'en',
+      ['updates', encodeURIComponent('a/b c')],
+      'https://staging.logto.io/',
+      'https://staging.logto.io/updates/a%2Fb%20c',
+    ],
+  ])('builds URL for locale "%s" and path %j', (language, pathnames, baseUrl, expected) => {
+    expect(getProductUpdatesUrl(language, pathnames, baseUrl)).toBe(expected);
+  });
+
+  it.each([
+    ['https://logto.io/updates.json', 'https://logto.io', true],
+    ['https://logto.io/zh-CN/updates.json', 'https://logto.io', true],
+    ['https://staging.logto.io/pt-BR/updates.json', 'https://staging.logto.io///', true],
+    ['https://other.example/updates.json', 'https://logto.io', false],
+    ['/api/tenants/123/subscription', 'https://logto.io', false],
+    ['https://logto.io/updates.json', '', false],
+  ])('matches feed URL "%s" against "%s" -> %s', (key, baseUrl, expected) => {
+    expect(isProductUpdatesFeedUrl(key, baseUrl)).toBe(expected);
+  });
 });
 
 describe('productUpdatesFeedGuard', () => {
@@ -112,7 +123,7 @@ describe('productUpdatesFeedGuard', () => {
 });
 
 describe('filterUnreadProductUpdates', () => {
-  it('excludes items published at or before userCreatedAt (Unix ms and ISO string)', () => {
+  it('excludes items published at or before userCreatedAt', () => {
     const userCreatedAtIso = '2026-11-10T00:00:00.000Z';
     const items = [
       makeFeedItem('older', '2026-11-09T23:59:59.999Z'),
@@ -123,7 +134,6 @@ describe('filterUnreadProductUpdates', () => {
     expect(filterIds(items, { userCreatedAt: Date.parse(userCreatedAtIso), now: nowMs })).toEqual([
       'newer',
     ]);
-    expect(filterIds(items, { userCreatedAt: userCreatedAtIso, now: nowMs })).toEqual(['newer']);
   });
 
   it('excludes items published at or before max(userCreatedAt, lastReadUpdateAt)', () => {
@@ -175,7 +185,7 @@ describe('filterUnreadProductUpdates', () => {
         now: nowMs,
       })
     ).toEqual(['valid']);
-    expect(filterIds(items, { userCreatedAt: 'invalid-user-created-at', now: nowMs })).toEqual([]);
+    expect(filterIds(items, { userCreatedAt: Number.NaN, now: nowMs })).toEqual([]);
   });
 
   it('sorts unread items descending by publishedDate without mutating input', () => {

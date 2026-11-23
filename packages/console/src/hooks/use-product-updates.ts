@@ -1,11 +1,10 @@
 import { useLogto } from '@logto/react';
-import { appendPath, joinPath, trySafe } from '@silverhand/essentials';
+import { appendPath, condString, trySafe } from '@silverhand/essentials';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import useSWR from 'swr';
 import { z } from 'zod';
 
 import { isCloud, productUpdatesBaseUrl } from '@/consts/env';
-import { dropLeadingSlash } from '@/utils/url';
 
 import useCurrentUser from './use-current-user';
 import useUserPreferences from './use-user-preferences';
@@ -22,7 +21,7 @@ export type ProductUpdateItem = ProductUpdateFeedItem & {
 };
 
 export type FilterUnreadProductUpdatesOptions = {
-  userCreatedAt: number | string;
+  userCreatedAt: number;
   lastReadUpdateAt?: string;
   now?: number;
 };
@@ -45,91 +44,49 @@ export const productUpdateFeedItemGuard = z.object({
 
 export const productUpdatesFeedGuard = z.array(productUpdateFeedItemGuard);
 
-const toEpochMs = (value: number | string | undefined): number | undefined => {
-  if (value === undefined) {
-    return undefined;
-  }
-
-  if (typeof value === 'number') {
-    return Number.isFinite(value) ? value : undefined;
-  }
-
-  const trimmed = value.trim();
-
-  if (trimmed === '') {
-    return undefined;
-  }
-
-  const parsed = Date.parse(trimmed);
-  return Number.isFinite(parsed) ? parsed : undefined;
-};
-
-const getLocalePathSegment = (language: string): string => {
-  const trimmed = language.trim();
-
-  if (trimmed === '' || trimmed.toLowerCase() === 'en') {
-    return '';
-  }
-
-  return encodeURIComponent(trimmed);
-};
-
-const buildLocalizedProductUpdatesUrl = (
+export const getProductUpdatesUrl = (
   language: string,
-  baseUrl: string,
-  ...segments: string[]
-): string => {
-  const localeSegment = getLocalePathSegment(language);
-  const parsedBaseUrl = trySafe(() => new URL(baseUrl.trim()));
-
-  if (parsedBaseUrl) {
-    return appendPath(parsedBaseUrl, localeSegment, ...segments).href;
-  }
-
-  const normalizedBaseUrl = baseUrl.trim().replace(/\/+$/, '');
-  const path = dropLeadingSlash(joinPath(localeSegment, ...segments));
-  return `${normalizedBaseUrl}/${path}`;
-};
-
-export const buildProductUpdatesFeedUrl = (
-  language: string,
+  pathnames: readonly string[],
   baseUrl: string = productUpdatesBaseUrl
-): string => buildLocalizedProductUpdatesUrl(language, baseUrl, 'updates.json');
+): string | undefined => {
+  const trimmedLanguage = language.trim();
+  const localePrefix = condString(
+    trimmedLanguage && trimmedLanguage.toLowerCase() !== 'en' && encodeURIComponent(trimmedLanguage)
+  );
 
-export const buildProductUpdateUrl = (
-  id: string,
-  language: string,
+  return trySafe(() => appendPath(new URL(baseUrl), localePrefix, ...pathnames).href);
+};
+
+export const isProductUpdatesFeedUrl = (
+  key: string,
   baseUrl: string = productUpdatesBaseUrl
-): string => buildLocalizedProductUpdatesUrl(language, baseUrl, 'updates', encodeURIComponent(id));
+): boolean => {
+  const parsedBaseUrl = trySafe(() => new URL(baseUrl));
+  const parsedKey = trySafe(() => new URL(key));
+
+  return Boolean(
+    parsedBaseUrl &&
+      parsedKey &&
+      parsedKey.origin === parsedBaseUrl.origin &&
+      parsedKey.pathname.endsWith('/updates.json')
+  );
+};
 
 export const filterUnreadProductUpdates = <T extends Pick<ProductUpdateFeedItem, 'publishedDate'>>(
   items: readonly T[],
   { userCreatedAt, lastReadUpdateAt, now = Date.now() }: FilterUnreadProductUpdatesOptions
 ): T[] => {
-  const userCreatedAtMs = toEpochMs(userCreatedAt);
-
-  if (userCreatedAtMs === undefined || !Number.isFinite(now)) {
-    return [];
-  }
-
-  const lastReadUpdateAtMs = toEpochMs(lastReadUpdateAt);
-  const watermarkMs =
-    lastReadUpdateAtMs === undefined
-      ? userCreatedAtMs
-      : Math.max(userCreatedAtMs, lastReadUpdateAtMs);
-  const cutoffMs = now - productUpdatesMaxAgeMs;
+  const lastReadAt = lastReadUpdateAt ? Date.parse(lastReadUpdateAt) : Number.NaN;
+  const watermark = Number.isNaN(lastReadAt) ? userCreatedAt : Math.max(userCreatedAt, lastReadAt);
+  const cutoff = now - productUpdatesMaxAgeMs;
 
   return items
-    .map((item) => ({ item, publishedAtMs: toEpochMs(item.publishedDate) }))
-    .filter(
-      (entry): entry is { item: T; publishedAtMs: number } =>
-        entry.publishedAtMs !== undefined &&
-        entry.publishedAtMs > watermarkMs &&
-        entry.publishedAtMs >= cutoffMs
-    )
+    .filter(({ publishedDate }) => {
+      const publishedAt = Date.parse(publishedDate);
+      return publishedAt > watermark && publishedAt >= cutoff;
+    })
     .slice()
-    .sort((first, second) => second.publishedAtMs - first.publishedAtMs)
-    .map(({ item }) => item);
+    .sort((first, second) => Date.parse(second.publishedDate) - Date.parse(first.publishedDate));
 };
 
 const fetchProductUpdatesFeed = async (url: string): Promise<readonly ProductUpdateFeedItem[]> => {
@@ -161,7 +118,7 @@ export const useProductUpdates = (): UseProductUpdatesResult => {
   const isReady =
     isCloud && isAuthenticated && isUserLoaded && Boolean(user) && isPreferencesLoaded;
   const feedUrl = isReady
-    ? buildProductUpdatesFeedUrl(userPreferences.language, productUpdatesBaseUrl)
+    ? (getProductUpdatesUrl(userPreferences.language, ['updates.json']) ?? null)
     : null;
 
   const { data: feedItems } = useSWR<readonly ProductUpdateFeedItem[]>(
@@ -203,12 +160,14 @@ export const useProductUpdates = (): UseProductUpdatesResult => {
     const initialUnread = filterUnreadProductUpdates(feedItems, {
       userCreatedAt: user.createdAt,
       lastReadUpdateAt: userPreferences.lastReadUpdateAt,
-    }).map(
-      (item): ProductUpdateItem => ({
-        ...item,
-        url: buildProductUpdateUrl(item.id, userPreferences.language, productUpdatesBaseUrl),
-      })
-    );
+    }).flatMap((item): ProductUpdateItem[] => {
+      const url = getProductUpdatesUrl(userPreferences.language, [
+        'updates',
+        encodeURIComponent(item.id),
+      ]);
+
+      return url ? [{ ...item, url }] : [];
+    });
 
     // eslint-disable-next-line @silverhand/fp/no-mutation -- lock session batch per user in React ref
     initializedUserIdRef.current = user.id;

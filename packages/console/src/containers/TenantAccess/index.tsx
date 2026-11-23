@@ -7,6 +7,7 @@ import { useSWRConfig } from 'swr';
 
 import { isCloud } from '@/consts/env';
 import { reservedTenantIdWildcard, TenantsContext } from '@/contexts/TenantsProvider';
+import { isProductUpdatesFeedUrl } from '@/hooks/use-product-updates';
 import useUserDefaultTenantId from '@/hooks/use-user-default-tenant-id';
 
 /**
@@ -60,9 +61,13 @@ export default function TenantAccess() {
        * revalidate the `me` key to make console work again.
        * - Exclude keys that include `/.well-known/` because they are usually static and
        * should not be revalidated.
+       * - Exclude the product updates feed URL because it is user-scoped and static per page
+       * load, so switching tenants should not re-fetch it.
        */
       await mutate(
-        (key) => typeof key !== 'string' || (key !== 'me' && !key.includes('/.well-known/')),
+        (key) =>
+          typeof key !== 'string' ||
+          (key !== 'me' && !key.includes('/.well-known/') && !isProductUpdatesFeedUrl(key)),
         undefined,
         { rollbackOnError: false, throwOnError: false }
       );
