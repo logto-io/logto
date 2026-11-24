@@ -79,14 +79,6 @@ export class MfaValidator {
     return getAllUserEnabledMfaVerifications(this.mfaSettings, this.user);
   }
 
-  /**
-   * For front-end display usage only.
-   * Returns all the available MFA verifications for the user that can be used for verification.
-   *
-   * - Filter out backup codes if all the codes are used
-   * - Filter out duplicated verifications with the same type
-   * - Sort by last used time, the latest used factor is the first one, backup code is always the last one
-   */
   get availableUserMfaVerificationTypes() {
     return (
       this.userEnabledMfaVerifications

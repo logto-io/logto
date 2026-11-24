@@ -142,7 +142,7 @@
       "post": {
         "operationId": "SkipMfaBindingFlow",
         "summary": "Skip MFA binding flow",
-        "description": "Skip MFA verification binding flow. If the MFA is enabled in the sign-in experience settings and marked as `UserControlled`, the user can skip the MFA verification binding flow by calling this API.",
+        "description": "Skip MFA verification binding flow. If MFA is enabled in the sign-in experience settings and can be skipped, the user can skip the MFA verification binding flow by calling this API.",
         "responses": {
           "204": {
             "description": "The MFA verification has been successfully skipped."
@@ -213,9 +213,6 @@
           },
           "404": {
             "description": "The user has not been identified yet. The suggestion state must be associated with an identified user."
-          },
-          "422": {
-            "description": "The suggestion is not skippable under current policy."
           }
         }
       }
@@ -271,6 +268,9 @@
           },
           "400": {
             "description": "Not supported for the current interaction event. This API can only be used in the `SignIn` or `Register` interaction."
+          },
+          "403": {
+            "description": "MFA verification is required but has not been completed. The user must verify MFA before updating MFA settings."
           },
           "404": {
             "description": "The user has not been identified yet. The `passkey-skipped` configuration must be associated with a identified user."
