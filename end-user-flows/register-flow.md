@@ -1,5 +1,7 @@
 # Register flow
 
+## Registration entries
+
 ```mermaid
 flowchart TD
   start([Registration entry])
@@ -69,6 +71,20 @@ flowchart TD
     ml3 -->|no| ml4[User identified with<br/>verified one-time token]
   end
 
+  reg_attempt(["Submit registration identification -> Profile fulfillment"])
+  idu2 --> reg_attempt
+  reg_verified --> reg_attempt
+  sso5 --> reg_attempt
+  so6 --> reg_attempt
+  ml4 --> reg_attempt
+```
+
+## Profile fulfillment and user creation
+
+```mermaid
+flowchart TD
+  reg_attempt([Submit registration identification]) --> existing_id{Identifier already used<br/>by an existing account}
+
   subgraph RegisterBackend["Profile fulfillment and user creation"]
     existing_id -->|yes| existing_id_sign_in_enabled{Current verification method<br/>enabled for sign-in?}
     existing_id_sign_in_enabled -->|yes| out_existing_id[Suggest sign-in flow<br/>with the same identifier]
@@ -87,7 +103,7 @@ flowchart TD
     social_continue_link --> out_social_continue_link([Bind social identity and sign in<br/>outside this register flow])
     required_password -->|yes| fulfill_password[Fulfill password]
     required_password -->|no| collect_custom_profile_enabled{Is collecting custom profile fields enabled?}
-    fulfill_password -->  collect_custom_profile_enabled
+    fulfill_password --> collect_custom_profile_enabled
 
     collect_custom_profile_enabled -->|yes| collect_custom_profile[Fulfill custom user profile fields]
     collect_custom_profile_enabled -->|no| create_user
@@ -95,57 +111,13 @@ flowchart TD
     profile_skip_sso -->|yes| create_user[Create user from interaction data]
   end
 
-  reg_attempt[Submit registration identification]
-  idu2 --> reg_attempt
-  reg_verified --> reg_attempt
-  sso5 --> reg_attempt
-  so6 --> reg_attempt
-  ml4 --> reg_attempt
-
-  reg_attempt --> existing_id{Identifier already used<br/>by an existing account}
-
-  subgraph PasskeyBinding["Passkey sign-in handling"]
-    create_user --> sso_bypass{Registered through enterprise SSO?}
-    sso_bypass -->|no| passkey_enabled{Passkey sign-in enabled?}
-
-    passkey_enabled -->|no| skip_passkey
-    passkey_enabled -->|yes| passkey_bound{"Passkey (WebAuthn) bound?"}
-
-    passkey_bound -->|yes| skip_passkey
-    passkey_bound -->|no| bind_passkey[Bind passkey]
-  end
-
-  subgraph MfaFlow["MFA handling"]
-    skip_passkey[Skip passkey setup] --> mfa_policy
-    bind_passkey --> mfa_policy
-
-    mfa_policy{MFA mandatory now<br/>or required by organization?}
-    mfa_policy -->|no| mfa_onboarding{MFA onboarding:<br/>Enable or skip?}
-
-    mfa_onboarding -->|enable| mfa_missing
-
-    mfa_policy -->|yes| mfa_missing
-
-    mfa_missing{Missing required MFA factor?}
-    mfa_missing -->|yes| mfa_bind[MFA binding or factor page]
-    mfa_missing -->|no| mfa_suggestion{Suggest an additional MFA factor?}
-
-    mfa_bind --> mfa_bind2[Bind authenticator app, passkey, email, or phone]
-    mfa_bind2 --> backup_gate
-
-    mfa_suggestion -->|yes| mfa_suggestion_bind[Additional MFA factor suggestion]
-    mfa_suggestion -->|no| backup_gate{Backup code enabled<br/>and still missing or empty?}
-
-    mfa_suggestion_bind --> mfa_suggestion_bind2[Bind another factor or skip suggestion]
-    mfa_suggestion_bind2 --> backup_gate
-
-    backup_gate -->|yes| backup[Generate and save backup codes]
-  end
-
-  sso_bypass -->|yes| submit[Submit interaction]
-  mfa_onboarding -->|skip| submit
-  backup_gate -->|no| submit
-  backup --> submit
-
-  submit --> done([OIDC redirect])
+  create_user --> submit_gates[["ExperienceInteraction.submit() gates (see submit-gates.md)"]]
+  submit_gates --> done([OIDC redirect])
 ```
+
+## Post-creation submit & MFA gates
+
+After creating the user, `ExperienceInteraction.submit()` runs the shared gate sequence in [submit-gates.md](./submit-gates.md):
+
+- **Register**: Runs `guardUnreachableRequestedAcr()` instead of `guardFirstFactor()`, skips `guardMfaVerificationStatus()`, and runs mandatory profile, passkey prompt, `assertMfaFulfilled()`, trusted-device opt-in (when an eligible MFA factor was bound), and final ACR assertion.
+- **Enterprise SSO / Social registration**: Enterprise SSO skips mandatory profile, passkey prompt, and `assertMfaFulfilled()` (unless requested `mfa` ACR or requested enrollment factors apply); Social skips mandatory profile when `skipRequiredIdentifiers` is enabled.
