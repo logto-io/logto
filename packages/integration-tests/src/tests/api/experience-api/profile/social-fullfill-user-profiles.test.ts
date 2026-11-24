@@ -5,7 +5,7 @@ import {
   mockSocialConnectorId,
   mockSocialConnectorTarget,
 } from '#src/__mocks__/connectors-mock.js';
-import { deleteUser, getUser } from '#src/api/admin-user.js';
+import { deleteUser, getUser, putUserIdentity } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { initExperienceClient, logoutClient, processSession } from '#src/helpers/client.js';
 import {
@@ -13,9 +13,13 @@ import {
   setEmailConnector,
   setSocialConnector,
 } from '#src/helpers/connector.js';
-import { signInWithSocial } from '#src/helpers/experience/index.js';
+import {
+  identifyUserWithEmailVerificationCode,
+  signInWithSocial,
+} from '#src/helpers/experience/index.js';
 import {
   successfullyCreateSocialVerification,
+  successfullyVerifySocialAccount,
   successfullyVerifySocialAuthorization,
 } from '#src/helpers/experience/social-verification.js';
 import {
@@ -305,6 +309,39 @@ describe('fulfill missing mandatory profile fields', () => {
     expect(identities[mockSocialConnectorTarget]).toBeTruthy();
 
     await deleteUser(userId);
+  });
+
+  it('should not link a second account from a linked provider', async () => {
+    await updateSignInExperience({
+      signIn: {
+        methods: [
+          {
+            identifier: SignInIdentifier.Email,
+            password: false,
+            verificationCode: true,
+            isPasswordPrimary: false,
+          },
+        ],
+      },
+    });
+
+    const { userProfile, user } = await generateNewUser({ primaryEmail: true });
+    await putUserIdentity(user.id, mockSocialConnectorTarget, { userId: generateStandardId() });
+
+    const client = await initExperienceClient();
+    const verificationId = await successfullyVerifySocialAccount(
+      client,
+      connectorIdMap.get(mockSocialConnectorId)!,
+      { userId: generateStandardId() }
+    );
+    await identifyUserWithEmailVerificationCode(client, userProfile.primaryEmail);
+
+    await expectRejects(client.updateProfile({ type: 'social', verificationId }), {
+      code: 'user.social_provider_already_linked',
+      status: 422,
+    });
+
+    await deleteUser(user.id);
   });
 
   it('should not ask to provide email if `skipRequiredIdentifiers` is true', async () => {

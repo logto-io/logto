@@ -1,4 +1,9 @@
+import { MfaFactor } from '@logto/schemas';
 import * as s from 'superstruct';
+
+export type VerificationCodeMfaFactor =
+  | MfaFactor.EmailVerificationCode
+  | MfaFactor.PhoneVerificationCode;
 
 const pendingStepUpActionsWithoutInput = Object.freeze([
   'enter-subpage',
@@ -30,7 +35,9 @@ export type PendingStepUpAction =
   | { type: 'revoke-grant'; applicationId: string; grantIds: string[] }
   | { type: 'remove-trusted-device'; trustedDeviceId: string }
   | { type: 'rename-passkey'; id: string; name: string }
-  | { type: 'delete-passkey'; id: string };
+  | { type: 'delete-passkey'; id: string }
+  | { type: 'add-verification-code-mfa'; factor: VerificationCodeMfaFactor }
+  | { type: 'remove-verification-code-mfa'; id: string };
 
 /**
  * - `authorizing`: Account Center redirected to the authorization endpoint for the step-up.
@@ -70,6 +77,11 @@ const pendingStepUpActionGuard = s.union([
   s.object({ type: s.literal('remove-trusted-device'), trustedDeviceId: s.string() }),
   s.object({ type: s.literal('rename-passkey'), id: s.string(), name: s.string() }),
   s.object({ type: s.literal('delete-passkey'), id: s.string() }),
+  s.object({
+    type: s.literal('add-verification-code-mfa'),
+    factor: s.enums([MfaFactor.EmailVerificationCode, MfaFactor.PhoneVerificationCode]),
+  }),
+  s.object({ type: s.literal('remove-verification-code-mfa'), id: s.string() }),
 ]);
 
 export const storedPendingStepUpGuard = s.object({

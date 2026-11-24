@@ -344,6 +344,8 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
 
   /**
    * Find the related user using the social identity's verified email or phone number.
+   *
+   * @throws {RequestError} with 422 if the related user already linked this provider, since linking would replace it.
    */
   private async findRelatedUserBySocialIdentity(): ReturnType<
     typeof socials.findSocialRelatedUser
@@ -354,7 +356,24 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
       return null;
     }
 
-    return socials.findSocialRelatedUser(this.socialUserInfo);
+    const relatedUser = await socials.findSocialRelatedUser(this.socialUserInfo);
+
+    if (!relatedUser) {
+      return null;
+    }
+
+    const {
+      metadata: { target },
+    } = await this.getConnectorData();
+
+    const [, user] = relatedUser;
+
+    assertThat(
+      !user.identities[target],
+      new RequestError({ code: 'user.social_provider_already_linked', status: 422 })
+    );
+
+    return relatedUser;
   }
 
   private async getConnectorData(): Promise<LogtoConnector<SocialConnector>> {

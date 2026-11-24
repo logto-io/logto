@@ -19,6 +19,8 @@ const user = {
   sso_identity_not_exist: 'حساب SSO سازمانی هنوز ثبت نشده است.',
   identity_already_in_use: 'حساب اجتماعی به حساب موجودی متصل شده است.',
   social_account_exists_in_profile: 'این حساب اجتماعی را از قبل متصل کرده‌اید.',
+  social_provider_already_linked:
+    'حساب دیگری از این ارائه‌دهنده قبلاً متصل شده است. با همان حساب یا روش دیگری وارد شوید.',
   cannot_delete_self: 'نمی‌توانید خودتان را حذف کنید.',
   sign_up_method_not_enabled: 'این روش ثبت‌نام فعال نیست.',
   sign_in_method_not_enabled: 'این روش ورود فعال نیست.',
@@ -42,6 +44,12 @@ const user = {
   missing_mfa: 'قبل از ورود باید MFA اضافی متصل کنید.',
   totp_already_in_use: 'TOTP از قبل در حال استفاده است.',
   backup_code_already_in_use: 'کد پشتیبان از قبل در حال استفاده است.',
+  email_mfa_already_in_use: 'MFA با کد تأیید ایمیل از قبل در حال استفاده است.',
+  phone_mfa_already_in_use: 'MFA با کد تأیید پیامکی از قبل در حال استفاده است.',
+  email_mfa_requires_primary_email:
+    'کاربر برای استفاده از MFA با کد تأیید ایمیل به یک ایمیل اصلی نیاز دارد.',
+  phone_mfa_requires_primary_phone:
+    'کاربر برای استفاده از MFA با کد تأیید پیامکی به یک شماره تلفن اصلی نیاز دارد.',
   password_algorithm_required: 'الگوریتم رمز عبور الزامی است.',
   password_and_digest: 'نمی‌توانید همزمان رمز عبور متنی و digest رمز عبور تنظیم کنید.',
   personal_access_token_name_exists: 'نام توکن دسترسی شخصی از قبل وجود دارد.',

@@ -82,10 +82,10 @@ export class OidcSessionExtensionsQueries {
       )}
       from ${modelInstanceTable}
       left join ${table}
-        on ${modelInstanceFields.payload} ->> 'uid' = ${fields.sessionUid}
+        on ${modelInstanceFields.payloadUid} = ${fields.sessionUid}
         and ${fields.accountId} = ${accountId}
       where ${modelInstanceFields.modelName} = ${sessionModelName}
-        and ${modelInstanceFields.payload} ->> 'accountId' = ${accountId}
+        and ${modelInstanceFields.payloadAccountId} = ${accountId}
         and ${modelInstanceFields.expiresAt} > ${convertToTimestamp()}
     `);
   }
@@ -109,11 +109,11 @@ export class OidcSessionExtensionsQueries {
       )}
       from ${modelInstanceTable}
       left join ${table}
-        on ${modelInstanceFields.payload} ->> 'uid' = ${fields.sessionUid}
+        on ${modelInstanceFields.payloadUid} = ${fields.sessionUid}
         and ${fields.accountId} = ${accountId}
       where ${modelInstanceFields.modelName} = ${sessionModelName}
-        and ${modelInstanceFields.payload} ->> 'accountId' = ${accountId}
-        and ${modelInstanceFields.payload} ->> 'uid' = ${sessionUid}
+        and ${modelInstanceFields.payloadAccountId} = ${accountId}
+        and ${modelInstanceFields.payloadUid} = ${sessionUid}
         and ${modelInstanceFields.expiresAt} > ${convertToTimestamp()}
     `);
   }

@@ -1,4 +1,4 @@
-import { type RecaptchaEnterpriseMode } from '@logto/schemas';
+import { type FriendlyCaptchaApiEndpoint, type RecaptchaEnterpriseMode } from '@logto/schemas';
 
 export type CaptchaFormType = {
   siteKey: string;
@@ -8,4 +8,5 @@ export type CaptchaFormType = {
   endpoint?: string;
   mode?: RecaptchaEnterpriseMode;
   scoreThreshold?: number;
+  apiEndpoint?: FriendlyCaptchaApiEndpoint;
 };

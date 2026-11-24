@@ -101,6 +101,13 @@ const account_center = {
     email_removed: 'Адрес электронной почты успешно удалён.',
     phone_removed: 'Номер телефона успешно удалён.',
     username_removed: 'Имя пользователя успешно удалено.',
+    remove_email_verification_code_confirmation_title:
+      'Удалить код подтверждения по электронной почте',
+    remove_email_verification_code_confirmation_description:
+      'Вы больше не будете получать коды двухэтапной проверки на этот адрес электронной почты. Адрес электронной почты останется в вашем аккаунте.',
+    remove_phone_verification_code_confirmation_title: 'Удалить код подтверждения по телефону',
+    remove_phone_verification_code_confirmation_description:
+      'Вы больше не будете получать коды двухэтапной проверки на этот номер телефона. Номер телефона останется в вашем аккаунте.',
     trusted_devices: {
       title: 'Доверенные устройства MFA',
       current_device: 'Текущее устройство',

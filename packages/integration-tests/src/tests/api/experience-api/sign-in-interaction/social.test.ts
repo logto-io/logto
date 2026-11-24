@@ -5,14 +5,17 @@ import {
   mockSocialConnectorId,
   mockSocialConnectorTarget,
 } from '#src/__mocks__/connectors-mock.js';
-import { deleteUser, getUser, getUserIdentity } from '#src/api/admin-user.js';
+import { deleteUser, getUser, getUserIdentity, putUserIdentity } from '#src/api/admin-user.js';
 import { updateConnectorConfig } from '#src/api/connector.js';
+import { initExperienceClient } from '#src/helpers/client.js';
 import {
   clearConnectorsByTypes,
   setEmailConnector,
   setSocialConnector,
 } from '#src/helpers/connector.js';
 import { signInWithSocial } from '#src/helpers/experience/index.js';
+import { successfullyVerifySocialAccount } from '#src/helpers/experience/social-verification.js';
+import { expectRejects } from '#src/helpers/index.js';
 import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
 import { generateNewUser } from '#src/helpers/user.js';
 import { generateEmail } from '#src/utils.js';
@@ -128,6 +131,65 @@ describe('social sign-in and sign-up', () => {
     expect(tokenSecret?.metadata.scope).toBe('openid profile email');
     expect(tokenSecret?.metadata.hasRefreshToken).toBe(true);
     await deleteUser(userId);
+  });
+
+  it('should reject an email match with the provider linked', async () => {
+    const connectorId = connectorIdMap.get(mockSocialConnectorId)!;
+    const { userProfile, user } = await generateNewUser({ primaryEmail: true });
+    await putUserIdentity(user.id, mockSocialConnectorTarget, { userId: generateStandardId() });
+
+    const client = await initExperienceClient();
+    const verificationId = await successfullyVerifySocialAccount(client, connectorId, {
+      userId: generateStandardId(),
+      email: userProfile.primaryEmail,
+    });
+
+    await expectRejects(client.identifyUser({ verificationId }), {
+      code: 'user.social_provider_already_linked',
+      status: 422,
+    });
+    await expectRejects(client.identifyUser({ verificationId, linkSocialIdentity: true }), {
+      code: 'user.social_provider_already_linked',
+      status: 422,
+    });
+
+    await deleteUser(user.id);
+  });
+
+  it('should reject submit if the provider got linked after identify', async () => {
+    const connectorId = connectorIdMap.get(mockSocialConnectorId)!;
+    const { userProfile, user } = await generateNewUser({ primaryEmail: true });
+
+    const client = await initExperienceClient();
+    const verificationId = await successfullyVerifySocialAccount(client, connectorId, {
+      userId: generateStandardId(),
+      email: userProfile.primaryEmail,
+      tokenResponse: { ...mockTokenResponse, scope: 'openid email' },
+    });
+    await client.identifyUser({ verificationId, linkSocialIdentity: true });
+
+    const linkedSocialUserId = generateStandardId();
+    await signInWithSocial(
+      connectorId,
+      {
+        id: linkedSocialUserId,
+        email: userProfile.primaryEmail,
+        tokenResponse: { ...mockTokenResponse, scope: 'openid profile' },
+      },
+      { linkSocial: true }
+    );
+
+    await expectRejects(client.submitInteraction(), {
+      code: 'user.social_provider_already_linked',
+      status: 422,
+    });
+
+    const { identities } = await getUser(user.id);
+    expect(identities[mockSocialConnectorTarget]?.userId).toBe(linkedSocialUserId);
+    const { tokenSecret } = await getUserIdentity(user.id, mockSocialConnectorTarget);
+    expect(tokenSecret?.metadata.scope).toBe('openid profile');
+
+    await deleteUser(user.id);
   });
 
   it('should successfully sign-in with linked email and sync name', async () => {

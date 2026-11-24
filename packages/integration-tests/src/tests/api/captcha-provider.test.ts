@@ -1,4 +1,4 @@
-import { CaptchaType } from '@logto/schemas';
+import { CaptchaType, FriendlyCaptchaApiEndpoint } from '@logto/schemas';
 
 import {
   deleteCaptchaProvider,
@@ -81,6 +81,19 @@ describe('captcha provider', () => {
       type: CaptchaType.Geetest,
       siteKey: 'captcha_id',
       secretKey: 'captcha_key',
+    } as const;
+
+    await updateCaptchaProvider({ config });
+
+    await expect(getCaptchaProvider()).resolves.toMatchObject({ config });
+  });
+
+  it('should update and get Friendly Captcha provider successfully', async () => {
+    const config = {
+      type: CaptchaType.FriendlyCaptcha,
+      siteKey: 'site_key',
+      secretKey: 'api_key',
+      apiEndpoint: FriendlyCaptchaApiEndpoint.Eu,
     } as const;
 
     await updateCaptchaProvider({ config });

@@ -98,6 +98,12 @@ const account_center = {
     email_removed: 'تمت إزالة عنوان البريد الإلكتروني بنجاح.',
     phone_removed: 'تمت إزالة رقم الهاتف بنجاح.',
     username_removed: 'تمت إزالة اسم المستخدم بنجاح.',
+    remove_email_verification_code_confirmation_title: 'إزالة رمز التحقق عبر البريد الإلكتروني',
+    remove_email_verification_code_confirmation_description:
+      'لن تتلقى بعد الآن رموز التحقق بخطوتين على عنوان البريد الإلكتروني هذا. سيبقى عنوان البريد الإلكتروني في حسابك.',
+    remove_phone_verification_code_confirmation_title: 'إزالة رمز التحقق عبر الهاتف',
+    remove_phone_verification_code_confirmation_description:
+      'لن تتلقى بعد الآن رموز التحقق بخطوتين على رقم الهاتف هذا. سيبقى رقم الهاتف في حسابك.',
     trusted_devices: {
       title: 'الأجهزة الموثوقة للمصادقة متعددة العوامل',
       current_device: 'الجهاز الحالي',

@@ -585,6 +585,30 @@
                       }
                     },
                     "required": ["type", "codes"]
+                  },
+                  {
+                    "type": "object",
+                    "x-logto-dev-feature": true,
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": ["EmailVerificationCode"],
+                        "description": "The type of the MFA verification. Enrolls the user's primary email in email verification code MFA; the user must have a primary email, and can enroll only once."
+                      }
+                    },
+                    "required": ["type"]
+                  },
+                  {
+                    "type": "object",
+                    "x-logto-dev-feature": true,
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": ["PhoneVerificationCode"],
+                        "description": "The type of the MFA verification. Enrolls the user's primary phone number in SMS verification code MFA; the user must have a primary phone number, and can enroll only once."
+                      }
+                    },
+                    "required": ["type"]
                   }
                 ]
               }

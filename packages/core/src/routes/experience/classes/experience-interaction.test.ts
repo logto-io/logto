@@ -1782,7 +1782,7 @@ describe('ExperienceInteraction class', () => {
     const proveSubjectWithSocial = async (
       experienceInteraction: InstanceType<typeof ExperienceInteraction>,
       stepUpTenant: MockTenant,
-      resolvedUser?: User
+      resolvedUser?: User | RequestError
     ) => {
       const { libraries, queries } = stepUpTenant;
       const record = new SocialVerification(libraries, queries, {
@@ -1792,6 +1792,10 @@ describe('ExperienceInteraction class', () => {
         socialUserInfo: { id: 'github-user' },
       });
       jest.spyOn(record, 'identifyUser').mockImplementation(async () => {
+        if (resolvedUser instanceof RequestError) {
+          throw resolvedUser;
+        }
+
         if (!resolvedUser) {
           throw new RequestError({ code: 'user.identity_not_exist', status: 404 });
         }
@@ -1946,6 +1950,13 @@ describe('ExperienceInteraction class', () => {
     it.each([
       { name: 'another account', resolvedUser: { ...mockUser, id: 'someone-else' } },
       { name: 'no account', resolvedUser: undefined },
+      {
+        name: 'an email match with the provider linked',
+        resolvedUser: new RequestError({
+          code: 'user.social_provider_already_linked',
+          status: 422,
+        }),
+      },
     ])(
       'rejects a subject proof that resolves to $name with a recoverable mismatch',
       async ({ resolvedUser }) => {

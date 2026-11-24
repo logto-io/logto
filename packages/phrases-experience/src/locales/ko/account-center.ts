@@ -100,6 +100,12 @@ const account_center = {
     email_removed: '이메일 주소가 성공적으로 제거되었습니다.',
     phone_removed: '전화번호가 성공적으로 제거되었습니다.',
     username_removed: '사용자 이름이 성공적으로 제거되었습니다.',
+    remove_email_verification_code_confirmation_title: '이메일 인증 코드 제거',
+    remove_email_verification_code_confirmation_description:
+      '이 이메일 주소로 더 이상 2단계 인증 코드를 받지 않습니다. 이메일 주소는 계정에 그대로 유지됩니다.',
+    remove_phone_verification_code_confirmation_title: '전화 인증 코드 제거',
+    remove_phone_verification_code_confirmation_description:
+      '이 전화번호로 더 이상 2단계 인증 코드를 받지 않습니다. 전화번호는 계정에 그대로 유지됩니다.',
     trusted_devices: {
       title: 'MFA 신뢰할 수 있는 기기',
       current_device: '현재 기기',

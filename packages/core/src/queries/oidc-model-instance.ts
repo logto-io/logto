@@ -33,12 +33,7 @@ const sessionModelName = 'Session';
  */
 // Hard-code this value since 3 seconds is a reasonable number for concurrency and no need for further configuration
 const refreshTokenReuseInterval = 3;
-/**
- * Under row-level security the planner cannot seek by the jsonb key, so each batch scans the
- * tenant's rows for the model up to its matches and the final empty batch scans them all; a
- * smaller batch only repeats that scan. 2000 keeps each statement's delete work at a level
- * production has carried; revisit once the lookup no longer goes through jsonb.
- */
+/** Bounds the rows each revocation statement deletes. */
 const revokeInstanceBatchSize = 2000;
 /** Safety valve so a revocation request stays bounded even for pathological instance counts. */
 const maxRevokeInstanceBatches = 1000;
@@ -96,9 +91,9 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
   };
 
   /**
-   * Finds an instance by its `uid` or `userCode` payload key. Under row-level security the jsonb
-   * comparison is a filter on the `(tenant_id, model_name)` index prefix; `payload_uid` and
-   * `payload_user_code` hold the same values for an index seek.
+   * Finds an instance by its `uid` or `userCode` payload key through the `payload_uid` /
+   * `payload_user_code` columns; under row-level security a `payload->>` comparison cannot use an
+   * index.
    *
    * @see findPayloadByUid
    * @see findPayloadByUserCode
@@ -110,8 +105,8 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
   ) => {
     const condition =
       field === 'uid'
-        ? sql`${fields.payload}->>'uid'=${value}`
-        : sql`${fields.payload}->>'userCode'=${value}`;
+        ? sql`${fields.payloadUid}=${value}`
+        : sql`${fields.payloadUserCode}=${value}`;
 
     // Fetch up to 2 matching records to detect duplicates without loading all of them.
     const results = await pool.any<QueryResult>(sql`
@@ -210,9 +205,9 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
    * work stays bounded.
    *
    * @param target - Human-readable principal for the cap log, e.g. `accountId <userId>`.
-   * @param condition - Must include the payload key-existence clause matching the partial index
-   * predicate, so the planner can prove the partial index and each batch scans only the tenant's
-   * rows for the model that carry the key.
+   * @param condition - Must compare a `payload_*` key column rather than `payload->>`: under
+   * row-level security only the column comparison can seek an index, so each batch reads just
+   * the matching rows.
    */
   const revokeInstancesInBatches = async (
     modelName: string,
@@ -246,16 +241,14 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
     revokeInstancesInBatches(
       modelName,
       `grantId ${grantId}`,
-      sql`${fields.payload} ? 'grantId'
-          and ${fields.payload}->>'grantId'=${grantId}`
+      sql`${fields.payloadGrantId}=${grantId}`
     );
 
   const revokeInstanceByUserId = async (modelName: string, userId: string) =>
     revokeInstancesInBatches(
       modelName,
       `accountId ${userId}`,
-      sql`${fields.payload} ? 'accountId'
-          and ${fields.payload}->>'accountId'=${userId}`
+      sql`${fields.payloadAccountId}=${userId}`
     );
 
   const findUserActiveApplicationGrants = async (
@@ -273,6 +266,10 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
     const oidcModelInstancePayload = sql.identifier([
       oidcModelInstanceAlias,
       OidcModelInstances.fields.payload,
+    ]);
+    const oidcModelInstancePayloadAccountId = sql.identifier([
+      oidcModelInstanceAlias,
+      OidcModelInstances.fields.payloadAccountId,
     ]);
     const oidcModelInstanceExpiresAt = sql.identifier([
       oidcModelInstanceAlias,
@@ -299,7 +296,7 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
       inner join ${applicationTable} as ${applicationTableIdentifier}
         on ${oidcModelInstancePayload}->>'clientId'=${applicationId}
       where ${oidcModelInstanceModelName}='Grant'
-        and ${oidcModelInstancePayload}->>'accountId'=${userId}
+        and ${oidcModelInstancePayloadAccountId}=${userId}
         ${
           applicationType
             ? sql`and ${applicationIsThirdParty}=${applicationType === 'thirdParty'}`
@@ -339,7 +336,7 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
         on ${cimdGrantClientSnapshots.fields.tenantId}=${oidcModelInstanceTenantId}
         and ${cimdGrantClientSnapshots.fields.grantId}=${fields.id}
       where ${fields.modelName}='Grant'
-        and ${fields.payload}->>'accountId'=${userId}
+        and ${fields.payloadAccountId}=${userId}
         and ${fields.expiresAt} > ${convertToTimestamp()}
     `);
   };
@@ -349,7 +346,7 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
       select ${fields.id}, ${fields.payload}, ${fields.expiresAt}
       from ${table}
       where ${fields.modelName}='Grant'
-        and ${fields.payload}->>'accountId'=${userId}
+        and ${fields.payloadAccountId}=${userId}
         and ${fields.payload}->>'clientId'=${clientId}
         and ${fields.expiresAt} > ${convertToTimestamp()}
     `);
@@ -362,7 +359,7 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
       select ${fields.payload} ->> 'uid' as "sessionUid"
       from ${table}
       where ${fields.modelName} = ${sessionModelName}
-        and ${fields.payload} ->> 'accountId' = ${accountId}
+        and ${fields.payloadAccountId} = ${accountId}
         and ${fields.expiresAt} > ${convertToTimestamp()}
         and exists (
           select 1

@@ -43,6 +43,10 @@ const security = {
       name: 'GeeTest',
       description: '极验自适应验证码，提供本地化验证体验，在中国大陆访问稳定。',
     },
+    friendly_captcha: {
+      name: 'Friendly Captcha',
+      description: '注重隐私且符合 GDPR 的工作量证明验证码，无需视觉谜题。',
+    },
   },
   captcha_details: {
     back_to_security: '返回安全',
@@ -64,6 +68,10 @@ const security = {
       '此端点使用 HTTP，仅适用于本地开发。浏览器会拦截 HTTPS 登录页发出的 HTTP 请求，且密钥将以明文传输。生产环境请使用 HTTPS。',
     geetest_captcha_id: '验证 ID',
     geetest_captcha_key: '验证密钥',
+    friendly_captcha_api_key: 'API 密钥',
+    friendly_captcha_api_endpoint: 'API 端点',
+    friendly_captcha_api_endpoint_global: '全球',
+    friendly_captcha_api_endpoint_eu: '欧盟',
     deletion_description: '你确定要删除此验证码提供商吗？',
     captcha_deleted: '验证码提供商删除成功',
     setup_captcha: '设置验证码',

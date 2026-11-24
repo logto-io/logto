@@ -20,6 +20,8 @@ const user = {
   sso_identity_not_exist: 'La cuenta SSO empresarial no ha sido registrada aún.',
   identity_already_in_use: 'La cuenta social ha sido asociada a una cuenta existente.',
   social_account_exists_in_profile: 'Ya has asociado esta cuenta social.',
+  social_provider_already_linked:
+    'Ya hay otra cuenta de este proveedor vinculada. Inicia sesión con esa cuenta o con otro método.',
   cannot_delete_self: 'No puedes eliminarte a ti mismo.',
   sign_up_method_not_enabled: 'Este método de registro no está habilitado.',
   sign_in_method_not_enabled: 'Este método de inicio de sesión no está habilitado.',
@@ -46,6 +48,12 @@ const user = {
   missing_mfa: 'Debes vincular un MFA adicional antes de iniciar sesión.',
   totp_already_in_use: 'TOTP ya está en uso.',
   backup_code_already_in_use: 'El código de respaldo ya está en uso.',
+  email_mfa_already_in_use: 'La MFA con código de verificación de email ya está en uso.',
+  phone_mfa_already_in_use: 'La MFA con código de verificación SMS ya está en uso.',
+  email_mfa_requires_primary_email:
+    'El usuario necesita un email principal para usar la MFA con código de verificación de email.',
+  phone_mfa_requires_primary_phone:
+    'El usuario necesita un número de teléfono principal para usar la MFA con código de verificación SMS.',
   password_algorithm_required: 'Se requiere algoritmo de contraseña.',
   password_and_digest:
     'No puedes establecer una contraseña en texto plano y en formato resumido al mismo tiempo.',
