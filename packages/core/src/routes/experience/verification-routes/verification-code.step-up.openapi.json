@@ -2,7 +2,7 @@
   "paths": {
     "/api/experience/verification/verification-code": {
       "post": {
-        "description": "Create a new `CodeVerification` record and sends the code to the specified identifier. The code verification can be used to verify the given identifier. Once the interaction already carries a subject (the subject pinned by a step-up authentication, or an identified user), the identifier may carry only its `type`: the code is then sent to that user's primary email or phone with the `SignIn` template, the subject is read from the interaction storage, and the request never carries a raw identifier. This variant is only accepted with the `SignIn` interaction event.",
+        "description": "Create a new `CodeVerification` record and sends the code to the specified identifier. The code verification can be used to verify the given identifier. Once the interaction already carries a subject (the subject pinned by a step-up authentication, or an identified user), the identifier may carry only its `type`: the code is then sent to that user's primary email or phone with the `SignIn` template by default, the subject is read from the interaction storage, and the request never carries a raw identifier. This variant is only accepted with the `SignIn` interaction event.",
         "requestBody": {
           "content": {
             "application/json": {

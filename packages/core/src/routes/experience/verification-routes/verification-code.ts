@@ -75,11 +75,19 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
     identifier: verificationCodeIdentifierGuard,
     interactionEvent: z.nativeEnum(InteractionEvent),
   });
-  const subjectBodyGuard = z.object({
+  const stableSubjectBodyGuard = z.object({
     identifier: subjectVerificationCodeIdentifierGuard,
     interactionEvent: z.literal(InteractionEvent.SignIn),
+  });
+  // Email / SMS MFA explicit enrollment: `BindMfa` sends the code to enroll the primary email or
+  // phone as an MFA factor
+  const bindMfaSubjectBodyGuard = stableSubjectBodyGuard.extend({
     templateType: z.literal(TemplateType.BindMfa).optional(),
   });
+  const subjectBodyGuard: z.ZodType<z.infer<typeof bindMfaSubjectBodyGuard>> = EnvSet.values
+    .isDevFeaturesEnabled
+    ? bindMfaSubjectBodyGuard
+    : stableSubjectBodyGuard;
   const bodyGuard = z.union([stableBodyGuard, subjectBodyGuard]);
   const verifyIdentifierGuard = verificationCodeIdentifierPayloadGuard;
 
@@ -102,12 +110,8 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
 
       // The subject is already authenticated, so no captcha applies
       if (identifierPayload.value === undefined) {
-        // Email / SMS MFA explicit enrollment: `BindMfa` sends the code to enroll the primary email
-        // or phone as an MFA factor
         const templateType =
-          EnvSet.values.isDevFeaturesEnabled && 'templateType' in ctx.guard.body
-            ? ctx.guard.body.templateType
-            : undefined;
+          'templateType' in ctx.guard.body ? ctx.guard.body.templateType : undefined;
         const { userId, identifier } = await getSubjectIdentifier({
           identifierType: identifierPayload.type,
           experienceInteraction,
