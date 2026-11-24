@@ -24,7 +24,7 @@ export const webhookDeliveryTimeoutMs = 20_000;
 export const webhookBodyReadTimeoutMs = 10_000;
 export const webhookPerTenantConcurrency = 20;
 export const webhookPerHookConcurrency = 5;
-export const webhookRetryBaseMs = 10_000;
+const webhookRetryBaseMs = 10_000;
 export const webhookRetryMaxMs = 4 * 60 * 60 * 1000;
 export const webhookRetryMaxAgeMs = 24 * 60 * 60 * 1000;
 export const webhookCircuitBreakerFailureThreshold = 5;
@@ -49,7 +49,7 @@ export const parseWebhookJobPayload = (raw: string): WebhookJobPayload => {
   return { event: body.event, body };
 };
 
-export const isRetryableWebhookStatus = (status: number): boolean =>
+const isRetryableWebhookStatus = (status: number): boolean =>
   status === 408 || status === 429 || (status >= 500 && status <= 599);
 
 const getErrorCode = (value: unknown): string | undefined =>
@@ -68,7 +68,7 @@ const isInvalidUrlError = (error: unknown): boolean => {
 };
 
 /** Classify delivery errors into queued retries vs. permanent failures. */
-export const isRetryableWebhookError = (error: unknown): boolean => {
+const isRetryableWebhookError = (error: unknown): boolean => {
   if (error instanceof HTTPError) {
     return isRetryableWebhookStatus(error.response.status);
   }
@@ -143,7 +143,6 @@ type CreateWebhookJobHandlerOptions = {
   deliveryTimeoutMs?: number;
   bodyReadTimeoutMs?: number;
   backoffMs?: (attempt: number) => number;
-  maxAgeMs?: number;
   onExhausted?: () => void;
 };
 
@@ -162,6 +161,7 @@ export const createWebhookJobHandler = (
   const {
     deliveryTimeoutMs = webhookDeliveryTimeoutMs,
     bodyReadTimeoutMs = webhookBodyReadTimeoutMs,
+    backoffMs = createExponentialBackoff({ baseMs: webhookRetryBaseMs, maxMs: webhookRetryMaxMs }),
   } = options ?? {};
 
   return defineJobHandler<WebhookJobPayload, CoreJobSettlementMeta>({
@@ -176,23 +176,12 @@ export const createWebhookJobHandler = (
       failureThreshold: webhookCircuitBreakerFailureThreshold,
     },
     retry: {
-      backoffMs:
-        options?.backoffMs ??
-        createExponentialBackoff({
-          baseMs: webhookRetryBaseMs,
-          maxMs: webhookRetryMaxMs,
-        }),
+      backoffMs,
       // Do not set `maxAttempts: 1` here: reclaimed rows (after lease expiry or shutdown hand-back)
       // arrive with `attempts >= 2` and would be dropped before `handle()` runs.
-      maxAgeMs: options?.maxAgeMs ?? webhookRetryMaxAgeMs,
+      maxAgeMs: webhookRetryMaxAgeMs,
     },
-    ...conditional(
-      options?.onExhausted && {
-        onExhausted: () => {
-          options.onExhausted?.();
-        },
-      }
-    ),
+    ...conditional(options?.onExhausted && { onExhausted: options.onExhausted }),
     handle: async (job) => {
       if (!job.tenantId) {
         consoleLog.error(`Webhook job ${job.id} is missing tenantId.`);
@@ -256,8 +245,12 @@ export const createWebhookJobHandler = (
           disableRetries: true,
         });
 
+        // A 2xx status means the receiver accepted the event, so a slow or broken body must not
+        // cause a resend.
         logEntry.append({
-          response: await parseBoundedResponse(response),
+          response: (await trySafe(parseBoundedResponse(response))) ?? {
+            statusCode: response.status,
+          },
         });
         consoleLog.info(`\tHook ${job.groupKey} succeeded`);
 
@@ -285,7 +278,12 @@ export const createWebhookJobHandler = (
 
           return {
             status: 'retry',
-            ...conditional(retryAfterMs !== undefined && { retryAfterMs }),
+            // The receiver may ask for a longer wait than the backoff schedule, never a shorter one.
+            ...conditional(
+              retryAfterMs !== undefined && {
+                retryAfterMs: Math.max(backoffMs(job.attempts), retryAfterMs),
+              }
+            ),
             meta,
           };
         }

@@ -266,7 +266,7 @@ describe('webhook job handler', () => {
   });
 
   it.each([429, 503, 408])(
-    'honors Retry-After header on HTTP %s and caps it at 4 hours',
+    'honors Retry-After header on HTTP %s between the backoff schedule and 4 hours',
     async (status) => {
       const handler = createWebhookJobHandler({ findHookForDelivery });
 
@@ -286,6 +286,16 @@ describe('webhook job handler', () => {
       await expect(handler.handle(createClaimedJob())).resolves.toMatchObject({
         status: 'retry',
         retryAfterMs: webhookRetryMaxMs,
+      });
+
+      // A delay shorter than the backoff for this attempt (40 s on attempt 3) is raised to it.
+      findHookForDelivery.mockResolvedValueOnce(createHookRecord());
+      sendWebhookRequest.mockRejectedValueOnce(
+        createHttpError(status, { headers: { 'retry-after': '0' } })
+      );
+      await expect(handler.handle(createClaimedJob({ attempts: 3 }))).resolves.toMatchObject({
+        status: 'retry',
+        retryAfterMs: 40_000,
       });
 
       findHookForDelivery.mockResolvedValueOnce(createHookRecord());
@@ -322,7 +332,7 @@ describe('webhook job handler', () => {
     await expect(handler.handle(createClaimedJob())).rejects.toThrow('connection reset');
   });
 
-  it('aborts and retries when response body read exceeds bodyReadTimeoutMs', async () => {
+  it('settles as delivered when a 2xx response body read exceeds bodyReadTimeoutMs', async () => {
     findHookForDelivery.mockResolvedValueOnce(createHookRecord());
     sendWebhookRequest.mockResolvedValueOnce({
       status: 200,
@@ -337,14 +347,14 @@ describe('webhook job handler', () => {
 
     const sentRequest = sendWebhookRequest.mock.calls[0]?.[0] as { signal?: AbortSignal };
     expect(sentRequest.signal?.aborted).toBe(true);
-    expect(result.status).toBe('retry');
+    expect(result.status).toBe('done');
     expect(result.meta?.log?.payload).toMatchObject({
-      result: LogResult.Error,
+      result: LogResult.Success,
       hookId: 'hook-1',
       attempts: 1,
+      response: { statusCode: 200 },
     });
-    expect(result.meta?.log?.payload.error).toContain('body read timed out after 50ms');
-    expect(result.meta?.log?.payload).not.toHaveProperty('response');
+    expect(result.meta?.log?.payload).not.toHaveProperty('error');
   });
 
   it('exhausts and invokes onExhausted at the 24-hour cutoff', async () => {

@@ -283,11 +283,10 @@ export const createJobQueueQueries = (
       return count > 0 ? 'settled' : 'stale';
     }
 
-    const { nextAttemptAt: _, ...baseLogPayload } = meta.log.payload;
     const logPayload =
       resolution.status === 'retry'
-        ? { ...baseLogPayload, nextAttemptAt: resolution.nextAttemptAt }
-        : baseLogPayload;
+        ? { ...meta.log.payload, nextAttemptAt: resolution.nextAttemptAt }
+        : meta.log.payload;
 
     const { count } = await pool.one<{ count: number }>(sql`
       with settled as (${settledCte}),

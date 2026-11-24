@@ -880,7 +880,7 @@ describeWithDatabase('job queue queries on Postgres', () => {
   });
 
   describe('parkDueGroup()', () => {
-    it('parks due waiting rows and expired leases while leaving live leases, future rows, and other groups untouched', async () => {
+    it('parks due rows, expired leases, and rows waiting until before the park time while leaving live leases, later rows, and other groups untouched', async () => {
       await seed([
         { id: 'jq-park-due', groupKey: 'jq-hook-park', dueIn: -10 },
         {
@@ -890,10 +890,13 @@ describeWithDatabase('job queue queries on Postgres', () => {
           claimedBy: 'dead-worker',
           attempts: 1,
         },
+        // A failed probe handed back with its own short backoff.
+        { id: 'jq-park-backoff', groupKey: 'jq-hook-park', dueIn: 10, attempts: 1 },
+        // A lease ending before the park time is still live.
         {
           id: 'jq-park-live',
           groupKey: 'jq-hook-park',
-          dueIn: 60,
+          dueIn: 30,
           claimedBy: 'live-worker',
           attempts: 1,
         },
@@ -907,8 +910,9 @@ describeWithDatabase('job queue queries on Postgres', () => {
         },
       ]);
 
+      const parkedIds = ['jq-park-due', 'jq-park-expired', 'jq-park-backoff'];
       const previousNextAttemptAt = Date.now() - 5000;
-      for (const id of ['jq-park-due', 'jq-park-expired']) {
+      for (const id of parkedIds) {
         // eslint-disable-next-line no-await-in-loop -- seed matching log rows sequentially
         await pool.query(sql`
           insert into logs (tenant_id, id, key, payload)
@@ -936,9 +940,9 @@ describeWithDatabase('job queue queries on Postgres', () => {
           nextAttemptAt: parkedAt,
           minCreatedAt: 0,
         })
-      ).resolves.toBe(2);
+      ).resolves.toBe(3);
 
-      for (const id of ['jq-park-due', 'jq-park-expired']) {
+      for (const id of parkedIds) {
         // eslint-disable-next-line no-await-in-loop -- verify parked rows and updated logs
         const job = await findJob(id);
         expect(job).toMatchObject({ claimedBy: null });
@@ -954,11 +958,36 @@ describeWithDatabase('job queue queries on Postgres', () => {
         claimedBy: 'live-worker',
         attempts: 1,
       });
+      expect((await findJob('jq-park-live'))!.nextAttemptAt).toBeLessThan(parkedAt);
       expect((await findJob('jq-park-future'))!.nextAttemptAt).toBeGreaterThan(parkedAt);
       expect((await findJob('jq-park-other-hook'))!.nextAttemptAt).toBeLessThanOrEqual(Date.now());
       expect((await findJob('jq-park-other-tenant'))!.nextAttemptAt).toBeLessThanOrEqual(
         Date.now()
       );
+    });
+
+    it('skips rows locked by another transaction instead of waiting for them', async () => {
+      await seed([
+        { id: 'jq-park-locked', groupKey: 'jq-hook-lock', dueIn: -10 },
+        { id: 'jq-park-free', groupKey: 'jq-hook-lock', dueIn: -10 },
+      ]);
+
+      const parkedAt = Date.now() + 45_000;
+      await pool.transaction(async (transaction) => {
+        await transaction.query(sql`select 1 from jobs where id = 'jq-park-locked' for update`);
+        await expect(
+          queries().parkDueGroup({
+            tenantId: defaultTenantId,
+            type: jobType,
+            groupKey: 'jq-hook-lock',
+            nextAttemptAt: parkedAt,
+            minCreatedAt: Date.now() - 24 * 60 * 60 * 1000,
+          })
+        ).resolves.toBe(1);
+      });
+
+      expect((await findJob('jq-park-locked'))!.nextAttemptAt).toBeLessThanOrEqual(Date.now());
+      expect(Math.abs((await findJob('jq-park-free'))!.nextAttemptAt - parkedAt)).toBeLessThan(10);
     });
 
     it('bulk-expires older due rows with fallback or cleared logs without cross-tenant overwrites', async () => {
@@ -982,6 +1011,9 @@ describeWithDatabase('job queue queries on Postgres', () => {
             now() - interval '25 hours'),
           (${defaultTenantId}, 'jq-exp-foreign', ${webhookJobType}, 'jq-hook-exp',
             ${makePayload('jq-exp-foreign')}, 0, now() - interval '10 seconds',
+            now() - interval '25 hours'),
+          (${defaultTenantId}, 'jq-exp-waiting', ${webhookJobType}, 'jq-hook-exp',
+            ${makePayload('jq-exp-waiting')}, 1, now() + interval '10 seconds',
             now() - interval '25 hours'),
           (${defaultTenantId}, 'jq-exp-fresh', ${webhookJobType}, 'jq-hook-exp',
             ${makePayload('jq-exp-fresh')}, 0, now() - interval '10 seconds',
@@ -1023,7 +1055,8 @@ describeWithDatabase('job queue queries on Postgres', () => {
         })
       ).resolves.toBe(1);
 
-      expect(onBulkExpired).toHaveBeenCalledWith(3);
+      expect(onBulkExpired).toHaveBeenCalledWith(4);
+      await expect(findJob('jq-exp-waiting')).resolves.toBeNull();
       await expect(findJob('jq-exp-unattempted')).resolves.toBeNull();
       await expect(findJob('jq-exp-attempted')).resolves.toBeNull();
       await expect(findJob('jq-exp-foreign')).resolves.toBeNull();

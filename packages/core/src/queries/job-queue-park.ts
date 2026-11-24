@@ -26,9 +26,12 @@ export type CreateJobQueueQueriesOptions = {
 const toTimestamp = (epochMs: number) => sql`to_timestamp(${epochMs}::double precision / 1000)`;
 
 /**
- * Create the `parkDueGroup` adapter query: bulk-expires due waiting rows older than `minCreatedAt`
+ * Create the `parkDueGroup` adapter query: bulk-expires the group's rows older than `minCreatedAt`
  * (keeping `logs` consistent and writing fallback failure logs for unattempted rows), then parks
- * remaining due waiting rows of `(tenantId, type, groupKey)` without touching live leases.
+ * the rest to `nextAttemptAt`. Both steps cover due rows and waiting rows due before
+ * `nextAttemptAt`, such as the failed probe that was just handed back, and never touch a live
+ * lease. Rows are locked in `id` order and rows locked by another transaction are skipped, so a
+ * park neither waits on nor deadlocks with a concurrent claim, settlement, or park.
  */
 export const createParkDueGroup =
   (pool: CommonQueryMethods, options?: CreateJobQueueQueriesOptions) =>
@@ -43,17 +46,33 @@ export const createParkDueGroup =
       return 0;
     }
 
+    const isParkable = sql`
+      tenant_id = ${tenantId}
+      and type = ${type}
+      and group_key = ${groupKey}
+      and (
+        next_attempt_at <= now()
+        or (claimed_by is null and next_attempt_at < ${toTimestamp(nextAttemptAt)})
+      )
+    `;
+
     const { parkedCount, expiredCount } = await pool.transaction(async (connection) => {
       const expired =
         minCreatedAt > 0
           ? await connection.any<ExpiredJobRow>(sql`
+              with targets as (
+                select id
+                from jobs
+                where ${isParkable}
+                  and created_at <= ${toTimestamp(minCreatedAt)}
+                order by id asc
+                for update skip locked
+              )
               delete from jobs
-              where tenant_id = ${tenantId}
-                and type = ${type}
-                and group_key = ${groupKey}
-                and next_attempt_at <= now()
-                and created_at <= ${toTimestamp(minCreatedAt)}
-              returning id, tenant_id, type, group_key, payload, attempts
+              using targets
+              where jobs.id = targets.id
+              returning jobs.id, jobs.tenant_id, jobs.type, jobs.group_key, jobs.payload,
+                jobs.attempts
             `)
           : [];
 
@@ -113,15 +132,20 @@ export const createParkDueGroup =
       }
 
       const { count } = await connection.one<{ count: number }>(sql`
-        with parked as (
+        with targets as (
+          select id
+          from jobs
+          where ${isParkable}
+          order by id asc
+          for update skip locked
+        ),
+        parked as (
           update jobs
           set claimed_by = null,
               next_attempt_at = ${toTimestamp(nextAttemptAt)}
-          where tenant_id = ${tenantId}
-            and type = ${type}
-            and group_key = ${groupKey}
-            and next_attempt_at <= now()
-          returning id, tenant_id
+          from targets
+          where jobs.id = targets.id
+          returning jobs.id, jobs.tenant_id
         ),
         updated_logs as (
           update logs

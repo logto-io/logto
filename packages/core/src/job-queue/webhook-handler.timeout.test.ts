@@ -154,7 +154,7 @@ describe('webhook job handler delivery and body-read bounds', () => {
     jest.clearAllMocks();
   });
 
-  it('aborts and retries when 200 headers arrive immediately but body stalls', async () => {
+  it('settles as delivered when 200 headers arrive immediately but body stalls', async () => {
     await withHttpServer(
       (_request, response) => {
         response.writeHead(200, { 'content-type': 'text/plain' });
@@ -170,20 +170,20 @@ describe('webhook job handler delivery and body-read bounds', () => {
         const elapsedMs = Date.now() - startedAt;
 
         expect(elapsedMs).toBeLessThan(350);
-        expect(result.status).toBe('retry');
+        expect(result.status).toBe('done');
         expect(result.meta?.log?.payload).toMatchObject({
-          result: LogResult.Error,
+          result: LogResult.Success,
           hookId: 'hook-1',
           attempts: 1,
+          response: { statusCode: 200 },
         });
-        expect(result.meta?.log?.payload.error).toContain('body read timed out after 150ms');
-        expect(result.meta?.log?.payload).not.toHaveProperty('response');
+        expect(result.meta?.log?.payload).not.toHaveProperty('error');
         await expect(waitForClosedConnections(1)).resolves.toBeGreaterThanOrEqual(1);
       }
     );
   });
 
-  it('aborts and retries when 200 response continuously trickles bytes', async () => {
+  it('settles as delivered when 200 response continuously trickles bytes', async () => {
     await withHttpServer(
       (_request, response, _attempt, trackTimer) => {
         response.writeHead(200, { 'content-type': 'text/plain' });
@@ -207,13 +207,13 @@ describe('webhook job handler delivery and body-read bounds', () => {
         const elapsedMs = Date.now() - startedAt;
 
         expect(elapsedMs).toBeLessThan(350);
-        expect(result.status).toBe('retry');
+        expect(result.status).toBe('done');
         expect(result.meta?.log?.payload).toMatchObject({
-          result: LogResult.Error,
+          result: LogResult.Success,
           attempts: 1,
+          response: { statusCode: 200 },
         });
-        expect(result.meta?.log?.payload.error).toContain('body read timed out after 150ms');
-        expect(result.meta?.log?.payload).not.toHaveProperty('response');
+        expect(result.meta?.log?.payload).not.toHaveProperty('error');
         await expect(waitForClosedConnections(1)).resolves.toBeGreaterThanOrEqual(1);
       }
     );

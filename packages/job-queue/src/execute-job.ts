@@ -174,6 +174,8 @@ const updateCircuitBreakerAfterSettle = async <SettlementMeta>({
   if (
     outcome.parseFailed === true ||
     outcome.attemptBudgetExceeded === true ||
+    // A permanent failure says nothing about whether the group can take more work.
+    outcome.resolution.status === 'fail' ||
     !handler.circuitBreaker
   ) {
     return false;
@@ -196,7 +198,7 @@ const updateCircuitBreakerAfterSettle = async <SettlementMeta>({
     const { parkDueGroup } = queries;
     const minCreatedAt =
       handler.retry.maxAgeMs !== undefined && Number.isFinite(handler.retry.maxAgeMs)
-        ? Math.max(0, now - handler.retry.maxAgeMs)
+        ? Math.max(0, nextAttemptAt - handler.retry.maxAgeMs)
         : 0;
 
     await trySafe(
