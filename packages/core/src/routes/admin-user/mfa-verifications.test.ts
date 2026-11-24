@@ -14,7 +14,6 @@ import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
-import { resetDevFeaturesEnabled, setDevFeaturesEnabled } from '#src/test-utils/dev-features.js';
 import { MockTenant, type Partial2 } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -368,26 +367,6 @@ describe('adminUserRoutes', () => {
       expect(response.status).toEqual(422);
       expect(response.body).toMatchObject({ code: 'user.phone_mfa_requires_primary_phone' });
       expect(updateUserById).not.toHaveBeenCalled();
-    });
-
-    it('should reject the types without dev features', async () => {
-      setDevFeaturesEnabled(false);
-
-      try {
-        const requester = createRequester({
-          middlewares: [koaI18next(), koaErrorHandler()],
-          authedRoutes: adminUserRoutes,
-          tenantContext,
-        });
-        const response = await requester.post(`/users/${mockUser.id}/mfa-verifications`).send({
-          type: MfaFactor.EmailVerificationCode,
-        });
-
-        expect(response.status).toEqual(400);
-        expect(updateUserById).not.toHaveBeenCalled();
-      } finally {
-        resetDevFeaturesEnabled();
-      }
     });
   });
 

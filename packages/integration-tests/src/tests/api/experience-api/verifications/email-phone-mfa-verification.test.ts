@@ -31,7 +31,6 @@ import {
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest } from '#src/utils.js';
 
 const mfaTestCases = [
   {
@@ -150,7 +149,7 @@ describe('MFA verification code factor guard', () => {
   );
 });
 
-devFeatureTest.describe('MFA verification code in explicit enrollment mode', () => {
+describe('MFA verification code in explicit enrollment mode', () => {
   const userApi = new UserApiTest();
 
   beforeAll(async () => {

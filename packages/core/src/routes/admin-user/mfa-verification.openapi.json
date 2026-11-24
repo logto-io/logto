@@ -90,7 +90,7 @@
           }
         },
         "summary": "Create an MFA verification for a user",
-        "description": "Create a new MFA verification for a given user ID."
+        "description": "Create a new MFA verification for a given user ID. `EmailVerificationCode` and `PhoneVerificationCode` enroll the user's primary email or phone number in verification code MFA; the user must have the matching primary identifier, and can enroll each only once."
       }
     },
     "/api/users/{userId}/mfa-verifications/{verificationId}": {

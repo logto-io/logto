@@ -987,7 +987,6 @@ describe('POST /experience/profile/mfa', () => {
   );
 
   it('rejects email/phone MFA binding when the factor is disabled in sign-in experience', async () => {
-    setDevFeaturesEnabled(true);
     const user = {
       ...mockUser,
       primaryEmail: 'alice@logto.dev',
@@ -1016,7 +1015,6 @@ describe('POST /experience/profile/mfa', () => {
 
     expect(response.status).toBe(400);
     expect(response.body).toMatchObject({ code: 'session.mfa.mfa_factor_not_enabled' });
-    resetDevFeaturesEnabled();
   });
 });
 
@@ -2192,7 +2190,6 @@ describe('POST /experience/submit', () => {
   ])(
     'enrolls existing primary email without rewriting profile and persists MFA record ($name)',
     async ({ recordUserId }) => {
-      setDevFeaturesEnabled(true);
       const user = {
         ...mockUser,
         primaryEmail: 'existing@logto.dev',
@@ -2261,7 +2258,6 @@ describe('POST /experience/submit', () => {
   );
 
   it('allows enrolling an existing primary phone from suggest_additional_mfa after enrolling primary email in explicit mode', async () => {
-    setDevFeaturesEnabled(true);
     const user = {
       ...mockUser,
       primaryEmail: 'existing@logto.dev',
