@@ -131,7 +131,7 @@
             }
           },
           "400": {
-            "description": "Bad request. The user is not identified or does not have the specified identifier type bound for MFA."
+            "description": "Bad request. <br/>- `session.identifier_not_found:` The user is not identified. <br/>- `session.mfa.mfa_factor_not_enabled:` The MFA factor is not enabled in the sign-in experience settings, or the user has no primary identifier of the specified type. <br/>- `session.mfa.mfa_factor_not_enrolled:` The user has not set up the MFA factor."
           },
           "404": {
             "description": "User not found."

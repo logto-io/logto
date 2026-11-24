@@ -44,6 +44,7 @@ const session = {
     mfa_policy_not_user_controlled:
       'Политика многофакторной аутентификации не контролируется пользователем.',
     mfa_factor_not_enabled: 'Фактор MFA не включен.',
+    mfa_factor_not_enrolled: 'Пользователь не настроил этот фактор MFA.',
     suggest_additional_mfa:
       'Для лучшей защиты добавьте ещё один метод MFA. Вы можете пропустить этот шаг и продолжить.',
   },

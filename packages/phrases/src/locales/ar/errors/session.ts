@@ -36,6 +36,7 @@ const session = {
     invalid_backup_code: 'رمز النسخ الاحتياطي غير صالح.',
     mfa_policy_not_user_controlled: 'سياسة MFA ليست تحت سيطرة المستخدم.',
     mfa_factor_not_enabled: 'عامل MFA غير ممكّن.',
+    mfa_factor_not_enrolled: 'لم يقم المستخدم بإعداد عامل MFA هذا.',
     suggest_additional_mfa:
       'للمزيد من الحماية، يُنصح بإضافة طريقة MFA أخرى. يمكنك تخطي هذه الخطوة والمتابعة.',
   },
