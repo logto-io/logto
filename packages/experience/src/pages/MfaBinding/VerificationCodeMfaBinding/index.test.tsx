@@ -7,7 +7,7 @@ import UserInteractionContext, {
   type UserInteractionContextType,
 } from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import { bindMfaByVerificationCode, sendSubjectVerificationCode } from '@/apis/experience';
+import { bindMfaByVerificationCode, sendSubjectBindMfaVerificationCode } from '@/apis/experience';
 import { type MfaFlowState } from '@/types/guard';
 
 import VerificationCodeMfaBinding from '.';
@@ -42,7 +42,7 @@ jest.mock('react-i18next', () => ({
 jest.mock('@/apis/experience', () => ({
   ...jest.requireActual('@/apis/experience'),
   bindMfaByVerificationCode: jest.fn(),
-  sendSubjectVerificationCode: jest.fn(),
+  sendSubjectBindMfaVerificationCode: jest.fn(),
 }));
 
 jest.mock('@/hooks/use-global-redirect-to', () => ({
@@ -81,9 +81,10 @@ const mockedUseLocation = useLocation as jest.MockedFunction<typeof useLocation>
 const mockedBindMfaByVerificationCode = bindMfaByVerificationCode as jest.MockedFunction<
   typeof bindMfaByVerificationCode
 >;
-const mockedSendSubjectVerificationCode = sendSubjectVerificationCode as jest.MockedFunction<
-  typeof sendSubjectVerificationCode
->;
+const mockedSendSubjectBindMfaVerificationCode =
+  sendSubjectBindMfaVerificationCode as jest.MockedFunction<
+    typeof sendSubjectBindMfaVerificationCode
+  >;
 
 const createUserInteractionValue = (
   verificationIdsMap: UserInteractionContextType['verificationIdsMap'] = {},
@@ -198,7 +199,9 @@ describe('<VerificationCodeMfaBinding />', () => {
 
   it('resends a primary verification code and updates verificationId', async () => {
     const setVerificationId = jest.fn();
-    mockedSendSubjectVerificationCode.mockResolvedValue({ verificationId: 'resent-email-vid' });
+    mockedSendSubjectBindMfaVerificationCode.mockResolvedValue({
+      verificationId: 'resent-email-vid',
+    });
 
     renderEmailBinding(
       buildMaskedEmailState([MfaFactor.EmailVerificationCode]),
@@ -209,7 +212,7 @@ describe('<VerificationCodeMfaBinding />', () => {
     fireEvent.click(screen.getByText('description.resend_passcode'));
 
     await waitFor(() => {
-      expect(mockedSendSubjectVerificationCode).toHaveBeenCalledWith(SignInIdentifier.Email);
+      expect(mockedSendSubjectBindMfaVerificationCode).toHaveBeenCalledWith(SignInIdentifier.Email);
       expect(setVerificationId).toHaveBeenCalledWith(
         VerificationType.EmailVerificationCode,
         'resent-email-vid'

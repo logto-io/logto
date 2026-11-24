@@ -337,19 +337,19 @@ export const createNewCodeVerificationRecord = (
 
 /**
  * Factory method to create a new `EmailCodeVerification` / `PhoneCodeVerification` record for the
- * subject the interaction carries, with the identifier resolved from that user. It always uses the
- * `SignIn` template: it verifies a primary identifier as a first factor, never binds a new one.
+ * subject the interaction carries, with the identifier resolved from that user. It never binds a
+ * new identifier: it uses the `SignIn` template to verify the primary identifier as a first factor,
+ * or the `BindMfa` template to enroll it as an MFA factor.
  */
 export const createSubjectCodeVerificationRecord = (
   libraries: Libraries,
   queries: Queries,
   identifier: IdentifierCodeVerificationIdentifier,
-  userId: string
-) =>
-  buildCodeVerificationRecord(libraries, queries, identifier, {
-    templateType: TemplateType.SignIn,
+  {
     userId,
-  });
+    templateType = TemplateType.SignIn,
+  }: { userId: string; templateType?: TemplateType.SignIn | TemplateType.BindMfa }
+) => buildCodeVerificationRecord(libraries, queries, identifier, { templateType, userId });
 
 /**
  * Factory method to create a new `MfaEmailCodeVerification` / `MfaPhoneCodeVerification` record using the given identifier.
