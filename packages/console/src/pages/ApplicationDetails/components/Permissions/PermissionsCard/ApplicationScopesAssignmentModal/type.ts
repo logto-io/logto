@@ -10,14 +10,7 @@ import { type DataEntry } from '@/ds-components/DataTransferBox/type';
 
 type DataTransferBoxComponentProps<V extends DataEntry> = Pick<
   DataTransferBoxProps<V>,
-  | 'selectedData'
-  | 'setSelectedData'
-  | 'availableDataList'
-  | 'availableDataGroups'
-  | 'title'
-  | 'isSourceLoading'
-  | 'sourcePagination'
-  | 'onSourceSearch'
+  'selectedData' | 'setSelectedData' | 'availableDataList' | 'availableDataGroups' | 'title'
 >;
 
 type ScopeAssignmentHookReturnType<
