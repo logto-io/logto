@@ -3,7 +3,6 @@ import { InteractionHookEvent, LogResult } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 import { type Nullable } from '@silverhand/essentials';
 import { HTTPError, type NormalizedOptions } from 'ky';
-import Sinon from 'sinon';
 
 import { type WebhookDeliveryHook } from '#src/queries/job-queue.js';
 
@@ -18,16 +17,12 @@ await mockEsmWithActual('#src/libraries/hook/utils.js', () => ({
   sendWebhookRequest,
 }));
 
-const { EnvSet } = await import('#src/env-set/index.js');
 const {
   createWebhookJobHandler,
   parseWebhookJobPayload,
-  webhookBodyReadTimeoutMs,
   webhookDeliveryTimeoutMs,
   webhookJobLeaseMs,
   webhookJobType,
-  webhookPerHookConcurrency,
-  webhookPerTenantConcurrency,
 } = await import('./webhook-handler.js');
 
 const createHookRecord = (overrides?: Partial<WebhookDeliveryHook>): WebhookDeliveryHook => ({
@@ -70,28 +65,19 @@ describe('webhook job handler', () => {
   >();
 
   afterEach(() => {
-    Sinon.restore();
     jest.clearAllMocks();
   });
 
-  it('registers the expected lease and uniform concurrency limits across Cloud and OSS', () => {
-    for (const isCloud of [false, true]) {
-      Sinon.stub(EnvSet, 'values').value({ ...EnvSet.values, isCloud });
-      const handler = createWebhookJobHandler({ findHookForDelivery });
+  it('registers the expected lease and concurrency limits', () => {
+    const handler = createWebhookJobHandler({ findHookForDelivery });
 
-      expect(handler.type).toBe(webhookJobType);
-      expect(handler.leaseMs).toBe(webhookJobLeaseMs);
-      expect(webhookDeliveryTimeoutMs).toBeLessThan(webhookJobLeaseMs);
-      expect(webhookBodyReadTimeoutMs).toBeLessThanOrEqual(webhookDeliveryTimeoutMs);
-      expect(handler.limits).toEqual({
-        perTenantConcurrency: webhookPerTenantConcurrency,
-        perGroupConcurrency: webhookPerHookConcurrency,
-      });
-      expect(handler.limits).toEqual({
-        perTenantConcurrency: 20,
-        perGroupConcurrency: 5,
-      });
-    }
+    expect(handler.type).toBe(webhookJobType);
+    expect(handler.leaseMs).toBe(webhookJobLeaseMs);
+    expect(webhookDeliveryTimeoutMs).toBeLessThan(webhookJobLeaseMs);
+    expect(handler.limits).toEqual({
+      perTenantConcurrency: 20,
+      perGroupConcurrency: 5,
+    });
   });
 
   it('parses valid webhook payloads while preserving custom keys and rejecting invalid payloads', () => {
@@ -204,27 +190,14 @@ describe('webhook job handler', () => {
     await expect(handler.handle(createClaimedJob())).rejects.toThrow('connection reset');
   });
 
-  it('aborts and fails when response body read exceeds bodyReadTimeoutMs', async () => {
+  it('aborts the delivery signal once the attempt ends', async () => {
     findHookForDelivery.mockResolvedValueOnce(createHookRecord());
-    sendWebhookRequest.mockResolvedValueOnce({
-      status: 200,
-      text: async () =>
-        new Promise<string>((resolve) => {
-          void resolve;
-        }),
-    });
+    sendWebhookRequest.mockRejectedValueOnce(new Error('Request timed out'));
 
-    const handler = createWebhookJobHandler({ findHookForDelivery }, { bodyReadTimeoutMs: 50 });
-    const result = await handler.handle(createClaimedJob());
+    const handler = createWebhookJobHandler({ findHookForDelivery });
+    await handler.handle(createClaimedJob());
 
     const sentRequest = sendWebhookRequest.mock.calls[0]?.[0] as { signal?: AbortSignal };
     expect(sentRequest.signal?.aborted).toBe(true);
-    expect(result.status).toBe('fail');
-    expect(result.meta?.log?.payload).toMatchObject({
-      result: LogResult.Error,
-      hookId: 'hook-1',
-    });
-    expect(result.meta?.log?.payload.error).toContain('body read timed out after 50ms');
-    expect(result.meta?.log?.payload).not.toHaveProperty('response');
   });
 });

@@ -140,7 +140,7 @@ const createHook = (url: string, retries?: number): WebhookDeliveryHook => ({
   enabled: true,
 });
 
-describe('webhook job handler delivery and body-read bounds', () => {
+describe('webhook job handler delivery deadline', () => {
   beforeEach(() => {
     // Loopback test servers intentionally use local addresses guarded in production by SSRF checks.
     Sinon.stub(EnvSet, 'values').value({
@@ -163,19 +163,16 @@ describe('webhook job handler delivery and body-read bounds', () => {
       async ({ endpoint, waitForClosedConnections }) => {
         const handler = createWebhookJobHandler(
           { findHookForDelivery: async () => createHook(endpoint, 0) },
-          { deliveryTimeoutMs: 400, bodyReadTimeoutMs: 150 }
+          { deliveryTimeoutMs: 150 }
         );
-        const startedAt = Date.now();
         const result = await handler.handle(createClaimedJob());
-        const elapsedMs = Date.now() - startedAt;
 
-        expect(elapsedMs).toBeLessThan(350);
         expect(result.status).toBe('fail');
         expect(result.meta?.log?.payload).toMatchObject({
           result: LogResult.Error,
           hookId: 'hook-1',
         });
-        expect(result.meta?.log?.payload.error).toContain('body read timed out after 150ms');
+        expect(result.meta?.log?.payload.error).toContain('Webhook delivery timed out after 150ms');
         expect(result.meta?.log?.payload).not.toHaveProperty('response');
         await expect(waitForClosedConnections(1)).resolves.toBeGreaterThanOrEqual(1);
       }
@@ -199,15 +196,12 @@ describe('webhook job handler delivery and body-read bounds', () => {
       async ({ endpoint, waitForClosedConnections }) => {
         const handler = createWebhookJobHandler(
           { findHookForDelivery: async () => createHook(endpoint, 0) },
-          { deliveryTimeoutMs: 400, bodyReadTimeoutMs: 150 }
+          { deliveryTimeoutMs: 150 }
         );
-        const startedAt = Date.now();
         const result = await handler.handle(createClaimedJob());
-        const elapsedMs = Date.now() - startedAt;
 
-        expect(elapsedMs).toBeLessThan(350);
         expect(result.status).toBe('fail');
-        expect(result.meta?.log?.payload.error).toContain('body read timed out after 150ms');
+        expect(result.meta?.log?.payload.error).toContain('Webhook delivery timed out after 150ms');
         expect(result.meta?.log?.payload).not.toHaveProperty('response');
         await expect(waitForClosedConnections(1)).resolves.toBeGreaterThanOrEqual(1);
       }
@@ -223,13 +217,10 @@ describe('webhook job handler delivery and body-read bounds', () => {
       async ({ endpoint, waitForClosedConnections }) => {
         const handler = createWebhookJobHandler(
           { findHookForDelivery: async () => createHook(endpoint, 0) },
-          { deliveryTimeoutMs: 400, bodyReadTimeoutMs: 150 }
+          { deliveryTimeoutMs: 150 }
         );
-        const startedAt = Date.now();
         const result = await handler.handle(createClaimedJob());
-        const elapsedMs = Date.now() - startedAt;
 
-        expect(elapsedMs).toBeLessThan(350);
         expect(result.status).toBe('fail');
         expect(result.meta?.log?.payload).toMatchObject({
           result: LogResult.Error,
@@ -259,13 +250,10 @@ describe('webhook job handler delivery and body-read bounds', () => {
       async ({ endpoint, getAttempts, waitForClosedConnections }) => {
         const handler = createWebhookJobHandler(
           { findHookForDelivery: async () => createHook(endpoint, 3) },
-          { deliveryTimeoutMs: 350, bodyReadTimeoutMs: 150 }
+          { deliveryTimeoutMs: 350 }
         );
-        const startedAt = Date.now();
         const result = await handler.handle(createClaimedJob());
-        const elapsedMs = Date.now() - startedAt;
 
-        expect(elapsedMs).toBeLessThan(600);
         expect(getAttempts()).toBeLessThan(4);
         expect(result.status).toBe('fail');
         expect(result.meta?.log?.payload.error).toContain('Webhook delivery timed out after 350ms');

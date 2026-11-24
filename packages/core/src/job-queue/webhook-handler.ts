@@ -3,7 +3,7 @@ import { hookEventGuard, LogResult, type HookEvent } from '@logto/schemas';
 import { ConsoleLog, normalizeError } from '@logto/shared';
 import { conditional, trySafe } from '@silverhand/essentials';
 import chalk from 'chalk';
-import { HTTPError, type KyResponse } from 'ky';
+import { HTTPError } from 'ky';
 import { z } from 'zod';
 
 import { parseResponse, sendWebhookRequest } from '#src/libraries/hook/utils.js';
@@ -14,8 +14,6 @@ export const webhookJobType = 'webhook';
 export const webhookJobLeaseMs = 60_000;
 /** Total wall-clock budget for headers, in-call retries, and body read, well below `webhookJobLeaseMs`. */
 export const webhookDeliveryTimeoutMs = 45_000;
-/** Cap on reading a single response body after headers arrive, clamped by remaining delivery time. */
-export const webhookBodyReadTimeoutMs = 10_000;
 export const webhookPerTenantConcurrency = 20;
 export const webhookPerHookConcurrency = 5;
 
@@ -41,7 +39,6 @@ export const parseWebhookJobPayload = (raw: string): WebhookJobPayload => {
 
 type CreateWebhookJobHandlerOptions = {
   deliveryTimeoutMs?: number;
-  bodyReadTimeoutMs?: number;
 };
 
 /**
@@ -55,10 +52,7 @@ export const createWebhookJobHandler = (
   queries: Pick<ReturnType<typeof createJobQueueQueries>, 'findHookForDelivery'>,
   options?: CreateWebhookJobHandlerOptions
 ) => {
-  const {
-    deliveryTimeoutMs = webhookDeliveryTimeoutMs,
-    bodyReadTimeoutMs = webhookBodyReadTimeoutMs,
-  } = options ?? {};
+  const { deliveryTimeoutMs = webhookDeliveryTimeoutMs } = options ?? {};
 
   return defineJobHandler<WebhookJobPayload, CoreJobSettlementMeta>({
     type: webhookJobType,
@@ -95,37 +89,9 @@ export const createWebhookJobHandler = (
       logEntry.append({ hookId: job.groupKey, hookRequest: { body: job.payload.body } });
 
       const abortController = new AbortController();
-      const deadlineAt = Date.now() + deliveryTimeoutMs;
       const deliveryTimer = setTimeout(() => {
         abortController.abort(new Error(`Webhook delivery timed out after ${deliveryTimeoutMs}ms`));
       }, deliveryTimeoutMs);
-
-      const parseBoundedResponse = async (response: KyResponse) => {
-        if (abortController.signal.aborted) {
-          return parseResponse(response, abortController.signal);
-        }
-
-        const remainingMs = deadlineAt - Date.now();
-        if (remainingMs <= 0) {
-          abortController.abort(
-            new Error(`Webhook delivery timed out after ${deliveryTimeoutMs}ms`)
-          );
-          return parseResponse(response, abortController.signal);
-        }
-
-        const bodyTimeoutMs = Math.min(remainingMs, bodyReadTimeoutMs);
-        const bodyTimer = setTimeout(() => {
-          abortController.abort(
-            new Error(`Webhook response body read timed out after ${bodyTimeoutMs}ms`)
-          );
-        }, bodyTimeoutMs);
-
-        try {
-          return await parseResponse(response, abortController.signal);
-        } finally {
-          clearTimeout(bodyTimer);
-        }
-      };
 
       try {
         const response = await sendWebhookRequest({
@@ -136,7 +102,7 @@ export const createWebhookJobHandler = (
         });
 
         logEntry.append({
-          response: await parseBoundedResponse(response),
+          response: await parseResponse(response),
         });
         consoleLog.info(`\tHook ${job.groupKey} succeeded`);
 
@@ -148,7 +114,7 @@ export const createWebhookJobHandler = (
         logEntry.append({
           result: LogResult.Error,
           response: conditional(
-            error instanceof HTTPError && (await trySafe(parseBoundedResponse(error.response)))
+            error instanceof HTTPError && (await trySafe(parseResponse(error.response)))
           ),
           error: String(normalizeError(error)),
         });
@@ -160,6 +126,8 @@ export const createWebhookJobHandler = (
         };
       } finally {
         clearTimeout(deliveryTimer);
+        // Close whatever the attempt left open, such as a request ky gave up on after its timeout.
+        abortController.abort();
       }
     },
   });
