@@ -1,15 +1,7 @@
-import {
-  MfaFactor,
-  VerificationType,
-  userMfaDataGuard,
-  userMfaDataKey,
-  type Mfa,
-  type User,
-} from '@logto/schemas';
+import { MfaFactor, VerificationType, type Mfa, type User } from '@logto/schemas';
 import { type Optional } from '@silverhand/essentials';
 
 import { getAllUserEnabledMfaVerifications } from '#src/libraries/mfa.js';
-import { isNoSkipMfaPolicy } from '#src/libraries/sign-in-experience/mfa-policy.js';
 
 import { type InteractionProfile } from '../../types.js';
 import { type BackupCodeVerification } from '../verifications/backup-code-verification.js';
@@ -22,6 +14,10 @@ import { type TotpVerification } from '../verifications/totp-verification.js';
 import { type WebAuthnVerification } from '../verifications/web-authn-verification.js';
 
 import type { AdaptiveMfaResult } from './adaptive-mfa-validator/types.js';
+import {
+  parseUserMfaConfig,
+  resolveMfaVerificationRequirement,
+} from './mfa-verification-decision.js';
 
 const mfaVerificationTypes = Object.freeze([
   VerificationType.TOTP,
@@ -93,44 +89,20 @@ export class MfaValidator {
     );
   }
 
-  /**
-   * Whether MFA verification is required for the current sign-in interaction.
-   *
-   * Decision order:
-   * 1. If adaptive MFA is enabled (result defined):
-   *    - triggered + user has factors → required
-   *    - otherwise → not required
-   * 2. If adaptive MFA is disabled (result undefined), fall back to SIE policy:
-   *    - disabled/skipped MFA + non-Mandatory policy + no user/org requirement → not required
-   *    - user has factors → required
-   *    - otherwise → not required
-   */
   get isMfaRequired(): boolean {
-    const hasUserFactors = this.userEnabledMfaVerifications.length > 0;
     const { adaptiveMfaResult, isMfaRequiredByUser } = this.verificationContext;
 
-    if (adaptiveMfaResult !== undefined) {
-      // Verification guard only applies when the user already has MFA factors
-      // enabled in the current sign-in experience.
-      return adaptiveMfaResult.requiresMfa && hasUserFactors;
-    }
-
-    const mfaData = userMfaDataGuard.safeParse(this.user.logtoConfig[userMfaDataKey]);
-    const skipMfaOnSignIn = mfaData.success ? mfaData.data.skipMfaOnSignIn : undefined;
-    const isMfaEnabled = mfaData.success ? mfaData.data.enabled : undefined;
-
-    // If `isMfaEnabled` is undefined, it means the user exists before the `enabled` flag is introduced,
-    // we should still enforce MFA for them if they have MFA factors. Only skip the check if mfa is explicitly
-    // disabled, or skipped on sign-in, and neither the policy nor a user/org requirement enforces it.
-    if (
-      (isMfaEnabled === false || skipMfaOnSignIn) &&
-      !isNoSkipMfaPolicy(this.mfaSettings.policy) &&
-      !isMfaRequiredByUser
-    ) {
-      return false;
-    }
-
-    return hasUserFactors;
+    return resolveMfaVerificationRequirement({
+      mfaSettings: this.mfaSettings,
+      adaptiveMfaResult,
+      userFactors: this.availableUserMfaVerificationTypes,
+      userMfaConfig: parseUserMfaConfig(this.user.logtoConfig),
+      isMfaRequiredByUser: Boolean(isMfaRequiredByUser),
+      hasVerifiedSsoIdentity: false,
+      hasVerifiedSignInPasskey: false,
+      hasVerifiedMfaRecord: false,
+      isTrustedDeviceVerified: false,
+    }).required;
   }
 
   isMfaVerified(verificationRecords: VerificationRecord[]) {

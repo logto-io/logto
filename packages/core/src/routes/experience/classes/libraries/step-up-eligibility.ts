@@ -29,6 +29,7 @@ import { maskEmail, maskPhone } from '@logto/shared';
 
 import { achieveAcr, type AuthenticationContribution } from './authentication-context.js';
 import { MfaValidator } from './mfa-validator.js';
+import { mfaFactorToVerificationType } from './mfa-verification-decision.js';
 
 /** Whether an email / SMS connector is configured; gates every code-based method. */
 type MessageConnectorAvailability = {
@@ -125,14 +126,6 @@ export type StepUpEligibility = {
   subjectProofConnectors: SubjectProofConnector[];
   maskedIdentifiers: MaskedIdentifiers;
 };
-
-export const mfaFactorToVerificationType = Object.freeze({
-  [MfaFactor.TOTP]: VerificationType.TOTP,
-  [MfaFactor.WebAuthn]: VerificationType.WebAuthn,
-  [MfaFactor.BackupCode]: VerificationType.BackupCode,
-  [MfaFactor.EmailVerificationCode]: VerificationType.MfaEmailVerificationCode,
-  [MfaFactor.PhoneVerificationCode]: VerificationType.MfaPhoneVerificationCode,
-}) satisfies Record<MfaFactor, VerificationType>;
 
 /**
  * The `1fa`-role methods of the eligibility table: password when the user has one, the primary
