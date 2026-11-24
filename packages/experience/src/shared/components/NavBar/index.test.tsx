@@ -12,7 +12,7 @@ describe('<NavBar />', () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
-  it('names the back button by its visible text', () => {
+  it('names the back button', () => {
     const onBack = jest.fn();
     const { getByRole } = render(<NavBar onBack={onBack} />);
 
