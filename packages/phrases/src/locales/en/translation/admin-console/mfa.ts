@@ -28,7 +28,7 @@ const mfa = {
   verification_code_enrollment_implicit: 'Every user with a verified email or phone number',
   verification_code_enrollment_explicit: 'Only users who set it up',
   verification_code_enrollment_explicit_confirmation:
-    'Email and SMS verification codes will count as 2-step verification only for users who set them up. Users who have not set them up can no longer use them for 2-step verification, and users without another factor will be treated as having no MFA. Are you sure you want to continue?',
+    'Email and SMS verification codes will count as 2-step verification only for users who set them up. Users who have not set them up can no longer use them for 2-step verification, and users without another factor will be treated as having no MFA. Users who turned on 2-step verification with only an email or phone number will see a "Setup incomplete" notice in the Account center until they add a verification method. Are you sure you want to continue?',
   verification_code_enrollment_implicit_confirmation:
     'Every user with a verified email address or phone number will use it for 2-step verification, including users who have not set it up. Are you sure you want to continue?',
   policy: 'Policy',

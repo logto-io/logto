@@ -19,8 +19,7 @@ const mfa = {
   send_to_email: '發送至 {{identifier}}',
   send_to_phone: '發送至 {{identifier}}',
   onboarding: '開啟兩步驗證',
-  onboarding_description:
-    '使用兩步驗證保護您的帳戶。選擇一種或多種方式：通行密鑰、身份驗證器（OTP）、短訊驗證碼或備份代碼。',
+  onboarding_description: '使用兩步驗證保護您的帳戶。選擇一種或多種方式，在登入時驗證您的身份。',
   enable_mfa: '啟用兩步驗證',
   add_mfa_factors: '添加兩步驗證',
   add_mfa_description: '已啟用兩步驗證。選擇第二種驗證方法進行安全登錄。',
