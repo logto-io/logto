@@ -35,6 +35,16 @@ describe('InputField Component', () => {
     expect(queryByText(errorCode)).not.toBeNull();
   });
 
+  test('associate the label with the input', () => {
+    const { getByLabelText } = render(<InputField name="foo" label="Email" />);
+    expect(getByLabelText('Email').tagName).toEqual('INPUT');
+  });
+
+  test('keep a provided input id', () => {
+    const { getByLabelText } = render(<InputField id="email" name="foo" label="Email" />);
+    expect(getByLabelText('Email').id).toEqual('email');
+  });
+
   test('render suffix', () => {
     const text = 'clearBtn';
     const { queryByText } = render(<InputField suffix={<button>{text}</button>} />);
