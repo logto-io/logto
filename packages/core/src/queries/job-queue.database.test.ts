@@ -737,6 +737,25 @@ describeWithDatabase('job queue queries on Postgres', () => {
       await expect(findLog('jq-log-absent')).resolves.toBeNull();
     });
 
+    it('settles jobs without the log when Postgres rejects its payload', async () => {
+      await seed([{ id: 'jq-log-invalid', tenantId: defaultTenantId, groupKey: 'jq-hook-i' }]);
+      const [job] = await queries().claimDue(claimInput({ workerId: 'worker-1' }));
+      assert(job, new Error('Expected claimed job'));
+
+      await expect(
+        queries().settle({
+          job,
+          workerId: 'worker-1',
+          resolution: { status: 'fail' },
+          // A lone surrogate, which `jsonb` rejects.
+          meta: logMeta('jq-hook-i', LogResult.Error, { response: { body: '\uD83D' } }),
+        })
+      ).resolves.toBe('settled');
+
+      await expect(findJob('jq-log-invalid')).resolves.toBeNull();
+      await expect(findLog('jq-log-invalid')).resolves.toBeNull();
+    });
+
     it('never overwrites another tenant log on a conflicting log id', async () => {
       await pool.query(sql`
         insert into logs (tenant_id, id, key, payload)
