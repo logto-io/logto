@@ -211,7 +211,7 @@ export default function logRoutes<T extends ManagementApiRouter>(
 
     const cursor = decodeLogCursor(query.cursor);
 
-    // Read one extra row so an exactly full page is distinguishable from the last page.
+    // Read one extra row to determine whether another page exists.
     // Cursor mode is audit-only and deliberately does not run the page-mode count query.
     const rows = await findLogsForCursor(limit + 1, {
       startTime,

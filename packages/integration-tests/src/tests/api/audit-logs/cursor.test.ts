@@ -101,14 +101,14 @@ describe('GET /logs cursor mode', () => {
           ${microsecondIdA},
           ${logKey},
           ${sql.jsonb(laterPayload)},
-          to_timestamp(${microsecondCreatedAt}::double precision / 1000)
+          to_timestamp(${microsecondCreatedAt}::double precision / 1000) + interval '1 microsecond'
         ),
         (
           ${defaultTenantId},
           ${microsecondIdB},
           ${logKey},
           ${sql.jsonb(laterPayload)},
-          to_timestamp(${microsecondCreatedAt}::double precision / 1000) + interval '1 microsecond'
+          to_timestamp(${microsecondCreatedAt}::double precision / 1000) + interval '2 microseconds'
         )
     `);
   });

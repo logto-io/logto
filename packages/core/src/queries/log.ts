@@ -145,7 +145,7 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
    * `createdAt` is selected twice: once as the unix-millisecond value the Management API
    * exposes, and once as exact UTC text for the next page's cursor. The default `timestamptz`
    * parser is `Date.parse`, which truncates microseconds; feeding that millisecond value back
-   * into the cursor would skip rows that share a millisecond.
+   * into the cursor would move the cursor backward and re-read rows that share a millisecond.
    *
    * Ascending order matches the cursor comparator, so the composite
    * `(tenant_id, created_at, id)` index can satisfy both the range filter and the ordering.
