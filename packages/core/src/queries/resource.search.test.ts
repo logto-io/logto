@@ -65,6 +65,7 @@ describe('resource query search and scope filters', () => {
       select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
       where ${fields.indicator} !~ ${managementApiIndicatorPattern}
+      order by ${fields.id}
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
@@ -129,6 +130,7 @@ describe('resource query search and scope filters', () => {
           and ${rolesScopes.fields.scopeId} = ${scopes.fields.id}
         )
       )))
+      order by ${fields.id}
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
@@ -157,6 +159,7 @@ describe('resource query search and scope filters', () => {
       select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
       where ((${fields.indicator} ~~* $1))
+      order by ${fields.id}
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {

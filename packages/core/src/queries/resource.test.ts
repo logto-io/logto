@@ -62,6 +62,7 @@ describe('resource query', () => {
     const expectSql = sql`
       select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
+      order by ${fields.id}
       limit $1
       offset $2
     `;

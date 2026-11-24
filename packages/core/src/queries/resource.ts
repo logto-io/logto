@@ -129,6 +129,7 @@ export const createResourceQueries = (pool: CommonQueryMethods, wellKnownCache: 
       select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
       ${buildResourceConditions(options)}
+      order by ${fields.id}
       ${conditionalSql(limit, (value) => sql`limit ${value}`)}
       ${conditionalSql(offset, (value) => sql`offset ${value}`)}
     `);
