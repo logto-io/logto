@@ -355,29 +355,32 @@ describe('refresh token rotation and reuse detection', () => {
   const password = generatePassword();
   /* eslint-disable @silverhand/fp/no-let */
   let application: Application;
+  let pool: DatabasePool;
   let userId = '';
   /* eslint-enable @silverhand/fp/no-let */
 
   beforeAll(async () => {
-    const [createdApplication, user] = await Promise.all([
+    const [createdApplication, createdPool, user] = await Promise.all([
       createApplication('OIDC refresh token rotation', ApplicationType.SPA, {
         oidcClientMetadata: {
           redirectUris: [demoAppRedirectUri],
           postLogoutRedirectUris: [demoAppRedirectUri],
         },
       }),
+      createPool(assertEnv('DB_URL'), { interceptors: createInterceptorsPreset() }),
       createUserByAdmin({ username, password }),
       enableAllPasswordSignInMethods(),
     ]);
 
     /* eslint-disable @silverhand/fp/no-mutation */
     application = createdApplication;
+    pool = createdPool;
     userId = user.id;
     /* eslint-enable @silverhand/fp/no-mutation */
   });
 
   afterAll(async () => {
-    await Promise.all([deleteApplication(application.id), deleteUser(userId)]);
+    await Promise.all([deleteApplication(application.id), deleteUser(userId), pool.end()]);
   });
 
   it('rotates public-client refresh tokens and revokes the whole grant on reuse', async () => {
@@ -391,6 +394,10 @@ describe('refresh token rotation and reuse detection', () => {
 
     const initialRefreshToken = await client.getRefreshToken();
     assert(initialRefreshToken, new Error('Missing refresh token after code exchange'));
+    const grantId = await pool.oneFirst<string>(sql`
+      select payload->>'grantId' from oidc_model_instances
+      where model_name = 'RefreshToken' and id = ${initialRefreshToken}
+    `);
 
     const exchangeRefreshToken = async (refreshToken: string) =>
       oidcApi
@@ -437,6 +444,13 @@ describe('refresh token rotation and reuse detection', () => {
     await expectOidcError(exchangeRefreshToken(leewayReplay.refresh_token), {
       error: 'invalid_grant',
     });
+    // Rejecting the tokens alone does not prove the revocation deleted the grant's rows.
+    await expect(
+      pool.oneFirst(sql`
+        select count(*) from oidc_model_instances
+        where payload_grant_id = ${grantId}
+      `)
+    ).resolves.toBe(0);
   });
 });
 

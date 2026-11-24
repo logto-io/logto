@@ -324,13 +324,21 @@ describe('account mfa verification routes', () => {
         .send({ type: MfaFactor.EmailVerificationCode });
 
       expect(response.status).toBe(422);
-      expect(response.body).toMatchObject({ code: 'session.mfa.bind_mfa_existed' });
+      expect(response.body).toMatchObject({ code: 'user.email_mfa_already_in_use' });
       expect(updateUserById).not.toHaveBeenCalled();
     });
 
     it.each([
-      [MfaFactor.EmailVerificationCode, { primaryEmail: null }, 'user.email_not_exist'],
-      [MfaFactor.PhoneVerificationCode, { primaryPhone: null }, 'user.phone_not_exist'],
+      [
+        MfaFactor.EmailVerificationCode,
+        { primaryEmail: null },
+        'user.email_mfa_requires_primary_email',
+      ],
+      [
+        MfaFactor.PhoneVerificationCode,
+        { primaryPhone: null },
+        'user.phone_mfa_requires_primary_phone',
+      ],
     ] as const)(
       'rejects enrolling %s without the primary identifier',
       async (type, profile, code) => {

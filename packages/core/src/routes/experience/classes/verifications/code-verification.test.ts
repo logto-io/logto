@@ -81,12 +81,9 @@ describe('CodeVerification created for the subject', () => {
   ] as const)(
     'carries the subject, identifies it by id, and exposes only the masked $identifier.type',
     async ({ identifier, type, masked }) => {
-      const verification = createSubjectCodeVerificationRecord(
-        libraries,
-        queries,
-        identifier,
-        mockUser.id
-      );
+      const verification = createSubjectCodeVerificationRecord(libraries, queries, identifier, {
+        userId: mockUser.id,
+      });
 
       expect(verification.type).toBe(type);
       expect(verification.userId).toBe(mockUser.id);
@@ -102,12 +99,9 @@ describe('CodeVerification created for the subject', () => {
         new RequestError({ code: 'session.verification_failed', status: 400 })
       );
 
-      const restored = createSubjectCodeVerificationRecord(
-        libraries,
-        queries,
-        identifier,
-        mockUser.id
-      );
+      const restored = createSubjectCodeVerificationRecord(libraries, queries, identifier, {
+        userId: mockUser.id,
+      });
       const data = { ...restored.toJson(), verified: true };
       const verified = new EmailCodeVerification(libraries, queries, {
         ...data,

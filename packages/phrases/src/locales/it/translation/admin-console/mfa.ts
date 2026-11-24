@@ -31,7 +31,7 @@ const mfa = {
     'Tutti gli utenti con un indirizzo email o un numero di telefono verificato',
   verification_code_enrollment_explicit: "Solo gli utenti che l'hanno configurata",
   verification_code_enrollment_explicit_confirmation:
-    'I codici di verifica via email e SMS conteranno come verifica in 2 passaggi solo per gli utenti che li hanno configurati. Gli utenti che non li hanno configurati li perdono come fattore di verifica in 2 passaggi, e gli utenti senza altri fattori saranno considerati senza MFA. Sei sicuro di voler continuare?',
+    "I codici di verifica via email e SMS conteranno come verifica in 2 passaggi solo per gli utenti che li hanno configurati. Gli utenti che non li hanno configurati li perdono come fattore di verifica in 2 passaggi, e gli utenti senza altri fattori saranno considerati senza MFA. Gli utenti che hanno attivato la verifica in 2 passaggi solo con un indirizzo email o un numero di telefono vedranno l'avviso «Configurazione incompleta» nel Centro account finché non aggiungono un metodo di verifica. Sei sicuro di voler continuare?",
   verification_code_enrollment_implicit_confirmation:
     "Tutti gli utenti con un indirizzo email o un numero di telefono verificato lo useranno per la verifica in 2 passaggi, inclusi gli utenti che non l'hanno configurata. Sei sicuro di voler continuare?",
   policy: 'Politica',

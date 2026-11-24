@@ -43,6 +43,7 @@ const session = {
     invalid_backup_code: '無効なバックアップコード。',
     mfa_policy_not_user_controlled: 'MFA ポリシーはユーザーによって管理されていません。',
     mfa_factor_not_enabled: 'MFA は有効になっていません。',
+    mfa_factor_not_enrolled: 'ユーザーはこの MFA 要素を設定していません。',
     suggest_additional_mfa:
       'より強力な保護のため、別のMFA方法の追加を検討してください。この手順はスキップして続行できます。',
   },

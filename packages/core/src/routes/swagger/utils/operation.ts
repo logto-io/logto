@@ -23,6 +23,7 @@ const anonymousPaths = new Set<string>([
 const advancedSearchPaths = new Set<string>([
   '/applications',
   '/applications/:applicationId/roles',
+  '/resources',
   '/resources/:resourceId/scopes',
   '/roles/:id/applications',
   '/roles/:id/scopes',

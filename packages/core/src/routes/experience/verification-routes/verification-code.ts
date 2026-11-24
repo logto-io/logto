@@ -11,6 +11,7 @@ import {
 import type Router from 'koa-router';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -74,10 +75,19 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
     identifier: verificationCodeIdentifierGuard,
     interactionEvent: z.nativeEnum(InteractionEvent),
   });
-  const subjectBodyGuard = z.object({
+  const stableSubjectBodyGuard = z.object({
     identifier: subjectVerificationCodeIdentifierGuard,
     interactionEvent: z.literal(InteractionEvent.SignIn),
   });
+  // Email / SMS MFA explicit enrollment: `BindMfa` sends the code to enroll the primary email or
+  // phone as an MFA factor
+  const bindMfaSubjectBodyGuard = stableSubjectBodyGuard.extend({
+    templateType: z.literal(TemplateType.BindMfa).optional(),
+  });
+  const subjectBodyGuard: z.ZodType<z.infer<typeof bindMfaSubjectBodyGuard>> = EnvSet.values
+    .isDevFeaturesEnabled
+    ? bindMfaSubjectBodyGuard
+    : stableSubjectBodyGuard;
   const bodyGuard = z.union([stableBodyGuard, subjectBodyGuard]);
   const verifyIdentifierGuard = verificationCodeIdentifierPayloadGuard;
 
@@ -100,6 +110,8 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
 
       // The subject is already authenticated, so no captcha applies
       if (identifierPayload.value === undefined) {
+        const templateType =
+          'templateType' in ctx.guard.body ? ctx.guard.body.templateType : undefined;
         const { userId, identifier } = await getSubjectIdentifier({
           identifierType: identifierPayload.type,
           experienceInteraction,
@@ -110,7 +122,10 @@ export default function verificationCodeRoutes<T extends ExperienceInteractionRo
           identifier,
           interactionEvent,
           createVerificationRecord: () =>
-            createSubjectCodeVerificationRecord(libraries, queries, identifier, userId),
+            createSubjectCodeVerificationRecord(libraries, queries, identifier, {
+              userId,
+              templateType,
+            }),
           libraries,
           queries,
           ctx,

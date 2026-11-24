@@ -2,8 +2,6 @@ import { type HookEvent, InteractionHookEvent } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 import ky from 'ky';
 
-import { ssrfProtectedFetch } from '#src/utils/outbound-request.js';
-
 const { jest } = import.meta;
 
 const { mockEsm } = createMockUtils(jest);
@@ -14,8 +12,16 @@ const post = jest
   .mockImplementation(jest.fn(async () => ({ statusCode: 200, body: '{"message":"ok"}' })));
 
 const mockSignature = 'mockSignature';
+const sign = jest.fn(() => mockSignature);
 mockEsm('#src/utils/sign.js', () => ({
-  sign: () => mockSignature,
+  sign,
+}));
+
+const ssrfProtectedFetch = jest.fn<ReturnType<typeof fetch>, Parameters<typeof fetch>>(
+  async () => new Response()
+);
+mockEsm('#src/utils/outbound-request.js', () => ({
+  ssrfProtectedFetch,
 }));
 
 const {
@@ -103,6 +109,77 @@ describe('sendWebhookRequest', () => {
         },
       })
     );
+  });
+
+  it('sends and signs a pre-serialized body string with default content-type', async () => {
+    const rawBody = '{"b":1,"a":2}';
+
+    await sendWebhookRequest({
+      hookConfig: {
+        url: 'https://logto.gg',
+        headers: { foo: 'bar' },
+      },
+      body: rawBody,
+      signingKey: 'mockSigningKey',
+    });
+
+    expect(sign).toHaveBeenLastCalledWith('mockSigningKey', rawBody);
+    expect(post.mock.lastCall?.[1]).toMatchObject({
+      body: rawBody,
+      headers: {
+        'user-agent': 'Logto (https://logto.io/)',
+        'content-type': 'application/json',
+        foo: 'bar',
+        'logto-signature-sha-256': mockSignature,
+      },
+    });
+    expect(post.mock.lastCall?.[1]).not.toHaveProperty('json');
+  });
+
+  it('preserves a custom Content-Type header when sending a raw body string', async () => {
+    const rawBody = '{"b":1,"a":2}';
+
+    await sendWebhookRequest({
+      hookConfig: {
+        url: 'https://logto.gg',
+        headers: { 'Content-Type': 'application/cloudevents+json' },
+      },
+      body: rawBody,
+      signingKey: 'mockSigningKey',
+    });
+
+    const requestOptions = post.mock.lastCall?.[1] as { headers?: Record<string, string> };
+    expect(requestOptions.headers).toEqual({
+      'user-agent': 'Logto (https://logto.io/)',
+      'Content-Type': 'application/cloudevents+json',
+      'logto-signature-sha-256': mockSignature,
+    });
+    expect(requestOptions.headers).not.toHaveProperty('content-type');
+  });
+
+  it('hands the signal to both ky and fetch when supplied and omits it otherwise', async () => {
+    await sendWebhookRequest({
+      hookConfig: { url: 'https://logto.gg' },
+      body: '{"ok":true}',
+      signingKey: 'mockSigningKey',
+    });
+    expect(post.mock.lastCall?.[1]).not.toHaveProperty('signal');
+    expect(post.mock.lastCall?.[1]?.fetch).toBe(ssrfProtectedFetch);
+
+    const { signal } = new AbortController();
+    await sendWebhookRequest({
+      hookConfig: { url: 'https://logto.gg' },
+      body: '{"ok":true}',
+      signingKey: 'mockSigningKey',
+      signal,
+    });
+    expect(post.mock.lastCall?.[1]).toMatchObject({ signal });
+
+    await post.mock.lastCall?.[1]?.fetch?.('https://logto.gg', { method: 'POST' });
+    expect(ssrfProtectedFetch).toHaveBeenLastCalledWith('https://logto.gg', {
+      method: 'POST',
+      signal,
+    });
   });
 });
 

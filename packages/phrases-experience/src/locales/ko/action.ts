@@ -38,6 +38,8 @@ const action = {
   use_another_account: '다른 계정 사용',
   back_to_current_account: '현재 계정으로 돌아가기',
   done: '완료',
+  close: '닫기',
+  clear: '지우기',
 };
 
 export default Object.freeze(action);

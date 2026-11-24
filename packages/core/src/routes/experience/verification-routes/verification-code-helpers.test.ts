@@ -479,6 +479,20 @@ describe('getMfaIdentifier', () => {
         queries,
       })
     ).rejects.toMatchError(
+      new RequestError({ code: 'session.mfa.mfa_factor_not_enrolled', status: 400 })
+    );
+  });
+
+  it('keeps refusing a code without the primary identifier as a factor that is not enabled', async () => {
+    findUserById.mockResolvedValueOnce({ primaryEmail: null, mfaVerifications: [] });
+
+    await expect(
+      getMfaIdentifier({
+        identifierType: SignInIdentifier.Email,
+        experienceInteraction: buildInteraction([MfaFactor.EmailVerificationCode]),
+        queries,
+      })
+    ).rejects.toMatchError(
       new RequestError({ code: 'session.mfa.mfa_factor_not_enabled', status: 400 })
     );
   });

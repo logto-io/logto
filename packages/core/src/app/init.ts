@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import type http from 'node:http';
 import http2 from 'node:http2';
 import path from 'node:path';
 
@@ -27,7 +28,25 @@ const logListening = (type: 'core' | 'admin' = 'core') => {
 
 const serverTimeout = 120_000;
 
-export default async function initApp(app: Koa): Promise<void> {
+const http2Sessions = new WeakMap<
+  http.Server | http2.Http2SecureServer,
+  Set<http2.ServerHttp2Session>
+>();
+
+/**
+ * Close the server's HTTP/2 sessions once their open streams finish, refusing new streams.
+ * `Http2SecureServer.close()` leaves established sessions open before Node.js 24.
+ */
+export const closeHttp2Sessions = (server: http.Server | http2.Http2SecureServer) => {
+  for (const session of http2Sessions.get(server) ?? []) {
+    session.close();
+  }
+};
+
+/** Start the core and admin servers, and return them so shutdown can close them. */
+export default async function initApp(
+  app: Koa
+): Promise<Array<http.Server | http2.Http2SecureServer>> {
   app.use(async (ctx, next) => {
     const requestId = nanoid(16);
     const consoleLog = new ConsoleLog(chalk.blue(requestId));
@@ -93,11 +112,21 @@ export default async function initApp(app: Koa): Promise<void> {
   const { isHttpsEnabled, httpsCert, httpsKey, urlSet, adminUrlSet } = EnvSet.values;
 
   if (isHttpsEnabled && httpsCert && httpsKey) {
-    const createHttp2Server = async () =>
-      http2.createSecureServer(
+    const createHttp2Server = async () => {
+      const server = http2.createSecureServer(
         { cert: await fs.readFile(httpsCert), key: await fs.readFile(httpsKey), allowHTTP1: true },
         app.callback()
       );
+      const sessions = new Set<http2.ServerHttp2Session>();
+
+      server.on('session', (session) => {
+        sessions.add(session);
+        session.once('close', () => sessions.delete(session));
+      });
+      http2Sessions.set(server, sessions);
+
+      return server;
+    };
 
     const coreServer = await createHttp2Server();
     coreServer.listen(urlSet.port, () => {
@@ -112,9 +141,11 @@ export default async function initApp(app: Koa): Promise<void> {
         logListening('admin');
       });
       adminServer.setTimeout(serverTimeout);
+
+      return [coreServer, adminServer];
     }
 
-    return;
+    return [coreServer];
   }
 
   // Chrome doesn't allow insecure HTTP/2 servers, stick with HTTP for localhost.
@@ -129,5 +160,9 @@ export default async function initApp(app: Koa): Promise<void> {
       logListening('admin');
     });
     adminServer.setTimeout(serverTimeout);
+
+    return [coreServer, adminServer];
   }
+
+  return [coreServer];
 }

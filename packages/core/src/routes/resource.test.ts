@@ -2,6 +2,8 @@ import {
   type Resource,
   type CreateResource,
   getManagementApiResourceIndicator,
+  SearchJointMode,
+  SearchMatchMode,
 } from '@logto/schemas';
 import { pickDefault } from '@logto/shared/esm';
 import { type Nullable } from '@silverhand/essentials';
@@ -39,7 +41,7 @@ const scopes = {
   findScopesByResourceId: async () => [mockScope],
   searchScopesByResourceId: async () => [mockScope],
   countScopesByResourceId: async () => ({ count: 1 }),
-  findScopesByResourceIds: async () => [],
+  findScopesByResourceIds: jest.fn(async () => []),
   insertScope: jest.fn(async () => mockScope),
   updateScopeById: jest.fn(async () => mockScope),
   deleteScopeById: jest.fn(),
@@ -72,8 +74,39 @@ describe('resource routes', () => {
   it('GET /resources?page=1&excludeManagementApis=true', async () => {
     const response = await resourceRequest.get('/resources?page=1&excludeManagementApis=true');
     expect(response.status).toEqual(200);
-    expect(resources.findTotalNumberOfResources).toHaveBeenLastCalledWith(true);
-    expect(resources.findAllResources).toHaveBeenLastCalledWith(true, 20, 0);
+    const expectedOptions = {
+      excludeManagementApis: true,
+      hasScopes: false,
+      excludeRoleId: undefined,
+      search: { matches: [], joint: SearchJointMode.Or, isCaseSensitive: false },
+    };
+    expect(resources.findTotalNumberOfResources).toHaveBeenLastCalledWith(expectedOptions);
+    expect(resources.findAllResources).toHaveBeenLastCalledWith(expectedOptions, 20, 0);
+  });
+
+  it('GET /resources with search, hasScopes, excludeRoleId, and includeScopes', async () => {
+    const response = await resourceRequest.get(
+      '/resources?page=1&hasScopes=true&excludeRoleId=role-1&includeScopes=true&search=%25foo%25'
+    );
+    expect(response.status).toEqual(200);
+    const expectedOptions = {
+      excludeManagementApis: false,
+      hasScopes: true,
+      excludeRoleId: 'role-1',
+      search: {
+        matches: [{ mode: SearchMatchMode.Like, field: undefined, values: ['%foo%'] }],
+        joint: SearchJointMode.Or,
+        isCaseSensitive: false,
+      },
+    };
+    expect(resources.findTotalNumberOfResources).toHaveBeenLastCalledWith(expectedOptions);
+    expect(resources.findAllResources).toHaveBeenLastCalledWith(expectedOptions, 20, 0);
+    expect(scopes.findScopesByResourceIds).toHaveBeenLastCalledWith([mockResource.id], 'role-1');
+  });
+
+  it('GET /resources returns 400 for invalid search parameters', async () => {
+    const response = await resourceRequest.get('/resources?mode=invalid');
+    expect(response.status).toEqual(400);
   });
 
   it('GET /resources?includeScopes=true', async () => {

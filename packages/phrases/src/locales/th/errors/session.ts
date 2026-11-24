@@ -37,6 +37,7 @@ const session = {
     invalid_backup_code: 'โค้ดสำรองไม่ถูกต้อง',
     mfa_policy_not_user_controlled: 'นโยบาย MFA ไม่สามารถควบคุมโดยผู้ใช้ได้',
     mfa_factor_not_enabled: 'MFA นี้ยังไม่ได้เปิดใช้งาน',
+    mfa_factor_not_enrolled: 'ผู้ใช้ยังไม่ได้ตั้งค่า MFA นี้',
     suggest_additional_mfa:
       'เพื่อการป้องกันที่แข็งแกร่งยิ่งขึ้น พิจารณาเพิ่มวิธี MFA อื่น คุณสามารถข้ามขั้นตอนนี้และดำเนินการต่อได้',
   },

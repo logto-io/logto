@@ -44,6 +44,7 @@ const session = {
     invalid_backup_code: 'Nieprawidłowy kod zapasowy.',
     mfa_policy_not_user_controlled: 'Polityka MFA nie jest kontrolowana przez użytkownika.',
     mfa_factor_not_enabled: 'Czynnik MFA nie jest włączony.',
+    mfa_factor_not_enrolled: 'Użytkownik nie skonfigurował tego czynnika MFA.',
     suggest_additional_mfa:
       'Dla lepszej ochrony rozważ dodanie kolejnej metody MFA. Możesz pominąć ten krok i kontynuować.',
   },

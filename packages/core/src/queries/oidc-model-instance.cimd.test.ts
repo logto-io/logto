@@ -44,7 +44,7 @@ describe('findUserActiveCimdGrants', () => {
         on "cimd_grant_client_snapshots"."tenant_id"="oidc_model_instances"."tenant_id"
         and "cimd_grant_client_snapshots"."grant_id"=${fields.id}
       where ${fields.modelName}='Grant'
-        and ${fields.payload}->>'accountId'=${userId}
+        and ${fields.payloadAccountId}=${userId}
         and ${fields.expiresAt} > to_timestamp($2)
     `;
 

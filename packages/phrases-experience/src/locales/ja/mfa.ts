@@ -20,7 +20,7 @@ const mfa = {
   send_to_phone: '{{identifier}} に送信',
   onboarding: '2段階認証を有効にする',
   onboarding_description:
-    '2段階認証でアカウントを保護します。パスキー、認証アプリ（OTP）、SMS確認コード、バックアップコードの中から1つ以上を選択してください。',
+    '2段階認証でアカウントを保護します。サインイン時に本人確認に使う方法を1つ以上選択してください。',
   enable_mfa: '2段階認証を有効にする',
   add_mfa_factors: '2段階認証を追加',
   add_mfa_description:

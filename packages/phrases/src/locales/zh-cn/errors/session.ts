@@ -35,6 +35,7 @@ const session = {
     invalid_backup_code: '无效的备用代码。',
     mfa_policy_not_user_controlled: 'MFA 策略不受用户控制。',
     mfa_factor_not_enabled: 'MFA 因素未启用。',
+    mfa_factor_not_enrolled: '用户未设置此 MFA 因素。',
     suggest_additional_mfa: '为更强的安全性，建议添加另一种多因素认证方式。你可以跳过此步骤继续。',
   },
   trusted_device_suggest_opt_in: '请选择是否信任此设备。',

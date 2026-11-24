@@ -54,6 +54,7 @@ export type SingleSendMail = {
   FromAlias?: string;
   HtmlBody?: string;
   ReplyToAddress: 'true' | 'false';
+  ReplyAddress?: string;
   Subject: string;
   TagName?: string;
   TextBody?: string;

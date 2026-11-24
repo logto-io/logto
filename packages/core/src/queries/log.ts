@@ -6,7 +6,7 @@ import {
   type LogResponse,
   type WebhookLogPrefix,
 } from '@logto/schemas';
-import { conditional, conditionalArray } from '@silverhand/essentials';
+import { conditional } from '@silverhand/essentials';
 import { sql } from '@silverhand/slonik';
 import type { CommonQueryMethods } from '@silverhand/slonik';
 import { subDays } from 'date-fns';
@@ -19,9 +19,6 @@ import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 const { table, fields } = convertToIdentifiers(Logs);
 
 type AllowedKeyPrefix = AuditLogPrefix | WebhookLogPrefix;
-
-/** A log row plus the exact timestamp needed to resume a cursor read after it. */
-export type LogCursorRow = LogResponse & { createdAtCursor: string };
 
 type LogCondition = {
   logKey?: string;
@@ -39,6 +36,9 @@ type LogCondition = {
   /** Resume a cursor read after this row. */
   after?: LogCursor;
 };
+
+/** A log row plus the exact timestamp needed to resume a cursor read after it. */
+export type LogCursorRow = LogResponse & { createdAtCursor: string };
 
 /**
  * Bounds the rows counted to avoid a full `count(*)` traversal on tenants with
@@ -67,12 +67,12 @@ const buildLogConditionSql = (logCondition: LogCondition) =>
           keyPrefixFilter,
           (keyPrefixFilter) => sql`(${sql.join(keyPrefixFilter, sql` or `)})`
         ),
-        ...conditionalArray(
-          payload &&
-            Object.entries(payload).map(([key, value]) =>
-              value ? sql`${fields.payload}->>${key}=${value}` : sql``
-            )
+        conditionalSql(payload?.userId, (userId) => sql`${fields.payloadUserId}=${userId}`),
+        conditionalSql(
+          payload?.applicationId,
+          (applicationId) => sql`${fields.payloadApplicationId}=${applicationId}`
         ),
+        conditionalSql(payload?.hookId, (hookId) => sql`${fields.payloadHookId}=${hookId}`),
         conditionalSql(logKey, (logKey) => sql`${fields.key}=${logKey}`),
         // Use `!== undefined` (not `conditionalSql`) so a legitimate `start_time=0`
         // or `end_time=0` window still applies — `conditionalSql` treats `0` as
@@ -250,7 +250,7 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
       count(case when ${fields.payload}->>'result' = 'Success' then 1 end) as success_count
       from ${table}
       where ${fields.createdAt} > to_timestamp(${startTimeExclusive}::double precision / 1000)
-      and ${fields.payload}->>'hookId' = ${hookId}
+      and ${fields.payloadHookId} = ${hookId}
     `);
   };
 

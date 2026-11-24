@@ -77,6 +77,37 @@ describe('<SetPassword />', () => {
     });
   });
 
+  test('clears each password field from its named clear button', async () => {
+    const { container, getAllByRole } = render(<SetPassword onSubmit={submit} />);
+    const passwordInput = container.querySelector<HTMLInputElement>('input[name="newPassword"]');
+    const confirmPasswordInput = container.querySelector<HTMLInputElement>(
+      'input[name="confirmPassword"]'
+    );
+    const [clearPassword, clearConfirmPassword] = getAllByRole('button', { name: 'action.clear' });
+
+    act(() => {
+      fireEvent.change(passwordInput!, { target: { value: '1234asdf' } });
+      fireEvent.change(confirmPasswordInput!, { target: { value: '1234asdf' } });
+    });
+
+    act(() => {
+      fireEvent.click(clearPassword!);
+    });
+
+    await waitFor(() => {
+      expect(passwordInput?.value).toBe('');
+    });
+    expect(confirmPasswordInput?.value).toBe('1234asdf');
+
+    act(() => {
+      fireEvent.click(clearConfirmPassword!);
+    });
+
+    await waitFor(() => {
+      expect(confirmPasswordInput?.value).toBe('');
+    });
+  });
+
   test('should submit properly', async () => {
     const { queryByText, getByText, container } = render(<SetPassword onSubmit={submit} />);
     const submitButton = getByText('action.save_password');
