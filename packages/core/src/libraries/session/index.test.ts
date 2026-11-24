@@ -188,6 +188,27 @@ describe('revokeSessionAssociatedGrants', () => {
     expect(destroyGrant).toHaveBeenCalledTimes(1);
   });
 
+  it('should revoke built-in client grants for the first-party target', async () => {
+    await sessionLibrary.revokeSessionAssociatedGrants({
+      provider,
+      authorizations: {
+        'account-center': { grantId: 'grant-1' },
+        'demo-app': { grantId: 'grant-2' },
+        'device-demo-app': { grantId: 'grant-3' },
+        'unknown-app': { grantId: 'grant-4' },
+      },
+      target: SessionGrantRevokeTarget.FirstParty,
+    });
+
+    expect(revokeAccessTokenByGrantId).toHaveBeenCalledTimes(3);
+    expect(revokeAccessTokenByGrantId).toHaveBeenCalledWith('grant-1');
+    expect(revokeAccessTokenByGrantId).toHaveBeenCalledWith('grant-2');
+    expect(revokeAccessTokenByGrantId).toHaveBeenCalledWith('grant-3');
+    expect(revokeRefreshTokenByGrantId).toHaveBeenCalledTimes(3);
+    expect(revokeAuthorizationCodeByGrantId).toHaveBeenCalledTimes(3);
+    expect(destroyGrant).toHaveBeenCalledTimes(3);
+  });
+
   it('should not revoke grants when no authorizations are found', async () => {
     await sessionLibrary.revokeSessionAssociatedGrants({
       provider,

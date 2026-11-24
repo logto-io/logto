@@ -1,5 +1,6 @@
 import {
   SessionGrantRevokeTarget,
+  isBuiltInApplicationId,
   jwtCustomizerUserInteractionContextGuard,
   oidcSessionInstancePayloadGuard,
   userApplicationGrantPayloadGuard,
@@ -181,7 +182,12 @@ export const createSessionLibrary = (queries: Queries) => {
             );
 
             return pickGrantIds(
-              authorizationEntries.filter(([clientId]) => firstPartyApplicationIds.has(clientId))
+              authorizationEntries.filter(
+                // Built-in clients are first-party but are served from code, so they have no
+                // `applications` row to look up.
+                ([clientId]) =>
+                  isBuiltInApplicationId(clientId) || firstPartyApplicationIds.has(clientId)
+              )
             );
           })();
 
