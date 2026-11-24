@@ -1,0 +1,5 @@
+database:
+  existingSecret: logto-db
+  seedOnInstall: true
+endpoint: http://logto:3001
+adminEndpoint: http://logto:3002

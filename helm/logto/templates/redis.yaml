@@ -1,0 +1,86 @@
+{{- if eq .Values.redis.mode "bundled" }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "logto.redisName" . }}
+  labels:
+    {{- include "logto.redisLabels" . | nindent 4 }}
+spec:
+  ports:
+    - name: redis
+      port: 6379
+      targetPort: redis
+  selector:
+    {{- include "logto.redisSelectorLabels" . | nindent 4 }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "logto.redisName" . }}
+  labels:
+    {{- include "logto.redisLabels" . | nindent 4 }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "logto.redisSelectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "logto.redisLabels" . | nindent 8 }}
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- include "logto.podOptions" . | nindent 6 }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: redis
+          image: {{ .Values.redis.image | quote }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          command: ["sh", "-ec"]
+          args:
+            - |
+              case "$REDIS_PASSWORD" in
+                ''|*[!A-Za-z0-9_-]*) echo 'Redis password must use URL-safe base64 characters' >&2; exit 1 ;;
+              esac
+              umask 077
+              printf 'requirepass %s\nsave ""\nappendonly no\ndir /tmp\n' "$REDIS_PASSWORD" >/tmp/redis.conf
+              exec redis-server /tmp/redis.conf
+          env:
+            {{- include "logto.redisPasswordEnv" . | nindent 12 }}
+          ports:
+            - name: redis
+              containerPort: 6379
+          readinessProbe:
+            exec:
+              command: ["sh", "-ec", 'test "$(REDISCLI_AUTH="$REDIS_PASSWORD" redis-cli ping)" = PONG']
+          livenessProbe:
+            tcpSocket:
+              port: redis
+          resources:
+            {{- toYaml .Values.redis.resources | nindent 12 }}
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+{{- end }}

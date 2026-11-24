@@ -1,0 +1,29 @@
+suite: Database lifecycle hooks
+templates:
+  - database-job.yaml
+set:
+  database.existingSecret: logto-db
+tests:
+  - it: seeds a fresh database before install when requested
+    set:
+      database.seedOnInstall: true
+    asserts:
+      - equal:
+          path: metadata.annotations["helm.sh/hook"]
+          value: pre-install
+      - equal:
+          path: spec.template.spec.containers[0].args
+          value: [db, seed, --swe]
+  - it: migrates before an upgrade rather than running seed again
+    release:
+      upgrade: true
+    set:
+      database.seedOnInstall: true
+      database.migrateOnUpgrade: true
+    asserts:
+      - equal:
+          path: metadata.annotations["helm.sh/hook"]
+          value: pre-upgrade
+      - equal:
+          path: spec.template.spec.containers[0].args
+          value: [db, alteration, deploy, latest]

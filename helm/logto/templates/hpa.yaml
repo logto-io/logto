@@ -1,0 +1,34 @@
+{{- if .Values.autoscaling.enabled }}
+{{- $min := int .Values.autoscaling.minReplicas }}
+{{- $max := int .Values.autoscaling.maxReplicas }}
+{{- $target := int .Values.autoscaling.targetCPUUtilizationPercentage }}
+{{- if or (lt $min 1) (lt $max $min) }}
+{{- fail "autoscaling requires 1 <= minReplicas <= maxReplicas" }}
+{{- end }}
+{{- if lt $target 1 }}
+{{- fail "autoscaling.targetCPUUtilizationPercentage must be positive" }}
+{{- end }}
+{{- if not (dig "requests" "cpu" "" .Values.resources) }}
+{{- fail "resources.requests.cpu is required when autoscaling is enabled" }}
+{{- end }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "logto.fullname" . }}
+  labels:
+    {{- include "logto.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "logto.fullname" . }}
+  minReplicas: {{ $min }}
+  maxReplicas: {{ $max }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ $target }}
+{{- end }}
