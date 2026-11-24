@@ -1,5 +1,4 @@
 import {
-  LogResult,
   userInfoSelectFields,
   type BetterOmit,
   type ExceptionHookEventPayload,
@@ -7,17 +6,15 @@ import {
   type Hook,
   type HookConfig,
   type HookEvent,
-  type HookEventPayload,
   type HookTestErrorResponseData,
   type InteractionHookEventPayload,
 } from '@logto/schemas';
-import { generateStandardId, normalizeError, type ConsoleLog } from '@logto/shared';
+import { type ConsoleLog } from '@logto/shared';
 import { conditional, deduplicate, type Optional, pick, trySafe } from '@silverhand/essentials';
 import { HTTPError } from 'ky';
-import pMap from 'p-map';
 
 import RequestError from '#src/errors/RequestError/index.js';
-import { LogEntry } from '#src/middleware/koa-audit-log.js';
+import { type CoreJobQueue, jobQueue } from '#src/job-queue/index.js';
 import type Queries from '#src/tenants/Queries.js';
 
 import {
@@ -26,78 +23,30 @@ import {
   type HookMetadata,
   type HookContext,
 } from './context-manager.js';
-import { generateHookTestPayload, parseResponse, sendWebhookRequest } from './utils.js';
+import { createWebhookDispatcher, type TenantRequestSlot } from './delivery.js';
+import { generateHookTestPayload, sendWebhookRequest } from './utils.js';
 
-/** A payload before `sendWebhook` stamps it with the hook id and the delivery id. */
-type HookEventPayloadWithoutHookId = BetterOmit<HookEventPayload, 'hookId' | 'deliveryId'>;
+type CreateHookLibraryOptions = {
+  requestSlot?: TenantRequestSlot;
+  jobQueue?: CoreJobQueue;
+};
 
-export const createHookLibrary = (queries: Queries) => {
+export const createHookLibrary = (queries: Queries, options?: CreateHookLibraryOptions) => {
   const {
     applications: { findApplicationById },
     logs: { insertLog },
     // TODO: @gao should we use the library function thus we can pass full userinfo to the payload?
     users: { findUserById },
     hooks: { findAllHooks, findHookById },
+    jobs: { enqueueJob },
   } = queries;
 
-  /**
-   * Trigger web hook with the given payload and create a log entry for the request and response.
-   */
-  const sendWebhook = async (
-    hook: Hook,
-    payload: HookEventPayloadWithoutHookId,
-    consoleLog: ConsoleLog
-  ) => {
-    const { id, config, signingKey } = hook;
-    consoleLog.info(`\tTriggering hook ${id} due to ${payload.event} event`);
-
-    // One delivery = one request (ky retries included) = one audit log entry: the same id for both.
-    const deliveryId = generateStandardId();
-    const json: HookEventPayload = { ...payload, hookId: id, deliveryId };
-    const logEntry = new LogEntry(`TriggerHook.${payload.event}`);
-
-    logEntry.append({ hookId: id, hookRequest: { body: json } });
-
-    // Trigger web hook and log response
-    try {
-      const response = await sendWebhookRequest({
-        hookConfig: config,
-        payload: json,
-        signingKey,
-      });
-
-      logEntry.append({
-        response: await parseResponse(response),
-      });
-    } catch (error: unknown) {
-      logEntry.append({
-        result: LogResult.Error,
-        response: conditional(error instanceof HTTPError && (await parseResponse(error.response))),
-        error: String(normalizeError(error)),
-      });
-    }
-
-    consoleLog.info(
-      `\tHook ${id} ${logEntry.payload.result === LogResult.Success ? 'succeeded' : 'failed'}`
-    );
-
-    await insertLog({
-      id: deliveryId,
-      key: logEntry.key,
-      payload: logEntry.payload,
-    });
-  };
-
-  /**
-   * Trigger multiple web hooks with concurrency control.
-   */
-  const sendWebhooks = async <T extends HookEventPayloadWithoutHookId>(
-    webhooks: Array<{ hook: Hook; payload: T }>,
-    consoleLog: ConsoleLog
-  ) =>
-    pMap(webhooks, async ({ hook, payload }) => sendWebhook(hook, payload, consoleLog), {
-      concurrency: 10,
-    });
+  const { dispatchWebhooks, runWithTriggerLifecycle } = createWebhookDispatcher({
+    insertLog,
+    enqueueJob,
+    queue: options?.jobQueue ?? jobQueue,
+    requestSlot: options?.requestSlot,
+  });
 
   const fetchInteractionHookUsersById = async (
     interactionHookResults: InteractionHookDispatchContext['interactionHookResults']
@@ -127,65 +76,65 @@ export const createHookLibrary = (queries: Queries) => {
       return;
     }
 
-    const { interactionEvent, sessionId, applicationId, cimdClientId, userIp, userAgent } =
-      metadata;
+    await runWithTriggerLifecycle(async (useJobQueue) => {
+      const { interactionEvent, sessionId, applicationId, cimdClientId, userIp, userAgent } =
+        metadata;
 
-    const found = await findAllHooks();
+      const found = await findAllHooks();
 
-    if (found.length === 0) {
-      return;
-    }
-
-    const [application, usersById] = await Promise.all([
-      trySafe(async () => conditional(applicationId && (await findApplicationById(applicationId)))),
-      fetchInteractionHookUsersById(interactionHookResults),
-    ]);
-
-    const webhooks: Array<{
-      hook: Hook;
-      payload: BetterOmit<InteractionHookEventPayload, 'hookId' | 'deliveryId'>;
-    }> = [];
-
-    for (const interactionHookResult of interactionHookResults) {
-      const { userId, event } = interactionHookResult;
-      const customPayload =
-        'payload' in interactionHookResult ? interactionHookResult.payload : undefined;
-      const hookEvent = event ?? defaultHookEvent;
-
-      const hooks = found.filter(
-        ({ event, events, enabled }) =>
-          enabled && (events.length > 0 ? events.includes(hookEvent) : event === hookEvent) // For backward compatibility
-      );
-
-      if (hooks.length === 0) {
-        continue;
+      if (found.length === 0) {
+        return;
       }
 
-      const user = usersById.get(userId);
+      const [application, usersById] = await Promise.all([
+        trySafe(async () =>
+          conditional(applicationId && (await findApplicationById(applicationId)))
+        ),
+        fetchInteractionHookUsersById(interactionHookResults),
+      ]);
 
-      const payload = {
-        ...customPayload,
-        event: hookEvent,
-        interactionEvent,
-        createdAt: new Date().toISOString(),
-        sessionId,
-        userAgent,
-        userId,
-        userIp,
-        user: user && pick(user, ...userInfoSelectFields),
-        application: application && pick(application, 'id', 'type', 'name', 'description'),
-        cimdClientId,
-      } satisfies BetterOmit<InteractionHookEventPayload, 'hookId' | 'deliveryId'>;
+      const webhooks: Array<{
+        hook: Hook;
+        payload: BetterOmit<InteractionHookEventPayload, 'hookId' | 'deliveryId'>;
+      }> = [];
 
-      // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-      webhooks.push(...hooks.map((hook) => ({ hook, payload })));
-    }
+      for (const interactionHookResult of interactionHookResults) {
+        const { userId, event } = interactionHookResult;
+        const customPayload =
+          'payload' in interactionHookResult ? interactionHookResult.payload : undefined;
+        const hookEvent = event ?? defaultHookEvent;
 
-    if (webhooks.length === 0) {
-      return;
-    }
+        const hooks = found.filter(
+          ({ event, events, enabled }) =>
+            enabled && (events.length > 0 ? events.includes(hookEvent) : event === hookEvent) // For backward compatibility
+        );
 
-    await sendWebhooks(webhooks, consoleLog);
+        if (hooks.length === 0) {
+          continue;
+        }
+
+        const user = usersById.get(userId);
+
+        const payload = {
+          ...customPayload,
+          event: hookEvent,
+          interactionEvent,
+          createdAt: new Date().toISOString(),
+          sessionId,
+          userAgent,
+          userId,
+          userIp,
+          user: user && pick(user, ...userInfoSelectFields),
+          application: application && pick(application, 'id', 'type', 'name', 'description'),
+          cimdClientId,
+        } satisfies BetterOmit<InteractionHookEventPayload, 'hookId' | 'deliveryId'>;
+
+        // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+        webhooks.push(...hooks.map((hook) => ({ hook, payload })));
+      }
+
+      await dispatchWebhooks(webhooks, consoleLog, useJobQueue);
+    });
   };
 
   /**
@@ -196,10 +145,12 @@ export const createHookLibrary = (queries: Queries) => {
       return;
     }
 
-    const { dataHookContextArray: contextArray, metadata } = contextManager;
+    await runWithTriggerLifecycle(async (useJobQueue) => {
+      const { dataHookContextArray: contextArray, metadata } = contextManager;
 
-    const webhooks = await buildWebhooks({ contextArray, metadata });
-    await sendWebhooks(webhooks, consoleLog);
+      const webhooks = await buildWebhooks({ contextArray, metadata });
+      await dispatchWebhooks(webhooks, consoleLog, useJobQueue);
+    });
   };
 
   /**
@@ -213,10 +164,12 @@ export const createHookLibrary = (queries: Queries) => {
       return;
     }
 
-    const { exceptionHookContextArray: contextArray, metadata } = contextManager;
+    await runWithTriggerLifecycle(async (useJobQueue) => {
+      const { exceptionHookContextArray: contextArray, metadata } = contextManager;
 
-    const webhooks = await buildWebhooks({ contextArray, metadata });
-    await sendWebhooks(webhooks, consoleLog);
+      const webhooks = await buildWebhooks({ contextArray, metadata });
+      await dispatchWebhooks(webhooks, consoleLog, useJobQueue);
+    });
   };
 
   const triggerTestHook = async (hookId: string, events: HookEvent[], config: HookConfig) => {
@@ -314,36 +267,38 @@ export const createHookLibrary = (queries: Queries) => {
     payload: GrantLimitExceededEventData,
     metadata?: { ip?: string; userAgent?: string }
   ) => {
-    const hooks = await findAllHooks();
-    const matchingHooks = hooks.filter(
-      ({ event: hookEvent, events, enabled }) =>
-        enabled && (events.length > 0 ? events.includes(event) : event === hookEvent)
-    );
+    await runWithTriggerLifecycle(async (useJobQueue) => {
+      const hooks = await findAllHooks();
+      const matchingHooks = hooks.filter(
+        ({ event: hookEvent, events, enabled }) =>
+          enabled && (events.length > 0 ? events.includes(event) : event === hookEvent)
+      );
 
-    if (matchingHooks.length === 0) {
-      return;
-    }
+      if (matchingHooks.length === 0) {
+        return;
+      }
 
-    const { applicationId } = payload;
-    /** A CIMD-attributed payload carries no registered application id to enrich with. */
-    const application = conditional(
-      applicationId && (await trySafe(async () => findApplicationById(applicationId)))
-    );
+      const { applicationId } = payload;
+      /** A CIMD-attributed payload carries no registered application id to enrich with. */
+      const application = conditional(
+        applicationId && (await trySafe(async () => findApplicationById(applicationId)))
+      );
 
-    const webhookPayloads = matchingHooks.map((hook) => ({
-      hook,
-      payload: {
-        event,
-        createdAt: new Date().toISOString(),
-        ...metadata,
-        ...conditional(
-          application && { application: pick(application, 'id', 'type', 'name', 'description') }
-        ),
-        ...payload,
-      } satisfies BetterOmit<ExceptionHookEventPayload, 'hookId' | 'deliveryId'>,
-    }));
+      const webhookPayloads = matchingHooks.map((hook) => ({
+        hook,
+        payload: {
+          event,
+          createdAt: new Date().toISOString(),
+          ...metadata,
+          ...conditional(
+            application && { application: pick(application, 'id', 'type', 'name', 'description') }
+          ),
+          ...payload,
+        } satisfies BetterOmit<ExceptionHookEventPayload, 'hookId' | 'deliveryId'>,
+      }));
 
-    await sendWebhooks(webhookPayloads, consoleLog);
+      await dispatchWebhooks(webhookPayloads, consoleLog, useJobQueue);
+    });
   };
 
   return {

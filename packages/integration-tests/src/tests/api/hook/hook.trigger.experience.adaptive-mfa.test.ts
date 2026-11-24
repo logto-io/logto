@@ -128,11 +128,6 @@ describe('adaptive MFA experience hook trigger', () => {
       await processSession(client, redirectTo);
       await logoutClient(client);
 
-      expect(
-        await getHookLogs(adaptiveHook.id, InteractionHookEvent.PostSignInAdaptiveMfaTriggered)
-      ).toHaveLength(1);
-      expect(await getHookLogs(postSignInHook.id, InteractionHookEvent.PostSignIn)).toHaveLength(1);
-
       await assertHookLogResult(postSignInHook, InteractionHookEvent.PostSignIn, {
         hookPayload: {
           event: InteractionHookEvent.PostSignIn,
@@ -141,6 +136,11 @@ describe('adaptive MFA experience hook trigger', () => {
           user: expect.objectContaining({ id: user.id, username }),
         },
       });
+
+      expect(
+        await getHookLogs(adaptiveHook.id, InteractionHookEvent.PostSignInAdaptiveMfaTriggered)
+      ).toHaveLength(1);
+      expect(await getHookLogs(postSignInHook.id, InteractionHookEvent.PostSignIn)).toHaveLength(1);
     } finally {
       await updateSignInExperience({
         mfa: {

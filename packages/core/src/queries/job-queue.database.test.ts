@@ -1,10 +1,20 @@
+/* eslint-disable max-lines -- all Postgres job-queue tests share one test database and must run sequentially in one file */
 /**
  * Query tests for the `jobs` adapters against a seeded Postgres database (`logto db seed --test`).
  * They run only when `JOB_QUEUE_TEST_DB_URL` points to such a database, and they delete every
  * row in its `jobs` table.
  */
-import { type ClaimDueInput, type ClaimedJobRow } from '@logto/job-queue';
-import { adminTenantId, defaultTenantId } from '@logto/schemas';
+import { createHmac } from 'node:crypto';
+import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http';
+import { type AddressInfo } from 'node:net';
+
+import {
+  JobQueueWorker,
+  withTimeout,
+  type ClaimDueInput,
+  type ClaimedJobRow,
+} from '@logto/job-queue';
+import { InteractionHookEvent, LogResult, adminTenantId, defaultTenantId } from '@logto/schemas';
 import { assert, type Nullable } from '@silverhand/essentials';
 import {
   createInterceptorsPreset,
@@ -13,8 +23,12 @@ import {
   type CommonQueryMethods,
   type DatabasePool,
 } from '@silverhand/slonik';
+import Sinon from 'sinon';
 
-import { createJobQueueQueries } from './job-queue.js';
+import { EnvSet } from '#src/env-set/index.js';
+import { createWebhookJobHandler, webhookJobType } from '#src/job-queue/webhook-handler.js';
+
+import { createJobQueueQueries, type CoreJobSettlementMeta } from './job-queue.js';
 import { createJobQueries } from './jobs.js';
 
 const databaseUrl = process.env.JOB_QUEUE_TEST_DB_URL;
@@ -70,6 +84,22 @@ const runAsTenant = async <T>(
     return step(transaction);
   });
 
+const logMeta = (
+  hookId: string,
+  result: LogResult,
+  extra?: Record<string, unknown>
+): CoreJobSettlementMeta => ({
+  log: {
+    key: `TriggerHook.${InteractionHookEvent.PostSignIn}`,
+    payload: {
+      key: `TriggerHook.${InteractionHookEvent.PostSignIn}`,
+      result,
+      hookId,
+      ...extra,
+    },
+  },
+});
+
 describeWithDatabase('job queue queries on Postgres', () => {
   /* eslint-disable @silverhand/fp/no-let -- pool handle assigned in beforeAll */
   let pool: DatabasePool;
@@ -116,6 +146,50 @@ describeWithDatabase('job queue queries on Postgres', () => {
   const expireLease = async (id: string) =>
     pool.query(sql`update jobs set next_attempt_at = now() - interval '1 second' where id = ${id}`);
 
+  const seedHook = async ({
+    id,
+    tenantId = defaultTenantId,
+    url = 'https://example.com/webhook',
+    signingKey = 'secret-key',
+    enabled = true,
+  }: {
+    id: string;
+    tenantId?: string;
+    url?: string;
+    signingKey?: string;
+    enabled?: boolean;
+  }) =>
+    pool.query(sql`
+      insert into hooks (tenant_id, id, name, events, config, signing_key, enabled)
+      values (
+        ${tenantId},
+        ${id},
+        ${id},
+        ${JSON.stringify([InteractionHookEvent.PostSignIn])}::jsonb,
+        ${JSON.stringify({ url })}::jsonb,
+        ${signingKey},
+        ${enabled}
+      )
+    `);
+
+  const findLog = async (id: string) =>
+    pool.maybeOne<{
+      tenantId: string;
+      id: string;
+      key: string;
+      payload: Record<string, unknown>;
+      createdAt: number;
+      payloadHookId: Nullable<string>;
+    }>(
+      sql`select tenant_id, id, key, payload, created_at, payload_hook_id from logs where id = ${id}`
+    );
+
+  const cleanupTestRows = async () => {
+    await pool.query(sql`delete from jobs`);
+    await pool.query(sql`delete from logs where id like 'jq-%' or id = 'shared-log-id'`);
+    await pool.query(sql`delete from hooks where id like 'jq-%'`);
+  };
+
   beforeAll(async () => {
     assert(databaseUrl, new Error('JOB_QUEUE_TEST_DB_URL is required'));
     // eslint-disable-next-line @silverhand/fp/no-mutation -- pool handle assigned in beforeAll
@@ -123,11 +197,11 @@ describeWithDatabase('job queue queries on Postgres', () => {
   });
 
   beforeEach(async () => {
-    await pool.query(sql`delete from jobs`);
+    await cleanupTestRows();
   });
 
   afterAll(async () => {
-    await pool.query(sql`delete from jobs`);
+    await cleanupTestRows();
     await pool.end();
   });
 
@@ -462,4 +536,400 @@ describeWithDatabase('job queue queries on Postgres', () => {
       await expect(enqueue(defaultTenantId, 'redelivery', 'delivery-1')).resolves.toBeUndefined();
     });
   });
+
+  describe('findHookForDelivery() cross-tenant isolation', () => {
+    it('reads only hooks belonging to the explicit tenantId under sharedPool', async () => {
+      await seedHook({
+        id: 'jq-default-hook',
+        tenantId: defaultTenantId,
+        url: 'https://default.example.com',
+        signingKey: 'default-secret',
+        enabled: true,
+      });
+      await seedHook({
+        id: 'jq-admin-hook',
+        tenantId: adminTenantId,
+        url: 'https://admin.example.com',
+        signingKey: 'admin-secret',
+        enabled: false,
+      });
+
+      await expect(
+        queries().findHookForDelivery(adminTenantId, 'jq-default-hook')
+      ).resolves.toBeNull();
+      await expect(
+        queries().findHookForDelivery(defaultTenantId, 'jq-admin-hook')
+      ).resolves.toBeNull();
+
+      await expect(
+        queries().findHookForDelivery(defaultTenantId, 'jq-default-hook')
+      ).resolves.toEqual({
+        id: 'jq-default-hook',
+        config: { url: 'https://default.example.com' },
+        signingKey: 'default-secret',
+        enabled: true,
+      });
+      await expect(queries().findHookForDelivery(adminTenantId, 'jq-admin-hook')).resolves.toEqual({
+        id: 'jq-admin-hook',
+        config: { url: 'https://admin.example.com' },
+        signingKey: 'admin-secret',
+        enabled: false,
+      });
+    });
+  });
+
+  describe('settle() atomic logs CTE and cross-tenant isolation', () => {
+    it('atomically deletes jobs and inserts tenant-scoped logs on terminal outcomes', async () => {
+      await seed([
+        { id: 'jq-log-done', tenantId: defaultTenantId, groupKey: 'jq-hook-1' },
+        { id: 'jq-log-fail', tenantId: adminTenantId, groupKey: 'jq-hook-2' },
+      ]);
+      const claimed = await queries().claimDue(claimInput({ workerId: 'worker-1' }));
+      const doneJob = claimed.find(({ id }) => id === 'jq-log-done');
+      const failJob = claimed.find(({ id }) => id === 'jq-log-fail');
+      assert(doneJob && failJob, new Error('Expected both claimed jobs'));
+
+      await expect(
+        queries().settle({
+          job: doneJob,
+          workerId: 'worker-1',
+          resolution: { status: 'done' },
+          meta: logMeta('jq-hook-1', LogResult.Success),
+        })
+      ).resolves.toBe('settled');
+
+      await expect(
+        queries().settle({
+          job: failJob,
+          workerId: 'worker-1',
+          resolution: { status: 'fail' },
+          meta: logMeta('jq-hook-2', LogResult.Error, { error: '400 Bad Request' }),
+        })
+      ).resolves.toBe('settled');
+
+      await expect(findJob('jq-log-done')).resolves.toBeNull();
+      await expect(findJob('jq-log-fail')).resolves.toBeNull();
+
+      await expect(findLog('jq-log-done')).resolves.toMatchObject({
+        tenantId: defaultTenantId,
+        key: `TriggerHook.${InteractionHookEvent.PostSignIn}`,
+        payloadHookId: 'jq-hook-1',
+        payload: { result: LogResult.Success, hookId: 'jq-hook-1' },
+      });
+      await expect(findLog('jq-log-fail')).resolves.toMatchObject({
+        tenantId: adminTenantId,
+        key: `TriggerHook.${InteractionHookEvent.PostSignIn}`,
+        payloadHookId: 'jq-hook-2',
+        payload: { result: LogResult.Error, hookId: 'jq-hook-2', error: '400 Bad Request' },
+      });
+
+      // Verify RLS visibility for each tenant role.
+      await expect(
+        runAsTenant(pool, defaultTenantId, async (connection) =>
+          connection.anyFirst<string>(sql`select id from logs where id like 'jq-log-%'`)
+        )
+      ).resolves.toEqual(['jq-log-done']);
+      await expect(
+        runAsTenant(pool, adminTenantId, async (connection) =>
+          connection.anyFirst<string>(sql`select id from logs where id like 'jq-log-%'`)
+        )
+      ).resolves.toEqual(['jq-log-fail']);
+    });
+
+    it('updates the single log row in place across retry and final success', async () => {
+      await seed([{ id: 'jq-log-retry', tenantId: defaultTenantId, groupKey: 'jq-hook-r' }]);
+      const [firstClaim] = await queries().claimDue(claimInput({ workerId: 'worker-1' }));
+      assert(firstClaim, new Error('Expected first claim'));
+
+      const nextAttemptAt = Date.now() + 5000;
+      await expect(
+        queries().settle({
+          job: firstClaim,
+          workerId: 'worker-1',
+          resolution: { status: 'retry', delayMs: 5000, nextAttemptAt },
+          meta: logMeta('jq-hook-r', LogResult.Error, { attempts: 1 }),
+        })
+      ).resolves.toBe('settled');
+
+      const retryLog = await findLog('jq-log-retry');
+      expect(retryLog).toMatchObject({
+        payloadHookId: 'jq-hook-r',
+        payload: { result: LogResult.Error, attempts: 1, nextAttemptAt },
+      });
+
+      await expireLease('jq-log-retry');
+      const [secondClaim] = await queries().claimDue(claimInput({ workerId: 'worker-2' }));
+      assert(secondClaim, new Error('Expected second claim'));
+
+      await expect(
+        queries().settle({
+          job: secondClaim,
+          workerId: 'worker-2',
+          resolution: { status: 'done' },
+          meta: logMeta('jq-hook-r', LogResult.Success, { attempts: 2 }),
+        })
+      ).resolves.toBe('settled');
+
+      await expect(findJob('jq-log-retry')).resolves.toBeNull();
+      const settledLog = await findLog('jq-log-retry');
+      expect(settledLog?.createdAt).toBe(retryLog?.createdAt);
+      expect(settledLog?.payload).toMatchObject({
+        result: LogResult.Success,
+        attempts: 2,
+      });
+      expect(settledLog?.payload).not.toHaveProperty('nextAttemptAt');
+    });
+
+    it('rejects stale writers without inserting or overwriting logs', async () => {
+      await seed([{ id: 'jq-log-stale', tenantId: defaultTenantId, groupKey: 'jq-hook-s' }]);
+      const [first] = await queries().claimDue(claimInput({ workerId: 'worker-1' }));
+      assert(first, new Error('Expected claimed job'));
+      await expireLease('jq-log-stale');
+      const [second] = await queries().claimDue(claimInput({ workerId: 'worker-2' }));
+      assert(second, new Error('Expected reclaimed job'));
+
+      await expect(
+        queries().settle({
+          job: first,
+          workerId: 'worker-1',
+          resolution: { status: 'fail' },
+          meta: logMeta('jq-hook-s', LogResult.Error),
+        })
+      ).resolves.toBe('stale');
+      await expect(findLog('jq-log-stale')).resolves.toBeNull();
+
+      await expect(
+        queries().settle({
+          job: second,
+          workerId: 'worker-2',
+          resolution: { status: 'done' },
+          meta: logMeta('jq-hook-s', LogResult.Success),
+        })
+      ).resolves.toBe('settled');
+
+      await expect(
+        queries().settle({
+          job: first,
+          workerId: 'worker-1',
+          resolution: { status: 'fail' },
+          meta: logMeta('jq-hook-s', LogResult.Error),
+        })
+      ).resolves.toBe('stale');
+      await expect(findLog('jq-log-stale')).resolves.toMatchObject({
+        payload: { result: LogResult.Success },
+      });
+    });
+
+    it('settles jobs without writing logs when meta is omitted', async () => {
+      await seed([{ id: 'jq-log-absent', tenantId: defaultTenantId, groupKey: 'jq-hook-a' }]);
+      const [job] = await queries().claimDue(claimInput({ workerId: 'worker-1' }));
+      assert(job, new Error('Expected claimed job'));
+
+      await expect(
+        queries().settle({
+          job,
+          workerId: 'worker-1',
+          resolution: { status: 'done' },
+        })
+      ).resolves.toBe('settled');
+
+      await expect(findJob('jq-log-absent')).resolves.toBeNull();
+      await expect(findLog('jq-log-absent')).resolves.toBeNull();
+    });
+
+    it('settles jobs without the log when Postgres rejects its payload', async () => {
+      await seed([{ id: 'jq-log-invalid', tenantId: defaultTenantId, groupKey: 'jq-hook-i' }]);
+      const [job] = await queries().claimDue(claimInput({ workerId: 'worker-1' }));
+      assert(job, new Error('Expected claimed job'));
+
+      await expect(
+        queries().settle({
+          job,
+          workerId: 'worker-1',
+          resolution: { status: 'fail' },
+          // A lone surrogate, which `jsonb` rejects.
+          meta: logMeta('jq-hook-i', LogResult.Error, { response: { body: '\uD83D' } }),
+        })
+      ).resolves.toBe('settled');
+
+      await expect(findJob('jq-log-invalid')).resolves.toBeNull();
+      await expect(findLog('jq-log-invalid')).resolves.toBeNull();
+    });
+
+    it('never overwrites another tenant log on a conflicting log id', async () => {
+      await pool.query(sql`
+        insert into logs (tenant_id, id, key, payload)
+        values (
+          ${adminTenantId},
+          'shared-log-id',
+          'TriggerHook.PostSignIn',
+          ${JSON.stringify({ key: 'TriggerHook.PostSignIn', result: LogResult.Success, owner: 'admin' })}::jsonb
+        )
+      `);
+      await seed([{ id: 'shared-log-id', tenantId: defaultTenantId, groupKey: 'jq-hook-c' }]);
+      const [job] = await queries().claimDue(claimInput({ workerId: 'worker-1' }));
+      assert(job, new Error('Expected claimed job'));
+
+      await expect(
+        queries().settle({
+          job,
+          workerId: 'worker-1',
+          resolution: { status: 'fail' },
+          meta: logMeta('jq-hook-c', LogResult.Error, { owner: 'default' }),
+        })
+      ).resolves.toBe('settled');
+
+      await expect(findJob('shared-log-id')).resolves.toBeNull();
+      await expect(findLog('shared-log-id')).resolves.toMatchObject({
+        tenantId: adminTenantId,
+        payload: { result: LogResult.Success, owner: 'admin' },
+      });
+    });
+  });
+
+  describe('shutdown hand-back and multi-worker delivery', () => {
+    it('hands back an in-flight delivery within 5s so a second worker completes it with exact raw body', async () => {
+      Sinon.stub(EnvSet, 'values').value({
+        ...EnvSet.values,
+        isSsrfProtectionEnabled: false,
+      });
+
+      const receivedRequests: Array<{ rawBody: string; signature: string | undefined }> = [];
+      const openSockets: Array<IncomingMessage['socket']> = [];
+      // eslint-disable-next-line @silverhand/fp/no-let
+      let markFirstRequestReceived: (() => void) | undefined;
+      const firstRequestReceived = new Promise<void>((resolve) => {
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        markFirstRequestReceived = resolve;
+      });
+      // eslint-disable-next-line @silverhand/fp/no-let
+      let markSecondRequestReceived: (() => void) | undefined;
+      const secondRequestReceived = new Promise<void>((resolve) => {
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        markSecondRequestReceived = resolve;
+      });
+
+      const server: Server = createServer((request: IncomingMessage, response: ServerResponse) => {
+        const chunks: Uint8Array[] = [];
+        request.on('data', (chunk: Uint8Array) => {
+          // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+          chunks.push(chunk);
+        });
+        request.on('end', () => {
+          const rawBody = Buffer.concat(chunks).toString();
+          const signatureHeader = request.headers['logto-signature-sha-256'];
+          const signature = Array.isArray(signatureHeader) ? signatureHeader[0] : signatureHeader;
+          // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+          receivedRequests.push({ rawBody, signature });
+
+          if (receivedRequests.length === 1) {
+            // Keep the first attempt open past worker 1's drain budget.
+            // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+            openSockets.push(request.socket);
+            markFirstRequestReceived?.();
+            return;
+          }
+
+          response.writeHead(200, { 'Content-Type': 'application/json' });
+          response.end('{"received":true}');
+          markSecondRequestReceived?.();
+        });
+      });
+
+      await new Promise<void>((resolve) => {
+        server.listen(0, '127.0.0.1', resolve);
+      });
+
+      const { port } = server.address() as AddressInfo;
+      const hookId = 'jq-shutdown-hook';
+      const deliveryId = 'jq-shutdown-delivery';
+      const signingKey = 'shutdown-signing-key';
+      // Non-sorted keys prove `jobs.payload` text preserves the exact pre-serialized wire order.
+      const rawBody = JSON.stringify({
+        event: InteractionHookEvent.PostSignIn,
+        zField: 'z-first',
+        aField: 'a-second',
+        hookId,
+        deliveryId,
+      });
+
+      const worker1 = new JobQueueWorker<CoreJobSettlementMeta>(queries(), { pollIntervalMs: 50 });
+      const worker2 = new JobQueueWorker<CoreJobSettlementMeta>(queries(), { pollIntervalMs: 50 });
+      // eslint-disable-next-line @silverhand/fp/no-let
+      let worker1Stopping: Promise<number> | undefined;
+
+      try {
+        await seedHook({
+          id: hookId,
+          tenantId: defaultTenantId,
+          url: `http://127.0.0.1:${port}/hook`,
+          signingKey,
+          enabled: true,
+        });
+
+        await runAsTenant(pool, defaultTenantId, async (connection) =>
+          createJobQueries(connection).enqueueJob({
+            id: deliveryId,
+            type: webhookJobType,
+            groupKey: hookId,
+            dedupeKey: deliveryId,
+            payload: rawBody,
+          })
+        );
+
+        worker1.register(createWebhookJobHandler(queries()));
+        worker1.start();
+
+        await firstRequestReceived;
+
+        const shutdownStart = Date.now();
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        worker1Stopping = worker1.stop();
+        await expect(withTimeout(worker1Stopping, 200, 'drain timeout')).rejects.toThrow(
+          'drain timeout'
+        );
+        await expect(worker1.releaseClaimed()).resolves.toBe(1);
+        expect(Date.now() - shutdownStart).toBeLessThan(5000);
+
+        const handedBack = await findJob(deliveryId);
+        expect(handedBack).toMatchObject({ claimedBy: null, attempts: 1 });
+        expect(handedBack!.nextAttemptAt).toBeLessThanOrEqual(Date.now() + 1000);
+
+        worker2.register(createWebhookJobHandler(queries()));
+        worker2.start();
+
+        await secondRequestReceived;
+        await worker2.stop();
+
+        const expectedSignature = createHmac('sha256', signingKey).update(rawBody).digest('hex');
+        expect(receivedRequests).toHaveLength(2);
+        expect(receivedRequests[1]).toEqual({ rawBody, signature: expectedSignature });
+
+        await expect(findJob(deliveryId)).resolves.toBeNull();
+        await expect(findLog(deliveryId)).resolves.toMatchObject({
+          tenantId: defaultTenantId,
+          id: deliveryId,
+          key: `TriggerHook.${InteractionHookEvent.PostSignIn}`,
+          payloadHookId: hookId,
+          payload: {
+            result: LogResult.Success,
+            hookId,
+            response: { statusCode: 200, body: { received: true } },
+          },
+        });
+      } finally {
+        for (const socket of openSockets) {
+          socket.destroy();
+        }
+        await Promise.allSettled([worker1Stopping, worker2.stop()]);
+        await new Promise<void>((resolve) => {
+          server.close(() => {
+            resolve();
+          });
+        });
+        Sinon.restore();
+      }
+    }, 15_000);
+  });
 });
+/* eslint-enable max-lines */

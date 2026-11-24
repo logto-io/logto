@@ -15,6 +15,7 @@ import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.
 import { generateNewUserProfile } from '#src/helpers/user.js';
 
 import WebhookMockServer from './WebhookMockServer.js';
+import { assertHookLogResult } from './utils.js';
 
 describe('hook logs', () => {
   const mockServer = new WebhookMockServer(9999);
@@ -41,6 +42,8 @@ describe('hook logs', () => {
 
     const { username, password } = generateNewUserProfile({ username: true, password: true });
     const userId = await registerNewUserUsernamePassword(username, password);
+
+    await assertHookLogResult(createdHook, InteractionHookEvent.PostRegister, {});
 
     const logs = await authedAdminApi
       .get(`hooks/${createdHook.id}/recent-logs?page_size=100`)
@@ -74,6 +77,8 @@ describe('hook logs', () => {
 
     const { username, password } = generateNewUserProfile({ username: true, password: true });
     const userId = await registerNewUserUsernamePassword(username, password);
+
+    await assertHookLogResult(createdHook, InteractionHookEvent.PostRegister, {});
 
     const hookWithExecutionStats = await authedAdminApi
       .get(`hooks/${createdHook.id}?includeExecutionStats=true`)

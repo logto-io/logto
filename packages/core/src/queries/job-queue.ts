@@ -6,8 +6,20 @@ import {
   type SettleJobInput,
   type SettleOutcome,
 } from '@logto/job-queue';
-import { type Job } from '@logto/schemas';
-import { sql, type CommonQueryMethods } from '@silverhand/slonik';
+import { type Hook, type Job, type LogContextPayload, type LogKey } from '@logto/schemas';
+import { type Nullable } from '@silverhand/essentials';
+import { InvalidInputError, sql, type CommonQueryMethods } from '@silverhand/slonik';
+
+type JobLogUpsert = {
+  key: LogKey;
+  payload: LogContextPayload;
+};
+
+export type CoreJobSettlementMeta = {
+  log?: JobLogUpsert;
+};
+
+export type WebhookDeliveryHook = Pick<Hook, 'id' | 'config' | 'signingKey' | 'enabled'>;
 
 export type JobQueueGauges = {
   /** Rows in `jobs`, waiting or claimed. */
@@ -43,8 +55,11 @@ const fenceClaimedJob = (job: ClaimedJobRow, workerId: string) => sql`
  */
 export const createJobQueueQueries = (
   pool: CommonQueryMethods
-): Required<Pick<JobQueueQueries, 'claimDue' | 'settle' | 'releaseClaimed'>> & {
+): Required<
+  Pick<JobQueueQueries<CoreJobSettlementMeta>, 'claimDue' | 'settle' | 'releaseClaimed'>
+> & {
   getGauges: () => Promise<JobQueueGauges>;
+  findHookForDelivery: (tenantId: string, hookId: string) => Promise<Nullable<WebhookDeliveryHook>>;
 } => {
   /**
    * Claim up to `limit` due rows, oldest first. Rows of saturated tenants and groups are skipped,
@@ -200,23 +215,92 @@ export const createJobQueueQueries = (
   };
 
   /**
-   * Delete the row when the job ends, or hand it back with its next due time on retry. Returns
-   * `stale` when the lease was lost, so a slow worker never touches a reclaimed row.
+   * Read delivery config and signing secret explicitly by `(tenant_id, id)` on `EnvSet.sharedPool`.
+   * Never uses RLS-scoped `Queries` or `tenantPool.get()`.
    */
-  const settle = async ({ job, workerId, resolution }: SettleJobInput): Promise<SettleOutcome> => {
-    const { rowCount } =
+  const findHookForDelivery = async (
+    tenantId: string,
+    hookId: string
+  ): Promise<Nullable<WebhookDeliveryHook>> =>
+    pool.maybeOne<WebhookDeliveryHook>(sql`
+      select id, config, signing_key, enabled
+      from hooks
+      where tenant_id = ${tenantId}
+        and id = ${hookId}
+    `);
+
+  /**
+   * Delete the row when the job ends, or hand it back with its next due time on retry. Returns
+   * `stale` when the lease was lost, so a slow worker never touches a reclaimed row. When `meta.log`
+   * is provided, upsert the corresponding `logs` row in the same fenced CTE. A log Postgres rejects
+   * is dropped rather than left to block the settlement, or the lease would redeliver forever.
+   */
+  const settle = async ({
+    job,
+    workerId,
+    resolution,
+    meta,
+  }: SettleJobInput<CoreJobSettlementMeta>): Promise<SettleOutcome> => {
+    if (!meta?.log) {
+      const { rowCount } =
+        resolution.status === 'retry'
+          ? await pool.query(sql`
+              update jobs
+              set claimed_by = null, next_attempt_at = ${toTimestamp(resolution.nextAttemptAt)}
+              where ${fenceClaimedJob(job, workerId)}
+            `)
+          : await pool.query(sql`
+              delete from jobs
+              where ${fenceClaimedJob(job, workerId)}
+            `);
+
+      return rowCount > 0 ? 'settled' : 'stale';
+    }
+
+    const logPayload =
       resolution.status === 'retry'
-        ? await pool.query(sql`
+        ? { ...meta.log.payload, nextAttemptAt: resolution.nextAttemptAt }
+        : meta.log.payload;
+
+    const settledCte =
+      resolution.status === 'retry'
+        ? sql`
             update jobs
             set claimed_by = null, next_attempt_at = ${toTimestamp(resolution.nextAttemptAt)}
             where ${fenceClaimedJob(job, workerId)}
-          `)
-        : await pool.query(sql`
+            returning tenant_id
+          `
+        : sql`
             delete from jobs
             where ${fenceClaimedJob(job, workerId)}
-          `);
+            returning tenant_id
+          `;
 
-    return rowCount > 0 ? 'settled' : 'stale';
+    try {
+      const { count } = await pool.one<{ count: number }>(sql`
+        with settled as (
+          ${settledCte}
+        ),
+        logged as (
+          insert into logs (tenant_id, id, key, payload)
+          select tenant_id, ${job.id}, ${meta.log.key}, ${JSON.stringify(logPayload)}::jsonb
+          from settled
+          on conflict (id) do update
+            set payload = excluded.payload
+            where logs.tenant_id = excluded.tenant_id
+        )
+        select count(*)::int4 as count from settled
+      `);
+
+      return count > 0 ? 'settled' : 'stale';
+    } catch (error: unknown) {
+      // `jsonb` rejects some strings `JSON.stringify` emits, such as a lone surrogate.
+      if (!(error instanceof InvalidInputError)) {
+        throw error;
+      }
+
+      return settle({ job, workerId, resolution });
+    }
   };
 
   /** Hand claimed rows back as due now in one statement, such as when the worker shuts down. */
@@ -262,5 +346,5 @@ export const createJobQueueQueries = (
       from jobs
     `);
 
-  return { claimDue, settle, releaseClaimed, getGauges };
+  return { claimDue, settle, releaseClaimed, getGauges, findHookForDelivery };
 };
