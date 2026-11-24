@@ -92,6 +92,7 @@ const SetPassword = ({
         isSuffixFocusVisible={Boolean(newPassword)}
         suffix={
           <IconButton
+            aria-label={t('action.clear')}
             onClick={() => {
               setNewPassword('');
             }}
@@ -120,6 +121,7 @@ const SetPassword = ({
         isSuffixFocusVisible={Boolean(confirmPassword)}
         suffix={
           <IconButton
+            aria-label={t('action.clear')}
             onClick={() => {
               setConfirmPassword('');
             }}

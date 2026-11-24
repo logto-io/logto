@@ -38,6 +38,8 @@ const action = {
   use_another_account: 'ใช้บัญชีอื่น',
   back_to_current_account: 'กลับไปยังบัญชีปัจจุบัน',
   done: 'เสร็จสิ้น',
+  close: 'ปิด',
+  clear: 'ล้าง',
 };
 
 export default Object.freeze(action);

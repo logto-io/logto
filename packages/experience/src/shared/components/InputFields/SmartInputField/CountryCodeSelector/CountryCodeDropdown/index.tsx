@@ -265,10 +265,8 @@ const CountryCodeDropdown = ({
                 )}
                 // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
                 role="button"
-                onKeyDown={onKeyDownHandler({
-                  Enter: () => {
-                    onCodeChange(countryCallingCode);
-                  },
+                onKeyDown={onKeyDownHandler(() => {
+                  onCodeChange(countryCallingCode);
                 })}
                 onClick={() => {
                   onCodeChange(countryCallingCode);

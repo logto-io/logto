@@ -150,6 +150,8 @@ const SelectField = ({
         <div
           tabIndex={0}
           role="button"
+          aria-label={label}
+          aria-expanded={isOpen}
           className={classNames(styles.arrow, isOpen && styles.up)}
           onKeyDown={(event) => {
             if (event.key === 'Escape') {
