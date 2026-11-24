@@ -1,8 +1,6 @@
 import { type HookEvent, InteractionHookEvent } from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
-import ky, { type KyResponse } from 'ky';
-
-import { ssrfProtectedFetch } from '#src/utils/outbound-request.js';
+import ky from 'ky';
 
 const { jest } = import.meta;
 
@@ -19,9 +17,15 @@ mockEsm('#src/utils/sign.js', () => ({
   sign,
 }));
 
+const ssrfProtectedFetch = jest.fn<ReturnType<typeof fetch>, Parameters<typeof fetch>>(
+  async () => new Response()
+);
+mockEsm('#src/utils/outbound-request.js', () => ({
+  ssrfProtectedFetch,
+}));
+
 const {
   generateHookTestPayload,
-  parseResponse,
   sendWebhookRequest,
   truncateMembershipDelta,
   MEMBERSHIP_DELTA_CAP,
@@ -153,38 +157,29 @@ describe('sendWebhookRequest', () => {
     expect(requestOptions.headers).not.toHaveProperty('content-type');
   });
 
-  it('forwards signal to ky when supplied and omits it otherwise', async () => {
+  it('hands the signal to both ky and fetch when supplied and omits it otherwise', async () => {
     await sendWebhookRequest({
       hookConfig: { url: 'https://logto.gg' },
       body: '{"ok":true}',
       signingKey: 'mockSigningKey',
     });
     expect(post.mock.lastCall?.[1]).not.toHaveProperty('signal');
+    expect(post.mock.lastCall?.[1]?.fetch).toBe(ssrfProtectedFetch);
 
-    const controller = new AbortController();
+    const { signal } = new AbortController();
     await sendWebhookRequest({
       hookConfig: { url: 'https://logto.gg' },
       body: '{"ok":true}',
       signingKey: 'mockSigningKey',
-      signal: controller.signal,
+      signal,
     });
-    expect(post.mock.lastCall?.[1]).toMatchObject({ signal: controller.signal });
-  });
+    expect(post.mock.lastCall?.[1]).toMatchObject({ signal });
 
-  it('throws immediately without calling ky when signal is already aborted', async () => {
-    const controller = new AbortController();
-    controller.abort(new Error('deadline exceeded'));
-    const callCountBefore = post.mock.calls.length;
-
-    await expect(
-      sendWebhookRequest({
-        hookConfig: { url: 'https://logto.gg' },
-        body: '{"ok":true}',
-        signingKey: 'mockSigningKey',
-        signal: controller.signal,
-      })
-    ).rejects.toThrow('deadline exceeded');
-    expect(post).toHaveBeenCalledTimes(callCountBefore);
+    await post.mock.lastCall?.[1]?.fetch?.('https://logto.gg', { method: 'POST' });
+    expect(ssrfProtectedFetch).toHaveBeenLastCalledWith('https://logto.gg', {
+      method: 'POST',
+      signal,
+    });
   });
 
   it('disables in-call retries and omits ky hooks when disableRetries is true', async () => {
@@ -204,57 +199,6 @@ describe('sendWebhookRequest', () => {
       timeout: 10_000,
     });
     expect(requestOptions).not.toHaveProperty('hooks');
-  });
-});
-
-describe('parseResponse', () => {
-  it('parses JSON and plain text normally when signal is active', async () => {
-    const controller = new AbortController();
-
-    await expect(
-      parseResponse(new Response('{"ok":true}', { status: 200 }) as KyResponse, controller.signal)
-    ).resolves.toEqual({ statusCode: 200, body: { ok: true } });
-
-    await expect(
-      parseResponse(new Response('plain text', { status: 502 }) as KyResponse, controller.signal)
-    ).resolves.toEqual({ statusCode: 502, body: 'plain text' });
-  });
-
-  it('cancels response body and rejects immediately when signal is already aborted', async () => {
-    const cancel = jest.fn(async () => {
-      await Promise.resolve();
-    });
-    const stream = new ReadableStream({
-      cancel,
-    });
-    const controller = new AbortController();
-    controller.abort(new Error('already aborted'));
-
-    await expect(
-      parseResponse(new Response(stream, { status: 200 }) as KyResponse, controller.signal)
-    ).rejects.toThrow('already aborted');
-    expect(cancel).toHaveBeenCalledTimes(1);
-  });
-
-  it('cancels response body and rejects when signal aborts while response.text() is pending', async () => {
-    const cancel = jest.fn(async () => {
-      await Promise.resolve();
-    });
-    const pendingResponse = {
-      status: 200,
-      body: { cancel },
-      text: async () =>
-        new Promise<string>((resolve) => {
-          void resolve;
-        }),
-    } as unknown as KyResponse;
-    const controller = new AbortController();
-
-    const parsedPromise = parseResponse(pendingResponse, controller.signal);
-    controller.abort(new Error('body read timed out'));
-
-    await expect(parsedPromise).rejects.toThrow('body read timed out');
-    expect(cancel).toHaveBeenCalledTimes(1);
   });
 });
 

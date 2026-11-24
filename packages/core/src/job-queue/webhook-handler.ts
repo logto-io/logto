@@ -3,7 +3,7 @@ import { hookEventGuard, LogResult, type HookEvent } from '@logto/schemas';
 import { ConsoleLog, normalizeError } from '@logto/shared';
 import { conditional, type Nullable, trySafe } from '@silverhand/essentials';
 import chalk from 'chalk';
-import { HTTPError, type KyResponse } from 'ky';
+import { HTTPError } from 'ky';
 import { z } from 'zod';
 
 import { parseResponse, sendWebhookRequest } from '#src/libraries/hook/utils.js';
@@ -18,10 +18,8 @@ import { isRecord } from '#src/utils/type.js';
 
 export const webhookJobType = 'webhook';
 export const webhookJobLeaseMs = 60_000;
-/** Wall-clock budget for a single delivery attempt (10 s request + 10 s body read), well below `webhookJobLeaseMs`. */
+/** Wall-clock budget for a single delivery attempt, headers and body read, well below `webhookJobLeaseMs`. */
 export const webhookDeliveryTimeoutMs = 20_000;
-/** Cap on reading a single response body after headers arrive, clamped by remaining delivery time. */
-export const webhookBodyReadTimeoutMs = 10_000;
 export const webhookPerTenantConcurrency = 20;
 export const webhookPerHookConcurrency = 5;
 const webhookRetryBaseMs = 10_000;
@@ -141,7 +139,6 @@ export const buildExpiredWebhookLog = (row: ExpiredJobRow): JobLogUpsert | undef
 
 type CreateWebhookJobHandlerOptions = {
   deliveryTimeoutMs?: number;
-  bodyReadTimeoutMs?: number;
   backoffMs?: (attempt: number) => number;
   onExhausted?: () => void;
 };
@@ -160,7 +157,6 @@ export const createWebhookJobHandler = (
 ) => {
   const {
     deliveryTimeoutMs = webhookDeliveryTimeoutMs,
-    bodyReadTimeoutMs = webhookBodyReadTimeoutMs,
     backoffMs = createExponentialBackoff({ baseMs: webhookRetryBaseMs, maxMs: webhookRetryMaxMs }),
   } = options ?? {};
 
@@ -204,37 +200,9 @@ export const createWebhookJobHandler = (
       });
 
       const abortController = new AbortController();
-      const deadlineAt = Date.now() + deliveryTimeoutMs;
       const deliveryTimer = setTimeout(() => {
         abortController.abort(new Error(`Webhook delivery timed out after ${deliveryTimeoutMs}ms`));
       }, deliveryTimeoutMs);
-
-      const parseBoundedResponse = async (response: KyResponse) => {
-        if (abortController.signal.aborted) {
-          return parseResponse(response, abortController.signal);
-        }
-
-        const remainingMs = deadlineAt - Date.now();
-        if (remainingMs <= 0) {
-          abortController.abort(
-            new Error(`Webhook delivery timed out after ${deliveryTimeoutMs}ms`)
-          );
-          return parseResponse(response, abortController.signal);
-        }
-
-        const bodyTimeoutMs = Math.min(remainingMs, bodyReadTimeoutMs);
-        const bodyTimer = setTimeout(() => {
-          abortController.abort(
-            new Error(`Webhook response body read timed out after ${bodyTimeoutMs}ms`)
-          );
-        }, bodyTimeoutMs);
-
-        try {
-          return await parseResponse(response, abortController.signal);
-        } finally {
-          clearTimeout(bodyTimer);
-        }
-      };
 
       try {
         const response = await sendWebhookRequest({
@@ -248,7 +216,7 @@ export const createWebhookJobHandler = (
         // A 2xx status means the receiver accepted the event, so a slow or broken body must not
         // cause a resend.
         logEntry.append({
-          response: (await trySafe(parseBoundedResponse(response))) ?? {
+          response: (await trySafe(parseResponse(response))) ?? {
             statusCode: response.status,
           },
         });
@@ -262,7 +230,7 @@ export const createWebhookJobHandler = (
         logEntry.append({
           result: LogResult.Error,
           response: conditional(
-            error instanceof HTTPError && (await trySafe(parseBoundedResponse(error.response)))
+            error instanceof HTTPError && (await trySafe(parseResponse(error.response)))
           ),
           error: String(normalizeError(error)),
         });
@@ -294,6 +262,8 @@ export const createWebhookJobHandler = (
         };
       } finally {
         clearTimeout(deliveryTimer);
+        // Close whatever the attempt left open, such as a request ky gave up on after its timeout.
+        abortController.abort();
       }
     },
   });

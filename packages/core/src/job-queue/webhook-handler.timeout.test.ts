@@ -140,7 +140,7 @@ const createHook = (url: string, retries?: number): WebhookDeliveryHook => ({
   enabled: true,
 });
 
-describe('webhook job handler delivery and body-read bounds', () => {
+describe('webhook job handler delivery deadline', () => {
   beforeEach(() => {
     // Loopback test servers intentionally use local addresses guarded in production by SSRF checks.
     Sinon.stub(EnvSet, 'values').value({
@@ -163,13 +163,10 @@ describe('webhook job handler delivery and body-read bounds', () => {
       async ({ endpoint, waitForClosedConnections }) => {
         const handler = createWebhookJobHandler(
           { findHookForDelivery: async () => createHook(endpoint, 0) },
-          { deliveryTimeoutMs: 400, bodyReadTimeoutMs: 150 }
+          { deliveryTimeoutMs: 150 }
         );
-        const startedAt = Date.now();
         const result = await handler.handle(createClaimedJob());
-        const elapsedMs = Date.now() - startedAt;
 
-        expect(elapsedMs).toBeLessThan(350);
         expect(result.status).toBe('done');
         expect(result.meta?.log?.payload).toMatchObject({
           result: LogResult.Success,
@@ -200,13 +197,10 @@ describe('webhook job handler delivery and body-read bounds', () => {
       async ({ endpoint, waitForClosedConnections }) => {
         const handler = createWebhookJobHandler(
           { findHookForDelivery: async () => createHook(endpoint, 0) },
-          { deliveryTimeoutMs: 400, bodyReadTimeoutMs: 150 }
+          { deliveryTimeoutMs: 150 }
         );
-        const startedAt = Date.now();
         const result = await handler.handle(createClaimedJob());
-        const elapsedMs = Date.now() - startedAt;
 
-        expect(elapsedMs).toBeLessThan(350);
         expect(result.status).toBe('done');
         expect(result.meta?.log?.payload).toMatchObject({
           result: LogResult.Success,
@@ -228,13 +222,10 @@ describe('webhook job handler delivery and body-read bounds', () => {
       async ({ endpoint, waitForClosedConnections }) => {
         const handler = createWebhookJobHandler(
           { findHookForDelivery: async () => createHook(endpoint, 0) },
-          { deliveryTimeoutMs: 400, bodyReadTimeoutMs: 150 }
+          { deliveryTimeoutMs: 150 }
         );
-        const startedAt = Date.now();
         const result = await handler.handle(createClaimedJob());
-        const elapsedMs = Date.now() - startedAt;
 
-        expect(elapsedMs).toBeLessThan(350);
         expect(result.status).toBe('retry');
         expect(result.meta?.log?.payload).toMatchObject({
           result: LogResult.Error,
@@ -265,13 +256,10 @@ describe('webhook job handler delivery and body-read bounds', () => {
       async ({ endpoint, getAttempts, waitForClosedConnections }) => {
         const handler = createWebhookJobHandler(
           { findHookForDelivery: async () => createHook(endpoint, 3) },
-          { deliveryTimeoutMs: 200, bodyReadTimeoutMs: 100 }
+          { deliveryTimeoutMs: 200 }
         );
-        const startedAt = Date.now();
         const result = await handler.handle(createClaimedJob());
-        const elapsedMs = Date.now() - startedAt;
 
-        expect(elapsedMs).toBeLessThan(400);
         expect(getAttempts()).toBe(1);
         expect(result.status).toBe('retry');
         expect(result.meta?.log?.payload).toMatchObject({

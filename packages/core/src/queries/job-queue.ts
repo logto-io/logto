@@ -8,7 +8,7 @@ import {
 } from '@logto/job-queue';
 import { type Hook, type Job } from '@logto/schemas';
 import { type Nullable } from '@silverhand/essentials';
-import { sql, type CommonQueryMethods } from '@silverhand/slonik';
+import { InvalidInputError, sql, type CommonQueryMethods } from '@silverhand/slonik';
 
 import {
   type CreateJobQueueQueriesOptions,
@@ -18,9 +18,7 @@ import {
 
 export type { ExpiredJobRow, JobLogUpsert } from './job-queue-park.js';
 
-export type CoreJobSettlementMeta = {
-  log?: JobLogUpsert;
-};
+export type CoreJobSettlementMeta = { log?: JobLogUpsert };
 
 export type WebhookDeliveryHook = Pick<Hook, 'id' | 'config' | 'signingKey' | 'enabled'>;
 
@@ -240,7 +238,9 @@ export const createJobQueueQueries = (
    * Delete the row when the job ends, or hand it back with its next due time on retry. Returns
    * `stale` when the lease was lost, so a slow worker never touches a reclaimed row. When `meta.log`
    * is provided, upsert the corresponding `logs` row in the same fenced CTE; otherwise terminal
-   * settlements clear any pending `nextAttemptAt` on an existing `logs` row inside the fence.
+   * settlements clear any pending `nextAttemptAt` on an existing `logs` row inside the fence. A log
+   * Postgres rejects is dropped rather than left to block the settlement, or the lease would
+   * redeliver forever.
    */
   const settle = async ({
     job,
@@ -288,19 +288,29 @@ export const createJobQueueQueries = (
         ? { ...meta.log.payload, nextAttemptAt: resolution.nextAttemptAt }
         : meta.log.payload;
 
-    const { count } = await pool.one<{ count: number }>(sql`
-      with settled as (${settledCte}),
-      logged as (
-        insert into logs (tenant_id, id, key, payload)
-        select tenant_id, ${job.id}, ${meta.log.key}, ${JSON.stringify(logPayload)}::jsonb
-        from settled
-        on conflict (id) do update
-          set payload = excluded.payload
-          where logs.tenant_id = excluded.tenant_id
-      )
-      select count(*)::int4 as count from settled
-    `);
-    return count > 0 ? 'settled' : 'stale';
+    try {
+      const { count } = await pool.one<{ count: number }>(sql`
+        with settled as (${settledCte}),
+        logged as (
+          insert into logs (tenant_id, id, key, payload)
+          select tenant_id, ${job.id}, ${meta.log.key}, ${JSON.stringify(logPayload)}::jsonb
+          from settled
+          on conflict (id) do update
+            set payload = excluded.payload
+            where logs.tenant_id = excluded.tenant_id
+        )
+        select count(*)::int4 as count from settled
+      `);
+
+      return count > 0 ? 'settled' : 'stale';
+    } catch (error: unknown) {
+      // `jsonb` rejects some strings `JSON.stringify` emits, such as a lone surrogate.
+      if (!(error instanceof InvalidInputError)) {
+        throw error;
+      }
+
+      return settle({ job, workerId, resolution });
+    }
   };
 
   const parkDueGroup = createParkDueGroup(pool, options);
