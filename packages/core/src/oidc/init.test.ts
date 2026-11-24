@@ -1,5 +1,6 @@
 /* eslint-disable max-lines -- provider init tests share one harness; splitting fragments the shared mock setup. */
 import assert from 'node:assert';
+import { generateKeyPairSync } from 'node:crypto';
 
 import {
   AuthenticationContextMode,
@@ -9,9 +10,11 @@ import {
   logtoCookieKey,
   type Scope,
 } from '@logto/schemas';
+import { NotFoundError } from '@silverhand/slonik';
 import { errors, type KoaContextWithOIDC } from 'oidc-provider';
+import request from 'supertest';
 
-import { mockResource, mockUser } from '#src/__mocks__/index.js';
+import { mockApplication, mockResource, mockUser } from '#src/__mocks__/index.js';
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { JwtCustomizerLibrary } from '#src/libraries/jwt-customizer.js';
@@ -53,10 +56,10 @@ const getResourceServerInfo = async (ctx: KoaContextWithOIDC, indicator: string)
   );
 };
 
-const createProvider = (tenant: MockTenant) =>
+const createProvider = (tenant: MockTenant, envSet = tenant.envSet) =>
   initOidc(
     tenant.id,
-    tenant.envSet,
+    envSet,
     tenant.queries,
     tenant.libraries,
     tenant.logtoConfigs,
@@ -888,7 +891,7 @@ describe('RefreshToken TTL', () => {
 const findAccount = async (findUserById: () => Promise<typeof mockUser>) => {
   const provider = createProvider(new MockTenant(undefined, { users: { findUserById } }));
   const configuration = getProviderConfiguration(provider);
-  return configuration.findAccount(createOidcContext({ provider }), accountId);
+  return configuration.findAccount(createOidcContext({ provider, route: 'token' }), accountId);
 };
 
 describe('findAccount', () => {
@@ -901,7 +904,7 @@ describe('findAccount', () => {
   it('should reject when the user cannot be found', async () => {
     await expect(
       findAccount(async () => {
-        throw new Error('not found');
+        throw new NotFoundError();
       })
     ).rejects.toMatchError(new errors.InvalidGrant('user not found'));
   });
@@ -912,6 +915,83 @@ describe('findAccount', () => {
     ).rejects.toMatchError(new errors.InvalidGrant('user is suspended'));
   });
 });
+
+describe('authorization with a session for a deleted user', () => {
+  const { privateKey } = generateKeyPairSync('rsa', { modulusLength: 2048 });
+  const jwk = privateKey.export({ format: 'jwk' });
+
+  class AuthorizationEnvSet extends EnvSet {
+    override get oidc(): EnvSet['oidc'] {
+      return { ...mockEnvSet.oidc, cookieKeys: ['test-cookie-key'], privateJwks: [jwk] };
+    }
+  }
+
+  it.each([
+    ['login', 'sign-in'],
+    [undefined, 'sign-in'],
+    ['none', 'login_required'],
+  ])('should return %s as %s without reusing the session', async (prompt, expected) => {
+    const clientRedirectUri = 'https://client.example.com/callback';
+    const tenant = new MockTenant(undefined, {
+      applications: {
+        findApplicationById: async () => ({
+          ...mockApplication,
+          id: clientId,
+          oidcClientMetadata: {
+            ...mockApplication.oidcClientMetadata,
+            redirectUris: [clientRedirectUri],
+          },
+        }),
+      },
+      users: {
+        findUserById: async () => {
+          throw new NotFoundError();
+        },
+      },
+    });
+    const provider = createProvider(
+      tenant,
+      new AuthorizationEnvSet(defaultTenantId, EnvSet.values.dbUrl)
+    );
+    const session = new provider.Session();
+    session.loginAccount({ accountId, acr: LogtoAcr.Mfa });
+    // Resolve the real session model even though its user was deleted.
+    jest.spyOn(provider.Session, 'find').mockResolvedValueOnce(session);
+
+    provider.use(async (ctx, next) => {
+      if (ctx.path === '/seed-session-cookie') {
+        ctx.cookies.set('_session', session.jti, { signed: true });
+        ctx.status = 204;
+        return;
+      }
+
+      return next();
+    });
+
+    const agent = request.agent(provider.callback());
+    await agent.get('/seed-session-cookie').expect(204);
+    const response = await agent.get('/auth').query({
+      client_id: clientId,
+      redirect_uri: clientRedirectUri,
+      response_type: 'code',
+      scope: 'openid',
+      code_challenge: 'a'.repeat(43),
+      code_challenge_method: 'S256',
+      acr_values: LogtoAcr.Mfa,
+      ...(prompt && { prompt }),
+    });
+
+    expect(response.status).toBe(303);
+    const { location } = response.headers;
+    assert(location);
+    if (expected === 'sign-in') {
+      expect(location).toMatch(/^\/sign-in(?:\?|$)/);
+    } else {
+      expect(new URL(location).searchParams.get('error')).toBe(expected);
+    }
+  });
+});
+
 describe('authentication context provider metadata', () => {
   it('should advertise the Logto ACR values and the acr / amr / auth_time claims', () => {
     const configuration = getProviderConfiguration(createProvider(new MockTenant()));

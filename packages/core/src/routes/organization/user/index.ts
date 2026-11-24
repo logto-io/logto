@@ -31,6 +31,7 @@ export default function userRoutes(
       query: z.object({
         q: z.string().optional(),
         organizationRoleId: z.string().min(1).optional(),
+        roleId: z.string().min(1).optional(),
       }),
       params: z.object({ id: z.string().min(1) }),
       response: userWithOrganizationRolesGuard.array(),
@@ -38,14 +39,13 @@ export default function userRoutes(
     }),
     async (ctx, next) => {
       const search = parseSearchOptions(userSearchKeys, ctx.guard.query);
-      const { organizationRoleId } = ctx.guard.query;
-      const organizationRoleFilter = organizationRoleId ? { organizationRoleId } : {};
+      const { organizationRoleId, roleId } = ctx.guard.query;
 
       const [totalCount, entities] = await organizations.relations.users.getUsersByOrganizationId(
         ctx.guard.params.id,
         ctx.pagination,
         search,
-        organizationRoleFilter
+        { organizationRoleId, roleId }
       );
 
       ctx.pagination.totalCount = totalCount;

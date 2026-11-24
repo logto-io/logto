@@ -80,12 +80,17 @@
           {
             "name": "q",
             "in": "query",
-            "description": "The query to filter users. It will match multiple fields of users, including ID, name, username, email, and phone number.\n\nIf not provided, all users will be returned."
+            "description": "Search members by ID, name, username, email, or phone number."
           },
           {
             "name": "organizationRoleId",
             "in": "query",
-            "description": "The organization role ID used to filter organization members.\n\nIf not provided, all organization members will be returned."
+            "description": "Only include members assigned this organization role in the specified organization."
+          },
+          {
+            "name": "roleId",
+            "in": "query",
+            "description": "Only include members assigned this tenant-level user role. If `organizationRoleId` or `q` is also provided, members must match all supplied filters."
           }
         ],
         "responses": {

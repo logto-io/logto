@@ -97,7 +97,7 @@
           }
         },
         "summary": "Delete user",
-        "description": "Delete user with the given ID. Note all associated data will be deleted cascadingly."
+        "description": "Delete the user with the given ID and cascade deletion of associated data. Logto also attempts to revoke the user's sessions, tokens, and authorization grants. If revocation times out, the user is still deleted and remaining OIDC records are left to expire."
       }
     },
     "/api/users/{userId}/custom-data": {

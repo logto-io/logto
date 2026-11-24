@@ -19,6 +19,8 @@ type Query = {
   page_size?: number;
 };
 
+type OrganizationUsersQuery = Query & { organizationRoleId?: string; roleId?: string };
+
 export class OrganizationApi extends ApiFactory<Organization, Omit<CreateOrganization, 'id'>> {
   jit = new OrganizationJitApi(this.path);
   applications = new RelationApiFactory<Application>({
@@ -58,7 +60,7 @@ export class OrganizationApi extends ApiFactory<Organization, Omit<CreateOrganiz
 
   async getUsers(
     id: string,
-    query?: Query
+    query?: OrganizationUsersQuery
   ): Promise<[rows: UserWithOrganizationRoles[], totalCount: number]> {
     const got = await authedAdminApi.get(`${this.path}/${id}/users`, { searchParams: query });
     return [await got.json(), Number(got.headers.get('total-number') ?? 0)];
