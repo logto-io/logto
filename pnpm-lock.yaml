@@ -4182,6 +4182,9 @@ importers:
       '@logto/experience':
         specifier: workspace:*
         version: link:../experience
+      '@logto/job-queue':
+        specifier: workspace:^
+        version: link:../job-queue
       '@logto/js':
         specifier: ^5.1.0
         version: 5.1.0
