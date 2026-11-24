@@ -190,7 +190,12 @@ const EditProfileFieldModal = ({ field, userInfo, onClose, onUpdated }: Props) =
         <>
           <div className={styles.header}>
             <div className={styles.title}>{t('action.change', { method: field.label })}</div>
-            <button type="button" className={styles.closeButton} onClick={onClose}>
+            <button
+              type="button"
+              className={styles.closeButton}
+              aria-label={t('action.close')}
+              onClick={onClose}
+            >
               <CloseIcon />
             </button>
           </div>

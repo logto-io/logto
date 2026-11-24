@@ -3,6 +3,7 @@ import {
   defaultTrustedDevicePolicy,
   MfaFactor,
   MfaPolicy,
+  MfaVerificationCodeEnrollment,
   type TrustedDevicePolicy,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
@@ -77,7 +78,13 @@ export const normalizeSetUpPrompt = (policy: MfaPolicy, adaptiveMfaEnabled: bool
 };
 
 export const convertMfaConfigToForm = (
-  { policy, factors, organizationRequiredMfaPolicy, skipAdditionalBindingSuggestion }: MfaConfig,
+  {
+    policy,
+    factors,
+    organizationRequiredMfaPolicy,
+    skipAdditionalBindingSuggestion,
+    verificationCodeEnrollment,
+  }: MfaConfig,
   adaptiveMfa?: AdaptiveMfa,
   trustedDevice?: TrustedDevicePolicy
 ): MfaConfigForm => ({
@@ -88,6 +95,7 @@ export const convertMfaConfigToForm = (
   backupCodeEnabled: factors.includes(MfaFactor.BackupCode),
   emailVerificationCodeEnabled: factors.includes(MfaFactor.EmailVerificationCode),
   phoneVerificationCodeEnabled: factors.includes(MfaFactor.PhoneVerificationCode),
+  verificationCodeEnrollment: verificationCodeEnrollment ?? MfaVerificationCodeEnrollment.Implicit,
   organizationRequiredMfaPolicy,
   additionalBindingSuggestionEnabled: !skipAdditionalBindingSuggestion,
   adaptiveMfaEnabled: Boolean(adaptiveMfa?.enabled),
@@ -105,6 +113,7 @@ export const convertMfaFormToConfig = (mfaConfigForm: MfaConfigForm): MfaConfig 
     backupCodeEnabled,
     emailVerificationCodeEnabled,
     phoneVerificationCodeEnabled,
+    verificationCodeEnrollment,
     organizationRequiredMfaPolicy,
     additionalBindingSuggestionEnabled,
   } = mfaConfigForm;
@@ -129,6 +138,12 @@ export const convertMfaFormToConfig = (mfaConfigForm: MfaConfigForm): MfaConfig 
     ...conditional(shouldIncludeOrganizationRequiredMfaPolicy && { organizationRequiredMfaPolicy }),
     ...conditional(
       !additionalBindingSuggestionEnabled && { skipAdditionalBindingSuggestion: true }
+    ),
+    // Absent means implicit
+    ...conditional(
+      verificationCodeEnrollment === MfaVerificationCodeEnrollment.Explicit && {
+        verificationCodeEnrollment,
+      }
     ),
   };
 };

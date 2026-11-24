@@ -59,7 +59,7 @@ const account_center = {
     authenticator_app: '身份驗證器應用程式',
     passkeys: '通行密鑰',
     backup_codes: '備用碼',
-    email_verification_code: '電郵驗證碼',
+    email_verification_code: '電子郵件驗證碼',
     phone_verification_code: '電話驗證碼',
     passkeys_count_one: '{{count}} 個通行密鑰',
     passkeys_count_other: '{{count}} 個通行密鑰',
@@ -96,6 +96,12 @@ const account_center = {
     email_removed: '電子郵件地址已成功移除。',
     phone_removed: '手機號碼已成功移除。',
     username_removed: '使用者名稱已成功移除。',
+    remove_email_verification_code_confirmation_title: '移除電子郵件驗證碼',
+    remove_email_verification_code_confirmation_description:
+      '你將不再透過此電子郵件地址接收兩步驟驗證碼。該電子郵件地址仍會保留在你的帳戶中。',
+    remove_phone_verification_code_confirmation_title: '移除電話驗證碼',
+    remove_phone_verification_code_confirmation_description:
+      '你將不再透過此電話號碼接收兩步驟驗證碼。該電話號碼仍會保留在你的帳戶中。',
     trusted_devices: {
       title: 'MFA 受信任裝置',
       current_device: '目前裝置',

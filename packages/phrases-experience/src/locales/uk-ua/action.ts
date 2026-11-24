@@ -38,6 +38,8 @@ const action = {
   use_another_account: 'Використати інший обліковий запис',
   back_to_current_account: 'Повернутися до поточного облікового запису',
   done: 'Готово',
+  close: 'Закрити',
+  clear: 'Очистити',
 };
 
 export default Object.freeze(action);

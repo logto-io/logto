@@ -20,7 +20,7 @@ const mfa = {
   send_to_phone: 'Wyślij do {{identifier}}',
   onboarding: 'Włącz weryfikację dwuetapową',
   onboarding_description:
-    'Chroń swoje konto za pomocą weryfikacji dwuetapowej. Wybierz jedną lub więcej metod: klucz dostępu, aplikacja uwierzytelniająca (OTP), kod weryfikacyjny SMS lub kody zapasowe.',
+    'Chroń swoje konto za pomocą weryfikacji dwuetapowej. Wybierz jedną lub więcej metod potwierdzania tożsamości podczas logowania.',
   enable_mfa: 'Włącz weryfikację dwuetapową',
   add_mfa_factors: 'Dodaj weryfikację dwuetapową',
   add_mfa_description:

@@ -3,7 +3,7 @@ import { useCallback, useContext } from 'react';
 import { useTimer } from 'react-timer-hook';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
-import { sendStepUpVerificationCode } from '@/apis/experience';
+import { sendSubjectVerificationCode } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useStepUpErrorHandler from '@/hooks/use-step-up-error-handler';
@@ -29,7 +29,7 @@ const useResendStepUpVerificationCode = (identifierType: VerificationCodeIdentif
   const { setToast } = useToast();
   const handleError = useErrorHandler();
   const stepUpErrorHandlers = useStepUpErrorHandler();
-  const resend = useApi(sendStepUpVerificationCode);
+  const resend = useApi(sendSubjectVerificationCode);
   const { setVerificationId } = useContext(UserInteractionContext);
 
   const { seconds, isRunning, restart } = useTimer({

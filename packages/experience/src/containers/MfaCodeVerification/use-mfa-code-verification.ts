@@ -10,18 +10,28 @@ import useMfaSubmitErrorHandler from '@/hooks/use-mfa-submit-error-handler';
 
 import useGeneralVerificationCodeErrorHandler from '../VerificationCode/use-general-verification-code-error-handler';
 
+type UseMfaCodeVerificationResult = {
+  errorMessage?: string;
+  clearErrorMessage: () => void;
+  onSubmit: (code: string) => Promise<void>;
+};
+
 const useMfaCodeVerification = (
   identifierType: SignInIdentifier.Email | SignInIdentifier.Phone,
   verificationId: string,
-  errorCallback?: () => void
-) => {
+  errorCallback?: () => void,
+  verifyCode: typeof verifyMfaByVerificationCode = verifyMfaByVerificationCode
+): UseMfaCodeVerificationResult => {
   const [errorMessage, setErrorMessage] = useState<string>();
-  const asyncVerify = useApi(verifyMfaByVerificationCode);
+  const asyncVerify = useApi(verifyCode);
   const handleError = useErrorHandler();
   const redirectTo = useGlobalRedirectTo();
 
-  const { generalVerificationCodeErrorHandlers, errorMessage: generalErrorMessage } =
-    useGeneralVerificationCodeErrorHandler();
+  const {
+    generalVerificationCodeErrorHandlers,
+    errorMessage: generalErrorMessage,
+    clearErrorMessage,
+  } = useGeneralVerificationCodeErrorHandler();
 
   const submitInteractionErrorHandler = useMfaSubmitErrorHandler();
 
@@ -60,8 +70,14 @@ const useMfaCodeVerification = (
     ]
   );
 
+  const clearAllErrorMessages = () => {
+    setErrorMessage(undefined);
+    clearErrorMessage();
+  };
+
   return {
     errorMessage: errorMessage ?? generalErrorMessage,
+    clearErrorMessage: clearAllErrorMessages,
     onSubmit,
   };
 };

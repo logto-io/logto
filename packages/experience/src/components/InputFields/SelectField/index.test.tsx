@@ -61,6 +61,18 @@ describe('SelectField', () => {
     expect((input as HTMLInputElement).value).toBe('Banana');
   });
 
+  test('names the arrow toggle after the field and reports its state', () => {
+    const { getByRole } = render(<Controlled label="Favorite" name="favorite" options={options} />);
+    const toggle = getByRole('button', { name: 'Favorite' });
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+
+    act(() => {
+      fireEvent.keyDown(toggle, { key: 'Enter' });
+    });
+
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+  });
+
   test('ArrowDown first focuses first item then Enter selects', () => {
     const handleChange = jest.fn();
     const { container } = render(

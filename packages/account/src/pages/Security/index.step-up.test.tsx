@@ -8,6 +8,7 @@ import renderWithPageContext, {
   mockSignInExperienceSettings,
 } from '@ac/__mocks__/RenderWithPageContext';
 import { securityRoute } from '@ac/constants/routes';
+import { type PendingStepUpAction } from '@ac/utils/pending-step-up';
 import { accountStorage } from '@ac/utils/session-storage';
 import {
   completePendingStepUp,
@@ -15,7 +16,13 @@ import {
   startPendingStepUp,
 } from '@ac/utils/step-up';
 
-import { getMfaSettings, getMfaVerifications, updateMfaSettings } from '../../apis/mfa';
+import {
+  addVerificationCodeMfa,
+  deleteMfaVerification,
+  getMfaSettings,
+  getMfaVerifications,
+  updateMfaSettings,
+} from '../../apis/mfa';
 
 import Security from '.';
 
@@ -33,6 +40,8 @@ jest.mock('@logto/react', () => ({
 }));
 
 jest.mock('../../apis/mfa', () => ({
+  addVerificationCodeMfa: jest.fn(),
+  deleteMfaVerification: jest.fn(),
   getMfaSettings: jest.fn(),
   getMfaVerifications: jest.fn(),
   updateMfaSettings: jest.fn(),
@@ -104,8 +113,8 @@ const renderMfaSection = (
   );
 
 /** The state the restored route sees after a successful step-up callback. */
-const prepareResumableStepUp = (type: 'enable-mfa' | 'disable-mfa') => {
-  startPendingStepUp({ type }, '/account/security');
+const prepareResumableStepUp = (action: PendingStepUpAction) => {
+  startPendingStepUp(action, '/account/security');
   handlePendingStepUpOnPageLoad({ pathname: '/account', search: '?code=code&state=state' });
   completePendingStepUp();
   handlePendingStepUpOnPageLoad({ pathname: '/account', search: '' });
@@ -242,7 +251,7 @@ describe('<Security /> OIDC step-up', () => {
 
   it('runs the resumed action once with the elevated token', async () => {
     mockUpdateMfaSettings.mockResolvedValue({ skipMfaOnSignIn: true, required: false });
-    prepareResumableStepUp('disable-mfa');
+    prepareResumableStepUp({ type: 'disable-mfa' });
     const { getByLabelText, unmount } = renderMfaSection();
 
     await waitFor(() => {
@@ -267,7 +276,7 @@ describe('<Security /> OIDC step-up', () => {
 
   it('reports a challenge on the resumed action instead of stepping up again', async () => {
     mockUpdateMfaSettings.mockRejectedValue(createChallengeError());
-    prepareResumableStepUp('enable-mfa');
+    prepareResumableStepUp({ type: 'enable-mfa' });
 
     renderMfaSection();
 
@@ -277,5 +286,37 @@ describe('<Security /> OIDC step-up', () => {
     expect(mockUpdateMfaSettings).toHaveBeenCalledTimes(1);
     expect(mockSignIn).not.toHaveBeenCalled();
     expect(accountStorage.pendingStepUp.get()).toBeUndefined();
+  });
+
+  it('resumes enrolling the email verification code after the step-up', async () => {
+    jest.mocked(addVerificationCodeMfa).mockResolvedValue(undefined);
+    prepareResumableStepUp({
+      type: 'add-verification-code-mfa',
+      factor: MfaFactor.EmailVerificationCode,
+    });
+
+    renderMfaSection();
+
+    await waitFor(() => {
+      expect(addVerificationCodeMfa).toHaveBeenCalledWith(
+        'access-token',
+        MfaFactor.EmailVerificationCode
+      );
+    });
+    expect(addVerificationCodeMfa).toHaveBeenCalledTimes(1);
+    expect(mockSignIn).not.toHaveBeenCalled();
+  });
+
+  it('resumes removing the email verification code after the step-up', async () => {
+    jest.mocked(deleteMfaVerification).mockResolvedValue(undefined);
+    prepareResumableStepUp({ type: 'remove-verification-code-mfa', id: 'email-mfa' });
+
+    renderMfaSection();
+
+    await waitFor(() => {
+      expect(deleteMfaVerification).toHaveBeenCalledWith('access-token', 'email-mfa');
+    });
+    expect(deleteMfaVerification).toHaveBeenCalledTimes(1);
+    expect(mockSignIn).not.toHaveBeenCalled();
   });
 });

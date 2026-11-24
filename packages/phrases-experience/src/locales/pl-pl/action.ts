@@ -38,6 +38,8 @@ const action = {
   use_another_account: 'Użyj innego konta',
   back_to_current_account: 'Powróć do bieżącego konta',
   done: 'Gotowe',
+  close: 'Zamknij',
+  clear: 'Wyczyść',
 };
 
 export default Object.freeze(action);

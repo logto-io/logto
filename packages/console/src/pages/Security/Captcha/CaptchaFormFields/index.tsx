@@ -1,4 +1,4 @@
-import { RecaptchaEnterpriseMode } from '@logto/schemas';
+import { FriendlyCaptchaApiEndpoint, RecaptchaEnterpriseMode } from '@logto/schemas';
 import {
   type UseFormRegister,
   type FieldErrors,
@@ -39,6 +39,7 @@ function CaptchaFormFields({ metadata, errors, register, control }: Props) {
   const domainField = metadata.requiredFields.find((field) => field.field === 'domain');
   const modeField = metadata.requiredFields.find((field) => field.field === 'mode');
   const endpointField = metadata.requiredFields.find((field) => field.field === 'endpoint');
+  const apiEndpointField = metadata.requiredFields.find((field) => field.field === 'apiEndpoint');
   const scoreThresholdField = metadata.requiredFields.find(
     (field) => field.field === 'scoreThreshold'
   );
@@ -113,6 +114,27 @@ function CaptchaFormFields({ metadata, errors, register, control }: Props) {
             error={Boolean(errors.secretKey)}
             placeholder={String(t(secretKeyField.placeholder))}
             {...register('secretKey', { required: true })}
+          />
+        </FormField>
+      )}
+      {apiEndpointField && (
+        <FormField title={apiEndpointField.label}>
+          <Controller
+            name="apiEndpoint"
+            control={control}
+            defaultValue={FriendlyCaptchaApiEndpoint.Global}
+            render={({ field: { onChange, value } }) => (
+              <RadioGroup name="apiEndpoint" value={value} onChange={onChange}>
+                <Radio
+                  title="security.captcha_details.friendly_captcha_api_endpoint_global"
+                  value={FriendlyCaptchaApiEndpoint.Global}
+                />
+                <Radio
+                  title="security.captcha_details.friendly_captcha_api_endpoint_eu"
+                  value={FriendlyCaptchaApiEndpoint.Eu}
+                />
+              </RadioGroup>
+            )}
           />
         </FormField>
       )}

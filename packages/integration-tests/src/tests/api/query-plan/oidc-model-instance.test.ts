@@ -9,15 +9,32 @@ import {
   type SqlSqlToken,
 } from '@silverhand/slonik';
 
-import {
-  expectFilter,
-  expectIndexCondition,
-  expectNoIndexCondition,
-  explainAsTenant,
-} from '#src/helpers/query-plan.js';
+import { expectIndexCondition, explainAsTenant } from '#src/helpers/query-plan.js';
 
-// `explain` prints operators space-padded, unlike the query text.
-const grantIdExpression = /payload ->> 'grantId'/;
+// The shape of core's `OidcSessionExtensionsQueries` session lookups.
+const sessionsStatement = (extraCondition = sql``) => sql`
+  select oidc_model_instances.payload, oidc_session_extensions.last_submission
+  from oidc_model_instances
+  left join oidc_session_extensions
+    on payload_uid = session_uid
+    and oidc_session_extensions.account_id = ${'query-plan-seed-account-1'}
+  where model_name = ${'Session'}
+    and payload_account_id = ${'query-plan-seed-account-1'}
+    ${extraCondition}
+    and expires_at > now()
+`;
+
+// The shape of core's batched revoke; the outer delete only probes the primary key.
+const revokeStatement = (modelName: string, condition: SqlSqlToken) => sql`
+  delete from oidc_model_instances
+  where id in (
+    select id
+    from oidc_model_instances
+    where model_name = ${modelName}
+      and ${condition}
+    limit ${2000}
+  )
+`;
 
 const seedRows = async (connection: DatabasePoolConnection) => {
   await connection.query(sql`
@@ -39,7 +56,7 @@ const seedRows = async (connection: DatabasePoolConnection) => {
       jsonb_build_object('accountId', 'query-plan-seed-account-' || n)
         || case when model = 'Session' then jsonb_build_object('uid', 'query-plan-seed-uid-' || n) else '{}' end,
       now() + interval '1 hour'
-    from generate_series(1, 10) as n, unnest(array['Session', 'Grant']) as model
+    from generate_series(1, 10) as n, unnest(array['AccessToken', 'RefreshToken', 'Session', 'Grant']) as model
   `);
   await connection.query(sql`
     insert into oidc_model_instances (tenant_id, model_name, id, payload, expires_at)
@@ -93,59 +110,123 @@ describe('oidc_model_instances query plans under the tenant role', () => {
     expectIndexCondition(plan, 'id');
   });
 
-  describe('revoke by grant id', () => {
-    // The lookup inside core's batched delete; the delete itself only probes the primary key.
-    const statement = sql`
-      select id from oidc_model_instances
-      where model_name = ${'RefreshToken'}
-        and payload ? 'grantId'
-        and payload->>'grantId' = ${'query-plan-test-grant'}
-      limit ${500}
-    `;
+  it('seeks the batched revoke by the grant id column', async () => {
+    const plan = await explain(
+      revokeStatement('RefreshToken', sql`payload_grant_id = ${'query-plan-seed-grant-1'}`)
+    );
 
-    it('filters the grant id instead of seeking by it', async () => {
-      const plan = await explain(statement);
+    expectIndexCondition(plan, 'payload_grant_id');
+  });
 
-      expectIndexCondition(plan, 'tenant_id');
-      expectNoIndexCondition(plan, grantIdExpression);
-      expectFilter(plan, grantIdExpression);
+  it.each(['AccessToken', 'RefreshToken', 'Session', 'Grant'])(
+    'seeks the batched %s revoke by the account id column',
+    async (modelName) => {
+      const plan = await explain(
+        revokeStatement(modelName, sql`payload_account_id = ${'query-plan-seed-account-1'}`)
+      );
+
+      expectIndexCondition(plan, 'payload_account_id');
+    }
+  );
+
+  describe('user sessions with extensions', () => {
+    it('seeks the session list by the account id column', async () => {
+      const plan = await explain(sessionsStatement());
+
+      expectIndexCondition(plan, 'payload_account_id');
     });
 
-    it('seeks by the grant id column', async () => {
+    it('seeks a single session by a key column', async () => {
+      const plan = await explain(
+        sessionsStatement(sql`and payload_uid = ${'query-plan-seed-uid-1'}`)
+      );
+
+      expectIndexCondition(plan, /\(payload_(account_id|uid)[\s)]/);
+    });
+  });
+
+  describe('user grants', () => {
+    it('seeks the application grants by the account id column', async () => {
       const plan = await explain(sql`
-        select id from oidc_model_instances
-        where model_name = ${'RefreshToken'}
-          and payload_grant_id = ${'query-plan-seed-grant-1'}
-        limit ${500}
+        select oidc_model_instance.id, oidc_model_instance.payload, oidc_model_instance.expires_at,
+          json_build_object('id', application.id, 'name', application.name) as application
+        from oidc_model_instances as oidc_model_instance
+        inner join applications as application
+          on oidc_model_instance.payload->>'clientId' = application.id
+        where oidc_model_instance.model_name = 'Grant'
+          and oidc_model_instance.payload_account_id = ${'query-plan-seed-account-1'}
+          and oidc_model_instance.expires_at > now()
       `);
 
-      expectIndexCondition(plan, 'payload_grant_id');
+      expectIndexCondition(plan, 'payload_account_id');
     });
-  });
 
-  it.each(['Session', 'Grant'])('seeks a %s lookup by the account id column', async (modelName) => {
-    const plan = await explain(sql`
-      select id from oidc_model_instances
-      where model_name = ${modelName}
-        and payload_account_id = ${'query-plan-seed-account-1'}
-        and expires_at > now()
-    `);
+    it('seeks the CIMD grants by the account id column', async () => {
+      // With an empty snapshot table the planner would rather drive the join from it.
+      const seedSnapshots = async (connection: DatabasePoolConnection) => {
+        await seedRows(connection);
+        await connection.query(sql`
+          insert into cimd_grant_client_snapshots (tenant_id, grant_id, client_id)
+          select ${defaultTenantId}, id, 'https://query-plan.example.com/' || id
+          from oidc_model_instances
+          where model_name = 'Grant' and id like 'query-plan-seed-%'
+        `);
+        await connection.query(sql`analyze cimd_grant_client_snapshots`);
+      };
 
-    expectIndexCondition(plan, 'payload_account_id');
-  });
+      const plan = await explainAsTenant(
+        pool,
+        defaultTenantId,
+        sql`
+        select oidc_model_instances.id, payload, expires_at,
+          json_build_object(
+            'id', cimd_grant_client_snapshots.client_id,
+            'name', coalesce(cimd_grant_client_snapshots.name, cimd_grant_client_snapshots.client_id)
+          ) as application
+        from oidc_model_instances
+        inner join cimd_grant_client_snapshots
+          on cimd_grant_client_snapshots.tenant_id = oidc_model_instances.tenant_id
+          and cimd_grant_client_snapshots.grant_id = oidc_model_instances.id
+        where model_name = 'Grant'
+          and payload_account_id = ${'query-plan-seed-account-1'}
+          and expires_at > now()
+      `,
+        seedSnapshots
+      );
 
-  it('seeks by the tenant and filters the current uid lookup', async () => {
-    // The shape `findPayloadByUid` runs today, after its expression index was dropped. The planner
-    // may pick any Session-only partial index, which covers `model_name` by its predicate rather
-    // than an Index Cond, so only the tenant seek is stable.
-    const plan = await explain(sql`
-      select payload, consumed_at from oidc_model_instances
-      where model_name = ${'Session'} and payload->>'uid' = ${'query-plan-seed-uid-1'}
-      limit ${2}
-    `);
+      expectIndexCondition(plan, 'payload_account_id');
+    });
 
-    expectIndexCondition(plan, 'tenant_id');
-    expectFilter(plan, /payload ->> 'uid'/);
+    it('seeks the grants of a client by the account id column', async () => {
+      const plan = await explain(sql`
+        select id, payload, expires_at
+        from oidc_model_instances
+        where model_name = 'Grant'
+          and payload_account_id = ${'query-plan-seed-account-1'}
+          and payload->>'clientId' = ${'query-plan-test-client'}
+          and expires_at > now()
+      `);
+
+      expectIndexCondition(plan, 'payload_account_id');
+    });
+
+    it('seeks the session of a grant by the account id column', async () => {
+      const plan = await explain(sql`
+        select payload ->> 'uid' as "sessionUid"
+        from oidc_model_instances
+        where model_name = ${'Session'}
+          and payload_account_id = ${'query-plan-seed-account-1'}
+          and expires_at > now()
+          and exists (
+            select 1
+            from jsonb_each(payload -> 'authorizations') as authorization_entry
+            where authorization_entry.value ->> 'grantId' = ${'query-plan-test-grant'}
+          )
+        limit 1
+      `);
+
+      expectIndexCondition(plan, 'payload_account_id');
+    });
   });
 
   it('seeks a session lookup by the uid column', async () => {

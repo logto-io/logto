@@ -2,6 +2,7 @@ import {
   AccountCenterControlValue,
   MfaFactor,
   MfaPolicy,
+  MfaVerificationCodeEnrollment,
   type UserMfaVerificationResponse,
 } from '@logto/schemas';
 
@@ -222,6 +223,47 @@ describe('hasConfiguredSecondFactor', () => {
         hasPrimaryPhone: true,
       })
     ).toBe(true);
+  });
+
+  it('counts email and phone factors only with a stored record in explicit enrollment', () => {
+    const explicitSettings = (factors: MfaFactor[]) => ({
+      ...getSettings(factors),
+      mfa: {
+        factors,
+        policy: MfaPolicy.UserControlled,
+        verificationCodeEnrollment: MfaVerificationCodeEnrollment.Explicit,
+      },
+    });
+    const emailRecord = {
+      id: 'email',
+      createdAt: '2026-05-13T00:00:00.000Z',
+      type: MfaFactor.EmailVerificationCode,
+    } satisfies UserMfaVerificationResponse[number];
+
+    expect(
+      hasConfiguredSecondFactor([], explicitSettings([MfaFactor.EmailVerificationCode]), {
+        primaryEmail: 'alex@example.com',
+      })
+    ).toBe(false);
+    expect(
+      hasConfiguredSecondFactor(
+        [emailRecord],
+        explicitSettings([MfaFactor.EmailVerificationCode]),
+        {
+          primaryEmail: 'alex@example.com',
+        }
+      )
+    ).toBe(true);
+    // A record is ignored while the user has no primary email.
+    expect(
+      hasConfiguredSecondFactor(
+        [emailRecord],
+        explicitSettings([MfaFactor.EmailVerificationCode]),
+        {
+          primaryEmail: null,
+        }
+      )
+    ).toBe(false);
   });
 
   it('counts backup codes only while unused codes remain', () => {

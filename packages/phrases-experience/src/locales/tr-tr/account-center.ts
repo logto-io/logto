@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'Sayfa bulunamadı',
@@ -102,6 +103,12 @@ const account_center = {
     email_removed: 'E-posta adresi başarıyla kaldırıldı.',
     phone_removed: 'Telefon numarası başarıyla kaldırıldı.',
     username_removed: 'Kullanıcı adı başarıyla kaldırıldı.',
+    remove_email_verification_code_confirmation_title: 'E-posta doğrulama kodunu kaldır',
+    remove_email_verification_code_confirmation_description:
+      'Bu e-posta adresine artık iki adımlı doğrulama kodları gönderilmeyecek. E-posta adresi hesabınızda kalır.',
+    remove_phone_verification_code_confirmation_title: 'Telefon doğrulama kodunu kaldır',
+    remove_phone_verification_code_confirmation_description:
+      'Bu telefon numarasına artık iki adımlı doğrulama kodları gönderilmeyecek. Telefon numarası hesabınızda kalır.',
     trusted_devices: {
       title: 'MFA güvenilir cihazları',
       current_device: 'Geçerli cihaz',
@@ -295,3 +302,4 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
+/* eslint-enable max-lines */

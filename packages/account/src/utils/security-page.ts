@@ -5,7 +5,7 @@ import type {
   UserMfaVerificationResponse,
   UserProfileResponse,
 } from '@logto/schemas';
-import { AccountCenterControlValue, MfaFactor } from '@logto/schemas';
+import { AccountCenterControlValue, MfaFactor, resolveUserMfaFactors } from '@logto/schemas';
 
 import { getProfileFieldControlKey } from './profile-field-control';
 import { getAvailableSocialConnectors } from './social-connector.js';
@@ -83,9 +83,8 @@ export const hasVisiblePasskeySection = (
 /**
  * Whether the user has a usable verification method that counts as a real second factor.
  *
- * Mirrors the backend's enabled-factor resolution: only factors enabled in the sign-in experience
- * count, implicit email / phone factors count when the user has the corresponding primary
- * identifier, and backup codes count only while unused codes remain. When passkey sign-in is
+ * Follows the backend's rule in `resolveUserMfaFactors`, which decides when the email / phone
+ * factors count. Backup codes count only while unused codes remain. When passkey sign-in is
  * enabled, a WebAuthn credential acts as a sign-in passkey rather than a dedicated second factor,
  * so it is excluded here.
  */
@@ -94,35 +93,26 @@ export const hasConfiguredSecondFactor = (
   experienceSettings?: SecurityPageExperienceSettings,
   userInfo?: Partial<UserProfileResponse>
 ): boolean => {
-  const enabledFactors = experienceSettings?.mfa.factors ?? [];
-  const isPasskeySignInOn = isPasskeySignInEnabled(experienceSettings);
-
-  const hasStoredFactor = (mfaVerifications ?? []).some((verification) => {
-    if (!enabledFactors.includes(verification.type)) {
-      return false;
-    }
-
-    if (isPasskeySignInOn && verification.type === MfaFactor.WebAuthn) {
-      return false;
-    }
-
-    if (verification.type === MfaFactor.BackupCode) {
-      return (verification.remainCodes ?? 0) > 0;
-    }
-
-    return true;
-  });
-
-  if (hasStoredFactor) {
-    return true;
+  if (!experienceSettings) {
+    return false;
   }
 
-  const hasPrimaryEmail = userInfo?.hasPrimaryEmail ?? Boolean(userInfo?.primaryEmail);
-  const hasPrimaryPhone = userInfo?.hasPrimaryPhone ?? Boolean(userInfo?.primaryPhone);
+  const isPasskeySignInOn = isPasskeySignInEnabled(experienceSettings);
+  const storedFactors = (mfaVerifications ?? [])
+    .filter(
+      (verification) =>
+        !(isPasskeySignInOn && verification.type === MfaFactor.WebAuthn) &&
+        (verification.type !== MfaFactor.BackupCode || (verification.remainCodes ?? 0) > 0)
+    )
+    .map(({ type }) => type);
 
   return (
-    (enabledFactors.includes(MfaFactor.EmailVerificationCode) && hasPrimaryEmail) ||
-    (enabledFactors.includes(MfaFactor.PhoneVerificationCode) && hasPrimaryPhone)
+    resolveUserMfaFactors({
+      mfaSettings: experienceSettings.mfa,
+      storedFactors,
+      hasPrimaryEmail: userInfo?.hasPrimaryEmail ?? Boolean(userInfo?.primaryEmail),
+      hasPrimaryPhone: userInfo?.hasPrimaryPhone ?? Boolean(userInfo?.primaryPhone),
+    }).length > 0
   );
 };
 

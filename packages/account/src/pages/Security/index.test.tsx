@@ -5,6 +5,7 @@ import {
   ConnectorPlatform,
   MfaFactor,
   MfaPolicy,
+  MfaVerificationCodeEnrollment,
   type AccountCenter,
   type UserMfaVerificationResponse,
   type UserProfileResponse,
@@ -19,7 +20,13 @@ import renderWithPageContext, {
 } from '@ac/__mocks__/RenderWithPageContext';
 import { securityRoute } from '@ac/constants/routes';
 
-import { getMfaSettings, getMfaVerifications, updateMfaSettings } from '../../apis/mfa';
+import {
+  addVerificationCodeMfa,
+  deleteMfaVerification,
+  getMfaSettings,
+  getMfaVerifications,
+  updateMfaSettings,
+} from '../../apis/mfa';
 import { getTrustedDevices, removeTrustedDevice } from '../../apis/trusted-devices';
 
 import Security from '.';
@@ -42,6 +49,8 @@ const createIdTokenClaims = (authTime = Math.floor(Date.now() / 1000) - 60) => (
 });
 
 jest.mock('../../apis/mfa', () => ({
+  addVerificationCodeMfa: jest.fn(),
+  deleteMfaVerification: jest.fn(),
   getMfaSettings: jest.fn(),
   getMfaVerifications: jest.fn(),
   updateMfaSettings: jest.fn(),
@@ -158,6 +167,28 @@ const renderSecurity = ({
     }
   );
 };
+
+const renderExplicitEnrollment = () =>
+  renderSecurity({
+    accountCenterSettings: {
+      fields: {
+        username: AccountCenterControlValue.Off,
+        email: AccountCenterControlValue.Off,
+        phone: AccountCenterControlValue.Off,
+        password: AccountCenterControlValue.Off,
+        social: AccountCenterControlValue.Off,
+        mfa: AccountCenterControlValue.Edit,
+      },
+    },
+    experienceSettings: {
+      mfa: {
+        factors: [MfaFactor.EmailVerificationCode, MfaFactor.PhoneVerificationCode],
+        policy: MfaPolicy.Mandatory,
+        verificationCodeEnrollment: MfaVerificationCodeEnrollment.Explicit,
+      },
+    },
+    userInfo: { primaryEmail: 'alex@example.com', primaryPhone: null },
+  });
 
 describe('<Security />', () => {
   beforeEach(() => {
@@ -1206,6 +1237,71 @@ describe('<Security />', () => {
     expect(queryAllByText('account_center.security.not_configured')).toHaveLength(3);
     expect(queryByText('account_center.security.configured')).toBeNull();
     expect(queryAllByText('account_center.security.add')).toHaveLength(3);
+  });
+
+  describe('explicit email / phone MFA enrollment', () => {
+    it('enrolls the primary email from its row', async () => {
+      const emailRecord = {
+        id: 'email-mfa',
+        createdAt: '2026-05-13T00:00:00.000Z',
+        type: MfaFactor.EmailVerificationCode,
+      };
+      mockGetMfaVerifications.mockResolvedValueOnce([]).mockResolvedValueOnce([emailRecord]);
+      jest.mocked(addVerificationCodeMfa).mockResolvedValue(undefined);
+
+      const { getByText, queryByText } = renderExplicitEnrollment();
+
+      await waitFor(() => {
+        expect(queryByText('account_center.security.not_configured')).not.toBeNull();
+      });
+      // The phone row stays hidden without a primary phone.
+      expect(queryByText('account_center.security.phone_verification_code')).toBeNull();
+
+      fireEvent.click(getByText('account_center.security.add'));
+
+      await waitFor(() => {
+        expect(queryByText('account_center.security.remove')).not.toBeNull();
+      });
+      expect(addVerificationCodeMfa).toHaveBeenCalledWith(
+        'access-token',
+        MfaFactor.EmailVerificationCode
+      );
+      expect(queryByText('alex@example.com')).not.toBeNull();
+      expect(queryByText('account_center.security.change')).toBeNull();
+    });
+
+    it('removes the email enrollment after confirmation', async () => {
+      mockGetMfaVerifications
+        .mockResolvedValueOnce([
+          {
+            id: 'email-mfa',
+            createdAt: '2026-05-13T00:00:00.000Z',
+            type: MfaFactor.EmailVerificationCode,
+          },
+        ])
+        .mockResolvedValueOnce([]);
+      jest.mocked(deleteMfaVerification).mockResolvedValue(undefined);
+
+      const { getByText, getAllByText, queryByText } = renderExplicitEnrollment();
+
+      await waitFor(() => {
+        expect(queryByText('account_center.security.remove')).not.toBeNull();
+      });
+
+      fireEvent.click(getByText('account_center.security.remove'));
+      expect(
+        queryByText(
+          'account_center.security.remove_email_verification_code_confirmation_description'
+        )
+      ).not.toBeNull();
+      // The modal's confirm button is the last "Remove".
+      fireEvent.click(getAllByText('account_center.security.remove').at(-1)!);
+
+      await waitFor(() => {
+        expect(queryByText('account_center.security.add')).not.toBeNull();
+      });
+      expect(deleteMfaVerification).toHaveBeenCalledWith('access-token', 'email-mfa');
+    });
   });
 
   it('hides MFA section when disabled by Account Center settings or experience settings', () => {

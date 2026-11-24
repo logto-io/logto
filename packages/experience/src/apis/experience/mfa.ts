@@ -1,6 +1,8 @@
 import {
+  InteractionEvent,
   MfaFactor,
-  type SignInIdentifier,
+  SignInIdentifier,
+  type VerificationType,
   type WebAuthnRegistrationOptions,
   type WebAuthnAuthenticationOptions,
   type BindMfaPayload,
@@ -11,14 +13,56 @@ import api from '../api';
 
 import { experienceApiRoutes } from './const';
 import { submitInteraction } from './interaction';
+import { verifySubjectVerificationCode } from './subject-verification-code';
 
-const addMfa = async (type: MfaFactor, verificationId: string) =>
+export const addMfa = async (type: MfaFactor, verificationId: string) =>
   api.post(`${experienceApiRoutes.mfa}`, {
     json: {
       type,
       verificationId,
     },
   });
+
+type SanitizedVerificationRecord = {
+  id?: unknown;
+  type?: unknown;
+  verified?: unknown;
+};
+
+type InteractionStateResponse = {
+  interactionEvent?: unknown;
+  verificationRecords?: unknown;
+};
+
+/**
+ * Return the verified email/phone verification record ID from the current `Register`
+ * interaction, if one exists, so enrolling that same identifier for MFA needs no second code.
+ */
+export const getVerifiedRegisterCodeRecordId = async (
+  verificationType: VerificationType.EmailVerificationCode | VerificationType.PhoneVerificationCode
+): Promise<string | undefined> => {
+  const { interactionEvent, verificationRecords } = await api
+    .get(experienceApiRoutes.interaction)
+    .json<InteractionStateResponse>();
+
+  if (interactionEvent !== InteractionEvent.Register || !Array.isArray(verificationRecords)) {
+    return;
+  }
+
+  const matched = verificationRecords.find(
+    (record): record is SanitizedVerificationRecord =>
+      typeof record === 'object' &&
+      record !== null &&
+      'type' in record &&
+      record.type === verificationType &&
+      'verified' in record &&
+      record.verified === true &&
+      'id' in record &&
+      typeof record.id === 'string'
+  );
+
+  return typeof matched?.id === 'string' ? matched.id : undefined;
+};
 
 type TotpSecretResponse = {
   verificationId: string;
@@ -161,4 +205,23 @@ export const verifyMfaByVerificationCode = async (
     json: { verificationId, code, identifierType },
   });
   return submitInteraction();
+};
+
+export const bindMfaByVerificationCode = async (
+  verificationId: string,
+  code: string,
+  identifierType: SignInIdentifier.Email | SignInIdentifier.Phone
+) => {
+  const { verificationId: verifiedId } = await verifySubjectVerificationCode({
+    type: identifierType,
+    code,
+    verificationId,
+  });
+
+  const factor =
+    identifierType === SignInIdentifier.Email
+      ? MfaFactor.EmailVerificationCode
+      : MfaFactor.PhoneVerificationCode;
+
+  return bindMfa(factor, verifiedId);
 };

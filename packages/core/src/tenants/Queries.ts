@@ -14,6 +14,7 @@ import { createDailyActiveUsersQueries } from '#src/queries/daily-active-user.js
 import { createDailyTokenUsageQueries } from '#src/queries/daily-token-usage.js';
 import { createDomainsQueries } from '#src/queries/domains.js';
 import { createHooksQueries } from '#src/queries/hooks.js';
+import { createJobQueries } from '#src/queries/jobs.js';
 import { createLogQueries } from '#src/queries/log.js';
 import { createLogtoConfigQueries } from '#src/queries/logto-config.js';
 import { createOidcModelInstanceQueries } from '#src/queries/oidc-model-instance.js';
@@ -73,6 +74,7 @@ export default class Queries {
   applicationsRoles = createApplicationsRolesQueries(this.pool);
   verificationStatuses = createVerificationStatusQueries(this.pool);
   hooks = createHooksQueries(this.pool);
+  jobs = createJobQueries(this.pool);
   oneTimeTokens = createOneTimeTokenQueries(this.pool);
   domains = createDomainsQueries(this.pool);
   dailyActiveUsers = createDailyActiveUsersQueries(this.pool);

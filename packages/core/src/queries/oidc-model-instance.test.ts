@@ -153,13 +153,13 @@ describe('oidc-model-instance query', () => {
     ).resolves.toBeUndefined();
   });
 
-  it('findPayloadByUid should use uid literal jsonb key', async () => {
+  it('findPayloadByUid should use the uid column', async () => {
     const uid = 'foo';
     const expectSql = sql`
       select ${fields.payload}, ${fields.consumedAt}
       from ${table}
       where ${fields.modelName}=$1
-      and ${fields.payload}->>'uid'=$2
+      and ${fields.payloadUid}=$2
       limit 2
     `;
 
@@ -175,19 +175,19 @@ describe('oidc-model-instance query', () => {
     });
   });
 
-  it('findPayloadByUid - multiple results should delete with uid literal jsonb key', async () => {
+  it('findPayloadByUid - multiple results should delete by the uid column', async () => {
     const uid = 'foo';
     const selectSql = sql`
       select ${fields.payload}, ${fields.consumedAt}
       from ${table}
       where ${fields.modelName}=$1
-      and ${fields.payload}->>'uid'=$2
+      and ${fields.payloadUid}=$2
       limit 2
     `;
     const deleteSql = sql`
       delete from ${table}
       where ${fields.modelName}=$1
-      and ${fields.payload}->>'uid'=$2
+      and ${fields.payloadUid}=$2
     `;
 
     mockQuery
@@ -207,13 +207,13 @@ describe('oidc-model-instance query', () => {
     expect(mockQuery).toHaveBeenCalledTimes(2);
   });
 
-  it('findPayloadByUserCode should use userCode literal jsonb key', async () => {
+  it('findPayloadByUserCode should use the user code column', async () => {
     const userCode = 'code';
     const expectSql = sql`
       select ${fields.payload}, ${fields.consumedAt}
       from ${table}
       where ${fields.modelName}=$1
-      and ${fields.payload}->>'userCode'=$2
+      and ${fields.payloadUserCode}=$2
       limit 2
     `;
 
@@ -229,19 +229,19 @@ describe('oidc-model-instance query', () => {
     });
   });
 
-  it('findPayloadByUserCode - multiple results should delete with userCode literal jsonb key', async () => {
+  it('findPayloadByUserCode - multiple results should delete by the user code column', async () => {
     const userCode = 'code';
     const selectSql = sql`
       select ${fields.payload}, ${fields.consumedAt}
       from ${table}
       where ${fields.modelName}=$1
-      and ${fields.payload}->>'userCode'=$2
+      and ${fields.payloadUserCode}=$2
       limit 2
     `;
     const deleteSql = sql`
       delete from ${table}
       where ${fields.modelName}=$1
-      and ${fields.payload}->>'userCode'=$2
+      and ${fields.payloadUserCode}=$2
     `;
 
     mockQuery
@@ -288,8 +288,7 @@ describe('oidc-model-instance query', () => {
           select ${fields.id}
           from ${table}
           where ${fields.modelName}=$1
-          and ${fields.payload} ? 'grantId'
-          and ${fields.payload}->>'grantId'=$2
+          and ${fields.payloadGrantId}=$2
           limit $3
         )
       `,
@@ -302,8 +301,7 @@ describe('oidc-model-instance query', () => {
           select ${fields.id}
           from ${table}
           where ${fields.modelName}=$1
-          and ${fields.payload} ? 'accountId'
-          and ${fields.payload}->>'accountId'=$2
+          and ${fields.payloadAccountId}=$2
           limit $3
         )
       `,
@@ -362,7 +360,7 @@ describe('oidc-model-instance query', () => {
       inner join ${applicationTable} as "application"
         on "oidc_model_instance"."payload"->>'clientId'="application"."id"
       where "oidc_model_instance"."model_name"='Grant'
-        and "oidc_model_instance"."payload"->>'accountId'=${userId}
+        and "oidc_model_instance"."payload_account_id"=${userId}
         and "application"."is_third_party"=${true}
         and "oidc_model_instance"."expires_at" > to_timestamp($3)
     `;
@@ -402,7 +400,7 @@ describe('oidc-model-instance query', () => {
       inner join ${applicationTable} as "application"
         on "oidc_model_instance"."payload"->>'clientId'="application"."id"
       where "oidc_model_instance"."model_name"='Grant'
-        and "oidc_model_instance"."payload"->>'accountId'=${userId}
+        and "oidc_model_instance"."payload_account_id"=${userId}
         and "application"."is_third_party"=${false}
         and "oidc_model_instance"."expires_at" > to_timestamp($3)
     `;
@@ -429,7 +427,7 @@ describe('oidc-model-instance query', () => {
       inner join ${applicationTable} as "application"
         on "oidc_model_instance"."payload"->>'clientId'="application"."id"
       where "oidc_model_instance"."model_name"='Grant'
-        and "oidc_model_instance"."payload"->>'accountId'=${userId}
+        and "oidc_model_instance"."payload_account_id"=${userId}
         and "oidc_model_instance"."expires_at" > to_timestamp($2)
     `;
 

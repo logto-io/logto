@@ -18,6 +18,13 @@ const mfa = {
   email_verification_code_description: '連結電子郵件地址以接收和驗證驗證碼。',
   phone_verification_code: 'SMS 驗證碼',
   phone_verification_code_description: '連結電話號碼以接收和驗證 SMS 驗證碼。',
+  verification_code_enrollment: '電郵/SMS 兩步驗證',
+  verification_code_enrollment_implicit: '所有擁有已驗證電郵或電話號碼的用戶',
+  verification_code_enrollment_explicit: '僅限已設定的用戶',
+  verification_code_enrollment_explicit_confirmation:
+    '電郵及 SMS 驗證碼將只對已設定的用戶計為兩步驗證。未設定的用戶將失去這個兩步驗證因素，沒有其他因素的用戶將被視為未啟用 MFA。之前僅憑電郵或電話號碼開啟兩步驗證的用戶，在新增驗證方式之前，會在帳戶中心看到「設定未完成」的提示。確定要繼續嗎？',
+  verification_code_enrollment_implicit_confirmation:
+    '所有擁有已驗證電郵或電話號碼的用戶都會用它進行兩步驗證，包括未設定的用戶。確定要繼續嗎？',
   policy: '政策',
   policy_description: '設定登入和註冊流程的 MFA 政策。',
   two_step_sign_in_policy: '登入時的雙重驗證政策',

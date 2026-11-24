@@ -46,13 +46,7 @@ const CountryCodeSelector = (
       aria-disabled={!isInteractive}
       style={isInteractive ? undefined : { pointerEvents: 'none' }}
       onClick={isInteractive ? showDropDown : undefined}
-      onKeyDown={
-        isInteractive
-          ? onKeyDownHandler({
-              Enter: showDropDown,
-            })
-          : undefined
-      }
+      onKeyDown={isInteractive ? onKeyDownHandler(showDropDown) : undefined}
     >
       <span>{`+${countryCode}`}</span>
       <DownArrowIcon />

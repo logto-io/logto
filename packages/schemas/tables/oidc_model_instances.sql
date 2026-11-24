@@ -32,7 +32,6 @@ create index oidc_model_instances__expires_at
 create index oidc_model_instances__standin_model_name_expires_at
   on oidc_model_instances (tenant_id, model_name, expires_at);
 
-/* Partial on payload key existence so rows without accountId (e.g. client credentials tokens) stay out of the index. The parameter-free predicate stays provable under generic query plans, but matching queries must include the payload ? 'accountId' clause. */
 /** Copies the payload keys used for lookups into their `payload_*` columns. */
 create function oidc_model_instances__set_payload_keys() returns trigger as
 $$ begin

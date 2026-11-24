@@ -46,6 +46,11 @@ const security = {
       description:
         '중국 본토에서 안정적으로 동작하며 현지화된 챌린지를 제공하는 GeeTest 적응형 CAPTCHA입니다.',
     },
+    friendly_captcha: {
+      name: 'Friendly Captcha',
+      description:
+        '시각적 퍼즐 없이 개인정보 보호를 우선하고 GDPR을 준수하는 작업 증명 방식 CAPTCHA입니다.',
+    },
   },
   captcha_details: {
     back_to_security: '보안으로 돌아가기',
@@ -67,6 +72,10 @@ const security = {
       '이 엔드포인트는 HTTP를 사용하므로 로컬 개발에만 적합합니다. 브라우저는 HTTPS 로그인 페이지의 HTTP 요청을 차단하며, 시크릿 키가 암호화되지 않은 채 전송됩니다. 프로덕션에서는 HTTPS를 사용하세요.',
     geetest_captcha_id: 'CAPTCHA ID',
     geetest_captcha_key: 'CAPTCHA 키',
+    friendly_captcha_api_key: 'API 키',
+    friendly_captcha_api_endpoint: 'API 엔드포인트',
+    friendly_captcha_api_endpoint_global: '글로벌',
+    friendly_captcha_api_endpoint_eu: 'EU',
     deletion_description: '이 CAPTCHA 제공자를 삭제하시겠습니까?',
     captcha_deleted: 'CAPTCHA 제공자가 성공적으로 삭제되었습니다',
     setup_captcha: 'CAPTCHA 설정',

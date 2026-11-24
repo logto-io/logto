@@ -19,6 +19,8 @@ const user = {
   sso_identity_not_exist: 'บัญชี SSO ขององค์กรยังไม่ได้ลงทะเบียน',
   identity_already_in_use: 'บัญชีโซเชียลนี้ถูกเชื่อมโยงกับบัญชีที่มีอยู่แล้ว',
   social_account_exists_in_profile: 'คุณได้เชื่อมโยงบัญชีโซเชียลนี้แล้ว',
+  social_provider_already_linked:
+    'มีบัญชีอื่นจากผู้ให้บริการนี้เชื่อมโยงอยู่แล้ว โปรดเข้าสู่ระบบด้วยบัญชีนั้นหรือวิธีอื่น',
   cannot_delete_self: 'คุณไม่สามารถลบบัญชีของตัวเองได้',
   sign_up_method_not_enabled: 'ยังไม่ได้เปิดใช้งานวิธีสมัครนี้',
   sign_in_method_not_enabled: 'ยังไม่ได้เปิดใช้งานวิธีเข้าสู่ระบบนี้',
@@ -42,6 +44,11 @@ const user = {
   missing_mfa: 'คุณต้องผูก MFA เพิ่มเติมก่อนเข้าสู่ระบบ',
   totp_already_in_use: 'TOTP นี้ถูกใช้ไปแล้ว',
   backup_code_already_in_use: 'รหัสสำรองนี้ถูกใช้ไปแล้ว',
+  email_mfa_already_in_use: 'MFA ด้วยรหัสยืนยันอีเมลนี้ถูกใช้ไปแล้ว',
+  phone_mfa_already_in_use: 'MFA ด้วยรหัสยืนยัน SMS นี้ถูกใช้ไปแล้ว',
+  email_mfa_requires_primary_email: 'ผู้ใช้ต้องมีอีเมลหลักจึงจะใช้ MFA ด้วยรหัสยืนยันอีเมลได้',
+  phone_mfa_requires_primary_phone:
+    'ผู้ใช้ต้องมีหมายเลขโทรศัพท์หลักจึงจะใช้ MFA ด้วยรหัสยืนยัน SMS ได้',
   password_algorithm_required: 'ต้องระบุอัลกอริทึมของรหัสผ่าน',
   password_and_digest: 'ไม่สามารถตั้งค่ารหัสผ่านธรรมดาร่วมกับรหัสผ่านที่เข้ารหัสได้',
   personal_access_token_name_exists: 'มีชื่อ Personal access token นี้แล้ว',

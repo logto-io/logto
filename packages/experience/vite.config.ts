@@ -38,6 +38,10 @@ const buildConfig = (mode: string): UserConfig => ({
       DEV_FEATURES_ENABLED: process.env.DEV_FEATURES_ENABLED,
     },
   },
+  esbuild: {
+    // Lower logical assignment across the bundle for older browsers.
+    supported: { 'logical-assignment': false },
+  },
   build: {
     // Keep explicit iOS and Safari floors: "last 2 versions" moves with caniuse-lite data, which
     // previously raised the target past Safari 16.4 and emitted syntax that blanks the sign-in
@@ -58,6 +62,11 @@ const buildConfig = (mode: string): UserConfig => ({
           // captcha provider and it registers a custom element once evaluated.
           if (id.includes('/node_modules/cap-widget/')) {
             return 'cap-widget';
+          }
+
+          // Keep the Friendly Captcha SDK in its own lazy-loaded chunk so other tenants don't download it.
+          if (id.includes('/node_modules/@friendlycaptcha/sdk/')) {
+            return 'friendly-captcha';
           }
 
           for (const largePackage of ['libphonenumber-js', 'core-js']) {

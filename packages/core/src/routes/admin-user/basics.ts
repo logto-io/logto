@@ -517,13 +517,13 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
       // to resolve, and they are pruned after expiry. A revocation statement timeout on a
       // pathological instance count must not leave the user permanently undeletable.
       try {
-        await signOutUser(userId);
+        await signOutUser(userId, { revokeGrants: true });
       } catch (error: unknown) {
         if (!(error instanceof StatementTimeoutError)) {
           throw error;
         }
         getConsoleLogFromContext(ctx).error(
-          `Failed to revoke sessions and tokens for user ${userId} before deletion. Proceeding with the deletion; remaining instances are left to expire.`,
+          `Failed to revoke sessions, tokens, and grants for user ${userId} before deletion. Proceeding with the deletion; remaining instances are left to expire.`,
           error
         );
       }

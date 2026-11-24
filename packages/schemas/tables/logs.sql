@@ -35,3 +35,15 @@ create index logs__key
 
 create index logs__created_at_id
   on logs (tenant_id, created_at, id);
+
+create index logs__payload_application_id_created_at
+  on logs (tenant_id, payload_application_id, created_at)
+  where payload_application_id is not null;
+
+create index logs__payload_hook_id_created_at
+  on logs (tenant_id, payload_hook_id, created_at)
+  where payload_hook_id is not null;
+
+create index logs__payload_user_id_created_at
+  on logs (tenant_id, payload_user_id, created_at)
+  where payload_user_id is not null;

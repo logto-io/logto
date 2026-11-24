@@ -14,6 +14,7 @@ import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
+import { resetDevFeaturesEnabled, setDevFeaturesEnabled } from '#src/test-utils/dev-features.js';
 import { MockTenant, type Partial2 } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -292,6 +293,101 @@ describe('adminUserRoutes', () => {
         type: MfaFactor.BackupCode,
         codes,
       });
+    });
+  });
+
+  describe('Email and phone verification code', () => {
+    const emailVerification = {
+      id: 'email-mfa',
+      createdAt: '2025-01-01T00:00:00.000Z',
+      type: MfaFactor.EmailVerificationCode,
+    } satisfies User['mfaVerifications'][number];
+
+    it('should add a phone record next to an email record', async () => {
+      findUserById.mockResolvedValueOnce({ ...mockUser, mfaVerifications: [emailVerification] });
+      const response = await userRequest.post(`/users/${mockUser.id}/mfa-verifications`).send({
+        type: MfaFactor.PhoneVerificationCode,
+      });
+
+      expect(response.status).toEqual(200);
+      const { id, createdAt } = response.body as { id: string; createdAt: string };
+      expect(response.body).toEqual({ type: MfaFactor.PhoneVerificationCode, id, createdAt });
+      expect(updateUserById).toHaveBeenCalledWith(mockUser.id, {
+        mfaVerifications: [
+          emailVerification,
+          { type: MfaFactor.PhoneVerificationCode, id, createdAt },
+        ],
+      });
+    });
+
+    it('should fail for duplicate', async () => {
+      findUserById.mockResolvedValueOnce({ ...mockUser, mfaVerifications: [emailVerification] });
+      const response = await userRequest.post(`/users/${mockUser.id}/mfa-verifications`).send({
+        type: MfaFactor.EmailVerificationCode,
+      });
+
+      expect(response.status).toEqual(422);
+      expect(response.body).toMatchObject({ code: 'user.email_mfa_already_in_use' });
+      expect(updateUserById).not.toHaveBeenCalled();
+    });
+
+    it('should fail if the user has no primary email', async () => {
+      findUserById.mockResolvedValueOnce({ ...mockUser, primaryEmail: null, mfaVerifications: [] });
+      const response = await userRequest.post(`/users/${mockUser.id}/mfa-verifications`).send({
+        type: MfaFactor.EmailVerificationCode,
+      });
+
+      expect(response.status).toEqual(422);
+      expect(response.body).toMatchObject({ code: 'user.email_mfa_requires_primary_email' });
+      expect(updateUserById).not.toHaveBeenCalled();
+    });
+
+    it('should fail for a duplicate phone record', async () => {
+      findUserById.mockResolvedValueOnce({
+        ...mockUser,
+        mfaVerifications: [
+          emailVerification,
+          { ...emailVerification, id: 'phone-mfa', type: MfaFactor.PhoneVerificationCode },
+        ],
+      });
+      const response = await userRequest.post(`/users/${mockUser.id}/mfa-verifications`).send({
+        type: MfaFactor.PhoneVerificationCode,
+      });
+
+      expect(response.status).toEqual(422);
+      expect(response.body).toMatchObject({ code: 'user.phone_mfa_already_in_use' });
+      expect(updateUserById).not.toHaveBeenCalled();
+    });
+
+    it('should fail if the user has no primary phone', async () => {
+      findUserById.mockResolvedValueOnce({ ...mockUser, primaryPhone: null, mfaVerifications: [] });
+      const response = await userRequest.post(`/users/${mockUser.id}/mfa-verifications`).send({
+        type: MfaFactor.PhoneVerificationCode,
+      });
+
+      expect(response.status).toEqual(422);
+      expect(response.body).toMatchObject({ code: 'user.phone_mfa_requires_primary_phone' });
+      expect(updateUserById).not.toHaveBeenCalled();
+    });
+
+    it('should reject the types without dev features', async () => {
+      setDevFeaturesEnabled(false);
+
+      try {
+        const requester = createRequester({
+          middlewares: [koaI18next(), koaErrorHandler()],
+          authedRoutes: adminUserRoutes,
+          tenantContext,
+        });
+        const response = await requester.post(`/users/${mockUser.id}/mfa-verifications`).send({
+          type: MfaFactor.EmailVerificationCode,
+        });
+
+        expect(response.status).toEqual(400);
+        expect(updateUserById).not.toHaveBeenCalled();
+      } finally {
+        resetDevFeaturesEnabled();
+      }
     });
   });
 

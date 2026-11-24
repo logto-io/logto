@@ -16,11 +16,14 @@ import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { profilePropertyReferenceLink, userCustomData } from '@/consts';
 import CodeEditor from '@/ds-components/CodeEditor';
 import FormField from '@/ds-components/FormField';
+import Skeleton from '@/ds-components/FormField/Skeleton';
 import TextInput from '@/ds-components/TextInput';
 import TextLink from '@/ds-components/TextLink';
+import ImageUploaderField from '@/ds-components/Uploader/ImageUploaderField';
 import useApi, { type RequestError } from '@/hooks/use-api';
 import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
+import useUserAssetsService from '@/hooks/use-user-assets-service';
 import { trySubmitSafe } from '@/utils/form';
 import { safeParseJsonObject } from '@/utils/json';
 import { uriValidator } from '@/utils/validator';
@@ -42,6 +45,8 @@ function UserSettings() {
   const { getDocumentationUrl } = useDocumentationUrl();
   const { show } = useConfirmModal();
   const { user, isDeleting, onUserUpdated } = useOutletContext<UserDetailsOutletContext>();
+  const { isReady: isUserAssetsServiceReady, isLoading: isUserAssetsServiceLoading } =
+    useUserAssetsService();
 
   const userFormData = userDetailsParser.toLocalForm(user);
 
@@ -57,6 +62,13 @@ function UserSettings() {
     formState: { isSubmitting, errors, isDirty },
   } = useForm<UserDetailsForm>({ defaultValues: userFormData });
 
+  const { field: avatar } = useController({
+    name: 'avatar',
+    control,
+    rules: {
+      validate: (value) => !value || uriValidator(value) || t('errors.invalid_uri_format'),
+    },
+  });
   const { field: customData } = useController({ name: 'customData', control });
   const { field: profile } = useController({ name: 'profile', control });
 
@@ -186,16 +198,29 @@ function UserSettings() {
           <FormField title="user_details.field_name">
             <TextInput {...register('name')} placeholder={t('users.placeholder_name')} />
           </FormField>
-          <FormField title="user_details.field_avatar">
-            <TextInput
-              {...register('avatar', {
-                validate: (value) =>
-                  !value || uriValidator(value) || t('errors.invalid_uri_format'),
-              })}
-              error={errors.avatar?.message}
-              placeholder={t('user_details.field_avatar_placeholder')}
-            />
-          </FormField>
+          {isUserAssetsServiceLoading ? (
+            <Skeleton formFieldCount={1} />
+          ) : (
+            <FormField
+              title={
+                isUserAssetsServiceReady ? 'profile.fields.avatar' : 'user_details.field_avatar'
+              }
+            >
+              {isUserAssetsServiceReady ? (
+                <ImageUploaderField
+                  name={t('profile.fields.avatar')}
+                  value={avatar.value}
+                  onChange={avatar.onChange}
+                />
+              ) : (
+                <TextInput
+                  {...avatar}
+                  error={errors.avatar?.message}
+                  placeholder={t('user_details.field_avatar_placeholder')}
+                />
+              )}
+            </FormField>
+          )}
           <FormField
             title="user_details.field_custom_data"
             tip={

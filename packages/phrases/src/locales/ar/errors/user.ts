@@ -19,6 +19,8 @@ const user = {
   sso_identity_not_exist: 'لم يتم تسجيل حساب SSO المؤسسي بعد.',
   identity_already_in_use: 'تم ربط الحساب الاجتماعي بحساب موجود بالفعل.',
   social_account_exists_in_profile: 'لقد قمت بربط هذا الحساب الاجتماعي بالفعل.',
+  social_provider_already_linked:
+    'تم ربط حساب آخر من هذا المزوّد بالفعل. سجّل الدخول باستخدام ذلك الحساب أو بطريقة أخرى.',
   cannot_delete_self: 'لا يمكنك حذف نفسك.',
   sign_up_method_not_enabled: 'طريقة التسجيل هذه غير ممكّنة.',
   sign_in_method_not_enabled: 'طريقة تسجيل الدخول هذه غير ممكّنة.',
@@ -43,6 +45,14 @@ const user = {
   missing_mfa: 'يجب عليك ربط MFA الإضافي قبل تسجيل الدخول.',
   totp_already_in_use: 'تم استخدام TOTP بالفعل.',
   backup_code_already_in_use: 'تم استخدام رمز النسخ الاحتياطي بالفعل.',
+  email_mfa_already_in_use:
+    'المصادقة متعددة العوامل عبر رمز التحقق بالبريد الإلكتروني قيد الاستخدام بالفعل.',
+  phone_mfa_already_in_use:
+    'المصادقة متعددة العوامل عبر رمز التحقق بالرسائل القصيرة قيد الاستخدام بالفعل.',
+  email_mfa_requires_primary_email:
+    'يحتاج المستخدم إلى بريد إلكتروني أساسي لاستخدام المصادقة متعددة العوامل عبر رمز التحقق بالبريد الإلكتروني.',
+  phone_mfa_requires_primary_phone:
+    'يحتاج المستخدم إلى رقم هاتف أساسي لاستخدام المصادقة متعددة العوامل عبر رمز التحقق بالرسائل القصيرة.',
   password_algorithm_required: 'مطلوب خوارزمية كلمة المرور.',
   password_and_digest: 'لا يمكنك تعيين كلمة مرور عادية ومعلومات تجزئة كلمة المرور معًا.',
   personal_access_token_name_exists: 'اسم رمز الوصول الشخصي موجود بالفعل.',

@@ -101,6 +101,12 @@ const account_center = {
     email_removed: 'Email address removed successfully.',
     phone_removed: 'Phone number removed successfully.',
     username_removed: 'Username removed successfully.',
+    remove_email_verification_code_confirmation_title: 'Remove email verification code',
+    remove_email_verification_code_confirmation_description:
+      'You will no longer receive 2-step verification codes at this email address. The email address stays on your account.',
+    remove_phone_verification_code_confirmation_title: 'Remove phone verification code',
+    remove_phone_verification_code_confirmation_description:
+      'You will no longer receive 2-step verification codes at this phone number. The phone number stays on your account.',
     trusted_devices: {
       title: 'MFA trusted devices',
       current_device: 'Current device',

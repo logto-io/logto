@@ -11,8 +11,8 @@ import { switchToTenantRole } from './tenant-role.js';
 /**
  * Explains `statement` as the tenant's database role (see `switchToTenantRole`), so only leakproof
  * predicates can become index conditions. Sequential and bitmap scans are turned off so the tiny
- * integration tables still yield a plain index scan whose `Index Cond` and `Filter` lines show
- * which clauses the planner may use.
+ * integration tables still yield a plain index scan whose `Index Cond` lines show which clauses
+ * the planner may seek by.
  *
  * `seed` runs first as the pool's user, typically to insert rows and `analyze` the table: on an
  * empty, never-analyzed table every index scan costs the same, so the chosen index would depend
@@ -64,24 +64,5 @@ export const expectIndexCondition = (plan: readonly string[], column: string | R
   assert(
     hasPlanNode(plan, 'Index Cond:', column),
     new Error(`Expected ${String(column)} in an Index Cond.${describePlan(plan)}`)
-  );
-};
-
-/** Asserts `column` is not used to seek: it appears on no `Index Cond` line of the plan. */
-export const expectNoIndexCondition = (plan: readonly string[], column: string | RegExp) => {
-  assert(
-    !hasPlanNode(plan, 'Index Cond:', column),
-    new Error(`Expected ${String(column)} in no Index Cond.${describePlan(plan)}`)
-  );
-};
-
-/**
- * Asserts `column` is only checked after the scan: it appears on a `Filter` line, which means
- * every fetched row is tested against it instead of being found through an index.
- */
-export const expectFilter = (plan: readonly string[], column: string | RegExp) => {
-  assert(
-    hasPlanNode(plan, 'Filter:', column),
-    new Error(`Expected ${String(column)} in a Filter.${describePlan(plan)}`)
   );
 };

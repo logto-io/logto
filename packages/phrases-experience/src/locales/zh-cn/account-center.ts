@@ -93,6 +93,12 @@ const account_center = {
     email_removed: '邮箱地址已成功移除。',
     phone_removed: '手机号已成功移除。',
     username_removed: '用户名已成功移除。',
+    remove_email_verification_code_confirmation_title: '移除邮箱验证码',
+    remove_email_verification_code_confirmation_description:
+      '你将不再通过此邮箱接收两步验证码。该邮箱仍会保留在你的账户中。',
+    remove_phone_verification_code_confirmation_title: '移除手机验证码',
+    remove_phone_verification_code_confirmation_description:
+      '你将不再通过此手机号接收两步验证码。该手机号仍会保留在你的账户中。',
     trusted_devices: {
       title: 'MFA 受信任设备',
       current_device: '当前设备',

@@ -19,6 +19,8 @@ const user = {
   sso_identity_not_exist: 'The enterprise SSO account has not been registered yet.',
   identity_already_in_use: 'The social account has been associated with an existing account.',
   social_account_exists_in_profile: 'You have already associated this social account.',
+  social_provider_already_linked:
+    'A different account from this provider is already linked. Sign in with that account or another method.',
   cannot_delete_self: 'You cannot delete yourself.',
   sign_up_method_not_enabled: 'This sign-up method is not enabled.',
   sign_in_method_not_enabled: 'This sign-in method is not enabled.',
@@ -43,6 +45,12 @@ const user = {
   missing_mfa: 'You need to bind additional MFA before signing-in.',
   totp_already_in_use: 'TOTP is already in use.',
   backup_code_already_in_use: 'Backup code is already in use.',
+  email_mfa_already_in_use: 'Email verification code MFA is already in use.',
+  phone_mfa_already_in_use: 'SMS verification code MFA is already in use.',
+  email_mfa_requires_primary_email:
+    'The user needs a primary email address to use email verification code MFA.',
+  phone_mfa_requires_primary_phone:
+    'The user needs a primary phone number to use SMS verification code MFA.',
   password_algorithm_required: 'Password algorithm is required.',
   password_and_digest: 'You cannot set both plain text password and password digest.',
   personal_access_token_name_exists: 'Personal access token name already exists.',

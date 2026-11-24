@@ -1,4 +1,9 @@
-import { CaptchaType, RecaptchaEnterpriseMode, type CaptchaProvider } from '@logto/schemas';
+import {
+  CaptchaType,
+  FriendlyCaptchaApiEndpoint,
+  RecaptchaEnterpriseMode,
+  type CaptchaProvider,
+} from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 
 import { mockCaptchaProvider } from '#src/__mocks__/captcha.js';
@@ -28,6 +33,15 @@ const geetestProvider: CaptchaProvider = {
   config: {
     type: CaptchaType.Geetest,
     siteKey: 'captcha_id',
+    secretKey: 'secret_key',
+  },
+};
+
+const friendlyCaptchaProvider: CaptchaProvider = {
+  ...mockCaptchaProvider,
+  config: {
+    type: CaptchaType.FriendlyCaptcha,
+    siteKey: 'site_key',
     secretKey: 'secret_key',
   },
 };
@@ -164,6 +178,100 @@ describe('CaptchaValidator - GeeTest', () => {
     expect(append).toHaveBeenCalledWith({
       success: false,
       errorMessage: 'Failed to get the result from GeeTest',
+    });
+  });
+});
+
+describe('CaptchaValidator - Friendly Captcha', () => {
+  afterEach(() => {
+    ssrfProtectedFetch.mockReset();
+  });
+
+  it('verifies the token against the Friendly Captcha siteverify API', async () => {
+    ssrfProtectedFetch.mockResolvedValueOnce(Response.json({ success: true }));
+    const { log, append } = createLog();
+
+    await expect(
+      new CaptchaValidator(friendlyCaptchaProvider, log).verifyCaptcha('token')
+    ).resolves.toBe(true);
+
+    const [request] = ssrfProtectedFetch.mock.calls[0] ?? [];
+    expect(request).toBeInstanceOf(Request);
+
+    const { url, method, headers } = request as Request;
+    expect(url).toBe('https://global.frcapi.com/api/v2/captcha/siteverify');
+    expect(method).toBe('POST');
+    expect(headers.get('x-api-key')).toBe('secret_key');
+
+    await expect((request as Request).json()).resolves.toEqual({
+      response: 'token',
+      sitekey: 'site_key',
+    });
+    expect(append).toHaveBeenCalledWith({ success: true, errorMessage: undefined });
+  });
+
+  it('verifies the token against the EU siteverify API when the EU endpoint is configured', async () => {
+    ssrfProtectedFetch.mockResolvedValueOnce(Response.json({ success: true }));
+    const { log } = createLog();
+    const euProvider: CaptchaProvider = {
+      ...mockCaptchaProvider,
+      config: {
+        type: CaptchaType.FriendlyCaptcha,
+        siteKey: 'site_key',
+        secretKey: 'secret_key',
+        apiEndpoint: FriendlyCaptchaApiEndpoint.Eu,
+      },
+    };
+
+    await expect(new CaptchaValidator(euProvider, log).verifyCaptcha('token')).resolves.toBe(true);
+
+    const [request] = ssrfProtectedFetch.mock.calls[0] ?? [];
+    expect((request as Request).url).toBe('https://eu.frcapi.com/api/v2/captcha/siteverify');
+  });
+
+  it('returns false with the error code and detail when the token is rejected', async () => {
+    ssrfProtectedFetch.mockResolvedValueOnce(
+      Response.json({
+        success: false,
+        error: { error_code: 'response_invalid', detail: 'The response was invalid' },
+      })
+    );
+    const { log, append } = createLog();
+
+    await expect(
+      new CaptchaValidator(friendlyCaptchaProvider, log).verifyCaptcha('token')
+    ).resolves.toBe(false);
+    expect(append).toHaveBeenCalledWith({
+      success: false,
+      errorMessage: 'response_invalid: The response was invalid',
+    });
+  });
+
+  it('returns false with the error code on 4xx configuration errors', async () => {
+    ssrfProtectedFetch.mockResolvedValueOnce(
+      Response.json({ success: false, error: { error_code: 'auth_invalid' } }, { status: 401 })
+    );
+    const { log, append } = createLog();
+
+    await expect(
+      new CaptchaValidator(friendlyCaptchaProvider, log).verifyCaptcha('token')
+    ).resolves.toBe(false);
+    expect(append).toHaveBeenCalledWith({
+      success: false,
+      errorMessage: 'auth_invalid',
+    });
+  });
+
+  it('returns false when the Friendly Captcha API is unreachable', async () => {
+    ssrfProtectedFetch.mockRejectedValueOnce(new Error('connect ECONNREFUSED'));
+    const { log, append } = createLog();
+
+    await expect(
+      new CaptchaValidator(friendlyCaptchaProvider, log).verifyCaptcha('token')
+    ).resolves.toBe(false);
+    expect(append).toHaveBeenCalledWith({
+      success: false,
+      errorMessage: 'Failed to get the result from Friendly Captcha',
     });
   });
 });

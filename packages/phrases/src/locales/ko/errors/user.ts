@@ -19,6 +19,8 @@ const user = {
   sso_identity_not_exist: '엔터프라이즈 SSO 계정이 아직 등록되지 않았어요.',
   identity_already_in_use: '소셜 계정이 이미 등록되어 있어요.',
   social_account_exists_in_profile: '이 소셜 계정은 이미 연동되어 있습니다.',
+  social_provider_already_linked:
+    '이 제공업체의 다른 계정이 이미 연동되어 있어요. 해당 계정이나 다른 방법으로 로그인해 주세요.',
   cannot_delete_self: '자기 자신을 삭제할 수 없어요.',
   sign_up_method_not_enabled: '이 회원가입 방법은 활성화되어있지 않아요.',
   sign_in_method_not_enabled: '이 로그인 방법은 활성화되어있지 않아요.',
@@ -43,6 +45,12 @@ const user = {
   missing_mfa: '추가 MFA를 연동한 후에 로그인할 수 있습니다.',
   totp_already_in_use: 'TOTP가 이미 사용 중입니다.',
   backup_code_already_in_use: '백업 코드가 이미 사용 중입니다.',
+  email_mfa_already_in_use: '이메일 인증 코드 MFA가 이미 사용 중입니다.',
+  phone_mfa_already_in_use: 'SMS 인증 코드 MFA가 이미 사용 중입니다.',
+  email_mfa_requires_primary_email:
+    '이메일 인증 코드 MFA를 사용하려면 사용자에게 기본 이메일 주소가 필요합니다.',
+  phone_mfa_requires_primary_phone:
+    'SMS 인증 코드 MFA를 사용하려면 사용자에게 기본 전화번호가 필요합니다.',
   password_algorithm_required: '비밀번호 알고리즘이 필요합니다.',
   password_and_digest: '일반 텍스트 비밀번호와 비밀번호 다이제스트를 동시에 설정할 수 없습니다.',
   personal_access_token_name_exists: '개인 액세스 토큰 이름이 이미 존재합니다.',
