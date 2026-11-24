@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { MfaPolicy } from '../foundations/index.js';
+
 import {
   createAdminTenantSignInExperience,
   createDefaultSignInExperience,
@@ -37,5 +39,10 @@ describe('createDefaultSignInExperience', () => {
   it('keeps legacy null signUpProfileFields for seeded default tenants', () => {
     const row = createDefaultSignInExperience('some-tenant-id', false);
     expect(row.signUpProfileFields).toBeNull();
+  });
+
+  it('seeds PromptAtSignInAndSignUp for mfa.policy', () => {
+    const row = createDefaultSignInExperience('some-tenant-id', false);
+    expect(row.mfa).toEqual({ factors: [], policy: MfaPolicy.PromptAtSignInAndSignUp });
   });
 });

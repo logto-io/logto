@@ -9,6 +9,7 @@ import {
   ProductEvent,
   type SignInExperience,
   ForgotPasswordMethod,
+  mfaGuard,
   passwordExpirationPolicyGuard,
   verificationCodePolicyGuard,
 } from '@logto/schemas';
@@ -48,6 +49,15 @@ const isNonSkippableMfaPromptPolicy = (policy: MfaPolicy) =>
   [MfaPolicy.PromptAtSignInAndSignUpMandatory, MfaPolicy.PromptOnlyAtSignInMandatory].includes(
     policy
   );
+
+// Accept legacy 'UserControlled' without exposing it in OpenAPI.
+const legacyMfaPolicy = 'UserControlled';
+const mfaPatchGuard = mfaGuard.extend({
+  policy: z.preprocess(
+    (value) => (value === legacyMfaPolicy ? MfaPolicy.PromptAtSignInAndSignUp : value),
+    z.nativeEnum(MfaPolicy)
+  ),
+});
 
 export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
   ...args: RouterInitArgs<T>
@@ -92,6 +102,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
           supportEmail: true,
           supportWebsiteUrl: true,
           unknownSessionRedirectUrl: true,
+          mfa: true,
           passwordExpiration: true,
           verificationCodePolicy: true,
         })
@@ -102,6 +113,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
             supportEmail: string().email().optional().nullable().or(literal('')),
             supportWebsiteUrl: string().url().optional().nullable().or(literal('')),
             unknownSessionRedirectUrl: string().url().optional().nullable().or(literal('')),
+            mfa: mfaPatchGuard,
             passwordExpiration: passwordExpirationPolicyGuard,
             verificationCodePolicy: verificationCodePolicyGuard,
           })

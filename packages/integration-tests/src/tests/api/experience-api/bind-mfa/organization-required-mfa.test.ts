@@ -72,11 +72,7 @@ describe('Organization required MFA policy', () => {
     });
   });
 
-  it.each([
-    MfaPolicy.PromptAtSignInAndSignUp,
-    MfaPolicy.PromptOnlyAtSignIn,
-    MfaPolicy.UserControlled,
-  ])(
+  it.each([MfaPolicy.PromptAtSignInAndSignUp, MfaPolicy.PromptOnlyAtSignIn])(
     'should require MFA for %s settings, if user associated with organization that requires MFA and organizationRequiredMfaPolicy is Mandatory, even if user has MFA skipped',
     async (policy) => {
       await updateSignInExperience({
@@ -127,11 +123,7 @@ describe('Organization required MFA policy', () => {
     }
   );
 
-  it.each([
-    MfaPolicy.PromptAtSignInAndSignUp,
-    MfaPolicy.PromptOnlyAtSignIn,
-    MfaPolicy.UserControlled,
-  ])(
+  it.each([MfaPolicy.PromptAtSignInAndSignUp, MfaPolicy.PromptOnlyAtSignIn])(
     'should not allow skipping MFA for %s settings, if user associated with organization that requires MFA and organizationRequiredMfaPolicy is Mandatory',
     async (policy) => {
       await updateSignInExperience({
@@ -190,11 +182,7 @@ describe('Organization required MFA policy', () => {
     ).resolves.not.toThrow();
   });
 
-  it.each([
-    MfaPolicy.PromptAtSignInAndSignUp,
-    MfaPolicy.PromptOnlyAtSignIn,
-    MfaPolicy.UserControlled,
-  ])(
+  it.each([MfaPolicy.PromptAtSignInAndSignUp, MfaPolicy.PromptOnlyAtSignIn])(
     'should allow skip MFA for %s settings, if user associated with organization that requires MFA but organizationRequiredMfaPolicy is not set',
     async (policy) => {
       await updateSignInExperience({
@@ -229,11 +217,7 @@ describe('Organization required MFA policy', () => {
     }
   );
 
-  it.each([
-    MfaPolicy.PromptAtSignInAndSignUp,
-    MfaPolicy.PromptOnlyAtSignIn,
-    MfaPolicy.UserControlled,
-  ])(
+  it.each([MfaPolicy.PromptAtSignInAndSignUp, MfaPolicy.PromptOnlyAtSignIn])(
     'should allow skip MFA for %s settings, is not associated with any organization that requires MFA',
     async (policy) => {
       await updateSignInExperience({

@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  MfaPolicy,
   customUiCspGuard,
   defaultTrustedDevicePolicy,
+  mfaGuard,
   passwordExpirationPolicyGuard,
   trustedDevicePolicyGuard,
 } from './sign-in-experience.js';
@@ -107,5 +109,14 @@ describe('trustedDevicePolicyGuard', () => {
   it('rejects invalid enabled values', () => {
     const value = { enabled: 'true' };
     expect(trustedDevicePolicyGuard.safeParse(value).success).toBe(false);
+  });
+});
+
+describe('mfaGuard', () => {
+  it('accepts valid MfaPolicy values and rejects removed UserControlled', () => {
+    expect(
+      mfaGuard.safeParse({ factors: [], policy: MfaPolicy.PromptAtSignInAndSignUp }).success
+    ).toBe(true);
+    expect(mfaGuard.safeParse({ factors: [], policy: 'UserControlled' }).success).toBe(false);
   });
 });

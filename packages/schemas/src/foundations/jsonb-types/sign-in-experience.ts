@@ -190,8 +190,6 @@ export const mfaFactorsGuard = z.nativeEnum(MfaFactor).array();
 export type MfaFactors = z.infer<typeof mfaFactorsGuard>;
 
 export enum MfaPolicy {
-  /** @deprecated, use `PromptAtSignInAndSignUp` instead */
-  UserControlled = 'UserControlled',
   /** MFA is required for all users */
   Mandatory = 'Mandatory',
   /** Ask users to set up MFA on their sign-in after registration (skippable, one-time prompt, Optional MFA only) */

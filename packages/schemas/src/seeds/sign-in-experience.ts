@@ -60,7 +60,7 @@ export const createDefaultSignInExperience = (
     passwordPolicy: {},
     mfa: {
       factors: [],
-      policy: MfaPolicy.UserControlled,
+      policy: MfaPolicy.PromptAtSignInAndSignUp,
     },
   });
 
