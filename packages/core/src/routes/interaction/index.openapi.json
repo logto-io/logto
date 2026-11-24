@@ -2,7 +2,7 @@
   "tags": [
     {
       "name": "Interaction",
-      "description": "Interaction endpoints are used to manage and process interactions for end-users, such as sign-in experience. Interaction endpoints are legacy endpoints that are used internally, will be replaced with Experience endpoints instead."
+      "description": "Legacy endpoints for managing and processing end-user interactions, superseded by the Experience endpoints and frozen with no new rules or behavior changes. For MFA, they support binding and verifying TOTP, WebAuthn, and backup codes, and skipping under an optional policy. Email/SMS MFA, adaptive MFA, trusted devices, requested ACR, `enabled: false`, and verifying an existing factor before binding a new one are not supported and not planned."
     }
   ]
 }
