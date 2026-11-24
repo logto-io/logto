@@ -1,4 +1,3 @@
-/* eslint-disable max-lines -- Locale catalog mirrors the complete Account Center phrase schema. */
 const account_center = {
   home: {
     title: 'Сторінку не знайдено',
@@ -69,7 +68,6 @@ const account_center = {
     passkeys_count_other: '{{count}} passkeys',
     backup_codes_count_one: '{{count}} код залишився',
     backup_codes_count_other: '{{count}} кодів залишилось',
-    view: 'Перегляд',
     manage: 'Керування',
     turn_on_2_step_verification_description:
       'Додайте додатковий рівень безпеки. При вході вам буде запропоновано другий крок верифікації.',
@@ -301,4 +299,3 @@ const account_center = {
 };
 
 export default Object.freeze(account_center);
-/* eslint-enable max-lines */

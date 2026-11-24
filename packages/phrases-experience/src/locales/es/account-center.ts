@@ -71,7 +71,6 @@ const account_center = {
     passkeys_count_other: '{{count}} passkeys',
     backup_codes_count_one: '{{count}} código restante',
     backup_codes_count_other: '{{count}} códigos restantes',
-    view: 'Ver',
     manage: 'Gestionar',
     turn_on_2_step_verification_description:
       'Añade una capa extra de seguridad. Se te pedirá un segundo paso de verificación al iniciar sesión.',
