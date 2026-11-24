@@ -1,6 +1,6 @@
 import { isManagementApi, ProductEvent, Resources, Scopes } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
-import { yes } from '@silverhand/essentials';
+import { tryThat, yes } from '@silverhand/essentials';
 import { boolean, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
@@ -9,6 +9,7 @@ import koaPagination from '#src/middleware/koa-pagination.js';
 import { koaQuotaGuard, koaReportSubscriptionUpdates } from '#src/middleware/koa-quota-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 import { attachScopesToResources } from '#src/utils/resource.js';
+import { parseSearchParamsForSearch } from '#src/utils/search.js';
 
 import { captureEvent } from '../utils/posthog.js';
 
@@ -45,37 +46,59 @@ export default function resourceRoutes<T extends ManagementApiRouter>(
       query: object({
         includeScopes: string().optional(),
         excludeManagementApis: string().optional(),
+        hasScopes: string().optional(),
+        excludeRoleId: string().optional(),
       }),
       response: Resources.guard.extend({ scopes: Scopes.guard.array().optional() }).array(),
-      status: [200],
+      status: [200, 400],
     }),
     async (ctx, next) => {
       const { limit, offset, disabled } = ctx.pagination;
-      const {
-        query: { includeScopes, excludeManagementApis },
-      } = ctx.guard;
-      const shouldExcludeManagementApis = yes(excludeManagementApis);
+      const { searchParams } = ctx.request.URL;
+      const { includeScopes, excludeManagementApis, hasScopes, excludeRoleId } = ctx.guard.query;
 
-      if (disabled) {
-        const resources = await findAllResources(shouldExcludeManagementApis);
-        ctx.body = yes(includeScopes)
-          ? await attachScopesToResources(resources, scopeQueries)
-          : resources;
+      return tryThat(
+        async () => {
+          const search = parseSearchParamsForSearch(searchParams);
+          const options = {
+            excludeManagementApis: yes(excludeManagementApis),
+            hasScopes: yes(hasScopes),
+            excludeRoleId,
+            search,
+          };
 
-        return next();
-      }
+          if (disabled) {
+            const resources = await findAllResources(options);
+            ctx.body = yes(includeScopes)
+              ? await attachScopesToResources(resources, scopeQueries, excludeRoleId)
+              : resources;
 
-      const [{ count }, resources] = await Promise.all([
-        findTotalNumberOfResources(shouldExcludeManagementApis),
-        findAllResources(shouldExcludeManagementApis, limit, offset),
-      ]);
+            return next();
+          }
 
-      ctx.pagination.totalCount = count;
-      ctx.body = yes(includeScopes)
-        ? await attachScopesToResources(resources, scopeQueries)
-        : resources;
+          const [{ count }, resources] = await Promise.all([
+            findTotalNumberOfResources(options),
+            findAllResources(options, limit, offset),
+          ]);
 
-      return next();
+          ctx.pagination.totalCount = count;
+          ctx.body = yes(includeScopes)
+            ? await attachScopesToResources(resources, scopeQueries, excludeRoleId)
+            : resources;
+
+          return next();
+        },
+        (error) => {
+          if (error instanceof TypeError) {
+            throw new RequestError(
+              { code: 'request.invalid_input', details: error.message },
+              error
+            );
+          }
+
+          throw error;
+        }
+      );
     }
   );
 
