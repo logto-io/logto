@@ -266,7 +266,20 @@ const queryDatabaseData = async (database, manifests) => {
       }
 
       const data = omitArray(
-        rows,
+        rows.map((row) => {
+          // Fresh installs opt into explicit MFA enrollment; upgrades keep the old setting.
+          if (
+            table_schema === 'public' &&
+            table_name === 'sign_in_experiences' &&
+            row.tenant_id === 'default' &&
+            row.id === 'default' &&
+            row.mfa?.verificationCodeEnrollment === 'Explicit'
+          ) {
+            return { ...row, mfa: omit(row.mfa, 'verificationCodeEnrollment') };
+          }
+
+          return row;
+        }),
         'id',
         'resource_id',
         'role_id',
