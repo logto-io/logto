@@ -105,7 +105,7 @@ export class ProfileValidator {
    *
    */
   public guardProfileNotExistInCurrentUserAccount(user: User, profile: InteractionProfile = {}) {
-    const { username, primaryEmail, primaryPhone, passwordEncrypted } = profile;
+    const { username, primaryEmail, primaryPhone, passwordEncrypted, socialIdentity } = profile;
 
     if (username) {
       assertThat(
@@ -142,6 +142,16 @@ export class ProfileValidator {
         !user.passwordEncrypted,
         new RequestError({
           code: 'user.password_exists_in_profile',
+          status: 422,
+        })
+      );
+    }
+
+    if (socialIdentity) {
+      assertThat(
+        !user.identities[socialIdentity.target],
+        new RequestError({
+          code: 'user.social_provider_already_linked',
           status: 422,
         })
       );

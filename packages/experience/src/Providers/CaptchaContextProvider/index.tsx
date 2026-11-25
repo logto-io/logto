@@ -9,6 +9,7 @@ import PageContext from '../PageContextProvider/PageContext';
 import CaptchaContext, { type CaptchaContextType } from './CaptchaContext';
 import { loadCapWidget, solveCapWidget } from './cap';
 import { scriptId } from './constant';
+import { loadFriendlyCaptchaSdk, solveFriendlyCaptchaWidget } from './friendly-captcha';
 import { executeGeetest, loadGeetest } from './geetest';
 import { getScript } from './utils';
 
@@ -34,6 +35,18 @@ const CaptchaContextProvider = ({ children }: Props) => {
 
     if (captchaConfig.type === CaptchaType.Cap) {
       void loadCapWidget();
+      return;
+    }
+
+    if (captchaConfig.type === CaptchaType.FriendlyCaptcha) {
+      // Load ahead of the first submission; failures surface when the CAPTCHA is executed
+      void (async () => {
+        try {
+          await loadFriendlyCaptchaSdk();
+        } catch {
+          // The error is surfaced when the user submits and `executeCaptcha` rejects
+        }
+      })();
       return;
     }
 
@@ -75,6 +88,19 @@ const CaptchaContextProvider = ({ children }: Props) => {
 
       try {
         return await solveCapWidget(widgetRef.current);
+      } catch (error: unknown) {
+        setToast(t('error.captcha_verification_failed'));
+        throw error;
+      }
+    }
+
+    if (captchaConfig.type === CaptchaType.FriendlyCaptcha) {
+      if (!widgetRef.current) {
+        return;
+      }
+
+      try {
+        return await solveFriendlyCaptchaWidget(widgetRef.current);
       } catch (error: unknown) {
         setToast(t('error.captcha_verification_failed'));
         throw error;

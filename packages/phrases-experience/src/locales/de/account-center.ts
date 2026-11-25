@@ -108,6 +108,12 @@ const account_center = {
     email_removed: 'E-Mail-Adresse wurde erfolgreich entfernt.',
     phone_removed: 'Telefonnummer wurde erfolgreich entfernt.',
     username_removed: 'Benutzername erfolgreich entfernt.',
+    remove_email_verification_code_confirmation_title: 'E-Mail-Bestätigungscode entfernen',
+    remove_email_verification_code_confirmation_description:
+      'Sie erhalten an diese E-Mail-Adresse keine Codes für die 2-Faktor-Authentifizierung mehr. Die E-Mail-Adresse bleibt in Ihrem Konto.',
+    remove_phone_verification_code_confirmation_title: 'Telefon-Bestätigungscode entfernen',
+    remove_phone_verification_code_confirmation_description:
+      'Sie erhalten an diese Telefonnummer keine Codes für die 2-Faktor-Authentifizierung mehr. Die Telefonnummer bleibt in Ihrem Konto.',
     trusted_devices: {
       title: 'Vertrauenswürdige MFA-Geräte',
       current_device: 'Aktuelles Gerät',

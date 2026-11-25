@@ -5,7 +5,7 @@ import UserInteractionContext from '@/Providers/UserInteractionContextProvider/U
 import {
   addMfa,
   getVerifiedRegisterCodeRecordId,
-  sendSubjectVerificationCode,
+  sendSubjectBindMfaVerificationCode,
   submitInteraction,
 } from '@/apis/experience';
 import useApi from '@/hooks/use-api';
@@ -41,7 +41,7 @@ const useStartIdentifierMfaBinding = ({ replace, submitErrorHandlers }: Options 
   const asyncGetVerifiedRegisterCodeRecordId = useApi(getVerifiedRegisterCodeRecordId);
   const asyncAddMfa = useApi(addMfa);
   const asyncSubmitInteraction = useApi(submitInteraction);
-  const asyncSendSubjectVerificationCode = useApi(sendSubjectVerificationCode);
+  const asyncSendSubjectBindMfaVerificationCode = useApi(sendSubjectBindMfaVerificationCode);
   // MFA binding after registration continues as SignIn, matching useMfaSubmitErrorHandler.
   const trustedDeviceSignInErrorHandler = useTrustedDeviceOptInErrorHandler(
     InteractionEvent.SignIn
@@ -113,7 +113,7 @@ const useStartIdentifierMfaBinding = ({ replace, submitErrorHandlers }: Options 
         }
       }
 
-      const [sendError, sendResult] = await asyncSendSubjectVerificationCode(identifierType);
+      const [sendError, sendResult] = await asyncSendSubjectBindMfaVerificationCode(identifierType);
 
       if (sendError) {
         await handleError(sendError);
@@ -131,7 +131,7 @@ const useStartIdentifierMfaBinding = ({ replace, submitErrorHandlers }: Options 
     [
       asyncAddMfa,
       asyncGetVerifiedRegisterCodeRecordId,
-      asyncSendSubjectVerificationCode,
+      asyncSendSubjectBindMfaVerificationCode,
       asyncSubmitInteraction,
       handleError,
       navigate,

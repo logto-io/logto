@@ -75,6 +75,15 @@ export const addBackupCodeMfa = async (accessToken: string, payload: { codes: st
   });
 };
 
+export const addVerificationCodeMfa = async (
+  accessToken: string,
+  type: MfaFactor.EmailVerificationCode | MfaFactor.PhoneVerificationCode
+) => {
+  await createAuthenticatedKy(accessToken).post('/api/my-account/mfa-verifications', {
+    json: { type },
+  });
+};
+
 export const deleteMfaVerification = async (
   accessToken: string,
   mfaVerificationId: string

@@ -1,23 +1,42 @@
-import { CaptchaType, RecaptchaEnterpriseMode } from '@logto/schemas';
-import { useContext } from 'react';
+import { CaptchaType, RecaptchaEnterpriseMode, Theme } from '@logto/schemas';
+import { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import CaptchaContext from '@/Providers/CaptchaContextProvider/CaptchaContext';
+import { mountFriendlyCaptchaWidget } from '@/Providers/CaptchaContextProvider/friendly-captcha';
+import PageContext from '@/Providers/PageContextProvider/PageContext';
 
 import styles from './index.module.scss';
 
 const CaptchaBox = () => {
   const { captchaConfig, widgetRef, isCaptchaRequired } = useContext(CaptchaContext);
+  const { theme } = useContext(PageContext);
   const { i18n } = useTranslation();
 
   // Check if widget rendering is needed
-  // Turnstile and Cap always need a widget, reCAPTCHA Enterprise needs it only in checkbox mode
+  // Turnstile, Cap, and Friendly Captcha always need a widget; reCAPTCHA Enterprise needs it only in checkbox mode
   const needsWidget =
     isCaptchaRequired &&
     captchaConfig &&
     (captchaConfig.type === CaptchaType.Turnstile ||
       captchaConfig.type === CaptchaType.Cap ||
+      captchaConfig.type === CaptchaType.FriendlyCaptcha ||
       captchaConfig.mode === RecaptchaEnterpriseMode.Checkbox);
+
+  useEffect(() => {
+    const container = widgetRef?.current;
+
+    if (!isCaptchaRequired || captchaConfig?.type !== CaptchaType.FriendlyCaptcha || !container) {
+      return;
+    }
+
+    return mountFriendlyCaptchaWidget(container, {
+      siteKey: captchaConfig.siteKey,
+      theme: theme === Theme.Light ? 'light' : 'dark',
+      language: i18n.language,
+      apiEndpoint: captchaConfig.apiEndpoint,
+    });
+  }, [captchaConfig, i18n.language, isCaptchaRequired, theme, widgetRef]);
 
   if (!needsWidget) {
     return null;

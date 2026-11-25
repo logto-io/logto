@@ -3,6 +3,7 @@ import { animated, config, useSpring } from '@react-spring/web';
 import type { Nullable } from '@silverhand/essentials';
 import type { HTMLProps, Ref } from 'react';
 import { useEffect, useImperativeHandle, useRef, forwardRef, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import usePasskeyAutofillConditionalUI from '@/hooks/use-passkey-autofill-conditional-ui';
 import ClearIcon from '@/shared/assets/icons/clear-icon.svg?react';
@@ -32,6 +33,7 @@ const SmartInputField = (
   { defaultValue, enabledTypes = [], onChange, ...rest }: Props,
   ref: Ref<Nullable<HTMLInputElement>>
 ) => {
+  const { t } = useTranslation();
   const innerRef = useRef<HTMLInputElement>(null);
   useImperativeHandle(ref, () => innerRef.current);
   const isInputEditable = !rest.readOnly && !rest.disabled;
@@ -107,6 +109,7 @@ const SmartInputField = (
       suffix={
         isInputEditable ? (
           <IconButton
+            aria-label={t('action.clear')}
             onMouseDown={(event) => {
               event.preventDefault();
             }}

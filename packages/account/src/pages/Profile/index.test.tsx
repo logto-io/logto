@@ -488,6 +488,17 @@ describe('<Profile />', () => {
     expect(setToast).toHaveBeenCalledWith('account_center.update_success.default.description');
   });
 
+  it('closes the edit modal from the named close button', () => {
+    const { getByRole, queryByDisplayValue, queryAllByText } = renderProfile();
+
+    fireEvent.click(queryAllByText('account_center.security.change')[0]!);
+    expect(queryByDisplayValue('Alex')).not.toBeNull();
+
+    // The test setup uses `document.body` as the modal app element, so react-modal marks it `aria-hidden`
+    fireEvent.click(getByRole('button', { name: 'action.close', hidden: true }));
+    expect(queryByDisplayValue('Alex')).toBeNull();
+  });
+
   it('renders custom data checkbox fields with yes/no labels', () => {
     const { getByText } = renderProfile({
       accountCenterSettings: {

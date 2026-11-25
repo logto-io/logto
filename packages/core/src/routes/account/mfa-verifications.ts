@@ -11,6 +11,7 @@ import { generateStandardId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { buildUpdatedUserLogtoConfig } from '#src/libraries/user-logto-config.js';
 import {
@@ -26,7 +27,10 @@ import { buildVerificationRecordByIdAndType } from '#src/libraries/verification.
 import koaGuard from '#src/middleware/koa-guard.js';
 import { assertFirstPartyClient } from '#src/utils/assert-first-party-client.js';
 import assertThat from '#src/utils/assert-that.js';
-import { transpileUserMfaVerifications } from '#src/utils/user.js';
+import {
+  createVerificationCodeMfaVerification,
+  transpileUserMfaVerifications,
+} from '#src/utils/user.js';
 
 import type { UserRouter, RouterInitArgs } from '../types.js';
 
@@ -87,6 +91,13 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
           type: z.literal(MfaFactor.BackupCode),
           codes: z.string().array(),
         }),
+        // Email / SMS MFA explicit enrollment
+        ...(EnvSet.values.isDevFeaturesEnabled
+          ? [
+              z.object({ type: z.literal(MfaFactor.EmailVerificationCode) }),
+              z.object({ type: z.literal(MfaFactor.PhoneVerificationCode) }),
+            ]
+          : []),
       ]),
       status: [204, 400, 401, 403, 422],
     }),
@@ -246,7 +257,17 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
 
           break;
         }
-        // No default
+        default: {
+          const updatedUser = await updateUserById(userId, {
+            mfaVerifications: [
+              ...user.mfaVerifications,
+              createVerificationCodeMfaVerification(user, ctx.guard.body.type),
+            ],
+            logtoConfig: buildUpdatedUserLogtoConfig(user, { mfa: { enabled: true } }),
+          });
+
+          ctx.appendDataHookContext('User.Data.Updated', { user: updatedUser });
+        }
       }
 
       ctx.status = 204;

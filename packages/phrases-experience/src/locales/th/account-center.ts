@@ -99,6 +99,12 @@ const account_center = {
     email_removed: 'ลบที่อยู่อีเมลเรียบร้อยแล้ว',
     phone_removed: 'ลบหมายเลขโทรศัพท์เรียบร้อยแล้ว',
     username_removed: 'ลบชื่อผู้ใช้เรียบร้อยแล้ว',
+    remove_email_verification_code_confirmation_title: 'ลบรหัสยืนยันทางอีเมล',
+    remove_email_verification_code_confirmation_description:
+      'คุณจะไม่ได้รับรหัสยืนยันแบบ 2 ขั้นตอนที่อีเมลนี้อีกต่อไป อีเมลนี้จะยังคงอยู่ในบัญชีของคุณ',
+    remove_phone_verification_code_confirmation_title: 'ลบรหัสยืนยันทางโทรศัพท์',
+    remove_phone_verification_code_confirmation_description:
+      'คุณจะไม่ได้รับรหัสยืนยันแบบ 2 ขั้นตอนที่หมายเลขโทรศัพท์นี้อีกต่อไป หมายเลขโทรศัพท์นี้จะยังคงอยู่ในบัญชีของคุณ',
     trusted_devices: {
       title: 'อุปกรณ์ที่เชื่อถือสำหรับ MFA',
       current_device: 'อุปกรณ์ปัจจุบัน',

@@ -5,6 +5,7 @@ import { authenticator } from 'otplib';
 import qrcode from 'qrcode';
 import { object, string, z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import {
   generateBackupCodes,
@@ -18,6 +19,7 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 import {
   adminUserMfaVerificationResponseGuard,
+  createVerificationCodeMfaVerification,
   transpileUserMfaVerifications,
 } from '#src/utils/user.js';
 
@@ -60,6 +62,10 @@ export default function adminUserMfaVerificationsRoutes<T extends ManagementApiR
     }
   );
 
+  // Email / SMS MFA explicit enrollment: accept email and phone MFA only with dev features
+  const { isDevFeaturesEnabled } = EnvSet.values;
+  const createdVerificationCodeMfa = { id: z.string(), createdAt: z.string() };
+
   router.post(
     '/users/:userId/mfa-verifications',
     koaGuard({
@@ -73,6 +79,12 @@ export default function adminUserMfaVerificationsRoutes<T extends ManagementApiR
           type: z.literal(MfaFactor.BackupCode),
           codes: z.string().array().optional(),
         }),
+        ...(isDevFeaturesEnabled
+          ? [
+              z.object({ type: z.literal(MfaFactor.EmailVerificationCode) }),
+              z.object({ type: z.literal(MfaFactor.PhoneVerificationCode) }),
+            ]
+          : []),
       ]),
       response: z.discriminatedUnion('type', [
         z.object({
@@ -84,14 +96,33 @@ export default function adminUserMfaVerificationsRoutes<T extends ManagementApiR
           type: z.literal(MfaFactor.BackupCode),
           codes: z.string().array(),
         }),
+        ...(isDevFeaturesEnabled
+          ? [
+              z.object({
+                type: z.literal(MfaFactor.EmailVerificationCode),
+                ...createdVerificationCodeMfa,
+              }),
+              z.object({
+                type: z.literal(MfaFactor.PhoneVerificationCode),
+                ...createdVerificationCodeMfa,
+              }),
+            ]
+          : []),
       ]),
       status: [200, 404, 422],
     }),
     async (ctx, next) => {
-      const { id, mfaVerifications, username, primaryEmail, primaryPhone, name } =
-        await findUserById(ctx.guard.params.userId);
+      const user = await findUserById(ctx.guard.params.userId);
+      const { id, mfaVerifications, username, primaryEmail, primaryPhone, name } = user;
 
       const { type } = ctx.guard.body;
+
+      if (type === MfaFactor.EmailVerificationCode || type === MfaFactor.PhoneVerificationCode) {
+        const verification = createVerificationCodeMfaVerification(user, type);
+        await updateUserById(id, { mfaVerifications: [...mfaVerifications, verification] });
+        ctx.body = verification;
+        return next();
+      }
 
       if (type === MfaFactor.TOTP) {
         // A user can only bind one TOTP factor

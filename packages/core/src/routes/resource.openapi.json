@@ -18,6 +18,16 @@
             "in": "query",
             "name": "excludeManagementApis",
             "description": "If it's provided with a truthy value (`true`, `1`, `yes`), Logto Management API resources will be excluded from the response."
+          },
+          {
+            "in": "query",
+            "name": "hasScopes",
+            "description": "If it's provided with a truthy value (`true`, `1`, `yes`), only resources that have at least one scope (after applying `excludeRoleId`, if specified) will be returned."
+          },
+          {
+            "in": "query",
+            "name": "excludeRoleId",
+            "description": "Exclude scopes already assigned to the specified role when filtering resources with `hasScopes`, matching scope names during search, or attaching scopes with `includeScopes`."
           }
         ],
         "responses": {
@@ -26,7 +36,7 @@
           }
         },
         "summary": "Get API resources",
-        "description": "Get API resources in the current tenant with pagination."
+        "description": "Get API resources in the current tenant with optional search, filters, and pagination."
       },
       "post": {
         "requestBody": {

@@ -1,7 +1,8 @@
 import { ConnectorType } from '@logto/connector-kit';
 import { AgreeToTermsPolicy, SignInIdentifier, SignInMode } from '@logto/schemas';
 
-import { createUser, deleteUser } from '#src/api/admin-user.js';
+import { mockSocialConnectorTarget } from '#src/__mocks__/connectors-mock.js';
+import { createUser, deleteUser, putUserIdentity } from '#src/api/admin-user.js';
 import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import { demoAppUrl } from '#src/constants.js';
 import { clearConnectorsByTypes, setSocialConnector } from '#src/helpers/connector.js';
@@ -106,6 +107,31 @@ describe('automatic account linking', () => {
     experience.toMatchUrl(demoAppUrl);
     await experience.toMatchElement('div', { text: `User ID: ${user.id}` });
     await experience.toClick('div[role=button]', /sign out/i);
+    await experience.page.close();
+
+    await deleteUser(user.id);
+  });
+
+  it('should reject an email match with the provider linked', async () => {
+    await updateSignInExperience({
+      termsOfUseUrl: null,
+      privacyPolicyUrl: null,
+      socialSignIn: { automaticAccountLinking: true },
+    });
+    const user = await createUser({ primaryEmail: generateEmail() });
+    await putUserIdentity(user.id, mockSocialConnectorTarget, {
+      userId: 'linked_' + randomString(),
+    });
+    const experience = new ExpectExperience(await browser.newPage());
+
+    await experience.navigateTo(demoAppUrl.href);
+    await experience.toProcessSocialSignIn({
+      socialUserId: 'foo_' + randomString(),
+      socialEmail: user.primaryEmail!,
+    });
+
+    await experience.waitForToast(/already linked/i);
+    experience.toBeAt('sign-in');
     await experience.page.close();
 
     await deleteUser(user.id);

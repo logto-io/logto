@@ -1,6 +1,11 @@
 /* eslint-disable max-lines -- Account MFA route scenarios are kept together. */
 import { UserScope } from '@logto/core-kit';
-import { AccountCenterControlValue, MfaFactor, type User } from '@logto/schemas';
+import {
+  AccountCenterControlValue,
+  MfaFactor,
+  MfaVerificationCodeEnrollment,
+  type User,
+} from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
 
 import {
@@ -12,6 +17,7 @@ import {
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
 import type Queries from '#src/tenants/Queries.js';
+import { resetDevFeaturesEnabled, setDevFeaturesEnabled } from '#src/test-utils/dev-features.js';
 import { MockTenant, type Partial2 } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -265,6 +271,158 @@ describe('account mfa verification routes', () => {
 
       expect(response.status).toBe(422);
       expect(response.body).toMatchObject({ code: 'session.mfa.backup_code_can_not_be_alone' });
+      expect(updateUserById).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('POST /api/my-account/mfa-verifications email and phone verification codes', () => {
+    const mockCodeFactorsEnabled = () => {
+      findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        mfa: {
+          ...mockSignInExperience.mfa,
+          factors: [MfaFactor.EmailVerificationCode, MfaFactor.PhoneVerificationCode],
+        },
+      });
+    };
+
+    it.each([MfaFactor.EmailVerificationCode, MfaFactor.PhoneVerificationCode])(
+      'enrolls %s for the primary identifier',
+      async (type) => {
+        findUserById.mockResolvedValueOnce({
+          ...mockUser,
+          mfaVerifications: [mockUserTotpMfaVerification],
+        });
+        mockCodeFactorsEnabled();
+
+        const response = await accountRequest.post('/my-account/mfa-verifications').send({ type });
+
+        expect(response.status).toBe(204);
+        expect(getLastUpdatePayload()?.mfaVerifications).toMatchObject([
+          mockUserTotpMfaVerification,
+          { type },
+        ]);
+        expectUpdatedMfaEnabled(true);
+      }
+    );
+
+    it('rejects enrolling a factor the user already has', async () => {
+      findUserById.mockResolvedValueOnce({
+        ...mockUser,
+        mfaVerifications: [
+          {
+            id: 'email-mfa',
+            createdAt: new Date().toISOString(),
+            type: MfaFactor.EmailVerificationCode,
+          },
+        ],
+      });
+      mockCodeFactorsEnabled();
+
+      const response = await accountRequest
+        .post('/my-account/mfa-verifications')
+        .send({ type: MfaFactor.EmailVerificationCode });
+
+      expect(response.status).toBe(422);
+      expect(response.body).toMatchObject({ code: 'user.email_mfa_already_in_use' });
+      expect(updateUserById).not.toHaveBeenCalled();
+    });
+
+    it.each([
+      [
+        MfaFactor.EmailVerificationCode,
+        { primaryEmail: null },
+        'user.email_mfa_requires_primary_email',
+      ],
+      [
+        MfaFactor.PhoneVerificationCode,
+        { primaryPhone: null },
+        'user.phone_mfa_requires_primary_phone',
+      ],
+    ] as const)(
+      'rejects enrolling %s without the primary identifier',
+      async (type, profile, code) => {
+        // The other identifier stays, so a check of the wrong one would pass.
+        findUserById.mockResolvedValueOnce({ ...mockUser, ...profile });
+        mockCodeFactorsEnabled();
+
+        const response = await accountRequest.post('/my-account/mfa-verifications').send({ type });
+
+        expect(response.status).toBe(422);
+        expect(response.body).toMatchObject({ code });
+        expect(updateUserById).not.toHaveBeenCalled();
+      }
+    );
+
+    it('rejects enrolling a factor the sign-in experience does not enable', async () => {
+      findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        mfa: { ...mockSignInExperience.mfa, factors: [MfaFactor.PhoneVerificationCode] },
+      });
+
+      const response = await accountRequest
+        .post('/my-account/mfa-verifications')
+        .send({ type: MfaFactor.EmailVerificationCode });
+
+      expect(response.status).toBe(400);
+      expect(response.body).toMatchObject({ code: 'session.mfa.mfa_factor_not_enabled' });
+      expect(updateUserById).not.toHaveBeenCalled();
+    });
+
+    it('enrolls in explicit enrollment mode', async () => {
+      findDefaultSignInExperience.mockResolvedValueOnce({
+        ...mockSignInExperience,
+        mfa: {
+          ...mockSignInExperience.mfa,
+          factors: [MfaFactor.EmailVerificationCode],
+          verificationCodeEnrollment: MfaVerificationCodeEnrollment.Explicit,
+        },
+      });
+
+      const response = await accountRequest
+        .post('/my-account/mfa-verifications')
+        .send({ type: MfaFactor.EmailVerificationCode });
+
+      expect(response.status).toBe(204);
+      expect(getLastUpdatePayload()?.mfaVerifications).toMatchObject([
+        { type: MfaFactor.EmailVerificationCode },
+      ]);
+      expectUpdatedMfaEnabled(true);
+    });
+
+    it('does not accept the factors while dev features are disabled', async () => {
+      setDevFeaturesEnabled(false);
+      const request = createRequester({
+        middlewares: [koaI18next(), koaErrorHandler()],
+        authedRoutes: [
+          (router) => {
+            router.use(async (ctx, next) => {
+              ctx.auth = {
+                ...ctx.auth,
+                id: mockUser.id,
+                identityVerified: true,
+                scopes: new Set([UserScope.Identities]),
+              };
+              ctx.accountCenter = {
+                enabled: true,
+                fields: { mfa: AccountCenterControlValue.Edit },
+              };
+              ctx.appendDataHookContext = jest.fn();
+
+              return next();
+            });
+          },
+          accountMfaRoutes as never,
+        ],
+        tenantContext,
+      });
+      resetDevFeaturesEnabled();
+
+      const response = await request
+        .post('/my-account/mfa-verifications')
+        .send({ type: MfaFactor.EmailVerificationCode });
+
+      expect(response.status).toBe(400);
       expect(updateUserById).not.toHaveBeenCalled();
     });
   });

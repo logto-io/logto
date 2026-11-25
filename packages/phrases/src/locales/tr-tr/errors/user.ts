@@ -19,6 +19,8 @@ const user = {
   sso_identity_not_exist: 'Kurumsal SSO hesabı henüz kaydedilmedi.',
   identity_already_in_use: 'Sosyal platform hesabı kaydedildi.',
   social_account_exists_in_profile: 'Bu sosyal hesap zaten ilişkilendirilmiş.',
+  social_provider_already_linked:
+    'Bu sağlayıcıya ait başka bir hesap zaten bağlı. O hesapla veya başka bir yöntemle oturum açın.',
   cannot_delete_self: 'Kendinizi silemezsiniz.',
   sign_up_method_not_enabled: 'Bu kayıt yöntemi etkin değil.',
   sign_in_method_not_enabled: 'Bu oturum açma yöntemi etkin değil.',
@@ -43,6 +45,12 @@ const user = {
   missing_mfa: 'Oturum açmadan önce ekstra MFA bağlamanız gerekiyor.',
   totp_already_in_use: 'TOTP zaten kullanımda.',
   backup_code_already_in_use: 'Yedek kod zaten kullanımda.',
+  email_mfa_already_in_use: 'E-posta doğrulama kodu MFA zaten kullanımda.',
+  phone_mfa_already_in_use: 'SMS doğrulama kodu MFA zaten kullanımda.',
+  email_mfa_requires_primary_email:
+    'E-posta doğrulama kodu MFA kullanmak için kullanıcının birincil e-posta adresi olmalıdır.',
+  phone_mfa_requires_primary_phone:
+    'SMS doğrulama kodu MFA kullanmak için kullanıcının birincil telefon numarası olmalıdır.',
   password_algorithm_required: 'Şifre algoritması gereklidir.',
   password_and_digest: 'Düz metin şifresini ve şifre özetini aynı anda belirleyemezsiniz.',
   personal_access_token_name_exists: 'Kişisel erişim belirteci adı zaten mevcut.',

@@ -20,6 +20,8 @@ const user = {
   sso_identity_not_exist: 'エンタープライズ SSO アカウントはまだ登録されていません。',
   identity_already_in_use: 'このソーシャルアカウントはすでに別のアカウントに関連付けされています。',
   social_account_exists_in_profile: 'このソーシャルアカウントはすでに関連付けられています。',
+  social_provider_already_linked:
+    'このプロバイダーの別のアカウントがすでに関連付けられています。そのアカウントまたは別の方法でサインインしてください。',
   cannot_delete_self: '自分自身を削除することはできません。',
   sign_up_method_not_enabled: 'このサインアップ方法は有効化されていません。',
   sign_in_method_not_enabled: 'このサインイン方法は有効化されていません。',
@@ -46,6 +48,12 @@ const user = {
   missing_mfa: 'MFAを追加してからサインインしてください。',
   totp_already_in_use: 'TOTPはすでに使用されています。',
   backup_code_already_in_use: 'バックアップコードはすでに使用されています。',
+  email_mfa_already_in_use: 'メール認証コードによる MFA はすでに使用されています。',
+  phone_mfa_already_in_use: 'SMS認証コードによる MFA はすでに使用されています。',
+  email_mfa_requires_primary_email:
+    'メール認証コードによる MFA を使用するには、ユーザーにプライマリメールアドレスが必要です。',
+  phone_mfa_requires_primary_phone:
+    'SMS認証コードによる MFA を使用するには、ユーザーにプライマリ電話番号が必要です。',
   password_algorithm_required: 'Password algorithm is required.',
   password_and_digest: 'You cannot set both plain text password and password digest.',
   personal_access_token_name_exists: '個人用アクセス トークン名は既に存在します。',

@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@cap.js/wasm": "0.0.7",
+    "@friendlycaptcha/sdk": "1.1.5",
     "@jest/types": "^29.5.0",
     "@logto/connector-kit": "workspace:^",
     "@logto/core-kit": "workspace:^",

@@ -9,6 +9,7 @@ import {
   useRef,
   useEffect,
   useCallback,
+  useId,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -53,6 +54,9 @@ const InputField = (
 ) => {
   const { t, i18n } = useTranslation();
   const innerRef = useRef<HTMLInputElement>(null);
+  const generatedId = useId();
+  // Associate the visible label with the input, so assistive technologies announce it
+  const inputId = props.id ?? generatedId;
 
   useImperativeHandle(reference, () => innerRef.current);
 
@@ -115,6 +119,7 @@ const InputField = (
           <input
             {...props}
             ref={innerRef}
+            id={inputId}
             value={value}
             onAnimationStart={handleAnimationStart}
             onFocus={(event) => {
@@ -136,6 +141,7 @@ const InputField = (
             })}
         </div>
         <NotchedBorder
+          htmlFor={inputId}
           label={labelWithOptionalSuffix ?? ''}
           isActive={isActive}
           isDanger={Boolean(isDanger)}

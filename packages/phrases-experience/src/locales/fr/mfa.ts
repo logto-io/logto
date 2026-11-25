@@ -20,7 +20,7 @@ const mfa = {
   send_to_phone: 'Envoyer à {{identifier}}',
   onboarding: 'Activer la vérification en deux étapes',
   onboarding_description:
-    "Protégez votre compte avec la vérification en deux étapes. Choisissez une ou plusieurs méthodes : Passkey, application d'authentification (OTP), code de vérification SMS ou codes de secours.",
+    'Protégez votre compte avec la vérification en deux étapes. Choisissez une ou plusieurs méthodes pour vérifier votre identité lors de la connexion.',
   enable_mfa: 'Activer la vérification en deux étapes',
   add_mfa_factors: 'Ajouter la vérification en deux étapes',
   add_mfa_description:

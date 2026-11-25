@@ -233,12 +233,13 @@ export const createUserLibrary = (tenantId: string, queries: Queries) => {
     return user;
   };
 
-  const signOutUser = async (userId: string) => {
+  const signOutUser = async (userId: string, { revokeGrants = false } = {}) => {
     await Promise.all([
       revokeInstanceByUserId('AccessToken', userId),
       revokeInstanceByUserId('RefreshToken', userId),
       revokeInstanceByUserId('Session', userId),
       oidcSessionExtensions.deleteByAccountId(userId),
+      ...(revokeGrants ? [revokeInstanceByUserId('Grant', userId)] : []),
     ]);
   };
 

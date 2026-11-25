@@ -21,6 +21,13 @@ const mfa = {
   email_verification_code_description: '이메일 주소를 연결하여 인증 코드를 받고 검증하세요.',
   phone_verification_code: 'SMS 인증 코드',
   phone_verification_code_description: '전화번호를 연결하여 SMS 인증 코드를 받고 검증하세요.',
+  verification_code_enrollment: '이메일/SMS 2단계 인증',
+  verification_code_enrollment_implicit: '인증된 이메일 또는 전화번호가 있는 모든 사용자',
+  verification_code_enrollment_explicit: '설정한 사용자만',
+  verification_code_enrollment_explicit_confirmation:
+    '이메일 및 SMS 인증 코드는 이를 설정한 사용자에게만 2단계 인증으로 인정됩니다. 설정하지 않은 사용자는 이를 2단계 인증 요소로 사용할 수 없게 되며, 다른 요소가 없는 사용자는 MFA가 없는 것으로 처리됩니다. 이메일 또는 전화번호만으로 2단계 인증을 켠 사용자에게는 인증 방법을 추가할 때까지 계정 센터에 "설정이 완료되지 않았습니다" 알림이 표시됩니다. 계속하시겠습니까?',
+  verification_code_enrollment_implicit_confirmation:
+    '인증된 이메일 주소 또는 전화번호가 있는 모든 사용자는 설정하지 않았더라도 이를 2단계 인증에 사용합니다. 계속하시겠습니까?',
   policy: '정책',
   policy_description: '로그인 및 가입 플로우에 대한 MFA 정책을 설정합니다.',
   two_step_sign_in_policy: '로그인 시 2단계 인증 정책',

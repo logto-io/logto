@@ -87,6 +87,7 @@ const SetPassword = ({
         isSuffixFocusVisible={!!watch('newPassword')}
         suffix={
           <IconButton
+            aria-label={t('action.clear')}
             onClick={() => {
               resetField('newPassword');
             }}
@@ -109,6 +110,7 @@ const SetPassword = ({
         isSuffixFocusVisible={!!watch('confirmPassword')}
         suffix={
           <IconButton
+            aria-label={t('action.clear')}
             onClick={() => {
               resetField('confirmPassword');
             }}

@@ -90,13 +90,13 @@ const subjectVerificationRecords = Object.freeze({
     mockTenant.libraries,
     mockTenant.queries,
     { type: SignInIdentifier.Email, value: `subject@${emailDomain}` },
-    'subject-user-id'
+    { userId: 'subject-user-id' }
   ),
   [SignInIdentifier.Phone]: createSubjectCodeVerificationRecord(
     mockTenant.libraries,
     mockTenant.queries,
     { type: SignInIdentifier.Phone, value: 'value' },
-    'subject-user-id'
+    { userId: 'subject-user-id' }
   ),
 });
 

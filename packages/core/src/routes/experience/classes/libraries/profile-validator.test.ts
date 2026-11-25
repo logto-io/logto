@@ -27,6 +27,26 @@ describe('ProfileValidator', () => {
   } as unknown as SignInExperienceValidator;
   const profileValidator = new ProfileValidator(queries, signInExperienceValidator);
 
+  describe('guardProfileNotExistInCurrentUserAccount', () => {
+    const socialIdentity = { target: 'google', userInfo: { id: 'social-account-b' } };
+
+    it('should reject a social identity for a linked provider', () => {
+      const user = { ...mockUser, identities: { google: { userId: 'social-account-a' } } };
+
+      expect(() => {
+        profileValidator.guardProfileNotExistInCurrentUserAccount(user, { socialIdentity });
+      }).toThrow(
+        new RequestError({ code: 'user.social_provider_already_linked', status: 422 }).message
+      );
+    });
+
+    it('should accept a social identity for an unlinked provider', () => {
+      expect(() => {
+        profileValidator.guardProfileNotExistInCurrentUserAccount(mockUser, { socialIdentity });
+      }).not.toThrow();
+    });
+  });
+
   describe('validateAndParseCustomProfile', () => {
     it('should parse and split profile data into built-in and custom fields', () => {
       const profile = {
