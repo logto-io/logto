@@ -7,8 +7,14 @@ import { mockSocialConnectorTarget } from '#src/__mocks__/connectors-mock.js';
 import { deleteUser } from '#src/api/admin-user.js';
 import { deleteAction, upsertAction } from '#src/api/logto-config.js';
 import { createOneTimeToken, deleteOneTimeTokenById } from '#src/api/one-time-token.js';
+import { updateSignInExperience } from '#src/api/sign-in-experience.js';
+import { SsoConnectorApi } from '#src/api/sso-connector.js';
 import { initExperienceClient } from '#src/helpers/client.js';
 import { clearConnectorsByTypes, setSocialConnector } from '#src/helpers/connector.js';
+import {
+  successfullyCreateEnterpriseSsoVerification,
+  successfullyVerifyEnterpriseSsoAuthorization,
+} from '#src/helpers/experience/enterprise-sso-verification.js';
 import { registerNewUserUsernamePassword } from '#src/helpers/experience/index.js';
 import {
   successfullyCreateSocialVerification,
@@ -87,7 +93,8 @@ devFeatureTest.describe('action: pre-register', () => {
 
   it.each([
     ['allow', `const runAction = () => ({ action: 'allow' });`],
-    ['an empty result', `const runAction = () => {};`],
+    ['no result', `const runAction = () => {};`],
+    ['an empty object', `const runAction = () => ({});`],
   ])('should register the user when the action returns %s', async (_, script) => {
     await upsertAction(key, { script, enabled: true });
 
@@ -198,6 +205,53 @@ devFeatureTest.describe('action: pre-register', () => {
         id: socialUserId,
         hasRawData: false,
       });
+    });
+
+    it('should pass the enterprise SSO identity without detail', async () => {
+      const ssoConnectorApi = new SsoConnectorApi();
+      const domain = 'pre-register-sso.example.com';
+      const identityId = generateStandardId();
+      const email = generateEmail(domain);
+
+      try {
+        const connector = await ssoConnectorApi.createMockOidcConnector([domain]);
+        await updateSignInExperience({ singleSignOnEnabled: true });
+        await upsertAction(key, {
+          script: echoEventScript(
+            '{ types: event.verificationTypes, connectorId: event.user.enterpriseSsoIdentity.ssoConnectorId, identityId: event.user.enterpriseSsoIdentity.identityId, hasDetail: "detail" in event.user.enterpriseSsoIdentity }'
+          ),
+          enabled: true,
+        });
+
+        const state = 'state';
+        const redirectUri = 'http://localhost:3000';
+        const client = await initExperienceClient();
+        const { verificationId } = await successfullyCreateEnterpriseSsoVerification(
+          client,
+          connector.id,
+          { redirectUri, state }
+        );
+        await successfullyVerifyEnterpriseSsoAuthorization(client, connector.id, {
+          verificationId,
+          connectorData: { sub: identityId, email, email_verified: true },
+        });
+        await client.updateInteractionEvent({ interactionEvent: InteractionEvent.Register });
+
+        const data = await expectRejects(client.identifyUser({ verificationId }), {
+          code: 'action.registration_denied',
+          status: 422,
+        });
+
+        expect(parseMessage(data)).toEqual({
+          types: ['EnterpriseSso'],
+          connectorId: connector.id,
+          identityId,
+          hasDetail: false,
+        });
+      } finally {
+        await trySafe(updateSignInExperience({ singleSignOnEnabled: false }));
+        await ssoConnectorApi.cleanUp();
+      }
     });
 
     it('should report a one-time token registration in the verification types', async () => {
