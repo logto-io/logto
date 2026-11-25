@@ -30,16 +30,7 @@ const mfa = {
     '인증된 이메일 주소 또는 전화번호가 있는 모든 사용자는 설정하지 않았더라도 이를 2단계 인증에 사용합니다. 계속하시겠습니까?',
   policy: '정책',
   policy_description: '로그인 및 가입 플로우에 대한 MFA 정책을 설정합니다.',
-  two_step_sign_in_policy: '로그인 시 2단계 인증 정책',
-  user_controlled: '사용자는 자체적으로 MFA를 활성화 또는 비활성화할 수 있습니다',
-  user_controlled_tip:
-    '사용자는 처음 로그인 또는 가입 시에 MFA 설정을 건너 뛰거나 계정 설정에서 활성화/비활성화할 수 있습니다.',
-  mandatory: '사용자는 항상 로그인 시 MFA 사용이 필요합니다',
-  mandatory_tip:
-    '사용자는 처음 로그인 또는 가입 시에 MFA를 설정하고 모든 향후 로그인에서 그것을 사용해야 합니다.',
   require_mfa: 'MFA 필요',
-  require_mfa_label:
-    '애플리케이션에 액세스하기 위해 2단계 인증을 필수로 만들려면 이것을 활성화하세요. 비활성화하면 사용자가 스스로 MFA 사용 여부를 결정할 수 있습니다.',
   require_mfa_optional:
     '선택형 MFA: 사용자가 자신의 계정 보안을 위해 MFA 활성화를 선택할 수 있습니다',
   require_mfa_adaptive:

@@ -195,7 +195,6 @@ const sign_in_exp = {
       social: 'ソーシャル ID',
       password: 'パスワード',
       mfa: '多要素認証',
-      mfa_description: 'ユーザーがアカウントセンターから MFA 方法を管理できるようにします。',
       passkey: 'Passkey',
       username: 'ユーザー名',
       name: '名前',

@@ -154,7 +154,7 @@ describe('webhook job handler delivery deadline', () => {
     jest.clearAllMocks();
   });
 
-  it('aborts and fails when 200 headers arrive immediately but body stalls', async () => {
+  it('settles as delivered when 200 headers arrive immediately but body stalls', async () => {
     await withHttpServer(
       (_request, response) => {
         response.writeHead(200, { 'content-type': 'text/plain' });
@@ -167,19 +167,20 @@ describe('webhook job handler delivery deadline', () => {
         );
         const result = await handler.handle(createClaimedJob());
 
-        expect(result.status).toBe('fail');
+        expect(result.status).toBe('done');
         expect(result.meta?.log?.payload).toMatchObject({
-          result: LogResult.Error,
+          result: LogResult.Success,
           hookId: 'hook-1',
+          attempts: 1,
+          response: { statusCode: 200 },
         });
-        expect(result.meta?.log?.payload.error).toContain('Webhook delivery timed out after 150ms');
-        expect(result.meta?.log?.payload).not.toHaveProperty('response');
+        expect(result.meta?.log?.payload).not.toHaveProperty('error');
         await expect(waitForClosedConnections(1)).resolves.toBeGreaterThanOrEqual(1);
       }
     );
   });
 
-  it('aborts and fails when 200 response continuously trickles bytes', async () => {
+  it('settles as delivered when 200 response continuously trickles bytes', async () => {
     await withHttpServer(
       (_request, response, _attempt, trackTimer) => {
         response.writeHead(200, { 'content-type': 'text/plain' });
@@ -200,15 +201,19 @@ describe('webhook job handler delivery deadline', () => {
         );
         const result = await handler.handle(createClaimedJob());
 
-        expect(result.status).toBe('fail');
-        expect(result.meta?.log?.payload.error).toContain('Webhook delivery timed out after 150ms');
-        expect(result.meta?.log?.payload).not.toHaveProperty('response');
+        expect(result.status).toBe('done');
+        expect(result.meta?.log?.payload).toMatchObject({
+          result: LogResult.Success,
+          attempts: 1,
+          response: { statusCode: 200 },
+        });
+        expect(result.meta?.log?.payload).not.toHaveProperty('error');
         await expect(waitForClosedConnections(1)).resolves.toBeGreaterThanOrEqual(1);
       }
     );
   });
 
-  it('aborts stalled error body read on HTTPError without hanging', async () => {
+  it('aborts stalled error body read on HTTPError without hanging and marks it retryable', async () => {
     await withHttpServer(
       (_request, response) => {
         response.writeHead(500, { 'content-type': 'text/plain' });
@@ -221,10 +226,11 @@ describe('webhook job handler delivery deadline', () => {
         );
         const result = await handler.handle(createClaimedJob());
 
-        expect(result.status).toBe('fail');
+        expect(result.status).toBe('retry');
         expect(result.meta?.log?.payload).toMatchObject({
           result: LogResult.Error,
           hookId: 'hook-1',
+          attempts: 1,
         });
         expect(result.meta?.log?.payload.error).toContain('500');
         expect(result.meta?.log?.payload).not.toHaveProperty('response');
@@ -233,15 +239,15 @@ describe('webhook job handler delivery deadline', () => {
     );
   });
 
-  it('aborts slow 500 retry sequences at the overall deliveryTimeoutMs', async () => {
+  it('aborts slow response headers at deliveryTimeoutMs and returns retry', async () => {
     await withHttpServer(
       (_request, response, _attempt, trackTimer) => {
         const timer = setTimeout(() => {
           if (!response.destroyed) {
             response.writeHead(500);
-            response.end('retry later');
+            response.end('too late');
           }
-        }, 150);
+        }, 500);
         trackTimer(timer);
         response.on('close', () => {
           clearTimeout(timer);
@@ -250,17 +256,45 @@ describe('webhook job handler delivery deadline', () => {
       async ({ endpoint, getAttempts, waitForClosedConnections }) => {
         const handler = createWebhookJobHandler(
           { findHookForDelivery: async () => createHook(endpoint, 3) },
-          { deliveryTimeoutMs: 350 }
+          { deliveryTimeoutMs: 200 }
         );
         const result = await handler.handle(createClaimedJob());
 
-        expect(getAttempts()).toBeLessThan(4);
-        expect(result.status).toBe('fail');
-        expect(result.meta?.log?.payload.error).toContain('Webhook delivery timed out after 350ms');
+        expect(getAttempts()).toBe(1);
+        expect(result.status).toBe('retry');
+        expect(result.meta?.log?.payload).toMatchObject({
+          result: LogResult.Error,
+          attempts: 1,
+        });
+        expect(result.meta?.log?.payload.error).toContain('Webhook delivery timed out after 200ms');
         expect(result.meta?.log?.payload).not.toHaveProperty('response');
-        await expect(waitForClosedConnections(getAttempts())).resolves.toBeGreaterThanOrEqual(
-          getAttempts()
-        );
+        await expect(waitForClosedConnections(1)).resolves.toBeGreaterThanOrEqual(1);
+      }
+    );
+  });
+
+  it('sends a single HTTP attempt ignoring hook retries and preserves Retry-After on 503', async () => {
+    await withHttpServer(
+      (_request, response) => {
+        response.writeHead(503, { 'Retry-After': '120', 'content-type': 'text/plain' });
+        response.end('maintenance');
+      },
+      async ({ endpoint, getAttempts }) => {
+        const handler = createWebhookJobHandler({
+          findHookForDelivery: async () => createHook(endpoint, 3),
+        });
+        const result = await handler.handle(createClaimedJob());
+
+        expect(getAttempts()).toBe(1);
+        expect(result).toMatchObject({
+          status: 'retry',
+          retryAfterMs: 120_000,
+        });
+        expect(result.meta?.log?.payload).toMatchObject({
+          result: LogResult.Error,
+          attempts: 1,
+          response: { statusCode: 503, body: 'maintenance' },
+        });
       }
     );
   });

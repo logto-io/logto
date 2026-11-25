@@ -13,13 +13,6 @@ const useSkipMfa = () => {
   const redirectTo = useGlobalRedirectTo();
 
   const handleError = useErrorHandler();
-  /**
-   * TODO: @simeng-li
-   * Need to find a better implementation.
-   * In the registration event, MFA binding flow is triggered after user creation,
-   * so the error handle logic is same as the pre-sign-in event.
-   * This is confusing and should be refactored.
-   */
   const preSignInErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.SignIn, {
     replace: true,
   });

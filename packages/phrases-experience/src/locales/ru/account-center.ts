@@ -66,7 +66,6 @@ const account_center = {
     passkeys_count_other: '{{count}} passkeys',
     backup_codes_count_one: '{{count}} код остался',
     backup_codes_count_other: '{{count}} кодов осталось',
-    view: 'Просмотр',
     manage: 'Управление',
     turn_on_2_step_verification_description:
       'Добавьте дополнительный уровень безопасности. При входе вам будет предложен второй шаг верификации.',

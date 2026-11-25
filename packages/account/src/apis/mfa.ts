@@ -51,15 +51,6 @@ export const getBackupCodesList = async (accessToken: string): Promise<BackupCod
     .json<BackupCodesListResponse>();
 };
 
-export const addTotpMfa = async (
-  accessToken: string,
-  payload: { secret: string; code?: string }
-) => {
-  await createAuthenticatedKy(accessToken).post('/api/my-account/mfa-verifications', {
-    json: { type: MfaFactor.TOTP, ...payload },
-  });
-};
-
 export const createOrReplaceTotpMfa = async (
   accessToken: string,
   payload: { secret: string; code: string }

@@ -80,7 +80,6 @@ const mfa = {
   trust_this_device_other: 'Confiar neste dispositivo por {{count}} dias',
   secret_key_copied: 'Chave secreta copiada.',
   backup_code_copied: 'Código de backup copiado.',
-  webauthn_not_ready: 'WebAuthn ainda não está pronto. Por favor, tente novamente mais tarde.',
   webauthn_not_supported: 'WebAuthn não é suportado neste navegador.',
   webauthn_failed_to_create: 'Falha ao criar. Por favor, tente novamente.',
   webauthn_failed_to_verify: 'Falha ao verificar. Por favor, tente novamente.',

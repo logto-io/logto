@@ -29,6 +29,10 @@ import { generateHookTestPayload, sendWebhookRequest } from './utils.js';
 type CreateHookLibraryOptions = {
   requestSlot?: TenantRequestSlot;
   jobQueue?: CoreJobQueue;
+  waitingRowCaps?: {
+    perHook: number;
+    perTenant: number;
+  };
 };
 
 export const createHookLibrary = (queries: Queries, options?: CreateHookLibraryOptions) => {
@@ -38,14 +42,17 @@ export const createHookLibrary = (queries: Queries, options?: CreateHookLibraryO
     // TODO: @gao should we use the library function thus we can pass full userinfo to the payload?
     users: { findUserById },
     hooks: { findAllHooks, findHookById },
-    jobs: { enqueueJob },
+    jobs: { enqueueJob, countJobsByGroup, countJobsByType },
   } = queries;
 
   const { dispatchWebhooks, runWithTriggerLifecycle } = createWebhookDispatcher({
     insertLog,
     enqueueJob,
+    countJobsByGroup,
+    countJobsByType,
     queue: options?.jobQueue ?? jobQueue,
     requestSlot: options?.requestSlot,
+    waitingRowCaps: options?.waitingRowCaps,
   });
 
   const fetchInteractionHookUsersById = async (
