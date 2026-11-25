@@ -268,6 +268,7 @@ const queryDatabaseData = async (database, manifests) => {
       const data = omitArray(
         rows.map((row) => {
           // Fresh installs opt into explicit MFA enrollment; upgrades keep the old setting.
+          // Remove once the release shipping LOG-14724 lands and the released CLI seeds Explicit (LOG-14809).
           if (
             table_schema === 'public' &&
             table_name === 'sign_in_experiences' &&
