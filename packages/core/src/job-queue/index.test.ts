@@ -32,6 +32,8 @@ describe('CoreJobQueue', () => {
     });
     await queue.enqueue(async () => 'inserted');
     queue.recordExhaustedDeliveries(3);
+    queue.recordDroppedAtCap('group', 2);
+    queue.recordDroppedAtCap('tenant', 4);
     await queue.reportMetrics(async () => gauges);
 
     expect(trackMetric.mock.calls.map(([metric]) => metric)).toEqual([
@@ -40,6 +42,8 @@ describe('CoreJobQueue', () => {
       { name: jobQueueMetricNames.openCircuits, value: 0 },
       { name: jobQueueMetricNames.failedEnqueues, value: 2 },
       { name: jobQueueMetricNames.exhaustedDeliveries, value: 3 },
+      { name: jobQueueMetricNames.droppedAtGroupCap, value: 2 },
+      { name: jobQueueMetricNames.droppedAtTenantCap, value: 4 },
     ]);
 
     trackMetric.mockReset();
@@ -51,6 +55,8 @@ describe('CoreJobQueue', () => {
       { name: jobQueueMetricNames.openCircuits, value: 0 },
       { name: jobQueueMetricNames.failedEnqueues, value: 0 },
       { name: jobQueueMetricNames.exhaustedDeliveries, value: 0 },
+      { name: jobQueueMetricNames.droppedAtGroupCap, value: 0 },
+      { name: jobQueueMetricNames.droppedAtTenantCap, value: 0 },
     ]);
   });
 
@@ -138,6 +144,8 @@ describe('CoreJobQueue', () => {
       { name: jobQueueMetricNames.openCircuits, value: 0 },
       { name: jobQueueMetricNames.failedEnqueues, value: 2 },
       { name: jobQueueMetricNames.exhaustedDeliveries, value: 0 },
+      { name: jobQueueMetricNames.droppedAtGroupCap, value: 0 },
+      { name: jobQueueMetricNames.droppedAtTenantCap, value: 0 },
     ]);
   });
 

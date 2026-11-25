@@ -35,7 +35,11 @@ import type Queries from './Queries.js';
 export default class Libraries {
   users = createUserLibrary(this.tenantId, this.queries);
   phrases = createPhraseLibrary(this.queries);
-  hooks = createHookLibrary(this.queries, { requestSlot: this.requestSlot });
+  hooks = createHookLibrary(this.queries, {
+    tenantId: this.tenantId,
+    requestSlot: this.requestSlot,
+  });
+
   actions = new ActionLibrary(
     this.tenantId,
     this.logtoConfigs,
