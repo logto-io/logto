@@ -1863,20 +1863,26 @@ describeWithDatabase('job queue queries on Postgres', () => {
               new WellKnownCache(defaultTenantId, new TtlCache())
             );
             const library = createHookLibrary(tenantQueries, { tenantId: defaultTenantId });
-            const created = await library.redeliverHookLog('jq-redeliver-hook', originalLogId);
+            return library.redeliverHookLog('jq-redeliver-hook', originalLogId);
+          });
 
-            // A concurrent redelivery for the same deliveryId must be rejected atomically by `jobs__type_dedupe_key`.
-            await expect(
-              library.redeliverHookLog('jq-redeliver-hook', originalLogId)
-            ).rejects.toMatchObject({
-              code: 'hook.redelivery_in_progress',
-              status: 409,
-            });
-
-            return created;
+          // A concurrent redelivery for the same deliveryId must be rejected atomically by `jobs__type_dedupe_key`.
+          await expect(
+            runAsTenant(pool, defaultTenantId, async (connection) => {
+              const tenantQueries = new Queries(
+                connection,
+                new WellKnownCache(defaultTenantId, new TtlCache())
+              );
+              const library = createHookLibrary(tenantQueries, { tenantId: defaultTenantId });
+              return library.redeliverHookLog('jq-redeliver-hook', originalLogId);
+            })
+          ).rejects.toMatchObject({
+            code: 'hook.redelivery_in_progress',
+            status: 409,
           });
 
           expect(redeliveryResult.logId).not.toBe(originalLogId);
+          expect(await findJob(redeliveryResult.logId)).not.toBeNull();
 
           const worker = new JobQueueWorker<CoreJobSettlementMeta>(queries(), {
             pollIntervalMs: 30,
