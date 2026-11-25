@@ -19,6 +19,11 @@ const actions = {
       name: 'Após o login',
       description: 'Execute lógica personalizada após um usuário entrar com sucesso.',
     },
+    pre_register: {
+      name: 'Antes do cadastro',
+      description:
+        'Execute uma lógica personalizada antes de criar um novo usuário e recuse o cadastro, se necessário.',
+    },
   },
   data_source_tab: 'Fonte de dados',
   test_tab: 'Contexto de teste',

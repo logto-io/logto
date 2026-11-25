@@ -18,6 +18,11 @@ const actions = {
       name: 'Post sign-in',
       description: 'Run custom logic after a user signs in successfully.',
     },
+    pre_register: {
+      name: 'Pre-register',
+      description:
+        'Run custom logic before a new user is created, and deny the registration if needed.',
+    },
   },
   data_source_tab: 'Data source',
   test_tab: 'Test context',

@@ -1,4 +1,5 @@
 import account_center from './account-center.js';
+import action from './action.js';
 import application from './application.js';
 import auth from './auth.js';
 import connector from './connector.js';
@@ -64,6 +65,7 @@ const errors = {
   custom_profile_fields,
   secrets,
   license,
+  action,
 };
 
 export default Object.freeze(errors);

@@ -17,6 +17,10 @@ const actions = {
       name: '登錄後',
       description: '在用戶成功登錄後運行自定義邏輯。',
     },
+    pre_register: {
+      name: '註冊前',
+      description: '在建立新用戶之前執行自訂邏輯，並在需要時拒絕註冊。',
+    },
   },
   data_source_tab: '數據源',
   test_tab: '測試上下文',

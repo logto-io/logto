@@ -19,6 +19,11 @@ const actions = {
       name: 'Oturum açma sonrası',
       description: 'Bir kullanıcı başarıyla oturum açtıktan sonra özel mantık çalıştırın.',
     },
+    pre_register: {
+      name: 'Kayıt öncesi',
+      description:
+        'Yeni bir kullanıcı oluşturulmadan önce özel mantık çalıştırın ve gerekirse kaydı reddedin.',
+    },
   },
   data_source_tab: 'Veri kaynağı',
   test_tab: 'Test bağlamı',

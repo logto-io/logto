@@ -18,6 +18,11 @@ const actions = {
       name: 'サインイン後',
       description: 'ユーザーが正常にサインインした後に、カスタムロジックを実行します。',
     },
+    pre_register: {
+      name: '登録前',
+      description:
+        '新しいユーザーが作成される前にカスタムロジックを実行し、必要に応じて登録を拒否します。',
+    },
   },
   data_source_tab: 'データソース',
   test_tab: 'テストコンテキスト',
