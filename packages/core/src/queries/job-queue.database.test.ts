@@ -1799,5 +1799,179 @@ describeWithDatabase('job queue queries on Postgres', () => {
       );
     });
   });
+
+  describe('manual redelivery and retrying-aware stats', () => {
+    it('redelivers a permanently failed log keeping deliveryId, rejects concurrent duplicates with 409, and updates only the new log row', async () => {
+      const receivedRequests: Array<{ rawBody: string; signature: string | undefined }> = [];
+
+      await withHttpFixture(
+        (request, response) => {
+          const chunks: Uint8Array[] = [];
+          request.on('data', (chunk: Uint8Array) => {
+            // eslint-disable-next-line @silverhand/fp/no-mutating-methods -- collect HTTP body chunks
+            chunks.push(chunk);
+          });
+          request.on('end', () => {
+            const rawBody = Buffer.concat(chunks).toString('utf8');
+            const signatureHeader = request.headers['logto-signature-sha-256'];
+            // eslint-disable-next-line @silverhand/fp/no-mutating-methods -- capture received webhook request
+            receivedRequests.push({
+              rawBody,
+              signature: typeof signatureHeader === 'string' ? signatureHeader : undefined,
+            });
+            response.writeHead(200);
+            response.end('ok');
+          });
+        },
+        async (baseUrl) => {
+          await seedHook({
+            id: 'jq-redeliver-hook',
+            tenantId: defaultTenantId,
+            url: `${baseUrl}/hook`,
+            signingKey: 'rotated-signing-key',
+          });
+
+          const originalBody = {
+            event: InteractionHookEvent.PostSignIn,
+            createdAt: '2026-11-20T00:00:00.000Z',
+            hookId: 'jq-redeliver-hook',
+            deliveryId: 'jq-orig-delivery',
+            userId: 'user-1',
+          };
+          const originalLogId = 'jq-orig-log-1';
+
+          await pool.query(sql`
+            insert into logs (tenant_id, id, key, payload)
+            values (
+              ${defaultTenantId},
+              ${originalLogId},
+              ${`TriggerHook.${InteractionHookEvent.PostSignIn}`},
+              ${sql.jsonb({
+                key: `TriggerHook.${InteractionHookEvent.PostSignIn}`,
+                result: LogResult.Error,
+                hookId: 'jq-redeliver-hook',
+                attempts: 1,
+                hookRequest: { body: originalBody },
+                error: 'HTTP 400',
+              })}
+            )
+          `);
+
+          const redeliveryResult = await runAsTenant(pool, defaultTenantId, async (connection) => {
+            const tenantQueries = new Queries(
+              connection,
+              new WellKnownCache(defaultTenantId, new TtlCache())
+            );
+            const library = createHookLibrary(tenantQueries, { tenantId: defaultTenantId });
+            const created = await library.redeliverHookLog('jq-redeliver-hook', originalLogId);
+
+            // A concurrent redelivery for the same deliveryId must be rejected atomically by `jobs__type_dedupe_key`.
+            await expect(
+              library.redeliverHookLog('jq-redeliver-hook', originalLogId)
+            ).rejects.toMatchObject({
+              code: 'hook.redelivery_in_progress',
+              status: 409,
+            });
+
+            return created;
+          });
+
+          expect(redeliveryResult.logId).not.toBe(originalLogId);
+
+          const worker = new JobQueueWorker<CoreJobSettlementMeta>(queries(), {
+            pollIntervalMs: 30,
+          });
+          worker.register(createWebhookJobHandler(queries()));
+          worker.start();
+
+          try {
+            await waitUntil(async () => (await findJob(redeliveryResult.logId)) === null);
+          } finally {
+            await worker.stop();
+          }
+
+          expect(receivedRequests).toHaveLength(1);
+          const received = receivedRequests[0]!;
+          expect(JSON.parse(received.rawBody)).toEqual(originalBody);
+          const expectedSignature = createHmac('sha256', 'rotated-signing-key')
+            .update(received.rawBody)
+            .digest('hex');
+          expect(received.signature).toBe(expectedSignature);
+
+          // New log entry records success and `redeliveredFrom`, while original log remains untouched.
+          await expect(findLog(redeliveryResult.logId)).resolves.toMatchObject({
+            id: redeliveryResult.logId,
+            payloadHookId: 'jq-redeliver-hook',
+            payload: {
+              result: LogResult.Success,
+              attempts: 1,
+              redeliveredFrom: originalLogId,
+            },
+          });
+          await expect(findLog(originalLogId)).resolves.toMatchObject({
+            id: originalLogId,
+            payload: {
+              result: LogResult.Error,
+              attempts: 1,
+              error: 'HTTP 400',
+            },
+          });
+          const originalLog = await findLog(originalLogId);
+          expect(originalLog?.payload).not.toHaveProperty('redeliveredFrom');
+        }
+      );
+    }, 15_000);
+
+    it('excludes retrying logs with nextAttemptAt from getHookExecutionStatsByHookId', async () => {
+      await pool.query(sql`
+        insert into logs (tenant_id, id, key, payload)
+        values
+          (
+            ${defaultTenantId},
+            'jq-stat-success',
+            ${`TriggerHook.${InteractionHookEvent.PostSignIn}`},
+            ${sql.jsonb({
+              key: `TriggerHook.${InteractionHookEvent.PostSignIn}`,
+              result: LogResult.Success,
+              hookId: 'jq-stats-hook',
+            })}
+          ),
+          (
+            ${defaultTenantId},
+            'jq-stat-failed',
+            ${`TriggerHook.${InteractionHookEvent.PostSignIn}`},
+            ${sql.jsonb({
+              key: `TriggerHook.${InteractionHookEvent.PostSignIn}`,
+              result: LogResult.Error,
+              hookId: 'jq-stats-hook',
+            })}
+          ),
+          (
+            ${defaultTenantId},
+            'jq-stat-retrying',
+            ${`TriggerHook.${InteractionHookEvent.PostSignIn}`},
+            ${sql.jsonb({
+              key: `TriggerHook.${InteractionHookEvent.PostSignIn}`,
+              result: LogResult.Error,
+              hookId: 'jq-stats-hook',
+              nextAttemptAt: Date.now() + 60_000,
+            })}
+          )
+      `);
+
+      const stats = await runAsTenant(pool, defaultTenantId, async (connection) => {
+        const tenantQueries = new Queries(
+          connection,
+          new WellKnownCache(defaultTenantId, new TtlCache())
+        );
+        return tenantQueries.logs.getHookExecutionStatsByHookId('jq-stats-hook');
+      });
+
+      expect(stats).toEqual({
+        requestCount: 2,
+        successCount: 1,
+      });
+    });
+  });
 });
 /* eslint-enable max-lines */

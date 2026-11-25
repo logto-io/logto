@@ -3,6 +3,7 @@ import { InteractionHookEvent, LogResult } from '@logto/schemas';
 import {
   buildExpiredWebhookLog,
   parseRetryAfterMs,
+  serializeWebhookRedeliveryJobPayload,
   webhookJobType,
   webhookRetryMaxMs,
 } from './webhook-handler.js';
@@ -62,6 +63,33 @@ describe('buildExpiredWebhookLog', () => {
         result: LogResult.Error,
         hookId: 'hook-1',
         attempts: 0,
+        hookRequest: { body: JSON.parse(rawPayload) as unknown },
+        error: 'Webhook delivery retry window expired while circuit breaker was open.',
+      },
+    });
+  });
+
+  it('preserves redeliveredFrom when a redelivery expires behind an open circuit breaker', () => {
+    const built = buildExpiredWebhookLog({
+      tenantId: 'tenant-1',
+      id: 'redelivery-log-1',
+      type: webhookJobType,
+      groupKey: 'hook-1',
+      payload: serializeWebhookRedeliveryJobPayload({
+        rawBody: rawPayload,
+        redeliveredFrom: 'failed-log-1',
+      }),
+      attempts: 0,
+    });
+
+    expect(built).toEqual({
+      key: `TriggerHook.${InteractionHookEvent.PostSignIn}`,
+      payload: {
+        key: `TriggerHook.${InteractionHookEvent.PostSignIn}`,
+        result: LogResult.Error,
+        hookId: 'hook-1',
+        attempts: 0,
+        redeliveredFrom: 'failed-log-1',
         hookRequest: { body: JSON.parse(rawPayload) as unknown },
         error: 'Webhook delivery retry window expired while circuit breaker was open.',
       },

@@ -34,6 +34,8 @@ const consoleLog = new ConsoleLog(chalk.magenta('webhook-job'));
 export type WebhookJobPayload = {
   event: HookEvent;
   body: Record<string, unknown>;
+  rawBody: string;
+  redeliveredFrom?: string;
 };
 
 const webhookJobBodyGuard = z
@@ -42,11 +44,40 @@ const webhookJobBodyGuard = z
   })
   .passthrough();
 
-/** Parse the pre-serialized webhook request body stored in `jobs.payload`. */
+const webhookRedeliveryEnvelopeGuard = z
+  .object({
+    rawBody: z.string(),
+    redeliveredFrom: z.string().min(1),
+  })
+  .strict();
+
+/**
+ * Wrap a reconstructed webhook body for manual redelivery so the worker sends and signs
+ * `rawBody` verbatim while recording `redeliveredFrom` on the new audit log entry.
+ */
+export const serializeWebhookRedeliveryJobPayload = (input: {
+  rawBody: string;
+  redeliveredFrom: string;
+}): string => JSON.stringify(input);
+
+/** Parse the pre-serialized webhook request body (or redelivery envelope) stored in `jobs.payload`. */
 export const parseWebhookJobPayload = (raw: string): WebhookJobPayload => {
   const parsed: unknown = JSON.parse(raw);
+  const envelope = webhookRedeliveryEnvelopeGuard.safeParse(parsed);
+
+  if (envelope.success) {
+    const inner: unknown = JSON.parse(envelope.data.rawBody);
+    const body = webhookJobBodyGuard.parse(inner);
+    return {
+      event: body.event,
+      body,
+      rawBody: envelope.data.rawBody,
+      redeliveredFrom: envelope.data.redeliveredFrom,
+    };
+  }
+
   const body = webhookJobBodyGuard.parse(parsed);
-  return { event: body.event, body };
+  return { event: body.event, body, rawBody: raw };
 };
 
 const isRetryableWebhookStatus = (status: number): boolean =>
@@ -131,6 +162,7 @@ export const buildExpiredWebhookLog = (row: ExpiredJobRow): JobLogUpsert | undef
   logEntry.append({
     hookId: row.groupKey,
     attempts: row.attempts,
+    ...conditional(parsed.redeliveredFrom && { redeliveredFrom: parsed.redeliveredFrom }),
     hookRequest: { body: parsed.body },
     result: LogResult.Error,
     error: 'Webhook delivery retry window expired while circuit breaker was open.',
@@ -200,6 +232,9 @@ export const createWebhookJobHandler = (
       logEntry.append({
         hookId: job.groupKey,
         attempts: job.attempts,
+        ...conditional(
+          job.payload.redeliveredFrom && { redeliveredFrom: job.payload.redeliveredFrom }
+        ),
         hookRequest: { body: job.payload.body },
       });
 
@@ -211,7 +246,7 @@ export const createWebhookJobHandler = (
       try {
         const response = await sendWebhookRequest({
           hookConfig: hook.config,
-          body: job.rawPayload,
+          body: job.payload.rawBody,
           signingKey: hook.signingKey,
           signal: abortController.signal,
           disableRetries: true,

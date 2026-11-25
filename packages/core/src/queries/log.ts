@@ -201,6 +201,7 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
       from ${table}
       where ${fields.createdAt} > to_timestamp(${startTimeExclusive}::double precision / 1000)
       and ${fields.payloadHookId} = ${hookId}
+      and not (${fields.payload} ? 'nextAttemptAt')
     `);
   };
 

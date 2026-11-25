@@ -120,6 +120,7 @@ describe('webhook job handler', () => {
     const parsed = parseWebhookJobPayload(rawPayload);
     expect(parsed).toEqual({
       event: InteractionHookEvent.PostSignIn,
+      rawBody: rawPayload,
       body: {
         event: InteractionHookEvent.PostSignIn,
         createdAt: '2026-11-20T00:00:00.000Z',

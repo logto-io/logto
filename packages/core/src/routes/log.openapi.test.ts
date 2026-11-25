@@ -13,14 +13,20 @@ import {
   assembleSwaggerDocument,
   buildManagementApiBaseDocument,
 } from './swagger/utils/documents.js';
-import { devFeatureSchemaExtension } from './swagger/utils/general.js';
+import {
+  devFeatureSchemaExtension,
+  removeUnnecessaryOperations,
+  validateSupplement,
+} from './swagger/utils/general.js';
 import { buildRouterObjects, groupRoutesByPath } from './swagger/utils/operation.js';
 import { type ManagementApiRouter } from './types.js';
 
 const loadSupplement = async (relativePath: string): Promise<DeepPartial<OpenAPIV3.Document>> =>
-  JSON.parse(
-    await fs.readFile(new URL(relativePath, import.meta.url), 'utf8')
-  ) as DeepPartial<OpenAPIV3.Document>;
+  removeUnnecessaryOperations(
+    JSON.parse(
+      await fs.readFile(new URL(relativePath, import.meta.url), 'utf8')
+    ) as DeepPartial<OpenAPIV3.Document>
+  );
 
 const buildLogOpenApiDocument = async () => {
   const router: ManagementApiRouter = new Router();
@@ -36,6 +42,10 @@ const buildLogOpenApiDocument = async () => {
     loadSupplement('./hooks.openapi.json'),
     loadSupplement('./log.openapi.json'),
   ]);
+
+  for (const supplement of supplements) {
+    validateSupplement(baseDocument, supplement);
+  }
 
   return assembleSwaggerDocument(supplements, baseDocument, createContextWithRouteParameters());
 };
@@ -92,6 +102,7 @@ describe('webhook log payload OpenAPI fields', () => {
       expect(payloadProperties).not.toHaveProperty('redeliveredFrom');
     }
 
+    expect(document.paths).not.toHaveProperty('/api/hooks/{id}/recent-logs/{logId}/redeliver');
     expect(JSON.stringify(document)).not.toContain(devFeatureSchemaExtension);
   });
 
@@ -119,6 +130,32 @@ describe('webhook log payload OpenAPI fields', () => {
       });
     }
 
+    const redeliverOperation =
+      document.paths['/api/hooks/{id}/recent-logs/{logId}/redeliver']?.post;
+    expect(redeliverOperation?.description).toBeTruthy();
+    expect(redeliverOperation).toMatchObject({
+      operationId: 'CreateHookRecentLogRedeliver',
+      summary: 'Redeliver a failed webhook log',
+      tags: ['Hooks', 'Dev feature'],
+      responses: {
+        202: {
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['logId'],
+                properties: {
+                  logId: {
+                    type: 'string',
+                    description: 'The ID of the new log entry created for this redelivery.',
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
     expect(JSON.stringify(document)).not.toContain(devFeatureSchemaExtension);
   });
 });

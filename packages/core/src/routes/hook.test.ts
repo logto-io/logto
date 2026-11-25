@@ -21,6 +21,8 @@ import {
   mockNanoIdForHook,
   mockTenantIdForHook,
 } from '#src/__mocks__/hook.js';
+import RequestError from '#src/errors/RequestError/index.js';
+import { resetDevFeaturesEnabled, setDevFeaturesEnabled } from '#src/test-utils/dev-features.js';
 import { createMockQuotaLibrary } from '#src/test-utils/quota.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
@@ -89,9 +91,10 @@ const mockQueries = {
 };
 
 const triggerTestHook = jest.fn();
+const redeliverHookLog = jest.fn();
 
 const mockLibraries = {
-  hooks: { triggerTestHook },
+  hooks: { triggerTestHook, redeliverHookLog },
   quota: createMockQuotaLibrary(),
 };
 
@@ -103,6 +106,7 @@ describe('hook routes', () => {
   const hookRequest = createRequester({ authedRoutes: hookRoutes, tenantContext });
 
   afterEach(() => {
+    resetDevFeaturesEnabled();
     jest.clearAllMocks();
   });
 
@@ -155,6 +159,7 @@ describe('hook routes', () => {
   });
 
   it('GET /hooks/:id/recent-logs should call countLogs and findLogs with correct parameters', async () => {
+    setDevFeaturesEnabled(true);
     jest.useFakeTimers().setSystemTime(100_000);
 
     const hookId = 'foo';
@@ -162,7 +167,7 @@ describe('hook routes', () => {
     const page = 1;
     const pageSize = 5;
 
-    const startTime = subDays(new Date(100_000), 1).getTime();
+    const startTime = subDays(new Date(100_000), 2).getTime();
 
     await hookRequest.get(
       `/hooks/${hookId}/recent-logs?logKey=${logKey}&page=${page}&page_size=${pageSize}`
@@ -213,7 +218,8 @@ describe('hook routes', () => {
 
   describe('GET /hooks/:id/recent-logs start_time / end_time params', () => {
     const now = 100_000_000;
-    const internalFloor = subDays(new Date(now), 1).getTime();
+    const oneDayFloor = subDays(new Date(now), 1).getTime();
+    const twoDayFloor = subDays(new Date(now), 2).getTime();
 
     beforeEach(() => {
       jest.useFakeTimers().setSystemTime(now);
@@ -223,11 +229,24 @@ describe('hook routes', () => {
       jest.useRealTimers();
     });
 
-    it('uses the 24h default when no time params are supplied', async () => {
+    it('uses the 24h default when no time params are supplied and dev features are disabled', async () => {
+      setDevFeaturesEnabled(false);
       await hookRequest.get(`/hooks/foo/recent-logs`);
       expect(countLogs).toHaveBeenCalledWith(
         expect.objectContaining({
-          startTime: internalFloor,
+          startTime: oneDayFloor,
+          endTime: undefined,
+        }),
+        expect.any(Object)
+      );
+    });
+
+    it('uses the 48h default when no time params are supplied and dev features are enabled', async () => {
+      setDevFeaturesEnabled(true);
+      await hookRequest.get(`/hooks/foo/recent-logs`);
+      expect(countLogs).toHaveBeenCalledWith(
+        expect.objectContaining({
+          startTime: twoDayFloor,
           endTime: undefined,
         }),
         expect.any(Object)
@@ -290,6 +309,49 @@ describe('hook routes', () => {
     it('returns 400 when start_time is not a finite number', async () => {
       const response = await hookRequest.get(`/hooks/foo/recent-logs?start_time=oops`);
       expect(response.status).toEqual(400);
+    });
+  });
+
+  describe('POST /hooks/:id/recent-logs/:logId/redeliver', () => {
+    it('returns 202 with the new logId when dev features are enabled', async () => {
+      setDevFeaturesEnabled(true);
+      const devRequest = createRequester({ authedRoutes: hookRoutes, tenantContext });
+      redeliverHookLog.mockResolvedValueOnce({ logId: 'new-log-id' });
+
+      const response = await devRequest.post('/hooks/hook-1/recent-logs/log-1/redeliver');
+
+      expect(response.status).toEqual(202);
+      expect(response.body).toEqual({ logId: 'new-log-id' });
+      expect(redeliverHookLog).toHaveBeenCalledWith('hook-1', 'log-1');
+    });
+
+    it('propagates 409 and 422 errors from redeliverHookLog', async () => {
+      setDevFeaturesEnabled(true);
+      const devRequest = createRequester({ authedRoutes: hookRoutes, tenantContext });
+
+      redeliverHookLog.mockRejectedValueOnce(
+        new RequestError({ code: 'hook.redelivery_in_progress', status: 409 })
+      );
+      await expect(
+        devRequest.post('/hooks/hook-1/recent-logs/log-1/redeliver')
+      ).resolves.toHaveProperty('status', 409);
+
+      redeliverHookLog.mockRejectedValueOnce(
+        new RequestError({ code: 'hook.disabled', status: 422 })
+      );
+      await expect(
+        devRequest.post('/hooks/hook-1/recent-logs/log-1/redeliver')
+      ).resolves.toHaveProperty('status', 422);
+    });
+
+    it('returns 404 when dev features are disabled', async () => {
+      setDevFeaturesEnabled(false);
+      const productionRequest = createRequester({ authedRoutes: hookRoutes, tenantContext });
+
+      const response = await productionRequest.post('/hooks/hook-1/recent-logs/log-1/redeliver');
+
+      expect(response.status).toEqual(404);
+      expect(redeliverHookLog).not.toHaveBeenCalled();
     });
   });
 

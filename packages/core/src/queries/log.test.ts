@@ -89,11 +89,12 @@ describe('countLogs()', () => {
 });
 
 describe('getHookExecutionStatsByHookId()', () => {
-  it('filters by the hook id column', async () => {
+  it('filters by the hook id column and excludes retrying logs', async () => {
     mockQuery.mockImplementationOnce(async (query, values) => {
       const statement = String(query);
 
       expect(statement).toContain('"payload_hook_id" = $2');
+      expect(statement).toContain(`not ("payload" ? 'nextAttemptAt')`);
       expect(statement).not.toContain(`->>'hookId'`);
       expect(values).toEqual([expect.any(Number), 'hook-1']);
 
