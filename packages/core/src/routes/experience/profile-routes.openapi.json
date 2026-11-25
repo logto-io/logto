@@ -157,7 +157,7 @@
             "description": "The user has not been identified yet. The `mfa-skipped` configuration must be associated with an identified user."
           },
           "422": {
-            "description": "The MFA verification binding is `Mandatory`, user can not skip the MFA verification binding flow."
+            "description": "MFA binding cannot be skipped: the MFA policy does not allow skipping, or the user is required to use MFA."
           }
         }
       }
