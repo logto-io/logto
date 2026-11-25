@@ -19,6 +19,9 @@ export const Tenants = createModel(
     constraint tenants__db_user
       unique (db_user)
   );
+  /* The tenant lookup db_user = current_user compares under the "C" collation of the name type and only a "C" index serves it */
+  create index tenants__db_user_collate_c
+    on tenants ((db_user collate "C"));
   /* no_after_each */
 `,
   'public'
