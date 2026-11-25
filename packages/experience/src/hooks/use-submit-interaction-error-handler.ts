@@ -11,6 +11,7 @@ import useMfaErrorHandler, {
 } from './use-mfa-error-handler';
 import useMissingPasskeyErrorHandler from './use-missing-passkey-error-handler';
 import useNavigateWithPreservedSearchParams from './use-navigate-with-preserved-search-params';
+import useRegistrationDeniedErrorHandler from './use-registration-denied-error-handler';
 import useRequiredProfileErrorHandler, {
   type Options as UseRequiredProfileErrorHandlerOptions,
 } from './use-required-profile-error-handler';
@@ -48,6 +49,9 @@ const useSubmitInteractionErrorHandler = (
   });
   const mfaErrorHandler = useMfaErrorHandler({ replace });
   const emailBlockedErrorHandler = useEmailBlockedErrorHandler({ onConfirm: onEmailBlocked });
+  const registrationDeniedErrorHandler = useRegistrationDeniedErrorHandler({
+    onConfirm: onEmailBlocked,
+  });
   const passkeySignInErrorHandler = useMissingPasskeyErrorHandler(interactionEvent);
   const trustedDeviceOptInErrorHandler = useTrustedDeviceOptInErrorHandler(interactionEvent);
   const { isPureStepUp } = useStepUpContext();
@@ -61,6 +65,7 @@ const useSubmitInteractionErrorHandler = (
             ...requiredProfileErrorHandler,
             ...mfaErrorHandler,
             ...emailBlockedErrorHandler,
+            ...registrationDeniedErrorHandler,
             ...cond(passkeySignInErrorHandler),
             ...trustedDeviceOptInErrorHandler,
           }),
@@ -80,6 +85,7 @@ const useSubmitInteractionErrorHandler = (
       mfaErrorHandler,
       navigate,
       passkeySignInErrorHandler,
+      registrationDeniedErrorHandler,
       requiredProfileErrorHandler,
       stepUpErrorHandlers,
       trustedDeviceOptInErrorHandler,

@@ -10,6 +10,7 @@ import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
 import useNavigateToSignIn from '@/hooks/use-navigate-to-sign-in';
 import useRedirectCallbackValidation from '@/hooks/use-redirect-callback-validation';
+import useRegistrationDeniedErrorHandler from '@/hooks/use-registration-denied-error-handler';
 import { useSieMethods } from '@/hooks/use-sie';
 import useTerms from '@/hooks/use-terms';
 import { parseQueryParameters } from '@/utils';
@@ -21,6 +22,9 @@ type SingleSignOnRegisterOptions = {
 const useSingleSignOnRegister = ({ onEmailBlocked }: SingleSignOnRegisterOptions = {}) => {
   const handleError = useErrorHandler();
   const emailBlockedErrorHandler = useEmailBlockedErrorHandler({ onConfirm: onEmailBlocked });
+  const registrationDeniedErrorHandler = useRegistrationDeniedErrorHandler({
+    onConfirm: onEmailBlocked,
+  });
 
   const request = useApi(registerWithVerifiedIdentifier);
   const { termsValidation, agreeToTermsPolicy } = useTerms();
@@ -43,7 +47,10 @@ const useSingleSignOnRegister = ({ onEmailBlocked }: SingleSignOnRegisterOptions
       const [error, result] = await request(verificationId);
 
       if (error) {
-        await handleError(error, emailBlockedErrorHandler);
+        await handleError(error, {
+          ...emailBlockedErrorHandler,
+          ...registrationDeniedErrorHandler,
+        });
 
         return;
       }
@@ -57,6 +64,7 @@ const useSingleSignOnRegister = ({ onEmailBlocked }: SingleSignOnRegisterOptions
       emailBlockedErrorHandler,
       handleError,
       navigateToSignIn,
+      registrationDeniedErrorHandler,
       redirectTo,
       request,
       termsValidation,
