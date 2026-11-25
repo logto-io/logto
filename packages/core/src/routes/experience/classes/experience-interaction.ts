@@ -16,7 +16,6 @@ import {
   loginPromptAuthenticationContextDetailsGuard,
   type Mfa as MfaSettings,
   MfaFactor,
-  MfaPolicy,
   MissingProfile,
   SignInIdentifier,
   type AuthenticationProof,
@@ -77,6 +76,7 @@ import {
   mfaFactorToVerificationType,
   parseUserMfaConfig,
   resolveMfaVerificationRequirement,
+  resolveUnconditionalExemption,
 } from './libraries/mfa-verification-decision.js';
 import { ProvisionLibrary } from './libraries/provision-library.js';
 import { SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
@@ -718,7 +718,7 @@ export default class ExperienceInteraction {
       adaptiveMfaResult,
       isMfaRequiredByUser: isRequiredByUser,
       pursued,
-      allowSoftExemptions: true,
+      purpose: 'verification',
     });
     const initialDecision = resolveMfaVerificationRequirement(snapshot);
 
@@ -1698,27 +1698,12 @@ export default class ExperienceInteraction {
   private resolveEarlyMfaGateDecision(
     isRequestedMfaUnmet: boolean
   ): MfaVerificationDecision | undefined {
-    const { isRequestedMfaSatisfied } = this;
-
-    if (
-      isRequestedMfaUnmet ||
-      (!this.hasVerifiedSsoIdentity && !this.hasVerifiedSignInPasskey && !isRequestedMfaSatisfied)
-    ) {
-      return;
-    }
-
-    return resolveMfaVerificationRequirement({
-      mfaSettings: { policy: MfaPolicy.NoPrompt },
-      userFactors: [],
-      userMfaConfig: {},
-      isMfaRequiredByUser: false,
+    return resolveUnconditionalExemption({
       hasVerifiedSsoIdentity: this.hasVerifiedSsoIdentity,
       hasVerifiedSignInPasskey: this.hasVerifiedSignInPasskey,
-      hasVerifiedMfaRecord: false,
-      isTrustedDeviceVerified: false,
       requestedAcr: {
         isRequestedMfaUnmet,
-        isRequestedMfaSatisfied,
+        isRequestedMfaSatisfied: this.isRequestedMfaSatisfied,
       },
     });
   }
@@ -1729,19 +1714,16 @@ export default class ExperienceInteraction {
     adaptiveMfaResult,
     isMfaRequiredByUser,
     pursued,
-    allowSoftExemptions,
+    purpose,
   }: {
     mfaSettings: MfaSettings;
     user: User;
     adaptiveMfaResult?: AdaptiveMfaResult;
     isMfaRequiredByUser: boolean;
     pursued?: { acr: LogtoAcr; decision?: StepUpEligibility };
-    allowSoftExemptions: boolean;
+    purpose: MfaVerificationSnapshot['purpose'];
   }): MfaVerificationSnapshot {
-    const mfaValidator = new MfaValidator(mfaSettings, user, {
-      adaptiveMfaResult,
-      isMfaRequiredByUser,
-    });
+    const mfaValidator = new MfaValidator(mfaSettings, user);
 
     return {
       mfaSettings,
@@ -1760,7 +1742,7 @@ export default class ExperienceInteraction {
         hasFreshFirstFactor: this.hasFreshFirstFactor,
         eligibleMethods: pursued?.decision?.availableMethods ?? [],
       },
-      allowSoftExemptions,
+      purpose,
     };
   }
 
@@ -1797,7 +1779,7 @@ export default class ExperienceInteraction {
         user,
         isMfaRequiredByUser: false,
         pursued,
-        allowSoftExemptions: false,
+        purpose: 'binding',
       })
     );
 

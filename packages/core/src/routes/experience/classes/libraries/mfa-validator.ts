@@ -1,5 +1,4 @@
 import { MfaFactor, VerificationType, type Mfa, type User } from '@logto/schemas';
-import { type Optional } from '@silverhand/essentials';
 
 import { getAllUserEnabledMfaVerifications } from '#src/libraries/mfa.js';
 
@@ -12,12 +11,6 @@ import {
 import { type VerificationRecord } from '../verifications/index.js';
 import { type TotpVerification } from '../verifications/totp-verification.js';
 import { type WebAuthnVerification } from '../verifications/web-authn-verification.js';
-
-import type { AdaptiveMfaResult } from './adaptive-mfa-validator/types.js';
-import {
-  parseUserMfaConfig,
-  resolveMfaVerificationRequirement,
-} from './mfa-verification-decision.js';
 
 const mfaVerificationTypes = Object.freeze([
   VerificationType.TOTP,
@@ -58,11 +51,7 @@ export const isMfaVerificationRecord = (
 export class MfaValidator {
   constructor(
     private readonly mfaSettings: Mfa,
-    private readonly user: User,
-    private readonly verificationContext: {
-      adaptiveMfaResult?: Optional<AdaptiveMfaResult>;
-      isMfaRequiredByUser?: boolean;
-    } = {}
+    private readonly user: User
   ) {}
 
   /**
@@ -87,22 +76,6 @@ export class MfaValidator {
           return [...verifications, verification];
         }, [])
     );
-  }
-
-  get isMfaRequired(): boolean {
-    const { adaptiveMfaResult, isMfaRequiredByUser } = this.verificationContext;
-
-    return resolveMfaVerificationRequirement({
-      mfaSettings: this.mfaSettings,
-      adaptiveMfaResult,
-      userFactors: this.availableUserMfaVerificationTypes,
-      userMfaConfig: parseUserMfaConfig(this.user.logtoConfig),
-      isMfaRequiredByUser: Boolean(isMfaRequiredByUser),
-      hasVerifiedSsoIdentity: false,
-      hasVerifiedSignInPasskey: false,
-      hasVerifiedMfaRecord: false,
-      isTrustedDeviceVerified: false,
-    }).required;
   }
 
   isMfaVerified(verificationRecords: VerificationRecord[]) {
