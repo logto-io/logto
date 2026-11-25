@@ -86,6 +86,7 @@ export type JobLimitsPolicy = {
   perGroupConcurrency?: number;
   perTenantConcurrency?: number;
   maxWaitingRowsPerGroup?: number;
+  maxWaitingRowsPerTenant?: number;
 };
 
 /** Optional per-group circuit breaker configuration. */

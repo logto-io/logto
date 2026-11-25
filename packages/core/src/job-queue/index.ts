@@ -11,6 +11,12 @@ import {
   type JobQueueGauges,
 } from '#src/queries/job-queue.js';
 
+import {
+  WaitingRowCapCache,
+  type WaitingRowCapCheckInput,
+  type WaitingRowCapScope,
+  type WaitingRowReservation,
+} from './waiting-row-cap-cache.js';
 import { buildExpiredWebhookLog, createWebhookJobHandler } from './webhook-handler.js';
 
 const jobQueueMetricsIntervalMs = 60_000;
@@ -22,9 +28,15 @@ export const jobQueueMetricNames = Object.freeze({
   openCircuits: 'job_queue.open_circuits',
   failedEnqueues: 'job_queue.failed_enqueues',
   exhaustedDeliveries: 'job_queue.exhausted_deliveries',
+  droppedAtGroupCap: 'job_queue.dropped_at_group_cap',
+  droppedAtTenantCap: 'job_queue.dropped_at_tenant_cap',
 } as const);
 
 const consoleLog = new ConsoleLog(chalk.magenta('job-queue'));
+
+type CoreJobQueueOptions = {
+  waitingRowCapCache?: WaitingRowCapCache;
+};
 
 /**
  * The process-wide job queue: one worker per Core instance over `EnvSet.sharedPool`, the
@@ -35,7 +47,14 @@ export class CoreJobQueue {
   #metricsTimer?: NodeJS.Timeout;
   #failedEnqueues = 0;
   #exhaustedDeliveries = 0;
+  #droppedAtGroupCap = 0;
+  #droppedAtTenantCap = 0;
+  readonly #waitingRowCapCache: WaitingRowCapCache;
   readonly #pendingEnqueues = new Set<Promise<void>>();
+
+  constructor(options?: CoreJobQueueOptions) {
+    this.#waitingRowCapCache = options?.waitingRowCapCache ?? new WaitingRowCapCache();
+  }
 
   get worker(): JobQueueWorker<CoreJobSettlementMeta> | undefined {
     return this.#worker;
@@ -88,6 +107,26 @@ export class CoreJobQueue {
     this.#exhaustedDeliveries += count;
   }
 
+  /** Count deliveries dropped because the per-group or per-tenant waiting-row cap was reached. */
+  recordDroppedAtCap(scope: WaitingRowCapScope, count = 1): void {
+    if (scope === 'group') {
+      this.#droppedAtGroupCap += count;
+      return;
+    }
+
+    this.#droppedAtTenantCap += count;
+  }
+
+  /** Check per-group and per-tenant waiting-row caps and reserve a cached slot if below both. */
+  async tryReserveWaitingRow(input: WaitingRowCapCheckInput): Promise<WaitingRowReservation> {
+    return this.#waitingRowCapCache.tryReserve(input);
+  }
+
+  /** Wake the local worker after an enqueue commits. */
+  wake(): void {
+    this.#worker?.wake();
+  }
+
   /**
    * Track an async enqueue workflow in `#pendingEnqueues` synchronously before its first `await`,
    * so graceful shutdown waits for pre-insert lookups as well as the `jobs` insert itself.
@@ -108,17 +147,6 @@ export class CoreJobQueue {
     } finally {
       this.#pendingEnqueues.delete(pending);
     }
-  }
-
-  /**
-   * Run a fire-and-forget insert into `jobs`. Shutdown waits for it before closing pools, and a
-   * failure is logged and counted instead of thrown. Wakes the local worker once the row exists.
-   */
-  async enqueue(insert: () => Promise<unknown>): Promise<void> {
-    return this.trackEnqueue(async () => {
-      await insert();
-      this.#worker?.wake();
-    });
   }
 
   /**
@@ -155,6 +183,10 @@ export class CoreJobQueue {
     this.#failedEnqueues = 0;
     const exhaustedDeliveries = this.#exhaustedDeliveries;
     this.#exhaustedDeliveries = 0;
+    const droppedAtGroupCap = this.#droppedAtGroupCap;
+    this.#droppedAtGroupCap = 0;
+    const droppedAtTenantCap = this.#droppedAtTenantCap;
+    this.#droppedAtTenantCap = 0;
 
     const metrics: Record<string, number> = {
       ...(gauges && {
@@ -164,6 +196,8 @@ export class CoreJobQueue {
       [jobQueueMetricNames.openCircuits]: this.#worker?.openCircuitCount ?? 0,
       [jobQueueMetricNames.failedEnqueues]: failedEnqueues,
       [jobQueueMetricNames.exhaustedDeliveries]: exhaustedDeliveries,
+      [jobQueueMetricNames.droppedAtGroupCap]: droppedAtGroupCap,
+      [jobQueueMetricNames.droppedAtTenantCap]: droppedAtTenantCap,
     };
 
     const { client } = appInsights;

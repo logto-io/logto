@@ -8,6 +8,7 @@ import { createHmac } from 'node:crypto';
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http';
 import { type AddressInfo } from 'node:net';
 
+import { appInsights } from '@logto/app-insights/node';
 import {
   JobQueueWorker,
   withTimeout,
@@ -15,6 +16,7 @@ import {
   type ClaimedJobRow,
 } from '@logto/job-queue';
 import { InteractionHookEvent, LogResult, adminTenantId, defaultTenantId } from '@logto/schemas';
+import { ConsoleLog, TtlCache } from '@logto/shared';
 import { assert, type Nullable } from '@silverhand/essentials';
 import {
   createInterceptorsPreset,
@@ -25,12 +27,19 @@ import {
 } from '@silverhand/slonik';
 import Sinon from 'sinon';
 
+import { WellKnownCache } from '#src/caches/well-known.js';
 import { EnvSet } from '#src/env-set/index.js';
+import { CoreJobQueue, jobQueueMetricNames } from '#src/job-queue/index.js';
+import { WaitingRowCapCache } from '#src/job-queue/waiting-row-cap-cache.js';
 import {
   buildExpiredWebhookLog,
   createWebhookJobHandler,
   webhookJobType,
 } from '#src/job-queue/webhook-handler.js';
+import { HookContextManager } from '#src/libraries/hook/context-manager.js';
+import { createHookLibrary } from '#src/libraries/hook/index.js';
+import Queries from '#src/tenants/Queries.js';
+import { resetDevFeaturesEnabled, setDevFeaturesEnabled } from '#src/test-utils/dev-features.js';
 
 import { createJobQueueQueries, type CoreJobSettlementMeta } from './job-queue.js';
 import { createJobQueries } from './jobs.js';
@@ -226,12 +235,14 @@ describeWithDatabase('job queue queries on Postgres', () => {
     url = 'https://example.com/webhook',
     signingKey = 'secret-key',
     enabled = true,
+    events = [InteractionHookEvent.PostSignIn],
   }: {
     id: string;
     tenantId?: string;
     url?: string;
     signingKey?: string;
     enabled?: boolean;
+    events?: string[];
   }) =>
     pool.query(sql`
       insert into hooks (tenant_id, id, name, events, config, signing_key, enabled)
@@ -239,7 +250,7 @@ describeWithDatabase('job queue queries on Postgres', () => {
         ${tenantId},
         ${id},
         ${id},
-        ${JSON.stringify([InteractionHookEvent.PostSignIn])}::jsonb,
+        ${JSON.stringify(events)}::jsonb,
         ${JSON.stringify({ url })}::jsonb,
         ${signingKey},
         ${enabled}
@@ -260,7 +271,9 @@ describeWithDatabase('job queue queries on Postgres', () => {
 
   const cleanupTestRows = async () => {
     await pool.query(sql`delete from jobs`);
-    await pool.query(sql`delete from logs where id like 'jq-%' or id = 'shared-log-id'`);
+    await pool.query(
+      sql`delete from logs where id like 'jq-%' or id = 'shared-log-id' or payload_hook_id like 'jq-%'`
+    );
     await pool.query(sql`delete from hooks where id like 'jq-%'`);
   };
 
@@ -1597,6 +1610,193 @@ describeWithDatabase('job queue queries on Postgres', () => {
         }
       );
     }, 15_000);
+  });
+
+  describe('waiting-row caps', () => {
+    afterEach(() => {
+      resetDevFeaturesEnabled();
+    });
+
+    it('counts jobs bounded by limit per group and per type under tenant RLS', async () => {
+      await seed([
+        { id: 'cnt-a1', tenantId: defaultTenantId, groupKey: 'hook-a' },
+        { id: 'cnt-a2', tenantId: defaultTenantId, groupKey: 'hook-a' },
+        { id: 'cnt-a3', tenantId: defaultTenantId, groupKey: 'hook-a' },
+        { id: 'cnt-b1', tenantId: defaultTenantId, groupKey: 'hook-b' },
+        { id: 'cnt-admin', tenantId: adminTenantId, groupKey: 'hook-a' },
+      ]);
+      await pool.query(sql`
+        insert into jobs (tenant_id, id, type, group_key)
+        values (${defaultTenantId}, 'cnt-other-type', 'other', 'hook-a')
+      `);
+
+      await runAsTenant(pool, defaultTenantId, async (connection) => {
+        const jobQueries = createJobQueries(connection);
+        await expect(jobQueries.countJobsByGroup(jobType, 'hook-a', 10)).resolves.toBe(3);
+        await expect(jobQueries.countJobsByGroup(jobType, 'hook-a', 2)).resolves.toBe(2);
+        await expect(jobQueries.countJobsByGroup(jobType, 'hook-b', 10)).resolves.toBe(1);
+        await expect(jobQueries.countJobsByType(jobType, 10)).resolves.toBe(4);
+        await expect(jobQueries.countJobsByType(jobType, 3)).resolves.toBe(3);
+        await expect(jobQueries.countJobsByType('other', 10)).resolves.toBe(1);
+      });
+
+      await runAsTenant(pool, adminTenantId, async (connection) => {
+        const jobQueries = createJobQueries(connection);
+        await expect(jobQueries.countJobsByGroup(jobType, 'hook-a', 10)).resolves.toBe(1);
+        await expect(jobQueries.countJobsByType(jobType, 10)).resolves.toBe(1);
+      });
+    });
+
+    it('enforces per-hook and per-tenant caps end-to-end, writes overflow logs, and refreshes after TTL', async () => {
+      setDevFeaturesEnabled(true);
+      await seedHook({
+        id: 'jq-cap-hook-a',
+        tenantId: defaultTenantId,
+        events: ['Role.Created'],
+      });
+      await seedHook({
+        id: 'jq-cap-hook-admin',
+        tenantId: adminTenantId,
+        events: ['Role.Created'],
+      });
+
+      const now = Sinon.stub().returns(1000);
+      const queue = new CoreJobQueue({
+        waitingRowCapCache: new WaitingRowCapCache({ ttlMs: 5000, now }),
+      });
+
+      const triggerRoleCreated = async (tenantId: string) =>
+        runAsTenant(pool, tenantId, async (connection) => {
+          const tenantQueries = new Queries(
+            connection,
+            new WellKnownCache(tenantId, new TtlCache())
+          );
+          const library = createHookLibrary(tenantQueries, {
+            jobQueue: queue,
+            waitingRowCaps: { perHook: 2, perTenant: 3 },
+          });
+          const context = new HookContextManager({ ip: '127.0.0.1' });
+          context.appendDataHookContext('Role.Created', { data: { id: 'role-1' } });
+          await library.triggerDataHooks(new ConsoleLog(), context);
+        });
+
+      // Triggers 1-3: hook-a hits its per-hook cap (2) while tenant total (2) is below 3.
+      await triggerRoleCreated(defaultTenantId);
+      await triggerRoleCreated(defaultTenantId);
+      await triggerRoleCreated(defaultTenantId);
+
+      await expect(
+        pool.oneFirst<number>(
+          sql`select count(*)::int4 from jobs where tenant_id = ${defaultTenantId}`
+        )
+      ).resolves.toBe(2);
+
+      const groupCapLogs = await pool.any<{
+        id: string;
+        key: string;
+        payloadHookId: Nullable<string>;
+        payload: Record<string, unknown>;
+      }>(
+        sql`select id, key, payload_hook_id, payload from logs where tenant_id = ${defaultTenantId} and payload_hook_id = 'jq-cap-hook-a'`
+      );
+      expect(groupCapLogs).toHaveLength(1);
+      expect(groupCapLogs[0]?.key).toBe('TriggerHook.Role.Created');
+      expect(groupCapLogs[0]?.payload).toMatchObject({
+        result: LogResult.Error,
+        attempts: 0,
+      });
+      expect(groupCapLogs[0]?.payload.hookRequest).toMatchObject({
+        body: {
+          deliveryId: groupCapLogs[0]?.id,
+          hookId: 'jq-cap-hook-a',
+        },
+      });
+      expect(groupCapLogs[0]?.payload).not.toHaveProperty('nextAttemptAt');
+      expect(String(groupCapLogs[0]?.payload.error)).toContain('per-hook');
+
+      // Disable hook-a and enable hook-b: trigger 4 fills tenant cap (3), trigger 5 hits tenant cap.
+      await pool.query(sql`update hooks set enabled = false where id = 'jq-cap-hook-a'`);
+      await seedHook({
+        id: 'jq-cap-hook-b',
+        tenantId: defaultTenantId,
+        events: ['Role.Created'],
+      });
+
+      await triggerRoleCreated(defaultTenantId);
+      await triggerRoleCreated(defaultTenantId);
+
+      await expect(
+        pool.oneFirst<number>(
+          sql`select count(*)::int4 from jobs where tenant_id = ${defaultTenantId}`
+        )
+      ).resolves.toBe(3);
+
+      const tenantCapLogs = await pool.any<{
+        id: string;
+        key: string;
+        payloadHookId: Nullable<string>;
+        payload: Record<string, unknown>;
+      }>(
+        sql`select id, key, payload_hook_id, payload from logs where tenant_id = ${defaultTenantId} and payload_hook_id = 'jq-cap-hook-b'`
+      );
+      expect(tenantCapLogs).toHaveLength(1);
+      expect(tenantCapLogs[0]?.key).toBe('TriggerHook.Role.Created');
+      expect(tenantCapLogs[0]?.payload).toMatchObject({
+        result: LogResult.Error,
+        attempts: 0,
+      });
+      expect(tenantCapLogs[0]?.payload.hookRequest).toMatchObject({
+        body: {
+          deliveryId: tenantCapLogs[0]?.id,
+          hookId: 'jq-cap-hook-b',
+        },
+      });
+      expect(tenantCapLogs[0]?.payload).not.toHaveProperty('nextAttemptAt');
+      expect(String(tenantCapLogs[0]?.payload.error)).toContain('per-tenant');
+
+      // Admin tenant is unaffected by defaultTenantId's cap.
+      await triggerRoleCreated(adminTenantId);
+      await expect(
+        pool.oneFirst<number>(
+          sql`select count(*)::int4 from jobs where tenant_id = ${adminTenantId}`
+        )
+      ).resolves.toBe(1);
+
+      // Clear defaultTenantId jobs and advance past TTL so hook-b can enqueue again.
+      await pool.query(sql`delete from jobs where tenant_id = ${defaultTenantId}`);
+      now.returns(7000);
+
+      await triggerRoleCreated(defaultTenantId);
+      await expect(
+        pool.oneFirst<number>(
+          sql`select count(*)::int4 from jobs where tenant_id = ${defaultTenantId} and group_key = 'jq-cap-hook-b'`
+        )
+      ).resolves.toBe(1);
+
+      const reportedMetrics: Array<{ name: string; value: number }> = [];
+      const originalClient = appInsights.client;
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- capture reported metrics
+      appInsights.client = {
+        trackMetric: (metric: { name: string; value: number }) => {
+          // eslint-disable-next-line @silverhand/fp/no-mutating-methods -- collect metrics
+          reportedMetrics.push(metric);
+        },
+      } as unknown as NonNullable<typeof appInsights.client>;
+
+      try {
+        await queue.reportMetrics(queries().getGauges);
+      } finally {
+        // eslint-disable-next-line @silverhand/fp/no-mutation -- restore client
+        appInsights.client = originalClient;
+      }
+
+      expect(reportedMetrics).toEqual(
+        expect.arrayContaining([
+          { name: jobQueueMetricNames.droppedAtGroupCap, value: 1 },
+          { name: jobQueueMetricNames.droppedAtTenantCap, value: 1 },
+        ])
+      );
+    });
   });
 });
 /* eslint-enable max-lines */

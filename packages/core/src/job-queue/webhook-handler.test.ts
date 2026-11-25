@@ -24,6 +24,8 @@ const {
   webhookDeliveryTimeoutMs,
   webhookJobLeaseMs,
   webhookJobType,
+  webhookMaxWaitingRowsPerHook,
+  webhookMaxWaitingRowsPerTenant,
   webhookPerHookConcurrency,
   webhookPerTenantConcurrency,
   webhookRetryMaxAgeMs,
@@ -95,10 +97,14 @@ describe('webhook job handler', () => {
     expect(handler.limits).toEqual({
       perTenantConcurrency: webhookPerTenantConcurrency,
       perGroupConcurrency: webhookPerHookConcurrency,
+      maxWaitingRowsPerGroup: webhookMaxWaitingRowsPerHook,
+      maxWaitingRowsPerTenant: webhookMaxWaitingRowsPerTenant,
     });
     expect(handler.limits).toEqual({
       perTenantConcurrency: 20,
       perGroupConcurrency: 5,
+      maxWaitingRowsPerGroup: 10_000,
+      maxWaitingRowsPerTenant: 50_000,
     });
     expect(handler.circuitBreaker).toEqual({
       failureThreshold: webhookCircuitBreakerFailureThreshold,

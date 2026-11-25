@@ -22,6 +22,8 @@ export const webhookJobLeaseMs = 60_000;
 export const webhookDeliveryTimeoutMs = 20_000;
 export const webhookPerTenantConcurrency = 20;
 export const webhookPerHookConcurrency = 5;
+export const webhookMaxWaitingRowsPerHook = 10_000;
+export const webhookMaxWaitingRowsPerTenant = 50_000;
 const webhookRetryBaseMs = 10_000;
 export const webhookRetryMaxMs = 4 * 60 * 60 * 1000;
 export const webhookRetryMaxAgeMs = 24 * 60 * 60 * 1000;
@@ -167,6 +169,8 @@ export const createWebhookJobHandler = (
     limits: {
       perTenantConcurrency: webhookPerTenantConcurrency,
       perGroupConcurrency: webhookPerHookConcurrency,
+      maxWaitingRowsPerGroup: webhookMaxWaitingRowsPerHook,
+      maxWaitingRowsPerTenant: webhookMaxWaitingRowsPerTenant,
     },
     circuitBreaker: {
       failureThreshold: webhookCircuitBreakerFailureThreshold,

@@ -24,14 +24,21 @@ describe('CoreJobQueue', () => {
     appInsights.client = { trackMetric } as unknown as NonNullable<typeof appInsights.client>;
     const queue = new CoreJobQueue();
 
-    await queue.enqueue(async () => {
+    const succeeded = jest.fn();
+
+    await queue.trackEnqueue(async () => {
       throw new Error('insert failed');
     });
-    await queue.enqueue(async () => {
+    await queue.trackEnqueue(async () => {
       throw new Error('insert failed');
     });
-    await queue.enqueue(async () => 'inserted');
+    await queue.trackEnqueue(async () => {
+      succeeded();
+    });
+    expect(succeeded).toHaveBeenCalledTimes(1);
     queue.recordExhaustedDeliveries(3);
+    queue.recordDroppedAtCap('group', 2);
+    queue.recordDroppedAtCap('tenant', 4);
     await queue.reportMetrics(async () => gauges);
 
     expect(trackMetric.mock.calls.map(([metric]) => metric)).toEqual([
@@ -40,6 +47,8 @@ describe('CoreJobQueue', () => {
       { name: jobQueueMetricNames.openCircuits, value: 0 },
       { name: jobQueueMetricNames.failedEnqueues, value: 2 },
       { name: jobQueueMetricNames.exhaustedDeliveries, value: 3 },
+      { name: jobQueueMetricNames.droppedAtGroupCap, value: 2 },
+      { name: jobQueueMetricNames.droppedAtTenantCap, value: 4 },
     ]);
 
     trackMetric.mockReset();
@@ -51,6 +60,8 @@ describe('CoreJobQueue', () => {
       { name: jobQueueMetricNames.openCircuits, value: 0 },
       { name: jobQueueMetricNames.failedEnqueues, value: 0 },
       { name: jobQueueMetricNames.exhaustedDeliveries, value: 0 },
+      { name: jobQueueMetricNames.droppedAtGroupCap, value: 0 },
+      { name: jobQueueMetricNames.droppedAtTenantCap, value: 0 },
     ]);
   });
 
@@ -85,14 +96,14 @@ describe('CoreJobQueue', () => {
       inserted(name);
     };
 
-    void queue.enqueue(async () => slowInsert('before drain'));
+    void queue.trackEnqueue(async () => slowInsert('before drain'));
     const draining = queue.drain(
       // A request still running while its server closes enqueues after the drain began.
       (async () => {
         await new Promise((resolve) => {
           setTimeout(resolve, 10);
         });
-        void queue.enqueue(async () => slowInsert('while closing'));
+        void queue.trackEnqueue(async () => slowInsert('while closing'));
       })()
     );
     await draining;
@@ -138,6 +149,8 @@ describe('CoreJobQueue', () => {
       { name: jobQueueMetricNames.openCircuits, value: 0 },
       { name: jobQueueMetricNames.failedEnqueues, value: 2 },
       { name: jobQueueMetricNames.exhaustedDeliveries, value: 0 },
+      { name: jobQueueMetricNames.droppedAtGroupCap, value: 0 },
+      { name: jobQueueMetricNames.droppedAtTenantCap, value: 0 },
     ]);
   });
 
