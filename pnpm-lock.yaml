@@ -45,7 +45,7 @@ overrides:
   lodash.omit@<4.18.0: ^4.18.0
   mermaid@<10.9.8: ^10.9.8
   micromatch@<4.0.8: ^4.0.8
-  minimatch@<3.1.4: ^3.1.4
+  minimatch@<3.1.4: ^11.0.0
   minimatch@>=5.0.0 <5.1.8: ^5.1.8
   minimatch@>=9.0.0 <9.0.7: ^9.0.7
   nanoid@<3.3.17: ^3.3.17
@@ -346,7 +346,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/app-insights:
     dependencies:
@@ -386,7 +386,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/cli:
     dependencies:
@@ -501,7 +501,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-alipay-native:
     dependencies:
@@ -568,7 +568,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-alipay-web:
     dependencies:
@@ -635,7 +635,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-aliyun-dm:
     dependencies:
@@ -693,7 +693,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-aliyun-sms:
     dependencies:
@@ -751,7 +751,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-aliyun-sms-mas:
     dependencies:
@@ -809,7 +809,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-amazon:
     dependencies:
@@ -870,7 +870,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-apple:
     dependencies:
@@ -934,7 +934,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-aws-ses:
     dependencies:
@@ -998,7 +998,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-azuread:
     dependencies:
@@ -1059,7 +1059,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-dingtalk-web:
     dependencies:
@@ -1126,7 +1126,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-discord:
     dependencies:
@@ -1184,7 +1184,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-facebook:
     dependencies:
@@ -1242,7 +1242,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-feishu-web:
     dependencies:
@@ -1300,7 +1300,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-gatewayapi-sms:
     dependencies:
@@ -1358,7 +1358,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-github:
     dependencies:
@@ -1419,7 +1419,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-gitlab:
     dependencies:
@@ -1486,7 +1486,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-google:
     dependencies:
@@ -1547,7 +1547,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-http-email:
     dependencies:
@@ -1602,7 +1602,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-http-sms:
     dependencies:
@@ -1651,7 +1651,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-huggingface:
     dependencies:
@@ -1709,7 +1709,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-kakao:
     dependencies:
@@ -1767,7 +1767,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-kook:
     dependencies:
@@ -1825,7 +1825,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-kwtsms:
     dependencies:
@@ -1880,7 +1880,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-line:
     dependencies:
@@ -1941,7 +1941,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-linkedin:
     dependencies:
@@ -2002,7 +2002,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-logto-email:
     dependencies:
@@ -2063,7 +2063,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-logto-social-demo:
     dependencies:
@@ -2121,7 +2121,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-mailgun:
     dependencies:
@@ -2179,7 +2179,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-mailjunky:
     dependencies:
@@ -2237,7 +2237,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-mock-email:
     dependencies:
@@ -2295,7 +2295,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-mock-email-alternative:
     dependencies:
@@ -2353,7 +2353,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-mock-sms:
     dependencies:
@@ -2411,7 +2411,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-mock-social:
     dependencies:
@@ -2469,7 +2469,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-naver:
     dependencies:
@@ -2527,7 +2527,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-oauth2:
     dependencies:
@@ -2594,7 +2594,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-oidc:
     dependencies:
@@ -2664,7 +2664,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-patreon:
     dependencies:
@@ -2722,7 +2722,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-postmark:
     dependencies:
@@ -2777,7 +2777,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-qq:
     dependencies:
@@ -2835,7 +2835,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-saml:
     dependencies:
@@ -2899,7 +2899,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-sendgrid-email:
     dependencies:
@@ -2957,7 +2957,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-siwe:
     dependencies:
@@ -3012,7 +3012,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-slack:
     dependencies:
@@ -3073,7 +3073,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-smsaero:
     dependencies:
@@ -3131,7 +3131,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-smsbao-sms:
     dependencies:
@@ -3186,7 +3186,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-smtp:
     dependencies:
@@ -3250,7 +3250,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-smtp2go-email:
     dependencies:
@@ -3305,7 +3305,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-tencent-sms:
     dependencies:
@@ -3363,7 +3363,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-twilio-sms:
     dependencies:
@@ -3421,7 +3421,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-vonage-sms:
     dependencies:
@@ -3476,7 +3476,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-wechat-native:
     dependencies:
@@ -3534,7 +3534,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-wechat-web:
     dependencies:
@@ -3592,7 +3592,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-wecom:
     dependencies:
@@ -3653,7 +3653,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-whatsapp:
     dependencies:
@@ -3708,7 +3708,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-x:
     dependencies:
@@ -3769,7 +3769,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-xiaomi:
     dependencies:
@@ -3824,7 +3824,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/connectors/connector-yunpian-sms:
     dependencies:
@@ -3879,7 +3879,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/console:
     devDependencies:
@@ -5161,7 +5161,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/phrases:
     dependencies:
@@ -5308,7 +5308,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/shared:
     dependencies:
@@ -5360,7 +5360,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   packages/toolkit/connector-kit:
     dependencies:
@@ -5412,7 +5412,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
     optionalDependencies:
       zod:
         specifier: 3.24.3
@@ -5477,7 +5477,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
     optionalDependencies:
       zod:
         specifier: 3.24.3
@@ -5514,7 +5514,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
     optionalDependencies:
       zod:
         specifier: 3.24.3
@@ -5670,7 +5670,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.1.12
-        version: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+        version: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
 packages:
 
@@ -6582,6 +6582,9 @@ packages:
   '@isaacs/fs-minipass@4.0.1':
     resolution: {integrity: sha512-wgm9Ehl2jpeqP3zw/7mo3kRHFp5MEDhqAdwy1fTGkHAwnkGOVsgpvQhL8B5n1qlb01jV3n/bI0ZfZp5lWA1k4w==}
     engines: {node: '>=18.0.0'}
+
+  '@isaacs/nonrecursive-glob-match@1.1.0':
+    resolution: {integrity: sha512-GPm/Dbvk5RLmhRnxXIa7nTpK0xtl4E0wj0MslsuNiJ1FIROU+2+9lgUC/dgF7Ey4QCWhfEsgxilMRMCdHPfDfw==}
 
   '@istanbuljs/load-nyc-config@1.1.0':
     resolution: {integrity: sha512-VjeHSlIzpv/NyD3N0YuHfXOPDIixcA1q2ZV98wsMqcYlPmv2n3Yb2lYP9XMElnaFVXg5A7YLTeLu6V84uQDjmQ==}
@@ -9494,9 +9497,6 @@ packages:
   bowser@2.11.0:
     resolution: {integrity: sha512-AlcaJBi/pqqJBIQ8U9Mcpc9i8Aqxn88Skv5d+xBX006BY5u8N3mGLHa5Lgppa7L/HfwgwLgZ6NYs+Ag6uUmJRA==}
 
-  brace-expansion@1.1.21:
-    resolution: {integrity: sha512-9zeA+KLZNNzglF2TPKRQEDyx6Yby7daAkuy8MiPzpXPsYDWi/DRM8jmwUDxokQjYqBpv5DgPiwD4h4ZZSy1Ujw==}
-
   brace-expansion@2.1.7:
     resolution: {integrity: sha512-uZbew1NqdmPDTMJ8ah1y+b+9QEJrfkXFk3RcTQw3X0jW/xRUvFKsg1CfQdSYGdTbXZWExtU3J3ccxtnfw1Fi0g==}
 
@@ -9893,9 +9893,6 @@ packages:
   compressible@2.0.18:
     resolution: {integrity: sha512-AF3r7P5dWxL8MxyITRMlORQNaOA2IkAFaTr4k7BUumjPtRpGDTZpl0Pb1XCO6JeDCBdp126Cgs9sMxqSjgYyRg==}
     engines: {node: '>= 0.6'}
-
-  concat-map@0.0.1:
-    resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
 
   confbox@0.1.8:
     resolution: {integrity: sha512-RMtmw0iFkeR4YV+fUOSucriAQNb9g8zFR52MWCtl+cCZOFRNL6zeB395vPzFhEjjn4fMxXudmELnl/KF/WrK6w==}
@@ -13135,8 +13132,9 @@ packages:
     resolution: {integrity: sha512-MULkVLfKGYDFYejP07QOurDLLQpcjk7Fw+7jXS2R2czRQzR56yHRveU5NDJEOviH+hETZKSkIk5c+T23GjFUMg==}
     engines: {node: 18 || 20 || >=22}
 
-  minimatch@3.1.5:
-    resolution: {integrity: sha512-VgjWUsnnT6n+NUk6eZq77zeFdpW2LWDzP6zFGrCbHXiYNul5Dzqk2HHQ5uFH2DNW5Xbp8+jVzaeNt94ssEEl4w==}
+  minimatch@11.0.9:
+    resolution: {integrity: sha512-KCFkfyjqerNlSstjlhIGNXIKZGA/6O4V4RlhZ+Dsr621SPPw0mzlypE9D9ZOoPiVefHID+j7/XuMMlqfD/F60Q==}
+    engines: {node: 20 || >=22}
 
   minimatch@5.1.9:
     resolution: {integrity: sha512-7o1wEA2RyMP7Iu7GNba9vc0RWWGACJOCZBJX2GJWip0ikV+wcOsgVuY9uE8CPiyQhkGFSlhuSkZPavN7u1c2Fw==}
@@ -17417,7 +17415,7 @@ snapshots:
       ignore: 5.3.1
       import-fresh: 3.3.0
       js-yaml: 4.3.2
-      minimatch: 3.1.5
+      minimatch: 11.0.9
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
       - supports-color
@@ -17431,7 +17429,7 @@ snapshots:
       ignore: 5.3.1
       import-fresh: 3.3.0
       js-yaml: 4.3.2
-      minimatch: 3.1.5
+      minimatch: 11.0.9
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
       - supports-color
@@ -17507,7 +17505,7 @@ snapshots:
     dependencies:
       '@humanwhocodes/object-schema': 2.0.3
       debug: 4.4.3(supports-color@10.0.0)
-      minimatch: 3.1.5
+      minimatch: 11.0.9
     transitivePeerDependencies:
       - supports-color
 
@@ -17515,7 +17513,7 @@ snapshots:
     dependencies:
       '@humanwhocodes/object-schema': 2.0.3
       debug: 4.4.3(supports-color@5.5.0)
-      minimatch: 3.1.5
+      minimatch: 11.0.9
     transitivePeerDependencies:
       - supports-color
 
@@ -17623,6 +17621,8 @@ snapshots:
   '@isaacs/fs-minipass@4.0.1':
     dependencies:
       minipass: 7.1.3
+
+  '@isaacs/nonrecursive-glob-match@1.1.0': {}
 
   '@istanbuljs/load-nyc-config@1.1.0':
     dependencies:
@@ -19242,7 +19242,7 @@ snapshots:
       eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9(supports-color@10.0.0))(eslint-plugin-import@2.29.1)(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0)
       eslint-plugin-consistent-default-export-name: 0.0.15
       eslint-plugin-eslint-comments: 3.2.0(eslint@8.57.0(supports-color@10.0.0))
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0)(typescript@5.9.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9(supports-color@10.0.0))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0)
       eslint-plugin-n: 17.2.1(eslint@8.57.0(supports-color@10.0.0))
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-prettier: 5.1.3(eslint-config-prettier@9.1.0(eslint@8.57.0(supports-color@10.0.0)))(eslint@8.57.0(supports-color@10.0.0))(prettier@3.5.3)
@@ -19270,7 +19270,7 @@ snapshots:
       eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9(supports-color@5.5.0))(eslint-plugin-import@2.29.1)(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0)
       eslint-plugin-consistent-default-export-name: 0.0.15
       eslint-plugin-eslint-comments: 3.2.0(eslint@8.57.0(supports-color@5.5.0))
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0)(typescript@5.9.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9(supports-color@5.5.0))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0)
       eslint-plugin-n: 17.2.1(eslint@8.57.0(supports-color@5.5.0))
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-prettier: 5.1.3(eslint-config-prettier@9.1.0(eslint@8.57.0(supports-color@5.5.0)))(eslint@8.57.0(supports-color@5.5.0))(prettier@3.5.3)
@@ -20568,7 +20568,7 @@ snapshots:
       obug: 2.1.1
       std-env: 4.1.0
       tinyrainbow: 3.1.0
-      vitest: 4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
+      vitest: 4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
 
   '@vitest/expect@4.1.12':
     dependencies:
@@ -21531,11 +21531,6 @@ snapshots:
 
   bowser@2.11.0: {}
 
-  brace-expansion@1.1.21:
-    dependencies:
-      balanced-match: 1.0.2
-      concat-map: 0.0.1
-
   brace-expansion@2.1.7:
     dependencies:
       balanced-match: 1.0.2
@@ -21919,8 +21914,6 @@ snapshots:
   compressible@2.0.18:
     dependencies:
       mime-db: 1.54.0
-
-  concat-map@0.0.1: {}
 
   confbox@0.1.8: {}
 
@@ -22844,8 +22837,8 @@ snapshots:
       debug: 4.4.3(supports-color@10.0.0)
       enhanced-resolve: 5.16.0
       eslint: 8.57.0(supports-color@10.0.0)
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9(supports-color@10.0.0))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0)(typescript@5.9.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9(supports-color@10.0.0))(eslint-import-resolver-typescript@3.6.1)(eslint-plugin-import@2.29.1)(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9(supports-color@10.0.0))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.3
       is-core-module: 2.13.1
@@ -22861,8 +22854,8 @@ snapshots:
       debug: 4.4.3(supports-color@5.5.0)
       enhanced-resolve: 5.16.0
       eslint: 8.57.0(supports-color@5.5.0)
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9(supports-color@5.5.0))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0)
-      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0)(typescript@5.9.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9(supports-color@5.5.0))(eslint-import-resolver-typescript@3.6.1)(eslint-plugin-import@2.29.1)(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0)
+      eslint-plugin-import: 2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9(supports-color@5.5.0))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0)
       fast-glob: 3.3.2
       get-tsconfig: 4.7.3
       is-core-module: 2.13.1
@@ -22873,7 +22866,7 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-module-utils@2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9(supports-color@10.0.0))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0):
+  eslint-module-utils@2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9(supports-color@10.0.0))(eslint-import-resolver-typescript@3.6.1)(eslint-plugin-import@2.29.1)(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0):
     dependencies:
       debug: 3.2.7(supports-color@10.0.0)
     optionalDependencies:
@@ -22882,9 +22875,10 @@ snapshots:
       eslint-import-resolver-node: 0.3.9(supports-color@10.0.0)
       eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9(supports-color@10.0.0))(eslint-plugin-import@2.29.1)(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0)
     transitivePeerDependencies:
+      - eslint-plugin-import
       - supports-color
 
-  eslint-module-utils@2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9(supports-color@5.5.0))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0):
+  eslint-module-utils@2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9(supports-color@5.5.0))(eslint-import-resolver-typescript@3.6.1)(eslint-plugin-import@2.29.1)(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0):
     dependencies:
       debug: 3.2.7(supports-color@5.5.0)
     optionalDependencies:
@@ -22893,6 +22887,7 @@ snapshots:
       eslint-import-resolver-node: 0.3.9(supports-color@5.5.0)
       eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9(supports-color@5.5.0))(eslint-plugin-import@2.29.1)(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0)
     transitivePeerDependencies:
+      - eslint-plugin-import
       - supports-color
 
   eslint-plugin-consistent-default-export-name@0.0.15:
@@ -22926,7 +22921,7 @@ snapshots:
       eslint: 8.57.0(supports-color@5.5.0)
       ignore: 5.3.1
 
-  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0)(typescript@5.9.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0):
+  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9(supports-color@10.0.0))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0):
     dependencies:
       array-includes: 3.1.8
       array.prototype.findlastindex: 1.2.5
@@ -22936,11 +22931,11 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0(supports-color@10.0.0)
       eslint-import-resolver-node: 0.3.9(supports-color@10.0.0)
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9(supports-color@10.0.0))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9(supports-color@10.0.0))(eslint-import-resolver-typescript@3.6.1)(eslint-plugin-import@2.29.1)(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0)
       hasown: 2.0.4
       is-core-module: 2.13.1
       is-glob: 4.0.3
-      minimatch: 3.1.5
+      minimatch: 11.0.9
       object.fromentries: 2.0.8
       object.groupby: 1.0.3
       object.values: 1.2.0
@@ -22949,11 +22944,12 @@ snapshots:
     optionalDependencies:
       '@typescript-eslint/parser': 7.7.0(eslint@8.57.0(supports-color@10.0.0))(supports-color@10.0.0)(typescript@5.9.3)
     transitivePeerDependencies:
+      - eslint-import-resolver-node
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0)(typescript@5.9.3))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0):
+  eslint-plugin-import@2.29.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9(supports-color@5.5.0))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0):
     dependencies:
       array-includes: 3.1.8
       array.prototype.findlastindex: 1.2.5
@@ -22963,11 +22959,11 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0(supports-color@5.5.0)
       eslint-import-resolver-node: 0.3.9(supports-color@5.5.0)
-      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9(supports-color@5.5.0))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0)
+      eslint-module-utils: 2.8.1(@typescript-eslint/parser@7.7.0(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9(supports-color@5.5.0))(eslint-import-resolver-typescript@3.6.1)(eslint-plugin-import@2.29.1)(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0)
       hasown: 2.0.4
       is-core-module: 2.13.1
       is-glob: 4.0.3
-      minimatch: 3.1.5
+      minimatch: 11.0.9
       object.fromentries: 2.0.8
       object.groupby: 1.0.3
       object.values: 1.2.0
@@ -22976,6 +22972,7 @@ snapshots:
     optionalDependencies:
       '@typescript-eslint/parser': 7.7.0(eslint@8.57.0(supports-color@5.5.0))(supports-color@5.5.0)(typescript@5.9.3)
     transitivePeerDependencies:
+      - eslint-import-resolver-node
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
       - supports-color
@@ -22996,7 +22993,7 @@ snapshots:
       hasown: 2.0.4
       jsx-ast-utils: 3.3.5
       language-tags: 1.0.9
-      minimatch: 3.1.5
+      minimatch: 11.0.9
       object.entries: 1.1.8
       object.fromentries: 2.0.8
 
@@ -23073,7 +23070,7 @@ snapshots:
       eslint: 8.57.0(supports-color@10.0.0)
       estraverse: 5.3.0
       jsx-ast-utils: 3.3.5
-      minimatch: 3.1.5
+      minimatch: 11.0.9
       object.entries: 1.1.8
       object.fromentries: 2.0.8
       object.hasown: 1.1.4
@@ -23209,7 +23206,7 @@ snapshots:
       json-stable-stringify-without-jsonify: 1.0.1
       levn: 0.4.1
       lodash.merge: 4.6.2
-      minimatch: 3.1.5
+      minimatch: 11.0.9
       natural-compare: 1.4.0
       optionator: 0.9.3
       strip-ansi: 6.0.1
@@ -23252,7 +23249,7 @@ snapshots:
       json-stable-stringify-without-jsonify: 1.0.1
       levn: 0.4.1
       lodash.merge: 4.6.2
-      minimatch: 3.1.5
+      minimatch: 11.0.9
       natural-compare: 1.4.0
       optionator: 0.9.3
       strip-ansi: 6.0.1
@@ -23754,7 +23751,7 @@ snapshots:
       fs.realpath: 1.0.0
       inflight: 1.0.6
       inherits: 2.0.4
-      minimatch: 3.1.5
+      minimatch: 11.0.9
       once: 1.4.0
       path-is-absolute: 1.0.1
 
@@ -26606,9 +26603,10 @@ snapshots:
     dependencies:
       brace-expansion: 5.0.12
 
-  minimatch@3.1.5:
+  minimatch@11.0.9:
     dependencies:
-      brace-expansion: 1.1.21
+      '@isaacs/nonrecursive-glob-match': 1.1.0
+      brace-expansion: 5.0.12
 
   minimatch@5.1.9:
     dependencies:
@@ -26744,7 +26742,7 @@ snapshots:
       chokidar: 3.6.0
       debug: 4.4.1(supports-color@5.5.0)
       ignore-by-default: 1.0.1
-      minimatch: 3.1.5
+      minimatch: 11.0.9
       pstree.remy: 1.1.8
       semver: 7.7.1
       simple-update-notifier: 2.0.0
@@ -28890,7 +28888,7 @@ snapshots:
     dependencies:
       '@istanbuljs/schema': 0.1.3
       glob: 7.2.3
-      minimatch: 3.1.5
+      minimatch: 11.0.9
 
   test-exclude@8.0.0:
     dependencies:
@@ -29424,7 +29422,7 @@ snapshots:
       sass: 1.77.8
       yaml: 2.8.4
 
-  vitest@4.1.12(@opentelemetry/api@1.8.0)(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4)):
+  vitest@4.1.12(@types/node@26.6.5)(@vitest/coverage-v8@4.1.12)(jsdom@20.0.2(supports-color@10.0.0))(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4)):
     dependencies:
       '@vitest/expect': 4.1.12
       '@vitest/mocker': 4.1.12(vite@6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4))
@@ -29447,7 +29445,6 @@ snapshots:
       vite: 6.4.5(@types/node@26.6.5)(jiti@1.21.0)(lightningcss@1.25.1)(sass@1.77.8)(yaml@2.8.4)
       why-is-node-running: 2.3.0
     optionalDependencies:
-      '@opentelemetry/api': 1.8.0
       '@types/node': 26.6.5
       '@vitest/coverage-v8': 4.1.12(vitest@4.1.12)
       jsdom: 20.0.2(supports-color@10.0.0)
