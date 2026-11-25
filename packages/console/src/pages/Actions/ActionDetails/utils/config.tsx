@@ -205,6 +205,9 @@ export const getActionModel = (actionType: LogtoActionKey): ModelSettings => {
     case LogtoActionKey.PostSignIn: {
       return postSignInModel;
     }
+    case LogtoActionKey.PreRegister: {
+      throw new TypeError('Pre-register action is not configured in Console yet.');
+    }
   }
 };
 
@@ -218,6 +221,9 @@ export const getDefaultContextSample = (actionType: LogtoActionKey) => {
     }
     case LogtoActionKey.PostSignIn: {
       return defaultPostSignInEvent;
+    }
+    case LogtoActionKey.PreRegister: {
+      throw new TypeError('Pre-register action is not configured in Console yet.');
     }
   }
 };

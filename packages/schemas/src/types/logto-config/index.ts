@@ -109,6 +109,7 @@ export const jwtCustomizerConfigGuard: Readonly<{
 export type ActionType = {
   [LogtoActionKey.PostFirstFactorVerification]: LogtoAction;
   [LogtoActionKey.PostSignIn]: LogtoAction;
+  [LogtoActionKey.PreRegister]: LogtoAction;
 };
 
 export const actionConfigGuard: Readonly<{
@@ -116,6 +117,7 @@ export const actionConfigGuard: Readonly<{
 }> = Object.freeze({
   [LogtoActionKey.PostFirstFactorVerification]: logtoActionGuard,
   [LogtoActionKey.PostSignIn]: logtoActionGuard,
+  [LogtoActionKey.PreRegister]: logtoActionGuard,
 });
 
 export const jwtCustomizerConfigsGuard = z.discriminatedUnion('key', [

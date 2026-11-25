@@ -4,6 +4,7 @@ import {
   LogtoActionKey,
   loggablePostFirstFactorVerificationEventGuard,
   loggablePostSignInEventGuard,
+  loggablePreRegisterEventGuard,
   userProfileAddressKeys,
   userProfileKeys,
   Users,
@@ -30,6 +31,7 @@ const safeValidationIssueCodes = new Set<string>(Object.values(z.ZodIssueCode));
 const eventProjectionGuards = Object.freeze({
   [LogtoActionKey.PostFirstFactorVerification]: loggablePostFirstFactorVerificationEventGuard,
   [LogtoActionKey.PostSignIn]: loggablePostSignInEventGuard,
+  [LogtoActionKey.PreRegister]: loggablePreRegisterEventGuard,
 });
 
 /** An event that does not match its key's expected shape degrades to the key alone. */
@@ -48,7 +50,8 @@ export const toLoggableActionEvent = (
   try {
     switch (key) {
       case LogtoActionKey.PostFirstFactorVerification:
-      case LogtoActionKey.PostSignIn: {
+      case LogtoActionKey.PostSignIn:
+      case LogtoActionKey.PreRegister: {
         const parsed = eventProjectionGuards[key].safeParse(event);
         return parsed.success ? parsed.data : { key };
       }

@@ -7,10 +7,12 @@ import {
 import { ResponseError } from '@withtyped/client';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { buildSafeActionErrorSummary } from '#src/libraries/action-sanitization.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { koaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
+import assertThat from '#src/utils/assert-that.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 import { actionQuotaKey } from '#src/utils/subscription/types.js';
 import { isRecord } from '#src/utils/type.js';
@@ -21,6 +23,26 @@ const actionConfigsGuard = z.object({
   key: z.nativeEnum(LogtoActionKey),
   value: logtoActionGuard,
 });
+
+// Pre-register action: unavailable until the feature is released.
+const isActionKeyAvailable = (key: LogtoActionKey) =>
+  key !== LogtoActionKey.PreRegister || EnvSet.values.isDevFeaturesEnabled;
+
+/** Reject an action type that is not available, as if it did not exist. */
+const assertActionKeyExists = (key: LogtoActionKey) => {
+  assertThat(
+    isActionKeyAvailable(key),
+    new RequestError({ code: 'entity.not_exists_with_id', status: 404, name: 'action', id: key })
+  );
+};
+
+/** Reject an action type that is not available as invalid input. */
+const assertActionKeyAccepted = (key: LogtoActionKey) => {
+  assertThat(
+    isActionKeyAvailable(key),
+    new RequestError({ code: 'guard.invalid_input', status: 400, type: 'action type' })
+  );
+};
 
 const parseActionResponseError = async (error: ResponseError): Promise<unknown> => {
   try {
@@ -66,7 +88,7 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const actions = await getActions(getConsoleLogFromContext(ctx));
       ctx.body = Object.values(LogtoActionKey)
-        .filter((key) => actions[key])
+        .filter((key) => isActionKeyAvailable(key) && actions[key])
         .map((key) => ({ key, value: actions[key] }));
       return next();
     }
@@ -82,6 +104,7 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
     koaQuotaGuard({ key: actionQuotaKey, quota: libraries.quota }),
     async (ctx, next) => {
       const { body } = ctx.guard;
+      assertActionKeyAccepted(body.actionType);
 
       try {
         // Share the same Cloud/local execution selection as production `runAction()`, flagged as
@@ -153,6 +176,7 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
       const {
         params: { actionType },
       } = ctx.guard;
+      assertActionKeyExists(actionType);
 
       ctx.body = await getAction(actionType);
       return next();
@@ -175,6 +199,7 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
         params: { actionType },
         body,
       } = ctx.guard;
+      assertActionKeyAccepted(actionType);
 
       const { rows } = await getRowsByKeys([actionType]);
       const action = await upsertAction(actionType, body);
@@ -204,6 +229,7 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
         params: { actionType },
         body,
       } = ctx.guard;
+      assertActionKeyExists(actionType);
 
       ctx.body = await updateAction(actionType, body);
       return next();
@@ -222,6 +248,7 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
       const {
         params: { actionType },
       } = ctx.guard;
+      assertActionKeyExists(actionType);
 
       await deleteAction(actionType);
       ctx.status = 204;
