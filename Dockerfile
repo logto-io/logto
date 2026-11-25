@@ -37,21 +37,20 @@ ENV ADDITIONAL_CONNECTOR_ARGS=${additional_connector_args}
 RUN pnpm cli connector link $ADDITIONAL_CONNECTOR_ARGS -p .
 
 ### Prune dependencies for production ###
-# `pnpm install` only skips devDependencies with an explicit `--prod` flag; `NODE_ENV=production`
-# alone does not prune them. Every workspace `node_modules` (including the nested ones under
-# `packages/*/*`) is removed so the production install rebuilds them from production dependencies.
+# Since pnpm 10, use `--prod` to skip devDependencies.
 # Keep prune + production install in one layer to avoid extra transient disk usage.
 RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
   rm -rf node_modules packages/*/node_modules packages/*/*/node_modules \
   && pnpm i --prod --frozen-lockfile
 
+# Verify dev dependencies were pruned and core can still load the connector kit.
+RUN test ! -e node_modules/husky \
+  && test ! -e packages/toolkit/connector-kit/node_modules/.bin/vitest \
+  && cd packages/core \
+  && node --input-type=module -e "await import('@logto/connector-kit')"
+
 ### Clean up ###
-# The SPA packages are only served from their built `dist` folders, so their TypeScript sources,
-# source maps and test-only packages are not needed at runtime.
-RUN rm -rf .scripts pnpm-*.yaml packages/cloud \
-  packages/integration-tests packages/create \
-  packages/*/src packages/*/*/src \
-  && find packages -name '*.map' -type f -delete
+RUN rm -rf .scripts pnpm-*.yaml packages/cloud packages/integration-tests packages/create
 
 ###### [STAGE] Seal ######
 FROM node:26-alpine AS app
