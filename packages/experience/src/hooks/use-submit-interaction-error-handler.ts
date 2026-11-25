@@ -21,7 +21,8 @@ import useTrustedDeviceOptInErrorHandler from './use-trusted-device-opt-in-error
 
 type Options = Omit<UseRequiredProfileErrorHandlerOptions, 'interactionEvent'> &
   UseMfaVerificationErrorHandlerOptions & {
-    readonly onEmailBlocked?: () => void;
+    /** Callback after dismissing blocking alerts (email blocked or registration denied). */
+    readonly onBlocked?: () => void;
   };
 
 /**
@@ -39,7 +40,7 @@ const useSubmitInteractionErrorHandler = (
    * when additional user profile information is required.
    */
   interactionEvent: ContinueFlowInteractionEvent,
-  { replace, onEmailBlocked, ...rest }: Options = {}
+  { replace, onBlocked, ...rest }: Options = {}
 ): ErrorHandlers => {
   const navigate = useNavigateWithPreservedSearchParams();
   const requiredProfileErrorHandler = useRequiredProfileErrorHandler({
@@ -48,9 +49,9 @@ const useSubmitInteractionErrorHandler = (
     ...rest,
   });
   const mfaErrorHandler = useMfaErrorHandler({ replace });
-  const emailBlockedErrorHandler = useEmailBlockedErrorHandler({ onConfirm: onEmailBlocked });
+  const emailBlockedErrorHandler = useEmailBlockedErrorHandler({ onConfirm: onBlocked });
   const registrationDeniedErrorHandler = useRegistrationDeniedErrorHandler({
-    onConfirm: onEmailBlocked,
+    onConfirm: onBlocked,
   });
   const passkeySignInErrorHandler = useMissingPasskeyErrorHandler(interactionEvent);
   const trustedDeviceOptInErrorHandler = useTrustedDeviceOptInErrorHandler(interactionEvent);

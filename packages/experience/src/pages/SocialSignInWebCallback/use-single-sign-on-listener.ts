@@ -16,14 +16,15 @@ import useTerms from '@/hooks/use-terms';
 import { parseQueryParameters } from '@/utils';
 
 type SingleSignOnRegisterOptions = {
-  readonly onEmailBlocked?: () => void;
+  /** Callback after dismissing blocking alerts (email blocked or registration denied). */
+  readonly onBlocked?: () => void;
 };
 
-const useSingleSignOnRegister = ({ onEmailBlocked }: SingleSignOnRegisterOptions = {}) => {
+const useSingleSignOnRegister = ({ onBlocked }: SingleSignOnRegisterOptions = {}) => {
   const handleError = useErrorHandler();
-  const emailBlockedErrorHandler = useEmailBlockedErrorHandler({ onConfirm: onEmailBlocked });
+  const emailBlockedErrorHandler = useEmailBlockedErrorHandler({ onConfirm: onBlocked });
   const registrationDeniedErrorHandler = useRegistrationDeniedErrorHandler({
-    onConfirm: onEmailBlocked,
+    onConfirm: onBlocked,
   });
 
   const request = useApi(registerWithVerifiedIdentifier);
@@ -102,7 +103,7 @@ const useSingleSignOnListener = (connectorId: string) => {
   const singleSignOnAuthorizationRequest = useApi(signInWithSso);
 
   const registerSingleSignOnIdentity = useSingleSignOnRegister({
-    onEmailBlocked: navigateToSignIn,
+    onBlocked: navigateToSignIn,
   });
 
   const singleSignOnHandler = useCallback(

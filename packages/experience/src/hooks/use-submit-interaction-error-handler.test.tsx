@@ -144,13 +144,13 @@ describe('useSubmitInteractionErrorHandler', () => {
   });
 
   it('forwards the interaction event and options to the sibling hooks', () => {
-    const onEmailBlocked = jest.fn();
+    const onBlocked = jest.fn();
 
     renderHook(() =>
       useSubmitInteractionErrorHandler(InteractionEvent.Register, {
         replace: true,
         linkSocial: 'github',
-        onEmailBlocked,
+        onBlocked,
       })
     );
 
@@ -160,9 +160,9 @@ describe('useSubmitInteractionErrorHandler', () => {
       interactionEvent: InteractionEvent.Register,
     });
     expect(mockUseMfaErrorHandler).toHaveBeenCalledWith({ replace: true });
-    expect(mockUseEmailBlockedErrorHandler).toHaveBeenCalledWith({ onConfirm: onEmailBlocked });
+    expect(mockUseEmailBlockedErrorHandler).toHaveBeenCalledWith({ onConfirm: onBlocked });
     expect(mockUseRegistrationDeniedErrorHandler).toHaveBeenCalledWith({
-      onConfirm: onEmailBlocked,
+      onConfirm: onBlocked,
     });
     expect(mockUseMissingPasskeyErrorHandler).toHaveBeenCalledWith(InteractionEvent.Register);
     expect(mockUseTrustedDeviceOptInErrorHandler).toHaveBeenCalledWith(InteractionEvent.Register);

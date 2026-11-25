@@ -38,6 +38,11 @@ describe('useRegistrationDeniedErrorHandler', () => {
       { message: '' },
       'Your registration was declined.',
     ],
+    [
+      'the localized message for a whitespace-only action message',
+      { message: '   ' },
+      'Your registration was declined.',
+    ],
   ])('shows %s and navigates back', async (_, data, expectedContent) => {
     const { result } = renderHook(() => useRegistrationDeniedErrorHandler());
 

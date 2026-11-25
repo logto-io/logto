@@ -2,6 +2,7 @@ import { type RequestErrorBody } from '@logto/schemas';
 import { useCallback, useMemo } from 'react';
 
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
+import { parseGuard, registrationDeniedErrorDataGuard } from '@/types/guard';
 
 import { usePromiseConfirmModal } from './use-confirm-modal';
 import { type ErrorHandlers } from './use-error-handler';
@@ -11,13 +12,11 @@ export type Options = {
 };
 
 const getDeniedMessage = (data: unknown) => {
-  if (typeof data !== 'object' || data === null) {
-    return;
+  const message = parseGuard(data, registrationDeniedErrorDataGuard)?.message?.trim();
+
+  if (message) {
+    return message;
   }
-
-  const message: unknown = Reflect.get(data, 'message');
-
-  return typeof message === 'string' && message.length > 0 ? message : undefined;
 };
 
 /** Shows why a pre-register action declined the registration, preferring the script's message. */
