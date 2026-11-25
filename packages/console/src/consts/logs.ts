@@ -96,6 +96,7 @@ export const auditLogEventTitle = Object.freeze({
   'SamlApplication.Callback': 'Handle SAML application callback',
   'Action.PostFirstFactorVerification': 'Execute post first-factor verification action',
   'Action.PostSignIn': 'Execute post sign-in action',
+  'Action.PreRegister': 'Execute pre-register action',
   'TrustedDevice.Created': 'Create trusted device',
   'TrustedDevice.Used': 'Use trusted device',
 } satisfies Partial<Record<Exclude<AuditLogKey, interaction.DeprecatedInteractionLogKey>, string>>);
