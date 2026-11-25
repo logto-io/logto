@@ -12,37 +12,15 @@ import RequestError from '#src/errors/RequestError/index.js';
 import { buildSafeActionErrorSummary } from '#src/libraries/action-sanitization.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { koaQuotaGuard } from '#src/middleware/koa-quota-guard.js';
-import assertThat from '#src/utils/assert-that.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 import { actionQuotaKey } from '#src/utils/subscription/types.js';
 import { isRecord } from '#src/utils/type.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
-const actionConfigsGuard = z.object({
-  key: z.nativeEnum(LogtoActionKey),
-  value: logtoActionGuard,
-});
-
 // Pre-register action: unavailable until the feature is released.
 const isActionKeyAvailable = (key: LogtoActionKey) =>
   key !== LogtoActionKey.PreRegister || EnvSet.values.isDevFeaturesEnabled;
-
-/** Reject an action type that is not available, as if it did not exist. */
-const assertActionKeyExists = (key: LogtoActionKey) => {
-  assertThat(
-    isActionKeyAvailable(key),
-    new RequestError({ code: 'entity.not_exists_with_id', status: 404, name: 'action', id: key })
-  );
-};
-
-/** Reject an action type that is not available as invalid input. */
-const assertActionKeyAccepted = (key: LogtoActionKey) => {
-  assertThat(
-    isActionKeyAvailable(key),
-    new RequestError({ code: 'guard.invalid_input', status: 400, type: 'action type' })
-  );
-};
 
 const parseActionResponseError = async (error: ResponseError): Promise<unknown> => {
   try {
@@ -79,6 +57,16 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
   const { getRowsByKeys, deleteAction } = queries.logtoConfigs;
   const { upsertAction, getAction, getActions, updateAction } = logtoConfigs;
 
+  // Pre-register action: hide from public OpenAPI and reject at the guard until released.
+  const actionTypeGuard = EnvSet.values.isDevFeaturesEnabled
+    ? z.nativeEnum(LogtoActionKey)
+    : z.enum([LogtoActionKey.PostFirstFactorVerification, LogtoActionKey.PostSignIn]);
+
+  const actionConfigsGuard = z.object({
+    key: actionTypeGuard,
+    value: logtoActionGuard,
+  });
+
   router.get(
     '/configs/actions',
     koaGuard({
@@ -97,14 +85,13 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
   router.post(
     '/configs/actions/test',
     koaGuard({
-      body: actionExecutionRequestBodyGuard,
+      body: actionExecutionRequestBodyGuard.extend({ actionType: actionTypeGuard }),
       response: jsonGuard.optional(),
       status: [200, 204, 400, 403, 422],
     }),
     koaQuotaGuard({ key: actionQuotaKey, quota: libraries.quota }),
     async (ctx, next) => {
       const { body } = ctx.guard;
-      assertActionKeyAccepted(body.actionType);
 
       try {
         // Share the same Cloud/local execution selection as production `runAction()`, flagged as
@@ -167,7 +154,7 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
     '/configs/actions/:actionType',
     koaGuard({
       params: z.object({
-        actionType: z.nativeEnum(LogtoActionKey),
+        actionType: actionTypeGuard,
       }),
       response: logtoActionGuard,
       status: [200, 404],
@@ -176,7 +163,6 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
       const {
         params: { actionType },
       } = ctx.guard;
-      assertActionKeyExists(actionType);
 
       ctx.body = await getAction(actionType);
       return next();
@@ -187,7 +173,7 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
     '/configs/actions/:actionType',
     koaGuard({
       params: z.object({
-        actionType: z.nativeEnum(LogtoActionKey),
+        actionType: actionTypeGuard,
       }),
       body: logtoActionGuard,
       response: logtoActionGuard,
@@ -199,7 +185,6 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
         params: { actionType },
         body,
       } = ctx.guard;
-      assertActionKeyAccepted(actionType);
 
       const { rows } = await getRowsByKeys([actionType]);
       const action = await upsertAction(actionType, body);
@@ -217,7 +202,7 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
     '/configs/actions/:actionType',
     koaGuard({
       params: z.object({
-        actionType: z.nativeEnum(LogtoActionKey),
+        actionType: actionTypeGuard,
       }),
       body: logtoActionGuard.partial(),
       response: logtoActionGuard,
@@ -229,7 +214,6 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
         params: { actionType },
         body,
       } = ctx.guard;
-      assertActionKeyExists(actionType);
 
       ctx.body = await updateAction(actionType, body);
       return next();
@@ -240,7 +224,7 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
     '/configs/actions/:actionType',
     koaGuard({
       params: z.object({
-        actionType: z.nativeEnum(LogtoActionKey),
+        actionType: actionTypeGuard,
       }),
       status: [204, 404],
     }),
@@ -248,7 +232,6 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
       const {
         params: { actionType },
       } = ctx.guard;
-      assertActionKeyExists(actionType);
 
       await deleteAction(actionType);
       ctx.status = 204;
