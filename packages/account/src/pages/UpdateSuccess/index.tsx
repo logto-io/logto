@@ -21,7 +21,6 @@ type IdentifierType =
   | 'totp'
   | 'totp_replaced'
   | 'backup_code'
-  | 'backup_code_deleted'
   | 'passkey'
   | 'social';
 

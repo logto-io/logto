@@ -79,7 +79,6 @@ const mfa = {
   trust_this_device_other: 'Důvěřovat tomuto zařízení po dobu {{count}} dnů',
   secret_key_copied: 'Tajný klíč zkopírován.',
   backup_code_copied: 'Záložní kód zkopírován.',
-  webauthn_not_ready: 'WebAuthn ještě není připraven. Zkus to prosím později.',
   webauthn_not_supported: 'WebAuthn není v tomto prohlížeči podporován.',
   webauthn_failed_to_create: 'Nepodařilo se vytvořit. Zkus to prosím znovu.',
   webauthn_failed_to_verify: 'Nepodařilo se ověřit. Zkus to prosím znovu.',

@@ -67,7 +67,6 @@ const account_center = {
     passkeys_count_other: '{{count}} passkeys',
     backup_codes_count_one: '{{count}} code remaining',
     backup_codes_count_other: '{{count}} codes remaining',
-    view: 'View',
     manage: 'Manage',
     turn_on_2_step_verification_description:
       "Add an extra layer of security. You'll be prompted for a second verification step at sign-in.",

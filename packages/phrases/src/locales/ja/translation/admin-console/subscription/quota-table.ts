@@ -36,7 +36,6 @@ const quota_table = {
     social_connectors: 'ソーシャルコネクタ',
     standard_connectors: 'スタンダードコネクタ',
     built_in_email_connector: '組み込みE-mailコネクタ',
-    mfa: '多要素認証',
     sso: 'エンタープライズ SSO',
     impersonation: 'なりすまし',
   },

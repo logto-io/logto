@@ -36,7 +36,6 @@ const quota_table = {
     social_connectors: 'ตัวเชื่อมต่อโซเชียล',
     standard_connectors: 'ตัวเชื่อมต่อมาตรฐาน',
     built_in_email_connector: 'ตัวเชื่อมต่ออีเมลในตัว',
-    mfa: 'การยืนยันตัวตนหลายปัจจัย',
     sso: 'SSO สำหรับองค์กร',
     impersonation: 'การสวมรอย',
   },

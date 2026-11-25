@@ -217,8 +217,6 @@ const useStepUp = (): StepUpController => {
 export type StepUpEntryState = {
   /** Whether the page may render its form and run its Account API calls. */
   isReady: boolean;
-  /** Whether the local ID token is still being inspected. */
-  isChecking: boolean;
   /**
    * Whether a step-up just completed but the new context is still not fresh enough. Retrying
    * would loop through the authorization endpoint, so the page reports the failure instead.
@@ -243,9 +241,6 @@ type StepUpEntryOptions = {
  * Guard the entry of a standalone Account Center subpage. Sensitive multi-step flows must not let
  * the user fill a form, receive an OTP, scan a TOTP QR code, register a WebAuthn credential, or
  * finish an upstream OAuth only to have the final write rejected.
- *
- * A stale context renders through `isChecking` and starts a step-up whose `max_age` matches the
- * entry threshold.
  */
 export const useStepUpEntry = ({ enabled, skip = false }: StepUpEntryOptions): StepUpEntryState => {
   const { getIdTokenClaims } = useLogto();
@@ -253,7 +248,6 @@ export const useStepUpEntry = ({ enabled, skip = false }: StepUpEntryOptions): S
   const { startStepUp } = useStepUp();
   const [state, setState] = useState<StepUpEntryState>(() => ({
     isReady: skip,
-    isChecking: enabled && !skip,
     hasFailed: false,
     isResumed: false,
   }));
@@ -261,12 +255,12 @@ export const useStepUpEntry = ({ enabled, skip = false }: StepUpEntryOptions): S
 
   useEffect(() => {
     if (!enabled) {
-      setState({ isReady: false, isChecking: false, hasFailed: false, isResumed: false });
+      setState({ isReady: false, hasFailed: false, isResumed: false });
       return;
     }
 
     if (skip) {
-      setState({ isReady: true, isChecking: false, hasFailed: false, isResumed: false });
+      setState({ isReady: true, hasFailed: false, isResumed: false });
       return;
     }
 
@@ -280,8 +274,6 @@ export const useStepUpEntry = ({ enabled, skip = false }: StepUpEntryOptions): S
     let isCancelled = false;
 
     const check = async () => {
-      setState((current) => ({ ...current, isChecking: true }));
-
       // Consume an entry step-up on the page it restored, so a later subpage cannot mistake it
       // for a step-up of its own. It only matters when the new context is still not fresh.
       const justSteppedUp = Boolean(consumePendingStepUpAction(['enter-subpage']));
@@ -300,7 +292,6 @@ export const useStepUpEntry = ({ enabled, skip = false }: StepUpEntryOptions): S
         if (ready) {
           setState({
             isReady: true,
-            isChecking: false,
             hasFailed: false,
             isResumed: justSteppedUp,
           });
@@ -310,7 +301,7 @@ export const useStepUpEntry = ({ enabled, skip = false }: StepUpEntryOptions): S
         // A step-up that just completed on this route did not refresh the context far enough.
         // Starting another one would loop through the authorization endpoint.
         if (justSteppedUp) {
-          setState({ isReady: false, isChecking: false, hasFailed: true, isResumed: true });
+          setState({ isReady: false, hasFailed: true, isResumed: true });
           return;
         }
 
@@ -322,7 +313,6 @@ export const useStepUpEntry = ({ enabled, skip = false }: StepUpEntryOptions): S
         if (!isCancelled) {
           setState({
             isReady: false,
-            isChecking: false,
             hasFailed: true,
             isResumed: justSteppedUp,
           });
