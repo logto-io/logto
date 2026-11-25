@@ -112,6 +112,30 @@ describe('GroupCircuitBreakerTracker', () => {
     expect(tracker.getGroupConstraint(group, 31_500)).toBe('closed');
   });
 
+  it('treats retryAfterMs as a minimum on top of the probe backoff step', () => {
+    const tracker = new GroupCircuitBreakerTracker();
+    const fail = (id: string, now: number, retryAfterMs: number) =>
+      tracker.recordFailure({
+        job: makeJob(id),
+        threshold: 1,
+        backoffMs,
+        maxAgeMs,
+        retryAfterMs,
+        now,
+      });
+
+    // Opening: a zero delay cannot shorten step 1 (10 s).
+    expect(fail('job_1', 1000, 0)).toEqual({ shouldPark: true, nextAttemptAt: 11_000 });
+
+    // Probe failure: a short delay cannot shorten step 2 (20 s).
+    expect(tracker.tryAcquireProbe(makeJob('probe_1'), 11_000)).toBe('probe');
+    expect(fail('probe_1', 11_000, 1000)).toEqual({ shouldPark: true, nextAttemptAt: 31_000 });
+
+    // A delay longer than step 3 (40 s) still pushes the next probe out.
+    expect(tracker.tryAcquireProbe(makeJob('probe_2'), 31_000)).toBe('probe');
+    expect(fail('probe_2', 31_000, 300_000)).toEqual({ shouldPark: true, nextAttemptAt: 331_000 });
+  });
+
   it('unblocks probe slot via releaseProbe and prunes stale idle circuits past maxAgeMs', () => {
     const tracker = new GroupCircuitBreakerTracker();
 

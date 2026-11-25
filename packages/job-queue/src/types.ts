@@ -202,8 +202,9 @@ export type ParkDueGroupInput = {
   groupKey: string;
   nextAttemptAt: number;
   /**
-   * Earliest creation timestamp still in the retry window, or `0` if there is no cutoff. Mark
-   * older waiting rows as permanently failed instead of parking them. Do not touch live leases.
+   * Earliest creation timestamp whose retry window still covers `nextAttemptAt`, or `0` if there
+   * is no cutoff. Mark older waiting rows as permanently failed instead of parking them past
+   * their window. Do not touch live leases.
    * The adapter is responsible for any logs or metrics because bulk expiry skips `onExhausted`.
    */
   minCreatedAt: number;
