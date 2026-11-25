@@ -1,5 +1,5 @@
 import { MfaFactor } from '@logto/schemas';
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext } from 'react';
 
 import UserInteractionContext from '@/Providers/UserInteractionContextProvider/UserInteractionContext';
 import { sendMfaVerificationCode } from '@/apis/experience';
@@ -18,16 +18,11 @@ type Options = {
 };
 
 const useSendMfaVerificationCode = ({ replace, errorHandlers }: Options = {}) => {
-  const [errorMessage, setErrorMessage] = useState<string>();
   const navigate = useNavigateWithPreservedSearchParams();
 
   const handleError = useErrorHandler();
   const asyncSendVerificationCode = useApi(sendMfaVerificationCode);
   const { setVerificationId } = useContext(UserInteractionContext);
-
-  const clearErrorMessage = useCallback(() => {
-    setErrorMessage('');
-  }, []);
 
   const onSubmit = useCallback(
     async (identifier: VerificationCodeIdentifier, flowState: MfaFlowState) => {
@@ -53,8 +48,6 @@ const useSendMfaVerificationCode = ({ replace, errorHandlers }: Options = {}) =>
   );
 
   return {
-    errorMessage,
-    clearErrorMessage,
     onSubmit,
   };
 };

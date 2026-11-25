@@ -66,7 +66,6 @@ const account_center = {
     passkeys_count_other: '{{count}}개의 패스키',
     backup_codes_count_one: '{{count}}개의 코드',
     backup_codes_count_other: '{{count}}개의 코드',
-    view: '보기',
     manage: '관리',
     turn_on_2_step_verification_description:
       '추가 보안 계층을 추가합니다. 로그인 시 두 번째 인증 단계가 요청됩니다.',

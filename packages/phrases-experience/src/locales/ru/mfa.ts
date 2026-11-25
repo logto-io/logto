@@ -79,7 +79,6 @@ const mfa = {
   trust_this_device_other: 'Доверять этому устройству в течение {{count}} дня',
   secret_key_copied: 'Ключ скопирован.',
   backup_code_copied: 'Резервный код скопирован.',
-  webauthn_not_ready: 'WebAuthn еще не готов. Пожалуйста, попробуйте позже.',
   webauthn_not_supported: 'WebAuthn не поддерживается в этом браузере.',
   webauthn_failed_to_create: 'Не удалось создать. Пожалуйста, попробуйте еще раз.',
   webauthn_failed_to_verify: 'Не удалось проверить. Пожалуйста, попробуйте еще раз.',

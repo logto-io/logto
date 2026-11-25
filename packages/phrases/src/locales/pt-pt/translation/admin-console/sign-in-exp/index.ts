@@ -195,8 +195,6 @@ const sign_in_exp = {
       social: 'Identidades sociais',
       password: 'Palavra-passe',
       mfa: 'Autenticação multifator',
-      mfa_description:
-        'Permita que os utilizadores gerem os métodos MFA a partir do centro de conta.',
       passkey: 'Passkey',
       username: 'Nome de utilizador',
       name: 'Nome',

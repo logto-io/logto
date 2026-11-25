@@ -90,7 +90,6 @@ describe('<BackupCodeView /> OIDC step-up', () => {
     mockSignIn.mockResolvedValue(undefined);
     mockUseStepUpEntry.mockReturnValue({
       isReady: true,
-      isChecking: false,
       hasFailed: false,
       isResumed: true,
       verificationId: undefined,
