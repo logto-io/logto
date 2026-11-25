@@ -1672,7 +1672,6 @@ describeWithDatabase('job queue queries on Postgres', () => {
             new WellKnownCache(tenantId, new TtlCache())
           );
           const library = createHookLibrary(tenantQueries, {
-            tenantId,
             jobQueue: queue,
             waitingRowCaps: { perHook: 2, perTenant: 3 },
           });

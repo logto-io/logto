@@ -7,7 +7,7 @@ const defaultMaxCachedGroups = 50_000;
 export type WaitingRowCapScope = 'group' | 'tenant';
 
 export type WaitingRowReservation =
-  | { allowed: true; rollback: () => void }
+  | { allowed: true }
   | { allowed: false; scope: WaitingRowCapScope };
 
 export type WaitingRowCapCheckInput = {
@@ -59,7 +59,7 @@ export class WaitingRowCapCache {
 
   /**
    * Check per-group and per-tenant waiting-row caps and reserve one slot in the local cache if
-   * both are below their limits. Callers must invoke `rollback()` if the subsequent DB insert fails.
+   * both are below their limits.
    */
   async tryReserve({
     tenantId,
@@ -70,14 +70,6 @@ export class WaitingRowCapCache {
     countByGroup,
     countByType,
   }: WaitingRowCapCheckInput): Promise<WaitingRowReservation> {
-    if (maxWaitingRowsPerTenant <= 0) {
-      return { allowed: false, scope: 'tenant' };
-    }
-
-    if (maxWaitingRowsPerGroup <= 0) {
-      return { allowed: false, scope: 'group' };
-    }
-
     const tenantCacheKey = JSON.stringify([tenantId, type]);
     const groupCacheKey = JSON.stringify([tenantId, type, groupKey]);
 
@@ -132,8 +124,8 @@ export class WaitingRowCapCache {
     maxWaitingRowsPerGroup: number;
     maxWaitingRowsPerTenant: number;
   }): WaitingRowReservation {
-    // Re-read synchronously after all awaits so concurrent reservations in the same process never
-    // overshoot a cap.
+    // Re-read synchronously after all awaits so reservations that share a cache entry see each
+    // other's increments.
     const currentGroup = this.getFresh(this.#groupCounts, groupCacheKey) ?? fallbackGroupEntry;
     if (currentGroup.count >= maxWaitingRowsPerGroup) {
       return { allowed: false, scope: 'group' };
@@ -162,19 +154,7 @@ export class WaitingRowCapCache {
       this.#tenantCounts.set(tenantCacheKey, nextTenantEntry);
     }
 
-    const pendingRollback = new Set([0]);
-
-    return {
-      allowed: true,
-      rollback: () => {
-        if (!pendingRollback.delete(0)) {
-          return;
-        }
-
-        this.decrementEntry(this.#groupCounts, groupCacheKey, nextGroupEntry.expiresAt);
-        this.decrementEntry(this.#tenantCounts, tenantCacheKey, nextTenantEntry.expiresAt);
-      },
-    };
+    return { allowed: true };
   }
 
   private getFresh(cache: LRUCache<string, CacheEntry>, key: string): CacheEntry | undefined {
@@ -233,20 +213,5 @@ export class WaitingRowCapCache {
 
     inFlight.set(key, loadPromise);
     return loadPromise;
-  }
-
-  private decrementEntry(
-    cache: LRUCache<string, CacheEntry>,
-    key: string,
-    expectedExpiresAt: number
-  ): void {
-    const current = this.getFresh(cache, key);
-
-    if (current && current.expiresAt === expectedExpiresAt && current.count > 0) {
-      cache.set(key, {
-        count: current.count - 1,
-        expiresAt: current.expiresAt,
-      });
-    }
   }
 }

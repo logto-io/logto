@@ -22,12 +22,8 @@ export const createJobQueries = (pool: CommonQueryMethods) => {
    * Count active jobs of the given `type` for the current tenant, bounded at `limit` via an
    * index-only scan on `jobs__type_group_key` (with the tenant predicate enforced by RLS).
    */
-  const countJobsByType = async (type: string, limit: number): Promise<number> => {
-    if (limit <= 0) {
-      return 0;
-    }
-
-    return pool.oneFirst<number>(sql`
+  const countJobsByType = async (type: string, limit: number): Promise<number> =>
+    pool.oneFirst<number>(sql`
       select count(*)::int4
       from (
         select 1
@@ -36,22 +32,13 @@ export const createJobQueries = (pool: CommonQueryMethods) => {
         limit ${limit}
       ) as bounded
     `);
-  };
 
   /**
    * Count active jobs for the given `(type, groupKey)` in the current tenant, bounded at `limit`
    * via an index-only scan on `jobs__type_group_key` (with the tenant predicate enforced by RLS).
    */
-  const countJobsByGroup = async (
-    type: string,
-    groupKey: string,
-    limit: number
-  ): Promise<number> => {
-    if (limit <= 0) {
-      return 0;
-    }
-
-    return pool.oneFirst<number>(sql`
+  const countJobsByGroup = async (type: string, groupKey: string, limit: number): Promise<number> =>
+    pool.oneFirst<number>(sql`
       select count(*)::int4
       from (
         select 1
@@ -61,7 +48,6 @@ export const createJobQueries = (pool: CommonQueryMethods) => {
         limit ${limit}
       ) as bounded
     `);
-  };
 
   return { enqueueJob, countJobsByType, countJobsByGroup };
 };

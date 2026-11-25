@@ -81,7 +81,6 @@ describe('createHookLibrary waiting-row caps', () => {
     return {
       queue,
       library: createHookLibrary(queries, {
-        tenantId: 'tenant-1',
         jobQueue: queue,
         waitingRowCaps,
       }),
@@ -237,36 +236,6 @@ describe('createHookLibrary waiting-row caps', () => {
     expect(trackMetric).toHaveBeenCalledWith({
       name: jobQueueMetricNames.droppedAtGroupCap,
       value: 1,
-    });
-  });
-
-  it('rolls back cached counts when enqueueJob fails so subsequent triggers are not falsely capped', async () => {
-    findAllHooks.mockResolvedValue([makeHook('hook-1', ['Role.Created'])]);
-    countJobsByGroup.mockResolvedValueOnce(1);
-    countJobsByType.mockResolvedValueOnce(1);
-    enqueueJob.mockRejectedValueOnce(new Error('db write error'));
-
-    const { queue, library } = setup({
-      waitingRowCaps: { perHook: 2, perTenant: 10 },
-    });
-    const dataContext = new HookContextManager({ ip: '1.2.3.4' });
-    dataContext.appendDataHookContext('Role.Created', { data: { id: 'role-1' } });
-
-    await library.triggerDataHooks(new ConsoleLog(), dataContext);
-    // Second trigger within TTL still succeeds because the failed insert rolled back its reservation.
-    await library.triggerDataHooks(new ConsoleLog(), dataContext);
-
-    expect(enqueueJob).toHaveBeenCalledTimes(2);
-    expect(insertLog).not.toHaveBeenCalled();
-
-    await queue.reportMetrics(async () => ({ depth: 0, oldestWaitingAgeMs: 0 }));
-    expect(trackMetric).toHaveBeenCalledWith({
-      name: jobQueueMetricNames.failedEnqueues,
-      value: 1,
-    });
-    expect(trackMetric).toHaveBeenCalledWith({
-      name: jobQueueMetricNames.droppedAtGroupCap,
-      value: 0,
     });
   });
 });

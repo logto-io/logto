@@ -27,7 +27,6 @@ import { createWebhookDispatcher, type TenantRequestSlot } from './delivery.js';
 import { generateHookTestPayload, sendWebhookRequest } from './utils.js';
 
 type CreateHookLibraryOptions = {
-  tenantId?: string;
   requestSlot?: TenantRequestSlot;
   jobQueue?: CoreJobQueue;
   waitingRowCaps?: {
@@ -52,7 +51,6 @@ export const createHookLibrary = (queries: Queries, options?: CreateHookLibraryO
     countJobsByGroup,
     countJobsByType,
     queue: options?.jobQueue ?? jobQueue,
-    tenantId: options?.tenantId,
     requestSlot: options?.requestSlot,
     waitingRowCaps: options?.waitingRowCaps,
   });
