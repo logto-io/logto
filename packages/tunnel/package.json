@@ -58,7 +58,7 @@
   "devDependencies": {
     "@silverhand/eslint-config": "^6.1.0",
     "@silverhand/ts-config": "^6.1.0",
-    "@types/adm-zip": "^0.5.5",
+    "@types/adm-zip": "^0.6.0",
     "@types/node": "^26.0.0",
     "@types/yargs": "^17.0.13",
     "@vitest/coverage-v8": "^4.1.12",
