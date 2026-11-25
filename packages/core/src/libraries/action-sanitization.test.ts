@@ -90,6 +90,65 @@ describe('toLoggableActionEvent', () => {
     }
   });
 
+  it('keeps only allowlisted fields from pre-register events', () => {
+    const event = toLoggableActionEvent(LogtoActionKey.PreRegister, {
+      key: LogtoActionKey.PreRegister,
+      interactionEvent: InteractionEvent.Register,
+      verificationTypes: [VerificationType.EmailVerificationCode],
+      applicationId: 'app_id',
+      user: {
+        username: 'new_user',
+        primaryEmail: 'new_user@example.com',
+        primaryPhone: '+1234567890',
+        name: 'Private Display Name',
+        avatar: 'https://example.com/private-avatar.png',
+        profile: { familyName: 'PrivateFamily' },
+        customData: { secretNote: 'private-custom-data' },
+        socialIdentity: {
+          target: 'google',
+          userInfo: { id: 'social_user_id', email: 'social@example.com' },
+        },
+        ssoIdentity: {
+          issuer: 'https://sso.example.com',
+          identityId: 'sso_identity_id',
+          detail: { secret: 'sso-detail' },
+        },
+      },
+      request: {
+        ip: '203.0.113.1',
+        userAgent: 'PrivateAgent/1.0',
+      },
+    });
+
+    expect(event).toEqual({
+      key: LogtoActionKey.PreRegister,
+      interactionEvent: InteractionEvent.Register,
+      verificationTypes: [VerificationType.EmailVerificationCode],
+      applicationId: 'app_id',
+      user: {
+        username: 'new_user',
+        primaryEmail: 'new_user@example.com',
+        primaryPhone: '+1234567890',
+      },
+    });
+
+    const serialized = JSON.stringify(event);
+    for (const leaked of [
+      'Private Display Name',
+      'private-avatar.png',
+      'PrivateFamily',
+      'private-custom-data',
+      'social_user_id',
+      'sso.example.com',
+      'sso_identity_id',
+      'sso-detail',
+      '203.0.113.1',
+      'PrivateAgent/1.0',
+    ]) {
+      expect(serialized).not.toContain(leaked);
+    }
+  });
+
   it('degrades to the action key when the event shape does not match', () => {
     expect(
       toLoggableActionEvent(LogtoActionKey.PostSignIn, { unexpected: 'private value' })

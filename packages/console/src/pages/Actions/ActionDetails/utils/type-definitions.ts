@@ -116,6 +116,9 @@ declare ${postFirstFactorVerificationEventTypeDefinition}`;
 
 declare ${postSignInEventTypeDefinition}`;
     }
+    case LogtoActionKey.PreRegister: {
+      throw new TypeError('Pre-register action is not configured in Console yet.');
+    }
   }
 };
 
@@ -130,6 +133,9 @@ declare ${postFirstFactorVerificationResultTypeDefinition}`;
       return `declare ${actionUserPatchTypeDefinition}
 
 declare ${postSignInResultTypeDefinition}`;
+    }
+    case LogtoActionKey.PreRegister: {
+      throw new TypeError('Pre-register action is not configured in Console yet.');
     }
   }
 };

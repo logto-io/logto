@@ -5,6 +5,7 @@ import {
   LogtoActionKey,
   postFirstFactorVerificationResultGuard,
   postSignInResultGuard,
+  preRegisterResultGuard,
 } from '@logto/schemas';
 import { isPlainObject, trySafe } from '@silverhand/essentials';
 
@@ -25,7 +26,7 @@ export const actionMetricNames = Object.freeze({
 export type ActionRuntimeLocation = 'local' | 'azure' | 'cloud';
 
 type ActionExecutionOutcome = 'success' | 'executionError' | 'invalidResult' | 'noop' | 'fallback';
-type ActionExecutionAction = 'createUser' | 'updateUser' | 'noop';
+type ActionExecutionAction = 'createUser' | 'updateUser' | 'allow' | 'deny' | 'noop';
 
 export type ActionTelemetryProperties = {
   actionType: keyof typeof LogtoActionKey;
@@ -44,6 +45,7 @@ type ActionResultTelemetryData = {
 const actionTypeNames = Object.freeze({
   [LogtoActionKey.PostFirstFactorVerification]: 'PostFirstFactorVerification',
   [LogtoActionKey.PostSignIn]: 'PostSignIn',
+  [LogtoActionKey.PreRegister]: 'PreRegister',
 } satisfies Record<LogtoActionKey, ActionTelemetryProperties['actionType']>);
 
 const strictActionUserPatchGuard = actionUserPatchGuard.strict();
@@ -176,6 +178,33 @@ const getPostSignInResultTelemetry = (
   );
 };
 
+const getPreRegisterResultTelemetry = (
+  result: unknown,
+  runtimeLocation: ActionRuntimeLocation
+): ActionTelemetryProperties => {
+  if (result === null || result === undefined || isEmptyRecord(result)) {
+    return buildTelemetryProperties(LogtoActionKey.PreRegister, runtimeLocation, 'noop', 'noop');
+  }
+
+  const parsed = preRegisterResultGuard.safeParse(result);
+
+  if (!parsed.success) {
+    return buildTelemetryProperties(
+      LogtoActionKey.PreRegister,
+      runtimeLocation,
+      'invalidResult',
+      'noop'
+    );
+  }
+
+  return buildTelemetryProperties(
+    LogtoActionKey.PreRegister,
+    runtimeLocation,
+    'success',
+    parsed.data.action
+  );
+};
+
 export const getActionResultTelemetryProperties = ({
   key,
   event,
@@ -189,6 +218,9 @@ export const getActionResultTelemetryProperties = ({
       }
       case LogtoActionKey.PostSignIn: {
         return getPostSignInResultTelemetry(result, runtimeLocation);
+      }
+      case LogtoActionKey.PreRegister: {
+        return getPreRegisterResultTelemetry(result, runtimeLocation);
       }
     }
   } catch {
