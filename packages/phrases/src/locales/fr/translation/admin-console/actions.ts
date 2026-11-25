@@ -20,6 +20,11 @@ const actions = {
       description:
         'Exécutez une logique personnalisée après la connexion réussie d’un utilisateur.',
     },
+    pre_register: {
+      name: 'Avant l’inscription',
+      description:
+        'Exécutez une logique personnalisée avant la création d’un nouvel utilisateur et refusez l’inscription si nécessaire.',
+    },
   },
   data_source_tab: 'Source de données',
   test_tab: 'Contexte de test',

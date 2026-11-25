@@ -20,6 +20,11 @@ const actions = {
       description:
         'Ejecuta lógica personalizada después de que un usuario inicie sesión correctamente.',
     },
+    pre_register: {
+      name: 'Antes del registro',
+      description:
+        'Ejecuta lógica personalizada antes de crear un nuevo usuario y rechaza el registro si es necesario.',
+    },
   },
   data_source_tab: 'Fuente de datos',
   test_tab: 'Contexto de prueba',

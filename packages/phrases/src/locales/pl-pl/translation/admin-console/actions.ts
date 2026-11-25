@@ -19,6 +19,11 @@ const actions = {
       name: 'Po zalogowaniu',
       description: 'Uruchom niestandardową logikę po pomyślnym zalogowaniu się użytkownika.',
     },
+    pre_register: {
+      name: 'Przed rejestracją',
+      description:
+        'Uruchom niestandardową logikę przed utworzeniem nowego użytkownika i w razie potrzeby odrzuć rejestrację.',
+    },
   },
   data_source_tab: 'Źródło danych',
   test_tab: 'Kontekst testowy',

@@ -20,6 +20,11 @@ const actions = {
       description:
         'Führe benutzerdefinierte Logik aus, nachdem sich ein Benutzer erfolgreich angemeldet hat.',
     },
+    pre_register: {
+      name: 'Vor der Registrierung',
+      description:
+        'Führe benutzerdefinierte Logik aus, bevor ein neuer Benutzer erstellt wird, und lehne die Registrierung bei Bedarf ab.',
+    },
   },
   data_source_tab: 'Datenquelle',
   test_tab: 'Testkontext',
