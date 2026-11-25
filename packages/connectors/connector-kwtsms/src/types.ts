@@ -1,0 +1,65 @@
+import { z } from 'zod';
+
+import { templateTypeGuard, TemplateType } from '@logto/connector-kit';
+
+/**
+ * @doc https://www.kwtsms.com/api-documentation.html
+ */
+
+export type PublicParameters = {
+  username: string;
+  password: string;
+  sender: string;
+  mobile: string;
+  message: string;
+  /** "1" queues the message without delivering it, "0" sends it for real. */
+  test: '0' | '1';
+};
+
+/** Success body of POST /API/send/. */
+export const kwtSmsSuccessGuard = z.object({ result: z.literal('OK') }).passthrough();
+
+/** Error body of POST /API/send/ (HTTP 4XX, `result` is "ERROR"). */
+export const kwtSmsErrorGuard = z.object({
+  result: z.literal('ERROR'),
+  code: z.string(),
+  description: z.string().optional(),
+});
+
+/**
+ * UsageType here is used to specify the use case of the template, can be either
+ * 'Register', 'SignIn', 'ForgotPassword', 'Generic' or 'Test'.
+ */
+const requiredTemplateUsageTypes: TemplateType[] = [
+  TemplateType.Register,
+  TemplateType.SignIn,
+  TemplateType.ForgotPassword,
+  TemplateType.Generic,
+];
+
+const templateGuard = z.object({
+  usageType: templateTypeGuard,
+  content: z.string().min(1),
+});
+
+export const kwtSmsConfigGuard = z.object({
+  username: z.string().min(1),
+  password: z.string().min(1),
+  senderId: z.string().min(1).default('KWT-SMS'),
+  testMode: z.boolean().default(false),
+  templates: z.array(templateGuard).refine(
+    (templates) =>
+      requiredTemplateUsageTypes.every((requiredType) =>
+        templates.map((template) => template.usageType).includes(requiredType)
+      ),
+    (templates) => ({
+      message: `Template with UsageType (${requiredTemplateUsageTypes
+        .filter(
+          (requiredType) => !templates.map((template) => template.usageType).includes(requiredType)
+        )
+        .join(', ')}) should be provided!`,
+    })
+  ),
+});
+
+export type KwtSmsConfig = z.infer<typeof kwtSmsConfigGuard>;
