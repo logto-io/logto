@@ -1,6 +1,8 @@
 import type { AuditLogKey, LogKey, interaction } from '@logto/schemas';
 import { type Optional } from '@silverhand/essentials';
 
+import { isDevFeaturesEnabled } from './env';
+
 export const auditLogEventTitle = Object.freeze({
   'ExchangeTokenBy.AuthorizationCode': 'Exchange token by Code',
   'ExchangeTokenBy.ClientCredentials': 'Exchange token by Client Credentials',
@@ -96,6 +98,8 @@ export const auditLogEventTitle = Object.freeze({
   'SamlApplication.Callback': 'Handle SAML application callback',
   'Action.PostFirstFactorVerification': 'Execute post first-factor verification action',
   'Action.PostSignIn': 'Execute post sign-in action',
+  // Pre-register action: hide from Audit Logs filter until the feature is released.
+  ...(isDevFeaturesEnabled ? { 'Action.PreRegister': 'Execute pre-register action' } : {}),
   'TrustedDevice.Created': 'Create trusted device',
   'TrustedDevice.Used': 'Use trusted device',
 } satisfies Partial<Record<Exclude<AuditLogKey, interaction.DeprecatedInteractionLogKey>, string>>);

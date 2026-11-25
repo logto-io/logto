@@ -1,6 +1,8 @@
 import { type AdminConsoleKey } from '@logto/phrases';
 import { LogtoActionKey } from '@logto/schemas';
 
+import { isDevFeaturesEnabled } from '@/consts/env';
+
 export type ActionCatalogItem = {
   actionType: LogtoActionKey;
   name: AdminConsoleKey;
@@ -18,4 +20,14 @@ export const actionCatalog: readonly ActionCatalogItem[] = Object.freeze([
     name: 'actions.types.post_sign_in.name',
     description: 'actions.types.post_sign_in.description',
   },
+  // Pre-register action
+  ...(isDevFeaturesEnabled
+    ? [
+        {
+          actionType: LogtoActionKey.PreRegister,
+          name: 'actions.types.pre_register.name',
+          description: 'actions.types.pre_register.description',
+        } satisfies ActionCatalogItem,
+      ]
+    : []),
 ]);
