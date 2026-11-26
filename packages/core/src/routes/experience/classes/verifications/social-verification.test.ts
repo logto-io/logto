@@ -316,6 +316,49 @@ describe('SocialVerification', () => {
       expect(isExternalGoogleOneTapChecker).toHaveBeenCalledWith(connectorData);
     });
 
+    it.each([
+      ['of a different length', 'matching'],
+      ['of the same length but a different value', 'matching_tokeX'],
+    ])(
+      'should reject a CSRF token %s than the cookie for regular Google One Tap',
+      async (_, csrfToken) => {
+        const verification = new SocialVerification(tenant.libraries, tenant.queries, {
+          id: 'test-id',
+          connectorId: 'google',
+          type: VerificationType.Social,
+          connectorSession: { state: 'test-state' },
+        } as SocialVerificationRecordData);
+
+        getConnector.mockResolvedValueOnce({
+          ...mockConnector,
+          type: ConnectorType.Social,
+          metadata: { ...mockConnector.metadata, id: GoogleConnector.factoryId, target: 'google' },
+        });
+
+        isExternalGoogleOneTapChecker.mockReturnValueOnce(false);
+
+        // @ts-expect-error test mock context
+        const ctx: WithLogContext = {
+          ...createMockContext(),
+          ...createMockLogContext(),
+          cookies: {
+            get: jest.fn().mockReturnValue('matching_token'),
+            set: jest.fn(),
+          } as unknown as Cookies,
+        };
+
+        const connectorData = {
+          [GoogleConnector.oneTapParams.credential]: 'credential',
+          [GoogleConnector.oneTapParams.csrfToken]: csrfToken,
+        };
+
+        await expect(
+          // @ts-expect-error test mock tenant context
+          verification.verify(ctx, tenantContext, connectorData, 'verificationRecord')
+        ).rejects.toThrow(RequestError);
+      }
+    );
+
     it('should work with matching CSRF token for regular Google One Tap', async () => {
       const verification = new SocialVerification(tenant.libraries, tenant.queries, {
         id: 'test-id',

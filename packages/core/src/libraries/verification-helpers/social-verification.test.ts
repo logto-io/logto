@@ -115,6 +115,34 @@ describe('verifySocialIdentity', () => {
     ).rejects.toThrow('CSRF token mismatch.');
   });
 
+  it.each([
+    ['of a different length', 'tok'],
+    ['of the same length but a different value', 'tokex'],
+  ])('should throw error if the csrf token is %s than the cookie', async (_, csrfToken) => {
+    const ctx: WithLogContext = {
+      ...createMockContext(),
+      ...createMockLogContext(),
+      // @ts-expect-error test mock context
+      cookies: { get: jest.fn().mockReturnValue('token') },
+    };
+
+    getConnector.mockResolvedValueOnce({
+      ...mockConnector,
+      metadata: {
+        ...mockConnector.metadata,
+        id: GoogleConnector.factoryId,
+      },
+    });
+    const connectorData = {
+      [GoogleConnector.oneTapParams.credential]: 'credential',
+      [GoogleConnector.oneTapParams.csrfToken]: csrfToken,
+    };
+
+    await expect(
+      verifySocialIdentity({ connectorId: 'google', connectorData }, ctx, tenant)
+    ).rejects.toThrow('CSRF token mismatch.');
+  });
+
   it('should verify Google One Tap verification', async () => {
     const ctx: WithLogContext = {
       ...createMockContext(),

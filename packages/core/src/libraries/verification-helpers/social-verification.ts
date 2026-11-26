@@ -15,6 +15,7 @@ import { z } from 'zod';
 import type { WithLogContext } from '#src/middleware/koa-audit-log.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
+import { safeCompare } from '#src/utils/safe-compare.js';
 
 import { assertTrustedSiweRedirectUri } from './siwe.js';
 
@@ -93,7 +94,7 @@ export const verifySocialIdentity = async (
     } else {
       const csrfToken = connectorData[GoogleConnector.oneTapParams.csrfToken];
       const value = ctx.cookies.get(GoogleConnector.oneTapParams.csrfToken);
-      assertThat(value === csrfToken, 'session.csrf_token_mismatch');
+      assertThat(safeCompare(value, csrfToken), 'session.csrf_token_mismatch');
     }
   }
 
