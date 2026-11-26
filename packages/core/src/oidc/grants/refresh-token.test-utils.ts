@@ -29,9 +29,11 @@ export const mockHandler = (tenant = new MockTenant()) => {
  * `mockUser`, with no stored MFA verification.
  */
 export const stubOrganizationMfa = (tenant: MockTenant, factors?: MfaFactor[]) => {
+  /* eslint-disable no-restricted-syntax -- partial Organization stub scoped to isMfaRequired */
   Sinon.stub(tenant.queries.organizations, 'findById').resolves({
     isMfaRequired: Boolean(factors),
   } as Organization);
+  /* eslint-enable no-restricted-syntax */
 
   if (factors) {
     Sinon.stub(tenant.queries.signInExperiences, 'findDefaultSignInExperience').resolves({
@@ -64,12 +66,14 @@ type RefreshToken = InstanceType<KoaContextWithOIDC['oidc']['provider']['Refresh
 export type Grant = InstanceType<KoaContextWithOIDC['oidc']['provider']['Grant']>;
 export type Client = InstanceType<KoaContextWithOIDC['oidc']['provider']['Client']>;
 
+/* eslint-disable no-restricted-syntax -- partial oidc-provider Client stub for unit tests */
 export const validClient: Client = {
   clientId,
   grantTypeAllowed: jest.fn().mockResolvedValue(true),
   clientAuthMethod: 'none',
   metadata: jest.fn(() => ({ client_id: clientId, appLevelAccessControlEnabled: false })),
 } as unknown as Client;
+/* eslint-enable no-restricted-syntax */
 
 export const validRefreshToken: RefreshToken = {
   kind: 'RefreshToken',
