@@ -7,6 +7,7 @@ import {
   defaultTenantId,
   adminTenantId,
   defaultManagementApi,
+  materializeManagementApiScopes,
   createAdminDataInAdminTenant,
   createMeApiInAdminTenant,
   createDefaultSignInExperience,
@@ -157,7 +158,14 @@ export const seedTables = async (
 ) => {
   await createTenant(connection, defaultTenantId);
   await seedOidcConfigs(connection, defaultTenantId);
-  await seedAdminData(connection, defaultManagementApi);
+  await seedAdminData(
+    connection,
+    defaultManagementApi,
+    ...materializeManagementApiScopes(
+      defaultManagementApi.resource.tenantId,
+      defaultManagementApi.resource.id
+    )
+  );
 
   /**
    * Create a pre-configured role for the Logto Management API access
