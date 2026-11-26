@@ -1,8 +1,11 @@
-import { type GeneratedSchema } from '@logto/schemas';
+import { ManagementApiScope, type GeneratedSchema } from '@logto/schemas';
 import type { Middleware } from 'koa';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
+import { isGuardMiddleware } from '#src/middleware/koa-guard.js';
+import { isManagementApiPermissionMiddleware } from '#src/middleware/koa-management-api-permission.js';
+import { isPaginationMiddleware } from '#src/middleware/koa-pagination.js';
 
 import SchemaQueries from './SchemaQueries.js';
 import SchemaRouter from './SchemaRouter.js';
@@ -287,6 +290,57 @@ describe('SchemaRouter', () => {
 
       await errorHandlerRequest.get(`${baseRoute}/foo`);
       expect(errorHandler).toHaveBeenCalled();
+    });
+  });
+
+  describe('permissions', () => {
+    it('places koaManagementApiPermission before koaPagination and koaGuard on declared routes only', () => {
+      const permissionRouter = new SchemaRouter(schema, queries, {
+        permissions: {
+          get: ManagementApiScope.ReadOrganizations,
+          post: ManagementApiScope.CreateOrganizations,
+        },
+      });
+
+      const getLayer = permissionRouter.stack.find(
+        (layer) => layer.path === baseRoute && layer.methods.includes('GET')
+      );
+      const postLayer = permissionRouter.stack.find(
+        (layer) => layer.path === baseRoute && layer.methods.includes('POST')
+      );
+      const deleteLayer = permissionRouter.stack.find(
+        (layer) => layer.path === `${baseRoute}/:id` && layer.methods.includes('DELETE')
+      );
+
+      expect(getLayer).toBeDefined();
+      expect(postLayer).toBeDefined();
+      expect(deleteLayer).toBeDefined();
+
+      // GET has permission before pagination and guard
+      const getPermIndex =
+        getLayer?.stack.findIndex((function_) => isManagementApiPermissionMiddleware(function_)) ??
+        -1;
+      const getPaginationIndex =
+        getLayer?.stack.findIndex((function_) => isPaginationMiddleware(function_)) ?? -1;
+      const getGuardIndex =
+        getLayer?.stack.findIndex((function_) => isGuardMiddleware(function_)) ?? -1;
+      expect(getPermIndex).toBe(0);
+      expect(getPermIndex).toBeLessThan(getPaginationIndex);
+      expect(getPermIndex).toBeLessThan(getGuardIndex);
+
+      // POST has permission before guard
+      const postPermIndex =
+        postLayer?.stack.findIndex((function_) => isManagementApiPermissionMiddleware(function_)) ??
+        -1;
+      const postGuardIndex =
+        postLayer?.stack.findIndex((function_) => isGuardMiddleware(function_)) ?? -1;
+      expect(postPermIndex).toBe(0);
+      expect(postPermIndex).toBeLessThan(postGuardIndex);
+
+      // Omitted DELETE has no permission middleware (falls back to default-all on managementRouter)
+      expect(
+        deleteLayer?.stack.some((function_) => isManagementApiPermissionMiddleware(function_))
+      ).toBe(false);
     });
   });
 });
