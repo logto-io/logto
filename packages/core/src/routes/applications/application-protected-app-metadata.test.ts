@@ -37,6 +37,7 @@ const syncAppCustomDomainStatus = jest.fn(async () => ({
 const syncAppConfigsToRemote = jest.fn();
 const deleteDomainFromRemote = jest.fn();
 const deleteRemoteAppConfigs = jest.fn();
+const validateProtectedApplicationById = jest.fn();
 
 await mockIdGenerators();
 
@@ -57,7 +58,7 @@ const tenantContext = new MockTenant(
       deleteDomainFromRemote,
       deleteRemoteAppConfigs,
     },
-    applications: { validateProtectedApplicationById: jest.fn() },
+    applications: { validateProtectedApplicationById },
   }
 );
 
@@ -73,6 +74,7 @@ describe('application protected app metadata routes', () => {
     syncAppConfigsToRemote.mockClear();
     deleteDomainFromRemote.mockClear();
     deleteRemoteAppConfigs.mockClear();
+    validateProtectedApplicationById.mockClear();
   });
 
   const requester = createRequester({
@@ -87,10 +89,19 @@ describe('application protected app metadata routes', () => {
       );
       expect(response.status).toEqual(200);
       expect(response.body).toEqual([mockDomainResponse]);
+      expect(validateProtectedApplicationById).toHaveBeenCalledWith(mockProtectedApplication.id);
     });
   });
 
   describe('POST /applications/:applicationId/protected-app-metadata/custom-domains', () => {
+    it('should reject invalid body before validating application', async () => {
+      const response = await requester
+        .post(`/applications/${mockProtectedApplication.id}/protected-app-metadata/custom-domains`)
+        .send({});
+      expect(response.status).toEqual(400);
+      expect(validateProtectedApplicationById).not.toHaveBeenCalled();
+    });
+
     it('should return 201 and update OIDC metadata and sync site configs', async () => {
       const response = await requester
         .post(`/applications/${mockProtectedApplication.id}/protected-app-metadata/custom-domains`)

@@ -32,15 +32,6 @@ export default function applicationProtectedAppMetadataRoutes<T extends Manageme
   const pathname = '/applications/:id/protected-app-metadata';
   const customDomainsPathname = `${pathname}/custom-domains`;
 
-  // Guard application exists and is a protected app
-  router.use(pathname, koaGuard({ params: z.object(params) }), async (ctx, next) => {
-    const { id } = ctx.guard.params;
-
-    await validateProtectedApplicationById(id);
-
-    return next();
-  });
-
   router.get(
     customDomainsPathname,
     koaGuard({
@@ -50,6 +41,8 @@ export default function applicationProtectedAppMetadataRoutes<T extends Manageme
     }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
+
+      await validateProtectedApplicationById(id);
 
       const {
         protectedAppMetadata: { customDomains },
@@ -69,6 +62,9 @@ export default function applicationProtectedAppMetadataRoutes<T extends Manageme
     }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;
+
+      await validateProtectedApplicationById(id);
+
       // Hostnames are case-insensitive. Store in lowercase so the site config key and the
       // redirect URIs match the request host the worker sees.
       const domain = ctx.guard.body.domain.toLowerCase();
@@ -123,6 +119,8 @@ export default function applicationProtectedAppMetadataRoutes<T extends Manageme
     }),
     async (ctx, next) => {
       const { id, domain: rawDomain } = ctx.guard.params;
+
+      await validateProtectedApplicationById(id);
 
       const { protectedAppMetadata, oidcClientMetadata } = await findApplicationById(id);
 

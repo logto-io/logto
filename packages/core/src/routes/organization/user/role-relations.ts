@@ -24,19 +24,11 @@ export default function userRoleRelationRoutes(
   const params = Object.freeze({ id: z.string().min(1), userId: z.string().min(1) } as const);
   const pathname = '/:id/users/:userId/roles';
 
-  // The pathname of `.use()` will not match the end of the path, for example:
-  // `.use('/foo', ...)` will match both `/foo` and `/foo/bar`.
-  // See https://github.com/koajs/router/blob/02ad6eedf5ced6ec1eab2138380fd67c63e3f1d7/lib/router.js#L330-L333
-  router.use(pathname, koaGuard({ params: z.object(params) }), async (ctx, next) => {
-    const { id, userId } = ctx.guard.params;
-
-    // Ensure membership
-    if (!(await organizations.relations.users.exists({ organizationId: id, userId }))) {
+  const ensureMembership = async (organizationId: string, userId: string) => {
+    if (!(await organizations.relations.users.exists({ organizationId, userId }))) {
       throw new RequestError({ code: 'organization.require_membership', status: 422 });
     }
-
-    return next();
-  });
+  };
 
   router.get(
     pathname,
@@ -48,6 +40,8 @@ export default function userRoleRelationRoutes(
     }),
     async (ctx, next) => {
       const { id, userId } = ctx.guard.params;
+
+      await ensureMembership(id, userId);
 
       const [totalCount, entities] = await organizations.relations.usersRoles.getEntities(
         OrganizationRoles,
@@ -80,6 +74,8 @@ export default function userRoleRelationRoutes(
     async (ctx, next) => {
       const { id, userId } = ctx.guard.params;
       const { organizationRoleIds = [], organizationRoleNames = [] } = ctx.guard.body;
+
+      await ensureMembership(id, userId);
 
       const organizationRoleIdsFromNames =
         organizationRoleNames.length > 0
@@ -131,6 +127,8 @@ export default function userRoleRelationRoutes(
       const { id, userId } = ctx.guard.params;
       const { organizationRoleIds = [], organizationRoleNames = [] } = ctx.guard.body;
 
+      await ensureMembership(id, userId);
+
       const organizationRoleIdsFromNames =
         organizationRoleNames.length > 0
           ? await organizations.roles.findAllByNames(organizationRoleNames)
@@ -168,6 +166,8 @@ export default function userRoleRelationRoutes(
     }),
     async (ctx, next) => {
       const { id, organizationRoleId, userId } = ctx.guard.params;
+
+      await ensureMembership(id, userId);
 
       await organizations.relations.usersRoles.delete({
         organizationId: id,

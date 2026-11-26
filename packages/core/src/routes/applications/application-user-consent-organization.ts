@@ -26,16 +26,12 @@ export default function applicationUserConsentOrganizationRoutes<T extends Manag
   const pathname = '/applications/:id/users/:userId/consent-organizations';
 
   // Guard application exists and is a third party application
-  router.use(pathname, koaGuard({ params: z.object(params) }), async (ctx, next) => {
-    const { id, userId } = ctx.guard.params;
-
+  const validateApplicationAndUser = async (id: string, userId: string) => {
     await validateThirdPartyApplicationById(id);
 
     // Ensure that the user exists.
     await users.findUserById(userId);
-
-    return next();
-  });
+  };
 
   router.get(
     pathname,
@@ -49,6 +45,8 @@ export default function applicationUserConsentOrganizationRoutes<T extends Manag
     }),
     async (ctx, next) => {
       const { id, userId } = ctx.guard.params;
+
+      await validateApplicationAndUser(id, userId);
 
       const [totalCount, entities] = await applications.userConsentOrganizations.getEntities(
         Organizations,
@@ -77,6 +75,8 @@ export default function applicationUserConsentOrganizationRoutes<T extends Manag
       const { id, userId } = ctx.guard.params;
       const { organizationIds } = ctx.guard.body;
 
+      await validateApplicationAndUser(id, userId);
+
       // Assert that user is a member of all organizations
       await validateUserConsentOrganizationMembership(userId, organizationIds);
 
@@ -97,6 +97,8 @@ export default function applicationUserConsentOrganizationRoutes<T extends Manag
     async (ctx, next) => {
       const { id, userId } = ctx.guard.params;
       const { organizationIds } = ctx.guard.body;
+
+      await validateApplicationAndUser(id, userId);
 
       // Assert that user is a member of all organizations
       await validateUserConsentOrganizationMembership(userId, organizationIds);
@@ -125,6 +127,8 @@ export default function applicationUserConsentOrganizationRoutes<T extends Manag
     }),
     async (ctx, next) => {
       const { id, organizationId, userId } = ctx.guard.params;
+
+      await validateApplicationAndUser(id, userId);
 
       await applications.userConsentOrganizations.delete({
         applicationId: id,
