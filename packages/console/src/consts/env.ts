@@ -37,3 +37,5 @@ export const postHogHost = normalizeEnv(import.meta.env.POSTHOG_PUBLIC_HOST);
  */
 export const postHogUiHost = normalizeEnv(import.meta.env.POSTHOG_PUBLIC_UI_HOST);
 export const ossSurveyEndpoint = normalizeEnv(import.meta.env.LOGTO_OSS_SURVEY_ENDPOINT);
+export const productUpdatesBaseUrl =
+  normalizeEnv(import.meta.env.PRODUCT_UPDATES_BASE_URL) ?? 'https://logto.io';
