@@ -34,6 +34,29 @@ jobs:
             exit 1
           fi
 
+  main-management-api-policy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node and pnpm
+        uses: silverhand-io/actions-node-pnpm-run-steps@v5
+        with:
+          pnpm-version: 12
+          node-version: ^26.0.0
+
+      - name: Prepack
+        run: pnpm prepack
+
+      - name: Build core for test
+        working-directory: ./packages/core
+        run: pnpm build:test
+
+      - name: Check Management API route policy and scope matrix
+        working-directory: ./packages/core
+        run: pnpm test:only build/routes/init.management-api-policy.test.js
+
   main-build:
     runs-on: ubuntu-latest
 

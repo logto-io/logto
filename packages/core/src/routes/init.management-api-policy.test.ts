@@ -220,7 +220,15 @@ describe('Management API route-stack policy validation', () => {
       string
     >;
 
-    expect(actualMatrix).toEqual(expectedMatrix);
+    try {
+      expect(actualMatrix).toEqual(expectedMatrix);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        // eslint-disable-next-line @silverhand/fp/no-mutation -- append update command hint to assertion failure
+        error.message = `${error.message}\n\nManagement API scope matrix is out of sync. Run 'pnpm --filter @logto/core update:scope-matrix' and commit the updated snapshot.`;
+      }
+      throw error;
+    }
   });
 
   it('validates middleware ordering, uniqueness, catalog consistency, and domain/method invariants', () => {
