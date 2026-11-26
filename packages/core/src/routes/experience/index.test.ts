@@ -1020,6 +1020,18 @@ describe('POST /experience/profile/mfa', () => {
   });
 });
 
+describe('POST /experience/profile/mfa skip endpoints', () => {
+  it.each([
+    '/experience/profile/mfa/mfa-suggestion-skipped',
+    '/experience/profile/mfa/passkey-skipped',
+  ])('should return 403 for %s when MFA verification is required', async (path) => {
+    const response = await createMfaRequiredRequester().post(path);
+
+    expect(response.status).toBe(403);
+    expect(response.body).toMatchObject({ code: 'session.mfa.require_mfa_verification' });
+  });
+});
+
 describe('POST /experience/submit', () => {
   afterEach(() => {
     resetDevFeaturesEnabled();

@@ -313,8 +313,6 @@ export class Mfa {
    * @throws {RequestError} with status 404 if the verification record is not found
    * @throws {RequestError} with status 400 if TOTP is not enabled in the sign-in experience
    * @throws {RequestError} with status 422 if the user already has a TOTP factor
-   *
-   * - Any existing TOTP factor will be replaced with the new one.
    */
   async addTotpByVerificationId(verificationId: string, log?: LogEntry) {
     const verificationRecord = this.interactionContext.consumeForBindByType(
@@ -560,7 +558,6 @@ export class Mfa {
    *
    * @throws {RequestError} with status 422 if the user should be prompted to enable MFA according to the policy and user state
    */
-
   private async assertOptionalMfaEnablement(
     submitMfaValidationContext: SubmitMfaValidationContext
   ) {
@@ -927,17 +924,6 @@ export class Mfa {
     assertThat(isFactorsEnabled, new RequestError({ code: 'session.mfa.mfa_factor_not_enabled' }));
   }
 
-  /**
-   * Build shared context for submit-time MFA fulfillment checks.
-   *
-   * @remarks
-   * This context is shared by both adaptive MFA binding check and mandatory MFA policy check,
-   * so we can reuse the same resolved values and avoid duplicated async logic in one submit flow.
-   *
-   * Although we still call async getters here, both of them already rely on internal caching:
-   * - `signInExperienceValidator.getMfaSettings()` reads from cached sign-in experience data.
-   * - `interactionContext.getIdentifiedUser()` resolves to the interaction-level user cache.
-   */
   private async buildSubmitMfaValidationContext(): Promise<SubmitMfaValidationContext> {
     const [mfaSettings, user] = await Promise.all([
       this.signInExperienceValidator.getMfaSettings(),

@@ -194,7 +194,6 @@ const sign_in_exp = {
       social: 'ตัวตนโซเชียล',
       password: 'รหัสผ่าน',
       mfa: 'การยืนยันตัวตนหลายปัจจัย',
-      mfa_description: 'ให้ผู้ใช้จัดการวิธี MFA จากศูนย์บัญชี.',
       passkey: 'Passkey',
       username: 'ชื่อผู้ใช้',
       name: 'ชื่อ',

@@ -45,6 +45,14 @@ export class MockQueries extends Queries {
       getUsernameCaseSensitive: async () => true,
     };
 
+    // Bounded waiting-row cap checks read via `oneFirst`, which would throw `NotFoundError` on
+    // the empty mock pool unless tests explicitly override `jobs` counts.
+    this.jobs = {
+      ...this.jobs,
+      countJobsByType: async () => 0,
+      countJobsByGroup: async () => 0,
+    };
+
     if (!queriesOverride) {
       return;
     }

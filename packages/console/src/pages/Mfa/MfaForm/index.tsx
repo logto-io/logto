@@ -23,7 +23,6 @@ import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { mfa } from '@/consts';
 import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
-import { TenantsContext } from '@/contexts/TenantsProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
 import InlineNotification from '@/ds-components/InlineNotification';
@@ -71,7 +70,6 @@ function MfaForm({ data, adaptiveMfa, trustedDevice, signInMethods, onMfaUpdated
     currentSubscriptionQuota,
     mutateSubscriptionQuotaAndUsages,
   } = useContext(SubscriptionDataContext);
-  const { currentTenantId } = useContext(TenantsContext);
   const { isConnectorTypeEnabled } = useEnabledConnectorTypes();
 
   const isMfaDisabled =

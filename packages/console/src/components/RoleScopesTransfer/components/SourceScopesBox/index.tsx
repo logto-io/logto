@@ -1,19 +1,22 @@
-import type { ResourceResponse, Scope, ScopeResponse } from '@logto/schemas';
+import type { ResourceResponse, ScopeResponse } from '@logto/schemas';
 import { PredefinedScope, RoleType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import type { ChangeEvent } from 'react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import Search from '@/assets/icons/search.svg?react';
 import EmptyDataPlaceholder from '@/components/EmptyDataPlaceholder';
 import type { DetailedResourceResponse } from '@/components/RoleScopesTransfer/types';
+import { defaultPageSize } from '@/consts';
+import Pagination from '@/ds-components/Pagination';
 import TextInput from '@/ds-components/TextInput';
 import type { RequestError } from '@/hooks/use-api';
+import useDebounce from '@/hooks/use-debounce';
 import transferLayout from '@/scss/transfer.module.scss';
-import { buildUrl } from '@/utils/url';
+import { buildUrl, formatSearchKeyword } from '@/utils/url';
 
 import ResourceItem from '../ResourceItem';
 
@@ -26,35 +29,45 @@ type Props = {
   readonly onChange: (value: ScopeResponse[]) => void;
 };
 
+const pageSize = defaultPageSize;
+
 function SourceScopesBox({ roleId, roleType, selectedScopes, onChange }: Props) {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const { data: allResources, error: fetchAllResourcesError } = useSWR<
-    ResourceResponse[],
-    RequestError
-  >(
-    buildUrl('api/resources', {
-      includeScopes: String(true),
-      // Management API scopes are only assignable to machine-to-machine roles
-      ...conditional(
-        roleType !== RoleType.MachineToMachine && { excludeManagementApis: String(true) }
-      ),
-    })
-  );
-
-  const { data: roleScopes, error: fetchRoleScopesError } = useSWR<Scope[], RequestError>(
-    roleId && `api/roles/${roleId}/scopes`
-  );
-
-  const isLoading =
-    (!allResources && !fetchAllResourcesError) || (roleId && !roleScopes && !fetchRoleScopesError);
-
-  const hasError = Boolean(fetchAllResourcesError) || Boolean(roleId && fetchRoleScopesError);
-
+  const [page, setPage] = useState(1);
   const [keyword, setKeyword] = useState('');
+  const debounce = useDebounce();
+
+  useEffect(() => {
+    setPage(1);
+  }, [roleType]);
+
+  const url = buildUrl('api/resources', {
+    page: String(page),
+    page_size: String(pageSize),
+    includeScopes: String(true),
+    hasScopes: String(true),
+    // Management API scopes are only assignable to machine-to-machine roles
+    ...conditional(
+      roleType !== RoleType.MachineToMachine && { excludeManagementApis: String(true) }
+    ),
+    ...conditional(roleId && { excludeRoleId: roleId }),
+    ...conditional(keyword && { search: formatSearchKeyword(keyword) }),
+  });
+
+  const { data, error } = useSWR<[ResourceResponse[], number], RequestError>(url, {
+    keepPreviousData: false,
+  });
+
+  const isLoading = !data && !error;
+  const hasError = Boolean(error);
+  const [allResources, totalCount] = data ?? [];
 
   const handleSearchInput = (event: ChangeEvent<HTMLInputElement>) => {
-    setKeyword(event.target.value);
+    debounce(() => {
+      setPage(1);
+      setKeyword(event.target.value);
+    });
   };
 
   const isScopeAdded = (scope: ScopeResponse) =>
@@ -84,52 +97,36 @@ function SourceScopesBox({ roleId, roleType, selectedScopes, onChange }: Props) 
   const getResourceSelectedScopes = ({ scopes }: DetailedResourceResponse) =>
     scopes.filter((scope) => selectedScopes.findIndex(({ id }) => id === scope.id) >= 0);
 
-  const resources: DetailedResourceResponse[] = useMemo(() => {
-    if (!allResources || (roleId && !roleScopes)) {
+  const dataSource: DetailedResourceResponse[] = useMemo(() => {
+    if (!allResources) {
       return [];
     }
 
-    const existingScopeIds = roleScopes?.map(({ id }) => id) ?? [];
-    const excludeScopeIds = new Set([...existingScopeIds, PredefinedScope.All]);
+    const lowerCasedKeyword = keyword.toLowerCase();
 
     return allResources
-      .filter(({ scopes }) => scopes.some(({ id }) => !excludeScopeIds.has(id)))
-      .map(({ scopes, ...resource }) => ({
-        ...resource,
-        scopes: scopes
-          .filter(({ id }) => !excludeScopeIds.has(id))
+      .map(({ scopes, ...resource }) => {
+        const assignableScopes = scopes
+          .filter(({ id }) => id !== PredefinedScope.All)
           .map((scope) => ({
             ...scope,
             resource,
-          })),
-      }));
-  }, [allResources, roleId, roleScopes]);
+          }));
 
-  const dataSource = useMemo(() => {
-    const lowerCasedKeyword = keyword.toLowerCase();
+        const doesResourceMatchKeyword =
+          !lowerCasedKeyword ||
+          resource.name.toLowerCase().includes(lowerCasedKeyword) ||
+          resource.indicator.toLowerCase().includes(lowerCasedKeyword);
 
-    return (
-      conditional(
-        lowerCasedKeyword &&
-          resources
-            .filter(({ name, scopes }) => {
-              return (
-                name.toLowerCase().includes(lowerCasedKeyword) ||
-                scopes.some(({ name }) => name.toLowerCase().includes(lowerCasedKeyword))
-              );
-            })
-            .map(({ scopes, ...resource }) => ({
-              ...resource,
-              scopes: scopes.filter(
-                ({ name, resource }) =>
-                  name.toLocaleLowerCase().includes(lowerCasedKeyword) ||
-                  resource.name.toLocaleLowerCase().includes(lowerCasedKeyword)
-              ),
-            }))
-            .filter(({ scopes }) => scopes.length > 0)
-      ) ?? resources
-    );
-  }, [keyword, resources]);
+        return {
+          ...resource,
+          scopes: doesResourceMatchKeyword
+            ? assignableScopes
+            : assignableScopes.filter(({ name }) => name.toLowerCase().includes(lowerCasedKeyword)),
+        };
+      })
+      .filter(({ scopes }) => scopes.length > 0);
+  }, [allResources, keyword]);
 
   const isEmpty = !isLoading && !hasError && dataSource.length === 0;
 
@@ -160,6 +157,16 @@ function SourceScopesBox({ roleId, roleType, selectedScopes, onChange }: Props) 
           ))
         )}
       </div>
+      <Pagination
+        mode="pico"
+        page={page}
+        totalCount={totalCount}
+        pageSize={pageSize}
+        className={transferLayout.boxPagination}
+        onChange={(page) => {
+          setPage(page);
+        }}
+      />
     </div>
   );
 }

@@ -66,7 +66,7 @@ function verifiedInteractionGuard<StateT, ContextT extends WithLogContext, Respo
       experienceInteraction.interactionEvent !== InteractionEvent.ForgotPassword,
       new RequestError({
         code: 'session.not_supported_for_forgot_password',
-        statue: 400,
+        status: 400,
       })
     );
 
@@ -126,7 +126,7 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
         interactionEvent !== InteractionEvent.ForgotPassword,
         new RequestError({
           code: 'session.not_supported_for_forgot_password',
-          statue: 400,
+          status: 400,
         })
       );
 
@@ -345,7 +345,7 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
   // Mark optional additional MFA binding suggestion as skipped.
   router.post(
     `${experienceRoutes.mfa}/mfa-suggestion-skipped`,
-    koaGuard({ status: [204, 400, 404] }),
+    koaGuard({ status: [204, 400, 403, 404] }),
     verifiedInteractionGuard(),
     async (ctx, next) => {
       const { experienceInteraction } = ctx;
@@ -361,7 +361,7 @@ export default function interactionProfileRoutes<T extends ExperienceInteraction
 
   router.post(
     `${experienceRoutes.mfa}/passkey-skipped`,
-    koaGuard({ status: [204, 400, 404] }),
+    koaGuard({ status: [204, 400, 403, 404] }),
     verifiedInteractionGuard(),
     async (ctx, next) => {
       const { experienceInteraction } = ctx;

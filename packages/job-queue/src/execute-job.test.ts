@@ -76,6 +76,72 @@ describe('JobQueueWorker settlement edge cases', () => {
     await worker.stop();
   });
 
+  it('does not count permanent failures toward the circuit breaker', async () => {
+    const rows = ['fail_1', 'fail_2', 'fail_3'].map((id) => buildRow({ id, attempts: 1 }));
+    const parkDueGroup = vi.fn<NonNullable<JobQueueQueries['parkDueGroup']>>(async () => 0);
+    const worker = new JobQueueWorker({
+      claimDue: vi
+        .fn<JobQueueQueries['claimDue']>()
+        .mockResolvedValueOnce(rows)
+        .mockResolvedValue([]),
+      settle: vi.fn<JobQueueQueries['settle']>(async () => 'settled'),
+      parkDueGroup,
+    });
+    worker.register<string>({
+      type: 'webhook',
+      parsePayload: (raw) => raw,
+      leaseMs: 60_000,
+      retry,
+      circuitBreaker: { failureThreshold: 2 },
+      handle: async () => ({ status: 'fail' }),
+    });
+
+    worker.start();
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(worker.openCircuitCount).toBe(0);
+    expect(parkDueGroup).not.toHaveBeenCalled();
+
+    await worker.stop();
+  });
+
+  it('expires rows whose retry window ends before the parked attempt time', async () => {
+    const maxAgeMs = 24 * 60 * 60 * 1000;
+    const now = 2 * maxAgeMs;
+    vi.setSystemTime(now);
+
+    const parkDueGroup = vi.fn<NonNullable<JobQueueQueries['parkDueGroup']>>(async () => 0);
+    const worker = new JobQueueWorker({
+      claimDue: vi
+        .fn<JobQueueQueries['claimDue']>()
+        .mockResolvedValueOnce([buildRow({ attempts: 1, createdAt: now - 1000 })])
+        .mockResolvedValue([]),
+      settle: vi.fn<JobQueueQueries['settle']>(async () => 'settled'),
+      parkDueGroup,
+    });
+    worker.register<string>({
+      type: 'webhook',
+      parsePayload: (raw) => raw,
+      leaseMs: 60_000,
+      retry: { backoffMs: retry.backoffMs, maxAgeMs },
+      circuitBreaker: { failureThreshold: 1 },
+      handle: async () => ({ status: 'retry' }),
+    });
+
+    worker.start();
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(parkDueGroup).toHaveBeenCalledExactlyOnceWith({
+      tenantId: 't1',
+      type: 'webhook',
+      groupKey: 'hook_1',
+      nextAttemptAt: now + 10_000,
+      minCreatedAt: now + 10_000 - maxAgeMs,
+    });
+
+    await worker.stop();
+  });
+
   it('skips circuit-breaker and exhaustion updates when settle fails', async () => {
     const row = buildRow({ id: 'job_settle_error', attempts: 3 });
     const log = { info: vi.fn(), warn: vi.fn(), error: vi.fn() };

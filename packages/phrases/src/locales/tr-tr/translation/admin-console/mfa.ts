@@ -36,17 +36,7 @@ const mfa = {
     'Doğrulanmış e-posta adresi veya telefon numarası olan her kullanıcı, bunu ayarlamamış olsa bile 2 adımlı doğrulama için kullanacak. Devam etmek istediğinizden emin misiniz?',
   policy: 'Politika',
   policy_description: 'Giriş ve kaydolma akışları için MFA politikasını belirleyin.',
-  two_step_sign_in_policy: 'Girişte 2 aşamalı doğrulama politikası',
-  user_controlled:
-    "Kullanıcılar MFA'yı kendi başlarına etkinleştirebilir veya devre dışı bırakabilir",
-  user_controlled_tip:
-    'Kullanıcılar, giriş veya kayıt sırasında ilk kez MFA kurulumunu atlayabilir veya hesap ayarlarında etkinleştirebilir/devre dışı bırakabilir.',
-  mandatory: 'Kullanıcılar her zaman girişte MFA kullanmak zorundadır',
-  mandatory_tip:
-    'Kullanıcılar, ilk kez giriş veya kayıt sırasında MFA kurmalı ve tüm gelecekteki girişlerde kullanmalıdır.',
   require_mfa: 'MFA Gerektir',
-  require_mfa_label:
-    "Uygulamalarınıza erişim için 2 aşamalı doğrulamayı zorunlu hale getirmek üzere bunu etkinleştirin. Eğer devre dışıysa, kullanıcılar MFA'yı kendileri için etkinleştirip etkinleştirmemeye karar verebilir.",
   require_mfa_optional:
     "İsteğe bağlı MFA: Kullanıcıların kendi hesap güvenlikleri için MFA'yı etkinleştirmeyi seçmelerine izin verin",
   require_mfa_adaptive:

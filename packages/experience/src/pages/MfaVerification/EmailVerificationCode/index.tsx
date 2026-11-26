@@ -36,12 +36,10 @@ const EmailVerificationCode = () => {
         description="mfa.enter_email_verification_code_description"
         descriptionProps={{ identifier: maskedEmail }}
       >
-        {verificationId ? (
-          <MfaCodeVerification
-            identifierType={SignInIdentifier.Email}
-            verificationId={verificationId}
-          />
-        ) : null}
+        <MfaCodeVerification
+          identifierType={SignInIdentifier.Email}
+          verificationId={verificationId}
+        />
       </SectionLayout>
       <SwitchMfaFactorsLink
         flow={UserMfaFlow.MfaVerification}

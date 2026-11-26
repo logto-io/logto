@@ -678,14 +678,9 @@ export default class ExperienceInteraction {
    * Validate the interaction verification records against the sign-in experience and user MFA settings.
    * The interaction is verified if at least one user enabled MFA verification record is present and verified.
    *
-   * @remarks
-   * - EnterpriseSso verified interaction does not require MFA verification.
-   * - Users signing in with passkey does not require MFA verification.
-   *
-   * @throws {RequestError} with 404 if the if the user is not identified or not found
+   * @throws {RequestError} with 404 if the user is not identified or not found
    * @throws {RequestError} with 403 if the mfa verification is required but not verified
    */
-
   public async guardMfaVerificationStatus(log?: LogEntry) {
     // A requested `mfa` is a requirement of the relying party, not of the tenant's sign-in MFA
     // policy: `skipMfaOnSignIn`, an adaptive-MFA non-trigger result and a trusted device are all
@@ -2097,7 +2092,7 @@ export default class ExperienceInteraction {
 
   /**
    * Assert the interaction is identified and return the identified user.
-   * @throws RequestError with 404 if the if the user is not identified or not found
+   * @throws RequestError with 404 if the user is not identified or not found
    */
   private async getIdentifiedUser(): Promise<User> {
     if (this.userCache) {
