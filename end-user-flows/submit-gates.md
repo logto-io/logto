@@ -13,7 +13,7 @@ flowchart TD
   g3 --> g4["4. Passkey prompt<br/>422 user.passkey_preferred -> /create-passkey"]
   g4 --> g5[["5. MFA enrollment & suggestions<br/>assertMfaFulfilled() (see below)"]]
   g5 --> g6["6. Trusted device opt-in<br/>422 session.trusted_device_suggest_opt_in -> /trusted-device"]
-  g6 --> g7["7. Final requested ACR assertion<br/>403 session.step_up.acr_not_satisfied -> /step-up"]
+  g6 --> g7["7. Final requested ACR assertion<br/>403 session.step_up.acr_not_satisfied -> /step-up (pure step-up)"]
   g7 --> finalize["Finalize interaction & write user / session state"]
   finalize --> done(["OIDC redirect"])
 ```
@@ -22,12 +22,13 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  g5a["5a. Optional MFA enablement<br/>422 user.suggest_mfa -> /mfa-onboarding"]
+  g5a["5a. Optional MFA enablement<br/>(skipped under asNoSkipMandatoryPolicy)<br/>422 user.suggest_mfa -> /mfa-onboarding"]
   g5b["5b. Required MFA binding<br/>422 user.missing_mfa -> /mfa-binding or /mfa-binding/:factor"]
-  g5c["5c. Additional MFA suggestion<br/>422 session.mfa.suggest_additional_mfa -> /mfa-binding or /mfa-binding/:factor"]
+  g5c["5c. Additional MFA suggestion<br/>(when skipAdditionalBindingSuggestion is off)<br/>422 session.mfa.suggest_additional_mfa -> /mfa-binding or /mfa-binding/:factor"]
   g5d["5d. Backup code binding<br/>422 session.mfa.backup_code_required -> /mfa-binding/BackupCode"]
   g5a --> g5b
-  g5b --> g5c
+  g5b -->|exempt / user skipped| g6_exit(["Continue to Gate 6"])
+  g5b -->|required / bound| g5c
   g5c --> g5d
 ```
 
@@ -39,7 +40,7 @@ flowchart TD
 | --- | --- | --- | --- | --- | --- |
 | 0. Captcha | Runs | Runs | Runs | Runs | Runs, then resets password & exits |
 | 1. Requested ACR pre-check | `guardFirstFactor()` | `guardUnreachableRequestedAcr()` | `guardFirstFactor()` / `guardUnreachableRequestedAcr()` | `guardFirstFactor()` | Skipped (exited) |
-| 2. Sign-in MFA verification | Runs | Skipped | Skipped unless requested `mfa` ACR unmet | Skipped unless requested `mfa` ACR unmet | Skipped (exited) |
+| 2. Sign-in MFA verification | Runs | Skipped | Sign-in: skipped unless requested `mfa` ACR unmet; register: skipped | Skipped unless requested `mfa` ACR unmet | Skipped (exited) |
 | 3. Mandatory profile | Runs | Runs | Skipped | Runs | Skipped (exited) |
 | 4. Passkey prompt | Runs | Runs | Skipped | Runs | Skipped (exited) |
 | 5. MFA enrollment (5a–5d) | Runs | Runs | Skipped unless requested `mfa` ACR unmet or requested enrollment applies | Runs | Skipped (exited) |
@@ -52,13 +53,13 @@ Note: Social sign-in and register also skip Gate 3 (`Mandatory profile`) when `s
 
 | Gate / Aspect | Implementation | Matrix tests / Experience error handler |
 | --- | --- | --- |
-| `submit()` orchestration | [ExperienceInteraction.submit()](../packages/core/src/routes/experience/classes/experience-interaction.ts#L1087-L1206) | [use-submit-interaction-error-handler.ts](../packages/experience/src/hooks/use-submit-interaction-error-handler.ts) |
-| 0. Captcha | [guardCaptcha()](../packages/core/src/routes/experience/classes/experience-interaction.ts#L1447-L1454) | — |
-| 1. Requested ACR pre-check | [guardFirstFactor()](../packages/core/src/routes/experience/classes/experience-interaction.ts#L874-L935), [guardUnreachableRequestedAcr()](../packages/core/src/routes/experience/classes/experience-interaction.ts#L1537-L1547) | [use-step-up-error-handler.ts](../packages/experience/src/hooks/use-step-up-error-handler.ts) |
-| 2. Sign-in MFA verification | [guardMfaVerificationStatus()](../packages/core/src/routes/experience/classes/experience-interaction.ts#L692-L754), [resolveMfaVerificationRequirement()](../packages/core/src/routes/experience/classes/libraries/mfa-verification-decision.ts#L184) | [`resolveMfaVerificationRequirement decision matrix`](../packages/core/src/routes/experience/classes/libraries/mfa-verification-decision.test.ts#L314), [`ExperienceInteraction MFA verification audit log and binding agreement`](../packages/core/src/routes/experience/classes/libraries/mfa-verification-decision.integration.test.ts#L121), [use-mfa-error-handler.ts](../packages/experience/src/hooks/use-mfa-error-handler.ts) |
-| Binding eligibility (`canBindMfa`) | [canBindMfa()](../packages/core/src/routes/experience/classes/experience-interaction.ts#L763-L765), [getMfaBindingBlock()](../packages/core/src/routes/experience/classes/experience-interaction.ts#L1777-L1819) | Covered by [`ExperienceInteraction MFA verification audit log and binding agreement`](../packages/core/src/routes/experience/classes/libraries/mfa-verification-decision.integration.test.ts#L121) |
-| 3. Mandatory profile | [Profile.assertUserMandatoryProfileFulfilled()](../packages/core/src/routes/experience/classes/profile.ts#L220-L270) | [use-submit-interaction-error-handler.ts](../packages/experience/src/hooks/use-submit-interaction-error-handler.ts) |
-| 4. Passkey prompt | [Mfa.assertPasskeySignInFulfilled()](../packages/core/src/routes/experience/classes/mfa.ts#L489-L505) | [use-missing-passkey-error-handler.ts](../packages/experience/src/hooks/use-missing-passkey-error-handler.ts) |
-| 5. MFA enrollment (5a–5d) | [Mfa.assertMfaFulfilled()](../packages/core/src/routes/experience/classes/mfa.ts#L467-L487), [assertOptionalMfaEnablement()](../packages/core/src/routes/experience/classes/mfa.ts#L532-L545), [assertUserMandatoryMfaFulfilled()](../packages/core/src/routes/experience/classes/mfa.ts#L547-L601), [guardAdditionalBindingSuggestion()](../packages/core/src/routes/experience/classes/mfa.ts#L610-L646), [resolveMfaEnrollmentRequirement()](../packages/core/src/routes/experience/classes/libraries/mfa-enrollment-decision.ts#L213), [mfa-additional-suggestion.ts](../packages/core/src/routes/experience/classes/libraries/mfa-additional-suggestion.ts) | [`resolveMfaEnrollmentRequirement`](../packages/core/src/routes/experience/classes/libraries/mfa-enrollment-decision.test.ts#L391), [use-mfa-error-handler.ts](../packages/experience/src/hooks/use-mfa-error-handler.ts) |
-| 6. Trusted device opt-in | [TrustedDevice.assertOptInDecision()](../packages/core/src/routes/experience/classes/trusted-device.ts#L81-L113) | [use-trusted-device-opt-in-error-handler.ts](../packages/experience/src/hooks/use-trusted-device-opt-in-error-handler.ts) |
-| 7. Final requested ACR | [experience-interaction.ts](../packages/core/src/routes/experience/classes/experience-interaction.ts#L1199-L1206) | [use-step-up-error-handler.ts](../packages/experience/src/hooks/use-step-up-error-handler.ts) |
+| `submit()` orchestration | [ExperienceInteraction.submit()](../packages/core/src/routes/experience/classes/experience-interaction.ts) | [use-submit-interaction-error-handler.ts](../packages/experience/src/hooks/use-submit-interaction-error-handler.ts) |
+| 0. Captcha | [guardCaptcha()](../packages/core/src/routes/experience/classes/experience-interaction.ts) | — |
+| 1. Requested ACR pre-check | [guardFirstFactor()](../packages/core/src/routes/experience/classes/experience-interaction.ts), [guardUnreachableRequestedAcr()](../packages/core/src/routes/experience/classes/experience-interaction.ts) | [use-submit-interaction-error-handler.ts](../packages/experience/src/hooks/use-submit-interaction-error-handler.ts) |
+| 2. Sign-in MFA verification | [guardMfaVerificationStatus()](../packages/core/src/routes/experience/classes/experience-interaction.ts), [resolveMfaVerificationRequirement()](../packages/core/src/routes/experience/classes/libraries/mfa-verification-decision.ts) | [`resolveMfaVerificationRequirement decision matrix`](../packages/core/src/routes/experience/classes/libraries/mfa-verification-decision.test.ts), [`ExperienceInteraction MFA verification audit log and binding agreement`](../packages/core/src/routes/experience/classes/experience-interaction.mfa-verification-reason.test.ts), [use-mfa-error-handler.ts](../packages/experience/src/hooks/use-mfa-error-handler.ts) |
+| Binding eligibility (`canBindMfa`) | [canBindMfa()](../packages/core/src/routes/experience/classes/experience-interaction.ts), [getMfaBindingBlock()](../packages/core/src/routes/experience/classes/experience-interaction.ts) | Covered by [`ExperienceInteraction MFA verification audit log and binding agreement`](../packages/core/src/routes/experience/classes/experience-interaction.mfa-verification-reason.test.ts) |
+| 3. Mandatory profile | [Profile.assertUserMandatoryProfileFulfilled()](../packages/core/src/routes/experience/classes/profile.ts) | [use-submit-interaction-error-handler.ts](../packages/experience/src/hooks/use-submit-interaction-error-handler.ts) |
+| 4. Passkey prompt | [Mfa.assertPasskeySignInFulfilled()](../packages/core/src/routes/experience/classes/mfa.ts) | [use-missing-passkey-error-handler.ts](../packages/experience/src/hooks/use-missing-passkey-error-handler.ts) |
+| 5. MFA enrollment (5a–5d) | [Mfa.assertMfaFulfilled()](../packages/core/src/routes/experience/classes/mfa.ts), [assertUserMandatoryMfaFulfilled()](../packages/core/src/routes/experience/classes/mfa.ts), [resolvePreBindMfaEnrollment()](../packages/core/src/routes/experience/classes/libraries/mfa-enrollment-decision.ts), [resolveMfaEnrollmentRequirement()](../packages/core/src/routes/experience/classes/libraries/mfa-enrollment-decision.ts), [mfa-additional-suggestion.ts](../packages/core/src/routes/experience/classes/libraries/mfa-additional-suggestion.ts) | [`resolveMfaEnrollmentRequirement`](../packages/core/src/routes/experience/classes/libraries/mfa-enrollment-decision.test.ts), [use-mfa-error-handler.ts](../packages/experience/src/hooks/use-mfa-error-handler.ts) |
+| 6. Trusted device opt-in | [TrustedDevice.assertOptInDecision()](../packages/core/src/routes/experience/classes/trusted-device.ts) | [use-trusted-device-opt-in-error-handler.ts](../packages/experience/src/hooks/use-trusted-device-opt-in-error-handler.ts) |
+| 7. Final requested ACR | [experience-interaction.ts](../packages/core/src/routes/experience/classes/experience-interaction.ts) | [use-step-up-error-handler.ts](../packages/experience/src/hooks/use-step-up-error-handler.ts) |
