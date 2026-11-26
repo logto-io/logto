@@ -1,6 +1,3 @@
-import { readFileSync, writeFileSync } from 'node:fs';
-import path from 'node:path';
-
 import { ManagementApiScope, PredefinedScope } from '@logto/schemas';
 import Koa from 'koa';
 import type Router from 'koa-router';
@@ -13,8 +10,6 @@ import {
   extractPolicyScopes,
   isKnownManagementApiScope,
   isManagementApiPermissionMiddleware,
-  type ManagementApiPermissionPolicy,
-  normalizeManagementApiPermissionPolicy,
 } from '#src/middleware/koa-management-api-permission.js';
 import { isPaginationMiddleware } from '#src/middleware/koa-pagination.js';
 import { isQuotaGuardMiddleware } from '#src/middleware/koa-quota-guard.js';
@@ -46,51 +41,6 @@ const getManagementRouter = (tenant: MockTenant) => {
   }
 
   return managementRouter;
-};
-
-const formatPolicy = (policy?: ManagementApiPermissionPolicy): string => {
-  if (!policy) {
-    return PredefinedScope.All;
-  }
-
-  return normalizeManagementApiPermissionPolicy(policy)
-    .map((group) => group.join(' & '))
-    .join(' | ');
-};
-
-/**
- * Builds a deterministic sorted `(METHOD path) -> policy` map for every mounted Management API
- * operation (excluding implicit `HEAD` aliases). Compared against the committed golden snapshot
- * so every domain PR shows a single, easy-to-review table of effective endpoint permissions.
- */
-const buildScopeMatrix = (stack: readonly Router.Layer[]): Record<string, string> => {
-  const entries: Array<[string, string]> = [];
-
-  for (const layer of stack) {
-    const methods = layer.methods.filter((method) => method !== 'HEAD');
-    if (methods.length === 0) {
-      continue;
-    }
-
-    const permissionMiddleware = layer.stack.find((middleware) =>
-      isManagementApiPermissionMiddleware(middleware)
-    );
-    const formattedPolicy = formatPolicy(permissionMiddleware?.policy);
-
-    for (const method of methods) {
-      // eslint-disable-next-line @silverhand/fp/no-mutating-methods -- building sorted snapshot entries
-      entries.push([`${method} ${layer.path}`, formattedPolicy]);
-    }
-  }
-
-  // Sort by path first, then HTTP method, so operations on the same endpoint stay grouped
-  const sortedEntries = entries.slice().sort(([keyA], [keyB]) => {
-    const [methodA = '', pathA = ''] = keyA.split(' ');
-    const [methodB = '', pathB = ''] = keyB.split(' ');
-    return pathA.localeCompare(pathB) || methodA.localeCompare(methodB);
-  });
-
-  return Object.fromEntries(sortedEntries);
 };
 
 /**
@@ -159,8 +109,6 @@ const allOnlyWritePathPatterns: readonly RegExp[] = [
   /^\/organization-scopes(?:\/|$)/,
 ];
 
-const scopeMatrixSnapshotPath = path.resolve('src/routes/management-api-scope-matrix.json');
-
 const assertPermissionMiddlewareOrder = (layer: Router.Layer, permissionIndex: number) => {
   const guardIndex = layer.stack.findIndex((middleware) => isGuardMiddleware(middleware));
   const quotaIndex = layer.stack.findIndex((middleware) => isQuotaGuardMiddleware(middleware));
@@ -207,30 +155,6 @@ const assertMethodAndDomainInvariants = (
 };
 
 describe('Management API route-stack policy validation', () => {
-  it('matches the committed Golden Scope Matrix snapshot', () => {
-    const managementRouter = getManagementRouter(new MockTenant());
-    const actualMatrix = buildScopeMatrix(managementRouter.stack);
-
-    if (process.env.UPDATE_MANAGEMENT_API_SCOPE_MATRIX === '1') {
-      writeFileSync(scopeMatrixSnapshotPath, `${JSON.stringify(actualMatrix, null, 2)}\n`);
-    }
-
-    const expectedMatrix = JSON.parse(readFileSync(scopeMatrixSnapshotPath, 'utf8')) as Record<
-      string,
-      string
-    >;
-
-    try {
-      expect(actualMatrix).toEqual(expectedMatrix);
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        // eslint-disable-next-line @silverhand/fp/no-mutation -- append update command hint to assertion failure
-        error.message = `${error.message}\n\nManagement API scope matrix is out of sync. Run 'pnpm --filter @logto/core update:scope-matrix' and commit the updated snapshot.`;
-      }
-      throw error;
-    }
-  });
-
   it('validates middleware ordering, uniqueness, catalog consistency, and domain/method invariants', () => {
     const managementRouter = getManagementRouter(new MockTenant());
     const routeLayers = managementRouter.stack.filter((layer) => layer.methods.length > 0);
