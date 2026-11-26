@@ -6,7 +6,7 @@ import { type SubscriptionCountBasedUsage } from '@/cloud/types/router';
 import AppLoading from '@/components/AppLoading';
 import ProductUpdatesContainer from '@/components/ProductUpdatesCardStack/ProductUpdatesContainer';
 import Topbar from '@/components/Topbar';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import SubscriptionDataProvider from '@/contexts/SubscriptionDataProvider';
 import useSubscriptionData from '@/contexts/SubscriptionDataProvider/use-subscription-data';
 import {
@@ -88,8 +88,7 @@ export default function AppContent() {
           <TenantNotificationContainer />
         </SubscriptionDataProvider>
       )}
-      {/* Product Updates for Logto Cloud */}
-      {isCloud && isDevFeaturesEnabled && (
+      {isCloud && (
         <ProductUpdatesContainer
           isHidden={isLoading || !currentTenant || Boolean(isTenantSuspended)}
         />
