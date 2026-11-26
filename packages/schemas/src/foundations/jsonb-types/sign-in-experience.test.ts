@@ -113,10 +113,12 @@ describe('trustedDevicePolicyGuard', () => {
 });
 
 describe('mfaGuard', () => {
-  it('accepts valid MfaPolicy values and rejects removed UserControlled', () => {
+  it('accepts valid MfaPolicy values including deprecated UserControlled', () => {
     expect(
       mfaGuard.safeParse({ factors: [], policy: MfaPolicy.PromptAtSignInAndSignUp }).success
     ).toBe(true);
-    expect(mfaGuard.safeParse({ factors: [], policy: 'UserControlled' }).success).toBe(false);
+    expect(mfaGuard.safeParse({ factors: [], policy: MfaPolicy.UserControlled }).success).toBe(
+      true
+    );
   });
 });

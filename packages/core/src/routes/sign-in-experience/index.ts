@@ -50,11 +50,10 @@ const isNonSkippableMfaPromptPolicy = (policy: MfaPolicy) =>
     policy
   );
 
-// Accept legacy 'UserControlled' without exposing it in OpenAPI.
-const legacyMfaPolicy = 'UserControlled';
+// Normalize deprecated UserControlled to PromptAtSignInAndSignUp while keeping OpenAPI enum generation intact.
 const mfaPatchGuard = mfaGuard.extend({
   policy: z.preprocess(
-    (value) => (value === legacyMfaPolicy ? MfaPolicy.PromptAtSignInAndSignUp : value),
+    (value) => (value === MfaPolicy.UserControlled ? MfaPolicy.PromptAtSignInAndSignUp : value),
     z.nativeEnum(MfaPolicy)
   ),
 });

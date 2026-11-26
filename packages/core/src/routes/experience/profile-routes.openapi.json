@@ -142,7 +142,7 @@
       "post": {
         "operationId": "SkipMfaBindingFlow",
         "summary": "Skip MFA binding flow",
-        "description": "Skip MFA verification binding flow. If the MFA is enabled in the sign-in experience settings and marked as `UserControlled`, the user can skip the MFA verification binding flow by calling this API.",
+        "description": "Skip MFA verification binding flow. If the MFA is enabled in the sign-in experience settings and the MFA policy is not mandatory, the user can skip the MFA verification binding flow by calling this API.",
         "responses": {
           "204": {
             "description": "The MFA verification has been successfully skipped."
