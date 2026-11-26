@@ -140,7 +140,7 @@ export const isValidUrl = (url?: string) => {
 export const isLocalhost = (url: string) => {
   const parsedUrl = new URL(url);
 
-  return ['localhost', '127.0.0.1', '::1'].includes(parsedUrl.hostname);
+  return ['localhost', '127.0.0.1', '[::1]'].includes(parsedUrl.hostname);
 };
 
 /**

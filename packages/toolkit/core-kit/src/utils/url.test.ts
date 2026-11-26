@@ -88,11 +88,17 @@ describe('isLocalhost()', () => {
     expect(isLocalhost('http://localhost:3001')).toBeTruthy();
     expect(isLocalhost('https://localhost:3001')).toBeTruthy();
     expect(isLocalhost('http://localhost:3001/callback')).toBeTruthy();
+    expect(isLocalhost('http://127.0.0.1')).toBeTruthy();
+    expect(isLocalhost('http://127.0.0.1:3001/callback')).toBeTruthy();
+    expect(isLocalhost('http://[::1]')).toBeTruthy();
+    expect(isLocalhost('http://[::1]:3001/callback')).toBeTruthy();
+    expect(isLocalhost('https://[0:0:0:0:0:0:0:1]:3001')).toBeTruthy();
   });
 
   it('should return false for non-localhost', () => {
     expect(isLocalhost('https://localhost.dev/callback')).toBeFalsy();
     expect(isLocalhost('https://my-company.com/callback?test=123')).toBeFalsy();
     expect(isLocalhost('https://abc.com/callback?test=123#param=hash')).toBeFalsy();
+    expect(isLocalhost('http://[::2]:3001')).toBeFalsy();
   });
 });
