@@ -1,3 +1,4 @@
+import { ReservedResource } from '@logto/core-kit';
 import { InteractionEvent } from '@logto/schemas';
 import { ResponseError } from '@withtyped/client';
 import Router from 'koa-router';
@@ -25,7 +26,8 @@ jest.unstable_mockModule('#src/libraries/jwt-customizer.js', () => ({
 }));
 
 const { EnvSet } = await import('#src/env-set/index.js');
-const { getExtraTokenClaimsForJwtCustomization } = await import('./extra-token-claims.js');
+const { getExtraTokenClaimsForJwtCustomization, getExtraTokenClaimsForOrganizationApiResource } =
+  await import('./extra-token-claims.js');
 
 const buildContextAndToken = ({
   organizationId,
@@ -329,5 +331,73 @@ describe('getExtraTokenClaimsForJwtCustomization', () => {
       expect(payload).toHaveProperty('cimdClientId', cimdClientId);
       expect(payload).not.toHaveProperty('applicationId');
     });
+  });
+});
+
+const createOrgApiAccessToken = (ctx: KoaContextWithOIDC, aud?: string | string[]): AccessToken =>
+  Object.create(ctx.oidc.provider.AccessToken.prototype, {
+    accountId: { value: accountId, enumerable: true },
+    ...(aud === undefined ? {} : { aud: { value: aud, enumerable: true } }),
+  }) as AccessToken;
+
+describe('getExtraTokenClaimsForOrganizationApiResource', () => {
+  const apiResource = 'https://api.notes.com';
+
+  it('returns organization_id claim for an API resource access token', async () => {
+    const ctx = createOidcContext({
+      params: { organization_id: 'org-1', resource: apiResource },
+    });
+
+    await expect(
+      getExtraTokenClaimsForOrganizationApiResource(ctx, createOrgApiAccessToken(ctx, apiResource))
+    ).resolves.toEqual({ organization_id: 'org-1' });
+  });
+
+  it('skips organization_id when params.resource is ReservedResource.Organization', async () => {
+    const ctx = createOidcContext({
+      params: { organization_id: 'org-1', resource: ReservedResource.Organization },
+    });
+
+    await expect(
+      getExtraTokenClaimsForOrganizationApiResource(
+        ctx,
+        createOrgApiAccessToken(ctx, ReservedResource.Organization)
+      )
+    ).resolves.toBeUndefined();
+  });
+
+  it('skips organization_id when token.aud is ReservedResource.Organization', async () => {
+    const ctx = createOidcContext({
+      params: { organization_id: 'org-1', resource: [ReservedResource.Organization] },
+    });
+
+    await expect(
+      getExtraTokenClaimsForOrganizationApiResource(
+        ctx,
+        createOrgApiAccessToken(ctx, ReservedResource.Organization)
+      )
+    ).resolves.toBeUndefined();
+  });
+
+  it('returns undefined when organization_id or resource is missing, or token is not an access token', async () => {
+    const ctxNoResource = createOidcContext({ params: { organization_id: 'org-1' } });
+    await expect(
+      getExtraTokenClaimsForOrganizationApiResource(
+        ctxNoResource,
+        createOrgApiAccessToken(ctxNoResource)
+      )
+    ).resolves.toBeUndefined();
+
+    const ctxNoOrg = createOidcContext({ params: { resource: apiResource } });
+    await expect(
+      getExtraTokenClaimsForOrganizationApiResource(ctxNoOrg, createOrgApiAccessToken(ctxNoOrg))
+    ).resolves.toBeUndefined();
+
+    const ctxNonAccessToken = createOidcContext({
+      params: { organization_id: 'org-1', resource: apiResource },
+    });
+    await expect(
+      getExtraTokenClaimsForOrganizationApiResource(ctxNonAccessToken, {})
+    ).resolves.toBeUndefined();
   });
 });

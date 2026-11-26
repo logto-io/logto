@@ -124,7 +124,8 @@ const createContext = (
     grantType,
     organizationId,
     clientId: contextClientId = clientId,
-  }: { grantType: GrantType; organizationId?: string; clientId?: string }
+    route,
+  }: { grantType: GrantType; organizationId?: string; clientId?: string; route?: string }
 ) => {
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal client stub for OIDC context testing
   const client: KoaContextWithOIDC['oidc']['client'] = {
@@ -138,6 +139,7 @@ const createContext = (
 
   return createOidcContext({
     provider,
+    ...(route ? { route } : {}),
     client,
     params: {
       grant_type: grantType,
@@ -548,8 +550,12 @@ describe('oidc provider init', () => {
 describe('getResourceServerInfo for CIMD clients', () => {
   const cimdClientId = 'https://client.example.com/client-metadata.json';
 
-  const createCimdContext = (provider: KoaContextWithOIDC['oidc']['provider']) =>
-    createContext(provider, { grantType: GrantType.AuthorizationCode, clientId: cimdClientId });
+  const createCimdContext = (provider: KoaContextWithOIDC['oidc']['provider'], route?: string) =>
+    createContext(provider, {
+      grantType: GrantType.AuthorizationCode,
+      clientId: cimdClientId,
+      route,
+    });
 
   it('should filter resource scopes through the tenant ceiling without touching the applications table', async () => {
     const findResourceByIndicator = jest.fn().mockResolvedValue({
@@ -588,7 +594,8 @@ describe('getResourceServerInfo for CIMD clients', () => {
 
     const { id, queries, libraries, logtoConfigs, subscription } = tenant;
     const provider = initOidc(id, cimdEnvSet, queries, libraries, logtoConfigs, subscription);
-    const ctx = createCimdContext(provider);
+    // Consent / authorization stage combines both personal and organization ceilings.
+    const ctx = createCimdContext(provider, 'authorization');
 
     const result = await getResourceServerInfo(ctx, indicator);
 

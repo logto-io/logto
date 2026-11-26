@@ -83,6 +83,7 @@ import {
   filterResourceScopesForTheThirdPartyApplication,
 } from './resource.js';
 import { getAcceptedUserClaims, getUserClaimsData } from './scope.js';
+import { isConsentAuthorizationRoute, resolveThirdPartyTokenScopes } from './token-route-scopes.js';
 
 // Temporarily removed 'EdDSA' since it's not supported by browser yet
 const supportedSigningAlgs = Object.freeze(['RS256', 'PS256', 'ES256', 'ES384', 'ES512'] as const);
@@ -114,12 +115,19 @@ export default function initOidc(
     overwrite: true,
   } as const);
 
-  const getResourceServerInfoCore = async (
-    indicator: string,
-    clientId: string | undefined,
-    userId: string | undefined,
-    organizationId: string | undefined
-  ): Promise<Pick<ResourceServer, 'accessTokenFormat' | 'jwt' | 'accessTokenTTL' | 'scope'>> => {
+  const getResourceServerInfoCore = async ({
+    indicator,
+    clientId,
+    userId,
+    organizationId,
+    route,
+  }: {
+    indicator: string;
+    clientId: string | undefined;
+    userId: string | undefined;
+    organizationId: string | undefined;
+    route: string | undefined;
+  }): Promise<Pick<ResourceServer, 'accessTokenFormat' | 'jwt' | 'accessTokenTTL' | 'scope'>> => {
     const resourceServer = await findResource(queries, indicator);
 
     if (!resourceServer) {
@@ -127,6 +135,30 @@ export default function initOidc(
     }
 
     const { accessTokenTtl: accessTokenTTL } = resourceServer;
+    const treatAsCimdClient = shouldTreatAsCimdClient(envSet, clientId);
+    const isThirdParty =
+      treatAsCimdClient ||
+      (clientId !== undefined && (await isThirdPartyApplication(queries, clientId)));
+
+    if (isThirdParty && clientId && !isConsentAuthorizationRoute(route)) {
+      // Token-issuance and other non-consent routes fail closed into context-isolated scope
+      // resolution for third-party apps and CIMD clients (Cases 1, 2 & 4).
+      const resolvedScopes = await resolveThirdPartyTokenScopes({
+        envSet,
+        queries,
+        libraries,
+        clientId,
+        userId,
+        indicator,
+        organizationId,
+      });
+
+      return {
+        ...getSharedResourceServerData(envSet),
+        accessTokenTTL,
+        scope: resolvedScopes.map(({ name }) => name).join(' '),
+      };
+    }
 
     const scopes = await findResourceScopes({
       queries,
@@ -138,7 +170,7 @@ export default function initOidc(
       userId,
     });
 
-    if (shouldTreatAsCimdClient(envSet, clientId)) {
+    if (treatAsCimdClient) {
       /**
        * CIMD clients are unregistered: the tenant-wide ceiling replaces the per-application
        * consent configuration the third-party filter below reads.
@@ -152,7 +184,7 @@ export default function initOidc(
       };
     }
 
-    if (clientId && (await isThirdPartyApplication(queries, clientId))) {
+    if (isThirdParty && clientId) {
       const filteredScopes = await filterResourceScopesForTheThirdPartyApplication(
         libraries,
         clientId,
@@ -257,12 +289,20 @@ export default function initOidc(
         // Disable the auto use of authorization_code granted resource feature
         useGrantedResource: () => false,
         getResourceServerInfo: async (ctx, indicator) => {
-          const { client, params, session, entities } = ctx.oidc;
+          const { client, params, session, entities, route } = ctx.oidc;
           const userId = session?.accountId ?? entities.Account?.accountId;
           const organizationId =
-            typeof params?.organization_id === 'string' ? params.organization_id : undefined;
+            typeof params?.organization_id === 'string' && params.organization_id
+              ? params.organization_id
+              : undefined;
 
-          return getResourceServerInfoCore(indicator, client?.clientId, userId, organizationId);
+          return getResourceServerInfoCore({
+            indicator,
+            clientId: client?.clientId,
+            userId,
+            organizationId,
+            route,
+          });
         },
       },
     },

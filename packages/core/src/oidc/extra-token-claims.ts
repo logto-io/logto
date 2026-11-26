@@ -1,4 +1,5 @@
 import { appInsights } from '@logto/app-insights/node';
+import { ReservedResource } from '@logto/core-kit';
 import {
   type Json,
   LogtoJwtTokenKey,
@@ -57,7 +58,8 @@ const throwJwtCustomizerInvalidRequest = (ctx: KoaContextWithOIDC, message: stri
 /**
  * For organization API resource feature, add extra token claim `organization_id` to the
  * access token.
- * Note that this is available only when `resource` and `organization_id` are both present.
+ * Note that this is available only when `resource` and `organization_id` are both present,
+ * and never for the virtual consent-only `ReservedResource.Organization` indicator.
  */
 export const getExtraTokenClaimsForOrganizationApiResource = async (
   ctx: KoaContextWithOIDC,
@@ -66,7 +68,7 @@ export const getExtraTokenClaimsForOrganizationApiResource = async (
   const organizationId = ctx.oidc.params?.organization_id;
   const resource = ctx.oidc.params?.resource;
 
-  if (!organizationId || !resource) {
+  if (!organizationId || !resource || resource === ReservedResource.Organization) {
     return;
   }
 
@@ -76,6 +78,13 @@ export const getExtraTokenClaimsForOrganizationApiResource = async (
 
   // Only handle access tokens
   if (!isAccessToken) {
+    return;
+  }
+
+  if (
+    token.aud === ReservedResource.Organization ||
+    (Array.isArray(token.aud) && token.aud.includes(ReservedResource.Organization))
+  ) {
     return;
   }
 

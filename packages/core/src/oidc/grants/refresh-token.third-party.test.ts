@@ -9,6 +9,7 @@ import {
   accountId,
   assertUserHasApplicationAccess,
   clientId,
+  createReservedOrgResourceRefreshContext,
   grantId,
   mockHandler,
   stubAccount,
@@ -236,5 +237,39 @@ describe('refresh token grant for registered third-party applications', () => {
       scope: '',
       aud: 'urn:logto:organization:some_org_id',
     });
+  });
+
+  it.each([
+    {
+      label: 'OAuth-only implicit fallback (omitted openid, no resource param)',
+      params: { refresh_token: 'some_refresh_token' },
+    },
+    {
+      label: 'explicit resource=ReservedResource.Organization with organization_id',
+      params: {
+        refresh_token: 'some_refresh_token',
+        organization_id: 'some_org_id',
+        resource: ReservedResource.Organization,
+      },
+    },
+  ])('Case 4: should issue empty scope without throwing on $label', async ({ params }) => {
+    const { tenant } = createThirdPartyTenant({
+      roleScopes: ['invite:member'],
+      enabledOrganizationScopes: ['invite:member'],
+    });
+    const ctx = createReservedOrgResourceRefreshContext({
+      tenant,
+      client: validClient,
+      refreshTokenScopes: [UserScope.Organizations, 'invite:member'],
+      params,
+    });
+
+    const entityStub = Sinon.stub(ctx.oidc, 'entity');
+    await expect(mockHandler(tenant)(ctx)).resolves.toBeUndefined();
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- `entity()` args are typed `unknown`; the assertions below narrow them
+    const [key, value] = entityStub.lastCall.args;
+    expect(key).toBe('AccessToken');
+    expect(value).toMatchObject({ scope: '' });
   });
 });

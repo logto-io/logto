@@ -60,6 +60,7 @@ import {
   validateGrant,
   validatePresence,
 } from '#src/oidc/oidc-provider-internals.js';
+import { resolveThirdPartyTokenScopes, type ScopeEntity } from '#src/oidc/token-route-scopes.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -103,19 +104,16 @@ const requiredParameters = Object.freeze(['refresh_token']) satisfies ReadonlyAr
   (typeof parameters)[number]
 >;
 
-const boundOrganizationScopes = (
-  roleScopeNames: readonly string[],
-  allowedScopes: ReadonlyArray<{ name: string }>,
+const filterByGrantOrganizationScopes = (
+  scopes: readonly ScopeEntity[],
   grant: InstanceType<Provider['Grant']>
 ) => {
-  const allowedNames = new Set(allowedScopes.map(({ name }) => name));
   // `getResourceScope` returns `''` when the Grant carries no record for the resource.
   const grantedOrganizationScopes = new Set(
     grant.getResourceScope(ReservedResource.Organization).split(' ').filter(Boolean)
   );
-  return roleScopeNames.filter(
-    (name) => allowedNames.has(name) && grantedOrganizationScopes.has(name)
-  );
+
+  return scopes.map(({ name }) => name).filter((name) => grantedOrganizationScopes.has(name));
 };
 
 // We have to disable the rules because the original implementation is written in JavaScript and
@@ -357,33 +355,32 @@ export const buildHandler: Handler = (envSet, queries, libraries) => async (ctx)
   // the logic is handled in `getResourceServerInfo` and `extraTokenClaims`, see the init file of oidc-provider.
   if (organizationId && !params.resource) {
     /* === RFC 0001 === */
-    /** All the scopes granted to the user through organization roles. */
-    const roleScopeNames = await queries.organizations.relations.usersRoles
-      .getUserScopes(organizationId, account.accountId)
-      .then((scopes) => scopes.map(({ name }) => name));
     /**
-     * CIMD clients and registered third-party applications bound organization role scopes twice:
-     * by the Grant's organization-resource record and by their live allowed organization scopes
-     * (the tenant-wide `cimd_organization_scopes` ceiling for CIMD, or the application's enabled
-     * `organizationScopes` for registered third-party apps). The Grant intersection is
-     * load-bearing — scope names are not unique across resources, and the flat refresh-token
-     * scope set passed to `handleOrganizationToken` cannot carry the organization resource's
-     * boundary, so without it a name granted for an unrelated API resource or OIDC scope would
-     * issue the same-named organization scope. First-party applications remain unbounded here.
+     * CIMD clients and registered third-party applications resolve live organization role scopes
+     * through the unified token-route scope resolver (live org roles ∩ live tenant ceiling or app
+     * `organizationScopes`) and further intersect with `Grant[urn:logto:resource:organizations]`.
+     * The Grant intersection is load-bearing — scope names are not unique across resources, and
+     * the flat refresh-token scope set passed to `handleOrganizationToken` cannot carry the
+     * organization resource's boundary, so without it a name granted for an unrelated API resource
+     * or OIDC scope would issue the same-named organization scope. First-party applications remain
+     * unbounded here.
      */
-    const getAvailableScopes = async (): Promise<string[]> => {
-      if (!isThirdParty) {
-        return roleScopeNames;
-      }
+    const availableScopes = isThirdParty
+      ? filterByGrantOrganizationScopes(
+          await resolveThirdPartyTokenScopes({
+            envSet,
+            queries,
+            libraries,
+            clientId: client.clientId,
+            userId: account.accountId,
+            organizationId,
+          }),
+          grant
+        )
+      : await queries.organizations.relations.usersRoles
+          .getUserScopes(organizationId, account.accountId)
+          .then((scopes) => scopes.map(({ name }) => name));
 
-      const allowedScopes = treatAsCimdClient
-        ? await queries.cimd.organizationScopes.findAll()
-        : await libraries.applications.getApplicationUserConsentOrganizationScopes(client.clientId);
-
-      return boundOrganizationScopes(roleScopeNames, allowedScopes, grant);
-    };
-
-    const availableScopes = await getAvailableScopes();
     await handleOrganizationToken({
       envSet,
       availableScopes,

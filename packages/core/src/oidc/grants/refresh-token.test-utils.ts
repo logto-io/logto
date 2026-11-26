@@ -1,9 +1,11 @@
-import { UserScope } from '@logto/core-kit';
+import { ReservedResource, UserScope } from '@logto/core-kit';
 import { type MfaFactor, type Organization } from '@logto/schemas';
 import { type Adapter, type KoaContextWithOIDC, errors } from 'oidc-provider';
 import Sinon from 'sinon';
 
 import { mockSignInExperience, mockUser } from '#src/__mocks__/index.js';
+import { type EnvSet } from '#src/env-set/index.js';
+import initOidc from '#src/oidc/init.js';
 import { getProviderConfiguration } from '#src/oidc/oidc-provider-internals.js';
 import { createOidcContext } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -192,6 +194,66 @@ export const createPreparedContext = () => {
   const ctx = createOidcContext(validOidcContext);
   stubRefreshToken(ctx);
   stubGrant(ctx);
+  stubAccount(ctx);
+  return ctx;
+};
+
+const createProviderForTenant = (tenant: MockTenant, envSet: EnvSet = tenant.envSet) =>
+  initOidc(
+    tenant.id,
+    envSet,
+    tenant.queries,
+    tenant.libraries,
+    tenant.logtoConfigs,
+    tenant.subscription
+  );
+
+export const createReservedOrgResourceRefreshContext = ({
+  tenant,
+  envSet = tenant.envSet,
+  client,
+  refreshTokenScopes,
+  params,
+}: {
+  tenant: MockTenant;
+  envSet?: EnvSet;
+  client: Client;
+  refreshTokenScopes: string[];
+  params: Record<string, string | undefined>;
+}) => {
+  const provider = createProviderForTenant(tenant, envSet);
+  // `RefreshToken.save()` and `AccessToken.save()` invoke provider hooks (`ttl`, `extraTokenClaims`)
+  // with AsyncLocalStorage's request context, which is absent in direct handler unit tests; stub
+  // persistence so we inspect the built token directly.
+  Sinon.stub(provider.RefreshToken.prototype, 'save').resolves('refresh_token');
+  Sinon.stub(provider.AccessToken.prototype, 'save').resolves('access_token');
+  const refreshTokenOverrides = {
+    clientId: client.clientId,
+    scope: refreshTokenScopes.join(' '),
+    scopes: new Set(refreshTokenScopes),
+    resource: ReservedResource.Organization,
+    // `resolveResource` reads `model.resourceIndicators` at runtime (not declared in `@types/oidc-provider`).
+    resourceIndicators: new Set([ReservedResource.Organization]),
+  };
+
+  const ctx = createOidcContext({
+    provider,
+    route: 'token',
+    requestParamScopes: new Set(),
+    params,
+    entities: {
+      RefreshToken: validRefreshToken,
+      Client: client,
+    },
+    client,
+  });
+  stubRefreshToken(ctx, refreshTokenOverrides);
+  stubGrant(ctx, {
+    clientId: client.clientId,
+    getResourceScopeFiltered: jest.fn((_resource: string, filter: Set<string>) =>
+      [...filter].join(' ')
+    ),
+  });
   stubAccount(ctx);
   return ctx;
 };

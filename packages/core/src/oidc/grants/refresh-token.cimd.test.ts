@@ -1,8 +1,11 @@
+import { ReservedResource, UserScope } from '@logto/core-kit';
+import { defaultTenantId } from '@logto/schemas';
 import { errors } from 'oidc-provider';
 import Sinon from 'sinon';
 
-import { type EnvSet } from '#src/env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
+import { mockEnvSet } from '#src/test-utils/env-set.js';
 import { createOidcContext } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
@@ -11,6 +14,7 @@ import {
   accountId,
   assertUserHasApplicationAccess,
   createAccessDeniedError,
+  createReservedOrgResourceRefreshContext,
   grantId,
   stubAccount,
   stubGrant,
@@ -29,8 +33,13 @@ const cimdClientId = 'https://client.example.com/metadata.json';
  * The gate reads only `oidc.cimdEnabled` from the tenant env set; the jest environment keeps
  * the dev-features and SSRF-protection static flags on already.
  */
-// eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal env-set stub scoped to the field the gate reads
-const cimdEnvSet = { oidc: { cimdEnabled: true } } as EnvSet;
+class MockCimdEnvSet extends EnvSet {
+  override get oidc(): EnvSet['oidc'] {
+    return { ...mockEnvSet.oidc, cimdEnabled: true };
+  }
+}
+
+const cimdEnvSet = new MockCimdEnvSet(defaultTenantId, EnvSet.values.dbUrl);
 
 const cimdClient: Client = {
   clientId: cimdClientId,
@@ -160,5 +169,44 @@ describe('refresh token grant for CIMD clients', () => {
 
     await expect(buildCimdHandler(tenant, tenant.envSet)(ctx)).rejects.toThrow(errors.AccessDenied);
     expect(assertUserHasApplicationAccess).toHaveBeenCalled();
+  });
+
+  it.each([
+    {
+      label: 'OAuth-only implicit fallback (omitted openid, no resource param)',
+      params: { refresh_token: 'some_refresh_token' },
+    },
+    {
+      label: 'explicit resource=ReservedResource.Organization with organization_id',
+      params: {
+        refresh_token: 'some_refresh_token',
+        organization_id: 'some_org_id',
+        resource: ReservedResource.Organization,
+      },
+    },
+  ])('Case 4: should issue empty scope without throwing on $label', async ({ params }) => {
+    const tenant = new MockTenant();
+    Sinon.stub(tenant.queries.organizations.relations.users, 'exists').resolves(true);
+    Sinon.stub(tenant.queries.cimd.grantOrganizations, 'exists').resolves(true);
+    stubOrganizationMfa(tenant);
+
+    const ctx = createReservedOrgResourceRefreshContext({
+      tenant,
+      envSet: cimdEnvSet,
+      client: cimdClient,
+      refreshTokenScopes: [UserScope.Organizations, 'foo'],
+      params,
+    });
+
+    const entityStub = Sinon.stub(ctx.oidc, 'entity');
+    await expect(buildCimdHandler(tenant)(ctx)).resolves.toBeUndefined();
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- `entity()` args are typed `unknown`; the assertions below narrow them
+    const [key, value] = entityStub.lastCall.args;
+    expect(key).toBe('AccessToken');
+    expect(value).toMatchObject({
+      clientId: cimdClientId,
+      scope: '',
+    });
   });
 });
