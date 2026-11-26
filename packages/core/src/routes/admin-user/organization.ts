@@ -1,6 +1,8 @@
+import { ManagementApiScope } from '@logto/schemas';
 import { z } from 'zod';
 
 import koaGuard from '#src/middleware/koa-guard.js';
+import koaManagementApiPermission from '#src/middleware/koa-management-api-permission.js';
 
 import { organizationWithRolesResponseGuard } from '../organization/guards.js';
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
@@ -10,6 +12,7 @@ export default function adminUserOrganizationRoutes<T extends ManagementApiRoute
 ) {
   router.get(
     '/users/:userId/organizations',
+    koaManagementApiPermission(ManagementApiScope.ReadUsers),
     koaGuard({
       params: z.object({ userId: z.string() }),
       response: organizationWithRolesResponseGuard.array(),

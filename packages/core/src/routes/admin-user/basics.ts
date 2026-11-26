@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 import { emailRegEx, phoneRegEx, usernameRegEx } from '@logto/core-kit';
 import {
+  ManagementApiScope,
   ProductEvent,
   UsersPasswordEncryptionMethod,
   adminTenantId,
@@ -27,6 +28,9 @@ import {
   encryptUserPassword,
 } from '#src/libraries/user.utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import koaManagementApiPermission, {
+  shouldMaskCredentials,
+} from '#src/middleware/koa-management-api-permission.js';
 import assertThat from '#src/utils/assert-that.js';
 import { getConsoleLogFromContext } from '#src/utils/console.js';
 
@@ -74,6 +78,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 
   router.get(
     '/users/:userId',
+    koaManagementApiPermission(ManagementApiScope.ReadUsers),
     koaGuard({
       params: object({ userId: string() }),
       query: object({
@@ -95,7 +100,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
         ssoIdentities: conditional(
           yes(includeSsoIdentities) && [...(await findUserSsoIdentities(userId))]
         ),
-        includePasswordHash: yes(includePasswordHash) && !ctx.auth.isReadOnly,
+        includePasswordHash: yes(includePasswordHash) && !shouldMaskCredentials(ctx.auth),
       });
 
       return next();
@@ -104,6 +109,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 
   router.get(
     '/users/:userId/custom-data',
+    koaManagementApiPermission(ManagementApiScope.ReadUsers),
     koaGuard({
       params: object({ userId: string() }),
       response: jsonObjectGuard,
@@ -123,6 +129,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 
   router.patch(
     '/users/:userId/custom-data',
+    koaManagementApiPermission(ManagementApiScope.UpdateUsers),
     koaGuard({
       params: object({ userId: string() }),
       body: object({ customData: jsonObjectGuard }),
@@ -149,6 +156,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 
   router.get(
     '/users/:userId/logto-configs',
+    koaManagementApiPermission(ManagementApiScope.ReadUsers),
     koaGuard({
       params: object({ userId: string() }),
       response: adminUserLogtoConfigResponseGuard,
@@ -203,6 +211,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 
   router.patch(
     '/users/:userId/profile',
+    koaManagementApiPermission(ManagementApiScope.UpdateUsers),
     koaGuard({
       params: object({ userId: string() }),
       body: object({ profile: userProfileGuard }),
@@ -229,6 +238,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 
   router.post(
     '/users',
+    koaManagementApiPermission(ManagementApiScope.CreateUsers),
     koaGuard({
       body: object({
         id: string().regex(customUserIdRegEx),
@@ -332,6 +342,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 
   router.patch(
     '/users/:userId',
+    koaManagementApiPermission(ManagementApiScope.UpdateUsers),
     koaGuard({
       params: object({ userId: string() }),
       body: object({
@@ -364,6 +375,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 
   router.patch(
     '/users/:userId/password',
+    koaManagementApiPermission(ManagementApiScope.UpdateUsers),
     koaGuard({
       params: object({ userId: string() }),
       body: object({ password: string().min(1) }),
@@ -391,6 +403,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 
   router.patch(
     '/users/:userId/password/expiration',
+    koaManagementApiPermission(ManagementApiScope.UpdateUsers),
     koaGuard({
       params: object({ userId: string() }),
       body: object({ isExpired: boolean() }),
@@ -426,6 +439,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 
   router.post(
     '/users/:userId/password/verify',
+    koaManagementApiPermission(ManagementApiScope.UpdateUsers),
     koaGuard({
       params: object({ userId: string() }),
       body: object({ password: string().min(1) }),
@@ -448,6 +462,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 
   router.get(
     '/users/:userId/has-password',
+    koaManagementApiPermission(ManagementApiScope.ReadUsers),
     koaGuard({
       params: object({ userId: string() }),
       response: object({ hasPassword: boolean() }),
@@ -467,6 +482,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 
   router.patch(
     '/users/:userId/is-suspended',
+    koaManagementApiPermission(ManagementApiScope.UpdateUsers),
     koaGuard({
       params: object({ userId: string() }),
       body: object({ isSuspended: boolean() }),
@@ -497,6 +513,7 @@ export default function adminUserBasicsRoutes<T extends ManagementApiRouter>(
 
   router.delete(
     '/users/:userId',
+    koaManagementApiPermission(ManagementApiScope.DeleteUsers),
     koaGuard({
       params: object({ userId: string() }),
       status: [204, 400, 404],

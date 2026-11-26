@@ -1,9 +1,10 @@
-import { getUserApplicationGrantsResponseGuard } from '@logto/schemas';
+import { getUserApplicationGrantsResponseGuard, ManagementApiScope } from '@logto/schemas';
 import { trySafe } from '@silverhand/essentials';
 import { object, string, enum as zodEnum } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import koaManagementApiPermission from '#src/middleware/koa-management-api-permission.js';
 
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
@@ -17,6 +18,7 @@ export default function adminUserGrantRoutes<T extends ManagementApiRouter>(
 
   router.get(
     '/users/:userId/grants',
+    koaManagementApiPermission(ManagementApiScope.ReadUsers),
     koaGuard({
       params: object({ userId: string() }),
       query: object({
@@ -43,6 +45,7 @@ export default function adminUserGrantRoutes<T extends ManagementApiRouter>(
 
   router.delete(
     '/users/:userId/grants/:grantId',
+    koaManagementApiPermission(ManagementApiScope.UpdateUsers),
     koaGuard({
       params: object({ userId: string(), grantId: string() }),
       status: [204, 404, 500],

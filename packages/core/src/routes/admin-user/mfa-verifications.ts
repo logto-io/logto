@@ -1,4 +1,4 @@
-import { isVerificationCodeMfaFactor, MfaFactor } from '@logto/schemas';
+import { isVerificationCodeMfaFactor, ManagementApiScope, MfaFactor } from '@logto/schemas';
 import { getUserDisplayName } from '@logto/shared';
 import { yes } from '@silverhand/essentials';
 import { authenticator } from 'otplib';
@@ -15,6 +15,9 @@ import {
   validateTotpSecret,
 } from '#src/libraries/verification-helpers/totp-validation.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import koaManagementApiPermission, {
+  shouldMaskCredentials,
+} from '#src/middleware/koa-management-api-permission.js';
 import assertThat from '#src/utils/assert-that.js';
 import {
   adminUserMfaVerificationResponseGuard,
@@ -42,6 +45,7 @@ export default function adminUserMfaVerificationsRoutes<T extends ManagementApiR
 
   router.get(
     '/users/:userId/mfa-verifications',
+    koaManagementApiPermission(ManagementApiScope.ReadUsers),
     koaGuard({
       params: object({ userId: string() }),
       query: object({ includeWebAuthnCredentials: string().optional() }),
@@ -55,7 +59,8 @@ export default function adminUserMfaVerificationsRoutes<T extends ManagementApiR
       } = ctx.guard;
       const user = await findUserById(userId);
       ctx.body = transpileUserMfaVerifications(user.mfaVerifications, {
-        includeWebAuthnCredentials: yes(includeWebAuthnCredentials),
+        includeWebAuthnCredentials:
+          yes(includeWebAuthnCredentials) && !shouldMaskCredentials(ctx.auth),
       });
       return next();
     }

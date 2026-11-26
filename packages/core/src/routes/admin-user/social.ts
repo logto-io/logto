@@ -1,6 +1,7 @@
 import { notImplemented } from '@logto/cli/lib/connector/consts.js';
 import {
   ConnectorType,
+  ManagementApiScope,
   identityGuard,
   identitiesGuard,
   userProfileResponseGuard,
@@ -11,6 +12,7 @@ import { object, record, string, unknown } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import koaManagementApiPermission from '#src/middleware/koa-management-api-permission.js';
 import assertThat from '#src/utils/assert-that.js';
 import { assertNoAuthorizationError } from '#src/utils/connectors/authorization-error.js';
 import { desensitizeTokenSetSecret } from '#src/utils/secret-encryption.js';
@@ -163,6 +165,7 @@ export default function adminUserSocialRoutes<T extends ManagementApiRouter>(
 
   router.get(
     '/users/:userId/identities/:target',
+    koaManagementApiPermission(ManagementApiScope.ReadUsers),
     koaGuard({
       params: object({ userId: string(), target: string() }),
       query: object({
