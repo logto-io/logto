@@ -8,9 +8,15 @@ const { mockEsm } = createMockUtils(jest);
 
 const mockFunction = jest.fn();
 
-const createClient = jest.fn((_config?: { socket?: { tls?: boolean } }) => ({
+type SocketOptions = {
+  tls?: boolean;
+  reconnectStrategy?: (retries: number, cause: Error) => number | false | Error;
+};
+
+const createClient = jest.fn((_config?: { socket?: SocketOptions }) => ({
   // Standalone clients report readiness via `isReady`; default to ready so commands run.
   isReady: true,
+  isOpen: true,
   set: mockFunction,
   get: mockFunction,
   del: mockFunction,
@@ -22,7 +28,8 @@ const createClient = jest.fn((_config?: { socket?: { tls?: boolean } }) => ({
 
 const createCluster = jest.fn(
   (_config?: {
-    defaults?: { username?: string; password?: string; socket?: { tls?: boolean } };
+    rootNodes?: Array<{ url: string; socket?: SocketOptions }>;
+    defaults?: { username?: string; password?: string; socket?: SocketOptions };
   }) => ({
     // The cluster client only exposes `isOpen`; default to open so commands run.
     isOpen: true,
@@ -256,6 +263,148 @@ describe('RedisCache', () => {
       warnSpy.mockRestore();
     }
   }, 8000);
+});
+
+const getReconnectStrategies = () => {
+  jest.clearAllMocks();
+  // eslint-disable-next-line no-new -- only the options passed to the factories are inspected
+  new RedisCache('redis://url');
+  // eslint-disable-next-line no-new -- only the options passed to the factories are inspected
+  new RedisClusterCache(new URL('redis://url?cluster=1'));
+
+  return [
+    createClient.mock.calls[0]?.[0]?.socket?.reconnectStrategy,
+    createCluster.mock.calls[0]?.[0]?.defaults?.socket?.reconnectStrategy,
+  ];
+};
+
+describe('Redis reconnection', () => {
+  it('keeps retrying with a capped delay instead of giving up', () => {
+    for (const reconnectStrategy of getReconnectStrategies()) {
+      expect(reconnectStrategy?.(1, new Error('ECONNREFUSED'))).toBe(500);
+      expect(reconnectStrategy?.(6, new Error('ECONNREFUSED'))).toBe(3000);
+      expect(reconnectStrategy?.(1000, new Error('ECONNREFUSED'))).toBe(5000);
+    }
+  });
+
+  it('does not retry when the server certificate is self-signed', () => {
+    for (const reconnectStrategy of getReconnectStrategies()) {
+      const cause: Error & { code: string } = {
+        name: 'Error',
+        message: 'self-signed certificate in certificate chain',
+        code: 'SELF_SIGNED_CERT_IN_CHAIN',
+      };
+      expect(reconnectStrategy?.(0, cause)).toBe(false);
+    }
+  });
+
+  it('does not hold startup while Redis is unreachable', async () => {
+    jest.clearAllMocks();
+    const cache = new RedisCache('redis://url');
+    // A standalone `connect()` only resolves once the socket is ready, which never happens here.
+    jest.spyOn(cache.client!, 'connect').mockImplementation(hang);
+    const warnSpy = jest.spyOn(cacheConsole, 'warn').mockReturnValue();
+
+    try {
+      const start = Date.now();
+      await cache.connect();
+      const elapsed = Date.now() - start;
+
+      expect(elapsed).toBeGreaterThanOrEqual(4900);
+      expect(elapsed).toBeLessThan(7000);
+      expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('Redis is not reachable'));
+    } finally {
+      warnSpy.mockRestore();
+    }
+  }, 8000);
+
+  it('connects a standalone client and confirms it with a ping', async () => {
+    jest.clearAllMocks();
+    const cache = new RedisCache('redis://url');
+    // Earlier tests leave the shared `mockFunction` hanging, so stub `connect` on its own.
+    Sinon.stub(cache.client!, 'connect').resolves();
+    const infoSpy = jest.spyOn(cacheConsole, 'info').mockReturnValue();
+
+    try {
+      await cache.connect();
+      expect(infoSpy).toHaveBeenCalledWith('Connected to Redis');
+    } finally {
+      infoSpy.mockRestore();
+    }
+  });
+
+  it('does not reconnect an open cluster when the ping after connecting fails', async () => {
+    jest.clearAllMocks();
+    const cache = new RedisClusterCache(new URL('redis://url?cluster=1'));
+    const connectStub = Sinon.stub(cache.client!, 'connect').resolves();
+    Sinon.stub(cache.client!, 'sendCommand').rejects(new Error('Socket closed unexpectedly'));
+    const errorSpy = jest.spyOn(cacheConsole, 'error').mockReturnValue();
+
+    try {
+      await cache.connect();
+      expect(connectStub.callCount).toBe(1);
+    } finally {
+      errorSpy.mockRestore();
+    }
+  });
+
+  it('stops retrying a cluster connection once disconnected', async () => {
+    jest.clearAllMocks();
+    const cache = new RedisClusterCache(new URL('redis://url?cluster=1'));
+    const connectStub = Sinon.stub(cache.client!, 'connect').callsFake(async () => {
+      void cache.disconnect();
+      throw new Error('All the root nodes are unavailable');
+    });
+    const errorSpy = jest.spyOn(cacheConsole, 'error').mockReturnValue();
+    const infoSpy = jest.spyOn(cacheConsole, 'info').mockReturnValue();
+
+    try {
+      const start = Date.now();
+      await cache.connect();
+
+      // Resolves after one backoff delay rather than at the startup timeout.
+      expect(Date.now() - start).toBeLessThan(2000);
+      expect(connectStub.callCount).toBe(1);
+    } finally {
+      errorSpy.mockRestore();
+      infoSpy.mockRestore();
+    }
+  });
+
+  it('gives each cluster root node its own socket options so discovery cannot disable reconnects', () => {
+    jest.clearAllMocks();
+    // eslint-disable-next-line no-new -- only the options passed to the factory are inspected
+    new RedisClusterCache(new URL('redis://h1?cluster=1&host=h2'));
+
+    const options = createCluster.mock.calls[0]?.[0];
+    expect(options?.rootNodes).toHaveLength(2);
+    for (const rootNode of options?.rootNodes ?? []) {
+      expect(rootNode.socket).toBeDefined();
+      expect(rootNode.socket).not.toBe(options?.defaults?.socket);
+    }
+  });
+
+  it('retries a cluster connection that failed because no root node answered', async () => {
+    jest.clearAllMocks();
+    const cache = new RedisClusterCache(new URL('redis://url?cluster=1'));
+    const connectStub = Sinon.stub(cache.client!, 'connect')
+      .onFirstCall()
+      .rejects(new Error('All the root nodes are unavailable'))
+      .onSecondCall()
+      .resolves();
+    const errorSpy = jest.spyOn(cacheConsole, 'error').mockReturnValue();
+    const infoSpy = jest.spyOn(cacheConsole, 'info').mockReturnValue();
+
+    try {
+      await cache.connect();
+
+      expect(connectStub.callCount).toBe(2);
+      expect(infoSpy).toHaveBeenCalledWith('Connected to Redis');
+    } finally {
+      errorSpy.mockRestore();
+      infoSpy.mockRestore();
+    }
+  });
 });
 
 describe('TLS socket options derived from the URL protocol', () => {
