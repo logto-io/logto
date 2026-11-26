@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { MfaVerificationCodeEnrollment } from '../foundations/index.js';
+
 import {
   createAdminTenantSignInExperience,
   createDefaultSignInExperience,
@@ -32,6 +34,11 @@ describe('createDefaultSignInExperience', () => {
   it('still has a two-parameter signature and seeds an empty passwordPolicy', () => {
     const row = createDefaultSignInExperience('some-tenant-id', false);
     expect(row.passwordPolicy).toEqual({});
+  });
+
+  it('seeds explicit email and SMS MFA enrollment', () => {
+    const row = createDefaultSignInExperience('some-tenant-id', false);
+    expect(row.mfa?.verificationCodeEnrollment).toBe(MfaVerificationCodeEnrollment.Explicit);
   });
 
   it('keeps legacy null signUpProfileFields for seeded default tenants', () => {

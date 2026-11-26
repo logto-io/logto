@@ -287,6 +287,12 @@ export class ExperienceClient extends MockClient {
     });
   }
 
+  public async enableMfa() {
+    return this.api.post(`${experienceRoutes.mfa}/mfa-enabled`, {
+      headers: this.headers,
+    });
+  }
+
   public async skipMfaBinding() {
     return this.api.post(`${experienceRoutes.mfa}/mfa-skipped`, {
       headers: this.headers,

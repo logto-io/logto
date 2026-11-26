@@ -885,28 +885,18 @@ describe('sign-in experience routes with dev features disabled', () => {
     expect(response.body).toEqual(expect.objectContaining({ adaptiveMfa, mfa }));
   });
 
-  it('should store the MFA verification code enrollment mode only with dev features', async () => {
+  it('should store the MFA verification code enrollment mode', async () => {
     const { requester, updateDefaultSignInExperience } = createDevFeaturesDisabledRequester();
     const mfa = {
       policy: MfaPolicy.PromptAtSignInAndSignUp,
       factors: [MfaFactor.TOTP],
-    };
-    const mfaWithMode = {
-      ...mfa,
       verificationCodeEnrollment: MfaVerificationCodeEnrollment.Explicit,
     };
 
-    const response = await requester.patch('/sign-in-exp').send({ mfa: mfaWithMode });
+    const response = await requester.patch('/sign-in-exp').send({ mfa });
 
     expect(response.status).toEqual(200);
     expect(updateDefaultSignInExperience).toHaveBeenLastCalledWith({ mfa });
-
-    // `afterEach` restores the flag.
-    setDevFeaturesEnabled(true);
-    const devResponse = await requester.patch('/sign-in-exp').send({ mfa: mfaWithMode });
-
-    expect(devResponse.status).toEqual(200);
-    expect(updateDefaultSignInExperience).toHaveBeenLastCalledWith({ mfa: mfaWithMode });
   });
 
   it('should include custom allowlist in GET response', async () => {

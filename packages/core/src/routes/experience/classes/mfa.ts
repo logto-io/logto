@@ -28,7 +28,6 @@ import { generateStandardId, maskEmail, maskPhone, PhoneNumberParser } from '@lo
 import { cond, conditional, condObject, deduplicate, pick } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { getAllUserEnabledMfaVerifications } from '#src/libraries/mfa.js';
 import {
@@ -253,23 +252,20 @@ export class Mfa {
       });
     }
 
-    // Email / SMS MFA explicit enrollment: persist enrolled verification code factors
-    if (EnvSet.values.isDevFeaturesEnabled) {
-      if (this.#emailVerificationCode) {
-        verificationSet.add({
-          id: generateStandardId(),
-          createdAt: new Date().toISOString(),
-          type: MfaFactor.EmailVerificationCode,
-        });
-      }
+    if (this.#emailVerificationCode) {
+      verificationSet.add({
+        id: generateStandardId(),
+        createdAt: new Date().toISOString(),
+        type: MfaFactor.EmailVerificationCode,
+      });
+    }
 
-      if (this.#phoneVerificationCode) {
-        verificationSet.add({
-          id: generateStandardId(),
-          createdAt: new Date().toISOString(),
-          type: MfaFactor.PhoneVerificationCode,
-        });
-      }
+    if (this.#phoneVerificationCode) {
+      verificationSet.add({
+        id: generateStandardId(),
+        createdAt: new Date().toISOString(),
+        type: MfaFactor.PhoneVerificationCode,
+      });
     }
 
     return {
@@ -437,11 +433,13 @@ export class Mfa {
     const profile = verificationRecord.toUserProfile();
     const identifierValue = 'primaryEmail' in profile ? profile.primaryEmail : profile.primaryPhone;
 
-    // Email / SMS MFA explicit enrollment: allow enrolling the user's existing primary email or
-    // phone without staging a duplicate profile update.
-    const isExistingPrimaryIdentifier =
-      EnvSet.values.isDevFeaturesEnabled &&
-      this.matchesExistingPrimaryIdentifier(factor, user, identifierValue);
+    // Allow enrolling the user's existing primary email or phone without staging a duplicate
+    // profile update.
+    const isExistingPrimaryIdentifier = this.matchesExistingPrimaryIdentifier(
+      factor,
+      user,
+      identifierValue
+    );
 
     if (isExistingPrimaryIdentifier) {
       log?.append({
@@ -689,16 +687,14 @@ export class Mfa {
       requiredFactors.length > 0 &&
       !requiredFactors.some((factor) => linkedFactors.includes(factor))
     ) {
-      // Email / SMS MFA explicit enrollment: expose masked existing primary identifiers so the
-      // onboarding list can offer sending a verification code to the user's existing address.
+      // Expose masked existing primary identifiers so the onboarding list can offer sending a
+      // verification code to the user's existing address.
       const maskedIdentifiers = condObject({
         [MfaFactor.EmailVerificationCode]:
-          EnvSet.values.isDevFeaturesEnabled &&
           requiredFactors.includes(MfaFactor.EmailVerificationCode) &&
           identifiedUser.primaryEmail &&
           maskEmail(identifiedUser.primaryEmail),
         [MfaFactor.PhoneVerificationCode]:
-          EnvSet.values.isDevFeaturesEnabled &&
           requiredFactors.includes(MfaFactor.PhoneVerificationCode) &&
           identifiedUser.primaryPhone &&
           maskPhone(identifiedUser.primaryPhone),
@@ -800,12 +796,9 @@ export class Mfa {
     const { signUp, passkeySignIn } =
       await this.signInExperienceValidator.getSignInExperienceData();
 
-    // Email / SMS MFA explicit enrollment: suggest another factor only when a dual-purpose factor
-    // was bound in this interaction as the user's sole MFA factor.
-    if (
-      EnvSet.values.isDevFeaturesEnabled &&
-      mfaSettings.verificationCodeEnrollment === MfaVerificationCodeEnrollment.Explicit
-    ) {
+    // Explicit enrollment: suggest another factor only when a dual-purpose factor was bound in
+    // this interaction as the user's sole MFA factor.
+    if (mfaSettings.verificationCodeEnrollment === MfaVerificationCodeEnrollment.Explicit) {
       const hasDualPurposeFactorBoundInSession =
         Boolean(this.#emailVerificationCode) ||
         Boolean(this.#phoneVerificationCode) ||
@@ -858,20 +851,16 @@ export class Mfa {
     const emailToMask = factorsInUser.includes(MfaFactor.EmailVerificationCode)
       ? effectiveEmail
       : conditional(
-          // Email / SMS MFA explicit enrollment: expose unenrolled existing primary email so the
-          // suggestion list enrolls it instead of opening the new-identifier profile form.
-          EnvSet.values.isDevFeaturesEnabled &&
-            sortedFactors.includes(MfaFactor.EmailVerificationCode) &&
-            primaryEmail
+          // Expose unenrolled existing primary email so the suggestion list enrolls it instead of
+          // opening the new-identifier profile form.
+          sortedFactors.includes(MfaFactor.EmailVerificationCode) && primaryEmail
         );
     const phoneToMask = factorsInUser.includes(MfaFactor.PhoneVerificationCode)
       ? effectivePhone
       : conditional(
-          // Email / SMS MFA explicit enrollment: expose unenrolled existing primary phone so the
-          // suggestion list enrolls it instead of opening the new-identifier profile form.
-          EnvSet.values.isDevFeaturesEnabled &&
-            sortedFactors.includes(MfaFactor.PhoneVerificationCode) &&
-            primaryPhone
+          // Expose unenrolled existing primary phone so the suggestion list enrolls it instead of
+          // opening the new-identifier profile form.
+          sortedFactors.includes(MfaFactor.PhoneVerificationCode) && primaryPhone
         );
     const maskedIdentifiers = condObject({
       [MfaFactor.EmailVerificationCode]: emailToMask && maskEmail(emailToMask),
@@ -882,9 +871,9 @@ export class Mfa {
       {
         availableFactors: sortedFactors,
         maskedIdentifiers,
-        // Email / SMS MFA explicit enrollment: distinguish already-bound factors from unenrolled
-        // existing primary identifiers that also carry a `maskedIdentifiers` entry.
-        ...conditional(EnvSet.values.isDevFeaturesEnabled && { boundFactors: factorsInUser }),
+        // Distinguish already-bound factors from unenrolled existing primary identifiers that also
+        // carry a `maskedIdentifiers` entry.
+        boundFactors: factorsInUser,
         isWebAuthnUsedAsSignInPasskey:
           passkeySignIn.enabled && factorsInUser.includes(MfaFactor.WebAuthn),
         skippable: true,

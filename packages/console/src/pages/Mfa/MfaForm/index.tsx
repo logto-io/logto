@@ -21,7 +21,7 @@ import FormCard from '@/components/FormCard';
 import InlineUpsell from '@/components/InlineUpsell';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { mfa } from '@/consts';
-import { isCloud, isDevFeaturesEnabled } from '@/consts/env';
+import { isCloud } from '@/consts/env';
 import { SubscriptionDataContext } from '@/contexts/SubscriptionDataProvider';
 import DynamicT from '@/ds-components/DynamicT';
 import FormField from '@/ds-components/FormField';
@@ -403,26 +403,23 @@ function MfaForm({ data, adaptiveMfa, trustedDevice, signInMethods, onMfaUpdated
               </div>
             </div>
           </FormField>
-          {/* Email / SMS MFA explicit enrollment */}
-          {isDevFeaturesEnabled &&
-            (formValues.emailVerificationCodeEnabled ||
-              formValues.phoneVerificationCodeEnabled) && (
-              <FormField title="mfa.verification_code_enrollment" headlineSpacing="large">
-                <Controller
-                  control={control}
-                  name="verificationCodeEnrollment"
-                  render={({ field: { onChange, value } }) => (
-                    <Select
-                      hasSelectedOptionIndicator
-                      value={value}
-                      options={verificationCodeEnrollmentOptions}
-                      isReadOnly={isMfaDisabled}
-                      onChange={onChange}
-                    />
-                  )}
-                />
-              </FormField>
-            )}
+          {(formValues.emailVerificationCodeEnabled || formValues.phoneVerificationCodeEnabled) && (
+            <FormField title="mfa.verification_code_enrollment" headlineSpacing="large">
+              <Controller
+                control={control}
+                name="verificationCodeEnrollment"
+                render={({ field: { onChange, value } }) => (
+                  <Select
+                    hasSelectedOptionIndicator
+                    value={value}
+                    options={verificationCodeEnrollmentOptions}
+                    isReadOnly={isMfaDisabled}
+                    onChange={onChange}
+                  />
+                )}
+              />
+            </FormField>
+          )}
           {isMfaDisabled && (
             <InlineUpsell
               for="mfa"

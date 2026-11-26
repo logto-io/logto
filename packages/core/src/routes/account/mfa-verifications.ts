@@ -11,7 +11,6 @@ import { generateStandardId } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { buildUpdatedUserLogtoConfig } from '#src/libraries/user-logto-config.js';
 import {
@@ -91,13 +90,8 @@ export default function mfaVerificationsRoutes<T extends UserRouter>(
           type: z.literal(MfaFactor.BackupCode),
           codes: z.string().array(),
         }),
-        // Email / SMS MFA explicit enrollment
-        ...(EnvSet.values.isDevFeaturesEnabled
-          ? [
-              z.object({ type: z.literal(MfaFactor.EmailVerificationCode) }),
-              z.object({ type: z.literal(MfaFactor.PhoneVerificationCode) }),
-            ]
-          : []),
+        z.object({ type: z.literal(MfaFactor.EmailVerificationCode) }),
+        z.object({ type: z.literal(MfaFactor.PhoneVerificationCode) }),
       ]),
       status: [204, 400, 401, 403, 422],
     }),

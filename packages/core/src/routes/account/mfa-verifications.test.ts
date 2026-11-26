@@ -17,7 +17,6 @@ import {
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
 import type Queries from '#src/tenants/Queries.js';
-import { resetDevFeaturesEnabled, setDevFeaturesEnabled } from '#src/test-utils/dev-features.js';
 import { MockTenant, type Partial2 } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -388,42 +387,6 @@ describe('account mfa verification routes', () => {
         { type: MfaFactor.EmailVerificationCode },
       ]);
       expectUpdatedMfaEnabled(true);
-    });
-
-    it('does not accept the factors while dev features are disabled', async () => {
-      setDevFeaturesEnabled(false);
-      const request = createRequester({
-        middlewares: [koaI18next(), koaErrorHandler()],
-        authedRoutes: [
-          (router) => {
-            router.use(async (ctx, next) => {
-              ctx.auth = {
-                ...ctx.auth,
-                id: mockUser.id,
-                identityVerified: true,
-                scopes: new Set([UserScope.Identities]),
-              };
-              ctx.accountCenter = {
-                enabled: true,
-                fields: { mfa: AccountCenterControlValue.Edit },
-              };
-              ctx.appendDataHookContext = jest.fn();
-
-              return next();
-            });
-          },
-          accountMfaRoutes as never,
-        ],
-        tenantContext,
-      });
-      resetDevFeaturesEnabled();
-
-      const response = await request
-        .post('/my-account/mfa-verifications')
-        .send({ type: MfaFactor.EmailVerificationCode });
-
-      expect(response.status).toBe(400);
-      expect(updateUserById).not.toHaveBeenCalled();
     });
   });
 
