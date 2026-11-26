@@ -138,7 +138,7 @@ const allowedDomainsByFirstSegment: Readonly<Record<string, readonly string[]>> 
 });
 
 /**
- * Sensitive write/delete/delegation path patterns that MUST remain `all`-only in Phase 1 to
+ * Sensitive write/delete/delegation path patterns that MUST remain `all`-only to
  * prevent privilege escalation or unauthorized secret/IdP mutation.
  */
 const allOnlyWritePathPatterns: readonly RegExp[] = [

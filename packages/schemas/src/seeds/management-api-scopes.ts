@@ -7,7 +7,7 @@ import { type CreateScope } from '../db-entries/index.js';
  *
  * Scopes follow `action:resource` naming (`read`, `create`, `update`, `delete`,
  * plus `verify:verification_codes`) and are added incrementally by domain PRs alongside their
- * route bindings and credential masking. Once all Phase 1 domains are finalized, a single
+ * route bindings and credential masking. Once all domains are finalized, a single
  * backfill alteration and seed update will populate existing and new tenant-local resources.
  */
 export const ManagementApiScope = Object.freeze({} as const);

@@ -25,7 +25,7 @@ type ManagementApiPermissionAlternative =
  *
  * - A single scope (e.g. `ManagementApiScope.ReadUsers`)
  * - An `anyOf` (OR) object where each alternative is a single scope or an AND tuple, allowing
- *   narrower scopes to be introduced in later phases without breaking existing callers.
+ *   narrower scopes to be introduced later without breaking existing callers.
  */
 export type ManagementApiPermissionPolicy =
   | ManagementApiScopeName
