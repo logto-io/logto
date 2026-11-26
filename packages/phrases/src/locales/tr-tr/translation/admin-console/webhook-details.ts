@@ -16,6 +16,13 @@ const webhook_details = {
   deleted: 'Webhook başarıyla silindi.',
   settings_tab: 'Ayarlar',
   recent_requests_tab: 'Son istekler (24s)',
+  recent_requests_tab_48h: 'Son istekler (48s)',
+  logs: {
+    attempts: 'Denemeler',
+    retrying: 'Yeniden deneniyor',
+    redeliver: 'Yeniden teslim et',
+    redelivery_queued: 'Yeniden teslim sıraya alındı.',
+  },
   settings: {
     settings: 'Ayarlar',
     settings_description:

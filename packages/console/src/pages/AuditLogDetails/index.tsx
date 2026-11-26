@@ -12,6 +12,7 @@ import ClientIdentifier from '@/components/ClientIdentifier';
 import DetailsPage from '@/components/DetailsPage';
 import PageMeta from '@/components/PageMeta';
 import UserName from '@/components/UserName';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import { logEventTitle } from '@/consts/logs';
 import Card from '@/ds-components/Card';
 import CodeEditor from '@/ds-components/CodeEditor';
@@ -19,6 +20,7 @@ import DangerousRaw from '@/ds-components/DangerousRaw';
 import FormField from '@/ds-components/FormField';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import Tag from '@/ds-components/Tag';
+import TextLink from '@/ds-components/TextLink';
 import type { RequestError } from '@/hooks/use-api';
 import { isWebhookEventLogKey } from '@/pages/WebhookDetails/utils';
 import { getUserTitle } from '@/utils/user';
@@ -72,6 +74,8 @@ function AuditLogDetails() {
   }
 
   const isWebHookEvent = isWebhookEventLogKey(data?.key ?? '');
+  // Durable job queue: webhook delivery attempts, pending retries, and manual redelivery source
+  const webhookDelivery = conditional(isDevFeaturesEnabled && isWebHookEvent && data?.payload);
 
   return (
     <DetailsPage
@@ -90,6 +94,11 @@ function AuditLogDetails() {
               <div className={styles.eventName}>
                 {logEventTitle[data.key]}
                 {isImpersonationLog(data) && <Tag status="alert">Impersonation</Tag>}
+                {webhookDelivery?.nextAttemptAt !== undefined && (
+                  <Tag type="state" status="alert">
+                    {t('webhook_details.logs.retrying')}
+                  </Tag>
+                )}
               </div>
               <div className={styles.basicInfo}>
                 <div className={styles.infoItem}>
@@ -137,6 +146,26 @@ function AuditLogDetails() {
                   <div className={styles.label}>{t('log_details.time')}</div>
                   <div>{new Date(data.createdAt).toLocaleString()}</div>
                 </div>
+                {webhookDelivery?.attempts !== undefined && (
+                  <div className={styles.infoItem}>
+                    <div className={styles.label}>{t('log_details.attempts')}</div>
+                    <div>{webhookDelivery.attempts}</div>
+                  </div>
+                )}
+                {webhookDelivery?.nextAttemptAt !== undefined && (
+                  <div className={styles.infoItem}>
+                    <div className={styles.label}>{t('log_details.next_attempt_time')}</div>
+                    <div>{new Date(webhookDelivery.nextAttemptAt).toLocaleString()}</div>
+                  </div>
+                )}
+                {webhookDelivery?.redeliveredFrom && (
+                  <div className={styles.infoItem}>
+                    <div className={styles.label}>{t('log_details.redelivered_from')}</div>
+                    <TextLink to={`${backLink}/${webhookDelivery.redeliveredFrom}`}>
+                      {webhookDelivery.redeliveredFrom}
+                    </TextLink>
+                  </div>
+                )}
               </div>
               {!isWebHookEvent && (
                 <div>

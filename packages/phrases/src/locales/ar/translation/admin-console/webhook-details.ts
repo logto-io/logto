@@ -16,6 +16,13 @@ const webhook_details = {
   deleted: 'تم حذف الويب هوك بنجاح.',
   settings_tab: 'الإعدادات',
   recent_requests_tab: 'الطلبات الأخيرة (24 ساعة)',
+  recent_requests_tab_48h: 'الطلبات الأخيرة (48 ساعة)',
+  logs: {
+    attempts: 'المحاولات',
+    retrying: 'جارٍ إعادة المحاولة',
+    redeliver: 'إعادة التسليم',
+    redelivery_queued: 'تمت إضافة إعادة التسليم إلى قائمة الانتظار.',
+  },
   settings: {
     settings: 'الإعدادات',
     settings_description:

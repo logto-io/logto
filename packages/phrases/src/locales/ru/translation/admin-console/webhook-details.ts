@@ -16,6 +16,13 @@ const webhook_details = {
   deleted: 'Вебхук был успешно удален.',
   settings_tab: 'Настройки',
   recent_requests_tab: 'Недавние запросы (за 24ч)',
+  recent_requests_tab_48h: 'Недавние запросы (за 48ч)',
+  logs: {
+    attempts: 'Попытки',
+    retrying: 'Повторная попытка',
+    redeliver: 'Доставить повторно',
+    redelivery_queued: 'Повторная доставка поставлена в очередь.',
+  },
   settings: {
     settings: 'Настройки',
     settings_description:
