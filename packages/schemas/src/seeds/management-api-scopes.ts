@@ -5,7 +5,7 @@ import { type CreateScope } from '../db-entries/index.js';
 /**
  * Built-in fine-grained scopes for each tenant's local Logto Management API resource.
  *
- * Scopes follow Auth0-aligned `action:resource` naming (`read`, `create`, `update`, `delete`,
+ * Scopes follow `action:resource` naming (`read`, `create`, `update`, `delete`,
  * plus `verify:verification_codes`) and are added incrementally by domain PRs alongside their
  * route bindings and credential masking. Once all Phase 1 domains are finalized, a single
  * backfill alteration and seed update will populate existing and new tenant-local resources.
