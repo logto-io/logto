@@ -325,7 +325,7 @@ describe('hook routes', () => {
       expect(redeliverHookLog).toHaveBeenCalledWith('hook-1', 'log-1');
     });
 
-    it('propagates 409 and 422 errors from redeliverHookLog', async () => {
+    it('propagates 409, 422, and 429 errors from redeliverHookLog', async () => {
       setDevFeaturesEnabled(true);
       const devRequest = createRequester({ authedRoutes: hookRoutes, tenantContext });
 
@@ -342,6 +342,13 @@ describe('hook routes', () => {
       await expect(
         devRequest.post('/hooks/hook-1/recent-logs/log-1/redeliver')
       ).resolves.toHaveProperty('status', 422);
+
+      redeliverHookLog.mockRejectedValueOnce(
+        new RequestError({ code: 'request.rate_limited', status: 429 })
+      );
+      await expect(
+        devRequest.post('/hooks/hook-1/recent-logs/log-1/redeliver')
+      ).resolves.toHaveProperty('status', 429);
     });
 
     it('returns 404 when dev features are disabled', async () => {

@@ -132,7 +132,8 @@ describe('webhook log payload OpenAPI fields', () => {
 
     const redeliverOperation =
       document.paths['/api/hooks/{id}/recent-logs/{logId}/redeliver']?.post;
-    expect(redeliverOperation?.description).toBeTruthy();
+    expect(redeliverOperation?.description).toContain('sanitized');
+    expect(redeliverOperation?.description).toContain('******');
     expect(redeliverOperation).toMatchObject({
       operationId: 'CreateHookRecentLogRedeliver',
       summary: 'Redeliver a failed webhook log',
@@ -147,12 +148,16 @@ describe('webhook log payload OpenAPI fields', () => {
                 properties: {
                   logId: {
                     type: 'string',
-                    description: 'The ID of the new log entry created for this redelivery.',
+                    description:
+                      'The ID of the log entry that will record this redelivery once its first attempt finishes.',
                   },
                 },
               },
             },
           },
+        },
+        429: {
+          description: 'The waiting delivery queue cap for this hook or tenant has been reached.',
         },
       },
     });

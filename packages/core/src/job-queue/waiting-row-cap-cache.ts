@@ -7,7 +7,7 @@ const defaultMaxCachedGroups = 50_000;
 export type WaitingRowCapScope = 'group' | 'tenant';
 
 export type WaitingRowReservation =
-  | { allowed: true }
+  | { allowed: true; release: () => void }
   | { allowed: false; scope: WaitingRowCapScope };
 
 export type WaitingRowCapCheckInput = {
@@ -154,7 +154,35 @@ export class WaitingRowCapCache {
       this.#tenantCounts.set(tenantCacheKey, nextTenantEntry);
     }
 
-    return { allowed: true };
+    // eslint-disable-next-line @silverhand/fp/no-let -- ensure reservation release is idempotent
+    let released = false;
+
+    const release = () => {
+      if (released) {
+        return;
+      }
+
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- ensure reservation release is idempotent
+      released = true;
+      this.decrementIfMatching(this.#groupCounts, groupCacheKey, nextGroupEntry.expiresAt);
+      this.decrementIfMatching(this.#tenantCounts, tenantCacheKey, nextTenantEntry.expiresAt);
+    };
+
+    return { allowed: true, release };
+  }
+
+  private decrementIfMatching(
+    cache: LRUCache<string, CacheEntry>,
+    key: string,
+    expectedExpiresAt: number
+  ): void {
+    const current = this.getFresh(cache, key);
+
+    if (!current || current.expiresAt !== expectedExpiresAt || current.count <= 0) {
+      return;
+    }
+
+    cache.set(key, { count: current.count - 1, expiresAt: current.expiresAt });
   }
 
   private getFresh(cache: LRUCache<string, CacheEntry>, key: string): CacheEntry | undefined {

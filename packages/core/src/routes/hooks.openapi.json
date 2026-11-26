@@ -205,7 +205,7 @@
       "post": {
         "tags": ["Dev feature"],
         "summary": "Redeliver a failed webhook log",
-        "description": "Re-enqueue a permanently failed webhook delivery log entry for the specified hook. Reconstructs the request body from the stored log payload while keeping the original `deliveryId`, signs it with the hook's current signing key, and sends it to the hook's current endpoint. Delivery results are written to a new log entry linked to the original via `redeliveredFrom`.",
+        "description": "Re-enqueue a permanently failed webhook delivery log entry for the specified hook. Reconstructs the request body from the stored log payload while keeping the original `deliveryId`, signs it with the hook's current signing key, and sends it to the hook's current endpoint. Because the request body is read from the sanitized audit log, fields redacted when the log was recorded (such as masked secrets or passwords replaced with `******` and omitted `script` keys) are sent in their sanitized form. Delivery results are written to a new log entry linked to the original via `redeliveredFrom`.",
         "responses": {
           "202": {
             "description": "The redelivery has been accepted and queued.",
@@ -214,7 +214,7 @@
                 "schema": {
                   "properties": {
                     "logId": {
-                      "description": "The ID of the new log entry created for this redelivery."
+                      "description": "The ID of the log entry that will record this redelivery once its first attempt finishes."
                     }
                   }
                 }
@@ -229,6 +229,9 @@
           },
           "422": {
             "description": "The hook is disabled, the log entry is not a permanently failed webhook delivery, or its stored request payload cannot be redelivered."
+          },
+          "429": {
+            "description": "The waiting delivery queue cap for this hook or tenant has been reached."
           }
         }
       }

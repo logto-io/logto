@@ -8,6 +8,8 @@ import { type CoreJobQueue } from '#src/job-queue/index.js';
 import {
   serializeWebhookRedeliveryJobPayload,
   webhookJobType,
+  webhookMaxWaitingRowsPerHook,
+  webhookMaxWaitingRowsPerTenant,
 } from '#src/job-queue/webhook-handler.js';
 import type Queries from '#src/tenants/Queries.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -25,7 +27,13 @@ type CreateRedeliverHookLogInput = {
   findHookById: Queries['hooks']['findHookById'];
   findLogById: Queries['logs']['findLogById'];
   enqueueJob: Queries['jobs']['enqueueJob'];
-  queue: Pick<CoreJobQueue, 'wake'>;
+  countJobsByGroup: Queries['jobs']['countJobsByGroup'];
+  countJobsByType: Queries['jobs']['countJobsByType'];
+  queue: Pick<CoreJobQueue, 'tryReserveWaitingRow' | 'wake'>;
+  waitingRowCaps?: {
+    perHook: number;
+    perTenant: number;
+  };
 };
 
 /**
@@ -33,8 +41,20 @@ type CreateRedeliverHookLogInput = {
  * re-enqueues it while preserving the original `deliveryId` for receiver deduplication.
  */
 export const createRedeliverHookLog =
-  ({ findHookById, findLogById, enqueueJob, queue }: CreateRedeliverHookLogInput) =>
+  ({
+    findHookById,
+    findLogById,
+    enqueueJob,
+    countJobsByGroup,
+    countJobsByType,
+    queue,
+    waitingRowCaps,
+  }: CreateRedeliverHookLogInput) =>
   async (hookId: string, logId: string): Promise<{ logId: string }> => {
+    const caps = waitingRowCaps ?? {
+      perHook: webhookMaxWaitingRowsPerHook,
+      perTenant: webhookMaxWaitingRowsPerTenant,
+    };
     const hookRecord = await findHookById(hookId);
     assertThat(hookRecord.enabled, new RequestError({ code: 'hook.disabled', status: 422 }));
 
@@ -64,6 +84,21 @@ export const createRedeliverHookLog =
     const rawBody = JSON.stringify(body);
     const newLogId = generateStandardId();
 
+    const reservation = await queue.tryReserveWaitingRow({
+      tenantId: hookRecord.tenantId,
+      type: webhookJobType,
+      groupKey: hookId,
+      maxWaitingRowsPerGroup: caps.perHook,
+      maxWaitingRowsPerTenant: caps.perTenant,
+      countByGroup: async (limit) => countJobsByGroup(webhookJobType, hookId, limit),
+      countByType: async (limit) => countJobsByType(webhookJobType, limit),
+    });
+
+    assertThat(
+      reservation.allowed,
+      new RequestError({ code: 'request.rate_limited', status: 429 })
+    );
+
     try {
       await enqueueJob({
         id: newLogId,
@@ -76,6 +111,8 @@ export const createRedeliverHookLog =
         }),
       });
     } catch (error: unknown) {
+      reservation.release();
+
       if (
         error instanceof UniqueIntegrityConstraintViolationError &&
         error.constraint === 'jobs__type_dedupe_key'

@@ -316,7 +316,10 @@ export const createHookLibrary = (queries: Queries, options?: CreateHookLibraryO
     findHookById,
     findLogById,
     enqueueJob,
+    countJobsByGroup,
+    countJobsByType,
     queue,
+    waitingRowCaps: options?.waitingRowCaps,
   });
 
   return {

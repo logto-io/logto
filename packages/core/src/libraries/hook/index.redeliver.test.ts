@@ -4,6 +4,7 @@ import { UniqueIntegrityConstraintViolationError } from '@silverhand/slonik';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { CoreJobQueue } from '#src/job-queue/index.js';
+import { WaitingRowCapCache } from '#src/job-queue/waiting-row-cap-cache.js';
 import {
   serializeWebhookRedeliveryJobPayload,
   webhookJobType,
@@ -64,20 +65,34 @@ describe('createHookLibrary redeliverHookLog', () => {
   const findHookById = jest.fn<Promise<Hook>, [id: string]>();
   const findLogById = jest.fn<Promise<Log>, [id: string]>();
   const enqueueJob = jest.fn<Promise<void>, Parameters<Queries['jobs']['enqueueJob']>>();
+  const countJobsByGroup = jest.fn<
+    Promise<number>,
+    Parameters<Queries['jobs']['countJobsByGroup']>
+  >();
+  const countJobsByType = jest.fn<
+    Promise<number>,
+    Parameters<Queries['jobs']['countJobsByType']>
+  >();
 
-  const setup = () => {
-    const queue = new CoreJobQueue();
+  const setup = ({
+    waitingRowCaps,
+    waitingRowCapCache,
+  }: {
+    waitingRowCaps?: { perHook: number; perTenant: number };
+    waitingRowCapCache?: WaitingRowCapCache;
+  } = {}) => {
+    const queue = new CoreJobQueue({ waitingRowCapCache });
     const wake = jest.spyOn(queue, 'wake');
     const queries = new MockQueries({
       hooks: { findHookById },
       logs: { findLogById },
-      jobs: { enqueueJob },
+      jobs: { enqueueJob, countJobsByGroup, countJobsByType },
     });
 
     return {
       queue,
       wake,
-      library: createHookLibrary(queries, { jobQueue: queue }),
+      library: createHookLibrary(queries, { jobQueue: queue, waitingRowCaps }),
     };
   };
 
@@ -85,6 +100,8 @@ describe('createHookLibrary redeliverHookLog', () => {
     findHookById.mockReset().mockResolvedValue(makeHook());
     findLogById.mockReset().mockResolvedValue(makeLog());
     enqueueJob.mockReset().mockResolvedValue();
+    countJobsByGroup.mockReset().mockResolvedValue(0);
+    countJobsByType.mockReset().mockResolvedValue(0);
   });
 
   afterEach(() => {
@@ -309,5 +326,69 @@ describe('createHookLibrary redeliverHookLog', () => {
       'connection lost'
     );
     expect(wake).not.toHaveBeenCalled();
+  });
+
+  it('rejects with 429 request.rate_limited when per-hook waiting-row cap is reached', async () => {
+    countJobsByGroup.mockResolvedValueOnce(2);
+
+    const { library, wake } = setup({
+      waitingRowCaps: { perHook: 2, perTenant: 10 },
+    });
+
+    await expect(library.redeliverHookLog('hook-1', 'delivery-1')).rejects.toMatchObject({
+      code: 'request.rate_limited',
+      status: 429,
+    });
+    expect(countJobsByGroup).toHaveBeenCalledWith(webhookJobType, 'hook-1', 2);
+    expect(enqueueJob).not.toHaveBeenCalled();
+    expect(wake).not.toHaveBeenCalled();
+  });
+
+  it('rejects with 429 request.rate_limited when per-tenant waiting-row cap is reached', async () => {
+    countJobsByGroup.mockResolvedValueOnce(0);
+    countJobsByType.mockResolvedValueOnce(3);
+
+    const { library, wake } = setup({
+      waitingRowCaps: { perHook: 2, perTenant: 3 },
+    });
+
+    await expect(library.redeliverHookLog('hook-1', 'delivery-1')).rejects.toMatchObject({
+      code: 'request.rate_limited',
+      status: 429,
+    });
+    expect(countJobsByType).toHaveBeenCalledWith(webhookJobType, 3);
+    expect(enqueueJob).not.toHaveBeenCalled();
+    expect(wake).not.toHaveBeenCalled();
+  });
+
+  it('releases reserved waiting-row capacity when enqueue fails with 409 or DB error', async () => {
+    const waitingRowCapCache = new WaitingRowCapCache({ ttlMs: 5000, now: () => 1000 });
+    countJobsByGroup.mockResolvedValueOnce(1);
+    countJobsByType.mockResolvedValueOnce(1);
+
+    const { library } = setup({
+      waitingRowCaps: { perHook: 2, perTenant: 2 },
+      waitingRowCapCache,
+    });
+
+    enqueueJob.mockRejectedValueOnce(
+      new UniqueIntegrityConstraintViolationError(new Error('duplicate'), 'jobs__type_dedupe_key')
+    );
+    await expect(library.redeliverHookLog('hook-1', 'delivery-1')).rejects.toMatchObject({
+      code: 'hook.redelivery_in_progress',
+      status: 409,
+    });
+
+    enqueueJob.mockRejectedValueOnce(new Error('connection lost'));
+    await expect(library.redeliverHookLog('hook-1', 'delivery-1')).rejects.toThrow(
+      'connection lost'
+    );
+
+    // Both failed attempts rolled back their cache reservations so a subsequent retry succeeds.
+    await expect(library.redeliverHookLog('hook-1', 'delivery-1')).resolves.toEqual({
+      logId: mockId,
+    });
+    expect(countJobsByGroup).toHaveBeenCalledTimes(1);
+    expect(countJobsByType).toHaveBeenCalledTimes(1);
   });
 });

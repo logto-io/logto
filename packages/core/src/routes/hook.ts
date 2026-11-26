@@ -203,7 +203,7 @@ export default function hookRoutes<T extends ManagementApiRouter>(
       koaGuard({
         params: z.object({ id: z.string(), logId: z.string() }),
         response: z.object({ logId: z.string() }),
-        status: [202, 404, 409, 422],
+        status: [202, 404, 409, 422, 429],
       }),
       async (ctx, next) => {
         const { id, logId } = ctx.guard.params;
