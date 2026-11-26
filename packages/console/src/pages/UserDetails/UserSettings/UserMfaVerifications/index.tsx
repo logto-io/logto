@@ -5,7 +5,6 @@ import {
   type SignInExperience,
   type UserMfaVerificationResponse,
 } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
 import { useCallback, useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
@@ -14,7 +13,6 @@ import useSWRImmutable from 'swr/immutable';
 
 import MfaFactorName from '@/components/MfaFactorName';
 import MfaFactorTitle from '@/components/MfaFactorTitle';
-import { isDevFeaturesEnabled } from '@/consts/env';
 import Button from '@/ds-components/Button';
 import Switch from '@/ds-components/Switch';
 import Table from '@/ds-components/Table';
@@ -209,9 +207,8 @@ function UserMfaVerifications({ userId }: Props) {
               render: (mfaVerification) => (
                 <MfaFactorTitle
                   {...mfaVerification}
-                  // Email / SMS MFA explicit enrollment: explain email and phone rows that differ
-                  // from what sign-in counts
-                  tooltip={conditional(isDevFeaturesEnabled && getFactorTip(mfaVerification))}
+                  // Explain email and phone rows that differ from what sign-in counts
+                  tooltip={getFactorTip(mfaVerification)}
                 />
               ),
             },

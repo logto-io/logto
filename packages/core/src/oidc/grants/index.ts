@@ -32,7 +32,7 @@ export const registerGrants = (
   // Override the default grants
   oidc.registerGrantType(
     GrantType.RefreshToken,
-    refreshToken.buildHandler(envSet, queries, libraries.applicationAccessControl),
+    refreshToken.buildHandler(envSet, queries, libraries),
     ...getParameterConfig(refreshToken.parameters)
   );
   oidc.registerGrantType(

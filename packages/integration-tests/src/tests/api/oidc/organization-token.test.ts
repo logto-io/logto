@@ -2,9 +2,18 @@ import assert from 'node:assert';
 
 import { UserScope, buildOrganizationUrn } from '@logto/core-kit';
 import { LogtoRequestError } from '@logto/js';
-import { MfaFactor } from '@logto/schemas';
+import { ApplicationType, ApplicationUserConsentScopeType, MfaFactor } from '@logto/schemas';
 
 import { createUserMfaVerification, deleteUser } from '#src/api/admin-user.js';
+import {
+  assignUserConsentScopes,
+  deleteUserConsentScopes,
+} from '#src/api/application-user-consent-scope.js';
+import { createApplicationWithSecret, deleteApplication } from '#src/api/application.js';
+import { consent } from '#src/api/interaction.js';
+import { createResource, deleteResource } from '#src/api/resource.js';
+import { assignUsersToRole, createRole, deleteRole } from '#src/api/role.js';
+import { createScope } from '#src/api/scope.js';
 import { type ExperienceClient } from '#src/client/experience/index.js';
 import { initExperienceClient, processSession } from '#src/helpers/client.js';
 import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
@@ -14,7 +23,14 @@ import {
   enableAllPasswordSignInMethods,
   enableUserControlledMfaWithTotp,
 } from '#src/helpers/sign-in-experience.js';
-import { generatePassword, generateUsername, randomString } from '#src/utils.js';
+import {
+  generatePassword,
+  generateResourceIndicator,
+  generateResourceName,
+  generateRoleName,
+  generateUsername,
+  randomString,
+} from '#src/utils.js';
 
 describe('get access token for organization', () => {
   const username = generateUsername();
@@ -127,5 +143,132 @@ describe('get access token for organization', () => {
     await expect(client.getOrganizationTokenClaims(testOrganizationId)).resolves.toMatchObject({
       aud: buildOrganizationUrn(testOrganizationId),
     });
+  });
+});
+
+describe('third-party application organization token scope isolation', () => {
+  const redirectUri = 'http://example.com';
+
+  beforeAll(async () => {
+    await enableAllPasswordSignInMethods();
+  });
+
+  it('should enforce live organizationScopes and Grant[Org] on registered third-party org tokens', async () => {
+    const username = generateUsername();
+    const password = generatePassword();
+    const collidedScopeName = `read:${randomString()}`;
+    const enabledOrgScopeName = `invite:${randomString()}`;
+    const removableOrgScopeName = `manage:${randomString()}`;
+
+    const organizationApi = new OrganizationApiTest();
+    const user = await createUserByAdmin({ username, password });
+    const resource = await createResource(generateResourceName(), generateResourceIndicator());
+    const apiScope = await createScope(resource.id, collidedScopeName);
+    const personalRole = await createRole({ name: generateRoleName(), scopeIds: [apiScope.id] });
+    const app = await createApplicationWithSecret(
+      `third-party-org-token-isolation-${randomString()}`,
+      ApplicationType.Traditional,
+      {
+        isThirdParty: true,
+        oidcClientMetadata: {
+          redirectUris: [redirectUri],
+          postLogoutRedirectUris: [],
+        },
+        customClientMetadata: {
+          alwaysIssueRefreshToken: true,
+        },
+      }
+    );
+
+    try {
+      await assignUsersToRole([user.id], personalRole.id);
+
+      const organization = await organizationApi.create({ name: `org:${randomString()}` });
+      await organizationApi.addUsers(organization.id, [user.id]);
+
+      const enabledOrgScope = await organizationApi.scopeApi.create({ name: enabledOrgScopeName });
+      const removableOrgScope = await organizationApi.scopeApi.create({
+        name: removableOrgScopeName,
+      });
+      const unenabledOrgScope = await organizationApi.scopeApi.create({ name: collidedScopeName });
+
+      const orgRole = await organizationApi.roleApi.create({
+        name: `org-role:${randomString()}`,
+        organizationScopeIds: [enabledOrgScope.id, removableOrgScope.id, unenabledOrgScope.id],
+      });
+      await organizationApi.addUserRoles(organization.id, user.id, [orgRole.id]);
+
+      // Enable the colliding scope on the API resource, but omit it from organizationScopes.
+      await assignUserConsentScopes(app.id, {
+        userScopes: [UserScope.Profile, UserScope.Organizations],
+        resourceScopes: [apiScope.id],
+        organizationScopes: [enabledOrgScope.id, removableOrgScope.id],
+      });
+
+      const client = await initExperienceClient({
+        config: {
+          appId: app.id,
+          appSecret: app.secret,
+          resources: [resource.indicator],
+          scopes: [
+            UserScope.Organizations,
+            enabledOrgScope.name,
+            removableOrgScope.name,
+            collidedScopeName,
+          ],
+        },
+        redirectUri,
+      });
+
+      await identifyUserWithUsernamePassword(client, username, password);
+      const { redirectTo } = await client.submitInteraction();
+      await client.processSession(redirectTo, false);
+      const { redirectTo: consentRedirectTo } = await client.send(consent, {
+        organizationIds: [organization.id],
+      });
+      await client.manualConsent(consentRedirectTo);
+
+      // 1. Enabled & consented org scopes are issued; colliding API resource scope does not leak.
+      const initialClaims = await client.getOrganizationTokenClaims(organization.id);
+      expect(initialClaims).toMatchObject({
+        aud: buildOrganizationUrn(organization.id),
+      });
+      expect(new Set(initialClaims.scope?.split(' '))).toEqual(
+        new Set([enabledOrgScopeName, removableOrgScopeName])
+      );
+
+      // 2. Removing an organizationScope from the third-party app immediately drops it on refresh.
+      await deleteUserConsentScopes(
+        app.id,
+        ApplicationUserConsentScopeType.OrganizationScopes,
+        removableOrgScope.id
+      );
+      await client.clearAccessToken();
+
+      await expect(client.getOrganizationTokenClaims(organization.id)).resolves.toMatchObject({
+        aud: buildOrganizationUrn(organization.id),
+        scope: enabledOrgScopeName,
+      });
+
+      // 3. Enabling the colliding org scope after consent still must not leak it from RT.scope
+      // because it was never granted under Grant[urn:logto:resource:organizations].
+      await assignUserConsentScopes(app.id, {
+        organizationScopes: [unenabledOrgScope.id],
+      });
+      await client.clearAccessToken();
+
+      await expect(client.getOrganizationTokenClaims(organization.id)).resolves.toMatchObject({
+        aud: buildOrganizationUrn(organization.id),
+        scope: enabledOrgScopeName,
+      });
+    } finally {
+      await Promise.all([
+        deleteApplication(app.id),
+        deleteResource(resource.id),
+        deleteRole(personalRole.id),
+        organizationApi.cleanUp(),
+        deleteUser(user.id),
+      ]);
+    }
   });
 });

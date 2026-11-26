@@ -1,4 +1,4 @@
-import type { Application, OidcModelInstance, OidcModelInstancePayload } from '@logto/schemas';
+import type { Application, OidcModelInstance } from '@logto/schemas';
 import { Applications, CimdGrantClientSnapshots, OidcModelInstances } from '@logto/schemas';
 import { ConsoleLog } from '@logto/shared';
 import type { Nullable } from '@silverhand/essentials';
@@ -137,42 +137,6 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
 
   const findPayloadByUserCode = async <T extends ValueExpression>(modelName: string, value: T) =>
     findPayloadByIndexedPayloadField(modelName, 'userCode', value);
-
-  /**
-   * @deprecated
-   * Keep it as a backup/reference path only.
-   *
-   * Use `findPayloadByUid` or `findPayloadByUserCode` instead.
-   */
-  const findPayloadByPayloadField = async <
-    T extends ValueExpression,
-    Field extends keyof OidcModelInstancePayload,
-  >(
-    modelName: string,
-    field: Field,
-    value: T
-  ) => {
-    const results = await pool.any<QueryResult>(sql`
-      ${findByModel(modelName)}
-      and ${fields.payload}->>${field}=${value}
-    `);
-
-    // Rarely, duplicate UIDs can exist for different sessions.
-    // This query may throw `DataIntegrityError`.
-    // If that happens, delete all duplicates and return `null`.
-    if (results.length > 1) {
-      // Delete all duplicates.
-      await pool.query(sql`
-        delete from ${table}
-        where ${fields.modelName}=${modelName}
-          and ${fields.payload}->>${field}=${value}
-      `);
-      return;
-    }
-
-    // If there is only one record, return the result.
-    return results[0] ? convertResult(results[0], modelName) : undefined;
-  };
 
   /**
    * Resolves `true` only for the call that consumes a single-use instance, and `false` when it is
@@ -373,7 +337,6 @@ export const createOidcModelInstanceQueries = (pool: CommonQueryMethods) => {
   return {
     upsertInstance,
     findPayloadById,
-    findPayloadByPayloadField,
     findPayloadByUid,
     findPayloadByUserCode,
     consumeInstanceById,

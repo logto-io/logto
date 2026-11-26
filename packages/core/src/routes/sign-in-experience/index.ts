@@ -40,11 +40,6 @@ import usernamePolicyRoutes from './username-policy.js';
 const isMfaEnabled = (mfa: Optional<SignInExperience['mfa']>): boolean =>
   Boolean(mfa?.factors && mfa.factors.length > 0);
 
-const removeVerificationCodeEnrollment = ({
-  verificationCodeEnrollment,
-  ...mfa
-}: SignInExperience['mfa']): SignInExperience['mfa'] => mfa;
-
 const isNonSkippableMfaPromptPolicy = (policy: MfaPolicy) =>
   [MfaPolicy.PromptAtSignInAndSignUpMandatory, MfaPolicy.PromptOnlyAtSignInMandatory].includes(
     policy
@@ -417,14 +412,6 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
 
       const payload = {
         ...rest,
-        // Email / SMS MFA explicit enrollment: until the feature is released, the enrollment mode
-        // is validated but not stored.
-        ...conditional(
-          mfa &&
-            !EnvSet.values.isDevFeaturesEnabled && {
-              mfa: removeVerificationCodeEnrollment(mfa),
-            }
-        ),
         ...conditional(normalizedAdaptiveMfa && { adaptiveMfa: normalizedAdaptiveMfa }),
         ...conditional(
           filteredSocialSignInConnectorTargets && {

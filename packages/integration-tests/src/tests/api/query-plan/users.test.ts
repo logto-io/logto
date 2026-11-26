@@ -40,8 +40,8 @@ describe('users query plans under the tenant role', () => {
     await pool.end();
   });
 
-  // The shapes the email and case-insensitive username lookups run once they read the columns;
-  // `lower()` on the parameter side has no column, so it does not stop the seek.
+  // Mirrors `hasUserWithEmail` and the case-insensitive `hasUser` with an excluded user; `lower()`
+  // on the parameter side has no column, so it does not stop the seek.
   it.each([
     ['email', 'primary_email_lower', 'qp.user.1@example.com'],
     ['username', 'username_lower', 'QP_User_1'],
