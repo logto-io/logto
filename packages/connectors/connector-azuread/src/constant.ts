@@ -37,6 +37,7 @@ export const defaultMetadata: ConnectorMetadata = {
       required: true,
       label: 'Client Secret',
       placeholder: '<client-secret>',
+      isConfidential: true,
     },
     {
       key: 'cloudInstance',

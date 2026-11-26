@@ -31,6 +31,7 @@ export const defaultMetadata: ConnectorMetadata = {
       type: ConnectorConfigFormItemType.Text,
       required: true,
       placeholder: '<your-mailjunky-api-key>',
+      isConfidential: true,
     },
     {
       key: 'fromEmail',

@@ -23,12 +23,14 @@ export const defaultMetadata: ConnectorMetadata = {
       label: 'API Key',
       type: ConnectorConfigFormItemType.Text,
       required: true,
+      isConfidential: true,
     },
     {
       key: 'apiSecret',
       label: 'API Secret',
       type: ConnectorConfigFormItemType.Text,
       required: true,
+      isConfidential: true,
     },
     {
       key: 'brandName',

@@ -38,6 +38,7 @@ export const defaultMetadata: ConnectorMetadata = {
       required: false,
       label: 'Client Secret',
       placeholder: '<client-secret>',
+      isConfidential: true,
     },
   ],
 };

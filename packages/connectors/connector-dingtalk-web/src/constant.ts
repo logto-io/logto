@@ -44,6 +44,7 @@ export const defaultMetadata: ConnectorMetadata = {
       required: true,
       type: ConnectorConfigFormItemType.Text,
       placeholder: '<client-secret>',
+      isConfidential: true,
     },
     {
       key: 'scope',

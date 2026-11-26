@@ -40,6 +40,7 @@ export const defaultMetadata: ConnectorMetadata = {
       label: 'Auth',
       type: ConnectorConfigFormItemType.Json,
       required: true,
+      isConfidential: ['pass', 'clientSecret', 'refreshToken', 'accessToken', 'privateKey'],
       defaultValue: {
         type: 'login',
         user: '<username>',
@@ -216,6 +217,7 @@ export const defaultMetadata: ConnectorMetadata = {
       label: 'TLS',
       type: ConnectorConfigFormItemType.Json,
       required: false,
+      isConfidential: ['key', 'passphrase', 'pfx'],
       defaultValue: {},
     },
     {

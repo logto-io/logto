@@ -35,6 +35,7 @@ export const defaultMetadata: ConnectorMetadata = {
       placeholder: '<your-meta-system-user-token>',
       description:
         'Generate a permanent token from a Meta Business System User with whatsapp_business_messaging and whatsapp_business_management permissions.',
+      isConfidential: true,
     },
     {
       key: 'phoneNumberId',

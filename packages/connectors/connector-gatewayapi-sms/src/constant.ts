@@ -34,6 +34,7 @@ export const defaultMetadata: ConnectorMetadata = {
       label: 'API Token',
       type: ConnectorConfigFormItemType.Text,
       required: true,
+      isConfidential: true,
     },
     {
       key: 'sender',

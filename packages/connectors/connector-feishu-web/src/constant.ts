@@ -40,6 +40,7 @@ export const defaultMetadata: ConnectorMetadata = {
       type: ConnectorConfigFormItemType.Text,
       required: true,
       placeholder: '<app-secret>',
+      isConfidential: true,
     },
     {
       key: 'disableEmailSync',

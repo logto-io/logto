@@ -48,6 +48,7 @@ export const defaultMetadata: ConnectorMetadata = {
       label: 'Private Key',
       type: ConnectorConfigFormItemType.MultilineText,
       required: true,
+      isConfidential: true,
       placeholder: '<private-key>',
     },
     {

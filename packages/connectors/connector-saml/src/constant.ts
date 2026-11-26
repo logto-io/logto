@@ -82,6 +82,7 @@ export const formItems: ConnectorConfigFormItem[] = [
     label: 'Signature Private Key',
     key: 'privateKey',
     required: true,
+    isConfidential: true,
     showConditions: [{ targetKey: 'signAuthnRequest', expectValue: true }],
     placeholder:
       '-----BEGIN RSA PRIVATE KEY-----\n[private-key-content]\n-----END RSA PRIVATE KEY-----',
@@ -91,6 +92,7 @@ export const formItems: ConnectorConfigFormItem[] = [
     type: ConnectorConfigFormItemType.Text,
     label: 'Signature Private Key Password',
     key: 'privateKeyPass',
+    isConfidential: true,
     showConditions: [{ targetKey: 'signAuthnRequest', expectValue: true }],
   },
   {
@@ -106,6 +108,7 @@ export const formItems: ConnectorConfigFormItem[] = [
     label: 'Decryption Private Key',
     key: 'encPrivateKey',
     required: true,
+    isConfidential: true,
     showConditions: [{ targetKey: 'encryptAssertion', expectValue: true }],
     placeholder:
       '-----BEGIN RSA PRIVATE KEY-----\n[private-key-content]\n-----END RSA PRIVATE KEY-----',
@@ -114,6 +117,7 @@ export const formItems: ConnectorConfigFormItem[] = [
     type: ConnectorConfigFormItemType.Text,
     label: 'Decryption Private Key Password',
     key: 'encPrivateKeyPass',
+    isConfidential: true,
     showConditions: [{ targetKey: 'encryptAssertion', expectValue: true }],
     description: 'The private key is used to decrypt the encrypted SAML assertion.',
   },
