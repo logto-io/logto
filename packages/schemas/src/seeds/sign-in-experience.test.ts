@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { MfaVerificationCodeEnrollment } from '../foundations/index.js';
+import { MfaPolicy, MfaVerificationCodeEnrollment } from '../foundations/index.js';
 
 import {
   createAdminTenantSignInExperience,
@@ -44,5 +44,10 @@ describe('createDefaultSignInExperience', () => {
   it('keeps legacy null signUpProfileFields for seeded default tenants', () => {
     const row = createDefaultSignInExperience('some-tenant-id', false);
     expect(row.signUpProfileFields).toBeNull();
+  });
+
+  it('seeds PromptAtSignInAndSignUp for mfa.policy', () => {
+    const row = createDefaultSignInExperience('some-tenant-id', false);
+    expect(row.mfa?.policy).toBe(MfaPolicy.PromptAtSignInAndSignUp);
   });
 });

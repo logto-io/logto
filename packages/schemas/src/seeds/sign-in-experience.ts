@@ -61,7 +61,7 @@ export const createDefaultSignInExperience = (
     passwordPolicy: {},
     mfa: {
       factors: [],
-      policy: MfaPolicy.UserControlled,
+      policy: MfaPolicy.PromptAtSignInAndSignUp,
       verificationCodeEnrollment: MfaVerificationCodeEnrollment.Explicit,
     },
   });

@@ -296,7 +296,7 @@ describe('PUT /experience', () => {
     reauthenticationRequired: false,
   };
   const totpUser = { ...mockUser, mfaVerifications: [mockUserTotpMfaVerification] };
-  const totpMfa: Mfa = { policy: MfaPolicy.UserControlled, factors: [MfaFactor.TOTP] };
+  const totpMfa: Mfa = { policy: MfaPolicy.PromptAtSignInAndSignUp, factors: [MfaFactor.TOTP] };
 
   const createStepUpRequester = ({
     user = totpUser,
@@ -399,7 +399,7 @@ describe('PUT /experience', () => {
     // does not enable here.
     const { requester, provider } = createStepUpRequester({
       user: mockUser,
-      mfa: { policy: MfaPolicy.UserControlled, factors: [] },
+      mfa: { policy: MfaPolicy.PromptAtSignInAndSignUp, factors: [] },
     });
 
     const response = await requester
@@ -421,7 +421,7 @@ describe('PUT /experience', () => {
     // session carries: there is nothing to ask for, and nothing verified to refresh `auth_time`.
     const { requester, provider } = createStepUpRequester({
       user: mockUser,
-      mfa: { policy: MfaPolicy.UserControlled, factors: [] },
+      mfa: { policy: MfaPolicy.PromptAtSignInAndSignUp, factors: [] },
       details: {
         authenticationContext: {
           requestedAcrValues: [LogtoAcr.Mfa, LogtoAcr.FirstFactor],
@@ -581,7 +581,7 @@ describe('step-up route allow-list', () => {
       createRequesterWithMocks({
         user: { ...mockUser, mfaVerifications: [mockUserWebAuthnMfaVerification] },
         mfa: {
-          policy: MfaPolicy.UserControlled,
+          policy: MfaPolicy.PromptAtSignInAndSignUp,
           factors: [MfaFactor.TOTP, MfaFactor.BackupCode],
         },
         interactionResult: {

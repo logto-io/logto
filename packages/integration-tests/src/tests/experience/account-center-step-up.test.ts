@@ -53,7 +53,7 @@ const usePasswordSignIn = async () =>
       ],
     },
     socialSignInConnectorTargets: [],
-    mfa: { factors: [], policy: MfaPolicy.UserControlled },
+    mfa: { factors: [], policy: MfaPolicy.PromptAtSignInAndSignUp },
   });
 
 /**
@@ -75,7 +75,7 @@ const usePasswordAndSocialSignIn = async () =>
       ],
     },
     socialSignInConnectorTargets: ['mock-social'],
-    mfa: { factors: [], policy: MfaPolicy.UserControlled },
+    mfa: { factors: [], policy: MfaPolicy.PromptAtSignInAndSignUp },
   });
 
 /**
@@ -501,7 +501,7 @@ describe('Account Center OIDC step-up', () => {
       signInMode: SignInMode.SignIn,
       signIn: { methods: [] },
       socialSignInConnectorTargets: ['mock-social'],
-      mfa: { factors: [], policy: MfaPolicy.UserControlled },
+      mfa: { factors: [], policy: MfaPolicy.PromptAtSignInAndSignUp },
     });
     // A username keeps the shared sign-up configuration from prompting for one; it is not a
     // verification method, so the user still has nothing to satisfy the step-up.

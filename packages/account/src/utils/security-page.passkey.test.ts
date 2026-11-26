@@ -19,7 +19,7 @@ import {
 describe('security-page utils with passkey sign-in enabled', () => {
   const experienceSettings = {
     socialConnectors: [],
-    mfa: { factors: [], policy: MfaPolicy.UserControlled },
+    mfa: { factors: [], policy: MfaPolicy.PromptAtSignInAndSignUp },
     passkeySignIn: { enabled: true },
   };
 
@@ -39,7 +39,7 @@ describe('security-page utils with passkey sign-in enabled', () => {
     expect(
       hasVisibleMfaSection(AccountCenterControlValue.Edit, {
         ...experienceSettings,
-        mfa: { factors: [MfaFactor.WebAuthn], policy: MfaPolicy.UserControlled },
+        mfa: { factors: [MfaFactor.WebAuthn], policy: MfaPolicy.PromptAtSignInAndSignUp },
       })
     ).toBe(false);
 
@@ -47,7 +47,10 @@ describe('security-page utils with passkey sign-in enabled', () => {
     expect(
       hasVisibleMfaSection(AccountCenterControlValue.Edit, {
         ...experienceSettings,
-        mfa: { factors: [MfaFactor.TOTP, MfaFactor.WebAuthn], policy: MfaPolicy.UserControlled },
+        mfa: {
+          factors: [MfaFactor.TOTP, MfaFactor.WebAuthn],
+          policy: MfaPolicy.PromptAtSignInAndSignUp,
+        },
       })
     ).toBe(true);
 
@@ -55,7 +58,7 @@ describe('security-page utils with passkey sign-in enabled', () => {
     expect(
       hasVisibleMfaSection(AccountCenterControlValue.Edit, {
         ...experienceSettings,
-        mfa: { factors: [MfaFactor.WebAuthn], policy: MfaPolicy.UserControlled },
+        mfa: { factors: [MfaFactor.WebAuthn], policy: MfaPolicy.PromptAtSignInAndSignUp },
         passkeySignIn: { enabled: false },
       })
     ).toBe(true);
@@ -67,14 +70,17 @@ describe('security-page utils with passkey sign-in enabled', () => {
     expect(
       hasEnabledSecondFactor({
         ...experienceSettings,
-        mfa: { factors: [MfaFactor.WebAuthn], policy: MfaPolicy.UserControlled },
+        mfa: { factors: [MfaFactor.WebAuthn], policy: MfaPolicy.PromptAtSignInAndSignUp },
       })
     ).toBe(false);
 
     expect(
       hasEnabledSecondFactor({
         ...experienceSettings,
-        mfa: { factors: [MfaFactor.TOTP, MfaFactor.WebAuthn], policy: MfaPolicy.UserControlled },
+        mfa: {
+          factors: [MfaFactor.TOTP, MfaFactor.WebAuthn],
+          policy: MfaPolicy.PromptAtSignInAndSignUp,
+        },
       })
     ).toBe(true);
 
@@ -82,7 +88,7 @@ describe('security-page utils with passkey sign-in enabled', () => {
     expect(
       hasEnabledSecondFactor({
         ...experienceSettings,
-        mfa: { factors: [MfaFactor.WebAuthn], policy: MfaPolicy.UserControlled },
+        mfa: { factors: [MfaFactor.WebAuthn], policy: MfaPolicy.PromptAtSignInAndSignUp },
         passkeySignIn: { enabled: false },
       })
     ).toBe(true);
@@ -97,7 +103,7 @@ describe('security-page utils with passkey sign-in enabled', () => {
     expect(
       isWebAuthnConfigurable({
         ...experienceSettings,
-        mfa: { factors: [MfaFactor.WebAuthn], policy: MfaPolicy.UserControlled },
+        mfa: { factors: [MfaFactor.WebAuthn], policy: MfaPolicy.PromptAtSignInAndSignUp },
         passkeySignIn: { enabled: false },
       })
     ).toBe(true);
@@ -106,7 +112,7 @@ describe('security-page utils with passkey sign-in enabled', () => {
     expect(
       isWebAuthnConfigurable({
         ...experienceSettings,
-        mfa: { factors: [MfaFactor.TOTP], policy: MfaPolicy.UserControlled },
+        mfa: { factors: [MfaFactor.TOTP], policy: MfaPolicy.PromptAtSignInAndSignUp },
         passkeySignIn: { enabled: false },
       })
     ).toBe(false);
@@ -144,7 +150,7 @@ describe('security-page utils with passkey sign-in enabled', () => {
       ...experienceSettings,
       mfa: {
         factors: [MfaFactor.TOTP, MfaFactor.WebAuthn],
-        policy: MfaPolicy.UserControlled,
+        policy: MfaPolicy.PromptAtSignInAndSignUp,
       },
     };
     const webAuthnOnly = [
@@ -170,7 +176,7 @@ describe('security-page utils with passkey sign-in enabled', () => {
 describe('hasConfiguredSecondFactor', () => {
   const getSettings = (factors: MfaFactor[]) => ({
     socialConnectors: [],
-    mfa: { factors, policy: MfaPolicy.UserControlled },
+    mfa: { factors, policy: MfaPolicy.PromptAtSignInAndSignUp },
     passkeySignIn: { enabled: false },
   });
 
@@ -230,7 +236,7 @@ describe('hasConfiguredSecondFactor', () => {
       ...getSettings(factors),
       mfa: {
         factors,
-        policy: MfaPolicy.UserControlled,
+        policy: MfaPolicy.PromptAtSignInAndSignUp,
         verificationCodeEnrollment: MfaVerificationCodeEnrollment.Explicit,
       },
     });

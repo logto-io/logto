@@ -91,7 +91,7 @@ const renderSecurity = ({
         experienceSettings: {
           ...mockSignInExperienceSettings,
           socialConnectors: [],
-          mfa: { policy: MfaPolicy.UserControlled, factors },
+          mfa: { policy: MfaPolicy.PromptAtSignInAndSignUp, factors },
           passkeySignIn: { enabled: true },
         },
       },
