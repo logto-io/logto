@@ -21,6 +21,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # The PR merge commit and its first parent, the base branch tip
+          fetch-depth: 2
+      - name: Require a chart version bump for packaged changes
+        if: github.event_name == 'pull_request'
+        run: |
+          set -euo pipefail
+          chart=helm/logto
+          if ! git cat-file -e "HEAD^1:$chart/Chart.yaml" 2>/dev/null; then
+            echo "No chart on the base branch, skipping"
+            exit 0
+          fi
+          # tests/ and ci/ are excluded from the package by .helmignore
+          if git diff --quiet HEAD^1 HEAD -- "$chart" ":!$chart/tests" ":!$chart/ci"; then
+            echo "No packaged chart changes"
+            exit 0
+          fi
+          version_of() { sed -n 's/^version: *//p' | tr -d '"'; }
+          old=$(git show "HEAD^1:$chart/Chart.yaml" | version_of)
+          new=$(version_of < "$chart/Chart.yaml")
+          if [[ "$old" == "$new" || $(printf '%s\n%s\n' "$old" "$new" | sort -V | tail -n1) != "$new" ]]; then
+            echo "::error file=$chart/Chart.yaml::Chart changes need a version bump above $old, got $new"
+            exit 1
+          fi
+          echo "Chart version $old -> $new"
       - uses: azure/setup-helm@v4
         with:
           version: v3.19.0

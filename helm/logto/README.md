@@ -177,10 +177,10 @@ installs a separate test-only PostgreSQL chart into a fresh kind cluster. It the
 with `ci/smoke-values.yaml` to exercise the external database and pre-install seed Job. It verifies database seed and
 startup, the core health endpoint, OIDC discovery, and the Admin Console welcome redirect. It
 does not test Ingress, TLS, optional Redis at runtime, or a database upgrade.
-It uses the published image pinned by `Chart.yaml`'s `appVersion`, not an image built from the PR.
-Changes to the Dockerfile or runtime write paths require separate testing with a locally built
-image, especially under the chart's non-root and read-only defaults. Before publishing this chart,
-agree with maintainers on keeping `appVersion` aligned with released `@logto/core` image tags.
+It uses the published image pinned by `image.tag` in `ci/smoke-values.yaml`, not an image built
+from the PR. Set `LOGTO_IMAGE_TAG` to test another published tag. Changes to the Dockerfile or
+runtime write paths require separate testing with a locally built image, especially under the
+chart's non-root and read-only defaults.
 
 To run the template tests locally, install the same plugin version as CI and run:
 
@@ -192,3 +192,10 @@ helm unittest --strict helm/logto
 To run the same smoke test locally with Docker, kind, kubectl, and Helm installed, run
 `bash .scripts/helm/smoke.sh` from the repository root. The script uses a separate kubeconfig and
 deletes only the cluster it creates.
+
+## Versioning
+
+`appVersion` follows the `@logto/core` version. The Changesets release PR updates it, bumps the
+chart `version` patch, and moves the smoke image pin to the previous release. Other changes to
+packaged chart files need their own `version` bump, which the Helm workflow checks on pull
+requests.

@@ -33,8 +33,10 @@ kind create cluster --name "$cluster" --kubeconfig "$KUBECONFIG" --wait 120s
   --set-file "password=$work_dir/postgres-password" --wait --timeout 2m
 rm -f -- "$work_dir/postgres-password"
 
+# LOGTO_IMAGE_TAG overrides the pinned smoke image, such as to test a newly published release.
 "${h[@]}" install logto "$repo_root/helm/logto" \
-  -f "$repo_root/helm/logto/ci/smoke-values.yaml" --wait --timeout 4m
+  -f "$repo_root/helm/logto/ci/smoke-values.yaml" \
+  ${LOGTO_IMAGE_TAG:+--set-string "image.tag=$LOGTO_IMAGE_TAG"} --wait --timeout 4m
 
 "${k[@]}" exec -i deployment/logto -- node --input-type=module - <<'JS'
 import assert from 'node:assert/strict';
