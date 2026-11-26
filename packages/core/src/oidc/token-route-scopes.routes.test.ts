@@ -7,8 +7,8 @@ import { consentAuthorizationRoutes, isConsentAuthorizationRoute } from './token
 describe('consentAuthorizationRoutes allowlist', () => {
   /**
    * Full `configuration.routes` keys defined by `oidc-provider`. Pinning this list ensures an
-   * upstream `oidc-provider` upgrade cannot silently introduce a new route without an explicit
-   * classification into consent/authorization vs. isolated token mode.
+   * upstream `oidc-provider` upgrade cannot silently introduce a new top-level configuration route
+   * key without an explicit classification into consent/authorization vs. isolated token mode.
    */
   const pinnedConfigurationRouteKeys = [
     'authorization',
@@ -28,10 +28,16 @@ describe('consentAuthorizationRoutes allowlist', () => {
   ];
 
   /**
-   * Complete set of `ctx.oidc.route` names mounted by `oidc-provider` (including sub-routes not
-   * listed as top-level keys in `configuration.routes`, such as `resume`, `device_resume`,
-   * `discovery`, `end_session_confirm`, `end_session_success`, dynamic registration, and dev
-   * interaction routes).
+   * Known `ctx.oidc.route` names mounted by `oidc-provider` (including sub-routes not listed as
+   * top-level keys in `configuration.routes`, such as `resume`, `device_resume`, `discovery`,
+   * `end_session_confirm`, `end_session_success`, dynamic registration, and dev interaction
+   * routes).
+   *
+   * Note: the custom `Router` in Logto's `oidc-provider` fork stores `#names` in a private class
+   * field, so runtime enumeration of newly added sub-routes is not available; this test pins exact
+   * equality of `configuration.routes` keys and verifies the existence of known mounted routes via
+   * `Provider#pathFor`. Because `isConsentAuthorizationRoute` is a fail-closed allowlist, any
+   * unrecognized sub-route safely defaults to isolated mode.
    */
   const expectedConsentAuthRoutes = [
     'authorization',

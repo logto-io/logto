@@ -1,5 +1,8 @@
+import assert from 'node:assert';
+import { createHash, randomBytes } from 'node:crypto';
+
 import { ReservedResource, UserScope, buildOrganizationUrn } from '@logto/core-kit';
-import { ApplicationType, GrantType } from '@logto/schemas';
+import { ApplicationType, GrantType, InteractionEvent } from '@logto/schemas';
 import { formUrlEncodedHeaders } from '@logto/shared';
 import { removeUndefinedKeys } from '@silverhand/essentials';
 import ky from 'ky';
@@ -11,6 +14,7 @@ import { consent } from '#src/api/interaction.js';
 import { createResource, deleteResource } from '#src/api/resource.js';
 import { assignUsersToRole, createRole, deleteRole } from '#src/api/role.js';
 import { createScope } from '#src/api/scope.js';
+import { ExperienceClient } from '#src/client/experience/index.js';
 import { defaultConfig } from '#src/client/index.js';
 import { initExperienceClient } from '#src/helpers/client.js';
 import { identifyUserWithUsernamePassword } from '#src/helpers/experience/index.js';
@@ -29,8 +33,31 @@ import {
 
 type TokenEndpointResponse = {
   access_token: string;
+  id_token?: string;
   refresh_token?: string;
   scope?: string;
+};
+
+const postTokenEndpoint = async ({
+  appId,
+  appSecret,
+  body,
+}: {
+  appId: string;
+  appSecret: string;
+  body: Record<string, string | undefined>;
+}): Promise<TokenEndpointResponse> => {
+  const basicAuth = Buffer.from(`${appId}:${appSecret}`).toString('base64');
+
+  return ky
+    .post(`${defaultConfig.endpoint}/oidc/token`, {
+      headers: {
+        ...formUrlEncodedHeaders,
+        authorization: `Basic ${basicAuth}`,
+      },
+      body: new URLSearchParams(removeUndefinedKeys(body)),
+    })
+    .json<TokenEndpointResponse>();
 };
 
 const exchangeRefreshToken = async ({
@@ -45,26 +72,17 @@ const exchangeRefreshToken = async ({
   refreshToken: string;
   resource?: string;
   organizationId?: string;
-}): Promise<TokenEndpointResponse> => {
-  const basicAuth = Buffer.from(`${appId}:${appSecret}`).toString('base64');
-
-  return ky
-    .post(`${defaultConfig.endpoint}/oidc/token`, {
-      headers: {
-        ...formUrlEncodedHeaders,
-        authorization: `Basic ${basicAuth}`,
-      },
-      body: new URLSearchParams(
-        removeUndefinedKeys({
-          grant_type: GrantType.RefreshToken,
-          refresh_token: refreshToken,
-          resource,
-          organization_id: organizationId,
-        })
-      ),
-    })
-    .json<TokenEndpointResponse>();
-};
+}): Promise<TokenEndpointResponse> =>
+  postTokenEndpoint({
+    appId,
+    appSecret,
+    body: {
+      grant_type: GrantType.RefreshToken,
+      refresh_token: refreshToken,
+      resource,
+      organization_id: organizationId,
+    },
+  });
 
 describe('third-party application token context isolation (Cases 1, 2 & 4)', () => {
   const redirectUri = 'http://example.com';
@@ -234,6 +252,136 @@ describe('third-party application token context isolation (Cases 1, 2 & 4)', () 
         deleteResource(sharedResource.id),
         deleteResource(personalOnlyResource.id),
         deleteRole(personalRole.id),
+        organizationApi.cleanUp(),
+        deleteUser(user.id),
+      ]);
+    }
+  });
+
+  it('Case 4 implicit fallback: handles OAuth-only authorization without openid and sole ReservedResource.Organization', async () => {
+    const username = generateUsername();
+    const password = generatePassword();
+    const orgScopeName = `invite:member:${randomString()}`;
+    const codeVerifier = randomBytes(32).toString('base64url');
+    const codeChallenge = createHash('sha256').update(codeVerifier).digest('base64url');
+
+    const organizationApi = new OrganizationApiTest();
+    const user = await createUserByAdmin({ username, password });
+    const app = await createApplicationWithSecret(
+      `third-party-oauth-only-fallback-${randomString()}`,
+      ApplicationType.Traditional,
+      {
+        isThirdParty: true,
+        oidcClientMetadata: {
+          redirectUris: [redirectUri],
+          postLogoutRedirectUris: [],
+        },
+        customClientMetadata: {
+          alwaysIssueRefreshToken: true,
+        },
+      }
+    );
+
+    try {
+      const organization = await organizationApi.create({ name: `org:${randomString()}` });
+      await organizationApi.addUsers(organization.id, [user.id]);
+
+      const orgScope = await organizationApi.scopeApi.create({ name: orgScopeName });
+      const orgRole = await organizationApi.roleApi.create({
+        name: `org-role:${randomString()}`,
+        organizationScopeIds: [orgScope.id],
+      });
+      await organizationApi.addUserRoles(organization.id, user.id, [orgRole.id]);
+
+      await assignUserConsentScopes(app.id, {
+        userScopes: [UserScope.Organizations],
+        organizationScopes: [orgScope.id],
+      });
+
+      // Start an OAuth-only authorization request without `openid` and with
+      // `urn:logto:resource:organizations` as its sole resource indicator.
+      const authUrl = new URL('/oidc/auth', defaultConfig.endpoint);
+      authUrl.searchParams.set('client_id', app.id);
+      authUrl.searchParams.set('redirect_uri', redirectUri);
+      authUrl.searchParams.set('response_type', 'code');
+      authUrl.searchParams.set('scope', [UserScope.Organizations, orgScope.name].join(' '));
+      authUrl.searchParams.set('resource', ReservedResource.Organization);
+      authUrl.searchParams.set('code_challenge', codeChallenge);
+      authUrl.searchParams.set('code_challenge_method', 'S256');
+
+      const authResponse = await ky.get(authUrl, { redirect: 'manual', throwHttpErrors: false });
+      expect(authResponse.status).toBe(303);
+      expect(authResponse.headers.get('location')).toMatch(/^\/sign-in/);
+
+      const client = new ExperienceClient({ appId: app.id, appSecret: app.secret });
+      client.assignRawCookies(authResponse.headers.getSetCookie());
+      await client.initInteraction({ interactionEvent: InteractionEvent.SignIn });
+      await identifyUserWithUsernamePassword(client, username, password);
+      const { redirectTo } = await client.submitInteraction();
+      await client.processSession(redirectTo, false);
+
+      const { redirectTo: consentRedirectTo } = await client.send(consent, {
+        organizationIds: [organization.id],
+      });
+      const callbackResponse = await ky.get(consentRedirectTo, {
+        headers: { cookie: client.getCookieHeader(new URL(consentRedirectTo).pathname) },
+        redirect: 'manual',
+        throwHttpErrors: false,
+      });
+      expect(callbackResponse.status).toBe(303);
+      const callbackLocation = callbackResponse.headers.get('location');
+      assert(callbackLocation, 'Expected authorization callback redirect location');
+      const code = new URL(callbackLocation).searchParams.get('code');
+      assert(code, 'Expected authorization code in callback URL');
+
+      // 1. Code exchange omits `resource`: oidc-provider's `resolve_resource.js` falls back to
+      // `ReservedResource.Organization` because `openid` was omitted. Must succeed with empty
+      // scope and no `organization_id` claim instead of failing with `invalid_target`.
+      const codeExchangeResponse = await postTokenEndpoint({
+        appId: app.id,
+        appSecret: app.secret,
+        body: {
+          grant_type: GrantType.AuthorizationCode,
+          code,
+          redirect_uri: redirectUri,
+          code_verifier: codeVerifier,
+        },
+      });
+      expect(codeExchangeResponse.id_token).toBeUndefined();
+      assert(codeExchangeResponse.refresh_token, 'Expected refresh_token from code exchange');
+      const codeAccessTokenPayload = getAccessTokenPayload(codeExchangeResponse.access_token);
+      expect(codeAccessTokenPayload.aud).toBe(ReservedResource.Organization);
+      expect(codeAccessTokenPayload.scope ?? '').toBe('');
+      expect(codeAccessTokenPayload).not.toHaveProperty('organization_id');
+
+      // 2. Refresh without `resource` or `organization_id` also triggers the implicit fallback
+      // and returns an empty scope with no `organization_id` claim.
+      const fallbackRefreshResponse = await exchangeRefreshToken({
+        appId: app.id,
+        appSecret: app.secret,
+        refreshToken: codeExchangeResponse.refresh_token,
+      });
+      const fallbackRefreshPayload = getAccessTokenPayload(fallbackRefreshResponse.access_token);
+      expect(fallbackRefreshPayload.aud).toBe(ReservedResource.Organization);
+      expect(fallbackRefreshPayload.scope ?? '').toBe('');
+      expect(fallbackRefreshPayload).not.toHaveProperty('organization_id');
+
+      // 3. The same refresh token still exchanges for a consented organization token (Case 3)
+      // when `organization_id` is explicitly requested.
+      const orgTokenResponse = await exchangeRefreshToken({
+        appId: app.id,
+        appSecret: app.secret,
+        refreshToken: fallbackRefreshResponse.refresh_token ?? codeExchangeResponse.refresh_token,
+        organizationId: organization.id,
+      });
+      const orgTokenPayload = getAccessTokenPayload(orgTokenResponse.access_token);
+      expect(orgTokenPayload).toMatchObject({
+        aud: buildOrganizationUrn(organization.id),
+        scope: orgScopeName,
+      });
+    } finally {
+      await Promise.all([
+        deleteApplication(app.id),
         organizationApi.cleanUp(),
         deleteUser(user.id),
       ]);
