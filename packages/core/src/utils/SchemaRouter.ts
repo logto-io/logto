@@ -14,6 +14,9 @@ import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
 import { type WithAuthContext } from '#src/middleware/koa-auth/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import { type WithHookContext } from '#src/middleware/koa-management-api-hooks.js';
+import koaManagementApiPermission, {
+  type ManagementApiPermissionPolicy,
+} from '#src/middleware/koa-management-api-permission.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 
 import { type TwoRelationsQueries } from './RelationQueries.js';
@@ -143,6 +146,13 @@ type SchemaRouterConfig<Key extends string> = {
    * @default false
    */
   isPaginationOptional?: boolean;
+  /**
+   * Static Management API permission policies for native CRUD routes.
+   * Omitted actions stay undeclared and default to requiring `all` via `managementRouter`.
+   */
+  permissions?: Partial<
+    Record<'get' | 'post' | 'getById' | 'patchById' | 'deleteById', ManagementApiPermissionPolicy>
+  >;
 };
 
 type RelationRoutesConfig = {
@@ -158,6 +168,11 @@ type RelationRoutesConfig = {
    * @default false
    */
   isPaginationOptional?: boolean;
+  /**
+   * Static Management API permission policies for relation routes.
+   * Omitted actions stay undeclared and default to requiring `all` via `managementRouter`.
+   */
+  permissions?: Partial<Record<'get' | 'post' | 'put' | 'delete', ManagementApiPermissionPolicy>>;
 };
 
 /**
@@ -178,18 +193,23 @@ export default class SchemaRouter<
   CreateSchema extends Partial<SchemaLike<Key> & { id: string }>,
   Schema extends SchemaLike<Key> & { id: string },
   StateT = unknown,
-  CustomT extends WithHookContext = WithHookContext & WithAuthContext,
+  CustomT extends WithHookContext & WithAuthContext = WithHookContext & WithAuthContext,
 > extends Router<StateT, CustomT> {
   public readonly config: SchemaRouterConfig<Key>;
 
   constructor(
     public readonly schema: GeneratedSchema<Key, CreateSchema, Schema>,
     public readonly queries: SchemaQueries<Key, CreateSchema, Schema>,
-    config: DeepPartial<SchemaRouterConfig<Key>> = {}
+    config: DeepPartial<Omit<SchemaRouterConfig<Key>, 'permissions'>> &
+      Pick<SchemaRouterConfig<Key>, 'permissions'> = {}
   ) {
     super({ prefix: '/' + tableToPathname(schema.table) });
 
-    this.config = deepmerge(defaultConfig, config, { isMergeableObject: isPlainObject });
+    const { permissions, ...restConfig } = config;
+    this.config = {
+      ...deepmerge(defaultConfig, restConfig, { isMergeableObject: isPlainObject }),
+      permissions,
+    };
 
     // Apply global middlewares (those without specific scope)
     if (this.config.middlewares?.length) {
@@ -252,7 +272,7 @@ export default class SchemaRouter<
       GeneratedSchema<string, RelationCreateSchema, RelationSchema>
     >,
     pathname = tableToPathname(relationQueries.schemas[1].table),
-    { disabled, hookEvent, isPaginationOptional }: Partial<RelationRoutesConfig> = {}
+    { disabled, hookEvent, isPaginationOptional, permissions }: Partial<RelationRoutesConfig> = {}
   ) {
     const relationSchema = relationQueries.schemas[1];
     const relationSchemaId = camelCaseSchemaId(relationSchema);
@@ -273,6 +293,7 @@ export default class SchemaRouter<
     if (!disabled?.get) {
       this.get(
         `/:id/${pathname}`,
+        this.#buildPermissionMiddleware(permissions?.get),
         koaPagination({ isOptional: isPaginationOptional }),
         koaGuard({
           params: z.object({ id: z.string().min(1) }),
@@ -303,6 +324,7 @@ export default class SchemaRouter<
 
     this.post(
       `/:id/${pathname}`,
+      this.#buildPermissionMiddleware(permissions?.post),
       koaGuard({
         params: z.object({ id: z.string().min(1) }),
         body: z.object({ [columns.relationSchemaIds]: z.string().min(1).array().nonempty() }),
@@ -329,6 +351,7 @@ export default class SchemaRouter<
 
     this.put(
       `/:id/${pathname}`,
+      this.#buildPermissionMiddleware(permissions?.put),
       koaGuard({
         params: z.object({ id: z.string().min(1) }),
         body: z.object({ [columns.relationSchemaIds]: z.string().min(1).array() }),
@@ -350,6 +373,7 @@ export default class SchemaRouter<
 
     this.delete(
       `/:id/${pathname}/:${camelCaseSchemaId(relationSchema)}`,
+      this.#buildPermissionMiddleware(permissions?.delete),
       koaGuard({
         params: z
           .object({ id: z.string().min(1) })
@@ -386,6 +410,7 @@ export default class SchemaRouter<
       entityGuard,
       hiddenFields = {},
       isPaginationOptional,
+      permissions,
     } = config;
     const responseGuard = entityGuard ?? schema.guard.omit(hiddenFields);
     // @ts-expect-error -- `.omit()` doesn't play well with generic schema keys.
@@ -399,6 +424,7 @@ export default class SchemaRouter<
     if (!disabled.get) {
       this.get(
         '/',
+        this.#buildPermissionMiddleware(permissions?.get),
         koaPagination({ isOptional: isPaginationOptional }),
         koaGuard({
           query: z.object({ q: z.string().optional() }),
@@ -421,6 +447,7 @@ export default class SchemaRouter<
     if (!disabled.post) {
       this.post(
         '/',
+        this.#buildPermissionMiddleware(permissions?.post),
         koaGuard({
           body: createBodyGuard,
           response: responseGuard,
@@ -443,6 +470,7 @@ export default class SchemaRouter<
     if (!disabled.getById) {
       this.get(
         '/:id',
+        this.#buildPermissionMiddleware(permissions?.getById),
         koaGuard({
           params: z.object({ id: z.string().min(1) }),
           response: responseGuard,
@@ -459,6 +487,7 @@ export default class SchemaRouter<
     if (!disabled.patchById) {
       this.patch(
         '/:id',
+        this.#buildPermissionMiddleware(permissions?.patchById),
         koaGuard({
           params: z.object({ id: z.string().min(1) }),
           body: updateBodyGuard,
@@ -476,6 +505,7 @@ export default class SchemaRouter<
     if (!disabled.deleteById) {
       this.delete(
         '/:id',
+        this.#buildPermissionMiddleware(permissions?.deleteById),
         koaGuard({
           params: z.object({ id: z.string().min(1) }),
           status: this.#collectRouteStatuses('delete', [204, 404]),
@@ -489,6 +519,14 @@ export default class SchemaRouter<
         }
       );
     }
+  }
+
+  #buildPermissionMiddleware(policy?: ManagementApiPermissionPolicy): Middleware<StateT, CustomT> {
+    if (policy) {
+      return koaManagementApiPermission(policy);
+    }
+
+    return async (_ctx, next) => next();
   }
 
   #assembleQualifiedMiddlewares<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
