@@ -65,7 +65,6 @@ const account_center = {
     passkeys_count_other: '{{count}} مفاتيح مرور',
     backup_codes_count_one: '{{count}} رمز متبقٍ',
     backup_codes_count_other: '{{count}} رموز متبقية',
-    view: 'عرض',
     manage: 'إدارة',
     turn_on_2_step_verification_description:
       'أضف طبقة أمان إضافية. ستتم مطالبتك بخطوة تحقق ثانية عند تسجيل الدخول.',

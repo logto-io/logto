@@ -150,17 +150,6 @@ export class CoreJobQueue {
   }
 
   /**
-   * Run a fire-and-forget insert into `jobs`. Shutdown waits for it before closing pools, and a
-   * failure is logged and counted instead of thrown. Wakes the local worker once the row exists.
-   */
-  async enqueue(insert: () => Promise<unknown>): Promise<void> {
-    return this.trackEnqueue(async () => {
-      await insert();
-      this.#worker?.wake();
-    });
-  }
-
-  /**
    * Stop claiming and wait for in-flight jobs, then release what is still claimed. Enqueues are
    * awaited once `serversClosed` settles, since requests still running can start new ones.
    */

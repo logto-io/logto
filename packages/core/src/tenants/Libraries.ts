@@ -36,7 +36,6 @@ export default class Libraries {
   users = createUserLibrary(this.tenantId, this.queries);
   phrases = createPhraseLibrary(this.queries);
   hooks = createHookLibrary(this.queries, {
-    tenantId: this.tenantId,
     requestSlot: this.requestSlot,
   });
 

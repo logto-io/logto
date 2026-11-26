@@ -73,7 +73,6 @@ const account_center = {
     passkeys_count_other: '{{count}} Passkeys',
     backup_codes_count_one: '{{count}} Code verbleibend',
     backup_codes_count_other: '{{count}} Codes verbleibend',
-    view: 'Ansehen',
     manage: 'Verwalten',
     turn_on_2_step_verification_description:
       'Fügen Sie eine zusätzliche Sicherheitsebene hinzu. Sie werden bei der Anmeldung zu einem zweiten Verifizierungsschritt aufgefordert.',

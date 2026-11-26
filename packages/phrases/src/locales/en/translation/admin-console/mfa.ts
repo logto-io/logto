@@ -33,16 +33,7 @@ const mfa = {
     'Every user with a verified email address or phone number will use it for 2-step verification, including users who have not set it up. Are you sure you want to continue?',
   policy: 'Policy',
   policy_description: 'Set the MFA policy for sign-in and sign-up flows.',
-  two_step_sign_in_policy: '2-step verification policy at sign-in',
-  user_controlled: 'Users can enable or disable MFA on their own',
-  user_controlled_tip:
-    'Users can skip the MFA set-up the first time at sign-in or sign-up, or enable/disable it in account settings.',
-  mandatory: 'Users are always required to use MFA at sign-in',
-  mandatory_tip:
-    'Users must set up MFA the first time at sign-in or sign-up, and use it for all future sign-ins.',
   require_mfa: 'Require MFA',
-  require_mfa_label:
-    'Enable this to make 2-step verification mandatory for accessing your applications. If disabled, users can decide whether to enable MFA for themselves.',
   require_mfa_optional:
     'Optional MFA: Let users choose to enable MFA for their own account security',
   require_mfa_adaptive:

@@ -65,7 +65,6 @@ const account_center = {
     passkeys_count_other: '{{count}} 个通行密钥',
     backup_codes_count_one: '{{count}} 个备用码',
     backup_codes_count_other: '{{count}} 个备用码',
-    view: '查看',
     manage: '管理',
     turn_on_2_step_verification_description: '增加一层额外的安全保护。登录时将要求进行第二步验证。',
     two_step_verification_incomplete_description: '两步验证已开启，但尚未生效。',

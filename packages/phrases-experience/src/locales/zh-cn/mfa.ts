@@ -72,7 +72,6 @@ const mfa = {
   trust_this_device_other: '在接下来的 {{count}} 天内信任此设备',
   secret_key_copied: '密钥已复制。',
   backup_code_copied: '备份代码已复制。',
-  webauthn_not_ready: 'WebAuthn 尚未准备就绪。请稍后重试。',
   webauthn_not_supported: '此浏览器不支持 WebAuthn。',
   webauthn_failed_to_create: '创建失败。请重试。',
   webauthn_failed_to_verify: '验证失败。请重试。',

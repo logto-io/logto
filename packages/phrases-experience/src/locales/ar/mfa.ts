@@ -78,7 +78,6 @@ const mfa = {
   trust_this_device_other: 'الوثوق بهذا الجهاز لمدة {{count}} يوم',
   secret_key_copied: 'تم نسخ المفتاح السري.',
   backup_code_copied: 'تم نسخ رمز النسخ الاحتياطي.',
-  webauthn_not_ready: 'WebAuthn غير جاهز حاليًا. يرجى المحاولة مرة أخرى لاحقًا.',
   webauthn_not_supported: 'WebAuthn غير مدعوم في هذا المتصفح.',
   webauthn_failed_to_create: 'فشل في الإنشاء. يرجى المحاولة مرة أخرى.',
   webauthn_failed_to_verify: 'فشل التحقق. يرجى المحاولة مرة أخرى.',

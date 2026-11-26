@@ -55,7 +55,6 @@ export const createHookLibrary = (queries: Queries, options?: CreateHookLibraryO
     countJobsByGroup,
     countJobsByType,
     queue,
-    tenantId: options?.tenantId,
     requestSlot: options?.requestSlot,
     waitingRowCaps: options?.waitingRowCaps,
   });

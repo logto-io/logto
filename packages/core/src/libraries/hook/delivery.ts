@@ -30,7 +30,6 @@ type CreateWebhookDispatcherInput = {
   countJobsByGroup: Queries['jobs']['countJobsByGroup'];
   countJobsByType: Queries['jobs']['countJobsByType'];
   queue: CoreJobQueue;
-  tenantId?: string;
   requestSlot?: TenantRequestSlot;
   waitingRowCaps?: {
     perHook: number;
@@ -47,7 +46,6 @@ export const createWebhookDispatcher = ({
   countJobsByGroup,
   countJobsByType,
   queue,
-  tenantId,
   requestSlot,
   waitingRowCaps,
 }: CreateWebhookDispatcherInput) => {
@@ -105,7 +103,6 @@ export const createWebhookDispatcher = ({
     consoleLog: ConsoleLog
   ) => {
     const { id } = hook;
-    const resolvedTenantId = tenantId ?? hook.tenantId;
     consoleLog.info(`\tEnqueueing hook ${id} due to ${payload.event} event`);
 
     const deliveryId = generateStandardId();
@@ -115,7 +112,7 @@ export const createWebhookDispatcher = ({
 
     await queue.trackEnqueue(async () => {
       const reservation = await queue.tryReserveWaitingRow({
-        tenantId: resolvedTenantId,
+        tenantId: hook.tenantId,
         type: webhookJobType,
         groupKey: id,
         maxWaitingRowsPerGroup: caps.perHook,
@@ -152,18 +149,13 @@ export const createWebhookDispatcher = ({
         return;
       }
 
-      try {
-        await enqueueJob({
-          id: deliveryId,
-          type: webhookJobType,
-          groupKey: id,
-          dedupeKey: deliveryId,
-          payload: serializedBody,
-        });
-      } catch (error: unknown) {
-        reservation.rollback();
-        throw error;
-      }
+      await enqueueJob({
+        id: deliveryId,
+        type: webhookJobType,
+        groupKey: id,
+        dedupeKey: deliveryId,
+        payload: serializedBody,
+      });
 
       queue.wake();
     });

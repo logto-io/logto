@@ -65,7 +65,6 @@ const account_center = {
     passkeys_count_other: '{{count}} passkeys',
     backup_codes_count_one: 'เหลือ {{count}} รหัส',
     backup_codes_count_other: 'เหลือ {{count}} รหัส',
-    view: 'ดู',
     manage: 'จัดการ',
     turn_on_2_step_verification_description:
       'เพิ่มชั้นความปลอดภัยเพิ่มเติม คุณจะถูกขอให้ทำการยืนยันขั้นตอนที่สองเมื่อลงชื่อเข้าใช้',

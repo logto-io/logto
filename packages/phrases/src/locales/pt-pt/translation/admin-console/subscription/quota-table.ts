@@ -36,7 +36,6 @@ const quota_table = {
     social_connectors: 'Conectores sociais',
     standard_connectors: 'Conectores padrão',
     built_in_email_connector: 'Conector de e-mail incorporado',
-    mfa: 'Autenticação de vários fatores',
     sso: 'SSO Empresarial',
     impersonation: 'Personificação',
   },
