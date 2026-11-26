@@ -37,13 +37,59 @@ import { type UserMfaVerificationsData, type InteractionContext } from '../types
 
 import { getCandidateAdditionalMfaFactors } from './libraries/mfa-additional-suggestion.js';
 import {
-  isEnrollmentExemptionReason,
+  type MfaEnrollmentDecision,
   MfaEnrollmentKind,
-  type MfaEnrollmentSnapshot,
+  type MfaPreBindEnrollmentSnapshot,
   resolveMfaEnrollmentRequirement,
+  resolvePreBindMfaEnrollment,
 } from './libraries/mfa-enrollment-decision.js';
 import { parseUserMfaConfig } from './libraries/mfa-verification-decision.js';
 import { SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
+
+const assertPreBindEnrollmentDecision = (decision: MfaEnrollmentDecision) => {
+  if (decision.kind === MfaEnrollmentKind.SuggestEnable) {
+    throw new RequestError({ code: 'user.suggest_mfa', status: 422 });
+  }
+
+  if (decision.kind === MfaEnrollmentKind.Missing) {
+    throw new RequestError(
+      { code: 'user.missing_mfa', status: 422 },
+      {
+        availableFactors: decision.availableFactors,
+        ...conditional(
+          decision.maskedIdentifiers && {
+            maskedIdentifiers: decision.maskedIdentifiers,
+          }
+        ),
+        ...conditional(decision.skippable && { skippable: true }),
+      }
+    );
+  }
+};
+
+const assertPostBindEnrollmentDecision = (decision: MfaEnrollmentDecision) => {
+  if (decision.kind === MfaEnrollmentKind.SuggestAdditional) {
+    throw new RequestError(
+      { code: 'session.mfa.suggest_additional_mfa', status: 422 },
+      {
+        availableFactors: decision.availableFactors,
+        maskedIdentifiers: decision.maskedIdentifiers ?? {},
+        ...conditional(decision.boundFactors && { boundFactors: decision.boundFactors }),
+        isWebAuthnUsedAsSignInPasskey: decision.isWebAuthnUsedAsSignInPasskey ?? false,
+        skippable: true,
+        suggestion: true,
+      }
+    );
+  }
+
+  assertThat(
+    decision.kind !== MfaEnrollmentKind.BackupCode,
+    new RequestError({
+      code: 'session.mfa.backup_code_required',
+      status: 422,
+    })
+  );
+};
 
 export type MfaData = {
   mfaEnabled?: boolean;
@@ -473,12 +519,6 @@ export class Mfa {
   } = {}) {
     const submitMfaValidationContext = await this.buildSubmitMfaValidationContext();
 
-    // For optional MFA, prompt an MFA enrollment page in prior if user hasn't set up or skipped MFA binding yet.
-    // A no-skip mandatory requirement has no optional step to offer, exactly as its policy bypasses this check.
-    if (!asNoSkipMandatoryPolicy) {
-      await this.assertOptionalMfaEnablement(submitMfaValidationContext);
-    }
-
     await this.assertUserMandatoryMfaFulfilled(
       submitMfaValidationContext,
       asNoSkipMandatoryPolicy,
@@ -529,21 +569,6 @@ export class Mfa {
     };
   }
 
-  private async assertOptionalMfaEnablement(
-    submitMfaValidationContext: SubmitMfaValidationContext
-  ) {
-    const snapshot = await this.buildEnrollmentSnapshot(submitMfaValidationContext);
-    const decision = resolveMfaEnrollmentRequirement(snapshot);
-
-    if (decision.shouldBackfillMfaEnabled) {
-      this.markMfaEnabled();
-    }
-
-    if (decision.kind === MfaEnrollmentKind.SuggestEnable) {
-      throw new RequestError({ code: 'user.suggest_mfa', status: 422 });
-    }
-  }
-
   private async assertUserMandatoryMfaFulfilled(
     submitMfaValidationContext: SubmitMfaValidationContext,
     asNoSkipMandatoryPolicy = false,
@@ -554,95 +579,56 @@ export class Mfa {
       mfaSettings.factors.length > 0
         ? await this.signInExperienceValidator.getConfiguredMfaFactors()
         : [];
-    const baseSnapshot = await this.buildEnrollmentSnapshot(submitMfaValidationContext, {
+    const preBindSnapshot = await this.buildPreBindEnrollmentSnapshot(submitMfaValidationContext, {
       asNoSkipMandatoryPolicy,
       enrollmentFactors,
       configuredFactors,
     });
-    const preBindDecision = resolveMfaEnrollmentRequirement(baseSnapshot);
+    const preBindDecision = resolvePreBindMfaEnrollment(preBindSnapshot);
 
-    if (preBindDecision.kind === MfaEnrollmentKind.Missing) {
-      throw new RequestError(
-        { code: 'user.missing_mfa', status: 422 },
-        {
-          availableFactors: preBindDecision.availableFactors,
-          ...conditional(
-            preBindDecision.maskedIdentifiers && {
-              maskedIdentifiers: preBindDecision.maskedIdentifiers,
-            }
-          ),
-          ...conditional(preBindDecision.skippable && { skippable: true }),
-        }
-      );
+    if (preBindDecision.shouldBackfillMfaEnabled) {
+      this.markMfaEnabled();
     }
 
-    if (
-      preBindDecision.kind === MfaEnrollmentKind.None &&
-      isEnrollmentExemptionReason(preBindDecision.reason)
-    ) {
+    assertPreBindEnrollmentDecision(preBindDecision);
+
+    if (preBindDecision.exempted) {
       return;
     }
 
+    // Lazily check binding eligibility and fetch SIE suggestion data only when a candidate exists.
     const canBindMfa = await this.interactionContext.canBindMfa();
+    const additionalSuggestionContext = getCandidateAdditionalMfaFactors({
+      ...preBindSnapshot,
+      canBindMfa,
+    })
+      ? await this.buildAdditionalSuggestionContext(preBindSnapshot)
+      : undefined;
+    const postBindDecision = resolveMfaEnrollmentRequirement({
+      ...preBindSnapshot,
+      canBindMfa,
+      additionalSuggestionContext,
+    });
 
-    if (!mfaSettings.skipAdditionalBindingSuggestion) {
-      await this.guardAdditionalBindingSuggestion({ ...baseSnapshot, canBindMfa });
-    }
-
-    const postBindDecision = resolveMfaEnrollmentRequirement({ ...baseSnapshot, canBindMfa });
-
-    assertThat(
-      postBindDecision.kind !== MfaEnrollmentKind.BackupCode,
-      new RequestError({
-        code: 'session.mfa.backup_code_required',
-        status: 422,
-      })
-    );
+    assertPostBindEnrollmentDecision(postBindDecision);
   }
 
-  /**
-   * Optionally suggest user to bind additional MFA factors.
-   * Encapsulates suggestion logic and throws a 422 with `session.mfa.suggest_additional_mfa`
-   * when conditions are met.
-   * The purpose is to suggest another MFA factor if the user has only Email, Phone, or Passkey factor,
-   * which can technically be used for both sign-in and MFA verification, not for MFA verification only.
-   */
-  private async guardAdditionalBindingSuggestion(snapshot: MfaEnrollmentSnapshot) {
-    if (!getCandidateAdditionalMfaFactors(snapshot)) {
-      return;
-    }
-
+  private async buildAdditionalSuggestionContext(snapshot: MfaPreBindEnrollmentSnapshot) {
     const { signUp, passkeySignIn } =
       await this.signInExperienceValidator.getSignInExperienceData();
     const currentProfile = this.interactionContext.getCurrentProfile();
-    const decision = resolveMfaEnrollmentRequirement({
-      ...snapshot,
-      additionalSuggestionContext: {
-        signUp,
-        passkeySignInEnabled: Boolean(passkeySignIn.enabled),
-        effectiveEmail: currentProfile.primaryEmail ?? snapshot.primaryEmail,
-        effectivePhone: currentProfile.primaryPhone ?? snapshot.primaryPhone,
-        sessionBoundDualPurposeFactors: {
-          emailVerificationCode: this.#emailVerificationCode,
-          phoneVerificationCode: this.#phoneVerificationCode,
-          webAuthn: Boolean(this.#webAuthn?.length),
-        },
-      },
-    });
 
-    if (decision.kind === MfaEnrollmentKind.SuggestAdditional) {
-      throw new RequestError(
-        { code: 'session.mfa.suggest_additional_mfa', status: 422 },
-        {
-          availableFactors: decision.availableFactors,
-          maskedIdentifiers: decision.maskedIdentifiers ?? {},
-          ...conditional(decision.boundFactors && { boundFactors: decision.boundFactors }),
-          isWebAuthnUsedAsSignInPasskey: decision.isWebAuthnUsedAsSignInPasskey ?? false,
-          skippable: true,
-          suggestion: true,
-        }
-      );
-    }
+    return {
+      signUp,
+      passkeySignInEnabled: Boolean(passkeySignIn.enabled),
+      effectiveEmail: currentProfile.primaryEmail ?? snapshot.primaryEmail,
+      effectivePhone: currentProfile.primaryPhone ?? snapshot.primaryPhone,
+      sessionBoundDualPurposeFactors: {
+        emailVerificationCode: this.#emailVerificationCode,
+        phoneVerificationCode: this.#phoneVerificationCode,
+        webAuthn: Boolean(this.#webAuthn?.length),
+      },
+    };
   }
 
   private matchesExistingPrimaryIdentifier(
@@ -697,18 +683,18 @@ export class Mfa {
     };
   }
 
-  private async buildEnrollmentSnapshot(
+  private async buildPreBindEnrollmentSnapshot(
     submitMfaValidationContext: SubmitMfaValidationContext,
     {
       asNoSkipMandatoryPolicy = false,
       enrollmentFactors,
-      configuredFactors = [],
+      configuredFactors,
     }: {
       asNoSkipMandatoryPolicy?: boolean;
       enrollmentFactors?: readonly MfaFactor[];
-      configuredFactors?: readonly MfaFactor[];
-    } = {}
-  ): Promise<MfaEnrollmentSnapshot> {
+      configuredFactors: readonly MfaFactor[];
+    }
+  ): Promise<MfaPreBindEnrollmentSnapshot> {
     const { mfaSettings, organizations, user, userFactors } = submitMfaValidationContext;
     const userMfaData = parseUserMfaConfig(user.logtoConfig);
     const isMfaRequired = await isMfaRequiredByUser(this.queries, mfaSettings, user, organizations);
@@ -728,7 +714,6 @@ export class Mfa {
       configuredFactors,
       userFactors,
       boundMfaFactors: this.bindMfaFactorsArray.map(({ type }) => type),
-      canBindMfa: false,
       additionalBindingSuggestionSkippedInSession: this.additionalBindingSuggestionSkipped,
       primaryEmail: user.primaryEmail ?? undefined,
       primaryPhone: user.primaryPhone ?? undefined,

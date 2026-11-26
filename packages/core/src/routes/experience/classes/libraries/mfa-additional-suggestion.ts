@@ -105,7 +105,11 @@ const resolveSuggestedIdentifier = ({
 }): string | undefined =>
   userFactors.includes(factor)
     ? effectiveValue
-    : conditional(isDevFeaturesEnabled && sortedFactors.includes(factor) && primaryValue);
+    : conditional(
+        // Email / SMS MFA explicit enrollment: expose unenrolled existing primary identifier so the
+        // suggestion list enrolls it instead of opening the new-identifier profile form.
+        isDevFeaturesEnabled && sortedFactors.includes(factor) && primaryValue
+      );
 
 export const getCandidateAdditionalMfaFactors = ({
   mfaSettings,
@@ -127,6 +131,8 @@ export const getCandidateAdditionalMfaFactors = ({
     mfaSettings.skipAdditionalBindingSuggestion === true ||
     additionalBindingSuggestionSkippedInSession === true ||
     userMfaConfig.additionalBindingSuggestionSkipped === true ||
+    // A sign-in that may not enroll a factor must not offer enrollment: with existing factors it
+    // would let a password-only visitor bind a new factor without proving one.
     !canBindMfa
   ) {
     return;
@@ -153,6 +159,8 @@ export const evaluateAdditionalMfaSuggestion = (
     return;
   }
 
+  // Email / SMS MFA explicit enrollment: suggest another factor only when a dual-purpose factor
+  // was bound in this interaction as the user's sole MFA factor.
   const isExplicitMode =
     isDevFeaturesEnabled &&
     mfaSettings.verificationCodeEnrollment === MfaVerificationCodeEnrollment.Explicit;
@@ -186,6 +194,8 @@ export const evaluateAdditionalMfaSuggestion = (
         primaryValue: input.primaryPhone,
       }),
     }),
+    // Email / SMS MFA explicit enrollment: distinguish already-bound factors from unenrolled
+    // existing primary identifiers that also carry a `maskedIdentifiers` entry.
     ...conditional(isDevFeaturesEnabled && { boundFactors: [...userFactors] }),
     isWebAuthnUsedAsSignInPasskey: passkeySignInEnabled && userFactors.includes(MfaFactor.WebAuthn),
   };
