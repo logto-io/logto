@@ -1,0 +1,9 @@
+database:
+  existingSecret: logto-db
+  seedOnInstall: true
+endpoint: http://logto:3001
+adminEndpoint: http://logto:3002
+image:
+  # A published release, since the release PR changes the chart before its image exists.
+  # `.scripts/helm/sync-chart-version.js` moves it to the outgoing `appVersion` on each release.
+  tag: "1.46.0"

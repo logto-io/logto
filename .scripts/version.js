@@ -18,6 +18,9 @@ await execAsync(cmd).catch(catchCmdError);
 // Manually run lifecycle script since changesets didn't
 await execAsync(`pnpm -r run version`).catch(catchCmdError);
 
+// Align the Helm chart's `appVersion` with the bumped core version
+await execAsync(`node .scripts/helm/sync-chart-version.js`).catch(catchCmdError);
+
 // Sanity check for prepublish scripts
 await execAsync(`pnpm -r prepack`).catch(catchCmdError);
 

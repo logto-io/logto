@@ -1,0 +1,75 @@
+replicaCount: 1
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 70
+
+strategy:
+  type: RollingUpdate
+
+podDisruptionBudget:
+  enabled: false # Only rendered when the fixed replica count or HPA minimum is at least two.
+  maxUnavailable: 1
+
+image:
+  repository: ghcr.io/logto-io/logto
+  tag: "" # Defaults to the chart's appVersion. Pin to an exact release for upgrades.
+  pullPolicy: IfNotPresent
+imagePullSecrets: []
+
+database:
+  existingSecret: ""
+  secretKey: DB_URL
+  # For a fresh, empty database only. The Secret and database must already exist.
+  seedOnInstall: false
+  # Run alterations from the target release image before rolling out its Pods.
+  migrateOnUpgrade: false
+  # Extra environment variables for seed and migration Jobs only.
+  extraEnv: []
+
+# Optional central cache: disabled, bundled (in-cluster), or external.
+redis:
+  mode: disabled
+  existingSecret: ""
+  passwordKey: REDIS_PASSWORD # Used in bundled mode; use a random URL-safe password.
+  urlKey: REDIS_URL # Used in external mode.
+  image: redis:7.4-alpine@sha256:7f7d30b7fdd09467bac58198a1f166dd69789d348d4fe859cccb20e0cf287fbe
+  resources: {}
+
+# Public origins, required when using Ingress. Keep the two hosts separate.
+endpoint: ""
+adminEndpoint: ""
+trustProxyHeader: false
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  host: ""
+  adminHost: ""
+  tls: []
+
+# Extra environment variables for the application Pods only.
+extraEnv: []
+resources: {}
+
+# Applied to application, database Job, and bundled Redis Pods. A ServiceAccount is optional.
+nodeSelector: {}
+tolerations: []
+affinity: {}
+podAnnotations: {}
+serviceAccountName: ""
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+  seccompProfile:
+    type: RuntimeDefault
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop: [ALL]

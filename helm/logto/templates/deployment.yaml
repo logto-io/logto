@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "logto.fullname" . }}
+  labels:
+    {{- include "logto.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  strategy:
+    {{- if eq .Values.strategy.type "Recreate" }}
+    type: Recreate
+    # Clear the API-defaulted RollingUpdate settings when switching strategies.
+    rollingUpdate: null
+    {{- else }}
+    {{- toYaml .Values.strategy | nindent 4 }}
+    {{- end }}
+  selector:
+    matchLabels:
+      {{- include "logto.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "logto.labels" . | nindent 8 }}
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- include "logto.podOptions" . | nindent 6 }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: logto
+          image: {{ include "logto.image" . | quote }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: 3001
+            - name: admin
+              containerPort: 3002
+          env:
+            {{- include "logto.dbEnv" . | nindent 12 }}
+            - name: npm_config_cache
+              value: /tmp/npm
+            {{- with include "logto.redisEnv" . }}
+            {{- . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.endpoint }}
+            - name: ENDPOINT
+              value: {{ . | quote }}
+            {{- end }}
+            {{- with .Values.adminEndpoint }}
+            - name: ADMIN_ENDPOINT
+              value: {{ . | quote }}
+            {{- end }}
+            {{- if .Values.trustProxyHeader }}
+            - name: TRUST_PROXY_HEADER
+              value: "1"
+            {{- end }}
+            {{- with .Values.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          startupProbe:
+            httpGet:
+              path: /api/status
+              port: http
+            failureThreshold: 30
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /api/status
+              port: http
+          livenessProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 15
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            {{- include "logto.writableMounts" . | nindent 12 }}
+      volumes:
+        {{- include "logto.writableVolumes" . | nindent 8 }}

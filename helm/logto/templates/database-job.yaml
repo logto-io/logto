@@ -1,0 +1,52 @@
+{{- $seed := and .Release.IsInstall .Values.database.seedOnInstall -}}
+{{- $migrate := and .Release.IsUpgrade .Values.database.migrateOnUpgrade -}}
+{{- if or $seed $migrate }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "logto.fullname" . }}-{{ ternary "seed" "migrate" $seed }}
+  labels:
+    {{- include "logto.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: {{ ternary "pre-install" "pre-upgrade" $seed }}
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+spec:
+  backoffLimit: 0
+  ttlSecondsAfterFinished: 3600
+  template:
+    {{- with .Values.podAnnotations }}
+    metadata:
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    spec:
+      restartPolicy: Never
+      {{- include "logto.podOptions" . | nindent 6 }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: database
+          image: {{ include "logto.image" . | quote }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          command: ["npm", "run", "cli", "--"]
+          args: {{ ternary (list "db" "seed" "--swe") (list "db" "alteration" "deploy" "latest") $seed | toJson }}
+          env:
+            {{- include "logto.dbEnv" . | nindent 12 }}
+            - name: npm_config_cache
+              value: /tmp/npm
+            - name: CI
+              value: "true"
+            {{- with .Values.database.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          volumeMounts:
+            {{- include "logto.writableMounts" . | nindent 12 }}
+      volumes:
+        {{- include "logto.writableVolumes" . | nindent 8 }}
+{{- end }}

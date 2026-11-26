@@ -1,0 +1,93 @@
+suite: Optional Logto resources
+templates:
+  - hpa.yaml
+  - poddisruptionbudget.yaml
+  - ingress.yaml
+  - redis.yaml
+release:
+  name: logto
+set:
+  database.existingSecret: logto-db
+tests:
+  - it: does not create optional resources by default
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: targets the Logto Deployment when autoscaling is enabled
+    template: hpa.yaml
+    set:
+      autoscaling.enabled: true
+      resources.requests.cpu: 250m
+    asserts:
+      - isKind:
+          of: HorizontalPodAutoscaler
+      - equal:
+          path: spec.scaleTargetRef
+          value: {apiVersion: apps/v1, kind: Deployment, name: logto}
+      - equal:
+          path: spec.minReplicas
+          value: 2
+  - it: creates a PDB for the HPA minimum even with a fixed replica count of one
+    template: poddisruptionbudget.yaml
+    set:
+      autoscaling.enabled: true
+      resources.requests.cpu: 250m
+      podDisruptionBudget.enabled: true
+    asserts:
+      - isKind:
+          of: PodDisruptionBudget
+  - it: creates a PDB with two fixed replicas when requested
+    template: poddisruptionbudget.yaml
+    set:
+      replicaCount: 2
+      podDisruptionBudget.enabled: true
+    asserts:
+      - isKind:
+          of: PodDisruptionBudget
+  - it: routes the public and admin hosts to their corresponding Service ports
+    template: ingress.yaml
+    set:
+      ingress.enabled: true
+      ingress.host: login.example.com
+      ingress.adminHost: admin.example.com
+      endpoint: https://login.example.com
+      adminEndpoint: https://admin.example.com
+    asserts:
+      - equal:
+          path: spec.rules[0].host
+          value: login.example.com
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.service
+          value: {name: logto, port: {name: http}}
+      - equal:
+          path: spec.rules[1].host
+          value: admin.example.com
+      - equal:
+          path: spec.rules[1].http.paths[0].backend.service
+          value: {name: logto, port: {name: admin}}
+  - it: creates a Redis Service and Deployment in bundled mode
+    template: redis.yaml
+    set:
+      redis.mode: bundled
+      redis.existingSecret: logto-redis-auth
+    asserts:
+      - hasDocuments:
+          count: 2
+      - isKind:
+          of: Service
+        documentSelector:
+          path: kind
+          value: Service
+      - isKind:
+          of: Deployment
+        documentSelector:
+          path: kind
+          value: Deployment
+  - it: does not create Redis resources in external mode
+    template: redis.yaml
+    set:
+      redis.mode: external
+      redis.existingSecret: logto-redis-url
+    asserts:
+      - hasDocuments:
+          count: 0
