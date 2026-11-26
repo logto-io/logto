@@ -107,7 +107,6 @@ describe('ProductUpdatesContainer', () => {
   it('handles full Cloud lifecycle: passive impression dedup, click, dismiss, and clear all', async () => {
     mockEnv({
       isCloud: true,
-      isDevFeaturesEnabled: true,
       productUpdatesBaseUrl: 'https://logto.io',
     });
 
@@ -210,7 +209,6 @@ describe('ProductUpdatesContainer', () => {
   it('reports user preference language on localized feed events', async () => {
     mockEnv({
       isCloud: true,
-      isDevFeaturesEnabled: true,
       productUpdatesBaseUrl: 'https://logto.io',
     });
     mockUser({

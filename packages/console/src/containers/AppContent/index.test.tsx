@@ -179,20 +179,9 @@ describe('AppContent product updates mount', () => {
   });
 
   it('does not mount product updates or fetch in OSS builds', () => {
-    mockEnv({ isCloud: false, isDevFeaturesEnabled: true });
+    mockEnv({ isCloud: false });
 
     renderAppContent(makeTenant('default'));
-
-    expect(screen.getByTestId('outlet-page')).not.toBeNull();
-    expect(screen.queryByRole('region', { name: 'Product updates' })).toBeNull();
-    expect(mockFetch).not.toHaveBeenCalled();
-    expect(mockCapture).not.toHaveBeenCalled();
-  });
-
-  it('does not mount product updates or fetch when dev features are disabled on Cloud', () => {
-    mockEnv({ isCloud: true, isDevFeaturesEnabled: false });
-
-    renderAppContent(makeTenant('tenant-a'));
 
     expect(screen.getByTestId('outlet-page')).not.toBeNull();
     expect(screen.queryByRole('region', { name: 'Product updates' })).toBeNull();
@@ -203,7 +192,6 @@ describe('AppContent product updates mount', () => {
   it('persists session state across tenant switches and hides over loading and suspended states', async () => {
     mockEnv({
       isCloud: true,
-      isDevFeaturesEnabled: true,
       productUpdatesBaseUrl: 'https://logto.io',
     });
 
