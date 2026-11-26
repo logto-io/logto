@@ -1,12 +1,20 @@
 @use '@/scss/underscore' as _;
 
 .container {
+  --bottom-offset: #{_.unit(4)};
   position: fixed;
-  bottom: _.unit(4);
+  bottom: var(--bottom-offset);
   inset-inline-end: _.unit(4);
-  z-index: 30;
+  @include _.z-index(front);
   width: 288px;
   max-width: calc(100vw - _.unit(8));
+  transition: bottom 0.3s ease-out;
+}
+
+/* stylelint-disable-next-line selector-pseudo-class-no-unknown */
+:global(body:has([data-submit-action-bar-active='true'])) .container {
+  // Keep a symmetrical gap above the sticky 60px SubmitFormChangesActionBar.
+  bottom: calc(var(--bottom-offset) + 60px);
 }
 
 .stage {
@@ -294,13 +302,14 @@
 
 @media (max-width: 600px) {
   .container {
-    bottom: _.unit(3);
+    --bottom-offset: #{_.unit(3)};
     inset-inline-end: _.unit(3);
     width: min(288px, calc(100vw - _.unit(6)));
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .container,
   .stage,
   .card {
     transition: none;

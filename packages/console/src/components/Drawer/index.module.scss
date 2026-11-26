@@ -41,6 +41,7 @@ $offset: 100%;
   position: fixed;
   background: var(--color-drawer-overlay);
   inset: 0;
+  @include _.z-index(modal);
 }
 
 /* stylelint-disable selector-class-pattern */
