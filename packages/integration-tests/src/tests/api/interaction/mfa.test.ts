@@ -8,7 +8,10 @@ import { updateSignInExperience } from '#src/api/sign-in-experience.js';
 import type MockClient from '#src/client/index.js';
 import { initClient, logoutClient, processSession } from '#src/helpers/client.js';
 import { expectRejects } from '#src/helpers/index.js';
-import { enableAllPasswordSignInMethods } from '#src/helpers/sign-in-experience.js';
+import {
+  enableAllPasswordSignInMethods,
+  resetMfaSettings,
+} from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
 
 const startLegacyPasswordSignIn = async (username: string, password: string) => {
@@ -55,7 +58,33 @@ describe('legacy interaction MFA smoke test', () => {
   });
 
   afterAll(async () => {
+    await resetMfaSettings();
     await userApi.cleanUp();
+  });
+
+  it('should skip MFA binding under an optional policy and not prompt on the next sign-in', async () => {
+    const { username, password } = generateNewUserProfile({ username: true, password: true });
+    const user = await userApi.create({ username, password });
+
+    const skipClient = await startLegacyPasswordSignIn(username, password);
+
+    await expectRejects<{ skippable?: boolean }>(submitLegacyInteraction(skipClient), {
+      code: 'user.missing_mfa',
+      status: 422,
+      expectData: (data) => {
+        expect(data.skippable).toBe(true);
+      },
+    });
+
+    await api.put('interaction/mfa-skipped', {
+      headers: { cookie: skipClient.interactionCookie },
+      json: { mfaSkipped: true },
+    });
+
+    await completeLegacySignIn(skipClient, user.id);
+
+    const nextClient = await startLegacyPasswordSignIn(username, password);
+    await completeLegacySignIn(nextClient, user.id);
   });
 
   it('should bind TOTP and backup codes, then sign in with TOTP and a backup code', async () => {
