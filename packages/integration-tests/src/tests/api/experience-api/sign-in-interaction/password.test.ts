@@ -12,7 +12,7 @@ import {
   successfullySendVerificationCode,
   successfullyVerifyVerificationCode,
 } from '#src/helpers/experience/verification-code.js';
-import { expectRejects } from '#src/helpers/index.js';
+import { createUserByAdmin, expectRejects } from '#src/helpers/index.js';
 import {
   disablePasswordExpiration,
   enableAllPasswordSignInMethods,
@@ -54,6 +54,21 @@ describe('sign-in with password verification happy path', () => {
       await deleteUser(user.id);
     }
   );
+
+  // Only ASCII letters change case, so the match does not depend on the database locale.
+  it('should sign-in with a non-ASCII email in another letter case', async () => {
+    const local = `Ünïcode.${crypto.randomUUID()}`;
+    const password = generatePassword();
+    const user = await createUserByAdmin({ primaryEmail: `${local}@Example.com`, password });
+    const upperAscii = local.replaceAll(/[a-z]/g, (letter) => letter.toUpperCase());
+
+    await signInWithPassword({
+      identifier: { type: SignInIdentifier.Email, value: `${upperAscii}@EXAMPLE.COM` },
+      password,
+    });
+
+    await deleteUser(user.id);
+  });
 
   it('sign-in with username and password and fulfill the email', async () => {
     await enableAllVerificationCodeSignInMethods({
