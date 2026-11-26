@@ -34,17 +34,19 @@ type OrganizationAccessOptions = {
 };
 
 /**
- * Whether the user has granted this organization to this client.
+ * Check whether the user has granted this organization to this client and return the resolved
+ * third-party classification.
  *
  * The CIMD test must come first: CIMD organization access is grant-scoped, not the
- * application-keyed consent relation the third-party branch checks.
+ * application-keyed consent relation the registered third-party branch checks. CIMD clients are
+ * always third-party, so that branch returns `isThirdParty: true` as well.
  */
 const checkOrganizationGrantedToClient = async (
   ctx: KoaContextWithOIDC,
   clientId: string,
   organizationId: string,
   { envSet, queries, account, isThirdParty }: OrganizationAccessOptions
-): Promise<{ granted: boolean; isThirdParty?: boolean }> => {
+): Promise<{ granted: boolean; isThirdParty: boolean }> => {
   /**
    * CIMD organization access is grant-scoped, keyed on the grant behind the current refresh
    * token. Caller contract: organization tokens are only obtainable through the refresh grant —
@@ -62,6 +64,7 @@ const checkOrganizationGrantedToClient = async (
       granted:
         grantId !== undefined &&
         (await queries.cimd.grantOrganizations.exists(grantId, organizationId)),
+      isThirdParty: true,
     };
   }
 
@@ -85,7 +88,12 @@ const checkOrganizationGrantedToClient = async (
 };
 
 /**
- * Implement access check for RFC 0001
+ * Implement access check for RFC 0001.
+ *
+ * Returns `{ organizationId, isThirdParty }` when `organization_id` is requested (where both
+ * CIMD clients and registered third-party applications yield `isThirdParty: true`, and
+ * first-party applications yield `isThirdParty: false`), or `{}` when no `organization_id` is
+ * present.
  */
 export const checkOrganizationAccess = async (
   ctx: KoaContextWithOIDC,

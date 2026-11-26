@@ -372,7 +372,7 @@ export const buildHandler: Handler = (envSet, queries, libraries) => async (ctx)
      * issue the same-named organization scope. First-party applications remain unbounded here.
      */
     const getAvailableScopes = async (): Promise<string[]> => {
-      if (!treatAsCimdClient && !isThirdParty) {
+      if (!isThirdParty) {
         return roleScopeNames;
       }
 
