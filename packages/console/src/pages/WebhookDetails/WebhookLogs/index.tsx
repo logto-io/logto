@@ -63,6 +63,8 @@ function WebhookLogs() {
       await api.post(`api/hooks/${id}/recent-logs/${logId}/redeliver`);
       toast.success(t('webhook_details.logs.redelivery_queued'));
       void mutate();
+    } catch {
+      // Error toast is already handled by `useApi`'s `beforeError` hook.
     } finally {
       setRedeliveringLogId(undefined);
     }
@@ -147,17 +149,24 @@ function WebhookLogs() {
                   enabled &&
                   payload.result === 'Error' &&
                   payload.nextAttemptAt === undefined && (
-                    <Button
-                      type="text"
-                      size="small"
-                      title="webhook_details.logs.redeliver"
-                      isLoading={redeliveringLogId === logId}
-                      disabled={redeliveringLogId !== undefined}
+                    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions -- Stop clicks on loading/disabled buttons (pointer-events: none) from bubbling to the row handler.
+                    <div
+                      className={styles.redeliverAction}
                       onClick={(event) => {
                         event.stopPropagation();
-                        void redeliver(logId);
                       }}
-                    />
+                    >
+                      <Button
+                        type="text"
+                        size="small"
+                        title="webhook_details.logs.redeliver"
+                        isLoading={redeliveringLogId === logId}
+                        disabled={redeliveringLogId !== undefined}
+                        onClick={() => {
+                          void redeliver(logId);
+                        }}
+                      />
+                    </div>
                   ),
               },
             ]
