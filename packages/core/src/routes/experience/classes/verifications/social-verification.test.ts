@@ -316,9 +316,7 @@ describe('SocialVerification', () => {
       expect(isExternalGoogleOneTapChecker).toHaveBeenCalledWith(connectorData);
     });
 
-    it.each([
-      ['of the same length but a different value', 'matching_tokeX'],
-    ])(
+    it.each([['of the same length but a different value', 'matching_tokeX']])(
       'should reject a CSRF token %s than the cookie for regular Google One Tap',
       async (_, csrfToken) => {
         const verification = new SocialVerification(tenant.libraries, tenant.queries, {

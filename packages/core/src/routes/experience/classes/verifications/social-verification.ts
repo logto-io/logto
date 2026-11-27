@@ -460,9 +460,9 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
       if (isExternalGoogleOneTapChecker(connectorData)) {
         assertThat(
           safeCompare(
-          connectorData[GoogleConnector.oneTapParams.credential],
-          ctx.cookies.get(logtoGoogleOneTapCookieKey)
-        ),
+            connectorData[GoogleConnector.oneTapParams.credential],
+            ctx.cookies.get(logtoGoogleOneTapCookieKey)
+          ),
           'session.google_one_tap.cookie_mismatch'
         );
       } else {

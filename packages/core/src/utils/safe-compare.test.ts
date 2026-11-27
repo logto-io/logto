@@ -27,7 +27,9 @@ describe('safeCompare()', () => {
   });
 
   it('should return false when either side is not a string', () => {
+    // eslint-disable-next-line unicorn/no-useless-undefined -- a missing cookie is the input under test
     expect(safeCompare(undefined, undefined)).toBe(false);
+    // eslint-disable-next-line unicorn/no-useless-undefined -- a missing cookie is the input under test
     expect(safeCompare('token', undefined)).toBe(false);
     expect(safeCompare(undefined, 'token')).toBe(false);
     expect(safeCompare('1', 1)).toBe(false);
