@@ -44,7 +44,7 @@ export type LicenseQuota = {
   idpInitiatedSso: boolean;
   /** Whether the instance's Console may be administered by more than one member. */
   consoleCollaboration: boolean;
-  /** Whether the sign-in experience MFA policy may be set to mandatory. */
+  /** Whether self-hosted Console members may be required to configure MFA. */
   mandatoryMfa: boolean;
   /**
    * Whether Logto's hosted email service may be used.

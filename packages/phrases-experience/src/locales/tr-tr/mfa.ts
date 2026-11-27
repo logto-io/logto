@@ -20,7 +20,7 @@ const mfa = {
   send_to_phone: '{{identifier}} adresine gönder',
   onboarding: '2 aşamalı doğrulamayı aç',
   onboarding_description:
-    'Hesabınızı 2 aşamalı doğrulama ile koruyun. Bir veya daha fazla yöntem seçin: Geçiş anahtarı, kimlik doğrulama uygulaması (OTP), SMS doğrulama kodu veya yedek kodlar.',
+    'Hesabınızı 2 aşamalı doğrulama ile koruyun. Oturum açarken kimliğinizi doğrulamak için bir veya daha fazla yöntem seçin.',
   enable_mfa: '2 aşamalı doğrulamayı etkinleştir',
   add_mfa_factors: '2 aşamalı doğrulamayı ekle',
   add_mfa_description:
@@ -79,7 +79,6 @@ const mfa = {
   trust_this_device_other: 'Bu cihaza {{count}} gün boyunca güven',
   secret_key_copied: 'Gizli anahtar kopyalandı.',
   backup_code_copied: 'Yedek kod kopyalandı.',
-  webauthn_not_ready: 'WebAuthn henüz hazır değil. Lütfen daha sonra tekrar deneyin.',
   webauthn_not_supported: 'Bu tarayıcıda WebAuthn desteklenmiyor.',
   webauthn_failed_to_create: 'Oluşturulamadı. Lütfen tekrar deneyin.',
   webauthn_failed_to_verify: 'Doğrulama başarısız oldu. Lütfen tekrar deneyin.',

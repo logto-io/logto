@@ -188,7 +188,7 @@ export class GroupCircuitBreakerTracker {
     const consecutiveFailures = (current?.consecutiveFailures ?? 0) + 1;
 
     if (consecutiveFailures >= threshold) {
-      const nextAttemptAt = now + Math.max(0, retryAfterMs ?? backoffMs(1));
+      const nextAttemptAt = now + Math.max(0, backoffMs(1), retryAfterMs ?? 0);
       this.entries.set(key, {
         tenantId: job.tenantId,
         type: job.type,
@@ -236,7 +236,7 @@ export class GroupCircuitBreakerTracker {
   }): RecordCircuitFailureResult {
     if (current.probeJobId === jobId) {
       const nextStep = current.step + 1;
-      const nextAttemptAt = now + Math.max(0, retryAfterMs ?? backoffMs(nextStep));
+      const nextAttemptAt = now + Math.max(0, backoffMs(nextStep), retryAfterMs ?? 0);
       this.entries.set(key, {
         ...current,
         consecutiveFailures: current.consecutiveFailures + 1,

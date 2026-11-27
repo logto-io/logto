@@ -31,22 +31,12 @@ const mfa = {
     'Doğrulanmış e-posta adresi veya telefon numarası olan her kullanıcı',
   verification_code_enrollment_explicit: 'Yalnızca bunu ayarlayan kullanıcılar',
   verification_code_enrollment_explicit_confirmation:
-    'E-posta ve SMS doğrulama kodları yalnızca bunları ayarlayan kullanıcılar için 2 adımlı doğrulama sayılacak. Bunları ayarlamamış kullanıcılar bunları 2 adımlı doğrulama faktörü olarak kaybeder ve başka faktörü olmayan kullanıcılar MFA olmadan kabul edilir. Devam etmek istediğinizden emin misiniz?',
+    'E-posta ve SMS doğrulama kodları yalnızca bunları ayarlayan kullanıcılar için 2 adımlı doğrulama sayılacak. Bunları ayarlamamış kullanıcılar bunları 2 adımlı doğrulama faktörü olarak kaybeder ve başka faktörü olmayan kullanıcılar MFA olmadan kabul edilir. 2 adımlı doğrulamayı yalnızca e-posta adresi veya telefon numarasıyla açmış kullanıcılar, bir doğrulama yöntemi ekleyene kadar Hesap merkezinde "Kurulum tamamlanmadı" uyarısını görür. Devam etmek istediğinizden emin misiniz?',
   verification_code_enrollment_implicit_confirmation:
     'Doğrulanmış e-posta adresi veya telefon numarası olan her kullanıcı, bunu ayarlamamış olsa bile 2 adımlı doğrulama için kullanacak. Devam etmek istediğinizden emin misiniz?',
   policy: 'Politika',
   policy_description: 'Giriş ve kaydolma akışları için MFA politikasını belirleyin.',
-  two_step_sign_in_policy: 'Girişte 2 aşamalı doğrulama politikası',
-  user_controlled:
-    "Kullanıcılar MFA'yı kendi başlarına etkinleştirebilir veya devre dışı bırakabilir",
-  user_controlled_tip:
-    'Kullanıcılar, giriş veya kayıt sırasında ilk kez MFA kurulumunu atlayabilir veya hesap ayarlarında etkinleştirebilir/devre dışı bırakabilir.',
-  mandatory: 'Kullanıcılar her zaman girişte MFA kullanmak zorundadır',
-  mandatory_tip:
-    'Kullanıcılar, ilk kez giriş veya kayıt sırasında MFA kurmalı ve tüm gelecekteki girişlerde kullanmalıdır.',
   require_mfa: 'MFA Gerektir',
-  require_mfa_label:
-    "Uygulamalarınıza erişim için 2 aşamalı doğrulamayı zorunlu hale getirmek üzere bunu etkinleştirin. Eğer devre dışıysa, kullanıcılar MFA'yı kendileri için etkinleştirip etkinleştirmemeye karar verebilir.",
   require_mfa_optional:
     "İsteğe bağlı MFA: Kullanıcıların kendi hesap güvenlikleri için MFA'yı etkinleştirmeyi seçmelerine izin verin",
   require_mfa_adaptive:

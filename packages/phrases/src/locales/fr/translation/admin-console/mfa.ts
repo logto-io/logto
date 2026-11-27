@@ -32,21 +32,12 @@ const mfa = {
     'Tous les utilisateurs avec un e-mail ou un numéro de téléphone vérifié',
   verification_code_enrollment_explicit: "Uniquement les utilisateurs qui l'ont configurée",
   verification_code_enrollment_explicit_confirmation:
-    "Les codes de vérification par e-mail et SMS ne compteront comme vérification en 2 étapes que pour les utilisateurs qui les ont configurés. Les utilisateurs qui ne les ont pas configurés les perdent comme facteur de vérification en 2 étapes, et les utilisateurs sans autre facteur seront considérés comme n'ayant pas de MFA. Êtes-vous sûr de vouloir continuer ?",
+    "Les codes de vérification par e-mail et SMS ne compteront comme vérification en 2 étapes que pour les utilisateurs qui les ont configurés. Les utilisateurs qui ne les ont pas configurés les perdent comme facteur de vérification en 2 étapes, et les utilisateurs sans autre facteur seront considérés comme n'ayant pas de MFA. Les utilisateurs qui ont activé la vérification en 2 étapes avec seulement une adresse e-mail ou un numéro de téléphone verront l'avis « Configuration incomplète » dans le Centre de compte jusqu'à ce qu'ils ajoutent une méthode de vérification. Êtes-vous sûr de vouloir continuer ?",
   verification_code_enrollment_implicit_confirmation:
     "Tous les utilisateurs avec une adresse e-mail ou un numéro de téléphone vérifié l'utiliseront pour la vérification en 2 étapes, y compris ceux qui ne l'ont pas configurée. Êtes-vous sûr de vouloir continuer ?",
   policy: 'Politique',
   policy_description: "Définissez la politique de MFA pour les flux de connexion et d'inscription.",
-  two_step_sign_in_policy: 'Politique de vérification en deux étapes à la connexion',
-  user_controlled: 'Les utilisateurs peuvent activer ou désactiver MFA eux-mêmes',
-  user_controlled_tip:
-    "Les utilisateurs peuvent ignorer la configuration MFA la première fois à la connexion ou à l'inscription, ou l'activer/désactiver dans les paramètres du compte.",
-  mandatory: 'Les utilisateurs doivent toujours utiliser MFA à la connexion',
-  mandatory_tip:
-    "Les utilisateurs doivent configurer MFA la première fois à la connexion ou à l'inscription, et l'utiliser pour toutes les connexions futures.",
   require_mfa: 'Exiger MFA',
-  require_mfa_label:
-    "Activez cette option pour rendre la vérification en deux étapes obligatoire pour accéder à vos applications. Si désactivé, les utilisateurs peuvent décider eux-mêmes d'activer MFA.",
   require_mfa_optional:
     "MFA facultative : laissez les utilisateurs choisir d'activer MFA pour la sécurité de leur propre compte",
   require_mfa_adaptive:

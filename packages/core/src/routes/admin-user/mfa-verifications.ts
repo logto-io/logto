@@ -1,11 +1,10 @@
 import { isVerificationCodeMfaFactor, MfaFactor } from '@logto/schemas';
-import { generateStandardId, getUserDisplayName } from '@logto/shared';
+import { getUserDisplayName } from '@logto/shared';
 import { yes } from '@silverhand/essentials';
 import { authenticator } from 'otplib';
 import qrcode from 'qrcode';
 import { object, string, z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import {
   generateBackupCodes,
@@ -19,23 +18,11 @@ import koaGuard from '#src/middleware/koa-guard.js';
 import assertThat from '#src/utils/assert-that.js';
 import {
   adminUserMfaVerificationResponseGuard,
+  createVerificationCodeMfaVerification,
   transpileUserMfaVerifications,
 } from '#src/utils/user.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
-
-const verificationCodeMfaRequirements = Object.freeze({
-  [MfaFactor.EmailVerificationCode]: {
-    identifier: 'primaryEmail',
-    missingIdentifierCode: 'user.email_mfa_requires_primary_email',
-    duplicateCode: 'user.email_mfa_already_in_use',
-  },
-  [MfaFactor.PhoneVerificationCode]: {
-    identifier: 'primaryPhone',
-    missingIdentifierCode: 'user.phone_mfa_requires_primary_phone',
-    duplicateCode: 'user.phone_mfa_already_in_use',
-  },
-} as const);
 
 export default function adminUserMfaVerificationsRoutes<T extends ManagementApiRouter>(
   ...args: RouterInitArgs<T>
@@ -74,8 +61,6 @@ export default function adminUserMfaVerificationsRoutes<T extends ManagementApiR
     }
   );
 
-  // Email / SMS MFA explicit enrollment: accept email and phone MFA only with dev features
-  const { isDevFeaturesEnabled } = EnvSet.values;
   const createdVerificationCodeMfa = { id: z.string(), createdAt: z.string() };
 
   router.post(
@@ -91,12 +76,8 @@ export default function adminUserMfaVerificationsRoutes<T extends ManagementApiR
           type: z.literal(MfaFactor.BackupCode),
           codes: z.string().array().optional(),
         }),
-        ...(isDevFeaturesEnabled
-          ? [
-              z.object({ type: z.literal(MfaFactor.EmailVerificationCode) }),
-              z.object({ type: z.literal(MfaFactor.PhoneVerificationCode) }),
-            ]
-          : []),
+        z.object({ type: z.literal(MfaFactor.EmailVerificationCode) }),
+        z.object({ type: z.literal(MfaFactor.PhoneVerificationCode) }),
       ]),
       response: z.discriminatedUnion('type', [
         z.object({
@@ -108,46 +89,25 @@ export default function adminUserMfaVerificationsRoutes<T extends ManagementApiR
           type: z.literal(MfaFactor.BackupCode),
           codes: z.string().array(),
         }),
-        ...(isDevFeaturesEnabled
-          ? [
-              z.object({
-                type: z.literal(MfaFactor.EmailVerificationCode),
-                ...createdVerificationCodeMfa,
-              }),
-              z.object({
-                type: z.literal(MfaFactor.PhoneVerificationCode),
-                ...createdVerificationCodeMfa,
-              }),
-            ]
-          : []),
+        z.object({
+          type: z.literal(MfaFactor.EmailVerificationCode),
+          ...createdVerificationCodeMfa,
+        }),
+        z.object({
+          type: z.literal(MfaFactor.PhoneVerificationCode),
+          ...createdVerificationCodeMfa,
+        }),
       ]),
       status: [200, 404, 422],
     }),
     async (ctx, next) => {
-      const { id, mfaVerifications, username, primaryEmail, primaryPhone, name } =
-        await findUserById(ctx.guard.params.userId);
+      const user = await findUserById(ctx.guard.params.userId);
+      const { id, mfaVerifications, username, primaryEmail, primaryPhone, name } = user;
 
       const { type } = ctx.guard.body;
 
       if (type === MfaFactor.EmailVerificationCode || type === MfaFactor.PhoneVerificationCode) {
-        const { identifier, missingIdentifierCode, duplicateCode } =
-          verificationCodeMfaRequirements[type];
-
-        // The code is sent to the primary identifier, so a record without it would be ignored
-        assertThat(
-          { primaryEmail, primaryPhone }[identifier],
-          new RequestError({ code: missingIdentifierCode, status: 422 })
-        );
-        assertThat(
-          mfaVerifications.every((verification) => verification.type !== type),
-          new RequestError({ code: duplicateCode, status: 422 })
-        );
-
-        const verification = {
-          id: generateStandardId(),
-          createdAt: new Date().toISOString(),
-          type,
-        };
+        const verification = createVerificationCodeMfaVerification(user, type);
         await updateUserById(id, { mfaVerifications: [...mfaVerifications, verification] });
         ctx.body = verification;
         return next();

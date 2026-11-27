@@ -12,9 +12,9 @@ import {
   LogtoActionKey,
   LogtoAcr,
   acrSatisfies,
-  getAuthenticationFactor,
   getAuthenticationFactorClass,
   loginPromptAuthenticationContextDetailsGuard,
+  type Mfa as MfaSettings,
   MfaFactor,
   MissingProfile,
   SignInIdentifier,
@@ -74,12 +74,20 @@ import {
 import { AuthenticationProofs } from './libraries/authentication-proofs.js';
 import { CaptchaValidator } from './libraries/captcha-validator.js';
 import { MfaValidator, isMfaVerificationRecord } from './libraries/mfa-validator.js';
+import {
+  type MfaVerificationDecision,
+  type MfaVerificationSnapshot,
+  filterPairableMfaFactors,
+  mfaFactorToVerificationType,
+  parseUserMfaConfig,
+  resolveMfaVerificationRequirement,
+  resolveUnconditionalExemption,
+} from './libraries/mfa-verification-decision.js';
 import { ProvisionLibrary } from './libraries/provision-library.js';
 import { SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
 import {
   computeStepUpEligibility,
   mayEstablishFirstFactor,
-  mfaFactorToVerificationType,
   type EstablishableMethod,
   type StepUpEligibility,
   type StepUpEligibilityInput,
@@ -688,14 +696,9 @@ export default class ExperienceInteraction {
    * Validate the interaction verification records against the sign-in experience and user MFA settings.
    * The interaction is verified if at least one user enabled MFA verification record is present and verified.
    *
-   * @remarks
-   * - EnterpriseSso verified interaction does not require MFA verification.
-   * - Users signing in with passkey does not require MFA verification.
-   *
-   * @throws {RequestError} with 404 if the if the user is not identified or not found
+   * @throws {RequestError} with 404 if the user is not identified or not found
    * @throws {RequestError} with 403 if the mfa verification is required but not verified
    */
-
   public async guardMfaVerificationStatus(log?: LogEntry) {
     // A requested `mfa` is a requirement of the relying party, not of the tenant's sign-in MFA
     // policy: `skipMfaOnSignIn`, an adaptive-MFA non-trigger result and a trusted device are all
@@ -708,65 +711,54 @@ export default class ExperienceInteraction {
     // account that was never identified.
     const user = await this.getIdentifiedUser();
 
-    if (!isRequestedMfaUnmet && this.isMfaGateFulfilled()) {
+    const earlyDecision = this.resolveEarlyMfaGateDecision(isRequestedMfaUnmet);
+
+    if (earlyDecision) {
+      log?.append({ mfaVerificationReason: earlyDecision.reason });
       return;
     }
 
     const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
     const adaptiveMfaResult = await this.adaptiveMfaValidator.getResult(log);
+    const isRequiredByUser = await isMfaRequiredByUser(this.tenant.queries, mfaSettings, user);
 
-    const mfaValidator = new MfaValidator(mfaSettings, user, {
+    const snapshot = this.buildMfaVerificationSnapshot({
+      mfaSettings,
+      user,
       adaptiveMfaResult,
-      isMfaRequiredByUser: await isMfaRequiredByUser(this.tenant.queries, mfaSettings, user),
+      isMfaRequiredByUser: isRequiredByUser,
+      pursued,
+      purpose: 'verification',
     });
+    const initialDecision = resolveMfaVerificationRequirement(snapshot);
 
-    // A requested `mfa` only offers the factors that pair with the first factor already proven and
-    // that the eligibility offers: a factor of the same kind (an MFA email code after an email
-    // sign-in) counts once and never lifts the context to `mfa`, and a code whose connector is
-    // unavailable cannot be delivered at all. A user left with none of them reaches the enrollment
-    // requirement of `assertMfaFulfilled`, which offers a factor that does reach the class.
-    const availableFactors = isRequestedMfaUnmet
-      ? this.getPairableMfaFactors(mfaValidator.availableUserMfaVerificationTypes).filter(
-          (factor) =>
-            (pursued.decision?.availableMethods ?? []).includes(mfaFactorToVerificationType[factor])
-        )
-      : mfaValidator.availableUserMfaVerificationTypes;
-
-    // Declared non-proof: an adaptive-MFA non-trigger result skips the gate and proves nothing,
-    // so it records no authentication proof.
-    // A requested `mfa` is enforced here only with a pairable enrolled factor to verify with; a
-    // user who has none reaches the enrollment requirement of `assertMfaFulfilled` instead.
-    const isMfaRequired = isRequestedMfaUnmet
-      ? availableFactors.length > 0
-      : mfaValidator.isMfaRequired;
-
-    if (!isMfaRequired) {
-      return;
-    }
-
-    // A verified MFA record satisfies the tenant's policy, but while a requested `mfa` is unmet it
-    // has not lifted the context, so the gate keeps asking for a pairable factor.
-    if (!isRequestedMfaUnmet && mfaValidator.isMfaVerified(this.verificationRecordsArray)) {
+    if (!initialDecision.required) {
+      log?.append({ mfaVerificationReason: initialDecision.reason });
       return;
     }
 
     // Declared non-proof: a trusted device satisfies the MFA gate but proves nothing now, so it
     // records no authentication proof and the context stays at what the first factor reached. It
     // fulfills the tenant's policy only and is never consulted for a requested `mfa`.
-    const isMfaVerifiedWithTrustedDevice =
+    const isTrustedDeviceVerified =
       !isRequestedMfaUnmet && (await this.trustedDevice.tryVerifyMfa(user.id));
 
-    this.assignAdaptiveMfaHookResult(user.id, adaptiveMfaResult);
+    const finalDecision = isTrustedDeviceVerified
+      ? resolveMfaVerificationRequirement({ ...snapshot, isTrustedDeviceVerified })
+      : initialDecision;
 
-    if (isMfaVerifiedWithTrustedDevice) {
+    this.assignAdaptiveMfaHookResult(user.id, adaptiveMfaResult);
+    log?.append({ mfaVerificationReason: finalDecision.reason });
+
+    if (!finalDecision.required) {
       return;
     }
 
     throw new RequestError(
       { code: 'session.mfa.require_mfa_verification', status: 403 },
       {
-        availableFactors,
-        maskedIdentifiers: buildMfaMaskedIdentifiers(availableFactors, user),
+        availableFactors: finalDecision.availableFactors,
+        maskedIdentifiers: buildMfaMaskedIdentifiers(finalDecision.availableFactors, user),
       }
     );
   }
@@ -1788,21 +1780,68 @@ export default class ExperienceInteraction {
     return this.verificationRecords.array();
   }
 
-  /**
-   * Whether what the interaction proved already fulfills the tenant MFA gate while no requested
-   * `mfa` is owed: an SSO or passkey sign-in satisfies the policy without a verification, and a
-   * request that listed `mfa` and reached it here has proved a first factor plus a distinct MFA
-   * factor, at least what the policy asks for. A factor bound in this interaction is a new-bind
-   * record the gate never accepts, so without the latter the gate could only re-offer the
-   * challenge the enrollment just replaced.
-   */
-  private isMfaGateFulfilled(): boolean {
+  private get provenFirstFactors(): AuthenticationFactor[] {
+    return this.authenticationProofs.proofs
+      .filter(({ class: factorClass }) => factorClass === AuthenticationFactorClass.FirstFactor)
+      .map(({ factor }) => factor);
+  }
+
+  private get isRequestedMfaSatisfied(): boolean {
     return (
-      this.hasVerifiedSsoIdentity ||
-      this.hasVerifiedSignInPasskey ||
-      (this.requestedAcrValues.includes(LogtoAcr.Mfa) &&
-        acrSatisfies(achieveAcr(this.countedAuthenticationProofs), LogtoAcr.Mfa))
+      this.requestedAcrValues.includes(LogtoAcr.Mfa) &&
+      acrSatisfies(achieveAcr(this.countedAuthenticationProofs), LogtoAcr.Mfa)
     );
+  }
+
+  private resolveEarlyMfaGateDecision(
+    isRequestedMfaUnmet: boolean
+  ): MfaVerificationDecision | undefined {
+    return resolveUnconditionalExemption({
+      hasVerifiedSsoIdentity: this.hasVerifiedSsoIdentity,
+      hasVerifiedSignInPasskey: this.hasVerifiedSignInPasskey,
+      requestedAcr: {
+        isRequestedMfaUnmet,
+        isRequestedMfaSatisfied: this.isRequestedMfaSatisfied,
+      },
+    });
+  }
+
+  private buildMfaVerificationSnapshot({
+    mfaSettings,
+    user,
+    adaptiveMfaResult,
+    isMfaRequiredByUser,
+    pursued,
+    purpose,
+  }: {
+    mfaSettings: MfaSettings;
+    user: User;
+    adaptiveMfaResult?: AdaptiveMfaResult;
+    isMfaRequiredByUser: boolean;
+    pursued?: { acr: LogtoAcr; decision?: StepUpEligibility };
+    purpose: MfaVerificationSnapshot['purpose'];
+  }): MfaVerificationSnapshot {
+    const mfaValidator = new MfaValidator(mfaSettings, user);
+
+    return {
+      mfaSettings,
+      adaptiveMfaResult,
+      userFactors: mfaValidator.availableUserMfaVerificationTypes,
+      userMfaConfig: parseUserMfaConfig(user.logtoConfig),
+      isMfaRequiredByUser,
+      hasVerifiedSsoIdentity: this.hasVerifiedSsoIdentity,
+      hasVerifiedSignInPasskey: this.hasVerifiedSignInPasskey,
+      hasVerifiedMfaRecord: mfaValidator.isMfaVerified(this.verificationRecordsArray),
+      isTrustedDeviceVerified: false,
+      requestedAcr: {
+        isRequestedMfaUnmet: pursued?.acr === LogtoAcr.Mfa,
+        isRequestedMfaSatisfied: this.isRequestedMfaSatisfied,
+        provenFirstFactors: this.provenFirstFactors,
+        hasFreshFirstFactor: this.hasFreshFirstFactor,
+        eligibleMethods: pursued?.decision?.availableMethods ?? [],
+      },
+      purpose,
+    };
   }
 
   /**
@@ -1827,30 +1866,20 @@ export default class ExperienceInteraction {
     // exemption can answer for it.
     const user = await this.getIdentifiedUser();
 
-    if (!isRequestedMfaUnmet && this.isMfaGateFulfilled()) {
+    if (this.resolveEarlyMfaGateDecision(isRequestedMfaUnmet)) {
       return;
     }
 
     const mfaSettings = await this.signInExperienceValidator.getMfaSettings();
-    const mfaValidator = new MfaValidator(mfaSettings, user);
-    const userFactors = mfaValidator.availableUserMfaVerificationTypes;
-
-    // Without a fresh first factor the pairable list is empty because the pair has no first side
-    // yet, not because there is nothing to challenge: keep the full list so an account with
-    // factors must still prove one before it may enroll another. A factor the eligibility cannot
-    // deliver is dropped, exactly as the gate drops it.
-    const availableFactors =
-      isRequestedMfaUnmet && this.hasFreshFirstFactor
-        ? this.getPairableMfaFactors(userFactors).filter((factor) =>
-            (pursued.decision?.availableMethods ?? []).includes(mfaFactorToVerificationType[factor])
-          )
-        : userFactors;
-
-    // While a requested `mfa` is unmet, a verified record of a non-pairable factor does not lift
-    // the request: only a pairable factor counts, and verifying one would have cleared the
-    // request already. This mirrors `guardMfaVerificationStatus`.
-    const isMfaVerified =
-      !isRequestedMfaUnmet && mfaValidator.isMfaVerified(this.verificationRecordsArray);
+    const decision = resolveMfaVerificationRequirement(
+      this.buildMfaVerificationSnapshot({
+        mfaSettings,
+        user,
+        isMfaRequiredByUser: false,
+        pursued,
+        purpose: 'binding',
+      })
+    );
 
     // A factor enrolled in this interaction keeps enrollment open for the rest of it: the first
     // enrollment was licensed by this guard, and backup codes or further factors belong to the
@@ -1859,40 +1888,14 @@ export default class ExperienceInteraction {
       isEnrolledFactorProof(proof)
     );
 
-    if (availableFactors.length === 0 || isMfaVerified || hasEnrolledFactor) {
+    if (!decision.required || hasEnrolledFactor) {
       return;
     }
 
     return {
-      availableFactors,
-      maskedIdentifiers: buildMfaMaskedIdentifiers(availableFactors, user),
+      availableFactors: decision.availableFactors,
+      maskedIdentifiers: buildMfaMaskedIdentifiers(decision.availableFactors, user),
     };
-  }
-
-  /**
-   * The factors that can fill the `mfa` side of a pair with the first factors this interaction has
-   * proven: a factor is kept when one of those first factors is of a different kind, so the two
-   * together reach `mfa`. A factor of the same kind as every proven first factor is dropped,
-   * because repeated records of one factor count once. With no first-factor proof, none is kept:
-   * {@link guardFirstFactor} runs first, so reaching the MFA gate without one means no first factor
-   * can be proven, and an `mfa`-class proof alone never lifts the context.
-   */
-  private getPairableMfaFactors(factors: readonly MfaFactor[]): MfaFactor[] {
-    if (!this.hasFreshFirstFactor) {
-      return [];
-    }
-
-    const firstFactors = new Set(
-      this.authenticationProofs.proofs
-        .filter(({ class: factorClass }) => factorClass === AuthenticationFactorClass.FirstFactor)
-        .map(({ factor }) => factor)
-    );
-
-    return factors.filter((factor) => {
-      const mfaFactor = getAuthenticationFactor(mfaFactorToVerificationType[factor]);
-
-      return [...firstFactors].some((firstFactor) => firstFactor !== mfaFactor);
-    });
   }
 
   /**
@@ -1912,8 +1915,12 @@ export default class ExperienceInteraction {
     ]);
     const availableMethods = new Set(decision.availableMethods);
 
-    return this.getPairableMfaFactors(
-      new MfaValidator(mfaSettings, user).availableUserMfaVerificationTypes
+    return filterPairableMfaFactors(
+      new MfaValidator(mfaSettings, user).availableUserMfaVerificationTypes,
+      {
+        hasFreshFirstFactor: this.hasFreshFirstFactor,
+        provenFirstFactors: this.provenFirstFactors,
+      }
     ).some((factor) => availableMethods.has(mfaFactorToVerificationType[factor]));
   }
 
@@ -2195,7 +2202,7 @@ export default class ExperienceInteraction {
 
   /**
    * Assert the interaction is identified and return the identified user.
-   * @throws RequestError with 404 if the if the user is not identified or not found
+   * @throws RequestError with 404 if the user is not identified or not found
    */
   private async getIdentifiedUser(): Promise<User> {
     if (this.userCache) {

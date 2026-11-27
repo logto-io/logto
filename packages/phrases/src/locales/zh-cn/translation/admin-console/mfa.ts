@@ -22,19 +22,12 @@ const mfa = {
   verification_code_enrollment_implicit: '所有拥有已验证邮箱或手机号码的用户',
   verification_code_enrollment_explicit: '仅限已设置的用户',
   verification_code_enrollment_explicit_confirmation:
-    '邮件和短信验证码将只对已设置的用户计为两步验证。未设置的用户将失去这一两步验证因素，没有其他因素的用户将被视为未启用 MFA。确定要继续吗？',
+    '邮件和短信验证码将只对已设置的用户计为两步验证。未设置的用户将失去这一两步验证因素，没有其他因素的用户将被视为未启用 MFA。之前仅凭邮箱或手机号开启两步验证的用户，在添加验证方式之前，会在账户中心看到“设置未完成”的提示。确定要继续吗？',
   verification_code_enrollment_implicit_confirmation:
     '所有拥有已验证邮箱或手机号码的用户都将使用它进行两步验证，包括未设置的用户。确定要继续吗？',
   policy: '策略',
   policy_description: '为登录和注册流程设置 MFA 策略。',
-  two_step_sign_in_policy: '登录时的两步验证策略',
-  user_controlled: '用户可以自行启用或禁用 MFA',
-  user_controlled_tip: '用户可以在首次登录或注册时跳过 MFA 设置，或在账户设置中启用/禁用 MFA。',
-  mandatory: '用户始终需要在登录时使用 MFA',
-  mandatory_tip: '用户必须在首次登录或注册时设置 MFA，并在所有未来的登录中使用它。',
   require_mfa: '需要 MFA',
-  require_mfa_label:
-    '启用此选项以使两步验证成为访问你的应用程序的强制要求。如果禁用，用户可以决定是否为自己启用 MFA。',
   require_mfa_optional: '可选 MFA：允许用户自行选择是否为其账号启用 MFA',
   require_mfa_adaptive: '自适应 MFA：仅在登录存在风险（例如新国家/长期未活动）时要求 MFA',
   require_mfa_mandatory: '强制 MFA：要求所有用户在每次登录时完成 MFA',

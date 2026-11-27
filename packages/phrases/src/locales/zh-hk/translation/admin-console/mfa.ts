@@ -22,19 +22,12 @@ const mfa = {
   verification_code_enrollment_implicit: '所有擁有已驗證電郵或電話號碼的用戶',
   verification_code_enrollment_explicit: '僅限已設定的用戶',
   verification_code_enrollment_explicit_confirmation:
-    '電郵及 SMS 驗證碼將只對已設定的用戶計為兩步驗證。未設定的用戶將失去這個兩步驗證因素，沒有其他因素的用戶將被視為未啟用 MFA。確定要繼續嗎？',
+    '電郵及 SMS 驗證碼將只對已設定的用戶計為兩步驗證。未設定的用戶將失去這個兩步驗證因素，沒有其他因素的用戶將被視為未啟用 MFA。之前僅憑電郵或電話號碼開啟兩步驗證的用戶，在新增驗證方式之前，會在帳戶中心看到「設定未完成」的提示。確定要繼續嗎？',
   verification_code_enrollment_implicit_confirmation:
     '所有擁有已驗證電郵或電話號碼的用戶都會用它進行兩步驗證，包括未設定的用戶。確定要繼續嗎？',
   policy: '政策',
   policy_description: '設定登入和註冊流程的 MFA 政策。',
-  two_step_sign_in_policy: '登入時的雙重驗證政策',
-  user_controlled: '用戶可自行啟用或停用 MFA',
-  user_controlled_tip: '用戶可在首次登入或註冊時跳過 MFA 設定，或在帳戶設定中啟用/停用它。',
-  mandatory: '用戶必須在登入時使用 MFA',
-  mandatory_tip: '用戶必須在首次登入或註冊時設定 MFA，並在之後的所有登入中使用。',
   require_mfa: '需要 MFA',
-  require_mfa_label:
-    '啟用此選項可將雙重驗證設為存取應用程式的強制要求。若停用，用戶可自行決定是否啟用 MFA。',
   require_mfa_optional: '選用 MFA:讓用戶自行選擇是否啟用 MFA 以加強帳戶安全',
   require_mfa_adaptive: '自適應 MFA:只在登入風險較高時(例如新國家／長期未活動)才要求使用 MFA',
   require_mfa_mandatory: '強制 MFA:所有用戶每次登入時都必須完成 MFA',

@@ -5,16 +5,23 @@ import {
   type Log,
   type WebhookLogPrefix,
 } from '@logto/schemas';
-import { conditional, conditionalArray } from '@silverhand/essentials';
+import { conditional } from '@silverhand/essentials';
 import { sql } from '@silverhand/slonik';
 import type { CommonQueryMethods } from '@silverhand/slonik';
 import { subDays } from 'date-fns';
 
 import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
+import { sanitizeLogContextPayload } from '#src/utils/sensitive-data.js';
 import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(Logs);
+
+// Rows written before the current masking rules may still hold secrets, so mask on read as well.
+const sanitizeLog = (log: Log): Log => ({
+  ...log,
+  payload: sanitizeLogContextPayload(log.payload),
+});
 
 type AllowedKeyPrefix = AuditLogPrefix | WebhookLogPrefix;
 
@@ -58,12 +65,12 @@ const buildLogConditionSql = (logCondition: LogCondition) =>
         keyPrefixFilter,
         (keyPrefixFilter) => sql`(${sql.join(keyPrefixFilter, sql` or `)})`
       ),
-      ...conditionalArray(
-        payload &&
-          Object.entries(payload).map(([key, value]) =>
-            value ? sql`${fields.payload}->>${key}=${value}` : sql``
-          )
+      conditionalSql(payload?.userId, (userId) => sql`${fields.payloadUserId}=${userId}`),
+      conditionalSql(
+        payload?.applicationId,
+        (applicationId) => sql`${fields.payloadApplicationId}=${applicationId}`
       ),
+      conditionalSql(payload?.hookId, (hookId) => sql`${fields.payloadHookId}=${hookId}`),
       conditionalSql(logKey, (logKey) => sql`${fields.key}=${logKey}`),
       // Use `!== undefined` (not `conditionalSql`) so a legitimate `start_time=0`
       // or `end_time=0` window still applies — `conditionalSql` treats `0` as
@@ -113,8 +120,8 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
     return { count: numericCount, isCapped: numericCount > LOGS_COUNT_CAP };
   };
 
-  const findLogs = async (limit: number, offset: number, logCondition: LogCondition) =>
-    pool.any<Log>(sql`
+  const findLogs = async (limit: number, offset: number, logCondition: LogCondition) => {
+    const logs = await pool.any<Log>(sql`
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
       ${buildLogConditionSql(logCondition)}
@@ -123,7 +130,11 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
       offset ${offset}
     `);
 
-  const findLogById = buildFindEntityByIdWithPool(pool)(Logs);
+    return logs.map((log) => sanitizeLog(log));
+  };
+
+  const findRawLogById = buildFindEntityByIdWithPool(pool)(Logs);
+  const findLogById = async (id: string) => sanitizeLog(await findRawLogById(id));
 
   const deleteLogsInRange = async (condition: {
     endTime: number;
@@ -200,7 +211,8 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
       count(case when ${fields.payload}->>'result' = 'Success' then 1 end) as success_count
       from ${table}
       where ${fields.createdAt} > to_timestamp(${startTimeExclusive}::double precision / 1000)
-      and ${fields.payload}->>'hookId' = ${hookId}
+      and ${fields.payloadHookId} = ${hookId}
+      and not (${fields.payload} ? 'nextAttemptAt')
     `);
   };
 

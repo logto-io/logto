@@ -5,6 +5,7 @@ import { type CloudConnectionLibrary } from '#src/libraries/cloud-connection.js'
 import type { ConnectorLibrary } from '#src/libraries/connector.js';
 import { createCustomProfileFieldsLibrary } from '#src/libraries/custom-profile-fields/index.js';
 import { createDomainLibrary } from '#src/libraries/domain.js';
+import { type TenantRequestSlot } from '#src/libraries/hook/delivery.js';
 import { createHookLibrary } from '#src/libraries/hook/index.js';
 import { JwtCustomizerLibrary } from '#src/libraries/jwt-customizer.js';
 import type { LogtoConfigLibrary } from '#src/libraries/logto-config.js';
@@ -34,7 +35,10 @@ import type Queries from './Queries.js';
 export default class Libraries {
   users = createUserLibrary(this.tenantId, this.queries);
   phrases = createPhraseLibrary(this.queries);
-  hooks = createHookLibrary(this.queries);
+  hooks = createHookLibrary(this.queries, {
+    requestSlot: this.requestSlot,
+  });
+
   actions = new ActionLibrary(
     this.tenantId,
     this.logtoConfigs,
@@ -102,6 +106,7 @@ export default class Libraries {
 
   session = createSessionLibrary(this.queries);
 
+  // eslint-disable-next-line max-params -- tenant-scoped library container accepts optional request slot for background webhook enqueues
   constructor(
     public readonly tenantId: string,
     private readonly queries: Queries,
@@ -109,6 +114,7 @@ export default class Libraries {
     private readonly connectors: ConnectorLibrary,
     private readonly cloudConnection: CloudConnectionLibrary,
     private readonly logtoConfigs: LogtoConfigLibrary,
-    private readonly subscription: SubscriptionLibrary
+    private readonly subscription: SubscriptionLibrary,
+    private readonly requestSlot?: TenantRequestSlot
   ) {}
 }

@@ -44,21 +44,13 @@ export const getAllUserEnabledMfaVerifications = (
 ): MfaFactor[] => {
   const storedVerifications = filterOutEmptyBackupCodes(user.mfaVerifications)
     .filter((verification) => mfaSettings.factors.includes(verification.type))
-    // Filter out backup codes if all the codes are used
-    .filter((verification) => {
-      if (verification.type !== MfaFactor.BackupCode) {
-        return true;
-      }
-      return verification.codes.some((code) => !code.usedAt);
-    })
-    .slice()
     // Sort by priority:
     // 1) WebAuthn always first if available
     // 2) Backup code always last
     // 3) Otherwise by last used time (desc)
     // Email and phone records are placed after the other stored factors by
     // `resolveUserMfaFactors`, so they never take part in this order.
-    .sort((verificationA, verificationB) => {
+    .toSorted((verificationA, verificationB) => {
       // WebAuthn to the front whenever present
       if (verificationA.type === MfaFactor.WebAuthn && verificationB.type !== MfaFactor.WebAuthn) {
         return -1;

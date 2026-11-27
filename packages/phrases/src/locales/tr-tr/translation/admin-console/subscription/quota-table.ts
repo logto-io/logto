@@ -36,7 +36,6 @@ const quota_table = {
     social_connectors: 'Sosyal bağlayıcılar',
     standard_connectors: 'Standart bağlayıcılar',
     built_in_email_connector: 'Dahili e-posta bağlayıcısı',
-    mfa: 'Çoklu faktörlü kimlik doğrulama',
     sso: 'Kurumsal SSO',
     impersonation: 'Taklit etme',
   },

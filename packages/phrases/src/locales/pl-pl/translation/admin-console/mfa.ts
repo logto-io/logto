@@ -31,21 +31,12 @@ const mfa = {
     'Każdy użytkownik ze zweryfikowanym adresem e-mail lub numerem telefonu',
   verification_code_enrollment_explicit: 'Tylko użytkownicy, którzy ją skonfigurowali',
   verification_code_enrollment_explicit_confirmation:
-    'Kody weryfikacyjne e-mail i SMS będą liczyć się jako weryfikacja dwuetapowa tylko dla użytkowników, którzy je skonfigurowali. Użytkownicy, którzy ich nie skonfigurowali, utracą je jako czynnik weryfikacji dwuetapowej, a użytkownicy bez innego czynnika będą traktowani jak użytkownicy bez MFA. Czy na pewno chcesz kontynuować?',
+    'Kody weryfikacyjne e-mail i SMS będą liczyć się jako weryfikacja dwuetapowa tylko dla użytkowników, którzy je skonfigurowali. Użytkownicy, którzy ich nie skonfigurowali, utracą je jako czynnik weryfikacji dwuetapowej, a użytkownicy bez innego czynnika będą traktowani jak użytkownicy bez MFA. Użytkownicy, którzy włączyli weryfikację dwuetapową tylko z adresem e-mail lub numerem telefonu, zobaczą w Centrum konta komunikat „Konfiguracja nie została ukończona”, dopóki nie dodadzą metody weryfikacji. Czy na pewno chcesz kontynuować?',
   verification_code_enrollment_implicit_confirmation:
     'Każdy użytkownik ze zweryfikowanym adresem e-mail lub numerem telefonu będzie go używać do weryfikacji dwuetapowej, także jeśli jej nie skonfigurował. Czy na pewno chcesz kontynuować?',
   policy: 'Polityka',
   policy_description: 'Ustaw politykę MFA dla procesów logowania i rejestracji.',
-  two_step_sign_in_policy: 'Polityka weryfikacji dwuetapowej podczas logowania',
-  user_controlled: 'Użytkownicy mogą samodzielnie włączać lub wyłączać MFA',
-  user_controlled_tip:
-    'Użytkownicy mogą pominąć konfigurację MFA podczas pierwszego logowania lub rejestracji lub włączyć/wyłączyć ją w ustawieniach konta.',
-  mandatory: 'Użytkownicy zawsze muszą korzystać z MFA podczas logowania',
-  mandatory_tip:
-    'Użytkownicy muszą skonfigurować MFA podczas pierwszego logowania lub rejestracji i używać go przy każdym kolejnym logowaniu.',
   require_mfa: 'Wymagaj MFA',
-  require_mfa_label:
-    'Włącz to, aby weryfikacja dwuetapowa była obowiązkowa do uzyskania dostępu do aplikacji. Jeśli jest wyłączona, użytkownicy mogą zdecydować, czy włączyć MFA dla siebie.',
   require_mfa_optional:
     'Opcjonalne MFA: pozwól użytkownikom zdecydować o włączeniu MFA dla bezpieczeństwa własnego konta',
   require_mfa_adaptive:

@@ -20,7 +20,7 @@ const mfa = {
   send_to_phone: '{{identifier}} に送信',
   onboarding: '2段階認証を有効にする',
   onboarding_description:
-    '2段階認証でアカウントを保護します。パスキー、認証アプリ（OTP）、SMS確認コード、バックアップコードの中から1つ以上を選択してください。',
+    '2段階認証でアカウントを保護します。サインイン時に本人確認に使う方法を1つ以上選択してください。',
   enable_mfa: '2段階認証を有効にする',
   add_mfa_factors: '2段階認証を追加',
   add_mfa_description:
@@ -78,7 +78,6 @@ const mfa = {
   trust_this_device_other: 'このデバイスを {{count}} 日間信頼する',
   secret_key_copied: '秘密鍵がコピーされました。',
   backup_code_copied: 'バックアップコードがコピーされました。',
-  webauthn_not_ready: 'WebAuthnはまだ準備ができていません。後でもう一度試してください。',
   webauthn_not_supported: 'このブラウザではWebAuthnはサポートされていません。',
   webauthn_failed_to_create: '作成に失敗しました。もう一度試してください。',
   webauthn_failed_to_verify: '確認に失敗しました。もう一度試してください。',

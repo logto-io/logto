@@ -266,6 +266,45 @@ describe('GET /swagger.json', () => {
     });
   });
 
+  it('should include response schema for 202 routes that declare a response guard', async () => {
+    const acceptedRouter = new Router();
+    acceptedRouter.post(
+      '/accepted',
+      koaGuard({
+        response: object({
+          logId: string(),
+        }),
+        status: [202, 409],
+      }),
+      () => ({})
+    );
+    const swaggerRequest = createSwaggerRequest([acceptedRouter]);
+    const response = await swaggerRequest.get('/swagger.json');
+    expect(response.body.paths).toMatchObject({
+      '/api/accepted': {
+        post: {
+          responses: {
+            202: {
+              description: 'Accepted',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    required: ['logId'],
+                    properties: {
+                      logId: { type: 'string' },
+                    },
+                  },
+                },
+              },
+            },
+            409: { description: 'Conflict' },
+          },
+        },
+      },
+    });
+  });
+
   it('should fall back to default when no response guard found', async () => {
     const swaggerRequest = createSwaggerRequest([mockRouter]);
     const response = await swaggerRequest.get('/swagger.json');

@@ -17,7 +17,6 @@ import {
 import koaErrorHandler from '#src/middleware/koa-error-handler.js';
 import koaI18next from '#src/middleware/koa-i18next.js';
 import type Queries from '#src/tenants/Queries.js';
-import { resetDevFeaturesEnabled, setDevFeaturesEnabled } from '#src/test-utils/dev-features.js';
 import { MockTenant, type Partial2 } from '#src/test-utils/tenant.js';
 import { createRequester } from '#src/utils/test-utils.js';
 
@@ -324,13 +323,21 @@ describe('account mfa verification routes', () => {
         .send({ type: MfaFactor.EmailVerificationCode });
 
       expect(response.status).toBe(422);
-      expect(response.body).toMatchObject({ code: 'session.mfa.bind_mfa_existed' });
+      expect(response.body).toMatchObject({ code: 'user.email_mfa_already_in_use' });
       expect(updateUserById).not.toHaveBeenCalled();
     });
 
     it.each([
-      [MfaFactor.EmailVerificationCode, { primaryEmail: null }, 'user.email_not_exist'],
-      [MfaFactor.PhoneVerificationCode, { primaryPhone: null }, 'user.phone_not_exist'],
+      [
+        MfaFactor.EmailVerificationCode,
+        { primaryEmail: null },
+        'user.email_mfa_requires_primary_email',
+      ],
+      [
+        MfaFactor.PhoneVerificationCode,
+        { primaryPhone: null },
+        'user.phone_mfa_requires_primary_phone',
+      ],
     ] as const)(
       'rejects enrolling %s without the primary identifier',
       async (type, profile, code) => {
@@ -380,42 +387,6 @@ describe('account mfa verification routes', () => {
         { type: MfaFactor.EmailVerificationCode },
       ]);
       expectUpdatedMfaEnabled(true);
-    });
-
-    it('does not accept the factors while dev features are disabled', async () => {
-      setDevFeaturesEnabled(false);
-      const request = createRequester({
-        middlewares: [koaI18next(), koaErrorHandler()],
-        authedRoutes: [
-          (router) => {
-            router.use(async (ctx, next) => {
-              ctx.auth = {
-                ...ctx.auth,
-                id: mockUser.id,
-                identityVerified: true,
-                scopes: new Set([UserScope.Identities]),
-              };
-              ctx.accountCenter = {
-                enabled: true,
-                fields: { mfa: AccountCenterControlValue.Edit },
-              };
-              ctx.appendDataHookContext = jest.fn();
-
-              return next();
-            });
-          },
-          accountMfaRoutes as never,
-        ],
-        tenantContext,
-      });
-      resetDevFeaturesEnabled();
-
-      const response = await request
-        .post('/my-account/mfa-verifications')
-        .send({ type: MfaFactor.EmailVerificationCode });
-
-      expect(response.status).toBe(400);
-      expect(updateUserById).not.toHaveBeenCalled();
     });
   });
 

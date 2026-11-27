@@ -20,7 +20,7 @@ const mfa = {
   send_to_phone: 'Invia a {{identifier}}',
   onboarding: 'Attiva la verifica in due passaggi',
   onboarding_description:
-    'Proteggi il tuo account con la verifica in due passaggi. Scegli uno o più metodi: Passkey, app di autenticazione (OTP), codice di verifica SMS o codici di backup.',
+    "Proteggi il tuo account con la verifica in due passaggi. Scegli uno o più metodi per verificare la tua identità al momento dell'accesso.",
   enable_mfa: 'Abilita la verifica in due passaggi',
   add_mfa_factors: 'Aggiungi la verifica in due passaggi',
   add_mfa_description:
@@ -80,7 +80,6 @@ const mfa = {
   trust_this_device_other: 'Considera attendibile questo dispositivo per {{count}} giorni',
   secret_key_copied: 'Chiave segreta copiata.',
   backup_code_copied: 'Codice di backup copiato.',
-  webauthn_not_ready: 'WebAuthn non è ancora pronto. Riprova più tardi.',
   webauthn_not_supported: 'WebAuthn non è supportato in questo browser.',
   webauthn_failed_to_create: 'Impossibile creare. Riprova.',
   webauthn_failed_to_verify: 'Verifica non riuscita. Riprova.',

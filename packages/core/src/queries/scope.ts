@@ -1,5 +1,5 @@
 import type { CreateScope, Scope } from '@logto/schemas';
-import { Resources, Scopes } from '@logto/schemas';
+import { Resources, RolesScopes, Scopes } from '@logto/schemas';
 import type { CommonQueryMethods } from '@silverhand/slonik';
 import { sql } from '@silverhand/slonik';
 
@@ -14,6 +14,7 @@ import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(Scopes, true);
 const resources = convertToIdentifiers(Resources, true);
+const rolesScopes = convertToIdentifiers(RolesScopes, true);
 
 const buildResourceConditions = (search?: Search) => {
   if (!search) {
@@ -98,12 +99,23 @@ export const createScopeQueries = (pool: CommonQueryMethods) => {
       where ${fields.resourceId}=${resourceId}
     `);
 
-  const findScopesByResourceIds = async (resourceIds: string[]) =>
+  const findScopesByResourceIds = async (resourceIds: string[], excludeRoleId?: string) =>
     resourceIds.length > 0
       ? pool.any<Scope>(sql`
         select ${sql.join(Object.values(fields), sql`, `)}
         from ${table}
         where ${fields.resourceId} = any(${sql.array(resourceIds, 'varchar')})
+        ${conditionalSql(
+          excludeRoleId,
+          (roleId) => sql`
+            and not exists (
+              select 1
+              from ${rolesScopes.table}
+              where ${rolesScopes.fields.roleId} = ${roleId}
+              and ${rolesScopes.fields.scopeId} = ${fields.id}
+            )
+          `
+        )}
       `)
       : [];
 

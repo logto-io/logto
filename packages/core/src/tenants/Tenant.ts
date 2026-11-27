@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Tenant mounts all per-tenant apps and owns its request-slot lifecycle; retaining background slots pushed it slightly over the limit */
 import { adminTenantId, experience } from '@logto/schemas';
 import { ConsoleLog } from '@logto/shared';
 import { once } from '@silverhand/essentials';
@@ -102,6 +103,7 @@ export default class Tenant implements TenantContext {
 
   public readonly provider: Provider;
   public readonly run: MiddlewareType;
+  public readonly libraries: Libraries;
 
   private readonly app: Koa;
 
@@ -113,6 +115,7 @@ export default class Tenant implements TenantContext {
    * {@link dispose}. Once `true`, the instance must not serve new requests.
    */
   #disposed = false;
+  #poolEnding = false;
 
   // eslint-disable-next-line max-params
   private constructor(
@@ -131,16 +134,23 @@ export default class Tenant implements TenantContext {
       cloudConnection,
       redisCache
     ),
-    public readonly libraries = new Libraries(
+    public readonly sentinel = new BasicSentinel(envSet.pool, queries)
+  ) {
+    this.libraries = new Libraries(
       id,
       queries,
       connectors,
       cloudConnection,
       logtoConfigs,
-      subscription
-    ),
-    public readonly sentinel = new BasicSentinel(envSet.pool, queries)
-  ) {
+      subscription,
+      {
+        retainRequestSlot: () => this.retainRequestSlot(),
+        releaseRequestSlot: () => {
+          this.requestEnd();
+        },
+      }
+    );
+
     const isAdminTenant = id === adminTenantId;
     const mountedApps = [
       ...Object.values(UserApps),
@@ -161,7 +171,7 @@ export default class Tenant implements TenantContext {
     app.use(koaSecurityHeaders(mountedApps, id));
 
     // Mount OIDC
-    const provider = initOidc(id, envSet, queries, libraries, logtoConfigs, subscription);
+    const provider = initOidc(id, envSet, queries, this.libraries, logtoConfigs, subscription);
 
     app.use(koaDeviceFlowShortcut());
     app.use(mount('/oidc', provider));
@@ -174,7 +184,7 @@ export default class Tenant implements TenantContext {
       logtoConfigs,
       cloudConnection,
       connectors,
-      libraries,
+      libraries: this.libraries,
       envSet,
       sentinel,
       subscription,
@@ -262,7 +272,7 @@ export default class Tenant implements TenantContext {
       mount(
         '/' + UserApps.AccountCenter,
         compose([
-          koaAccountCenterSsr(libraries),
+          koaAccountCenterSsr(this.libraries),
           koaSpaProxy({
             mountedApps,
             queries,
@@ -278,14 +288,14 @@ export default class Tenant implements TenantContext {
     app.use(
       compose([
         koaExperienceSecurityHeaders(id, queries, mountedApps),
-        koaExperienceSsr(libraries, queries),
+        koaExperienceSsr(this.libraries, queries),
         koaSpaSessionGuard(provider, queries),
         mount(
           `/${experience.routes.consent}`,
           compose([
             koaInteractionDetails(provider),
-            koaConsentGuard(libraries, queries),
-            koaAutoConsent(provider, envSet, queries, libraries),
+            koaConsentGuard(this.libraries, queries),
+            koaAutoConsent(provider, envSet, queries, this.libraries),
           ])
         ),
         koaSpaProxy({ mountedApps, queries }),
@@ -325,6 +335,21 @@ export default class Tenant implements TenantContext {
     return true;
   }
 
+  /**
+   * Hold the tenant database pool open for background work (such as fire-and-forget webhook
+   * enqueues) spawned by an already-active request. Unlike {@link requestStart}, this still
+   * succeeds while a disposed tenant is draining active requests, and fails only once the pool
+   * has begun closing.
+   */
+  public retainRequestSlot(): boolean {
+    if (this.#poolEnding || (this.#disposed && this.#requestCount <= 0)) {
+      return false;
+    }
+
+    this.#requestCount += 1;
+    return true;
+  }
+
   public requestEnd() {
     if (this.#requestCount > 0) {
       this.#requestCount -= 1;
@@ -349,6 +374,7 @@ export default class Tenant implements TenantContext {
     this.#disposed = true;
 
     if (this.#requestCount <= 0) {
+      this.#poolEnding = true;
       await this.envSet.end();
 
       return true;
@@ -357,6 +383,7 @@ export default class Tenant implements TenantContext {
     return new Promise<true | 'timeout'>((resolve, reject) => {
       const endEnvSet = once((result: true | 'timeout', timeout: ReturnType<typeof setTimeout>) => {
         this.#onRequestEmpty = undefined;
+        this.#poolEnding = true;
         clearTimeout(timeout);
 
         void (async () => {
@@ -414,3 +441,4 @@ export default class Tenant implements TenantContext {
     return isTenantHealthy(this.#createdAt, signingKeyRotationState);
   }
 }
+/* eslint-enable max-lines */

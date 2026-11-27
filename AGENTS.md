@@ -42,3 +42,7 @@ Every `eslint-disable` must include a short reason explaining why the suppressio
 ## Commit Hooks
 
 Never bypass commit hooks. Many packages depend on each other through built artifacts; when checks fail because local package outputs are stale or missing, run `pnpm prepack` before retrying.
+
+## MFA Gates & Flowcharts
+
+When changing an MFA gate in `ExperienceInteraction.submit()` or modifying either MFA decision function (`resolveMfaVerificationRequirement`, `resolvePreBindMfaEnrollment`, or `resolveMfaEnrollmentRequirement`), update the corresponding matrix test (`mfa-verification-decision.test.ts` / `experience-interaction.mfa-verification-reason.test.ts` or `mfa-enrollment-decision.test.ts`) and `end-user-flows/submit-gates.md` (plus `end-user-flows/sign-in-flow.md` and `end-user-flows/register-flow.md` when entry flows change) in the same PR.

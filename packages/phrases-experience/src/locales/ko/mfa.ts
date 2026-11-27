@@ -20,7 +20,7 @@ const mfa = {
   send_to_phone: '{{identifier}}로 전송',
   onboarding: '2단계 인증 켜기',
   onboarding_description:
-    '2단계 인증으로 계정을 보호하세요. 하나 이상의 방법을 선택하세요: 패스키, 인증 앱(OTP), SMS 인증 코드 또는 백업 코드.',
+    '2단계 인증으로 계정을 보호하세요. 로그인할 때 본인 확인에 사용할 방법을 하나 이상 선택하세요.',
   enable_mfa: '2단계 인증 활성화',
   add_mfa_factors: '2단계 인증 추가',
   add_mfa_description:
@@ -76,7 +76,6 @@ const mfa = {
   trust_this_device_other: '이 기기를 {{count}}일 동안 신뢰하기',
   secret_key_copied: '비밀 키가 복사되었습니다.',
   backup_code_copied: '백업 코드가 복사되었습니다.',
-  webauthn_not_ready: 'WebAuthn이 아직 준비되지 않았습니다. 나중에 다시 시도하세요.',
   webauthn_not_supported: '이 브라우저에서는 WebAuthn이 지원되지 않습니다.',
   webauthn_failed_to_create: '생성 실패. 다시 시도하세요.',
   webauthn_failed_to_verify: '확인 실패. 다시 시도하세요.',

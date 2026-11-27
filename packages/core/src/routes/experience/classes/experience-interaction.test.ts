@@ -1133,7 +1133,7 @@ describe('ExperienceInteraction class', () => {
         signInExperiences: {
           findDefaultSignInExperience: jest.fn().mockResolvedValue({
             ...mockSignInExperience,
-            mfa: { policy: MfaPolicy.UserControlled, factors: mfaFactors },
+            mfa: { policy: MfaPolicy.PromptAtSignInAndSignUp, factors: mfaFactors },
             ...signInExperienceOverrides,
           }),
         },
@@ -2321,7 +2321,7 @@ describe('ExperienceInteraction class', () => {
           logtoConfig: { [userMfaDataKey]: { skipMfaOnSignIn: true } },
         },
         signInExperienceOverrides: {
-          mfa: { policy: MfaPolicy.UserControlled, factors: [MfaFactor.TOTP] },
+          mfa: { policy: MfaPolicy.PromptAtSignInAndSignUp, factors: [MfaFactor.TOTP] },
         },
         interactionResult: {
           authenticationContext: { requestedAcrValues: [LogtoAcr.Mfa] },
@@ -2787,7 +2787,7 @@ describe('ExperienceInteraction class', () => {
         user: mockUserWithMfaVerifications,
         signInExperienceOverrides: {
           mfa: {
-            policy: MfaPolicy.UserControlled,
+            policy: MfaPolicy.PromptAtSignInAndSignUp,
             factors: [MfaFactor.TOTP, MfaFactor.EmailVerificationCode],
           },
         },
@@ -2840,7 +2840,7 @@ describe('ExperienceInteraction class', () => {
       const { experienceInteraction } = createSignInInteraction({
         signInExperienceOverrides: {
           mfa: {
-            policy: MfaPolicy.UserControlled,
+            policy: MfaPolicy.PromptAtSignInAndSignUp,
             factors: [MfaFactor.TOTP, MfaFactor.EmailVerificationCode],
           },
         },
@@ -2875,7 +2875,7 @@ describe('ExperienceInteraction class', () => {
       const { experienceInteraction, provider } = createSignInInteraction({
         // A password but no configured MFA factor: `mfa` is out of reach even through enrollment.
         signInExperienceOverrides: {
-          mfa: { policy: MfaPolicy.UserControlled, factors: [] },
+          mfa: { policy: MfaPolicy.PromptAtSignInAndSignUp, factors: [] },
         },
         interactionResult: {
           authenticationContext: { requestedAcrValues: [LogtoAcr.Mfa, LogtoAcr.FirstFactor] },
@@ -2927,7 +2927,10 @@ describe('ExperienceInteraction class', () => {
           // password can complete the pair on this tenant.
           connectors: [{ type: ConnectorType.Email }],
           signInExperienceOverrides: {
-            mfa: { policy: MfaPolicy.UserControlled, factors: [MfaFactor.EmailVerificationCode] },
+            mfa: {
+              policy: MfaPolicy.PromptAtSignInAndSignUp,
+              factors: [MfaFactor.EmailVerificationCode],
+            },
           },
           interactionResult: {
             authenticationContext: { requestedAcrValues: [LogtoAcr.Mfa, LogtoAcr.FirstFactor] },
@@ -3000,7 +3003,7 @@ describe('ExperienceInteraction class', () => {
         connectors: [{ type: ConnectorType.Email }],
         signInExperienceOverrides: {
           mfa: {
-            policy: MfaPolicy.UserControlled,
+            policy: MfaPolicy.PromptAtSignInAndSignUp,
             factors: [MfaFactor.EmailVerificationCode, MfaFactor.PhoneVerificationCode],
           },
         },
@@ -3095,7 +3098,7 @@ describe('ExperienceInteraction class', () => {
           interactionEvent: InteractionEvent.Register,
           connectors: [{ type: ConnectorType.Email }],
           signInExperienceOverrides: {
-            mfa: { policy: MfaPolicy.UserControlled, factors },
+            mfa: { policy: MfaPolicy.PromptAtSignInAndSignUp, factors },
           },
           interactionResult: {
             authenticationContext: { requestedAcrValues: acrValues },
@@ -3164,7 +3167,7 @@ describe('ExperienceInteraction class', () => {
           user: socialUser,
           signInExperienceOverrides: {
             signUp: { identifiers: [], password: false, verify: false },
-            mfa: { policy: MfaPolicy.UserControlled, factors },
+            mfa: { policy: MfaPolicy.PromptAtSignInAndSignUp, factors },
           },
           interactionResult: {
             authenticationContext: { requestedAcrValues: acrValues },
@@ -3368,7 +3371,7 @@ describe('ExperienceInteraction class', () => {
       const { experienceInteraction } = createSignInInteraction({
         user: mockUserWithMfaVerifications,
         signInExperienceOverrides: {
-          mfa: { policy: MfaPolicy.UserControlled, factors: [MfaFactor.TOTP] },
+          mfa: { policy: MfaPolicy.PromptAtSignInAndSignUp, factors: [MfaFactor.TOTP] },
         },
         interactionResult: {
           authenticationContext: { requestedAcrValues: [LogtoAcr.Mfa] },
@@ -3451,7 +3454,7 @@ describe('ExperienceInteraction class', () => {
           passwordEncryptionMethod: null,
         },
         signInExperienceOverrides: {
-          mfa: { policy: MfaPolicy.UserControlled, factors: [MfaFactor.TOTP] },
+          mfa: { policy: MfaPolicy.PromptAtSignInAndSignUp, factors: [MfaFactor.TOTP] },
         },
         interactionResult: {
           authenticationContext: { requestedAcrValues: [LogtoAcr.Mfa] },

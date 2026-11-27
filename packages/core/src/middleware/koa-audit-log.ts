@@ -10,28 +10,11 @@ import RequestError from '#src/errors/RequestError/index.js';
 import type Queries from '#src/tenants/Queries.js';
 import { getInjectedHeaderValues } from '#src/utils/injected-header-mapping.js';
 import { sanitizeError } from '#src/utils/sanitize-error.js';
-import {
-  sanitizeSensitiveDataRecord,
-  stripNullCharactersFromString,
-} from '#src/utils/sensitive-data.js';
+import { sanitizeLogContextPayload } from '#src/utils/sensitive-data.js';
 import { isRecord } from '#src/utils/type.js';
 
 const removeUndefinedKeys = (object: Record<string, unknown>) =>
   Object.fromEntries(Object.entries(object).filter(([, value]) => value !== undefined));
-
-/**
- * Reapply reserved fields after canonicalizing catch-all keys, so inputs such as `\0key` cannot
- * collide with the fields that define the log entry.
- */
-const sanitizeLogContextPayload = ({
-  key,
-  result,
-  ...payload
-}: LogContextPayload): LogContextPayload => ({
-  ...sanitizeSensitiveDataRecord(payload),
-  key: stripNullCharactersFromString(key),
-  result,
-});
 
 export class LogEntry {
   payload: LogContextPayload;

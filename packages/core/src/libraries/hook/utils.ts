@@ -28,14 +28,17 @@ export const parseResponse = async (response: KyResponse) => {
 
 type SendWebhookRequest = {
   hookConfig: HookConfig;
-  payload: HookEventPayload;
   signingKey: string;
-};
+  signal?: AbortSignal;
+  /** Disable in-call HTTP retries and preserve `Retry-After` headers for queue-managed retries. */
+  disableRetries?: boolean;
+} & ({ payload: HookEventPayload; body?: never } | { body: string; payload?: never });
 
 const rangeInclusive = (start: number, end: number) =>
   Array.from({ length: end - start + 1 }, (_, index) => start + index);
 
 const webhookRetryLimit = 3;
+const webhookRequestTimeoutMs = 10_000;
 /** Ky only accepts `statusCodes` as a number list; HTTP 5xx class is 500–599. */
 const webhookRetryStatusCodes = rangeInclusive(500, 599);
 
@@ -84,35 +87,52 @@ const abortRetryOnNonHttpError = ({ error }: { error: Error }) => {
   }
 };
 
-export const sendWebhookRequest = async ({
-  hookConfig,
-  payload,
-  signingKey,
-}: SendWebhookRequest) => {
+export const sendWebhookRequest = async (request: SendWebhookRequest) => {
+  const { hookConfig, signingKey, signal } = request;
   const { url, headers, retries } = hookConfig;
+  const hasContentType = Object.keys(headers ?? {}).some(
+    (key) => key.toLowerCase() === 'content-type'
+  );
+  const rawOrObjectPayload = request.body ?? request.payload;
 
   return ky.post(url, {
     headers: {
       'user-agent': 'Logto (https://logto.io/)',
+      ...conditional(
+        request.body !== undefined && !hasContentType && { 'content-type': 'application/json' }
+      ),
       ...headers,
-      ...conditional(signingKey && { 'logto-signature-sha-256': sign(signingKey, payload) }),
+      ...conditional(
+        signingKey && { 'logto-signature-sha-256': sign(signingKey, rawOrObjectPayload) }
+      ),
     },
-    json: payload,
+    ...(request.body === undefined ? { json: request.payload } : { body: request.body }),
     // The hook URL is tenant-supplied; keep delivery off the deployment's private network.
-    fetch: ssrfProtectedFetch,
-    // Public webhook delivery contract: retry POST requests on HTTP 5xx only.
-    // 408 and 429 are intentionally excluded so receivers cannot control this short retry window.
-    retry: {
-      limit: retries ?? webhookRetryLimit,
-      methods: ['post'],
-      statusCodes: webhookRetryStatusCodes,
-      // `afterStatusCodes: []` is ignored on ky 1.2.3; see dropRetryAfterHeader.
-    },
-    timeout: 10_000,
-    hooks: {
-      afterResponse: [dropRetryAfterHeader],
-      beforeRetry: [abortRetryOnNonHttpError],
-    },
+    // Ky only links `signal` to the request it clones for `fetch`, and some supported Node.js
+    // versions lose that link, so the abort would never reach the socket. Hand it over directly.
+    fetch: signal
+      ? async (input, init) => ssrfProtectedFetch(input, { ...init, signal })
+      : ssrfProtectedFetch,
+    ...conditional(signal && { signal }),
+    timeout: webhookRequestTimeoutMs,
+    ...(request.disableRetries
+      ? {
+          retry: 0,
+        }
+      : {
+          // Public webhook delivery contract: retry POST requests on HTTP 5xx only.
+          // 408 and 429 are intentionally excluded so receivers cannot control this short retry window.
+          retry: {
+            limit: retries ?? webhookRetryLimit,
+            methods: ['post'],
+            statusCodes: webhookRetryStatusCodes,
+            // `afterStatusCodes: []` is ignored on ky 1.2.3; see dropRetryAfterHeader.
+          },
+          hooks: {
+            afterResponse: [dropRetryAfterHeader],
+            beforeRetry: [abortRetryOnNonHttpError],
+          },
+        }),
   });
 };
 

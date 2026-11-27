@@ -1,10 +1,14 @@
 import { ConnectorType } from '@logto/connector-kit';
 import {
   InteractionEvent,
+  MfaFactor,
+  MfaPolicy,
+  MfaVerificationCodeEnrollment,
   SignInIdentifier,
   type VerificationCodeSignInIdentifier,
 } from '@logto/schemas';
 
+import { updateSignInExperience } from '#src/api/index.js';
 import { initExperienceClient, logoutClient, processSession } from '#src/helpers/client.js';
 import {
   clearConnectorsByTypes,
@@ -139,6 +143,50 @@ describe('MFA verification code factor guard', () => {
       // factor; sign-in with a contact and MFA through the same contact cannot both be enabled.
       await expectRejects(client.sendMfaVerificationCode({ identifierType }), {
         code: 'session.mfa.mfa_factor_not_enabled',
+        status: 400,
+      });
+    }
+  );
+});
+
+describe('MFA verification code in explicit enrollment mode', () => {
+  const userApi = new UserApiTest();
+
+  beforeAll(async () => {
+    await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
+    await Promise.all([setEmailConnector(), setSmsConnector()]);
+    await enableAllPasswordSignInMethods();
+    await updateSignInExperience({
+      mfa: {
+        factors: [MfaFactor.EmailVerificationCode, MfaFactor.PhoneVerificationCode],
+        policy: MfaPolicy.NoPrompt,
+        verificationCodeEnrollment: MfaVerificationCodeEnrollment.Explicit,
+      },
+    });
+  });
+
+  afterAll(async () => {
+    await clearConnectorsByTypes([ConnectorType.Email, ConnectorType.Sms]);
+    await resetMfaSettings();
+    await userApi.cleanUp();
+  });
+
+  it.each([SignInIdentifier.Email, SignInIdentifier.Phone] as const)(
+    'refuses an MFA code for a primary %s the user did not enroll',
+    async (identifierType) => {
+      const profile = generateNewUserProfile({
+        username: true,
+        password: true,
+        primaryEmail: true,
+        primaryPhone: true,
+      });
+      await userApi.create(profile);
+
+      const client = await initExperienceClient({ interactionEvent: InteractionEvent.SignIn });
+      await identifyUserWithUsernamePassword(client, profile.username, profile.password);
+
+      await expectRejects(client.sendMfaVerificationCode({ identifierType }), {
+        code: 'session.mfa.mfa_factor_not_enrolled',
         status: 400,
       });
     }

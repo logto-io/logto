@@ -20,7 +20,7 @@ const mfa = {
   send_to_phone: 'Send to {{identifier}}',
   onboarding: 'Turn on 2-step verification',
   onboarding_description:
-    'Protect your account with 2-step verification. Choose one or more methods: Passkey, authenticator app (OTP), SMS verification code, or backup codes.',
+    'Protect your account with 2-step verification. Choose one or more methods to verify your identity when you sign in.',
   enable_mfa: 'Enable 2-step verification',
   add_mfa_factors: 'Add 2-step verification',
   add_mfa_description:
@@ -80,7 +80,6 @@ const mfa = {
   trust_this_device_other: 'Trust this device for {{count}} days',
   secret_key_copied: 'Secret key copied.',
   backup_code_copied: 'Backup code copied.',
-  webauthn_not_ready: 'WebAuthn is not ready yet. Please try again later.',
   webauthn_not_supported: 'WebAuthn is not supported in this browser.',
   webauthn_failed_to_create: 'Failed to create. Please try again.',
   webauthn_failed_to_verify: 'Failed to verify. Please try again.',

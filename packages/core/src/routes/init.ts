@@ -60,7 +60,14 @@ import wellKnownOpenApiRoutes from './well-known/well-known.openapi.js';
 
 const createRouters = (tenant: TenantContext) => {
   const interactionRouter: AnonymousRouter = new Router();
-  /** @deprecated */
+  /**
+   * @deprecated Legacy `/api/interaction` endpoints are frozen and replaced by `/api/experience`.
+   * What they support today stays working with no new rules or behavior changes:
+   * - Supported MFA: binding and verifying TOTP, WebAuthn, and backup codes, and skipping under an
+   *   optional policy.
+   * - Not supported and not planned: email/SMS MFA, adaptive MFA, trusted devices, requested ACR,
+   *   `enabled: false`, and the "verify an existing factor before binding a new one" guard.
+   */
   interactionRoutes(interactionRouter, tenant);
 
   const experienceRouter: AnonymousRouter = new Router();

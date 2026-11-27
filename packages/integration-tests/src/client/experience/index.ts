@@ -1,3 +1,5 @@
+/* eslint-disable max-lines -- one client class wraps every Experience API route */
+import { type TemplateType } from '@logto/connector-kit';
 import {
   type InteractionIdentifier,
   type SignInIdentifier,
@@ -102,6 +104,7 @@ export class ExperienceClient extends MockClient {
   public async sendVerificationCode(payload: {
     identifier: VerificationCodeIdentifierPayload;
     interactionEvent: InteractionEvent;
+    templateType?: TemplateType.BindMfa;
   }) {
     return this.api
       .post(`${experienceRoutes.verification}/verification-code`, {
@@ -284,6 +287,12 @@ export class ExperienceClient extends MockClient {
     });
   }
 
+  public async enableMfa() {
+    return this.api.post(`${experienceRoutes.mfa}/mfa-enabled`, {
+      headers: this.headers,
+    });
+  }
+
   public async skipMfaBinding() {
     return this.api.post(`${experienceRoutes.mfa}/mfa-skipped`, {
       headers: this.headers,
@@ -346,3 +355,4 @@ export class ExperienceClient extends MockClient {
       .json<{ verificationId: string }>();
   }
 }
+/* eslint-enable max-lines */

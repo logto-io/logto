@@ -109,9 +109,6 @@ const useMfaErrorHandler = ({ replace }: Options = {}) => {
       }
 
       if (factor === MfaFactor.WebAuthn) {
-        /**
-         * Start WebAuthn processing if only TOTP is available.
-         */
         return startWebAuthnProcessing(flow, state, replace);
       }
 

@@ -82,7 +82,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
       ${
         caseSensitive
           ? sql`where ${fields.username}=${username}`
-          : sql`where lower(${fields.username})=lower(${username})`
+          : sql`where ${fields.usernameLower}=lower(${username})`
       }
     `);
 
@@ -90,7 +90,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     pool.maybeOne<User>(sql`
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
-      where lower(${fields.primaryEmail})=lower(${email})
+      where ${fields.primaryEmailLower}=lower(${email})
     `);
 
   /**
@@ -191,7 +191,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
       ${
         caseSensitive
           ? sql`where ${fields.username}=${username}`
-          : sql`where lower(${fields.username})=lower(${username})`
+          : sql`where ${fields.usernameLower}=lower(${username})`
       }
       ${conditionalSql(excludeUserId, (id) => sql`and ${fields.id}<>${id}`)}
     `);
@@ -203,11 +203,11 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
    */
   const findUsernameCaseConflicts = async (limit: number) =>
     pool.any<{ usernameLower: string; userIds: string[] }>(sql`
-      select lower(${fields.username}) as "usernameLower",
+      select ${fields.usernameLower} as "usernameLower",
              array_agg(${fields.id}) as "userIds"
       from ${table}
-      where ${fields.username} is not null
-      group by lower(${fields.username})
+      where ${fields.usernameLower} is not null
+      group by ${fields.usernameLower}
       having count(*) > 1
       order by min(${fields.createdAt})
       limit ${limit}
@@ -219,8 +219,8 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
       select count(*)::int from (
         select 1
         from ${table}
-        where ${fields.username} is not null
-        group by lower(${fields.username})
+        where ${fields.usernameLower} is not null
+        group by ${fields.usernameLower}
         having count(*) > 1
       ) as conflicts
     `);
@@ -236,7 +236,7 @@ export const createUserQueries = (pool: CommonQueryMethods) => {
     pool.exists(sql`
       select ${fields.primaryEmail}
       from ${table}
-      where lower(${fields.primaryEmail})=lower(${email})
+      where ${fields.primaryEmailLower}=lower(${email})
       ${conditionalSql(excludeUserId, (id) => sql`and ${fields.id}<>${id}`)}
     `);
 

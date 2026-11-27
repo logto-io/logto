@@ -19,8 +19,7 @@ const mfa = {
   send_to_email: '發送至 {{identifier}}',
   send_to_phone: '發送至 {{identifier}}',
   onboarding: '開啟兩步驗證',
-  onboarding_description:
-    '使用兩步驗證保護您的帳戶。選擇一種或多種方式：通行密鑰、身份驗證器（OTP）、簡訊驗證碼或備份代碼。',
+  onboarding_description: '使用兩步驗證保護您的帳戶。選擇一種或多種方式，在登入時驗證您的身分。',
   enable_mfa: '啟用兩步驗證',
   add_mfa_factors: '添加兩步驗證',
   add_mfa_description: '已啟用兩步驗證。選擇第二種驗證方法進行安全登錄。',
@@ -73,7 +72,6 @@ const mfa = {
   trust_this_device_other: '在接下來的 {{count}} 天內信任此裝置',
   secret_key_copied: '密鑰已複製。',
   backup_code_copied: '備份代碼已複製。',
-  webauthn_not_ready: 'WebAuthn 尚未準備就緒。請稍後重試。',
   webauthn_not_supported: '此瀏覽器不支援 WebAuthn。',
   webauthn_failed_to_create: '創建失敗。請重試。',
   webauthn_failed_to_verify: '驗證失敗。請重試。',

@@ -122,6 +122,56 @@ describe('Tenant request lifecycle and disposal', () => {
     expect(end.calledOnce).toBe(true);
     // The instance must not serve new requests after disposal.
     expect(tenant.requestStart()).toBe(false);
+    expect(tenant.retainRequestSlot()).toBe(false);
+  });
+
+  it('allows retaining a slot while an active request drains and blocks once the pool ends', async () => {
+    const tenant = await Tenant.create({
+      id: defaultTenantId,
+      redisCache: new RedisCache(),
+      withDefaultTenant,
+    });
+    const end = Sinon.stub(tenant.envSet, 'end').resolves();
+
+    expect(tenant.retainRequestSlot()).toBe(true);
+    expect(tenant.requestStart()).toBe(true);
+
+    const disposed = tenant.dispose();
+    await Promise.resolve();
+
+    // New requests are rejected once disposing, while an active request can still retain a slot.
+    expect(tenant.requestStart()).toBe(false);
+    expect(tenant.retainRequestSlot()).toBe(true);
+
+    tenant.requestEnd();
+    tenant.requestEnd();
+    await Promise.resolve();
+    expect(end.called).toBe(false);
+
+    tenant.requestEnd();
+    expect(await disposed).toBe(true);
+    expect(end.calledOnce).toBe(true);
+    expect(tenant.retainRequestSlot()).toBe(false);
+  });
+
+  it('rejects retainRequestSlot after the disposal drain timeout ends the pool', async () => {
+    const tenant = await Tenant.create({
+      id: defaultTenantId,
+      redisCache: new RedisCache(),
+      withDefaultTenant,
+    });
+    const end = Sinon.stub(tenant.envSet, 'end').resolves();
+
+    expect(tenant.requestStart()).toBe(true);
+
+    jest.useFakeTimers();
+    const disposed = tenant.dispose();
+    await Promise.resolve();
+
+    jest.advanceTimersByTime(130_000);
+    await expect(disposed).resolves.toBe('timeout');
+    expect(end.calledOnce).toBe(true);
+    expect(tenant.retainRequestSlot()).toBe(false);
   });
 
   it('waits for in-flight requests before ending the database pool', async () => {

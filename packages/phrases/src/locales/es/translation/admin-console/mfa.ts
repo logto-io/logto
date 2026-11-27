@@ -31,22 +31,13 @@ const mfa = {
     'Todos los usuarios con un email o número de teléfono verificado',
   verification_code_enrollment_explicit: 'Solo los usuarios que la configuraron',
   verification_code_enrollment_explicit_confirmation:
-    'Los códigos de verificación por email y SMS solo contarán como verificación en 2 pasos para los usuarios que los configuraron. Los usuarios que no los configuraron los perderán como factor de verificación en 2 pasos, y los usuarios sin otro factor se tratarán como si no tuvieran MFA. ¿Estás seguro de que deseas continuar?',
+    'Los códigos de verificación por email y SMS solo contarán como verificación en 2 pasos para los usuarios que los configuraron. Los usuarios que no los configuraron los perderán como factor de verificación en 2 pasos, y los usuarios sin otro factor se tratarán como si no tuvieran MFA. Los usuarios que activaron la verificación en 2 pasos solo con un email o número de teléfono verán el aviso "Configuración incompleta" en el Centro de cuentas hasta que añadan un método de verificación. ¿Estás seguro de que deseas continuar?',
   verification_code_enrollment_implicit_confirmation:
     'Todos los usuarios con un email o número de teléfono verificado lo usarán para la verificación en 2 pasos, incluidos los usuarios que no la configuraron. ¿Estás seguro de que deseas continuar?',
   policy: 'Política',
   policy_description:
     'Establece la política de MFA para los flujos de inicio de sesión y registro.',
-  two_step_sign_in_policy: 'Política de verificación de dos pasos al iniciar sesión',
-  user_controlled: 'Los usuarios pueden habilitar o deshabilitar MFA por sí mismos',
-  user_controlled_tip:
-    'Los usuarios pueden omitir la configuración de MFA la primera vez al iniciar sesión o registrarse, o habilitar/deshabilitarla en la configuración de la cuenta.',
-  mandatory: 'Siempre se requiere que los usuarios usen MFA al iniciar sesión',
-  mandatory_tip:
-    'Los usuarios deben configurar MFA la primera vez al iniciar sesión o registrarse, y usarlo en todas las futuras sesiones de inicio de sesión.',
   require_mfa: 'Requerir MFA',
-  require_mfa_label:
-    'Activa esto para hacer obligatorio la verificación de 2 pasos al acceder a tus aplicaciones. Si está desactivado, los usuarios pueden decidir si habilitar MFA por sí mismos.',
   require_mfa_optional:
     'MFA opcional: permite que los usuarios elijan habilitar MFA para la seguridad de su propia cuenta',
   require_mfa_adaptive:

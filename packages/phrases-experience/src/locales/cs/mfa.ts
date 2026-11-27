@@ -20,7 +20,7 @@ const mfa = {
   send_to_phone: 'Poslat na {{identifier}}',
   onboarding: 'Zapnout dvoufázové ověření',
   onboarding_description:
-    'Chraň svůj účet pomocí dvoufázového ověření. Vyber jednu nebo více metod: Přístupový klíč, autentizační aplikace (OTP), ověřovací kód SMS nebo záložní kódy.',
+    'Chraň svůj účet pomocí dvoufázového ověření. Vyber jednu nebo více metod, kterými ověříš svou identitu při přihlášení.',
   enable_mfa: 'Zapnout dvoufázové ověření',
   add_mfa_factors: 'Přidat dvoufázové ověření',
   add_mfa_description:
@@ -79,7 +79,6 @@ const mfa = {
   trust_this_device_other: 'Důvěřovat tomuto zařízení po dobu {{count}} dnů',
   secret_key_copied: 'Tajný klíč zkopírován.',
   backup_code_copied: 'Záložní kód zkopírován.',
-  webauthn_not_ready: 'WebAuthn ještě není připraven. Zkus to prosím později.',
   webauthn_not_supported: 'WebAuthn není v tomto prohlížeči podporován.',
   webauthn_failed_to_create: 'Nepodařilo se vytvořit. Zkus to prosím znovu.',
   webauthn_failed_to_verify: 'Nepodařilo se ověřit. Zkus to prosím znovu.',

@@ -113,8 +113,18 @@ jobs:
         timeout-minutes: 20
         run: pnpm exec playwright install --with-deps chromium
 
+      - name: Setup Postgres
+        uses: ikalnytskyi/action-setup-postgres@v6
+
+      - name: Setup job queue test database
+        run: pnpm cli db seed --test
+        env:
+          DB_URL: postgres://postgres:postgres@localhost:5432/job_queue_test
+
       - name: Test
         run: pnpm ci:test
+        env:
+          JOB_QUEUE_TEST_DB_URL: postgres://postgres:postgres@localhost:5432/job_queue_test
 
       - name: Codecov core
         uses: codecov/codecov-action@v4

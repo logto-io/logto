@@ -101,7 +101,7 @@ describe('security-page utils', () => {
               logoDark: '',
             },
           ],
-          mfa: { factors: [], policy: MfaPolicy.UserControlled },
+          mfa: { factors: [], policy: MfaPolicy.PromptAtSignInAndSignUp },
         }
       )
     ).toBe(true);
@@ -138,7 +138,7 @@ describe('security-page utils', () => {
             logoDark: '',
           },
         ],
-        mfa: { factors: [], policy: MfaPolicy.UserControlled },
+        mfa: { factors: [], policy: MfaPolicy.PromptAtSignInAndSignUp },
       })
     ).toBe(false);
   });
@@ -147,7 +147,7 @@ describe('security-page utils', () => {
     expect(
       hasVisibleMfaSection(AccountCenterControlValue.Edit, {
         socialConnectors: [],
-        mfa: { factors: [MfaFactor.TOTP], policy: MfaPolicy.UserControlled },
+        mfa: { factors: [MfaFactor.TOTP], policy: MfaPolicy.PromptAtSignInAndSignUp },
       })
     ).toBe(true);
   });
@@ -156,7 +156,7 @@ describe('security-page utils', () => {
     expect(
       hasVisibleMfaSection(AccountCenterControlValue.Edit, {
         socialConnectors: [],
-        mfa: { factors: [], policy: MfaPolicy.UserControlled },
+        mfa: { factors: [], policy: MfaPolicy.PromptAtSignInAndSignUp },
         passkeySignIn: { enabled: true },
       })
     ).toBe(false);
@@ -166,7 +166,7 @@ describe('security-page utils', () => {
     expect(
       isPasskeySignInEnabled({
         socialConnectors: [],
-        mfa: { factors: [], policy: MfaPolicy.UserControlled },
+        mfa: { factors: [], policy: MfaPolicy.PromptAtSignInAndSignUp },
         passkeySignIn: { enabled: true },
       })
     ).toBe(true);

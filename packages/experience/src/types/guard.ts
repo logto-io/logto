@@ -117,7 +117,6 @@ export const parseGuard = <T, S>(value: unknown, struct: s.Struct<T, S>) =>
   s.validate(value, struct, { coerce: true, mask: true })[1];
 
 export type MfaFlowState = s.Infer<typeof mfaFlowStateGuard>;
-export type TrustedDeviceOptInErrorData = s.Infer<typeof trustedDeviceOptInErrorDataGuard>;
 
 export const mfaBindingVerificationCodeStateGuard = s.type({
   flow: s.literal(UserMfaFlow.MfaBinding),
@@ -215,8 +214,6 @@ export const continueFlowStateGuard = s.object({
   // Navigation hint only; Core's authentication context determines the actual mode.
   isStepUp: s.optional(s.boolean()),
 });
-
-export type InteractionFlowState = s.Infer<typeof continueFlowStateGuard>;
 
 export const extraProfileFieldNamesGuard = s.union([
   s.literal('name'),

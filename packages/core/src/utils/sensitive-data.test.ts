@@ -25,4 +25,20 @@ describe('sanitizeSensitiveDataRecord', () => {
       note: 'safevalue',
     });
   });
+
+  it('masks MFA backup codes and keeps other codes readable', () => {
+    expect(
+      sanitizeSensitiveDataRecord({
+        verification: { type: 'BackupCode', backupCodes: ['a1b2c3d4e5'] },
+        bindMfa: { type: 'BackupCode', codes: ['a1b2c3d4e5'] },
+        customData: { codes: ['promo-1'] },
+        error: { code: 'session.mfa.invalid_backup_code' },
+      })
+    ).toEqual({
+      verification: { type: 'BackupCode', backupCodes: '******' },
+      bindMfa: { type: 'BackupCode', codes: '******' },
+      customData: { codes: ['promo-1'] },
+      error: { code: 'session.mfa.invalid_backup_code' },
+    });
+  });
 });

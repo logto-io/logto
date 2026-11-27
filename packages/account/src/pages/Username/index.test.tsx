@@ -25,7 +25,7 @@ jest.mock('@logto/react', () => ({
 jest.mock('@ac/hooks/use-step-up', () => ({
   __esModule: true,
   default: () => ({ requestStepUp: mockRequestStepUp }),
-  useStepUpEntry: () => ({ isReady: true, isChecking: false, hasFailed: false }),
+  useStepUpEntry: () => ({ isReady: true, hasFailed: false }),
 }));
 
 jest.mock('../../apis/account', () => ({

@@ -20,7 +20,7 @@ const mfa = {
   send_to_phone: 'ส่งไปที่ {{identifier}}',
   onboarding: 'เปิดการยืนยันแบบ 2 ขั้นตอน',
   onboarding_description:
-    'ปกป้องบัญชีของคุณด้วยการยืนยันแบบ 2 ขั้นตอน เลือกหนึ่งวิธีหรือมากกว่า: พาสคีย์ แอปยืนยันตัวตน (OTP) รหัสยืนยัน SMS หรือรหัสสำรอง',
+    'ปกป้องบัญชีของคุณด้วยการยืนยันแบบ 2 ขั้นตอน เลือกหนึ่งวิธีหรือมากกว่าเพื่อยืนยันตัวตนเมื่อลงชื่อเข้าใช้',
   enable_mfa: 'เปิดใช้งานการยืนยันแบบ 2 ขั้นตอน',
   add_mfa_factors: 'เพิ่มการยืนยันแบบ 2 ขั้นตอน',
   add_mfa_description:
@@ -78,7 +78,6 @@ const mfa = {
   trust_this_device_other: 'เชื่อถืออุปกรณ์นี้เป็นเวลา {{count}} วัน',
   secret_key_copied: 'คัดลอกคีย์ลับแล้ว',
   backup_code_copied: 'คัดลอกรหัสสำรองแล้ว',
-  webauthn_not_ready: 'WebAuthn ยังไม่พร้อม กรุณาลองใหม่อีกครั้งภายหลัง',
   webauthn_not_supported: 'เบราว์เซอร์นี้ไม่รองรับ WebAuthn',
   webauthn_failed_to_create: 'สร้างไม่สำเร็จ กรุณาลองใหม่อีกครั้ง',
   webauthn_failed_to_verify: 'ยืนยันไม่สำเร็จ กรุณาลองใหม่อีกครั้ง',

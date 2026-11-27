@@ -215,6 +215,12 @@ export default function initOidc(
     },
     conformIdTokenClaims: false,
     ...getProviderFetchConfig(),
+    // In oidc-provider v9, `jwks_uri` and `sector_identifier_uri` default to no limit.
+    fetchResponseBodyLimits: {
+      'client_id metadata document': 5 * 1024,
+      jwks_uri: 64 * 1024,
+      sector_identifier_uri: 64 * 1024,
+    },
     features: {
       userinfo: { enabled: true },
       revocation: { enabled: true },

@@ -10,6 +10,7 @@ import {
   deleteResource,
   setDefaultResource,
 } from '#src/api/index.js';
+import { createRole, deleteRole } from '#src/api/role.js';
 import { createScope } from '#src/api/scope.js';
 import { expectRejects } from '#src/helpers/index.js';
 import { generateResourceIndicator, generateResourceName } from '#src/utils.js';
@@ -201,5 +202,95 @@ describe('admin console api resources', () => {
     expect(getScopeIds(resource2.id)).toEqual(new Set([scope3.id]));
 
     await Promise.all([deleteResource(resource1.id), deleteResource(resource2.id)]);
+  });
+
+  it('should filter resources by hasScopes and excludeRoleId', async () => {
+    const [emptyResource, fullyAssignedResource, partiallyAssignedResource] = await Promise.all([
+      createResource(),
+      createResource(),
+      createResource(),
+    ]);
+    const [fullyAssignedScope, assignedScope, unassignedScope] = await Promise.all([
+      createScope(fullyAssignedResource.id),
+      createScope(partiallyAssignedResource.id),
+      createScope(partiallyAssignedResource.id),
+    ]);
+    const role = await createRole({
+      scopeIds: [fullyAssignedScope.id, assignedScope.id],
+    });
+
+    const resourcesWithScopes = await getResources({ hasScopes: 'true' });
+    const resourcesWithScopesIds = new Set(resourcesWithScopes.map(({ id }) => id));
+    expect(resourcesWithScopesIds.has(emptyResource.id)).toBe(false);
+    expect(resourcesWithScopesIds.has(fullyAssignedResource.id)).toBe(true);
+    expect(resourcesWithScopesIds.has(partiallyAssignedResource.id)).toBe(true);
+
+    const assignableResources = await authedAdminApi
+      .get('resources', {
+        searchParams: {
+          hasScopes: 'true',
+          excludeRoleId: role.id,
+          includeScopes: 'true',
+        },
+      })
+      .json<ResourceResponse[]>();
+    const assignableIds = new Set(assignableResources.map(({ id }) => id));
+    expect(assignableIds.has(emptyResource.id)).toBe(false);
+    expect(assignableIds.has(fullyAssignedResource.id)).toBe(false);
+    expect(assignableIds.has(partiallyAssignedResource.id)).toBe(true);
+
+    const matchedResource = assignableResources.find(
+      ({ id }) => id === partiallyAssignedResource.id
+    );
+    expect(matchedResource?.scopes.map(({ id }) => id)).toEqual([unassignedScope.id]);
+
+    await deleteRole(role.id);
+    await Promise.all([
+      deleteResource(emptyResource.id),
+      deleteResource(fullyAssignedResource.id),
+      deleteResource(partiallyAssignedResource.id),
+    ]);
+  });
+
+  it('should search resources by name, indicator, and scope name with pagination', async () => {
+    const token = generateResourceName();
+    const [nameResource, indicatorResource, scopeResource] = await Promise.all([
+      createResource(`prefix_${token}_name`),
+      createResource(generateResourceName(), `https://${token}.example.com/api`),
+      createResource(),
+    ]);
+    const matchingScope = await createScope(scopeResource.id, `read:${token}`);
+    const role = await createRole({ scopeIds: [matchingScope.id] });
+
+    const response = await authedAdminApi.get('resources', {
+      searchParams: {
+        page: '1',
+        page_size: '2',
+        search: `%${token}%`,
+      },
+    });
+    const paginatedResources = await response.json<ResourceResponse[]>();
+    expect(response.headers.get('total-number')).toBe('3');
+    expect(paginatedResources).toHaveLength(2);
+
+    const allMatched = await getResources({ search: `%${token}%` });
+    expect(new Set(allMatched.map(({ id }) => id))).toEqual(
+      new Set([nameResource.id, indicatorResource.id, scopeResource.id])
+    );
+
+    const matchedExcludingRole = await getResources({
+      search: `%${token}%`,
+      excludeRoleId: role.id,
+    });
+    expect(new Set(matchedExcludingRole.map(({ id }) => id))).toEqual(
+      new Set([nameResource.id, indicatorResource.id])
+    );
+
+    await deleteRole(role.id);
+    await Promise.all([
+      deleteResource(nameResource.id),
+      deleteResource(indicatorResource.id),
+      deleteResource(scopeResource.id),
+    ]);
   });
 });

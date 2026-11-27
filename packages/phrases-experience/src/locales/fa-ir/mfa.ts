@@ -20,7 +20,7 @@ const mfa = {
   send_to_phone: 'ارسال به {{identifier}}',
   onboarding: 'تأیید دو مرحله‌ای را فعال کنید',
   onboarding_description:
-    'با تأیید دو مرحله‌ای از حساب خود محافظت کنید. یک یا چند روش را انتخاب کنید: کلید عبور، اپلیکیشن احراز هویت (OTP)، کد تأیید پیامکی، یا کدهای پشتیبان.',
+    'با تأیید دو مرحله‌ای از حساب خود محافظت کنید. یک یا چند روش را برای تأیید هویت خود هنگام ورود انتخاب کنید.',
   enable_mfa: 'تأیید دو مرحله‌ای را فعال کنید',
   add_mfa_factors: 'تأیید دو مرحله‌ای را اضافه کنید',
   add_mfa_description:
@@ -79,7 +79,6 @@ const mfa = {
   trust_this_device_other: 'به این دستگاه برای {{count}} روز اعتماد کنید',
   secret_key_copied: 'کلید مخفی کپی شد.',
   backup_code_copied: 'کد پشتیبان کپی شد.',
-  webauthn_not_ready: 'WebAuthn هنوز آماده نیست. لطفاً بعداً دوباره تلاش کنید.',
   webauthn_not_supported: 'WebAuthn در این مرورگر پشتیبانی نمی‌شود.',
   webauthn_failed_to_create: 'ایجاد ناموفق بود. لطفاً دوباره تلاش کنید.',
   webauthn_failed_to_verify: 'تأیید ناموفق بود. لطفاً دوباره تلاش کنید.',

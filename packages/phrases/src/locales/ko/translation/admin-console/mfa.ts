@@ -25,21 +25,12 @@ const mfa = {
   verification_code_enrollment_implicit: '인증된 이메일 또는 전화번호가 있는 모든 사용자',
   verification_code_enrollment_explicit: '설정한 사용자만',
   verification_code_enrollment_explicit_confirmation:
-    '이메일 및 SMS 인증 코드는 이를 설정한 사용자에게만 2단계 인증으로 인정됩니다. 설정하지 않은 사용자는 이를 2단계 인증 요소로 사용할 수 없게 되며, 다른 요소가 없는 사용자는 MFA가 없는 것으로 처리됩니다. 계속하시겠습니까?',
+    '이메일 및 SMS 인증 코드는 이를 설정한 사용자에게만 2단계 인증으로 인정됩니다. 설정하지 않은 사용자는 이를 2단계 인증 요소로 사용할 수 없게 되며, 다른 요소가 없는 사용자는 MFA가 없는 것으로 처리됩니다. 이메일 또는 전화번호만으로 2단계 인증을 켠 사용자에게는 인증 방법을 추가할 때까지 계정 센터에 "설정이 완료되지 않았습니다" 알림이 표시됩니다. 계속하시겠습니까?',
   verification_code_enrollment_implicit_confirmation:
     '인증된 이메일 주소 또는 전화번호가 있는 모든 사용자는 설정하지 않았더라도 이를 2단계 인증에 사용합니다. 계속하시겠습니까?',
   policy: '정책',
   policy_description: '로그인 및 가입 플로우에 대한 MFA 정책을 설정합니다.',
-  two_step_sign_in_policy: '로그인 시 2단계 인증 정책',
-  user_controlled: '사용자는 자체적으로 MFA를 활성화 또는 비활성화할 수 있습니다',
-  user_controlled_tip:
-    '사용자는 처음 로그인 또는 가입 시에 MFA 설정을 건너 뛰거나 계정 설정에서 활성화/비활성화할 수 있습니다.',
-  mandatory: '사용자는 항상 로그인 시 MFA 사용이 필요합니다',
-  mandatory_tip:
-    '사용자는 처음 로그인 또는 가입 시에 MFA를 설정하고 모든 향후 로그인에서 그것을 사용해야 합니다.',
   require_mfa: 'MFA 필요',
-  require_mfa_label:
-    '애플리케이션에 액세스하기 위해 2단계 인증을 필수로 만들려면 이것을 활성화하세요. 비활성화하면 사용자가 스스로 MFA 사용 여부를 결정할 수 있습니다.',
   require_mfa_optional:
     '선택형 MFA: 사용자가 자신의 계정 보안을 위해 MFA 활성화를 선택할 수 있습니다',
   require_mfa_adaptive:

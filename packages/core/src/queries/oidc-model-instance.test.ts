@@ -21,7 +21,6 @@ const { createOidcModelInstanceQueries } = await import('./oidc-model-instance.j
 const {
   upsertInstance,
   findPayloadById,
-  findPayloadByPayloadField,
   findPayloadByUid,
   findPayloadByUserCode,
   destroyInstanceById,
@@ -96,61 +95,6 @@ describe('oidc-model-instance query', () => {
     await expect(findPayloadById(instance.modelName, instance.id)).resolves.toEqual({
       consumed: true,
     });
-  });
-
-  it('findPayloadByPayloadField - single result', async () => {
-    const uid_key = 'uid';
-    const uid_value = 'foo';
-
-    // Mock a single result
-    mockQuery.mockImplementationOnce(async () => {
-      // Simulate pool.any
-      return createMockQueryResult([{ consumedAt: 10 }]);
-    });
-
-    await expect(
-      findPayloadByPayloadField(instance.modelName, uid_key, uid_value)
-    ).resolves.toEqual({
-      consumed: true,
-    });
-  });
-
-  it('findPayloadByPayloadField - multiple results (should delete and return null)', async () => {
-    const uid_key = 'uid';
-    const uid_value = 'foo';
-
-    // Mock multiple results
-    mockQuery
-      .mockImplementationOnce(async () => {
-        // Simulate pool.any
-        return createMockQueryResult([{ uid: uid_value }, { uid: uid_value }]);
-      })
-      // @ts-expect-error - mock delete query
-      .mockImplementationOnce(async () => {
-        // Simulate delete query
-        return { rowCount: 2 };
-      });
-
-    await expect(
-      findPayloadByPayloadField(instance.modelName, uid_key, uid_value)
-    ).resolves.toBeUndefined();
-
-    expect(mockQuery).toHaveBeenCalledTimes(2);
-  });
-
-  it('findPayloadByPayloadField - no result', async () => {
-    const uid_key = 'uid';
-    const uid_value = 'foo';
-
-    // Mock no result
-    mockQuery.mockImplementationOnce(async () => {
-      // Simulate pool.any
-      return createMockQueryResult([]);
-    });
-
-    await expect(
-      findPayloadByPayloadField(instance.modelName, uid_key, uid_value)
-    ).resolves.toBeUndefined();
   });
 
   it('findPayloadByUid should use the uid column', async () => {

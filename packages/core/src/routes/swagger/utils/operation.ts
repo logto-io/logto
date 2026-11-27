@@ -23,6 +23,7 @@ const anonymousPaths = new Set<string>([
 const advancedSearchPaths = new Set<string>([
   '/applications',
   '/applications/:applicationId/roles',
+  '/resources',
   '/resources/:resourceId/scopes',
   '/roles/:id/applications',
   '/roles/:id/scopes',
@@ -76,7 +77,7 @@ const buildOperation = (
         throw new Error(`Invalid status code ${status}.`);
       }
 
-      if (status === 200 || status === 201) {
+      if (status === 200 || status === 201 || (status === 202 && Boolean(documentedResponse))) {
         return [
           status,
           {
