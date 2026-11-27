@@ -177,6 +177,14 @@ describe('oidc provider init', () => {
     expect(clientDefaults.id_token_signed_response_alg).toBe('RS256');
   });
 
+  it('should set a finite response body limit for every fetch purpose', () => {
+    const { fetchResponseBodyLimits } = getProviderConfiguration(createProvider(new MockTenant()));
+
+    expect(
+      Object.entries(fetchResponseBodyLimits).filter(([, limit]) => !Number.isFinite(limit))
+    ).toEqual([]);
+  });
+
   it('should allow missing application access control client metadata', async () => {
     const tenant = new MockTenant();
     const provider = createProvider(tenant);
