@@ -4,14 +4,27 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import {
   ConnectorConfigFormItemType,
-  confidentialValueMask,
   connectorConfigFormItemGuard,
-  getValue,
-  maskConfidentialConnectorConfig,
   type AllConnector,
   type ConnectorConfigFormItem,
   type CreateConnector,
 } from '@logto/connector-kit';
+import {
+  ZodDefault,
+  ZodDiscriminatedUnion,
+  ZodEffects,
+  ZodIntersection,
+  ZodNullable,
+  ZodObject,
+  ZodOptional,
+  ZodUnion,
+  type ZodTypeAny,
+} from 'zod';
+
+import {
+  confidentialValueMask,
+  maskConfidentialConnectorConfig,
+} from './mask-confidential-config.js';
 
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
 const connectorsDirectory = path.resolve(currentDirectory, '../../../../connectors');
@@ -34,6 +47,19 @@ const connectorsWithoutSecrets = new Set([
   'connector-mock-sms',
   'connector-mock-social',
   'connector-siwe',
+]);
+
+/**
+ * Top-level `configGuard` keys that are intentionally omitted from `formItems` and hold no secrets.
+ * Any other `configGuard` key must be declared in `formItems` so credential masking cannot miss it.
+ */
+const guardOnlyNonSecretKeys = new Set([
+  'oneTap',
+  'responseType',
+  'grantType',
+  'redirectUri',
+  'authnRequestBinding',
+  'assertionBinding',
 ]);
 
 const exactSecretKeys = new Set(['authorization', 'token', 'pass', 'pwd', 'pfx']);
@@ -95,10 +121,49 @@ const looksLikeSecretKey = (key: string): boolean => {
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
 
-const buildJsonSampleValue = (
-  item: Extract<ConnectorConfigFormItem, { type: ConnectorConfigFormItemType.Json }>
-): unknown => {
-  if (!Array.isArray(item.isConfidential)) {
+const extractTopLevelGuardKeys = (guard: ZodTypeAny): string[] => {
+  if (guard instanceof ZodObject) {
+    return Object.keys(guard.shape as Record<string, unknown>);
+  }
+
+  if (guard instanceof ZodEffects) {
+    return extractTopLevelGuardKeys(guard._def.schema as ZodTypeAny);
+  }
+
+  if (guard instanceof ZodOptional || guard instanceof ZodNullable || guard instanceof ZodDefault) {
+    return extractTopLevelGuardKeys(guard._def.innerType as ZodTypeAny);
+  }
+
+  if (guard instanceof ZodUnion) {
+    return [
+      ...new Set(
+        (guard._def.options as ZodTypeAny[]).flatMap((option) => extractTopLevelGuardKeys(option))
+      ),
+    ];
+  }
+
+  if (guard instanceof ZodDiscriminatedUnion) {
+    return [
+      ...new Set(
+        (guard._def.options as ZodTypeAny[]).flatMap((option) => extractTopLevelGuardKeys(option))
+      ),
+    ];
+  }
+
+  if (guard instanceof ZodIntersection) {
+    return [
+      ...new Set([
+        ...extractTopLevelGuardKeys(guard._def.left as ZodTypeAny),
+        ...extractTopLevelGuardKeys(guard._def.right as ZodTypeAny),
+      ]),
+    ];
+  }
+
+  return [];
+};
+
+const buildJsonSampleValue = (item: ConnectorConfigFormItem): unknown => {
+  if (!item.isConfidential) {
     return item.defaultValue ?? {};
   }
 
@@ -106,8 +171,7 @@ const buildJsonSampleValue = (
 
   return {
     ...base,
-    ...Object.fromEntries(item.isConfidential.map((subKey) => [subKey, `sample-${subKey}-secret`])),
-    nonSensitiveMeta: 'keep-intact',
+    sampleSecret: 'sample-secret-value',
   };
 };
 
@@ -140,31 +204,42 @@ const buildSampleConfig = (
 ): Record<string, unknown> =>
   Object.fromEntries(formItems.map((item) => [item.key, buildSampleValue(item)]));
 
-const getConfidentiality = (item: ConnectorConfigFormItem) =>
-  'isConfidential' in item ? item.isConfidential : undefined;
-
-const assertFormItemAnnotations = (item: ConnectorConfigFormItem) => {
-  const confidentiality = getConfidentiality(item);
-
-  if (nonConfidentialIdentifierKeys.has(item.key)) {
-    expect(confidentiality).toBeFalsy();
+const assertAllLeafStringsMasked = (value: unknown) => {
+  if (typeof value === 'string') {
+    expect(value).toBe(confidentialValueMask);
+    return;
   }
 
-  if (!confidentiality) {
+  if (Array.isArray(value)) {
+    for (const element of value) {
+      assertAllLeafStringsMasked(element);
+    }
+    return;
+  }
+
+  if (isRecord(value)) {
+    for (const element of Object.values(value)) {
+      assertAllLeafStringsMasked(element);
+    }
+  }
+};
+
+const assertFormItemAnnotations = (item: ConnectorConfigFormItem) => {
+  if (nonConfidentialIdentifierKeys.has(item.key)) {
+    expect(item.isConfidential).toBeFalsy();
+  }
+
+  if (!item.isConfidential) {
     expect(looksLikeSecretKey(item.key)).toBe(false);
   }
 
   if (
     item.type === ConnectorConfigFormItemType.Json &&
-    confidentiality !== true &&
+    !item.isConfidential &&
     isRecord(item.defaultValue)
   ) {
-    const declaredSubKeys = new Set(Array.isArray(confidentiality) ? confidentiality : []);
-
     for (const subKey of Object.keys(item.defaultValue)) {
-      if (!declaredSubKeys.has(subKey)) {
-        expect(looksLikeSecretKey(subKey)).toBe(false);
-      }
+      expect(looksLikeSecretKey(subKey)).toBe(false);
     }
   }
 };
@@ -175,35 +250,28 @@ const assertMaskedConfig = (
   maskedConfig: Record<string, unknown>
 ) => {
   for (const item of formItems) {
-    const confidentiality = getConfidentiality(item);
-
-    if (!confidentiality) {
+    if (!item.isConfidential) {
       expect(maskedConfig[item.key]).toEqual(sampleConfig[item.key]);
       continue;
     }
 
-    if (confidentiality === true) {
-      expect(maskedConfig[item.key]).toBe(confidentialValueMask);
+    if (item.type === ConnectorConfigFormItemType.Json) {
+      assertAllLeafStringsMasked(maskedConfig[item.key]);
       continue;
     }
 
-    for (const subKey of confidentiality) {
-      expect(getValue(maskedConfig, `${item.key}.${subKey}`)).toBe(confidentialValueMask);
-    }
-
-    expect(getValue(maskedConfig, `${item.key}.nonSensitiveMeta`)).toBe('keep-intact');
+    expect(maskedConfig[item.key]).toBe(confidentialValueMask);
   }
 };
 
-const loadConnectorMetadata = async (packageDirectory: string) => {
+const loadConnector = async (packageDirectory: string) => {
   const entryUrl = pathToFileURL(
     path.join(connectorsDirectory, packageDirectory, 'lib', 'index.js')
   ).href;
   const imported: unknown = await import(entryUrl);
   const createConnector = (imported as { default: CreateConnector<AllConnector> }).default;
-  const connector = await createConnector({ getConfig: async () => ({}) });
 
-  return connector.metadata;
+  return createConnector({ getConfig: async () => ({}) });
 };
 
 describe('built-in connector confidential metadata', () => {
@@ -218,16 +286,27 @@ describe('built-in connector confidential metadata', () => {
   it.each(connectorDirectories)(
     'validates confidential annotations and masks secrets for %s',
     async (packageDirectory) => {
-      const metadata = await loadConnectorMetadata(packageDirectory);
+      const connector = await loadConnector(packageDirectory);
+      const { metadata, configGuard } = connector;
       const formItems = metadata.formItems ?? [];
 
       for (const item of formItems) {
         expect(() => connectorConfigFormItemGuard.parse(item)).not.toThrow();
       }
 
-      const confidentialItems = formItems.filter(
-        (item) => 'isConfidential' in item && Boolean(item.isConfidential)
-      );
+      // Every top-level `configGuard` key on non-mock connectors must either appear in `formItems`
+      // or be explicitly allowlisted as a non-secret guard-only key, preventing unmasked config
+      // fields like `dkim`. Mock connectors intentionally omit `formItems` and use `configTemplate`.
+      if (!packageDirectory.startsWith('connector-mock-')) {
+        const formItemKeys = new Set(formItems.map((item) => item.key));
+        const guardKeys = extractTopLevelGuardKeys(configGuard);
+        const undeclaredGuardKeys = guardKeys.filter(
+          (key) => !formItemKeys.has(key) && !guardOnlyNonSecretKeys.has(key)
+        );
+        expect(undeclaredGuardKeys).toEqual([]);
+      }
+
+      const confidentialItems = formItems.filter((item) => Boolean(item.isConfidential));
 
       if (connectorsWithoutSecrets.has(packageDirectory)) {
         expect(confidentialItems).toEqual([]);
@@ -246,8 +325,8 @@ describe('built-in connector confidential metadata', () => {
     }
   );
 
-  it('masks nested Json credentials for connector-smtp while preserving non-sensitive fields', async () => {
-    const metadata = await loadConnectorMetadata('connector-smtp');
+  it('masks auth, tls, and dkim credentials for connector-smtp while preserving non-sensitive fields', async () => {
+    const { metadata } = await loadConnector('connector-smtp');
     const sampleConfig = {
       host: 'smtp.example.com',
       port: 587,
@@ -273,6 +352,11 @@ describe('built-in connector confidential metadata', () => {
         passphrase: 'sample-tls-passphrase',
         pfx: 'sample-pfx-secret',
       },
+      dkim: {
+        domainName: 'example.com',
+        keySelector: '2026',
+        privateKey: '-----BEGIN PRIVATE KEY-----\ndkim-key',
+      },
     };
 
     const masked = maskConfidentialConnectorConfig(sampleConfig, metadata.formItems);
@@ -282,10 +366,10 @@ describe('built-in connector confidential metadata', () => {
       port: 587,
       fromEmail: 'no-reply@example.com',
       auth: {
-        type: 'oauth2',
-        user: 'smtp-user@example.com',
+        type: confidentialValueMask,
+        user: confidentialValueMask,
         pass: confidentialValueMask,
-        clientId: 'smtp-oauth-client-id',
+        clientId: confidentialValueMask,
         clientSecret: confidentialValueMask,
         refreshToken: confidentialValueMask,
         accessToken: confidentialValueMask,
@@ -293,14 +377,19 @@ describe('built-in connector confidential metadata', () => {
           key: confidentialValueMask,
           passphrase: confidentialValueMask,
         },
-        serviceClient: 'service-client-id',
+        serviceClient: confidentialValueMask,
       },
       tls: {
-        servername: 'smtp.example.com',
+        servername: confidentialValueMask,
         rejectUnauthorized: true,
         key: confidentialValueMask,
         passphrase: confidentialValueMask,
         pfx: confidentialValueMask,
+      },
+      dkim: {
+        domainName: confidentialValueMask,
+        keySelector: confidentialValueMask,
+        privateKey: confidentialValueMask,
       },
     });
   });

@@ -14,7 +14,6 @@ import {
 } from './types/index.js';
 
 export * from './types/index.js';
-export * from './mask-confidential-config.js';
 export * from './smtp-mailbox.js';
 
 export function validateConfig<Output, Input = Output>(

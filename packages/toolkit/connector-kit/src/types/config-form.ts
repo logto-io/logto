@@ -21,6 +21,7 @@ const baseConfigFormItem = {
     .optional(),
   description: z.string().optional(),
   tooltip: z.string().optional(),
+  isConfidential: z.boolean().optional(), // For `Text`, `MultilineText`, and `Json` types.
   isDevFeature: z.boolean().optional(), // For development feature flag.
 };
 
@@ -36,22 +37,13 @@ export const connectorConfigFormItemGuard = z.discriminatedUnion('type', [
     ...baseConfigFormItem,
   }),
   z.object({
-    type: z.enum([ConnectorConfigFormItemType.Text, ConnectorConfigFormItemType.MultilineText]),
-    isConfidential: z.boolean().optional(),
-    ...baseConfigFormItem,
-  }),
-  z.object({
-    type: z.literal(ConnectorConfigFormItemType.Json),
-    /**
-     * Marks the JSON field (when `true`) or specific nested keys within it (when an array of key
-     * names or dot-separated paths) as confidential so credential masking can redact them while
-     * leaving non-sensitive fields intact.
-     */
-    isConfidential: z.union([z.boolean(), z.array(z.string().min(1))]).optional(),
-    ...baseConfigFormItem,
-  }),
-  z.object({
-    type: z.enum([ConnectorConfigFormItemType.Number, ConnectorConfigFormItemType.Switch]),
+    type: z.enum([
+      ConnectorConfigFormItemType.Text,
+      ConnectorConfigFormItemType.Number,
+      ConnectorConfigFormItemType.MultilineText,
+      ConnectorConfigFormItemType.Switch,
+      ConnectorConfigFormItemType.Json,
+    ]),
     ...baseConfigFormItem,
   }),
 ]);
