@@ -1,10 +1,9 @@
-import assert from 'node:assert';
 import { createHash, randomBytes } from 'node:crypto';
 
 import { ReservedResource, UserScope, buildOrganizationUrn } from '@logto/core-kit';
 import { ApplicationType, GrantType, InteractionEvent } from '@logto/schemas';
 import { formUrlEncodedHeaders } from '@logto/shared';
-import { removeUndefinedKeys } from '@silverhand/essentials';
+import { assert, removeUndefinedKeys } from '@silverhand/essentials';
 import ky from 'ky';
 
 import { deleteUser } from '#src/api/admin-user.js';
@@ -330,9 +329,9 @@ describe('third-party application token context isolation (Cases 1, 2 & 4)', () 
       });
       expect(callbackResponse.status).toBe(303);
       const callbackLocation = callbackResponse.headers.get('location');
-      assert(callbackLocation, 'Expected authorization callback redirect location');
+      assert(callbackLocation, new Error('Expected authorization callback redirect location'));
       const code = new URL(callbackLocation).searchParams.get('code');
-      assert(code, 'Expected authorization code in callback URL');
+      assert(code, new Error('Expected authorization code in callback URL'));
 
       // 1. Code exchange omits `resource`: oidc-provider's `resolve_resource.js` falls back to
       // `ReservedResource.Organization` because `openid` was omitted. Must succeed with empty
@@ -348,7 +347,10 @@ describe('third-party application token context isolation (Cases 1, 2 & 4)', () 
         },
       });
       expect(codeExchangeResponse.id_token).toBeUndefined();
-      assert(codeExchangeResponse.refresh_token, 'Expected refresh_token from code exchange');
+      assert(
+        codeExchangeResponse.refresh_token,
+        new Error('Expected refresh_token from code exchange')
+      );
       const codeAccessTokenPayload = getAccessTokenPayload(codeExchangeResponse.access_token);
       expect(codeAccessTokenPayload.aud).toBe(ReservedResource.Organization);
       expect(codeAccessTokenPayload.scope ?? '').toBe('');

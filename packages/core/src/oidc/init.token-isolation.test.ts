@@ -1,5 +1,3 @@
-import assert from 'node:assert';
-
 import { ReservedResource } from '@logto/core-kit';
 import {
   defaultTenantId,
@@ -8,6 +6,7 @@ import {
   type ResourceScopeEntity,
   type Scope,
 } from '@logto/schemas';
+import { assert } from '@silverhand/essentials';
 import { errors, type KoaContextWithOIDC } from 'oidc-provider';
 
 import { mockResource } from '#src/__mocks__/index.js';
@@ -17,7 +16,7 @@ import { mockEnvSet } from '#src/test-utils/env-set.js';
 import { createOidcContext } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 
-import initOidc from './init.js';
+import initOidc, { consentAuthorizationRoutes } from './init.js';
 
 const { jest } = import.meta;
 
@@ -67,7 +66,7 @@ const orgScope = buildOrgScope('org_scope_1', 'invite:member');
 
 const getResourceServerInfo = async (ctx: KoaContextWithOIDC, resourceIndicator: string) => {
   const configuration = getProviderConfiguration(ctx.oidc.provider);
-  assert(ctx.oidc.client);
+  assert(ctx.oidc.client, new Error('client is required'));
   return configuration.features.resourceIndicators.getResourceServerInfo(
     ctx,
     resourceIndicator,
@@ -175,10 +174,44 @@ const createIsolatedTenant = ({ isThirdParty }: { isThirdParty: boolean }) => {
     findAllOrgScopes,
     findUserScopesForResourceIndicator,
     getUserResourceScopes,
+    getApplicationUserConsentResourceScopes,
+    getApplicationUserConsentOrganizationResourceScopes,
   };
 };
 
 describe('getResourceServerInfo token-route context isolation', () => {
+  it('pins the four consent/authorization route names against the provider router', () => {
+    const tenant = new MockTenant();
+    const provider = initOidc(
+      tenant.id,
+      tenant.envSet,
+      tenant.queries,
+      tenant.libraries,
+      tenant.logtoConfigs,
+      tenant.subscription
+    );
+    // `Provider#pathFor` is a runtime method on oidc-provider missing from `@types/oidc-provider`.
+    const pathFor: unknown = Reflect.get(provider, 'pathFor');
+    expect(typeof pathFor).toBe('function');
+
+    expect([...consentAuthorizationRoutes].slice().sort()).toEqual([
+      'authorization',
+      'code_verification',
+      'device_resume',
+      'resume',
+    ]);
+
+    for (const route of consentAuthorizationRoutes) {
+      expect(() =>
+        (pathFor as (name: string, options?: Record<string, string>) => string).call(
+          provider,
+          route,
+          { uid: 'uid' }
+        )
+      ).not.toThrow();
+    }
+  });
+
   describe.each([
     { label: 'registered third-party app', clientId: registeredClientId, isCimd: false },
     { label: 'CIMD client', clientId: cimdClientId, isCimd: true },
@@ -198,24 +231,37 @@ describe('getResourceServerInfo token-route context isolation', () => {
     };
 
     it('Case 1: isolates personal API scopes on token route (omits org roles & org config)', async () => {
-      const { provider, findApplicationById, findUserScopesForResourceIndicator } = setup();
+      const {
+        provider,
+        tenant,
+        findApplicationById,
+        findUserScopesForResourceIndicator,
+        getUserResourceScopes,
+        getApplicationUserConsentOrganizationResourceScopes,
+      } = setup();
       const ctx = createContext(provider, { clientId, route: 'token' });
 
       const result = await getResourceServerInfo(ctx, indicator);
 
       expect(result.scope).toBe('global:billing');
-      expect(findUserScopesForResourceIndicator).toHaveBeenCalledWith(accountId, indicator, false);
+      expect(findUserScopesForResourceIndicator).toHaveBeenCalledWith(accountId, indicator);
+      expect(getUserResourceScopes).not.toHaveBeenCalled();
       if (isCimd) {
         expect(findApplicationById).not.toHaveBeenCalled();
+        expect(tenant.queries.cimd.organizationResourceScopes.findAll).not.toHaveBeenCalled();
+      } else {
+        expect(getApplicationUserConsentOrganizationResourceScopes).not.toHaveBeenCalled();
       }
     });
 
     it('Case 2: isolates org API scopes on token route (omits personal global roles & personal config)', async () => {
       const {
         provider,
+        tenant,
         findApplicationById,
         findUserScopesForResourceIndicator,
         getUserResourceScopes,
+        getApplicationUserConsentResourceScopes,
       } = setup();
       const ctx = createContext(provider, { clientId, route: 'token', organizationId });
 
@@ -226,6 +272,9 @@ describe('getResourceServerInfo token-route context isolation', () => {
       expect(findUserScopesForResourceIndicator).not.toHaveBeenCalled();
       if (isCimd) {
         expect(findApplicationById).not.toHaveBeenCalled();
+        expect(tenant.queries.cimd.resourceScopes.findAll).not.toHaveBeenCalled();
+      } else {
+        expect(getApplicationUserConsentResourceScopes).not.toHaveBeenCalled();
       }
     });
 

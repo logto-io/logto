@@ -334,26 +334,56 @@ describe('getExtraTokenClaimsForJwtCustomization', () => {
   });
 });
 
-const createOrgApiAccessToken = (ctx: KoaContextWithOIDC, aud?: string | string[]): AccessToken =>
+const createOrgApiAccessToken = (ctx: KoaContextWithOIDC, clientId = 'app-1'): AccessToken =>
   Object.create(ctx.oidc.provider.AccessToken.prototype, {
     accountId: { value: accountId, enumerable: true },
-    ...(aud === undefined ? {} : { aud: { value: aud, enumerable: true } }),
+    clientId: { value: clientId, enumerable: true },
   }) as AccessToken;
 
 describe('getExtraTokenClaimsForOrganizationApiResource', () => {
   const apiResource = 'https://api.notes.com';
+  const cimdClientId = 'https://client.example.com/metadata.json';
 
-  it('returns organization_id claim for an API resource access token', async () => {
+  it('returns organization_id claim for an API resource access token without querying applications', async () => {
+    const findApplicationById = jest.fn();
+    const tenant = new MockTenant(undefined, { applications: { findApplicationById } });
     const ctx = createOidcContext({
       params: { organization_id: 'org-1', resource: apiResource },
     });
 
     await expect(
-      getExtraTokenClaimsForOrganizationApiResource(ctx, createOrgApiAccessToken(ctx, apiResource))
+      getExtraTokenClaimsForOrganizationApiResource(ctx, createOrgApiAccessToken(ctx), {
+        envSet: tenant.envSet,
+        queries: tenant.queries,
+      })
     ).resolves.toEqual({ organization_id: 'org-1' });
+    expect(findApplicationById).not.toHaveBeenCalled();
   });
 
-  it('skips organization_id when params.resource is ReservedResource.Organization', async () => {
+  it('skips organization_id on ReservedResource.Organization for a registered third-party app', async () => {
+    const findApplicationById = jest.fn().mockResolvedValue({ isThirdParty: true });
+    const tenant = new MockTenant(undefined, { applications: { findApplicationById } });
+    const ctx = createOidcContext({
+      params: { organization_id: 'org-1', resource: ReservedResource.Organization },
+    });
+
+    await expect(
+      getExtraTokenClaimsForOrganizationApiResource(ctx, createOrgApiAccessToken(ctx), {
+        envSet: tenant.envSet,
+        queries: tenant.queries,
+      })
+    ).resolves.toBeUndefined();
+    expect(findApplicationById).toHaveBeenCalledWith('app-1');
+  });
+
+  it('skips organization_id on ReservedResource.Organization for a CIMD client without querying applications', async () => {
+    const findApplicationById = jest.fn();
+    const tenant = new MockTenant(undefined, { applications: { findApplicationById } });
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- spread copy of mock envSet with tenant CIMD toggle on; `oidc` is a getter
+    const cimdEnvSet = {
+      ...tenant.envSet,
+      oidc: { ...tenant.envSet.oidc, cimdEnabled: true },
+    } as InstanceType<typeof EnvSet>;
     const ctx = createOidcContext({
       params: { organization_id: 'org-1', resource: ReservedResource.Organization },
     });
@@ -361,43 +391,58 @@ describe('getExtraTokenClaimsForOrganizationApiResource', () => {
     await expect(
       getExtraTokenClaimsForOrganizationApiResource(
         ctx,
-        createOrgApiAccessToken(ctx, ReservedResource.Organization)
+        createOrgApiAccessToken(ctx, cimdClientId),
+        {
+          envSet: cimdEnvSet,
+          queries: tenant.queries,
+        }
       )
     ).resolves.toBeUndefined();
+    expect(findApplicationById).not.toHaveBeenCalled();
   });
 
-  it('skips organization_id when token.aud is ReservedResource.Organization', async () => {
+  it('keeps organization_id on ReservedResource.Organization for a first-party app', async () => {
+    const findApplicationById = jest.fn().mockResolvedValue({ isThirdParty: false });
+    const tenant = new MockTenant(undefined, { applications: { findApplicationById } });
     const ctx = createOidcContext({
-      params: { organization_id: 'org-1', resource: [ReservedResource.Organization] },
+      params: { organization_id: 'org-1', resource: ReservedResource.Organization },
     });
 
     await expect(
-      getExtraTokenClaimsForOrganizationApiResource(
-        ctx,
-        createOrgApiAccessToken(ctx, ReservedResource.Organization)
-      )
-    ).resolves.toBeUndefined();
+      getExtraTokenClaimsForOrganizationApiResource(ctx, createOrgApiAccessToken(ctx), {
+        envSet: tenant.envSet,
+        queries: tenant.queries,
+      })
+    ).resolves.toEqual({ organization_id: 'org-1' });
   });
 
   it('returns undefined when organization_id or resource is missing, or token is not an access token', async () => {
+    const tenant = new MockTenant();
+    const deps = { envSet: tenant.envSet, queries: tenant.queries };
+
     const ctxNoResource = createOidcContext({ params: { organization_id: 'org-1' } });
     await expect(
       getExtraTokenClaimsForOrganizationApiResource(
         ctxNoResource,
-        createOrgApiAccessToken(ctxNoResource)
+        createOrgApiAccessToken(ctxNoResource),
+        deps
       )
     ).resolves.toBeUndefined();
 
     const ctxNoOrg = createOidcContext({ params: { resource: apiResource } });
     await expect(
-      getExtraTokenClaimsForOrganizationApiResource(ctxNoOrg, createOrgApiAccessToken(ctxNoOrg))
+      getExtraTokenClaimsForOrganizationApiResource(
+        ctxNoOrg,
+        createOrgApiAccessToken(ctxNoOrg),
+        deps
+      )
     ).resolves.toBeUndefined();
 
     const ctxNonAccessToken = createOidcContext({
       params: { organization_id: 'org-1', resource: apiResource },
     });
     await expect(
-      getExtraTokenClaimsForOrganizationApiResource(ctxNonAccessToken, {})
+      getExtraTokenClaimsForOrganizationApiResource(ctxNonAccessToken, {}, deps)
     ).resolves.toBeUndefined();
   });
 });
