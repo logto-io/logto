@@ -375,7 +375,7 @@ export class Mfa {
     );
 
     log?.append({
-      verification: verificationRecord.toJson(),
+      verification: verificationRecord.toSanitizedJson(),
     });
 
     await this.checkMfaFactorsEnabledInSignInExperience([MfaFactor.BackupCode]);

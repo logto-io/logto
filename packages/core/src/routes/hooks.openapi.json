@@ -156,7 +156,7 @@
             "description": "Returned when `start_time` or `end_time` is not a finite number, or when `start_time > end_time`."
           },
           "200": {
-            "description": "A list of recent logs for the hook.",
+            "description": "A list of recent logs for the hook. Sensitive values in `payload` are masked the same way as in `GET /api/logs`.",
             "headers": {
               "Total-Number": {
                 "description": "When `enableCap=false`: exact match count. When `enableCap=true`: either the exact count (≤ 10,000) or the saturation sentinel `10001`.",
