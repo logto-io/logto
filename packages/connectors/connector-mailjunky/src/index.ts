@@ -1,4 +1,4 @@
-import { assert, trySafe } from '@silverhand/essentials';
+import { assert, conditional, trySafe } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
 
 import type {
@@ -53,10 +53,20 @@ type BuildMailJunkyBodyInput = {
   payload: SendMessagePayload;
   fromEmail: string;
   fromName?: string;
+  replyTo?: string;
 };
 
 const buildParameters = (input: BuildMailJunkyBodyInput): PublicParameters => {
-  const { to, subject, content, contentType = 'text/html', payload, fromEmail, fromName } = input;
+  const {
+    to,
+    subject,
+    content,
+    contentType = 'text/html',
+    payload,
+    fromEmail,
+    fromName,
+    replyTo,
+  } = input;
   const renderedSubject = replaceSendMessageHandlebars(subject, payload);
   const renderedContent = replaceSendMessageHandlebars(content, payload);
 
@@ -64,6 +74,7 @@ const buildParameters = (input: BuildMailJunkyBodyInput): PublicParameters => {
     from: formatMailbox(fromEmail, fromName),
     to,
     subject: renderedSubject,
+    ...conditional(replyTo && { reply_to: replaceSendMessageHandlebars(replyTo, payload) }),
   };
 
   if (contentType === 'text/plain') {
@@ -101,7 +112,7 @@ const sendMessage =
       fromEmail: string,
       fromName?: string
     ): PublicParameters => {
-      const { subject, content, contentType = 'text/html', sendFrom } = details;
+      const { subject, content, contentType = 'text/html', sendFrom, replyTo } = details;
       const renderedSendFrom = sendFrom
         ? replaceSendMessageHandlebars(sendFrom, payload)
         : undefined;
@@ -117,6 +128,7 @@ const sendMessage =
         payload,
         fromEmail: parsedFromEmail,
         fromName: parsedFromName,
+        replyTo,
       });
     };
 
