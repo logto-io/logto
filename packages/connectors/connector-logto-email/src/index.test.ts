@@ -52,6 +52,31 @@ describe('sendMessage()', () => {
     ).resolves.not.toThrow();
   });
 
+  it('should forward the caller IP for organization invitations only', async () => {
+    const post = vi.fn();
+    const { sendMessage } = await createConnector({
+      getConfig,
+      getCloudServiceClient: vi.fn().mockResolvedValue({ post }),
+    });
+    const to = 'foo@logto.io';
+    const ip = '203.0.113.1';
+    const path = `/api${emailEndpoint}`;
+
+    await sendMessage({ to, type: TemplateType.OrganizationInvitation, payload: {}, ip });
+    await sendMessage({ to, type: TemplateType.OrganizationInvitation, payload: {} });
+    await sendMessage({ to, type: TemplateType.SignIn, payload: { code: '1234' }, ip });
+
+    expect(post).toHaveBeenNthCalledWith(1, path, {
+      body: { data: { to, type: TemplateType.OrganizationInvitation, payload: {}, ip } },
+    });
+    expect(post).toHaveBeenNthCalledWith(2, path, {
+      body: { data: { to, type: TemplateType.OrganizationInvitation, payload: {} } },
+    });
+    expect(post).toHaveBeenNthCalledWith(3, path, {
+      body: { data: { to, type: TemplateType.SignIn, payload: { code: '1234' } } },
+    });
+  });
+
   it('should throw a usage-limit ConnectorError when the service usage cap is reached', async () => {
     // The cloud client rejects with an error carrying a numeric `status` on 429 (not a Got
     // HTTPError), so exercise the connector's structural status check with that shape.
