@@ -156,6 +156,29 @@ describe('MailJunky connector', () => {
     });
   });
 
+  it('should send the replyTo of the custom i18n template as reply_to', async () => {
+    getI18nEmailTemplate.mockResolvedValue({
+      subject: 'Passcode {{code}}',
+      content: '<p>{{code}}</p>',
+      contentType: 'text/html',
+      replyTo: 'support+{{code}}@example.com',
+    });
+
+    nockSend({
+      reply_to: 'support+123456@example.com',
+    });
+
+    getConfig.mockResolvedValue(mockedConfig);
+
+    await connector.sendMessage({
+      to: toEmail,
+      type: TemplateType.Generic,
+      payload: { code: '123456' },
+    });
+
+    expect(nock.isDone()).toBe(true);
+  });
+
   it('should send plain-text email when custom template contentType is text/plain', async () => {
     getI18nEmailTemplate.mockResolvedValue({
       subject: 'Plain {{code}}',

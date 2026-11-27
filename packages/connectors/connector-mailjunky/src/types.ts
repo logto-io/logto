@@ -12,6 +12,7 @@ export type PublicParameters = {
   from: string;
   to: string;
   subject: string;
+  reply_to?: string;
   html?: string;
   text?: string;
 };
