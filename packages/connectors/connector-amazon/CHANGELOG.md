@@ -1,5 +1,13 @@
 # @logto/connector-amazon
 
+## 0.4.0
+
+### Minor Changes
+
+- 51564b0: add a `disableEmailSync` switch to the Amazon connector
+
+  The connector always synced the `email` field returned by Amazon to the user profile. This switch makes that configurable, matching the control the Microsoft Azure AD and standard OAuth2 connectors already offer. It is off by default, so existing connectors keep their current behavior.
+
 ## 0.3.7
 
 ### Patch Changes

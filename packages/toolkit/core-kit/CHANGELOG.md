@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.14.1
+
+### Patch Changes
+
+- 0befe5e: raise the maximum custom tenant ID length from 19 to 36 characters
+
+  A canonical lowercase UUID now fits as a custom tenant ID. Derived admin tenant IDs such as `m-<tenantId>` and `t-<tenantId>` reach 38 characters, within the 64-character ID columns.
+
 ## 2.14.0
 
 ### Minor Changes

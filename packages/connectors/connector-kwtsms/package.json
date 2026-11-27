@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-kwtsms",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "kwtSMS connector implementation.",
   "author": "kwtSMS <support@kwtsms.com>",
   "dependencies": {
