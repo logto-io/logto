@@ -12,10 +12,11 @@ import useTerms from './use-terms';
 
 type Options = {
   readonly replace?: boolean;
-  readonly onEmailBlocked?: () => void;
+  /** Callback after dismissing blocking alerts (email blocked or registration denied). */
+  readonly onBlocked?: () => void;
 };
 
-const useSocialRegister = (connectorId: string, { replace, onEmailBlocked }: Options = {}) => {
+const useSocialRegister = (connectorId: string, { replace, onBlocked }: Options = {}) => {
   const handleError = useErrorHandler();
   const asyncRegisterWithSocial = useApi(registerWithVerifiedIdentifier);
   const redirectTo = useGlobalRedirectTo();
@@ -25,7 +26,7 @@ const useSocialRegister = (connectorId: string, { replace, onEmailBlocked }: Opt
   const preRegisterErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.Register, {
     linkSocial: connectorId,
     replace,
-    onEmailBlocked,
+    onBlocked,
   });
 
   return useCallback(

@@ -11,6 +11,7 @@ const mockMfaHandler = jest.fn();
 const mockEmailBlockedHandler = jest.fn();
 const mockMissingPasskeyHandler = jest.fn();
 const mockTrustedDeviceOptInHandler = jest.fn();
+const mockRegistrationDeniedHandler = jest.fn();
 
 /**
  * Stable marker objects so that the memoized result of the hook under test only changes when one
@@ -31,6 +32,9 @@ const mockMissingPasskeyHandlers: ErrorHandlers = {
 const mockTrustedDeviceOptInHandlers: ErrorHandlers = {
   'session.trusted_device_suggest_opt_in': mockTrustedDeviceOptInHandler,
 };
+const mockRegistrationDeniedHandlers: ErrorHandlers = {
+  'action.registration_denied': mockRegistrationDeniedHandler,
+};
 
 const mockUseRequiredProfileErrorHandler = jest.fn<ErrorHandlers, unknown[]>(
   () => mockRequiredProfileHandlers
@@ -44,6 +48,9 @@ const mockUseMissingPasskeyErrorHandler = jest.fn<ErrorHandlers, unknown[]>(
 );
 const mockUseTrustedDeviceOptInErrorHandler = jest.fn<ErrorHandlers, unknown[]>(
   () => mockTrustedDeviceOptInHandlers
+);
+const mockUseRegistrationDeniedErrorHandler = jest.fn<ErrorHandlers, unknown[]>(
+  () => mockRegistrationDeniedHandlers
 );
 
 jest.mock('./use-navigate-with-preserved-search-params', () => ({
@@ -74,6 +81,11 @@ jest.mock('./use-missing-passkey-error-handler', () => ({
 jest.mock('./use-trusted-device-opt-in-error-handler', () => ({
   __esModule: true,
   default: (...args: unknown[]) => mockUseTrustedDeviceOptInErrorHandler(...args),
+}));
+
+jest.mock('./use-registration-denied-error-handler', () => ({
+  __esModule: true,
+  default: (...args: unknown[]) => mockUseRegistrationDeniedErrorHandler(...args),
 }));
 
 describe('useSubmitInteractionErrorHandler', () => {
@@ -116,9 +128,11 @@ describe('useSubmitInteractionErrorHandler', () => {
     expect(result.current['session.trusted_device_suggest_opt_in']).toBe(
       mockTrustedDeviceOptInHandler
     );
+    expect(result.current['action.registration_denied']).toBe(mockRegistrationDeniedHandler);
     expect(typeof result.current['session.step_up.require_verification']).toBe('function');
     expect(new Set(Object.keys(result.current))).toEqual(
       new Set([
+        'action.registration_denied',
         'session.email_blocklist.email_not_allowed',
         'session.step_up.require_verification',
         'session.trusted_device_suggest_opt_in',
@@ -130,13 +144,13 @@ describe('useSubmitInteractionErrorHandler', () => {
   });
 
   it('forwards the interaction event and options to the sibling hooks', () => {
-    const onEmailBlocked = jest.fn();
+    const onBlocked = jest.fn();
 
     renderHook(() =>
       useSubmitInteractionErrorHandler(InteractionEvent.Register, {
         replace: true,
         linkSocial: 'github',
-        onEmailBlocked,
+        onBlocked,
       })
     );
 
@@ -146,7 +160,10 @@ describe('useSubmitInteractionErrorHandler', () => {
       interactionEvent: InteractionEvent.Register,
     });
     expect(mockUseMfaErrorHandler).toHaveBeenCalledWith({ replace: true });
-    expect(mockUseEmailBlockedErrorHandler).toHaveBeenCalledWith({ onConfirm: onEmailBlocked });
+    expect(mockUseEmailBlockedErrorHandler).toHaveBeenCalledWith({ onConfirm: onBlocked });
+    expect(mockUseRegistrationDeniedErrorHandler).toHaveBeenCalledWith({
+      onConfirm: onBlocked,
+    });
     expect(mockUseMissingPasskeyErrorHandler).toHaveBeenCalledWith(InteractionEvent.Register);
     expect(mockUseTrustedDeviceOptInErrorHandler).toHaveBeenCalledWith(InteractionEvent.Register);
   });

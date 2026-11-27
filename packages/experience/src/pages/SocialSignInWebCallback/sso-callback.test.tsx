@@ -202,6 +202,60 @@ describe('SocialCallbackPage — single sign-on', () => {
       });
     });
 
+    it('should show the denied message and redirect to the Logto sign-in page after pre-register denial', async () => {
+      const state = generateState();
+      storeState(state, connectorId);
+
+      mockUseSearchParameters.mockReturnValue([
+        new URLSearchParams(`state=${state}&code=foo`),
+        jest.fn(),
+      ]);
+      mockedSignInWithSso.mockRejectedValueOnce(
+        createRequestError({
+          code: 'user.sso_identity_not_exist',
+          message: 'SSO identity does not exist.',
+          data: undefined,
+        })
+      );
+      mockedRegisterWithVerifiedIdentifier.mockRejectedValueOnce(
+        createRequestError({
+          code: 'action.registration_denied',
+          message: 'Your registration was declined.',
+          data: { message: 'Use a work email.' },
+        })
+      );
+
+      const { findByText, getByText } = renderWithPageContext(
+        <SettingsProvider
+          settings={{
+            ...sieSettings,
+            agreeToTermsPolicy: AgreeToTermsPolicy.Automatic,
+          }}
+        >
+          <ConfirmModalProvider>
+            <UserInteractionContextProvider>
+              <Routes>
+                <Route path="/callback/social/:connectorId" element={<SocialCallback />} />
+                <Route path="/sign-in" element={<div>Sign in page</div>} />
+              </Routes>
+            </UserInteractionContextProvider>
+          </ConfirmModalProvider>
+        </SettingsProvider>,
+        {
+          initialEntries: ['/provider/continue', `/callback/social/${connectorId}`],
+          initialIndex: 1,
+        }
+      );
+
+      expect(await findByText('Use a work email.')).not.toBeNull();
+
+      fireEvent.click(getByText('action.got_it'));
+
+      await waitFor(() => {
+        expect(getByText('Sign in page')).not.toBeNull();
+      });
+    });
+
     it('should abort back to the client without a toast when the SSO callback fails', async () => {
       const state = generateState();
       storeState(state, connectorId);

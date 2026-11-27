@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import TextLink from '@/components/TextLink';
+import useNavigateToSignIn from '@/hooks/use-navigate-to-sign-in';
 import { useSieMethods } from '@/hooks/use-sie';
 import useSocialRegister from '@/hooks/use-social-register';
 import Button from '@/shared/components/Button';
@@ -48,7 +49,8 @@ const SocialLinkAccount = ({ connectorId, verificationId, className, relatedUser
   const bindSocialRelatedUser = useBindSocialRelatedUser();
   const [isBindingUser, setIsBindingUser] = useState(false);
 
-  const registerWithSocial = useSocialRegister(connectorId);
+  const navigateToSignIn = useNavigateToSignIn();
+  const registerWithSocial = useSocialRegister(connectorId, { onBlocked: navigateToSignIn });
 
   const actionText = getCreateAccountActionText(signUpMethods);
 

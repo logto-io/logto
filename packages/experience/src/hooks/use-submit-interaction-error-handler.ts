@@ -11,6 +11,7 @@ import useMfaErrorHandler, {
 } from './use-mfa-error-handler';
 import useMissingPasskeyErrorHandler from './use-missing-passkey-error-handler';
 import useNavigateWithPreservedSearchParams from './use-navigate-with-preserved-search-params';
+import useRegistrationDeniedErrorHandler from './use-registration-denied-error-handler';
 import useRequiredProfileErrorHandler, {
   type Options as UseRequiredProfileErrorHandlerOptions,
 } from './use-required-profile-error-handler';
@@ -20,7 +21,8 @@ import useTrustedDeviceOptInErrorHandler from './use-trusted-device-opt-in-error
 
 type Options = Omit<UseRequiredProfileErrorHandlerOptions, 'interactionEvent'> &
   UseMfaVerificationErrorHandlerOptions & {
-    readonly onEmailBlocked?: () => void;
+    /** Callback after dismissing blocking alerts (email blocked or registration denied). */
+    readonly onBlocked?: () => void;
   };
 
 /**
@@ -38,7 +40,7 @@ const useSubmitInteractionErrorHandler = (
    * when additional user profile information is required.
    */
   interactionEvent: ContinueFlowInteractionEvent,
-  { replace, onEmailBlocked, ...rest }: Options = {}
+  { replace, onBlocked, ...rest }: Options = {}
 ): ErrorHandlers => {
   const navigate = useNavigateWithPreservedSearchParams();
   const requiredProfileErrorHandler = useRequiredProfileErrorHandler({
@@ -47,7 +49,10 @@ const useSubmitInteractionErrorHandler = (
     ...rest,
   });
   const mfaErrorHandler = useMfaErrorHandler({ replace });
-  const emailBlockedErrorHandler = useEmailBlockedErrorHandler({ onConfirm: onEmailBlocked });
+  const emailBlockedErrorHandler = useEmailBlockedErrorHandler({ onConfirm: onBlocked });
+  const registrationDeniedErrorHandler = useRegistrationDeniedErrorHandler({
+    onConfirm: onBlocked,
+  });
   const passkeySignInErrorHandler = useMissingPasskeyErrorHandler(interactionEvent);
   const trustedDeviceOptInErrorHandler = useTrustedDeviceOptInErrorHandler(interactionEvent);
   const { isPureStepUp } = useStepUpContext();
@@ -61,6 +66,7 @@ const useSubmitInteractionErrorHandler = (
             ...requiredProfileErrorHandler,
             ...mfaErrorHandler,
             ...emailBlockedErrorHandler,
+            ...registrationDeniedErrorHandler,
             ...cond(passkeySignInErrorHandler),
             ...trustedDeviceOptInErrorHandler,
           }),
@@ -80,6 +86,7 @@ const useSubmitInteractionErrorHandler = (
       mfaErrorHandler,
       navigate,
       passkeySignInErrorHandler,
+      registrationDeniedErrorHandler,
       requiredProfileErrorHandler,
       stepUpErrorHandlers,
       trustedDeviceOptInErrorHandler,

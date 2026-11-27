@@ -102,6 +102,10 @@ export const trustedDeviceOptInErrorDataGuard = s.object({
   durationDays: s.number(),
 });
 
+export const registrationDeniedErrorDataGuard = s.object({
+  message: s.optional(s.string()),
+});
+
 export const trustedDeviceOptInStateGuard = s.assign(
   trustedDeviceOptInErrorDataGuard,
   s.object({
