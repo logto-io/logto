@@ -14,6 +14,7 @@ import {
   validateConfig,
   ConnectorError,
   ConnectorErrorCodes,
+  TemplateType,
 } from '@logto/connector-kit';
 
 import { defaultMetadata, emailEndpoint, usageEndpoint } from './constant.js';
@@ -29,7 +30,7 @@ const sendMessage =
     validateConfig(config, logtoEmailConfigGuard);
 
     const { companyInformation, senderName, appLogo } = config;
-    const { to, type, payload } = data;
+    const { to, type, payload, ip } = data;
 
     assert(getClient, new ConnectorError(ConnectorErrorCodes.NotImplemented));
     const client = await getClient();
@@ -46,6 +47,9 @@ const sendMessage =
               ...conditional(companyInformation && { companyInformation }),
               ...conditional(appLogo && { appLogo }),
             },
+            // Forward the IP for invitations only, where it is the Management API caller's. For
+            // other templates it is usually an end user's, which Logto Cloud does not need.
+            ...conditional(type === TemplateType.OrganizationInvitation && ip && { ip }),
           },
         },
       });
