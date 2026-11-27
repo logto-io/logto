@@ -63,6 +63,7 @@ declare module 'koa-router' {
        */
       _matchedRoute: string | RegExp | undefined;
       _matchedRouteName: string | undefined;
+      matched?: Layer[];
     }
 
     export type RouterContext<
@@ -236,17 +237,25 @@ declare module 'koa-router' {
     // Additional signatures
     get<T1, U1, T2, U2>(
       path: string | RegExp | Array<string | RegExp>,
-      middleware1: Koa.Middleware<T1, U1>,
-      middleware2: Koa.Middleware<StateT & T1, CustomT & U1>,
+      middleware1: Koa.Middleware<StateT & T1, CustomT & U1>,
+      middleware2: Koa.Middleware<StateT & T2, CustomT & U2>,
       routeHandler: Router.IMiddleware<StateT & T1 & T2, CustomT & U1 & U2>
     ): Router<StateT & T1 & T2, CustomT & U1 & U2>;
     get<T1, U1, T2, U2, T3, U3>(
       path: string | RegExp | Array<string | RegExp>,
-      middleware1: Koa.Middleware<T1, U1>,
-      middleware2: Koa.Middleware<StateT & T1, CustomT & U1>,
-      middleware3: Koa.Middleware<StateT & T1 & T2, CustomT & U1 & U2>,
+      middleware1: Koa.Middleware<StateT & T1, CustomT & U1>,
+      middleware2: Koa.Middleware<StateT & T2, CustomT & U2>,
+      middleware3: Koa.Middleware<StateT & T3, CustomT & U3>,
       routeHandler: Router.IMiddleware<StateT & T1 & T2 & T3, CustomT & U1 & U2 & U3>
     ): Router<StateT & T1 & T2 & T3, CustomT & U1 & U2 & U3>;
+    get<T1, U1, T2, U2, T3, U3, T4, U4>(
+      path: string | RegExp | Array<string | RegExp>,
+      middleware1: Koa.Middleware<StateT & T1, CustomT & U1>,
+      middleware2: Koa.Middleware<StateT & T2, CustomT & U2>,
+      middleware3: Koa.Middleware<StateT & T3, CustomT & U3>,
+      middleware4: Koa.Middleware<StateT & T4, CustomT & U4>,
+      routeHandler: Router.IMiddleware<StateT & T1 & T2 & T3 & T4, CustomT & U1 & U2 & U3 & U4>
+    ): Router<StateT & T1 & T2 & T3 & T4, CustomT & U1 & U2 & U3 & U4>;
 
     /**
      * HTTP post method
@@ -275,8 +284,8 @@ declare module 'koa-router' {
     // Additional signatures
     post<T1, U1, T2, U2>(
       path: string | RegExp | Array<string | RegExp>,
-      middleware1: Koa.Middleware<T1, U1>,
-      middleware2: Koa.Middleware<StateT & T1, CustomT & U1>,
+      middleware1: Koa.Middleware<StateT & T1, CustomT & U1>,
+      middleware2: Koa.Middleware<StateT & T2, CustomT & U2>,
       routeHandler: Router.IMiddleware<StateT & T1 & T2, CustomT & U1 & U2>
     ): Router<StateT & T1 & T2, CustomT & U1 & U2>;
     /**
@@ -296,6 +305,14 @@ declare module 'koa-router' {
       middleware3: Koa.Middleware<StateT & T3, CustomT & U3>,
       routeHandler: Router.IMiddleware<StateT & T1 & T2 & T3, CustomT & U1 & U2 & U3>
     ): Router<StateT & T1 & T2 & T3, CustomT & U1 & U2 & U3>;
+    post<T1, U1, T2, U2, T3, U3, T4, U4>(
+      path: string | RegExp | Array<string | RegExp>,
+      middleware1: Koa.Middleware<StateT & T1, CustomT & U1>,
+      middleware2: Koa.Middleware<StateT & T2, CustomT & U2>,
+      middleware3: Koa.Middleware<StateT & T3, CustomT & U3>,
+      middleware4: Koa.Middleware<StateT & T4, CustomT & U4>,
+      routeHandler: Router.IMiddleware<StateT & T1 & T2 & T3 & T4, CustomT & U1 & U2 & U3 & U4>
+    ): Router<StateT & T1 & T2 & T3 & T4, CustomT & U1 & U2 & U3 & U4>;
 
     /**
      * HTTP put method
@@ -324,17 +341,25 @@ declare module 'koa-router' {
     // Additional signatures
     put<T1, U1, T2, U2>(
       path: string | RegExp | Array<string | RegExp>,
-      middleware1: Koa.Middleware<T1, U1>,
-      middleware2: Koa.Middleware<StateT & T1, CustomT & U1>,
+      middleware1: Koa.Middleware<StateT & T1, CustomT & U1>,
+      middleware2: Koa.Middleware<StateT & T2, CustomT & U2>,
       routeHandler: Router.IMiddleware<StateT & T1 & T2, CustomT & U1 & U2>
     ): Router<StateT & T1 & T2, CustomT & U1 & U2>;
     put<T1, U1, T2, U2, T3, U3>(
       path: string | RegExp | Array<string | RegExp>,
-      middleware1: Koa.Middleware<T1, U1>,
-      middleware2: Koa.Middleware<StateT & T1, CustomT & U1>,
-      middleware3: Koa.Middleware<StateT & T1 & T2, CustomT & U1 & U2>,
+      middleware1: Koa.Middleware<StateT & T1, CustomT & U1>,
+      middleware2: Koa.Middleware<StateT & T2, CustomT & U2>,
+      middleware3: Koa.Middleware<StateT & T3, CustomT & U3>,
       routeHandler: Router.IMiddleware<StateT & T1 & T2 & T3, CustomT & U1 & U2 & U3>
     ): Router<StateT & T1 & T2 & T3, CustomT & U1 & U2 & U3>;
+    put<T1, U1, T2, U2, T3, U3, T4, U4>(
+      path: string | RegExp | Array<string | RegExp>,
+      middleware1: Koa.Middleware<StateT & T1, CustomT & U1>,
+      middleware2: Koa.Middleware<StateT & T2, CustomT & U2>,
+      middleware3: Koa.Middleware<StateT & T3, CustomT & U3>,
+      middleware4: Koa.Middleware<StateT & T4, CustomT & U4>,
+      routeHandler: Router.IMiddleware<StateT & T1 & T2 & T3 & T4, CustomT & U1 & U2 & U3 & U4>
+    ): Router<StateT & T1 & T2 & T3 & T4, CustomT & U1 & U2 & U3 & U4>;
 
     /**
      * HTTP link method
@@ -441,17 +466,25 @@ declare module 'koa-router' {
     // Additional signatures
     delete<T1, U1, T2, U2>(
       path: string | RegExp | Array<string | RegExp>,
-      middleware1: Koa.Middleware<T1, U1>,
-      middleware2: Koa.Middleware<StateT & T1, CustomT & U1>,
+      middleware1: Koa.Middleware<StateT & T1, CustomT & U1>,
+      middleware2: Koa.Middleware<StateT & T2, CustomT & U2>,
       routeHandler: Router.IMiddleware<StateT & T1 & T2, CustomT & U1 & U2>
     ): Router<StateT & T1 & T2, CustomT & U1 & U2>;
     delete<T1, U1, T2, U2, T3, U3>(
       path: string | RegExp | Array<string | RegExp>,
-      middleware1: Koa.Middleware<T1, U1>,
-      middleware2: Koa.Middleware<StateT & T1, CustomT & U1>,
-      middleware3: Koa.Middleware<StateT & T1 & T2, CustomT & U1 & U2>,
+      middleware1: Koa.Middleware<StateT & T1, CustomT & U1>,
+      middleware2: Koa.Middleware<StateT & T2, CustomT & U2>,
+      middleware3: Koa.Middleware<StateT & T3, CustomT & U3>,
       routeHandler: Router.IMiddleware<StateT & T1 & T2 & T3, CustomT & U1 & U2 & U3>
     ): Router<StateT & T1 & T2 & T3, CustomT & U1 & U2 & U3>;
+    delete<T1, U1, T2, U2, T3, U3, T4, U4>(
+      path: string | RegExp | Array<string | RegExp>,
+      middleware1: Koa.Middleware<StateT & T1, CustomT & U1>,
+      middleware2: Koa.Middleware<StateT & T2, CustomT & U2>,
+      middleware3: Koa.Middleware<StateT & T3, CustomT & U3>,
+      middleware4: Koa.Middleware<StateT & T4, CustomT & U4>,
+      routeHandler: Router.IMiddleware<StateT & T1 & T2 & T3 & T4, CustomT & U1 & U2 & U3 & U4>
+    ): Router<StateT & T1 & T2 & T3 & T4, CustomT & U1 & U2 & U3 & U4>;
 
     /**
      * Alias for `router.delete()` because delete is a reserved word
@@ -597,17 +630,25 @@ declare module 'koa-router' {
     // Additional signatures
     patch<T1, U1, T2, U2>(
       path: string | RegExp | Array<string | RegExp>,
-      middleware1: Koa.Middleware<T1, U1>,
-      middleware2: Koa.Middleware<StateT & T1, CustomT & U1>,
+      middleware1: Koa.Middleware<StateT & T1, CustomT & U1>,
+      middleware2: Koa.Middleware<StateT & T2, CustomT & U2>,
       routeHandler: Router.IMiddleware<StateT & T1 & T2, CustomT & U1 & U2>
     ): Router<StateT & T1 & T2, CustomT & U1 & U2>;
     patch<T1, U1, T2, U2, T3, U3>(
       path: string | RegExp | Array<string | RegExp>,
-      middleware1: Koa.Middleware<T1, U1>,
-      middleware2: Koa.Middleware<StateT & T1, CustomT & U1>,
-      middleware3: Koa.Middleware<StateT & T1 & T2, CustomT & U1 & U2>,
+      middleware1: Koa.Middleware<StateT & T1, CustomT & U1>,
+      middleware2: Koa.Middleware<StateT & T2, CustomT & U2>,
+      middleware3: Koa.Middleware<StateT & T3, CustomT & U3>,
       routeHandler: Router.IMiddleware<StateT & T1 & T2 & T3, CustomT & U1 & U2 & U3>
     ): Router<StateT & T1 & T2 & T3, CustomT & U1 & U2 & U3>;
+    patch<T1, U1, T2, U2, T3, U3, T4, U4>(
+      path: string | RegExp | Array<string | RegExp>,
+      middleware1: Koa.Middleware<StateT & T1, CustomT & U1>,
+      middleware2: Koa.Middleware<StateT & T2, CustomT & U2>,
+      middleware3: Koa.Middleware<StateT & T3, CustomT & U3>,
+      middleware4: Koa.Middleware<StateT & T4, CustomT & U4>,
+      routeHandler: Router.IMiddleware<StateT & T1 & T2 & T3 & T4, CustomT & U1 & U2 & U3 & U4>
+    ): Router<StateT & T1 & T2 & T3 & T4, CustomT & U1 & U2 & U3 & U4>;
 
     /**
      * Register route with all methods.

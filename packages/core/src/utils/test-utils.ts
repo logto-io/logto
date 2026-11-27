@@ -1,5 +1,6 @@
 import crypto from 'node:crypto';
 
+import { PredefinedScope } from '@logto/schemas';
 import type { QueryResult, QueryResultRow } from '@silverhand/slonik';
 import { createMockPool, createMockQueryResult } from '@silverhand/slonik';
 import type {
@@ -159,7 +160,7 @@ export function createRequester<StateT, ContextT extends IRouterParamContext, Re
     const authRouter: ManagementApiRouter = new Router();
 
     authRouter.use(async (ctx, next) => {
-      ctx.auth = { type: 'user', id: 'foo', scopes: new Set() };
+      ctx.auth = { type: 'user', id: 'foo', scopes: new Set([PredefinedScope.All]) };
 
       return next();
     });

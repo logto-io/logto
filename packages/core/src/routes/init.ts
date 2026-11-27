@@ -6,6 +6,7 @@ import { EnvSet } from '#src/env-set/index.js';
 import koaAuditLog from '#src/middleware/koa-audit-log.js';
 import koaBodyEtag from '#src/middleware/koa-body-etag.js';
 import { koaManagementApiHooks } from '#src/middleware/koa-management-api-hooks.js';
+import { registerManagementApiPolicyEnforcer } from '#src/middleware/koa-management-api-permission.js';
 import koaReadOnlyAccess from '#src/middleware/koa-read-only-access.js';
 import koaTenantGuard from '#src/middleware/koa-tenant-guard.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
@@ -58,7 +59,7 @@ import verificationCodeRoutes from './verification-code.js';
 import wellKnownRoutes from './well-known/index.js';
 import wellKnownOpenApiRoutes from './well-known/well-known.openapi.js';
 
-const createRouters = (tenant: TenantContext) => {
+export const createRouters = (tenant: TenantContext) => {
   const interactionRouter: AnonymousRouter = new Router();
   /**
    * @deprecated Legacy `/api/interaction` endpoints are frozen and replaced by `/api/experience`.
@@ -77,6 +78,7 @@ const createRouters = (tenant: TenantContext) => {
 
   const managementRouter: ManagementApiRouter = new Router();
   managementRouter.use(koaAuth(tenant.envSet, getManagementApiResourceIndicator(tenant.id)));
+  const finalizeManagementApiPolicies = registerManagementApiPolicyEnforcer(managementRouter);
   managementRouter.use(koaReadOnlyAccess());
   managementRouter.use(koaTenantGuard(tenant.id, tenant.queries));
   managementRouter.use(koaManagementApiHooks(tenant.libraries.hooks));
@@ -110,6 +112,10 @@ const createRouters = (tenant: TenantContext) => {
   customProfileFieldsRoutes(managementRouter, tenant);
   secretsRoutes(managementRouter, tenant);
   cimdRoutes(managementRouter, tenant);
+
+  // Index all mounted Management API route layers (including nested sub-routers) for the
+  // router-level policy enforcer registered immediately after `koaAuth`.
+  finalizeManagementApiPolicies();
 
   // General anonymous router for publicly accessible APIs
   const anonymousRouter: AnonymousRouter = new Router();

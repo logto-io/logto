@@ -281,9 +281,13 @@ export default function koaGuard<
         : guard(ctx, next));
     } catch (error: unknown) {
       // Assert the status code from `RequestError` that is thrown by inner middleware.
-      // Ignore guard errors since they will be always 400 and can be automatically documented
-      // in the OpenAPI route.
-      if (error instanceof RequestError && !error.code.startsWith('guard.')) {
+      // Ignore guard errors (400) and `auth.forbidden` (403, e.g. inline `assertHasScope` checks)
+      // since they are automatically documented on protected OpenAPI routes.
+      if (
+        error instanceof RequestError &&
+        !error.code.startsWith('guard.') &&
+        error.code !== 'auth.forbidden'
+      ) {
         assertStatusCode(error.status);
       }
 
