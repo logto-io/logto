@@ -27,6 +27,7 @@ export const defaultMetadata: ConnectorMetadata = {
       type: ConnectorConfigFormItemType.Text,
       required: true,
       placeholder: '<your-sendgrid-api-key>',
+      isConfidential: true,
     },
     {
       key: 'fromEmail',

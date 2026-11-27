@@ -24,6 +24,7 @@ export const defaultMetadata: ConnectorMetadata = {
       type: ConnectorConfigFormItemType.Text,
       required: true,
       placeholder: '<your-server-token>',
+      isConfidential: true,
     },
     {
       key: 'fromEmail',

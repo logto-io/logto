@@ -27,6 +27,7 @@ export const defaultMetadata: ConnectorMetadata = {
       type: ConnectorConfigFormItemType.Text,
       required: true,
       placeholder: '<your-smtp2go-api-key>',
+      isConfidential: true,
     },
     {
       key: 'sender',

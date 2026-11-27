@@ -41,6 +41,7 @@ export const defaultMetadata: ConnectorMetadata = {
       type: ConnectorConfigFormItemType.Text,
       required: true,
       placeholder: '<your-mailgun-api-key>',
+      isConfidential: true,
     },
     {
       key: 'from',

@@ -38,6 +38,7 @@ export const defaultMetadata: ConnectorMetadata = {
       type: ConnectorConfigFormItemType.Text,
       required: true,
       placeholder: '<auth-token>',
+      isConfidential: true,
     },
     {
       key: 'fromMessagingServiceSID',

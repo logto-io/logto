@@ -34,6 +34,7 @@ export const defaultMetadata: ConnectorMetadata = {
       type: ConnectorConfigFormItemType.Text,
       required: true,
       placeholder: '<access-key-secret>',
+      isConfidential: true,
     },
     {
       key: 'signName',

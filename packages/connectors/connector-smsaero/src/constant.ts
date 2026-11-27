@@ -35,6 +35,7 @@ export const defaultMetadata: ConnectorMetadata = {
       type: ConnectorConfigFormItemType.Text,
       required: true,
       placeholder: '<api-key>',
+      isConfidential: true,
     },
     {
       key: 'senderName',

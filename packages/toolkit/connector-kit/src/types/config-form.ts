@@ -21,7 +21,7 @@ const baseConfigFormItem = {
     .optional(),
   description: z.string().optional(),
   tooltip: z.string().optional(),
-  isConfidential: z.boolean().optional(), // For `Text` type only.
+  isConfidential: z.boolean().optional(), // For `Text`, `MultilineText`, and `Json` types.
   isDevFeature: z.boolean().optional(), // For development feature flag.
 };
 

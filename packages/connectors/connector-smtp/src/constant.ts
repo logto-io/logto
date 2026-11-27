@@ -40,6 +40,7 @@ export const defaultMetadata: ConnectorMetadata = {
       label: 'Auth',
       type: ConnectorConfigFormItemType.Json,
       required: true,
+      isConfidential: true,
       defaultValue: {
         type: 'login',
         user: '<username>',
@@ -216,6 +217,7 @@ export const defaultMetadata: ConnectorMetadata = {
       label: 'TLS',
       type: ConnectorConfigFormItemType.Json,
       required: false,
+      isConfidential: true,
       defaultValue: {},
     },
     {
@@ -245,6 +247,15 @@ export const defaultMetadata: ConnectorMetadata = {
       defaultValue: {},
       description:
         'Custom headers to be added to original email headers when sending messages. Both keys and values should be string-typed.',
+    },
+    {
+      key: 'dkim',
+      label: 'DKIM',
+      type: ConnectorConfigFormItemType.Json,
+      required: false,
+      isConfidential: true,
+      description:
+        'Optional DKIM signing configuration (`domainName`, `keySelector`, `privateKey`).',
     },
   ],
 };

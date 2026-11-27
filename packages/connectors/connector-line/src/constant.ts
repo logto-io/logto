@@ -39,6 +39,7 @@ export const defaultMetadata: ConnectorMetadata = {
       type: ConnectorConfigFormItemType.Text,
       label: 'Client Secret (Channel Secret)',
       required: true,
+      isConfidential: true,
     },
     {
       key: 'scope',

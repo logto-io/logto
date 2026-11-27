@@ -41,6 +41,7 @@ export const defaultMetadata: ConnectorMetadata = {
       label: 'Client Secret',
       required: true,
       placeholder: '<client-secret>',
+      isConfidential: true,
     },
     {
       key: 'scope',

@@ -49,6 +49,7 @@ export const defaultMetadata: ConnectorMetadata = {
       required: true,
       type: ConnectorConfigFormItemType.Text,
       placeholder: '<app-secret>',
+      isConfidential: true,
     },
     {
       key: 'agentId',

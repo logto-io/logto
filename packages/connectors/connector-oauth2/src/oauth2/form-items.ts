@@ -32,6 +32,7 @@ export const clientSecretFormItem: ConnectorConfigFormItem = Object.freeze({
   type: ConnectorConfigFormItemType.Text,
   required: true,
   placeholder: '<client-secret>',
+  isConfidential: true,
 });
 
 export const tokenEndpointAuthOptionsFormItems: ConnectorConfigFormItem[] = [
