@@ -1,5 +1,11 @@
 # Change Log
 
+## 5.2.1
+
+### Patch Changes
+
+- 842ffaa: add ky as a runtime dependency so connectors no longer rely on the host to provide it
+
 ## 5.2.0
 
 ### Minor Changes

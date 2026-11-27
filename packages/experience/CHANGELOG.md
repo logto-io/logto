@@ -1,5 +1,36 @@
 # Change Log
 
+## 1.25.0
+
+### Minor Changes
+
+- 32abb20: let users choose email and SMS 2-step verification instead of enrolling everyone with an email or phone
+
+  A new sign-in experience setting, `mfa.verificationCodeEnrollment`, decides who counts as enrolled in the email and SMS verification code MFA factors. `Implicit` keeps the current behavior: every user with a primary email or phone is enrolled. In `Explicit` mode, email or phone counts only for users who enrolled it, so enabling these factors no longer turns on MFA for every user, and new users see the full factor list when they set up 2-step verification. Existing tenants stay in `Implicit` mode until they switch in Console > Multi-factor auth; new tenants start in `Explicit` mode.
+
+  - Binding an email or phone as an MFA factor now stores an `EmailVerificationCode` or `PhoneVerificationCode` record in both modes. During sign-in onboarding, users can enroll the email or phone already on their account by verifying a code sent to it.
+  - Users can add and remove email and SMS MFA in Account Center through the Account API. Admins can add and remove these factors through the Management API, and view and remove them in the Console.
+  - The Account and Management API MFA verification lists and the custom JWT `user.mfaVerificationFactors` include the new types for users who have a record.
+
+- 108dc00: support Friendly Captcha as a CAPTCHA provider
+
+  [Friendly Captcha](https://friendlycaptcha.com) v2 is a privacy-first, GDPR-compliant CAPTCHA service based on proof-of-work without visual puzzles.
+
+  To use it, create a v2 application and API key in the Friendly Captcha dashboard, then go to Console > Security > CAPTCHA and add Friendly Captcha with its site key and API key. The same configuration is available through the `PUT /api/captcha-provider` Management API with `type: "FriendlyCaptcha"`.
+
+  Customers on Friendly Captcha's Advanced or Enterprise plan can set the API endpoint to EU (`apiEndpoint: "eu"`) so that both the sign-in widget and token verification use Friendly Captcha's dedicated EU endpoint.
+
+### Patch Changes
+
+- faf9161: fix a sign-in page load failure in older browsers caused by unsupported syntax in CAPTCHA loaders
+- e76847b: label icon-only buttons in the sign-in experience and Account Center for screen readers, and let Space activate the country code selector
+
+  Screen readers now announce the clear buttons on identifier and password fields as "Clear", and the close buttons on dialogs and the sign-in experience navigation bar as "Close". The navigation bar's back button is announced as "Back" on mobile, where its text is hidden. The arrow button of select fields is announced by the field label along with whether its options are expanded. The country code selector and its options now respond to Space as well as Enter.
+
+- fba39b9: make the password visibility toggle and input labels accessible
+
+  The show/hide password button now works with Enter and Space as well as a pointer, is announced as "Show password", and reports its state with `aria-pressed`. Text inputs are now labelled by their visible label, so screen readers announce "Email" or "Password" instead of an unnamed field.
+
 ## 1.24.0
 
 ### Minor Changes
