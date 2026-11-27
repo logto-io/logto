@@ -1,6 +1,8 @@
 const guard = {
   invalid_input: 'La richiesta {{type}} non è valida.',
   invalid_pagination: 'Il valore di paginazione della richiesta non è valido.',
+  unsupported_pagination_parameter:
+    "Il parametro di query '{{parameter}}' non è supportato nella modalità di paginazione {{mode}}.",
   can_not_get_tenant_id: "Impossibile ottenere l'ID dell'inquilino dalla richiesta.",
   file_size_exceeded: 'Dimensione del file superata.',
   mime_type_not_allowed: 'Il tipo MIME non è consentito.',

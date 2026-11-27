@@ -3,6 +3,7 @@ import {
   Logs,
   type HookExecutionStats,
   type Log,
+  type LogResponse,
   type WebhookLogPrefix,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
@@ -12,6 +13,7 @@ import { subDays } from 'date-fns';
 
 import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
+import type { LogCursor } from '#src/utils/log-cursor.js';
 import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(Logs);
@@ -31,7 +33,12 @@ type LogCondition = {
    */
   endTime?: number;
   includeKeyPrefix?: AllowedKeyPrefix[];
+  /** Resume a cursor read after this row. */
+  after?: LogCursor;
 };
+
+/** A log row plus the exact timestamp needed to resume a cursor read after it. */
+export type LogCursorRow = LogResponse & { createdAtCursor: string };
 
 /**
  * Bounds the rows counted to avoid a full `count(*)` traversal on tenants with
@@ -48,36 +55,45 @@ type CountLogsResult = {
 };
 
 const buildLogConditionSql = (logCondition: LogCondition) =>
-  conditionalSql(logCondition, ({ logKey, payload, startTime, endTime, includeKeyPrefix = [] }) => {
-    const keyPrefixFilter = conditional(
-      includeKeyPrefix.length > 0 &&
-        includeKeyPrefix.map((prefix) => sql`${fields.key} like ${`${prefix}%`}`)
-    );
-    const subConditions = [
-      conditionalSql(
-        keyPrefixFilter,
-        (keyPrefixFilter) => sql`(${sql.join(keyPrefixFilter, sql` or `)})`
-      ),
-      conditionalSql(payload?.userId, (userId) => sql`${fields.payloadUserId}=${userId}`),
-      conditionalSql(
-        payload?.applicationId,
-        (applicationId) => sql`${fields.payloadApplicationId}=${applicationId}`
-      ),
-      conditionalSql(payload?.hookId, (hookId) => sql`${fields.payloadHookId}=${hookId}`),
-      conditionalSql(logKey, (logKey) => sql`${fields.key}=${logKey}`),
-      // Use `!== undefined` (not `conditionalSql`) so a legitimate `start_time=0`
-      // or `end_time=0` window still applies — `conditionalSql` treats `0` as
-      // falsy and would silently drop the filter.
-      startTime === undefined
-        ? sql``
-        : sql`${fields.createdAt} >= to_timestamp(${startTime}::double precision / 1000)`,
-      endTime === undefined
-        ? sql``
-        : sql`${fields.createdAt} < to_timestamp(${endTime}::double precision / 1000) + interval '1 millisecond'`,
-    ].filter(({ sql }) => sql);
+  conditionalSql(
+    logCondition,
+    ({ logKey, payload, startTime, endTime, includeKeyPrefix = [], after }) => {
+      const keyPrefixFilter = conditional(
+        includeKeyPrefix.length > 0 &&
+          includeKeyPrefix.map((prefix) => sql`${fields.key} like ${`${prefix}%`}`)
+      );
+      const subConditions = [
+        conditionalSql(
+          keyPrefixFilter,
+          (keyPrefixFilter) => sql`(${sql.join(keyPrefixFilter, sql` or `)})`
+        ),
+        conditionalSql(payload?.userId, (userId) => sql`${fields.payloadUserId}=${userId}`),
+        conditionalSql(
+          payload?.applicationId,
+          (applicationId) => sql`${fields.payloadApplicationId}=${applicationId}`
+        ),
+        conditionalSql(payload?.hookId, (hookId) => sql`${fields.payloadHookId}=${hookId}`),
+        conditionalSql(logKey, (logKey) => sql`${fields.key}=${logKey}`),
+        // Use `!== undefined` (not `conditionalSql`) so a legitimate `start_time=0`
+        // or `end_time=0` window still applies — `conditionalSql` treats `0` as
+        // falsy and would silently drop the filter.
+        startTime === undefined
+          ? sql``
+          : sql`${fields.createdAt} >= to_timestamp(${startTime}::double precision / 1000)`,
+        endTime === undefined
+          ? sql``
+          : sql`${fields.createdAt} < to_timestamp(${endTime}::double precision / 1000) + interval '1 millisecond'`,
+        // Compare the timestamp and id as a row so the `(tenant_id, created_at, id)` index
+        // serves both the filter and the ascending order. The cursor timestamp is exact text,
+        // not the millisecond number exposed by the API.
+        after === undefined
+          ? sql``
+          : sql`(${fields.createdAt}, ${fields.id}) > (${after.createdAt}::timestamptz, ${after.id})`,
+      ].filter(({ sql }) => sql);
 
-    return subConditions.length > 0 ? sql`where ${sql.join(subConditions, sql` and `)}` : sql``;
-  });
+      return subConditions.length > 0 ? sql`where ${sql.join(subConditions, sql` and `)}` : sql``;
+    }
+  );
 
 export const createLogQueries = (pool: CommonQueryMethods) => {
   const insertLog = buildInsertIntoWithPool(pool)(Logs);
@@ -121,6 +137,40 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
       order by ${fields.createdAt} desc
       limit ${limit}
       offset ${offset}
+    `);
+
+  /**
+   * Read one keyset page for the cursor mode of `GET /logs`.
+   *
+   * `createdAt` is selected twice: once as the unix-millisecond value the Management API
+   * exposes, and once as exact UTC text for the next page's cursor. The default `timestamptz`
+   * parser is `Date.parse`, which truncates microseconds; feeding that millisecond value back
+   * into the cursor would move the cursor backward and re-read rows that share a millisecond.
+   *
+   * Ascending order matches the cursor comparator, so the composite
+   * `(tenant_id, created_at, id)` index can satisfy both the range filter and the ordering.
+   * The route requests `limit + 1` rows, then returns the first `limit` and uses the extra row
+   * only to decide whether the `Next-Cursor` response header should be set.
+   */
+  const findLogsForCursor = async (
+    limit: number,
+    logCondition: LogCondition
+  ): Promise<readonly LogCursorRow[]> =>
+    pool.any<LogCursorRow>(sql`
+      select
+        ${fields.tenantId},
+        ${fields.id},
+        ${fields.key},
+        ${fields.payload},
+        ${fields.createdAt},
+        to_char(
+          ${fields.createdAt} at time zone 'UTC',
+          'YYYY-MM-DD"T"HH24:MI:SS.US"Z"'
+        ) as ${sql.identifier(['created_at_cursor'])}
+      from ${table}
+      ${buildLogConditionSql(logCondition)}
+      order by ${fields.createdAt}, ${fields.id}
+      limit ${limit}
     `);
 
   const findLogById = buildFindEntityByIdWithPool(pool)(Logs);
@@ -209,6 +259,7 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
     insertLogIfNotExists,
     countLogs,
     findLogs,
+    findLogsForCursor,
     findLogById,
     deleteLogsInRange,
     getHookExecutionStatsByHookId,

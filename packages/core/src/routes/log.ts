@@ -8,26 +8,32 @@ import {
   saml,
   trustedDevice,
   type AuditLogPrefix,
+  type LogResponse,
 } from '@logto/schemas';
 import { yes } from '@silverhand/essentials';
 import { boolean, number, object, string } from 'zod';
+import type { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
+import type { LogCursorRow } from '#src/queries/log.js';
 import assertThat from '#src/utils/assert-that.js';
+import { decodeLogCursor, encodeLogCursor } from '#src/utils/log-cursor.js';
 import { parseTimestampParam, validateTimeWindow } from '#src/utils/time-window.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from './types.js';
 
-// `limit` bounds how many rows one call deletes. Each call is a single
-// `delete ... where ctid = any(array(select ... limit N))` statement, so the bound is what keeps a
-// call short: it stays clear of the pool's `statement_timeout`, holds few row locks at a time, and
-// avoids producing a burst of dead tuples and WAL that would compete with normal request traffic.
-// 1000 is a safe default for both interactive and scripted callers; 10000 is the ceiling for
-// callers that would trade a longer call for fewer round trips.
+// `limit` bounds how many rows one delete call processes. Each call is a single
+// `delete ... where ctid = any(array(select ... limit N))` statement, so the bound keeps a call
+// clear of the pool's `statement_timeout` and avoids a burst of dead tuples/WAL.
 const defaultDeleteLimit = 1000;
 const maxDeleteLimit = 10_000;
+
+// Cursor mode on `GET /logs` uses a smaller page than delete batches because it is exposed to
+// shared Logto Cloud instances.
+const defaultLogCursorLimit = 500;
+const maxLogCursorLimit = 1000;
 
 /**
  * The audit log keys exposed by `GET /logs`.
@@ -77,58 +83,197 @@ const parseBound = (raw: string | undefined, type: string): number | undefined =
   return value;
 };
 
+// Drop the internal cursor timestamp before returning the public log shape.
+const toLogResponse = (log: LogCursorRow): LogResponse => ({
+  tenantId: log.tenantId,
+  id: log.id,
+  key: log.key,
+  payload: log.payload,
+  createdAt: log.createdAt,
+});
+
+const logQueryGuard = object({
+  userId: string().optional(),
+  applicationId: string().optional(),
+  logKey: string().optional(),
+  enableCap: string().optional(),
+  pagination: string().optional(),
+  cursor: string().max(512).optional(),
+  limit: string().optional(),
+  start_time: string().optional(),
+  end_time: string().optional(),
+});
+
+type LogQuery = z.infer<typeof logQueryGuard>;
+
+type PaginationMode = 'page' | 'cursor';
+
+type PaginationParameter =
+  | 'page'
+  | 'page_size'
+  | 'enableCap'
+  | 'userId'
+  | 'applicationId'
+  | 'logKey'
+  | 'cursor'
+  | 'limit';
+
+const rejectUnsupportedPaginationParams = (
+  query: Record<string, unknown>,
+  mode: PaginationMode,
+  parameters: readonly PaginationParameter[]
+) => {
+  for (const parameter of parameters) {
+    if (parameter in query) {
+      throw new RequestError({
+        code: 'guard.unsupported_pagination_parameter',
+        parameter,
+        mode,
+      });
+    }
+  }
+};
+
+const parseLogTimeWindow = (
+  query: LogQuery,
+  mode: 'page' | 'cursor'
+): { startTime?: number; endTime?: number } => {
+  if (mode === 'cursor') {
+    const endTime = parseBound(query.end_time, 'end_time');
+
+    if (endTime === undefined) {
+      throw invalidInput('end_time');
+    }
+
+    const startTime = parseBound(query.start_time, 'start_time');
+    validateTimeWindow(startTime, endTime);
+    assertThat(
+      endTime <= Date.now(),
+      new RequestError({ code: 'log.cleanup_boundary_in_future', status: 400 })
+    );
+
+    return { startTime, endTime };
+  }
+
+  const startTime = parseTimestampParam(query.start_time, 'start_time');
+  const endTime = parseTimestampParam(query.end_time, 'end_time');
+  validateTimeWindow(startTime, endTime);
+
+  return { startTime, endTime };
+};
+
 export default function logRoutes<T extends ManagementApiRouter>(
   ...[router, { queries }]: RouterInitArgs<T>
 ) {
-  const { findLogById, countLogs, findLogs, deleteLogsInRange } = queries.logs;
+  const { findLogById, countLogs, findLogs, findLogsForCursor, deleteLogsInRange } = queries.logs;
+
+  const listLogsByPage = async (
+    query: LogQuery,
+    pagination: { limit: number; offset: number },
+    { startTime, endTime }: { startTime?: number; endTime?: number }
+  ) => {
+    const { userId, applicationId, logKey, enableCap } = query;
+    const includeKeyPrefix = auditLogKeyPrefixes;
+
+    // TODO: @Gao refactor like user search
+    const [{ count, isCapped }, logs] = await Promise.all([
+      countLogs(
+        {
+          logKey,
+          payload: { applicationId, userId },
+          startTime,
+          endTime,
+          includeKeyPrefix,
+        },
+        { capped: yes(enableCap) }
+      ),
+      findLogs(pagination.limit, pagination.offset, {
+        logKey,
+        payload: { userId, applicationId },
+        startTime,
+        endTime,
+        includeKeyPrefix,
+      }),
+    ]);
+
+    return { count, isCapped, logs };
+  };
+
+  const listLogsByCursor = async (
+    query: LogQuery,
+    { startTime, endTime }: { startTime?: number; endTime?: number }
+  ) => {
+    const limit = query.limit === undefined ? defaultLogCursorLimit : Number(query.limit);
+    assertThat(
+      Number.isInteger(limit) && limit >= 1 && limit <= maxLogCursorLimit,
+      invalidInput('limit')
+    );
+
+    const cursor = decodeLogCursor(query.cursor);
+
+    // Read one extra row to determine whether another page exists.
+    // Cursor mode is audit-only and deliberately does not run the page-mode count query.
+    const rows = await findLogsForCursor(limit + 1, {
+      startTime,
+      endTime,
+      includeKeyPrefix: auditLogKeyPrefixes,
+      after: cursor,
+    });
+
+    const items = rows.length > limit ? rows.slice(0, limit) : rows;
+    const lastItem = items.at(-1);
+    const nextCursor =
+      rows.length > limit && lastItem
+        ? encodeLogCursor({
+            createdAt: lastItem.createdAtCursor,
+            id: lastItem.id,
+          })
+        : undefined;
+
+    return { logs: items.map((item) => toLogResponse(item)), nextCursor };
+  };
 
   router.get(
     '/logs',
-    koaPagination(),
+    koaPagination({
+      skip: (context) => context.request.query.pagination === 'cursor',
+    }),
     koaGuard({
-      query: object({
-        userId: string().optional(),
-        applicationId: string().optional(),
-        logKey: string().optional(),
-        enableCap: string().optional(),
-        start_time: string().optional(),
-        end_time: string().optional(),
-      }),
+      query: logQueryGuard,
       response: logResponseGuard.array(),
       status: [200, 400],
     }),
     async (ctx, next) => {
-      const { limit, offset } = ctx.pagination;
-      const {
-        query: { userId, applicationId, logKey, enableCap, start_time, end_time },
-      } = ctx.guard;
+      const { query } = ctx.guard;
+      const cursorMode = query.pagination === 'cursor';
+      assertThat(query.pagination === undefined || cursorMode, invalidInput('pagination'));
 
-      const startTime = parseTimestampParam(start_time, 'start_time');
-      const endTime = parseTimestampParam(end_time, 'end_time');
-      validateTimeWindow(startTime, endTime);
+      if (cursorMode) {
+        rejectUnsupportedPaginationParams(ctx.request.query, 'cursor', [
+          'page',
+          'page_size',
+          'enableCap',
+          'userId',
+          'applicationId',
+          'logKey',
+        ]);
 
-      const includeKeyPrefix = auditLogKeyPrefixes;
+        const timeWindow = parseLogTimeWindow(query, 'cursor');
+        const { logs, nextCursor } = await listLogsByCursor(query, timeWindow);
 
-      // TODO: @Gao refactor like user search
-      const [{ count, isCapped }, logs] = await Promise.all([
-        countLogs(
-          {
-            logKey,
-            payload: { applicationId, userId },
-            startTime,
-            endTime,
-            includeKeyPrefix,
-          },
-          { capped: yes(enableCap) }
-        ),
-        findLogs(limit, offset, {
-          logKey,
-          payload: { userId, applicationId },
-          startTime,
-          endTime,
-          includeKeyPrefix,
-        }),
-      ]);
+        ctx.body = logs;
+
+        if (nextCursor) {
+          ctx.set('Next-Cursor', nextCursor);
+        }
+
+        return next();
+      }
+
+      rejectUnsupportedPaginationParams(ctx.request.query, 'page', ['cursor', 'limit']);
+
+      const timeWindow = parseLogTimeWindow(query, 'page');
+      const { count, isCapped, logs } = await listLogsByPage(query, ctx.pagination, timeWindow);
 
       // Return totalCount to pagination middleware
       ctx.pagination.totalCount = count;

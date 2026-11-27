@@ -1,6 +1,7 @@
 const guard = {
   invalid_input: '请求中 {{type}} 无效',
   invalid_pagination: '分页参数无效',
+  unsupported_pagination_parameter: "查询参数 '{{parameter}}' 在 {{mode}} 分页模式下不受支持。",
   can_not_get_tenant_id: '无法从请求中获取租户 ID。',
   file_size_exceeded: '文件大小超过限制。',
   mime_type_not_allowed: '不允许使用此 MIME 类型。',

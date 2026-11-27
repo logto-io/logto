@@ -45,6 +45,19 @@ afterEach(() => {
 });
 
 describe('request', () => {
+  it('skips pagination when the predicate matches', async () => {
+    const ctx = createContext({ pagination: 'cursor' });
+    const next = jest.fn();
+
+    await koaPagination({
+      skip: (context) => context.request.query.pagination === 'cursor',
+    })(ctx, next);
+
+    expect(next).toHaveBeenCalled();
+    expect(setHeader).not.toHaveBeenCalled();
+    expect(appendHeader).not.toHaveBeenCalled();
+  });
+
   it('should get limit and offset from queries', async () => {
     const ctx = createContext({ page: '1', page_size: '30' });
     await koaPagination()(ctx, async () => {
