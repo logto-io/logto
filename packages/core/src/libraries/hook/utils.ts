@@ -30,6 +30,8 @@ type SendWebhookRequest = {
   hookConfig: HookConfig;
   signingKey: string;
   signal?: AbortSignal;
+  /** Disable in-call HTTP retries and preserve `Retry-After` headers for queue-managed retries. */
+  disableRetries?: boolean;
 } & ({ payload: HookEventPayload; body?: never } | { body: string; payload?: never });
 
 const rangeInclusive = (start: number, end: number) =>
@@ -112,19 +114,25 @@ export const sendWebhookRequest = async (request: SendWebhookRequest) => {
       ? async (input, init) => ssrfProtectedFetch(input, { ...init, signal })
       : ssrfProtectedFetch,
     ...conditional(signal && { signal }),
-    // Public webhook delivery contract: retry POST requests on HTTP 5xx only.
-    // 408 and 429 are intentionally excluded so receivers cannot control this short retry window.
-    retry: {
-      limit: retries ?? webhookRetryLimit,
-      methods: ['post'],
-      statusCodes: webhookRetryStatusCodes,
-      // `afterStatusCodes: []` is ignored on ky 1.2.3; see dropRetryAfterHeader.
-    },
     timeout: webhookRequestTimeoutMs,
-    hooks: {
-      afterResponse: [dropRetryAfterHeader],
-      beforeRetry: [abortRetryOnNonHttpError],
-    },
+    ...(request.disableRetries
+      ? {
+          retry: 0,
+        }
+      : {
+          // Public webhook delivery contract: retry POST requests on HTTP 5xx only.
+          // 408 and 429 are intentionally excluded so receivers cannot control this short retry window.
+          retry: {
+            limit: retries ?? webhookRetryLimit,
+            methods: ['post'],
+            statusCodes: webhookRetryStatusCodes,
+            // `afterStatusCodes: []` is ignored on ky 1.2.3; see dropRetryAfterHeader.
+          },
+          hooks: {
+            afterResponse: [dropRetryAfterHeader],
+            beforeRetry: [abortRetryOnNonHttpError],
+          },
+        }),
   });
 };
 

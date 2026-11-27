@@ -13,22 +13,31 @@ jest.mock('@/hooks/use-current-tenant-scopes', () => ({
   default: () => ({ access: { isReadOnly: mockIsReadOnly() } }),
 }));
 
-const renderActionBar = () =>
-  render(<SubmitFormChangesActionBar isOpen isSubmitting={false} onSubmit={jest.fn()} />);
+const renderActionBar = (isOpen = true) =>
+  render(<SubmitFormChangesActionBar isOpen={isOpen} isSubmitting={false} onSubmit={jest.fn()} />);
 
 describe('SubmitFormChangesActionBar', () => {
-  it('offers to save changes', () => {
+  it('offers to save changes and marks the active bar for floating overlays', () => {
     mockIsReadOnly.mockReturnValue(false);
-    renderActionBar();
+    const { container } = renderActionBar(true);
 
     expect(screen.getByRole('button', { name: /save_changes/ })).toBeTruthy();
+    expect(container.firstElementChild?.getAttribute('data-submit-action-bar-active')).toBe('true');
   });
 
-  it('renders an empty bar for a read-only member', () => {
+  it('omits the active marker when closed', () => {
+    mockIsReadOnly.mockReturnValue(false);
+    const { container } = renderActionBar(false);
+
+    expect(container.firstElementChild?.getAttribute('data-submit-action-bar-active')).toBeNull();
+  });
+
+  it('renders an empty bar without the active marker for a read-only member', () => {
     mockIsReadOnly.mockReturnValue(true);
-    const { container } = renderActionBar();
+    const { container } = renderActionBar(true);
 
     expect(container.childElementCount).toBe(1);
     expect(container.firstElementChild?.childElementCount).toBe(0);
+    expect(container.firstElementChild?.getAttribute('data-submit-action-bar-active')).toBeNull();
   });
 });

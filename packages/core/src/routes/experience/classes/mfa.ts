@@ -21,7 +21,6 @@ import { generateStandardId, PhoneNumberParser } from '@logto/shared';
 import { cond, conditional, deduplicate, pick } from '@silverhand/essentials';
 import { z } from 'zod';
 
-import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { getAllUserEnabledMfaVerifications } from '#src/libraries/mfa.js';
 import {
@@ -276,23 +275,20 @@ export class Mfa {
       });
     }
 
-    // Email / SMS MFA explicit enrollment: persist enrolled verification code factors
-    if (EnvSet.values.isDevFeaturesEnabled) {
-      if (this.#emailVerificationCode) {
-        verificationSet.add({
-          id: generateStandardId(),
-          createdAt: new Date().toISOString(),
-          type: MfaFactor.EmailVerificationCode,
-        });
-      }
+    if (this.#emailVerificationCode) {
+      verificationSet.add({
+        id: generateStandardId(),
+        createdAt: new Date().toISOString(),
+        type: MfaFactor.EmailVerificationCode,
+      });
+    }
 
-      if (this.#phoneVerificationCode) {
-        verificationSet.add({
-          id: generateStandardId(),
-          createdAt: new Date().toISOString(),
-          type: MfaFactor.PhoneVerificationCode,
-        });
-      }
+    if (this.#phoneVerificationCode) {
+      verificationSet.add({
+        id: generateStandardId(),
+        createdAt: new Date().toISOString(),
+        type: MfaFactor.PhoneVerificationCode,
+      });
     }
 
     return {
@@ -402,7 +398,7 @@ export class Mfa {
     );
 
     log?.append({
-      verification: verificationRecord.toJson(),
+      verification: verificationRecord.toSanitizedJson(),
     });
 
     await this.checkMfaFactorsEnabledInSignInExperience([MfaFactor.BackupCode]);
@@ -460,11 +456,13 @@ export class Mfa {
     const profile = verificationRecord.toUserProfile();
     const identifierValue = 'primaryEmail' in profile ? profile.primaryEmail : profile.primaryPhone;
 
-    // Email / SMS MFA explicit enrollment: allow enrolling the user's existing primary email or
-    // phone without staging a duplicate profile update.
-    const isExistingPrimaryIdentifier =
-      EnvSet.values.isDevFeaturesEnabled &&
-      this.matchesExistingPrimaryIdentifier(factor, user, identifierValue);
+    // Allow enrolling the user's existing primary email or phone without staging a duplicate
+    // profile update.
+    const isExistingPrimaryIdentifier = this.matchesExistingPrimaryIdentifier(
+      factor,
+      user,
+      identifierValue
+    );
 
     if (isExistingPrimaryIdentifier) {
       log?.append({
@@ -700,7 +698,6 @@ export class Mfa {
     const isMfaRequired = await isMfaRequiredByUser(this.queries, mfaSettings, user, organizations);
 
     return {
-      isDevFeaturesEnabled: EnvSet.values.isDevFeaturesEnabled,
       mfaSettings,
       interactionEvent: this.interactionContext.getInteractionEvent(),
       userMfaConfig: {

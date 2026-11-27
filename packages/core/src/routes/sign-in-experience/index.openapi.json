@@ -90,8 +90,7 @@
                           "description": "Whether to skip suggesting another MFA factor to a user whose only MFA factor is the email, phone number, or passkey they can also sign in with. Defaults to `false`. Required MFA set-up is not affected."
                         },
                         "verificationCodeEnrollment": {
-                          "description": "Which users count as enrolled in the email and phone verification code MFA factors. `Implicit` (the default when absent): every user with a primary email or phone. `Explicit`: only users who enrolled the factor and have the primary email or phone.",
-                          "x-logto-dev-feature": true
+                          "description": "Which users count as enrolled in the email and phone verification code MFA factors. `Implicit` (the default when absent): every user with a primary email or phone. `Explicit`: only users who enrolled the factor and have the primary email or phone."
                         }
                       }
                     },
@@ -222,8 +221,7 @@
                         "description": "Whether to skip suggesting another MFA factor to a user whose only MFA factor is the email, phone number, or passkey they can also sign in with. Defaults to `false`. Required MFA set-up is not affected."
                       },
                       "verificationCodeEnrollment": {
-                        "description": "Which users count as enrolled in the email and phone verification code MFA factors. `Implicit` (the default when absent): every user with a primary email or phone. `Explicit`: only users who enrolled the factor and have the primary email or phone.",
-                        "x-logto-dev-feature": true
+                        "description": "Which users count as enrolled in the email and phone verification code MFA factors. `Implicit` (the default when absent): every user with a primary email or phone. `Explicit`: only users who enrolled the factor and have the primary email or phone. New tenants start in `Explicit`; omitting this field when updating `mfa` resets it to `Implicit`."
                       }
                     }
                   },
@@ -274,8 +272,7 @@
                     "mfa": {
                       "properties": {
                         "verificationCodeEnrollment": {
-                          "description": "Which users count as enrolled in the email and phone verification code MFA factors. `Implicit` (the default when absent): every user with a primary email or phone. `Explicit`: only users who enrolled the factor and have the primary email or phone.",
-                          "x-logto-dev-feature": true
+                          "description": "Which users count as enrolled in the email and phone verification code MFA factors. `Implicit` (the default when absent): every user with a primary email or phone. `Explicit`: only users who enrolled the factor and have the primary email or phone."
                         }
                       }
                     }

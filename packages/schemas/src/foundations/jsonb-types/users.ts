@@ -122,10 +122,6 @@ export const mfaVerificationEmailVerificationCode = z.object({
   ...baseMfaVerification,
 });
 
-export type MfaVerificationEmailVerificationCode = z.infer<
-  typeof mfaVerificationEmailVerificationCode
->;
-
 /**
  * The user's enrollment in SMS verification code MFA. The code is sent to the primary phone,
  * which is not stored here, so the record is ignored while the user has no primary phone.
@@ -134,10 +130,6 @@ export const mfaVerificationPhoneVerificationCode = z.object({
   type: z.literal(MfaFactor.PhoneVerificationCode),
   ...baseMfaVerification,
 });
-
-export type MfaVerificationPhoneVerificationCode = z.infer<
-  typeof mfaVerificationPhoneVerificationCode
->;
 
 export const mfaVerificationGuard = z.discriminatedUnion('type', [
   mfaVerificationTotp,

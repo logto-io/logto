@@ -27,7 +27,6 @@ export enum MfaEnrollmentKind {
 }
 
 export type MfaPreBindEnrollmentSnapshot = {
-  isDevFeaturesEnabled: boolean;
   mfaSettings: MfaSettings;
   interactionEvent: InteractionEvent;
   userMfaConfig: Pick<UserMfaData, 'enabled' | 'skipped' | 'additionalBindingSuggestionSkipped'>;
@@ -127,7 +126,6 @@ const resolveMissingMfaDecision = (
   shouldBackfillMfaEnabled: boolean
 ): MfaEnrollmentDecision | undefined => {
   const {
-    isDevFeaturesEnabled,
     mfaSettings: { policy },
     isMfaRequiredByUser,
     asNoSkipMandatoryPolicy = false,
@@ -147,14 +145,12 @@ const resolveMissingMfaDecision = (
     return;
   }
 
-  // Email / SMS MFA explicit enrollment: expose masked existing primary identifiers so the
-  // onboarding list can offer sending a verification code to the user's existing address.
-  const maskedIdentifiers = isDevFeaturesEnabled
-    ? buildFactorMaskedIdentifiers({
-        email: requiredFactors.includes(MfaFactor.EmailVerificationCode) ? primaryEmail : undefined,
-        phone: requiredFactors.includes(MfaFactor.PhoneVerificationCode) ? primaryPhone : undefined,
-      })
-    : {};
+  // Expose masked existing primary identifiers so the onboarding list can offer sending a
+  // verification code to the user's existing address.
+  const maskedIdentifiers = buildFactorMaskedIdentifiers({
+    email: requiredFactors.includes(MfaFactor.EmailVerificationCode) ? primaryEmail : undefined,
+    phone: requiredFactors.includes(MfaFactor.PhoneVerificationCode) ? primaryPhone : undefined,
+  });
 
   return {
     kind: MfaEnrollmentKind.Missing,

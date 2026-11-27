@@ -14,14 +14,15 @@ import {
   type User,
 } from '@logto/schemas';
 
+import { LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
-import { resetDevFeaturesEnabled, setDevFeaturesEnabled } from '#src/test-utils/dev-features.js';
 
 import { type InteractionContext } from '../types.js';
 
 import { type SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
 import { Mfa, type MfaData } from './mfa.js';
+import { BackupCodeVerification } from './verifications/backup-code-verification.js';
 import { EmailCodeVerification, PhoneCodeVerification } from './verifications/code-verification.js';
 
 const { jest } = import.meta;
@@ -779,13 +780,31 @@ const buildPhoneRecord = ({
     userId,
   });
 
+const mockSignInExperience = (
+  mfa: Mfa,
+  { passkeyEnabled = false }: { passkeyEnabled?: boolean } = {}
+) => {
+  jest
+    .spyOn(
+      (
+        mfa as unknown as {
+          signInExperienceValidator: SignInExperienceValidator;
+        }
+      ).signInExperienceValidator,
+      'getSignInExperienceData'
+    )
+    .mockResolvedValue({
+      signUp: { identifiers: [SignInIdentifier.Email] },
+      passkeySignIn: { enabled: passkeyEnabled },
+    } as never);
+};
+
 describe('Email and Phone MFA explicit enrollment', () => {
   afterEach(() => {
-    resetDevFeaturesEnabled();
     jest.restoreAllMocks();
   });
 
-  it('persists staged email/phone records only when dev features are enabled and hides them from sanitizedData', () => {
+  it('persists staged email/phone records and hides them from sanitizedData', () => {
     const { mfa } = createMfa({
       mfaData: { emailVerificationCode: true, phoneVerificationCode: true },
     });
@@ -797,7 +816,6 @@ describe('Email and Phone MFA explicit enrollment', () => {
     expect(mfa.sanitizedData).not.toHaveProperty('emailVerificationCode');
     expect(mfa.sanitizedData).not.toHaveProperty('phoneVerificationCode');
 
-    setDevFeaturesEnabled(true);
     const enabledResult = mfa.toUserMfaVerifications();
     const [firstVerification, secondVerification] = enabledResult.mfaVerifications;
     expect(enabledResult.mfaVerifications).toHaveLength(2);
@@ -809,15 +827,11 @@ describe('Email and Phone MFA explicit enrollment', () => {
     expect(typeof secondVerification?.id).toBe('string');
     expect(typeof secondVerification?.createdAt).toBe('string');
 
-    setDevFeaturesEnabled(false);
-    expect(mfa.toUserMfaVerifications().mfaVerifications).toEqual([]);
-
     mfa.cleanUp();
     expect(mfa.stagedVerificationCodeFactors).toEqual([]);
   });
 
   it('matches existing primary email case-insensitively and existing primary phone after normalization', async () => {
-    setDevFeaturesEnabled(true);
     const emailRecord = buildEmailRecord({ value: 'FOO@EXAMPLE.COM' });
     const phoneRecord = buildPhoneRecord({ value: '+1 (650) 253-0000', userId: 'user-id' });
     const { mfa } = createMfa({
@@ -867,7 +881,7 @@ describe('Email and Phone MFA explicit enrollment', () => {
     ]);
   });
 
-  it('treats existing primary identifier enrollment as a profile update when dev features are disabled or value differs', async () => {
+  it('treats verification code enrollment as a profile update when the value differs from the primary identifier', async () => {
     const emailRecord = buildEmailRecord({ value: 'other@example.com' });
     const { mfa } = createMfa({
       mfaSettings: {
@@ -890,50 +904,15 @@ describe('Email and Phone MFA explicit enrollment', () => {
       passkeySignIn: { enabled: false },
     } as never);
 
-    setDevFeaturesEnabled(true);
     await expect(
       mfa.addVerificationCodeByVerificationId(MfaFactor.EmailVerificationCode, emailRecord.id)
     ).resolves.toEqual({
       identifierValue: 'other@example.com',
       isExistingPrimaryIdentifier: false,
     });
-
-    const matchingRecord = buildEmailRecord({ value: 'foo@example.com' });
-    const { mfa: disabledMfa } = createMfa({
-      mfaSettings: {
-        policy: MfaPolicy.Mandatory,
-        factors: [MfaFactor.EmailVerificationCode],
-      },
-      user: {
-        id: 'user-id',
-        primaryEmail: 'foo@example.com',
-        logtoConfig: {},
-        mfaVerifications: [],
-      },
-      consumeForBindByType: (() =>
-        matchingRecord) as unknown as InteractionContext['consumeForBindByType'],
-    });
-    const { signInExperienceValidator: disabledValidator } = disabledMfa as unknown as {
-      signInExperienceValidator: SignInExperienceValidator;
-    };
-    jest.spyOn(disabledValidator, 'getSignInExperienceData').mockResolvedValue({
-      passkeySignIn: { enabled: false },
-    } as never);
-
-    setDevFeaturesEnabled(false);
-    await expect(
-      disabledMfa.addVerificationCodeByVerificationId(
-        MfaFactor.EmailVerificationCode,
-        matchingRecord.id
-      )
-    ).resolves.toEqual({
-      identifierValue: 'foo@example.com',
-      isExistingPrimaryIdentifier: false,
-    });
   });
 
   it('rejects disabled factors, unverified records, and mismatched userIds when adding verification code MFA', async () => {
-    setDevFeaturesEnabled(true);
     const buildWithRecord = (record: EmailCodeVerification, factors = [MfaFactor.TOTP]) => {
       const { mfa } = createMfa({
         mfaSettings: {
@@ -987,7 +966,7 @@ describe('Email and Phone MFA explicit enrollment', () => {
     });
   });
 
-  it('includes maskedIdentifiers on user.missing_mfa in explicit mode only when dev features are enabled', async () => {
+  it('includes maskedIdentifiers on user.missing_mfa in explicit mode', async () => {
     const mfaSettings: MfaSettings = {
       policy: MfaPolicy.Mandatory,
       factors: [MfaFactor.TOTP, MfaFactor.EmailVerificationCode, MfaFactor.PhoneVerificationCode],
@@ -1002,7 +981,6 @@ describe('Email and Phone MFA explicit enrollment', () => {
       mfaVerifications: [],
     };
 
-    setDevFeaturesEnabled(true);
     await expect(createMfa({ mfaSettings, user }).mfa.assertMfaFulfilled()).rejects.toMatchObject({
       code: 'user.missing_mfa',
       status: 422,
@@ -1018,18 +996,9 @@ describe('Email and Phone MFA explicit enrollment', () => {
         },
       },
     });
-
-    setDevFeaturesEnabled(false);
-    const disabledAssertion = createMfa({ mfaSettings, user }).mfa.assertMfaFulfilled();
-    await expect(disabledAssertion).rejects.toMatchObject({
-      code: 'user.missing_mfa',
-      status: 422,
-    });
-    await expect(disabledAssertion).rejects.not.toHaveProperty('data.maskedIdentifiers');
   });
 
   it('suggests another MFA factor in explicit mode only when a dual-purpose factor was bound in this session', async () => {
-    setDevFeaturesEnabled(true);
     const explicitSettings: MfaSettings = {
       policy: MfaPolicy.Mandatory,
       factors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
@@ -1147,26 +1116,7 @@ describe('Email and Phone MFA explicit enrollment', () => {
     await expect(buildPasskeyExplicit(false).assertMfaFulfilled()).resolves.toBeUndefined();
   });
 
-  it('exposes unenrolled primary identifiers and boundFactors on suggest_additional_mfa in explicit mode when dev features are enabled', async () => {
-    const mockSignInExperience = (
-      mfa: Mfa,
-      { passkeyEnabled = false }: { passkeyEnabled?: boolean } = {}
-    ) => {
-      jest
-        .spyOn(
-          (
-            mfa as unknown as {
-              signInExperienceValidator: SignInExperienceValidator;
-            }
-          ).signInExperienceValidator,
-          'getSignInExperienceData'
-        )
-        .mockResolvedValue({
-          signUp: { identifiers: [SignInIdentifier.Email] },
-          passkeySignIn: { enabled: passkeyEnabled },
-        } as never);
-    };
-
+  it('exposes unenrolled primary identifiers and boundFactors on suggest_additional_mfa in explicit mode', async () => {
     const user: Partial<User> = {
       id: 'user-id',
       primaryEmail: 'alice@logto.io',
@@ -1192,8 +1142,6 @@ describe('Email and Phone MFA explicit enrollment', () => {
       mockSignInExperience(mfa, options);
       return mfa;
     };
-
-    setDevFeaturesEnabled(true);
 
     // Enrolling EmailVerificationCode when the user also has an unenrolled primaryPhone exposes
     // both masked identifiers while marking only EmailVerificationCode as bound.
@@ -1265,44 +1213,45 @@ describe('Email and Phone MFA explicit enrollment', () => {
         isWebAuthnUsedAsSignInPasskey: true,
       },
     });
+  });
+});
 
-    // When dev features are disabled, boundFactors is omitted from suggest_additional_mfa.
-    setDevFeaturesEnabled(false);
-    const { mfa: implicitMfa } = createMfa({
-      interactionEvent: InteractionEvent.Register,
+describe('Mfa.addBackupCodeByVerificationId', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('keeps the generated backup codes out of the audit log', async () => {
+    const record = BackupCodeVerification.create({} as Libraries, {} as Queries, 'user-id');
+    const codes = record.generate();
+    const { mfa } = createMfa({
       mfaSettings: {
-        policy: MfaPolicy.Mandatory,
-        factors: [MfaFactor.TOTP, MfaFactor.EmailVerificationCode, MfaFactor.PhoneVerificationCode],
-        organizationRequiredMfaPolicy: OrganizationRequiredMfaPolicy.NoPrompt,
+        policy: MfaPolicy.PromptAtSignInAndSignUp,
+        factors: [MfaFactor.TOTP, MfaFactor.BackupCode],
       },
-      user,
+      mfaFactorsEnabledForBinding: [MfaFactor.TOTP, MfaFactor.BackupCode],
+      user: {
+        id: 'user-id',
+        logtoConfig: {},
+        mfaVerifications: [
+          {
+            type: MfaFactor.TOTP,
+            id: 'totp-id',
+            key: 'totp-secret',
+            createdAt: new Date(0).toISOString(),
+          },
+        ],
+      },
+      consumeForBindByType: (() => record) as unknown as InteractionContext['consumeForBindByType'],
     });
-    jest
-      .spyOn(
-        (
-          implicitMfa as unknown as {
-            signInExperienceValidator: SignInExperienceValidator;
-          }
-        ).signInExperienceValidator,
-        'getSignInExperienceData'
-      )
-      .mockResolvedValue({
-        signUp: { identifiers: [SignInIdentifier.Email, SignInIdentifier.Phone] },
-        passkeySignIn: { enabled: false },
-      } as never);
+    mockSignInExperience(mfa);
+    const log = new LogEntry('Interaction.SignIn.BindMfa.BackupCode.Submit');
 
-    const disabledAssertion = implicitMfa.assertMfaFulfilled();
-    await expect(disabledAssertion).rejects.toMatchObject({
-      code: 'session.mfa.suggest_additional_mfa',
-      status: 422,
-      data: {
-        maskedIdentifiers: {
-          [MfaFactor.EmailVerificationCode]: 'alic****@logto.io',
-          [MfaFactor.PhoneVerificationCode]: '****0000',
-        },
-      },
-    });
-    await expect(disabledAssertion).rejects.not.toHaveProperty('data.boundFactors');
+    await mfa.addBackupCodeByVerificationId(record.id, log);
+
+    expect(log.payload.verification).toEqual(record.toSanitizedJson());
+    expect(log.payload.verification).not.toHaveProperty('backupCodes');
+    expect(mfa.data.backupCode).toEqual({ type: MfaFactor.BackupCode, codes });
   });
 });
 /* eslint-enable max-lines */

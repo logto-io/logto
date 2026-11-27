@@ -266,7 +266,21 @@ const queryDatabaseData = async (database, manifests) => {
       }
 
       const data = omitArray(
-        rows,
+        rows.map((row) => {
+          // Fresh installs opt into explicit MFA enrollment; upgrades keep the old setting.
+          // Remove once the release shipping LOG-14724 lands and the released CLI seeds Explicit (LOG-14809).
+          if (
+            table_schema === 'public' &&
+            table_name === 'sign_in_experiences' &&
+            row.tenant_id === 'default' &&
+            row.id === 'default' &&
+            row.mfa?.verificationCodeEnrollment === 'Explicit'
+          ) {
+            return { ...row, mfa: omit(row.mfa, 'verificationCodeEnrollment') };
+          }
+
+          return row;
+        }),
         'id',
         'resource_id',
         'role_id',
@@ -277,10 +291,7 @@ const queryDatabaseData = async (database, manifests) => {
         'secret',
         'db_user',
         'db_user_password',
-        'add_on_sku_id',
-        // Trigger-kept copies: rows seeded before the alteration stay null until the users backfill runs; remove once it lands.
-        'primary_email_lower',
-        'username_lower'
+        'add_on_sku_id'
       );
 
       return [table_name, data.sort(buildSortByKeys(Object.keys(data[0] ?? {})))];

@@ -36,7 +36,6 @@ const quota_table = {
     social_connectors: '社交連接器',
     standard_connectors: '標準連接器',
     built_in_email_connector: '內建電子郵件連接器',
-    mfa: '多因素認證',
     sso: '企業 SSO',
     impersonation: '冒充',
   },

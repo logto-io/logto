@@ -98,6 +98,7 @@ describe('logs query plans under the tenant role', () => {
       from logs
       where created_at > to_timestamp(${startTimeExclusive}::double precision / 1000)
         and payload_hook_id = ${'qp-hook-1'}
+        and not (payload ? 'nextAttemptAt')
     `);
 
     expectIndexCondition(plan, 'payload_hook_id');

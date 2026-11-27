@@ -52,7 +52,7 @@ export type MfaVerificationSnapshot = {
     hasFreshFirstFactor?: boolean;
     eligibleMethods?: readonly VerificationType[];
   };
-  allowSoftExemptions?: boolean;
+  purpose: 'verification' | 'binding';
 };
 
 export type MfaVerificationDecision = {
@@ -66,6 +66,10 @@ export const parseUserMfaConfig = (logtoConfig: JsonObject): UserMfaData => {
   return parsed.success ? parsed.data : {};
 };
 
+/**
+ * Drop factors of the same kind as every proven first factor, because repeated records of one
+ * factor count once and cannot lift a single-factor sign-in to MFA.
+ */
 export const filterPairableMfaFactors = (
   factors: readonly MfaFactor[],
   {
@@ -92,7 +96,7 @@ export const filterPairableMfaFactors = (
 const resolveAvailableFactors = ({
   userFactors,
   requestedAcr,
-  allowSoftExemptions = true,
+  purpose,
 }: MfaVerificationSnapshot): MfaFactor[] => {
   if (!requestedAcr?.isRequestedMfaUnmet) {
     return [...userFactors];
@@ -100,7 +104,7 @@ const resolveAvailableFactors = ({
 
   if (!requestedAcr.hasFreshFirstFactor) {
     // Binding guard keeps all factors so users with MFA must prove one before enrolling.
-    return allowSoftExemptions ? [] : [...userFactors];
+    return purpose === 'binding' ? [...userFactors] : [];
   }
 
   const eligibleMethods = new Set(requestedAcr.eligibleMethods ?? []);
@@ -111,11 +115,14 @@ const resolveAvailableFactors = ({
   }).filter((factor) => eligibleMethods.has(mfaFactorToVerificationType[factor]));
 };
 
-const resolveUnconditionalExemption = ({
+export const resolveUnconditionalExemption = ({
   hasVerifiedSsoIdentity,
   hasVerifiedSignInPasskey,
   requestedAcr,
-}: MfaVerificationSnapshot): MfaVerificationDecision | undefined => {
+}: Pick<
+  MfaVerificationSnapshot,
+  'hasVerifiedSsoIdentity' | 'hasVerifiedSignInPasskey' | 'requestedAcr'
+>): MfaVerificationDecision | undefined => {
   if (requestedAcr?.isRequestedMfaUnmet) {
     return;
   }
@@ -142,10 +149,11 @@ const isUserOptedOut = ({
   adaptiveMfaResult,
   userMfaConfig,
   isMfaRequiredByUser,
-  allowSoftExemptions = true,
+  purpose,
 }: MfaVerificationSnapshot): boolean =>
-  allowSoftExemptions &&
+  purpose === 'verification' &&
   adaptiveMfaResult === undefined &&
+  // Users created before `enabled` existed have it `undefined` and must still be challenged.
   (userMfaConfig.enabled === false || Boolean(userMfaConfig.skipMfaOnSignIn)) &&
   !isNoSkipMfaPolicy(mfaSettings.policy) &&
   !isMfaRequiredByUser;
@@ -153,12 +161,7 @@ const isUserOptedOut = ({
 const resolvePostFactorExemption = (
   snapshot: MfaVerificationSnapshot
 ): MfaVerificationDecision | undefined => {
-  const {
-    hasVerifiedMfaRecord,
-    isTrustedDeviceVerified,
-    requestedAcr,
-    allowSoftExemptions = true,
-  } = snapshot;
+  const { hasVerifiedMfaRecord, isTrustedDeviceVerified, requestedAcr, purpose } = snapshot;
 
   if (requestedAcr?.isRequestedMfaUnmet) {
     return;
@@ -176,7 +179,7 @@ const resolvePostFactorExemption = (
     };
   }
 
-  if (allowSoftExemptions && isTrustedDeviceVerified) {
+  if (purpose === 'verification' && isTrustedDeviceVerified) {
     return { required: false, reason: MfaVerificationReason.TrustedDevice, availableFactors: [] };
   }
 };
@@ -190,13 +193,15 @@ export const resolveMfaVerificationRequirement = (
     return unconditionalExemption;
   }
 
-  const { adaptiveMfaResult, requestedAcr, allowSoftExemptions = true } = snapshot;
+  const { adaptiveMfaResult, requestedAcr, purpose } = snapshot;
 
   if (
     !requestedAcr?.isRequestedMfaUnmet &&
-    allowSoftExemptions &&
+    purpose === 'verification' &&
     adaptiveMfaResult?.requiresMfa === false
   ) {
+    // Declared non-proof: an adaptive-MFA non-trigger skips the gate and proves nothing, so it
+    // records no authentication proof.
     return {
       required: false,
       reason: MfaVerificationReason.AdaptiveNotTriggered,

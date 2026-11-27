@@ -26,6 +26,7 @@ type MockableEnv = {
   isCloud: boolean;
   isDevFeaturesEnabled: boolean;
   ossSurveyEndpoint: string | undefined;
+  productUpdatesBaseUrl: string;
 };
 
 /** Outside Cloud, not production, dev features off. */
@@ -34,6 +35,7 @@ const defaults: Readonly<MockableEnv> = Object.freeze({
   isCloud: false,
   isDevFeaturesEnabled: false,
   ossSurveyEndpoint: undefined,
+  productUpdatesBaseUrl: 'https://logto.io',
 });
 
 // eslint-disable-next-line @silverhand/fp/no-let -- the mocked module reads the current values through getters
@@ -68,6 +70,9 @@ export const mockEnvModule = Object.freeze({
   },
   get ossSurveyEndpoint() {
     return state.ossSurveyEndpoint;
+  },
+  get productUpdatesBaseUrl() {
+    return state.productUpdatesBaseUrl;
   },
 });
 

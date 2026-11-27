@@ -25,7 +25,6 @@ export type AdditionalMfaSuggestionContext = {
 };
 
 type AdditionalMfaSuggestionInput = {
-  isDevFeaturesEnabled: boolean;
   mfaSettings: MfaSettings;
   userMfaConfig: Pick<UserMfaData, 'additionalBindingSuggestionSkipped'>;
   configuredFactors: readonly MfaFactor[];
@@ -90,14 +89,12 @@ const shouldSuggestInImplicitMode = (
 
 const resolveSuggestedIdentifier = ({
   factor,
-  isDevFeaturesEnabled,
   userFactors,
   sortedFactors,
   effectiveValue,
   primaryValue,
 }: {
   factor: MfaFactor.EmailVerificationCode | MfaFactor.PhoneVerificationCode;
-  isDevFeaturesEnabled: boolean;
   userFactors: readonly MfaFactor[];
   sortedFactors: readonly MfaFactor[];
   effectiveValue: string | undefined;
@@ -106,9 +103,9 @@ const resolveSuggestedIdentifier = ({
   userFactors.includes(factor)
     ? effectiveValue
     : conditional(
-        // Email / SMS MFA explicit enrollment: expose unenrolled existing primary identifier so the
-        // suggestion list enrolls it instead of opening the new-identifier profile form.
-        isDevFeaturesEnabled && sortedFactors.includes(factor) && primaryValue
+        // Expose unenrolled existing primary identifier so the suggestion list enrolls it instead
+        // of opening the new-identifier profile form.
+        sortedFactors.includes(factor) && primaryValue
       );
 
 export const getCandidateAdditionalMfaFactors = ({
@@ -148,21 +145,20 @@ export const evaluateAdditionalMfaSuggestion = (
   | {
       availableFactors: MfaFactor[];
       maskedIdentifiers: Partial<Record<MfaFactor, string>>;
-      boundFactors?: MfaFactor[];
+      boundFactors: MfaFactor[];
       isWebAuthnUsedAsSignInPasskey: boolean;
     }
   | undefined => {
-  const { additionalSuggestionContext, isDevFeaturesEnabled, mfaSettings, userFactors } = input;
+  const { additionalSuggestionContext, mfaSettings, userFactors } = input;
   const sortedFactors = additionalSuggestionContext && getCandidateAdditionalMfaFactors(input);
 
   if (!additionalSuggestionContext || !sortedFactors) {
     return;
   }
 
-  // Email / SMS MFA explicit enrollment: suggest another factor only when a dual-purpose factor
-  // was bound in this interaction as the user's sole MFA factor.
+  // Explicit enrollment: suggest another factor only when a dual-purpose factor was bound in this
+  // interaction as the user's sole MFA factor.
   const isExplicitMode =
-    isDevFeaturesEnabled &&
     mfaSettings.verificationCodeEnrollment === MfaVerificationCodeEnrollment.Explicit;
   const shouldSuggest = isExplicitMode
     ? shouldSuggestInExplicitMode(userFactors, additionalSuggestionContext)
@@ -179,7 +175,6 @@ export const evaluateAdditionalMfaSuggestion = (
     maskedIdentifiers: buildFactorMaskedIdentifiers({
       email: resolveSuggestedIdentifier({
         factor: MfaFactor.EmailVerificationCode,
-        isDevFeaturesEnabled,
         userFactors,
         sortedFactors,
         effectiveValue: effectiveEmail,
@@ -187,16 +182,15 @@ export const evaluateAdditionalMfaSuggestion = (
       }),
       phone: resolveSuggestedIdentifier({
         factor: MfaFactor.PhoneVerificationCode,
-        isDevFeaturesEnabled,
         userFactors,
         sortedFactors,
         effectiveValue: effectivePhone,
         primaryValue: input.primaryPhone,
       }),
     }),
-    // Email / SMS MFA explicit enrollment: distinguish already-bound factors from unenrolled
-    // existing primary identifiers that also carry a `maskedIdentifiers` entry.
-    ...conditional(isDevFeaturesEnabled && { boundFactors: [...userFactors] }),
+    // Distinguish already-bound factors from unenrolled existing primary identifiers that also
+    // carry a `maskedIdentifiers` entry.
+    boundFactors: [...userFactors],
     isWebAuthnUsedAsSignInPasskey: passkeySignInEnabled && userFactors.includes(MfaFactor.WebAuthn),
   };
 };

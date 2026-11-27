@@ -8,6 +8,7 @@ import { createHmac } from 'node:crypto';
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http';
 import { type AddressInfo } from 'node:net';
 
+import { appInsights } from '@logto/app-insights/node';
 import {
   JobQueueWorker,
   withTimeout,
@@ -15,6 +16,7 @@ import {
   type ClaimedJobRow,
 } from '@logto/job-queue';
 import { InteractionHookEvent, LogResult, adminTenantId, defaultTenantId } from '@logto/schemas';
+import { ConsoleLog, TtlCache } from '@logto/shared';
 import { assert, type Nullable } from '@silverhand/essentials';
 import {
   createInterceptorsPreset,
@@ -25,11 +27,24 @@ import {
 } from '@silverhand/slonik';
 import Sinon from 'sinon';
 
+import { WellKnownCache } from '#src/caches/well-known.js';
 import { EnvSet } from '#src/env-set/index.js';
-import { createWebhookJobHandler, webhookJobType } from '#src/job-queue/webhook-handler.js';
+import { CoreJobQueue, jobQueueMetricNames } from '#src/job-queue/index.js';
+import { WaitingRowCapCache } from '#src/job-queue/waiting-row-cap-cache.js';
+import {
+  buildExpiredWebhookLog,
+  createWebhookJobHandler,
+  webhookJobType,
+} from '#src/job-queue/webhook-handler.js';
+import { HookContextManager } from '#src/libraries/hook/context-manager.js';
+import { createHookLibrary } from '#src/libraries/hook/index.js';
+import Queries from '#src/tenants/Queries.js';
+import { resetDevFeaturesEnabled, setDevFeaturesEnabled } from '#src/test-utils/dev-features.js';
 
 import { createJobQueueQueries, type CoreJobSettlementMeta } from './job-queue.js';
 import { createJobQueries } from './jobs.js';
+
+const { jest } = import.meta;
 
 const databaseUrl = process.env.JOB_QUEUE_TEST_DB_URL;
 const describeWithDatabase = databaseUrl ? describe : describe.skip;
@@ -100,6 +115,74 @@ const logMeta = (
   },
 });
 
+const waitUntil = async (predicate: () => Promise<boolean> | boolean, timeoutMs = 10_000) => {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    // eslint-disable-next-line no-await-in-loop -- polling condition in integration test
+    if (await predicate()) {
+      return;
+    }
+    // eslint-disable-next-line no-await-in-loop
+    await new Promise((resolve) => {
+      setTimeout(resolve, 25);
+    });
+  }
+  throw new Error(`Timed out after ${timeoutMs}ms waiting for condition`);
+};
+
+const withHttpFixture = async (
+  handler: (request: IncomingMessage, response: ServerResponse) => void,
+  run: (baseUrl: string) => Promise<void>
+) => {
+  Sinon.stub(EnvSet, 'values').value({
+    ...EnvSet.values,
+    isSsrfProtectionEnabled: false,
+  });
+
+  const sockets = new Set<IncomingMessage['socket']>();
+  const server: Server = createServer((request, response) => {
+    sockets.add(request.socket);
+    request.socket.once('close', () => {
+      sockets.delete(request.socket);
+    });
+    handler(request, response);
+  });
+
+  await new Promise<void>((resolve) => {
+    server.listen(0, '127.0.0.1', resolve);
+  });
+  const { port } = server.address() as AddressInfo;
+
+  try {
+    await run(`http://127.0.0.1:${port}`);
+  } finally {
+    for (const socket of sockets) {
+      socket.destroy();
+    }
+    await new Promise<void>((resolve) => {
+      server.close(() => {
+        resolve();
+      });
+    });
+    Sinon.restore();
+  }
+};
+
+const enqueueWebhook = async (pool: DatabasePool, tenantId: string, id: string, hookId: string) =>
+  runAsTenant(pool, tenantId, async (connection) =>
+    createJobQueries(connection).enqueueJob({
+      id,
+      type: webhookJobType,
+      groupKey: hookId,
+      dedupeKey: id,
+      payload: JSON.stringify({
+        event: InteractionHookEvent.PostSignIn,
+        hookId,
+        deliveryId: id,
+      }),
+    })
+  );
+
 describeWithDatabase('job queue queries on Postgres', () => {
   /* eslint-disable @silverhand/fp/no-let -- pool handle assigned in beforeAll */
   let pool: DatabasePool;
@@ -152,12 +235,14 @@ describeWithDatabase('job queue queries on Postgres', () => {
     url = 'https://example.com/webhook',
     signingKey = 'secret-key',
     enabled = true,
+    events = [InteractionHookEvent.PostSignIn],
   }: {
     id: string;
     tenantId?: string;
     url?: string;
     signingKey?: string;
     enabled?: boolean;
+    events?: string[];
   }) =>
     pool.query(sql`
       insert into hooks (tenant_id, id, name, events, config, signing_key, enabled)
@@ -165,7 +250,7 @@ describeWithDatabase('job queue queries on Postgres', () => {
         ${tenantId},
         ${id},
         ${id},
-        ${JSON.stringify([InteractionHookEvent.PostSignIn])}::jsonb,
+        ${JSON.stringify(events)}::jsonb,
         ${JSON.stringify({ url })}::jsonb,
         ${signingKey},
         ${enabled}
@@ -186,7 +271,9 @@ describeWithDatabase('job queue queries on Postgres', () => {
 
   const cleanupTestRows = async () => {
     await pool.query(sql`delete from jobs`);
-    await pool.query(sql`delete from logs where id like 'jq-%' or id = 'shared-log-id'`);
+    await pool.query(
+      sql`delete from logs where id like 'jq-%' or id = 'shared-log-id' or payload_hook_id like 'jq-%'`
+    );
     await pool.query(sql`delete from hooks where id like 'jq-%'`);
   };
 
@@ -785,6 +872,257 @@ describeWithDatabase('job queue queries on Postgres', () => {
         payload: { result: LogResult.Success, owner: 'admin' },
       });
     });
+
+    it('clears pending nextAttemptAt on existing logs when terminal settle omits meta', async () => {
+      await seed([{ id: 'jq-log-clear', tenantId: defaultTenantId, groupKey: 'jq-hook-clr' }]);
+      const [first] = await queries().claimDue(claimInput({ workerId: 'worker-1' }));
+      assert(first, new Error('Expected claimed job'));
+
+      const nextAttemptAt = Date.now() + 10_000;
+      await expect(
+        queries().settle({
+          job: first,
+          workerId: 'worker-1',
+          resolution: { status: 'retry', delayMs: 10_000, nextAttemptAt },
+          meta: logMeta('jq-hook-clr', LogResult.Error, { attempts: 1 }),
+        })
+      ).resolves.toBe('settled');
+
+      await expect(findLog('jq-log-clear')).resolves.toMatchObject({
+        payload: { result: LogResult.Error, attempts: 1, nextAttemptAt },
+      });
+
+      await expireLease('jq-log-clear');
+      const [second] = await queries().claimDue(claimInput({ workerId: 'worker-2' }));
+      assert(second, new Error('Expected reclaimed job'));
+
+      await expect(
+        queries().settle({
+          job: second,
+          workerId: 'worker-2',
+          resolution: { status: 'done' },
+        })
+      ).resolves.toBe('settled');
+
+      await expect(findJob('jq-log-clear')).resolves.toBeNull();
+      const log = await findLog('jq-log-clear');
+      expect(log?.payload).toMatchObject({ result: LogResult.Error, attempts: 1 });
+      expect(log?.payload).not.toHaveProperty('nextAttemptAt');
+    });
+  });
+
+  describe('parkDueGroup()', () => {
+    it('parks due rows, expired leases, and rows waiting until before the park time while leaving live leases, later rows, and other groups untouched', async () => {
+      await seed([
+        { id: 'jq-park-due', groupKey: 'jq-hook-park', dueIn: -10 },
+        {
+          id: 'jq-park-expired',
+          groupKey: 'jq-hook-park',
+          dueIn: -5,
+          claimedBy: 'dead-worker',
+          attempts: 1,
+        },
+        // A failed probe handed back with its own short backoff.
+        { id: 'jq-park-backoff', groupKey: 'jq-hook-park', dueIn: 10, attempts: 1 },
+        // A lease ending before the park time is still live.
+        {
+          id: 'jq-park-live',
+          groupKey: 'jq-hook-park',
+          dueIn: 30,
+          claimedBy: 'live-worker',
+          attempts: 1,
+        },
+        { id: 'jq-park-future', groupKey: 'jq-hook-park', dueIn: 120 },
+        { id: 'jq-park-other-hook', groupKey: 'jq-hook-other', dueIn: -10 },
+        {
+          id: 'jq-park-other-tenant',
+          tenantId: adminTenantId,
+          groupKey: 'jq-hook-park',
+          dueIn: -10,
+        },
+      ]);
+
+      const parkedIds = ['jq-park-due', 'jq-park-expired', 'jq-park-backoff'];
+      const previousNextAttemptAt = Date.now() - 5000;
+      for (const id of parkedIds) {
+        // eslint-disable-next-line no-await-in-loop -- seed matching log rows sequentially
+        await pool.query(sql`
+          insert into logs (tenant_id, id, key, payload)
+          values (
+            ${defaultTenantId},
+            ${id},
+            'TriggerHook.PostSignIn',
+            ${JSON.stringify({
+              key: 'TriggerHook.PostSignIn',
+              result: LogResult.Error,
+              hookId: 'jq-hook-park',
+              attempts: 1,
+              nextAttemptAt: previousNextAttemptAt,
+            })}::jsonb
+          )
+        `);
+      }
+
+      const parkedAt = Date.now() + 45_000;
+      await expect(
+        queries().parkDueGroup({
+          tenantId: defaultTenantId,
+          type: jobType,
+          groupKey: 'jq-hook-park',
+          nextAttemptAt: parkedAt,
+          minCreatedAt: 0,
+        })
+      ).resolves.toBe(3);
+
+      for (const id of parkedIds) {
+        // eslint-disable-next-line no-await-in-loop -- verify parked rows and updated logs
+        const job = await findJob(id);
+        expect(job).toMatchObject({ claimedBy: null });
+        expect(Math.abs(job!.nextAttemptAt - parkedAt)).toBeLessThan(10);
+
+        // eslint-disable-next-line no-await-in-loop
+        await expect(findLog(id)).resolves.toMatchObject({
+          payload: { nextAttemptAt: Math.trunc(parkedAt) },
+        });
+      }
+
+      await expect(findJob('jq-park-live')).resolves.toMatchObject({
+        claimedBy: 'live-worker',
+        attempts: 1,
+      });
+      expect((await findJob('jq-park-live'))!.nextAttemptAt).toBeLessThan(parkedAt);
+      expect((await findJob('jq-park-future'))!.nextAttemptAt).toBeGreaterThan(parkedAt);
+      expect((await findJob('jq-park-other-hook'))!.nextAttemptAt).toBeLessThanOrEqual(Date.now());
+      expect((await findJob('jq-park-other-tenant'))!.nextAttemptAt).toBeLessThanOrEqual(
+        Date.now()
+      );
+    });
+
+    it('skips rows locked by another transaction instead of waiting for them', async () => {
+      await seed([
+        { id: 'jq-park-locked', groupKey: 'jq-hook-lock', dueIn: -10 },
+        { id: 'jq-park-free', groupKey: 'jq-hook-lock', dueIn: -10 },
+      ]);
+
+      const parkedAt = Date.now() + 45_000;
+      await pool.transaction(async (transaction) => {
+        await transaction.query(sql`select 1 from jobs where id = 'jq-park-locked' for update`);
+        await expect(
+          queries().parkDueGroup({
+            tenantId: defaultTenantId,
+            type: jobType,
+            groupKey: 'jq-hook-lock',
+            nextAttemptAt: parkedAt,
+            minCreatedAt: Date.now() - 24 * 60 * 60 * 1000,
+          })
+        ).resolves.toBe(1);
+      });
+
+      expect((await findJob('jq-park-locked'))!.nextAttemptAt).toBeLessThanOrEqual(Date.now());
+      expect(Math.abs((await findJob('jq-park-free'))!.nextAttemptAt - parkedAt)).toBeLessThan(10);
+    });
+
+    it('bulk-expires older due rows with fallback or cleared logs without cross-tenant overwrites', async () => {
+      const makePayload = (deliveryId: string) =>
+        JSON.stringify({
+          event: InteractionHookEvent.PostSignIn,
+          hookId: 'jq-hook-exp',
+          deliveryId,
+        });
+
+      await pool.query(sql`
+        insert into jobs (
+          tenant_id, id, type, group_key, payload, attempts, next_attempt_at, created_at
+        )
+        values
+          (${defaultTenantId}, 'jq-exp-unattempted', ${webhookJobType}, 'jq-hook-exp',
+            ${makePayload('jq-exp-unattempted')}, 0, now() - interval '10 seconds',
+            now() - interval '25 hours'),
+          (${defaultTenantId}, 'jq-exp-attempted', ${webhookJobType}, 'jq-hook-exp',
+            ${makePayload('jq-exp-attempted')}, 2, now() - interval '10 seconds',
+            now() - interval '25 hours'),
+          (${defaultTenantId}, 'jq-exp-foreign', ${webhookJobType}, 'jq-hook-exp',
+            ${makePayload('jq-exp-foreign')}, 0, now() - interval '10 seconds',
+            now() - interval '25 hours'),
+          (${defaultTenantId}, 'jq-exp-waiting', ${webhookJobType}, 'jq-hook-exp',
+            ${makePayload('jq-exp-waiting')}, 1, now() + interval '10 seconds',
+            now() - interval '25 hours'),
+          (${defaultTenantId}, 'jq-exp-fresh', ${webhookJobType}, 'jq-hook-exp',
+            ${makePayload('jq-exp-fresh')}, 0, now() - interval '10 seconds',
+            now() - interval '1 hour')
+      `);
+
+      await pool.query(sql`
+        insert into logs (tenant_id, id, key, payload)
+        values
+          (${defaultTenantId}, 'jq-exp-attempted', 'TriggerHook.PostSignIn', ${JSON.stringify({
+            key: 'TriggerHook.PostSignIn',
+            result: LogResult.Error,
+            hookId: 'jq-hook-exp',
+            attempts: 2,
+            response: { statusCode: 503, body: 'unavailable' },
+            nextAttemptAt: Date.now() - 5000,
+          })}::jsonb),
+          (${adminTenantId}, 'jq-exp-foreign', 'TriggerHook.PostSignIn', ${JSON.stringify({
+            key: 'TriggerHook.PostSignIn',
+            result: LogResult.Success,
+            owner: 'admin',
+          })}::jsonb)
+      `);
+
+      const onBulkExpired = jest.fn();
+      const parkedAt = Date.now() + 60_000;
+      const customQueries = createJobQueueQueries(pool, {
+        buildExpiredLog: buildExpiredWebhookLog,
+        onBulkExpired,
+      });
+
+      await expect(
+        customQueries.parkDueGroup({
+          tenantId: defaultTenantId,
+          type: webhookJobType,
+          groupKey: 'jq-hook-exp',
+          nextAttemptAt: parkedAt,
+          minCreatedAt: Date.now() - 24 * 60 * 60 * 1000,
+        })
+      ).resolves.toBe(1);
+
+      expect(onBulkExpired).toHaveBeenCalledWith(4);
+      await expect(findJob('jq-exp-waiting')).resolves.toBeNull();
+      await expect(findJob('jq-exp-unattempted')).resolves.toBeNull();
+      await expect(findJob('jq-exp-attempted')).resolves.toBeNull();
+      await expect(findJob('jq-exp-foreign')).resolves.toBeNull();
+
+      const freshJob = await findJob('jq-exp-fresh');
+      expect(freshJob).toMatchObject({ claimedBy: null });
+      expect(Math.abs(freshJob!.nextAttemptAt - parkedAt)).toBeLessThan(10);
+
+      const fallbackLog = await findLog('jq-exp-unattempted');
+      expect(fallbackLog).toMatchObject({
+        tenantId: defaultTenantId,
+        key: `TriggerHook.${InteractionHookEvent.PostSignIn}`,
+        payloadHookId: 'jq-hook-exp',
+        payload: {
+          result: LogResult.Error,
+          attempts: 0,
+          hookRequest: { body: { deliveryId: 'jq-exp-unattempted' } },
+        },
+      });
+      expect(fallbackLog?.payload).not.toHaveProperty('nextAttemptAt');
+
+      const attemptedLog = await findLog('jq-exp-attempted');
+      expect(attemptedLog?.payload).toMatchObject({
+        result: LogResult.Error,
+        attempts: 2,
+        response: { statusCode: 503, body: 'unavailable' },
+      });
+      expect(attemptedLog?.payload).not.toHaveProperty('nextAttemptAt');
+
+      await expect(findLog('jq-exp-foreign')).resolves.toMatchObject({
+        tenantId: adminTenantId,
+        payload: { result: LogResult.Success, owner: 'admin' },
+      });
+    });
   });
 
   describe('shutdown hand-back and multi-worker delivery', () => {
@@ -930,6 +1268,715 @@ describeWithDatabase('job queue queries on Postgres', () => {
         Sinon.restore();
       }
     }, 15_000);
+  });
+
+  describe('end-to-end queued webhook retries, circuit breaker, and fairness', () => {
+    it('updates a single log entry in place across a 503 retry and 200 success with attempts = 2', async () => {
+      const state = { hits: 0 };
+
+      await withHttpFixture(
+        (_request, response) => {
+          // eslint-disable-next-line @silverhand/fp/no-mutation -- track per-request attempt count
+          state.hits += 1;
+          if (state.hits === 1) {
+            response.writeHead(503, { 'content-type': 'text/plain' });
+            response.end('try again');
+            return;
+          }
+          response.writeHead(200, { 'content-type': 'application/json' });
+          response.end('{"ok":true}');
+        },
+        async (baseUrl) => {
+          const hookId = 'jq-retry-hook';
+          const deliveryId = 'jq-retry-delivery';
+          await seedHook({ id: hookId, url: `${baseUrl}/hook` });
+          await enqueueWebhook(pool, defaultTenantId, deliveryId, hookId);
+
+          const worker = new JobQueueWorker<CoreJobSettlementMeta>(queries(), {
+            pollIntervalMs: 30,
+          });
+          worker.register(
+            createWebhookJobHandler(queries(), {
+              backoffMs: () => 150,
+            })
+          );
+          worker.start();
+
+          try {
+            await waitUntil(async () => {
+              const log = await findLog(deliveryId);
+              return log?.payload.attempts === 1;
+            });
+            const firstLog = await findLog(deliveryId);
+            expect(firstLog?.payload).toMatchObject({
+              result: LogResult.Error,
+              attempts: 1,
+              response: { statusCode: 503, body: 'try again' },
+            });
+            expect(typeof firstLog?.payload.nextAttemptAt).toBe('number');
+
+            await waitUntil(async () => (await findJob(deliveryId)) === null);
+            const finalLog = await findLog(deliveryId);
+            expect(finalLog?.createdAt).toBe(firstLog?.createdAt);
+            expect(finalLog?.payload).toMatchObject({
+              result: LogResult.Success,
+              attempts: 2,
+              response: { statusCode: 200, body: { ok: true } },
+            });
+            expect(finalLog?.payload).not.toHaveProperty('nextAttemptAt');
+            expect(state.hits).toBe(2);
+          } finally {
+            await worker.stop();
+          }
+        }
+      );
+    }, 15_000);
+
+    it('exhausts at the 24-hour cutoff, clears nextAttemptAt, and calls onExhausted', async () => {
+      await withHttpFixture(
+        (_request, response) => {
+          response.writeHead(503);
+          response.end('still down');
+        },
+        async (baseUrl) => {
+          const hookId = 'jq-cutoff-hook';
+          const deliveryId = 'jq-cutoff-delivery';
+          await seedHook({ id: hookId, url: `${baseUrl}/hook` });
+          await pool.query(sql`
+            insert into jobs (tenant_id, id, type, group_key, dedupe_key, payload, created_at)
+            values (
+              ${defaultTenantId},
+              ${deliveryId},
+              ${webhookJobType},
+              ${hookId},
+              ${deliveryId},
+              ${JSON.stringify({
+                event: InteractionHookEvent.PostSignIn,
+                hookId,
+                deliveryId,
+              })},
+              now() - interval '24 hours'
+            )
+          `);
+
+          const onExhausted = jest.fn();
+          const worker = new JobQueueWorker<CoreJobSettlementMeta>(queries(), {
+            pollIntervalMs: 30,
+          });
+          worker.register(createWebhookJobHandler(queries(), { onExhausted }));
+          worker.start();
+
+          try {
+            await waitUntil(async () => (await findJob(deliveryId)) === null);
+            expect(onExhausted).toHaveBeenCalledTimes(1);
+
+            const log = await findLog(deliveryId);
+            expect(log?.payload).toMatchObject({
+              result: LogResult.Error,
+              attempts: 1,
+              response: { statusCode: 503, body: 'still down' },
+            });
+            expect(log?.payload).not.toHaveProperty('nextAttemptAt');
+          } finally {
+            await worker.stop();
+          }
+        }
+      );
+    }, 15_000);
+
+    it('keeps slow hooks from delaying healthy hooks', async () => {
+      const slowResponses: ServerResponse[] = [];
+      const order: string[] = [];
+
+      await withHttpFixture(
+        (request, response) => {
+          if (request.url === '/slow') {
+            // eslint-disable-next-line @silverhand/fp/no-mutating-methods -- collect held responses for cleanup
+            slowResponses.push(response);
+            return;
+          }
+          // eslint-disable-next-line @silverhand/fp/no-mutating-methods -- record delivery completion order
+          order.push('healthy');
+          response.writeHead(200);
+          response.end('ok');
+        },
+        async (baseUrl) => {
+          await seedHook({ id: 'jq-slow-hook', url: `${baseUrl}/slow` });
+          await seedHook({ id: 'jq-fast-hook', url: `${baseUrl}/healthy` });
+
+          for (const index of Array.from({ length: 10 }, (_, item) => item)) {
+            // eslint-disable-next-line no-await-in-loop -- preserve older due order
+            await pool.query(sql`
+              insert into jobs (
+                tenant_id, id, type, group_key, dedupe_key, payload, next_attempt_at
+              )
+              values (
+                ${defaultTenantId},
+                ${`jq-slow-${index}`},
+                ${webhookJobType},
+                'jq-slow-hook',
+                ${`jq-slow-${index}`},
+                ${JSON.stringify({
+                  event: InteractionHookEvent.PostSignIn,
+                  hookId: 'jq-slow-hook',
+                  deliveryId: `jq-slow-${index}`,
+                })},
+                now() - interval '10 seconds'
+              )
+            `);
+          }
+
+          await enqueueWebhook(pool, defaultTenantId, 'jq-fast-delivery', 'jq-fast-hook');
+
+          const worker = new JobQueueWorker<CoreJobSettlementMeta>(queries(), {
+            pollIntervalMs: 30,
+          });
+          worker.register(createWebhookJobHandler(queries()));
+          worker.start();
+
+          try {
+            await waitUntil(async () => (await findJob('jq-fast-delivery')) === null);
+            expect(order).toEqual(['healthy']);
+            expect(slowResponses.length).toBeLessThanOrEqual(5);
+          } finally {
+            for (const response of slowResponses) {
+              response.writeHead(200);
+              response.end('done');
+            }
+            await worker.stop();
+          }
+        }
+      );
+    }, 15_000);
+
+    it('opens a circuit breaker after 5 dead-hook failures without delaying healthy hooks and recovers on probe success', async () => {
+      const state = { deadHealthy: false, deadAttempts: 0 };
+      const customQueries = createJobQueueQueries(pool, {
+        buildExpiredLog: buildExpiredWebhookLog,
+      });
+
+      await withHttpFixture(
+        (request, response) => {
+          if (request.url === '/dead') {
+            // eslint-disable-next-line @silverhand/fp/no-mutation -- track dead-hook HTTP attempts
+            state.deadAttempts += 1;
+            if (!state.deadHealthy) {
+              response.writeHead(500);
+              response.end('down');
+              return;
+            }
+          }
+          response.writeHead(200);
+          response.end('ok');
+        },
+        async (baseUrl) => {
+          await seedHook({ id: 'jq-dead-hook', url: `${baseUrl}/dead` });
+          await seedHook({ id: 'jq-live-hook', url: `${baseUrl}/live` });
+
+          for (const index of Array.from({ length: 8 }, (_, item) => item)) {
+            // eslint-disable-next-line no-await-in-loop -- preserve older due order
+            await pool.query(sql`
+              insert into jobs (
+                tenant_id, id, type, group_key, dedupe_key, payload, next_attempt_at
+              )
+              values (
+                ${defaultTenantId},
+                ${`jq-dead-${index}`},
+                ${webhookJobType},
+                'jq-dead-hook',
+                ${`jq-dead-${index}`},
+                ${JSON.stringify({
+                  event: InteractionHookEvent.PostSignIn,
+                  hookId: 'jq-dead-hook',
+                  deliveryId: `jq-dead-${index}`,
+                })},
+                now() - interval '10 seconds'
+              )
+            `);
+          }
+
+          await enqueueWebhook(pool, defaultTenantId, 'jq-live-delivery', 'jq-live-hook');
+
+          const worker = new JobQueueWorker<CoreJobSettlementMeta>(customQueries, {
+            pollIntervalMs: 30,
+          });
+          worker.register(
+            createWebhookJobHandler(customQueries, {
+              backoffMs: () => 250,
+            })
+          );
+          worker.start();
+
+          try {
+            await waitUntil(async () => (await findJob('jq-live-delivery')) === null);
+            await expect(findLog('jq-live-delivery')).resolves.toMatchObject({
+              payload: { result: LogResult.Success, attempts: 1 },
+            });
+
+            await waitUntil(() => worker.openCircuitCount === 1);
+            expect(state.deadAttempts).toBeGreaterThanOrEqual(5);
+
+            // Recover the dead endpoint and verify a probe closes the circuit and drains parked rows.
+            // eslint-disable-next-line @silverhand/fp/no-mutation -- toggle mock endpoint health
+            state.deadHealthy = true;
+            await waitUntil(async () => {
+              const remaining = await pool.oneFirst<number>(
+                sql`select count(*)::int4 from jobs where group_key = 'jq-dead-hook'`
+              );
+              return remaining === 0;
+            });
+
+            expect(worker.openCircuitCount).toBe(0);
+          } finally {
+            await worker.stop();
+          }
+        }
+      );
+    }, 15_000);
+
+    it('prevents one tenant backlog from delaying another tenant', async () => {
+      const backlogResponses: ServerResponse[] = [];
+      const order: string[] = [];
+
+      await withHttpFixture(
+        (request, response) => {
+          if (request.url === '/tenant-a') {
+            // eslint-disable-next-line @silverhand/fp/no-mutating-methods -- collect held responses for cleanup
+            backlogResponses.push(response);
+            return;
+          }
+          // eslint-disable-next-line @silverhand/fp/no-mutating-methods -- record delivery completion order
+          order.push('tenant-b');
+          response.writeHead(200);
+          response.end('ok');
+        },
+        async (baseUrl) => {
+          for (const hookIndex of Array.from({ length: 5 }, (_, item) => item)) {
+            // eslint-disable-next-line no-await-in-loop -- seed multiple hooks to saturate per-tenant cap (20)
+            await seedHook({
+              id: `jq-ta-hook-${hookIndex}`,
+              tenantId: defaultTenantId,
+              url: `${baseUrl}/tenant-a`,
+            });
+          }
+          await seedHook({
+            id: 'jq-tb-hook',
+            tenantId: adminTenantId,
+            url: `${baseUrl}/tenant-b`,
+          });
+
+          for (const index of Array.from({ length: 25 }, (_, item) => item)) {
+            const hookId = `jq-ta-hook-${index % 5}`;
+            // eslint-disable-next-line no-await-in-loop -- preserve older due order across groups
+            await pool.query(sql`
+              insert into jobs (
+                tenant_id, id, type, group_key, dedupe_key, payload, next_attempt_at
+              )
+              values (
+                ${defaultTenantId},
+                ${`jq-ta-${index}`},
+                ${webhookJobType},
+                ${hookId},
+                ${`jq-ta-${index}`},
+                ${JSON.stringify({
+                  event: InteractionHookEvent.PostSignIn,
+                  hookId,
+                  deliveryId: `jq-ta-${index}`,
+                })},
+                now() - interval '20 seconds'
+              )
+            `);
+          }
+
+          await enqueueWebhook(pool, adminTenantId, 'jq-tb-delivery', 'jq-tb-hook');
+
+          const worker = new JobQueueWorker<CoreJobSettlementMeta>(queries(), {
+            pollIntervalMs: 30,
+          });
+          worker.register(createWebhookJobHandler(queries()));
+          worker.start();
+
+          try {
+            await waitUntil(async () => (await findJob('jq-tb-delivery')) === null);
+            expect(order).toEqual(['tenant-b']);
+            expect(backlogResponses.length).toBeLessThanOrEqual(20);
+          } finally {
+            for (const response of backlogResponses) {
+              response.writeHead(200);
+              response.end('done');
+            }
+            await worker.stop();
+          }
+        }
+      );
+    }, 15_000);
+  });
+
+  describe('waiting-row caps', () => {
+    afterEach(() => {
+      resetDevFeaturesEnabled();
+    });
+
+    it('counts jobs bounded by limit per group and per type under tenant RLS', async () => {
+      await seed([
+        { id: 'cnt-a1', tenantId: defaultTenantId, groupKey: 'hook-a' },
+        { id: 'cnt-a2', tenantId: defaultTenantId, groupKey: 'hook-a' },
+        { id: 'cnt-a3', tenantId: defaultTenantId, groupKey: 'hook-a' },
+        { id: 'cnt-b1', tenantId: defaultTenantId, groupKey: 'hook-b' },
+        { id: 'cnt-admin', tenantId: adminTenantId, groupKey: 'hook-a' },
+      ]);
+      await pool.query(sql`
+        insert into jobs (tenant_id, id, type, group_key)
+        values (${defaultTenantId}, 'cnt-other-type', 'other', 'hook-a')
+      `);
+
+      await runAsTenant(pool, defaultTenantId, async (connection) => {
+        const jobQueries = createJobQueries(connection);
+        await expect(jobQueries.countJobsByGroup(jobType, 'hook-a', 10)).resolves.toBe(3);
+        await expect(jobQueries.countJobsByGroup(jobType, 'hook-a', 2)).resolves.toBe(2);
+        await expect(jobQueries.countJobsByGroup(jobType, 'hook-b', 10)).resolves.toBe(1);
+        await expect(jobQueries.countJobsByType(jobType, 10)).resolves.toBe(4);
+        await expect(jobQueries.countJobsByType(jobType, 3)).resolves.toBe(3);
+        await expect(jobQueries.countJobsByType('other', 10)).resolves.toBe(1);
+      });
+
+      await runAsTenant(pool, adminTenantId, async (connection) => {
+        const jobQueries = createJobQueries(connection);
+        await expect(jobQueries.countJobsByGroup(jobType, 'hook-a', 10)).resolves.toBe(1);
+        await expect(jobQueries.countJobsByType(jobType, 10)).resolves.toBe(1);
+      });
+    });
+
+    it('enforces per-hook and per-tenant caps end-to-end, writes overflow logs, and refreshes after TTL', async () => {
+      setDevFeaturesEnabled(true);
+      await seedHook({
+        id: 'jq-cap-hook-a',
+        tenantId: defaultTenantId,
+        events: ['Role.Created'],
+      });
+      await seedHook({
+        id: 'jq-cap-hook-admin',
+        tenantId: adminTenantId,
+        events: ['Role.Created'],
+      });
+
+      const now = Sinon.stub().returns(1000);
+      const queue = new CoreJobQueue({
+        waitingRowCapCache: new WaitingRowCapCache({ ttlMs: 5000, now }),
+      });
+
+      const triggerRoleCreated = async (tenantId: string) =>
+        runAsTenant(pool, tenantId, async (connection) => {
+          const tenantQueries = new Queries(
+            connection,
+            new WellKnownCache(tenantId, new TtlCache())
+          );
+          const library = createHookLibrary(tenantQueries, {
+            jobQueue: queue,
+            waitingRowCaps: { perHook: 2, perTenant: 3 },
+          });
+          const context = new HookContextManager({ ip: '127.0.0.1' });
+          context.appendDataHookContext('Role.Created', { data: { id: 'role-1' } });
+          await library.triggerDataHooks(new ConsoleLog(), context);
+        });
+
+      // Triggers 1-3: hook-a hits its per-hook cap (2) while tenant total (2) is below 3.
+      await triggerRoleCreated(defaultTenantId);
+      await triggerRoleCreated(defaultTenantId);
+      await triggerRoleCreated(defaultTenantId);
+
+      await expect(
+        pool.oneFirst<number>(
+          sql`select count(*)::int4 from jobs where tenant_id = ${defaultTenantId}`
+        )
+      ).resolves.toBe(2);
+
+      const groupCapLogs = await pool.any<{
+        id: string;
+        key: string;
+        payloadHookId: Nullable<string>;
+        payload: Record<string, unknown>;
+      }>(
+        sql`select id, key, payload_hook_id, payload from logs where tenant_id = ${defaultTenantId} and payload_hook_id = 'jq-cap-hook-a'`
+      );
+      expect(groupCapLogs).toHaveLength(1);
+      expect(groupCapLogs[0]?.key).toBe('TriggerHook.Role.Created');
+      expect(groupCapLogs[0]?.payload).toMatchObject({
+        result: LogResult.Error,
+        attempts: 0,
+      });
+      expect(groupCapLogs[0]?.payload.hookRequest).toMatchObject({
+        body: {
+          deliveryId: groupCapLogs[0]?.id,
+          hookId: 'jq-cap-hook-a',
+        },
+      });
+      expect(groupCapLogs[0]?.payload).not.toHaveProperty('nextAttemptAt');
+      expect(String(groupCapLogs[0]?.payload.error)).toContain('per-hook');
+
+      // Disable hook-a and enable hook-b: trigger 4 fills tenant cap (3), trigger 5 hits tenant cap.
+      await pool.query(sql`update hooks set enabled = false where id = 'jq-cap-hook-a'`);
+      await seedHook({
+        id: 'jq-cap-hook-b',
+        tenantId: defaultTenantId,
+        events: ['Role.Created'],
+      });
+
+      await triggerRoleCreated(defaultTenantId);
+      await triggerRoleCreated(defaultTenantId);
+
+      await expect(
+        pool.oneFirst<number>(
+          sql`select count(*)::int4 from jobs where tenant_id = ${defaultTenantId}`
+        )
+      ).resolves.toBe(3);
+
+      const tenantCapLogs = await pool.any<{
+        id: string;
+        key: string;
+        payloadHookId: Nullable<string>;
+        payload: Record<string, unknown>;
+      }>(
+        sql`select id, key, payload_hook_id, payload from logs where tenant_id = ${defaultTenantId} and payload_hook_id = 'jq-cap-hook-b'`
+      );
+      expect(tenantCapLogs).toHaveLength(1);
+      expect(tenantCapLogs[0]?.key).toBe('TriggerHook.Role.Created');
+      expect(tenantCapLogs[0]?.payload).toMatchObject({
+        result: LogResult.Error,
+        attempts: 0,
+      });
+      expect(tenantCapLogs[0]?.payload.hookRequest).toMatchObject({
+        body: {
+          deliveryId: tenantCapLogs[0]?.id,
+          hookId: 'jq-cap-hook-b',
+        },
+      });
+      expect(tenantCapLogs[0]?.payload).not.toHaveProperty('nextAttemptAt');
+      expect(String(tenantCapLogs[0]?.payload.error)).toContain('per-tenant');
+
+      // Admin tenant is unaffected by defaultTenantId's cap.
+      await triggerRoleCreated(adminTenantId);
+      await expect(
+        pool.oneFirst<number>(
+          sql`select count(*)::int4 from jobs where tenant_id = ${adminTenantId}`
+        )
+      ).resolves.toBe(1);
+
+      // Clear defaultTenantId jobs and advance past TTL so hook-b can enqueue again.
+      await pool.query(sql`delete from jobs where tenant_id = ${defaultTenantId}`);
+      now.returns(7000);
+
+      await triggerRoleCreated(defaultTenantId);
+      await expect(
+        pool.oneFirst<number>(
+          sql`select count(*)::int4 from jobs where tenant_id = ${defaultTenantId} and group_key = 'jq-cap-hook-b'`
+        )
+      ).resolves.toBe(1);
+
+      const reportedMetrics: Array<{ name: string; value: number }> = [];
+      const originalClient = appInsights.client;
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- capture reported metrics
+      appInsights.client = {
+        trackMetric: (metric: { name: string; value: number }) => {
+          // eslint-disable-next-line @silverhand/fp/no-mutating-methods -- collect metrics
+          reportedMetrics.push(metric);
+        },
+      } as unknown as NonNullable<typeof appInsights.client>;
+
+      try {
+        await queue.reportMetrics(queries().getGauges);
+      } finally {
+        // eslint-disable-next-line @silverhand/fp/no-mutation -- restore client
+        appInsights.client = originalClient;
+      }
+
+      expect(reportedMetrics).toEqual(
+        expect.arrayContaining([
+          { name: jobQueueMetricNames.droppedAtGroupCap, value: 1 },
+          { name: jobQueueMetricNames.droppedAtTenantCap, value: 1 },
+        ])
+      );
+    });
+  });
+
+  describe('manual redelivery and retrying-aware stats', () => {
+    it('redelivers a permanently failed log keeping deliveryId, rejects concurrent duplicates with 409, and updates only the new log row', async () => {
+      const receivedRequests: Array<{ rawBody: string; signature: string | undefined }> = [];
+
+      await withHttpFixture(
+        (request, response) => {
+          const chunks: Uint8Array[] = [];
+          request.on('data', (chunk: Uint8Array) => {
+            // eslint-disable-next-line @silverhand/fp/no-mutating-methods -- collect HTTP body chunks
+            chunks.push(chunk);
+          });
+          request.on('end', () => {
+            const rawBody = Buffer.concat(chunks).toString('utf8');
+            const signatureHeader = request.headers['logto-signature-sha-256'];
+            // eslint-disable-next-line @silverhand/fp/no-mutating-methods -- capture received webhook request
+            receivedRequests.push({
+              rawBody,
+              signature: typeof signatureHeader === 'string' ? signatureHeader : undefined,
+            });
+            response.writeHead(200);
+            response.end('ok');
+          });
+        },
+        async (baseUrl) => {
+          await seedHook({
+            id: 'jq-redeliver-hook',
+            tenantId: defaultTenantId,
+            url: `${baseUrl}/hook`,
+            signingKey: 'rotated-signing-key',
+          });
+
+          const originalBody = {
+            event: InteractionHookEvent.PostSignIn,
+            createdAt: '2026-11-20T00:00:00.000Z',
+            hookId: 'jq-redeliver-hook',
+            deliveryId: 'jq-orig-delivery',
+            userId: 'user-1',
+          };
+          const originalLogId = 'jq-orig-log-1';
+
+          await pool.query(sql`
+            insert into logs (tenant_id, id, key, payload)
+            values (
+              ${defaultTenantId},
+              ${originalLogId},
+              ${`TriggerHook.${InteractionHookEvent.PostSignIn}`},
+              ${sql.jsonb({
+                key: `TriggerHook.${InteractionHookEvent.PostSignIn}`,
+                result: LogResult.Error,
+                hookId: 'jq-redeliver-hook',
+                attempts: 1,
+                hookRequest: { body: originalBody },
+                error: 'HTTP 400',
+              })}
+            )
+          `);
+
+          const redeliveryResult = await runAsTenant(pool, defaultTenantId, async (connection) => {
+            const tenantQueries = new Queries(
+              connection,
+              new WellKnownCache(defaultTenantId, new TtlCache())
+            );
+            const library = createHookLibrary(tenantQueries, { tenantId: defaultTenantId });
+            return library.redeliverHookLog('jq-redeliver-hook', originalLogId);
+          });
+
+          // A concurrent redelivery for the same deliveryId must be rejected atomically by `jobs__type_dedupe_key`.
+          await expect(
+            runAsTenant(pool, defaultTenantId, async (connection) => {
+              const tenantQueries = new Queries(
+                connection,
+                new WellKnownCache(defaultTenantId, new TtlCache())
+              );
+              const library = createHookLibrary(tenantQueries, { tenantId: defaultTenantId });
+              return library.redeliverHookLog('jq-redeliver-hook', originalLogId);
+            })
+          ).rejects.toMatchObject({
+            code: 'hook.redelivery_in_progress',
+            status: 409,
+          });
+
+          expect(redeliveryResult.logId).not.toBe(originalLogId);
+          expect(await findJob(redeliveryResult.logId)).not.toBeNull();
+
+          const worker = new JobQueueWorker<CoreJobSettlementMeta>(queries(), {
+            pollIntervalMs: 30,
+          });
+          worker.register(createWebhookJobHandler(queries()));
+          worker.start();
+
+          try {
+            await waitUntil(async () => (await findJob(redeliveryResult.logId)) === null);
+          } finally {
+            await worker.stop();
+          }
+
+          expect(receivedRequests).toHaveLength(1);
+          const received = receivedRequests[0]!;
+          expect(JSON.parse(received.rawBody)).toEqual(originalBody);
+          const expectedSignature = createHmac('sha256', 'rotated-signing-key')
+            .update(received.rawBody)
+            .digest('hex');
+          expect(received.signature).toBe(expectedSignature);
+
+          // New log entry records success and `redeliveredFrom`, while original log remains untouched.
+          await expect(findLog(redeliveryResult.logId)).resolves.toMatchObject({
+            id: redeliveryResult.logId,
+            payloadHookId: 'jq-redeliver-hook',
+            payload: {
+              result: LogResult.Success,
+              attempts: 1,
+              redeliveredFrom: originalLogId,
+            },
+          });
+          await expect(findLog(originalLogId)).resolves.toMatchObject({
+            id: originalLogId,
+            payload: {
+              result: LogResult.Error,
+              attempts: 1,
+              error: 'HTTP 400',
+            },
+          });
+          const originalLog = await findLog(originalLogId);
+          expect(originalLog?.payload).not.toHaveProperty('redeliveredFrom');
+        }
+      );
+    }, 15_000);
+
+    it('excludes retrying logs with nextAttemptAt from getHookExecutionStatsByHookId', async () => {
+      await pool.query(sql`
+        insert into logs (tenant_id, id, key, payload)
+        values
+          (
+            ${defaultTenantId},
+            'jq-stat-success',
+            ${`TriggerHook.${InteractionHookEvent.PostSignIn}`},
+            ${sql.jsonb({
+              key: `TriggerHook.${InteractionHookEvent.PostSignIn}`,
+              result: LogResult.Success,
+              hookId: 'jq-stats-hook',
+            })}
+          ),
+          (
+            ${defaultTenantId},
+            'jq-stat-failed',
+            ${`TriggerHook.${InteractionHookEvent.PostSignIn}`},
+            ${sql.jsonb({
+              key: `TriggerHook.${InteractionHookEvent.PostSignIn}`,
+              result: LogResult.Error,
+              hookId: 'jq-stats-hook',
+            })}
+          ),
+          (
+            ${defaultTenantId},
+            'jq-stat-retrying',
+            ${`TriggerHook.${InteractionHookEvent.PostSignIn}`},
+            ${sql.jsonb({
+              key: `TriggerHook.${InteractionHookEvent.PostSignIn}`,
+              result: LogResult.Error,
+              hookId: 'jq-stats-hook',
+              nextAttemptAt: Date.now() + 60_000,
+            })}
+          )
+      `);
+
+      const stats = await runAsTenant(pool, defaultTenantId, async (connection) => {
+        const tenantQueries = new Queries(
+          connection,
+          new WellKnownCache(defaultTenantId, new TtlCache())
+        );
+        return tenantQueries.logs.getHookExecutionStatsByHookId('jq-stats-hook');
+      });
+
+      expect(stats).toEqual({
+        requestCount: 2,
+        successCount: 1,
+      });
+    });
   });
 });
 /* eslint-enable max-lines */

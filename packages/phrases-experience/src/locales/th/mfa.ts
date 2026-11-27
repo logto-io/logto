@@ -78,7 +78,6 @@ const mfa = {
   trust_this_device_other: 'เชื่อถืออุปกรณ์นี้เป็นเวลา {{count}} วัน',
   secret_key_copied: 'คัดลอกคีย์ลับแล้ว',
   backup_code_copied: 'คัดลอกรหัสสำรองแล้ว',
-  webauthn_not_ready: 'WebAuthn ยังไม่พร้อม กรุณาลองใหม่อีกครั้งภายหลัง',
   webauthn_not_supported: 'เบราว์เซอร์นี้ไม่รองรับ WebAuthn',
   webauthn_failed_to_create: 'สร้างไม่สำเร็จ กรุณาลองใหม่อีกครั้ง',
   webauthn_failed_to_verify: 'ยืนยันไม่สำเร็จ กรุณาลองใหม่อีกครั้ง',

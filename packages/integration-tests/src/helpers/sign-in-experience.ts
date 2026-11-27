@@ -50,7 +50,6 @@ export const defaultSignInExperienceSettings = {
   socialSignIn: {},
   socialSignInConnectorTargets: [],
   singleSignOnEnabled: false,
-  // `PromptAtSignInAndSignUp` replaces the deprecated `UserControlled` the seed still writes.
   mfa: { factors: [], policy: MfaPolicy.PromptAtSignInAndSignUp },
   adaptiveMfa: {},
   passkeySignIn: {},

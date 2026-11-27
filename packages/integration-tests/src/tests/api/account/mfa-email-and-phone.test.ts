@@ -20,7 +20,7 @@ import {
   enableAllPasswordSignInMethods,
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
-import { devFeatureTest, generateEmail, generatePhone } from '#src/utils.js';
+import { generateEmail, generatePhone } from '#src/utils.js';
 
 const factorConfigs = [
   {
@@ -46,7 +46,7 @@ const signIn = async (profile: { primaryEmail?: string; primaryPhone?: string } 
   return { user, password, api };
 };
 
-devFeatureTest.describe('my-account (mfa - email and phone verification codes)', () => {
+describe('my-account (mfa - email and phone verification codes)', () => {
   beforeAll(async () => {
     await enableAllPasswordSignInMethods();
     await enableAllAccountCenterFields();

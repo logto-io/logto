@@ -21,7 +21,6 @@ type ExpectedDecision = Partial<MfaEnrollmentDecision> & Pick<MfaEnrollmentDecis
 
 type MatrixCase = {
   name: string;
-  isDevFeaturesEnabled?: boolean;
   mfaSettings?: Partial<MfaSettings>;
   interactionEvent?: InteractionEvent;
   userMfaConfig?: MfaEnrollmentSnapshot['userMfaConfig'];
@@ -48,7 +47,6 @@ const mfa = (
 ): Partial<MfaSettings> => ({ policy, factors, ...extra });
 
 const buildSnapshot = ({
-  isDevFeaturesEnabled = false,
   mfaSettings,
   interactionEvent = InteractionEvent.SignIn,
   userMfaConfig = {},
@@ -71,7 +69,6 @@ const buildSnapshot = ({
   };
 
   return {
-    isDevFeaturesEnabled,
     mfaSettings: resolvedSettings,
     interactionEvent,
     userMfaConfig,
@@ -215,27 +212,7 @@ const matrix: MatrixCase[] = [
     expected: { kind: Missing, availableFactors: [MfaFactor.TOTP] },
   },
   {
-    name: 'omits maskedIdentifiers on missing_mfa when isDevFeaturesEnabled=false',
-    isDevFeaturesEnabled: false,
-    mfaSettings: mfa(MfaPolicy.Mandatory, [
-      MfaFactor.TOTP,
-      MfaFactor.EmailVerificationCode,
-      MfaFactor.PhoneVerificationCode,
-    ]),
-    primaryEmail: 'alice@logto.io',
-    primaryPhone: '16502530000',
-    expected: {
-      kind: Missing,
-      availableFactors: [
-        MfaFactor.TOTP,
-        MfaFactor.EmailVerificationCode,
-        MfaFactor.PhoneVerificationCode,
-      ],
-    },
-  },
-  {
-    name: 'exposes maskedIdentifiers on missing_mfa when isDevFeaturesEnabled=true',
-    isDevFeaturesEnabled: true,
+    name: 'exposes maskedIdentifiers on missing_mfa for existing primary identifiers',
     mfaSettings: mfa(MfaPolicy.Mandatory, [
       MfaFactor.TOTP,
       MfaFactor.EmailVerificationCode,
@@ -258,7 +235,6 @@ const matrix: MatrixCase[] = [
   },
   {
     name: 'does not suggest additional MFA or backup codes when canBindMfa=false',
-    isDevFeaturesEnabled: true,
     mfaSettings: mfa(MfaPolicy.Mandatory, [
       MfaFactor.EmailVerificationCode,
       MfaFactor.TOTP,
@@ -273,10 +249,9 @@ const matrix: MatrixCase[] = [
     expected: { kind: None },
   },
   {
-    name: 'suggests additional MFA in implicit mode (isDevFeaturesEnabled=false) for signup Email',
-    isDevFeaturesEnabled: false,
+    name: 'suggests additional MFA in implicit mode for signup Email',
     mfaSettings: mfa(MfaPolicy.Mandatory, [MfaFactor.EmailVerificationCode, MfaFactor.TOTP], {
-      verificationCodeEnrollment: MfaVerificationCodeEnrollment.Explicit,
+      verificationCodeEnrollment: MfaVerificationCodeEnrollment.Implicit,
     }),
     userFactors: [MfaFactor.EmailVerificationCode],
     primaryEmail: 'alice@logto.io',
@@ -293,12 +268,12 @@ const matrix: MatrixCase[] = [
       skippable: true,
       availableFactors: [MfaFactor.TOTP, MfaFactor.EmailVerificationCode],
       maskedIdentifiers: { [MfaFactor.EmailVerificationCode]: 'alic****@logto.io' },
+      boundFactors: [MfaFactor.EmailVerificationCode],
       isWebAuthnUsedAsSignInPasskey: false,
     },
   },
   {
     name: 'suggests additional MFA in explicit mode with boundFactors and unenrolled identifier',
-    isDevFeaturesEnabled: true,
     mfaSettings: mfa(
       MfaPolicy.Mandatory,
       [MfaFactor.EmailVerificationCode, MfaFactor.PhoneVerificationCode, MfaFactor.TOTP],
@@ -331,7 +306,6 @@ const matrix: MatrixCase[] = [
   },
   {
     name: 'suggests additional MFA in explicit mode when WebAuthn bound as sign-in passkey',
-    isDevFeaturesEnabled: true,
     mfaSettings: mfa(MfaPolicy.Mandatory, [MfaFactor.WebAuthn, MfaFactor.TOTP], {
       verificationCodeEnrollment: MfaVerificationCodeEnrollment.Explicit,
     }),
@@ -352,7 +326,6 @@ const matrix: MatrixCase[] = [
   },
   {
     name: 'skips additional MFA in explicit mode when factor is stored-only or multiple bound',
-    isDevFeaturesEnabled: true,
     mfaSettings: mfa(MfaPolicy.Mandatory, [MfaFactor.EmailVerificationCode, MfaFactor.TOTP], {
       verificationCodeEnrollment: MfaVerificationCodeEnrollment.Explicit,
     }),

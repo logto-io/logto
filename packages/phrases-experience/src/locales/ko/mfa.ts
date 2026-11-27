@@ -76,7 +76,6 @@ const mfa = {
   trust_this_device_other: '이 기기를 {{count}}일 동안 신뢰하기',
   secret_key_copied: '비밀 키가 복사되었습니다.',
   backup_code_copied: '백업 코드가 복사되었습니다.',
-  webauthn_not_ready: 'WebAuthn이 아직 준비되지 않았습니다. 나중에 다시 시도하세요.',
   webauthn_not_supported: '이 브라우저에서는 WebAuthn이 지원되지 않습니다.',
   webauthn_failed_to_create: '생성 실패. 다시 시도하세요.',
   webauthn_failed_to_verify: '확인 실패. 다시 시도하세요.',

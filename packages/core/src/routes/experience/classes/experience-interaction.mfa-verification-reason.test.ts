@@ -23,9 +23,9 @@ import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
-import { type Interaction, type WithHooksAndLogsContext } from '../../types.js';
+import { type Interaction, type WithHooksAndLogsContext } from '../types.js';
 
-import { MfaVerificationReason } from './mfa-verification-decision.js';
+import { MfaVerificationReason } from './libraries/mfa-verification-decision.js';
 
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
@@ -36,7 +36,7 @@ await mockEsmWithActual('#src/env-set/index.js', () => ({
   },
 }));
 
-const ExperienceInteraction = await pickDefault(import('../experience-interaction.js'));
+const ExperienceInteraction = await pickDefault(import('./experience-interaction.js'));
 
 const createInteraction = ({
   user = mockUserWithMfaVerifications,

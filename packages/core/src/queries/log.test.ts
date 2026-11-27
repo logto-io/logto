@@ -11,7 +11,7 @@ const pool = createMockPool({
 });
 
 const { createLogQueries } = await import('./log.js');
-const { countLogs, findLogs, deleteLogsInRange, getHookExecutionStatsByHookId } =
+const { countLogs, findLogs, findLogById, deleteLogsInRange, getHookExecutionStatsByHookId } =
   createLogQueries(pool);
 
 beforeEach(() => {
@@ -69,6 +69,43 @@ describe('findLogs()', () => {
   });
 });
 
+describe('log reads', () => {
+  const storedLog = {
+    id: 'log-1',
+    key: 'Interaction.SignIn.Submit',
+    payload: {
+      key: 'Interaction.SignIn.Submit',
+      result: 'Success',
+      params: { password: 'plain-password' },
+      interaction: {
+        mfa: { backupCode: { type: 'BackupCode', codes: ['a1b2c3d4e5'] } },
+        verificationRecords: [{ id: 'verification-1', backupCodes: ['a1b2c3d4e5'] }],
+      },
+    },
+  };
+  const maskedPayload = {
+    key: 'Interaction.SignIn.Submit',
+    result: 'Success',
+    params: { password: '******' },
+    interaction: {
+      mfa: { backupCode: { type: 'BackupCode', codes: '******' } },
+      verificationRecords: [{ id: 'verification-1', backupCodes: '******' }],
+    },
+  };
+
+  it('masks stored secrets in findLogs()', async () => {
+    mockQuery.mockResolvedValueOnce(createMockQueryResult([storedLog] as never));
+
+    await expect(findLogs(20, 0, {})).resolves.toEqual([{ ...storedLog, payload: maskedPayload }]);
+  });
+
+  it('masks stored secrets in findLogById()', async () => {
+    mockQuery.mockResolvedValueOnce(createMockQueryResult([storedLog] as never));
+
+    await expect(findLogById('log-1')).resolves.toEqual({ ...storedLog, payload: maskedPayload });
+  });
+});
+
 describe('countLogs()', () => {
   it('caps the count filtered by a column', async () => {
     mockQuery.mockImplementationOnce(async (query, values) => {
@@ -89,11 +126,12 @@ describe('countLogs()', () => {
 });
 
 describe('getHookExecutionStatsByHookId()', () => {
-  it('filters by the hook id column', async () => {
+  it('filters by the hook id column and excludes retrying logs', async () => {
     mockQuery.mockImplementationOnce(async (query, values) => {
       const statement = String(query);
 
       expect(statement).toContain('"payload_hook_id" = $2');
+      expect(statement).toContain(`not ("payload" ? 'nextAttemptAt')`);
       expect(statement).not.toContain(`->>'hookId'`);
       expect(values).toEqual([expect.any(Number), 'hook-1']);
 

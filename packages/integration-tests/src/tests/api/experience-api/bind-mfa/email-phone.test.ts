@@ -30,7 +30,7 @@ import {
   resetMfaSettings,
 } from '#src/helpers/sign-in-experience.js';
 import { generateNewUserProfile, UserApiTest } from '#src/helpers/user.js';
-import { devFeatureTest, generateEmail, generatePhone } from '#src/utils.js';
+import { generateEmail, generatePhone } from '#src/utils.js';
 
 const mfaConfigs = [
   {
@@ -83,61 +83,53 @@ describe.each(mfaConfigs)('$type MFA binding API tests', (config) => {
     await userApi.cleanUp();
   });
 
-  devFeatureTest.it(
-    `should enroll the existing primary ${type} with a BindMfa code in explicit mode`,
-    async () => {
-      await updateSignInExperience({
-        mfa: {
-          factors: [mfaFactor],
-          policy: MfaPolicy.Mandatory,
-          verificationCodeEnrollment: MfaVerificationCodeEnrollment.Explicit,
-        },
-      });
+  it(`should enroll the existing primary ${type} with a BindMfa code in explicit mode`, async () => {
+    await updateSignInExperience({
+      mfa: {
+        factors: [mfaFactor],
+        policy: MfaPolicy.Mandatory,
+        verificationCodeEnrollment: MfaVerificationCodeEnrollment.Explicit,
+      },
+    });
 
-      const { username, password } = generateNewUserProfile({ username: true, password: true });
-      const identifierValue = generateValue();
-      const user = await userApi.create({
-        username,
-        password,
-        ...(signInIdentifier === SignInIdentifier.Email
-          ? { primaryEmail: identifierValue }
-          : { primaryPhone: identifierValue }),
-      });
+    const { username, password } = generateNewUserProfile({ username: true, password: true });
+    const identifierValue = generateValue();
+    const user = await userApi.create({
+      username,
+      password,
+      ...(signInIdentifier === SignInIdentifier.Email
+        ? { primaryEmail: identifierValue }
+        : { primaryPhone: identifierValue }),
+    });
 
-      const client = await initExperienceClient();
-      await identifyUserWithUsernamePassword(client, username, password);
-      await expectRejects(client.submitInteraction(), { code: 'user.missing_mfa', status: 422 });
+    const client = await initExperienceClient();
+    await identifyUserWithUsernamePassword(client, username, password);
+    await expectRejects(client.submitInteraction(), { code: 'user.missing_mfa', status: 422 });
 
-      const { verificationId } = await client.sendVerificationCode({
-        identifier: { type: signInIdentifier },
-        interactionEvent: InteractionEvent.SignIn,
-        templateType: TemplateType.BindMfa,
-      });
-      const {
-        code,
-        address,
-        phone,
-        type: templateType,
-      } = await readConnectorMessage(connectorType);
-      expect(address ?? phone).toBe(identifierValue);
-      expect(templateType).toBe(TemplateType.BindMfa);
+    const { verificationId } = await client.sendVerificationCode({
+      identifier: { type: signInIdentifier },
+      interactionEvent: InteractionEvent.SignIn,
+      templateType: TemplateType.BindMfa,
+    });
+    const { code, address, phone, type: templateType } = await readConnectorMessage(connectorType);
+    expect(address ?? phone).toBe(identifierValue);
+    expect(templateType).toBe(TemplateType.BindMfa);
 
-      await client.verifyVerificationCode({
-        identifier: { type: signInIdentifier },
-        verificationId,
-        code,
-      });
-      await client.bindMfa(mfaFactor, verificationId);
+    await client.verifyVerificationCode({
+      identifier: { type: signInIdentifier },
+      verificationId,
+      code,
+    });
+    await client.bindMfa(mfaFactor, verificationId);
 
-      const { redirectTo } = await client.submitInteraction();
-      await processSession(client, redirectTo);
-      await logoutClient(client);
+    const { redirectTo } = await client.submitInteraction();
+    await processSession(client, redirectTo);
+    await logoutClient(client);
 
-      expect(await getUserMfaVerifications(user.id)).toEqual([
-        expect.objectContaining({ type: mfaFactor }),
-      ]);
-    }
-  );
+    expect(await getUserMfaVerifications(user.id)).toEqual([
+      expect.objectContaining({ type: mfaFactor }),
+    ]);
+  });
 
   it(`should bind ${type} MFA on register`, async () => {
     await enableMandatoryMfa();
