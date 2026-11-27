@@ -15,6 +15,7 @@ import { conditional, deduplicate, yes } from '@silverhand/essentials';
 import { subDays } from 'date-fns';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
@@ -56,7 +57,7 @@ export default function hookRoutes<T extends ManagementApiRouter>(
   } = queries;
 
   const {
-    hooks: { triggerTestHook },
+    hooks: { triggerTestHook, redeliverHookLog },
     quota,
   } = libraries;
 
@@ -157,11 +158,14 @@ export default function hookRoutes<T extends ManagementApiRouter>(
       validateTimeWindow(userStart, userEnd);
 
       const includeKeyPrefix: WebhookLogPrefix[] = [hook.Type.TriggerHook];
-      // Backward compat: when neither time param is supplied, fall back to the
-      // historical 24h lower bound. When the caller supplies either bound,
-      // honor their window as-is and skip the default.
+      // Durable job queue: widen the default lookback window from 24h to 48h when dev features are
+      // enabled so entries that fail after the 24h retry window remain visible for 24h to redeliver.
+      // When the caller supplies either bound, honor their window as-is and skip the default.
+      const defaultLookbackDays = EnvSet.values.isDevFeaturesEnabled ? 2 : 1;
       const hasExplicitWindow = userStart !== undefined || userEnd !== undefined;
-      const startTime = hasExplicitWindow ? userStart : subDays(new Date(), 1).getTime();
+      const startTime = hasExplicitWindow
+        ? userStart
+        : subDays(new Date(), defaultLookbackDays).getTime();
       const endTime = userEnd;
 
       const [{ count, isCapped }, logs] = await Promise.all([
@@ -191,6 +195,26 @@ export default function hookRoutes<T extends ManagementApiRouter>(
       return next();
     }
   );
+
+  // Durable job queue: expose webhook manual redelivery only when dev features are enabled.
+  if (EnvSet.values.isDevFeaturesEnabled) {
+    router.post(
+      '/hooks/:id/recent-logs/:logId/redeliver',
+      koaGuard({
+        params: z.object({ id: z.string(), logId: z.string() }),
+        response: z.object({ logId: z.string() }),
+        status: [202, 404, 409, 422, 429],
+      }),
+      async (ctx, next) => {
+        const { id, logId } = ctx.guard.params;
+
+        ctx.body = await redeliverHookLog(id, logId);
+        ctx.status = 202;
+
+        return next();
+      }
+    );
+  }
 
   router.post(
     '/hooks',

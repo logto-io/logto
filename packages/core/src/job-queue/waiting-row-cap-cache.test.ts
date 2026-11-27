@@ -220,4 +220,69 @@ describe('WaitingRowCapCache', () => {
     expect(countByGroup).toHaveBeenCalledTimes(3);
     expect(countByType).toHaveBeenCalledTimes(3);
   });
+
+  it('releases a reservation idempotently and ignores stale releases after TTL refresh', async () => {
+    const now = jest.fn(() => 1000);
+    const cache = new WaitingRowCapCache({ ttlMs: 5000, now });
+    const countByGroup = jest.fn().mockResolvedValueOnce(1).mockResolvedValueOnce(1);
+    const countByType = jest.fn().mockResolvedValueOnce(1).mockResolvedValueOnce(1);
+
+    const first = await cache.tryReserve({
+      tenantId: 'tenant-1',
+      type: 'webhook',
+      groupKey: 'hook-1',
+      maxWaitingRowsPerGroup: 2,
+      maxWaitingRowsPerTenant: 5,
+      countByGroup,
+      countByType,
+    });
+    expect(first.allowed).toBe(true);
+
+    if (first.allowed) {
+      first.release();
+      first.release();
+    }
+
+    // Because `first` was released (and decremented only once), a retry fits under cap = 2.
+    const second = await cache.tryReserve({
+      tenantId: 'tenant-1',
+      type: 'webhook',
+      groupKey: 'hook-1',
+      maxWaitingRowsPerGroup: 2,
+      maxWaitingRowsPerTenant: 5,
+      countByGroup,
+      countByType,
+    });
+    expect(second.allowed).toBe(true);
+    expect(countByGroup).toHaveBeenCalledTimes(1);
+    expect(countByType).toHaveBeenCalledTimes(1);
+
+    // Expire TTL and refresh; calling `release()` on the stale reservation must not touch it.
+    now.mockReturnValue(7000);
+    const refreshed = await cache.tryReserve({
+      tenantId: 'tenant-1',
+      type: 'webhook',
+      groupKey: 'hook-1',
+      maxWaitingRowsPerGroup: 2,
+      maxWaitingRowsPerTenant: 5,
+      countByGroup,
+      countByType,
+    });
+    expect(refreshed.allowed).toBe(true);
+
+    if (second.allowed) {
+      second.release();
+    }
+
+    const blocked = await cache.tryReserve({
+      tenantId: 'tenant-1',
+      type: 'webhook',
+      groupKey: 'hook-1',
+      maxWaitingRowsPerGroup: 2,
+      maxWaitingRowsPerTenant: 5,
+      countByGroup,
+      countByType,
+    });
+    expect(blocked).toEqual({ allowed: false, scope: 'group' });
+  });
 });

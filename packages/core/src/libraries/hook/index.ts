@@ -24,9 +24,11 @@ import {
   type HookContext,
 } from './context-manager.js';
 import { createWebhookDispatcher, type TenantRequestSlot } from './delivery.js';
+import { createRedeliverHookLog } from './redeliver.js';
 import { generateHookTestPayload, sendWebhookRequest } from './utils.js';
 
 type CreateHookLibraryOptions = {
+  tenantId?: string;
   requestSlot?: TenantRequestSlot;
   jobQueue?: CoreJobQueue;
   waitingRowCaps?: {
@@ -38,19 +40,21 @@ type CreateHookLibraryOptions = {
 export const createHookLibrary = (queries: Queries, options?: CreateHookLibraryOptions) => {
   const {
     applications: { findApplicationById },
-    logs: { insertLog },
+    logs: { insertLog, findLogById },
     // TODO: @gao should we use the library function thus we can pass full userinfo to the payload?
     users: { findUserById },
     hooks: { findAllHooks, findHookById },
     jobs: { enqueueJob, countJobsByGroup, countJobsByType },
   } = queries;
 
+  const queue = options?.jobQueue ?? jobQueue;
+
   const { dispatchWebhooks, runWithTriggerLifecycle } = createWebhookDispatcher({
     insertLog,
     enqueueJob,
     countJobsByGroup,
     countJobsByType,
-    queue: options?.jobQueue ?? jobQueue,
+    queue,
     requestSlot: options?.requestSlot,
     waitingRowCaps: options?.waitingRowCaps,
   });
@@ -308,11 +312,22 @@ export const createHookLibrary = (queries: Queries, options?: CreateHookLibraryO
     });
   };
 
+  const redeliverHookLog = createRedeliverHookLog({
+    findHookById,
+    findLogById,
+    enqueueJob,
+    countJobsByGroup,
+    countJobsByType,
+    queue,
+    waitingRowCaps: options?.waitingRowCaps,
+  });
+
   return {
     triggerInteractionHooks,
     triggerDataHooks,
     triggerExceptionHooks,
     triggerTestHook,
     triggerEvent,
+    redeliverHookLog,
   };
 };
