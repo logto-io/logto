@@ -14,6 +14,7 @@ import {
   type User,
 } from '@logto/schemas';
 
+import { LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Libraries from '#src/tenants/Libraries.js';
 import type Queries from '#src/tenants/Queries.js';
 
@@ -21,6 +22,7 @@ import { type InteractionContext } from '../types.js';
 
 import { type SignInExperienceValidator } from './libraries/sign-in-experience-validator.js';
 import { Mfa, type MfaData } from './mfa.js';
+import { BackupCodeVerification } from './verifications/backup-code-verification.js';
 import { EmailCodeVerification, PhoneCodeVerification } from './verifications/code-verification.js';
 
 const { jest } = import.meta;
@@ -1211,6 +1213,45 @@ describe('Email and Phone MFA explicit enrollment', () => {
         isWebAuthnUsedAsSignInPasskey: true,
       },
     });
+  });
+});
+
+describe('Mfa.addBackupCodeByVerificationId', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('keeps the generated backup codes out of the audit log', async () => {
+    const record = BackupCodeVerification.create({} as Libraries, {} as Queries, 'user-id');
+    const codes = record.generate();
+    const { mfa } = createMfa({
+      mfaSettings: {
+        policy: MfaPolicy.PromptAtSignInAndSignUp,
+        factors: [MfaFactor.TOTP, MfaFactor.BackupCode],
+      },
+      mfaFactorsEnabledForBinding: [MfaFactor.TOTP, MfaFactor.BackupCode],
+      user: {
+        id: 'user-id',
+        logtoConfig: {},
+        mfaVerifications: [
+          {
+            type: MfaFactor.TOTP,
+            id: 'totp-id',
+            key: 'totp-secret',
+            createdAt: new Date(0).toISOString(),
+          },
+        ],
+      },
+      consumeForBindByType: (() => record) as unknown as InteractionContext['consumeForBindByType'],
+    });
+    mockSignInExperience(mfa);
+    const log = new LogEntry('Interaction.SignIn.BindMfa.BackupCode.Submit');
+
+    await mfa.addBackupCodeByVerificationId(record.id, log);
+
+    expect(log.payload.verification).toEqual(record.toSanitizedJson());
+    expect(log.payload.verification).not.toHaveProperty('backupCodes');
+    expect(mfa.data.backupCode).toEqual({ type: MfaFactor.BackupCode, codes });
   });
 });
 /* eslint-enable max-lines */

@@ -11,7 +11,7 @@ const pool = createMockPool({
 });
 
 const { createLogQueries } = await import('./log.js');
-const { countLogs, findLogs, deleteLogsInRange, getHookExecutionStatsByHookId } =
+const { countLogs, findLogs, findLogById, deleteLogsInRange, getHookExecutionStatsByHookId } =
   createLogQueries(pool);
 
 beforeEach(() => {
@@ -66,6 +66,43 @@ describe('findLogs()', () => {
 
     await findLogs(20, 0, { payload: { userId: undefined, applicationId: '' } });
     expect(mockQuery).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('log reads', () => {
+  const storedLog = {
+    id: 'log-1',
+    key: 'Interaction.SignIn.Submit',
+    payload: {
+      key: 'Interaction.SignIn.Submit',
+      result: 'Success',
+      params: { password: 'plain-password' },
+      interaction: {
+        mfa: { backupCode: { type: 'BackupCode', codes: ['a1b2c3d4e5'] } },
+        verificationRecords: [{ id: 'verification-1', backupCodes: ['a1b2c3d4e5'] }],
+      },
+    },
+  };
+  const maskedPayload = {
+    key: 'Interaction.SignIn.Submit',
+    result: 'Success',
+    params: { password: '******' },
+    interaction: {
+      mfa: { backupCode: { type: 'BackupCode', codes: '******' } },
+      verificationRecords: [{ id: 'verification-1', backupCodes: '******' }],
+    },
+  };
+
+  it('masks stored secrets in findLogs()', async () => {
+    mockQuery.mockResolvedValueOnce(createMockQueryResult([storedLog] as never));
+
+    await expect(findLogs(20, 0, {})).resolves.toEqual([{ ...storedLog, payload: maskedPayload }]);
+  });
+
+  it('masks stored secrets in findLogById()', async () => {
+    mockQuery.mockResolvedValueOnce(createMockQueryResult([storedLog] as never));
+
+    await expect(findLogById('log-1')).resolves.toEqual({ ...storedLog, payload: maskedPayload });
   });
 });
 
