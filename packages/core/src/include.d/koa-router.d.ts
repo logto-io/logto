@@ -284,8 +284,8 @@ declare module 'koa-router' {
     // Additional signatures
     post<T1, U1, T2, U2>(
       path: string | RegExp | Array<string | RegExp>,
-      middleware1: Koa.Middleware<T1, U1>,
-      middleware2: Koa.Middleware<StateT & T1, CustomT & U1>,
+      middleware1: Koa.Middleware<StateT & T1, CustomT & U1>,
+      middleware2: Koa.Middleware<StateT & T2, CustomT & U2>,
       routeHandler: Router.IMiddleware<StateT & T1 & T2, CustomT & U1 & U2>
     ): Router<StateT & T1 & T2, CustomT & U1 & U2>;
     /**

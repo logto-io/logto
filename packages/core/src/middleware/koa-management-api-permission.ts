@@ -115,6 +115,31 @@ export const assertHasScope = (
   );
 };
 
+/** Placeholder used when masking credentials on Management API `GET` responses. */
+export const maskedCredentialValue = '******';
+
+/**
+ * Returns whether credential fields on Management API `GET` responses should be masked for the
+ * caller.
+ *
+ * Returns `true` whenever the caller is read-only (`auth.isReadOnly`) or lacks
+ * `PredefinedScope.All` (unless an optional dedicated `credentialScope` is granted).
+ */
+export const shouldMaskCredentials = (
+  auth: WithAuthContext['auth'],
+  credentialScope?: ManagementApiScopeName
+): boolean => {
+  if (auth.isReadOnly) {
+    return true;
+  }
+
+  if (auth.scopes.has(PredefinedScope.All)) {
+    return false;
+  }
+
+  return !(credentialScope && auth.scopes.has(credentialScope));
+};
+
 export const isManagementApiPermissionMiddleware = (
   function_: unknown
 ): function_ is WithManagementApiPermissionPolicy<IMiddleware> =>
@@ -176,17 +201,13 @@ const freezePolicy = (policy: ManagementApiPermissionPolicy): ManagementApiPermi
  *    or attach `registerManagementApiPolicyEnforcer(router)` and call its returned `finalize()`
  *    callback after mounting routes.
  */
-export default function koaManagementApiPermission<
-  StateT,
-  ContextT extends { auth: WithAuthContext['auth'] },
-  ResponseBodyT,
->(
+export default function koaManagementApiPermission(
   policy: ManagementApiPermissionPolicy
-): WithManagementApiPermissionPolicy<MiddlewareType<StateT, ContextT, ResponseBodyT>> {
+): WithManagementApiPermissionPolicy<MiddlewareType<unknown, { auth: WithAuthContext['auth'] }>> {
   const frozenPolicy = freezePolicy(policy);
 
   const managementApiPermissionMiddleware: WithManagementApiPermissionPolicy<
-    MiddlewareType<StateT, ContextT, ResponseBodyT>
+    MiddlewareType<unknown, { auth: WithAuthContext['auth'] }>
   > = async (ctx, next) => {
     assertHasManagementApiPermission(ctx.auth, frozenPolicy);
     return next();

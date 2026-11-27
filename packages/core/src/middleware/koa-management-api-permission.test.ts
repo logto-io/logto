@@ -17,8 +17,10 @@ import koaManagementApiPermission, {
   hasManagementApiPermission,
   isKnownManagementApiScope,
   isManagementApiPermissionMiddleware,
+  maskedCredentialValue,
   normalizeManagementApiPermissionPolicy,
   registerManagementApiPolicyEnforcer,
+  shouldMaskCredentials,
 } from './koa-management-api-permission.js';
 
 const { jest } = import.meta;
@@ -103,6 +105,17 @@ describe('koaManagementApiPermission helpers', () => {
     expect(isManagementApiPermissionMiddleware(middleware)).toBe(true);
     expect(middleware.policy).toEqual({ anyOf: [readUsersScope] });
     expect(Object.isFrozen(middleware.policy)).toBe(true);
+  });
+
+  it('evaluates shouldMaskCredentials for all, scoped, read-only, and dedicated credential scopes', () => {
+    expect(maskedCredentialValue).toBe('******');
+    expect(shouldMaskCredentials(createAuth([PredefinedScope.All]))).toBe(false);
+    expect(shouldMaskCredentials({ ...createAuth([PredefinedScope.All]), isReadOnly: true })).toBe(
+      true
+    );
+    expect(shouldMaskCredentials(createAuth([readUsersScope]))).toBe(true);
+    expect(shouldMaskCredentials(createAuth([readUsersScope]), readUsersScope)).toBe(false);
+    expect(shouldMaskCredentials(createAuth([readHooksScope]), readUsersScope)).toBe(true);
   });
 });
 

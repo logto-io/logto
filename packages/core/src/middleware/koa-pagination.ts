@@ -39,29 +39,27 @@ export const fallbackDefaultPageSize = 20;
 export const pageNumberKey = 'page';
 export const pageSizeKey = 'page_size';
 
-function koaPagination<StateT, ContextT, ResponseBodyT>(
+function koaPagination(
   config?: PaginationConfig<false>
-): MiddlewareType<StateT, WithPaginationContext<ContextT, false>, ResponseBodyT>;
-function koaPagination<StateT, ContextT, ResponseBodyT>(
+): MiddlewareType<unknown, WithPaginationContext<unknown, false>>;
+function koaPagination(
   config: PaginationConfig<true>
-): MiddlewareType<StateT, WithPaginationContext<ContextT, true>, ResponseBodyT>;
-function koaPagination<StateT, ContextT, ResponseBodyT>(
+): MiddlewareType<unknown, WithPaginationContext<unknown, true>>;
+function koaPagination(
   config?: PaginationConfig<boolean>
-): MiddlewareType<StateT, WithPaginationContext<ContextT, boolean>, ResponseBodyT>;
-function koaPagination<StateT, ContextT, ResponseBodyT, IsOptional extends boolean>({
+): MiddlewareType<unknown, WithPaginationContext<unknown, boolean>>;
+function koaPagination<IsOptional extends boolean>({
   defaultPageSize = fallbackDefaultPageSize,
   maxPageSize = 100,
   isOptional,
 }: PaginationConfig<IsOptional> = {}): MiddlewareType<
-  StateT,
-  WithPaginationContext<ContextT, true>,
-  ResponseBodyT
+  unknown,
+  WithPaginationContext<unknown, true>
 > {
   // Name this anonymous function for the utility function `isPaginationMiddleware` to identify it
   const paginationMiddleware: MiddlewareType<
-    StateT,
-    WithPaginationContext<ContextT, true>,
-    ResponseBodyT
+    unknown,
+    WithPaginationContext<unknown, true>
     // eslint-disable-next-line complexity -- maybe refactor me
   > = async (ctx, next) => {
     try {
