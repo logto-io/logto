@@ -329,6 +329,10 @@ describe('consent api', () => {
       // Scope2 is removed because organization2 is not consented
       expect(getAccessTokenPayload(accessToken)).toHaveProperty('scope', scope.name);
 
+      // Case 1: personal API token (no organization_id) must not receive org-only scopes
+      const personalAccessToken = await client.getAccessToken(resource.indicator);
+      expect(getAccessTokenPayload(personalAccessToken).scope ?? '').toBe('');
+
       await Promise.all([
         roleApi.cleanUp(),
         organizationApi.cleanUp(),

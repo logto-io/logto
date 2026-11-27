@@ -1,4 +1,5 @@
 import { appInsights } from '@logto/app-insights/node';
+import { ReservedResource } from '@logto/core-kit';
 import {
   type Json,
   LogtoJwtTokenKey,
@@ -33,6 +34,7 @@ import { buildAppInsightsTelemetry } from '#src/utils/request.js';
 import { dropReservedAuthenticationContextClaims } from './authentication-context-claims.js';
 import { getClientIdentifierPayload, shouldTreatAsCimdClient } from './cimd/index.js';
 import { tokenExchangeActGuard } from './grants/token-exchange/types.js';
+import { isThirdPartyApplication } from './resource.js';
 
 const hasI18n = (ctx: KoaContextWithOIDC): ctx is KoaContextWithOIDC & { i18n: i18n } =>
   'i18n' in ctx;
@@ -57,11 +59,14 @@ const throwJwtCustomizerInvalidRequest = (ctx: KoaContextWithOIDC, message: stri
 /**
  * For organization API resource feature, add extra token claim `organization_id` to the
  * access token.
- * Note that this is available only when `resource` and `organization_id` are both present.
+ * Note that this is available only when `resource` and `organization_id` are both present,
+ * and skipped for the virtual consent-only `ReservedResource.Organization` indicator on
+ * third-party and CIMD clients.
  */
 export const getExtraTokenClaimsForOrganizationApiResource = async (
   ctx: KoaContextWithOIDC,
-  token: unknown
+  token: unknown,
+  { envSet, queries }: { envSet: EnvSet; queries: Queries }
 ): Promise<UnknownObject | undefined> => {
   const organizationId = ctx.oidc.params?.organization_id;
   const resource = ctx.oidc.params?.resource;
@@ -77,6 +82,17 @@ export const getExtraTokenClaimsForOrganizationApiResource = async (
   // Only handle access tokens
   if (!isAccessToken) {
     return;
+  }
+
+  if (resource === ReservedResource.Organization) {
+    const clientId = token.clientId ?? ctx.oidc.client?.clientId;
+    const isThirdParty =
+      shouldTreatAsCimdClient(envSet, clientId) ||
+      (clientId !== undefined && (await isThirdPartyApplication(queries, clientId)));
+
+    if (isThirdParty) {
+      return;
+    }
   }
 
   return { organization_id: organizationId };
