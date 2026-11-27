@@ -1,0 +1,73 @@
+{{- $password := required "Provide a URL-safe password for the disposable PostgreSQL fixture" .Values.password -}}
+{{- if not (regexMatch "^[A-Za-z0-9_-]+$" $password) -}}
+{{- fail "The disposable PostgreSQL password must be URL-safe" -}}
+{{- end }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: logto-db
+type: Opaque
+stringData:
+  POSTGRES_PASSWORD: {{ $password | quote }}
+  DB_URL: {{ printf "postgres://postgres:%s@postgres:5432/logto" $password | quote }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+spec:
+  selector:
+    app.kubernetes.io/name: test-postgresql
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  ports:
+    - port: 5432
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: test-postgresql
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: test-postgresql
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 70
+        runAsGroup: 70
+        fsGroup: 70
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: postgres
+          image: {{ .Values.image | quote }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+          env:
+            - name: POSTGRES_DB
+              value: logto
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: logto-db
+                  key: POSTGRES_PASSWORD
+          readinessProbe:
+            exec:
+              command: [pg_isready, -h, '127.0.0.1', -U, postgres, -d, logto]
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: data
+          emptyDir: {}

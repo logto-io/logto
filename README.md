@@ -69,6 +69,8 @@ Pick your path:
 
 [📚 Full OSS installation guide →](https://docs.logto.io/logto-oss/get-started-with-oss?ref=readme)
 
+For Kubernetes, see the [experimental Helm chart](./helm/logto/README.md).
+
 ## Integrate anywhere
 
 Logto supports all your apps, APIs, and services with industry-standard protocols.

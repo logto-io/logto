@@ -1,0 +1,50 @@
+suite: Logto Deployment
+templates:
+  - deployment.yaml
+set:
+  database.existingSecret: logto-db
+tests:
+  - it: defaults to one replica and keeps PostgreSQL out of liveness
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 1
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.tcpSocket.port
+          value: http
+      - notExists:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.path
+          value: /api/status
+  - it: leaves the replica count to the HPA when autoscaling is enabled
+    set:
+      autoscaling.enabled: true
+      resources.requests.cpu: 250m
+    asserts:
+      - notExists:
+          path: spec.replicas
+  - it: configures Recreate without rolling update settings
+    release:
+      upgrade: true
+    set:
+      strategy.type: Recreate
+    asserts:
+      - equal:
+          path: spec.strategy.type
+          value: Recreate
+      - isNullOrEmpty:
+          path: spec.strategy.rollingUpdate
+  - it: references the existing Redis URL Secret in external mode
+    set:
+      redis.mode: external
+      redis.existingSecret: logto-redis-url
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: REDIS_URL
+            valueFrom:
+              secretKeyRef:
+                name: logto-redis-url
+                key: REDIS_URL

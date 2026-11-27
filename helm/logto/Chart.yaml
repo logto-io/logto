@@ -1,0 +1,6 @@
+apiVersion: v2
+name: logto
+description: Experimental Helm chart for self-hosted Logto
+type: application
+version: 0.1.0
+appVersion: "1.46.0"

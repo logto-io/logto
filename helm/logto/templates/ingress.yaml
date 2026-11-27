@@ -1,0 +1,46 @@
+{{- if .Values.ingress.enabled }}
+{{- $host := required "ingress.host is required when enabling Ingress" .Values.ingress.host }}
+{{- $endpoint := required "endpoint is required when enabling Ingress" .Values.endpoint }}
+{{- if not (or (eq $endpoint (printf "https://%s" $host)) (eq $endpoint (printf "http://%s" $host))) }}
+{{- fail "endpoint must be http:// or https:// followed by ingress.host, with no explicit port, path, or trailing slash" }}
+{{- end }}
+{{- with .Values.ingress.adminHost }}
+{{- $adminEndpoint := required "adminEndpoint is required when enabling the admin Ingress" $.Values.adminEndpoint }}
+{{- if or (eq . $host) (not (or (eq $adminEndpoint (printf "https://%s" .)) (eq $adminEndpoint (printf "http://%s" .)))) }}
+{{- fail "adminEndpoint must be http:// or https:// followed by ingress.adminHost, with no explicit port, path, or trailing slash; ingress.adminHost must differ from ingress.host" }}
+{{- end }}
+{{- end }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "logto.fullname" . }}
+  labels:
+    {{- include "logto.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- with .Values.ingress.className }}
+  ingressClassName: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.ingress.tls }}
+  tls:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  rules:
+    {{- range $rule := list (dict "host" $host "port" "http") (dict "host" .Values.ingress.adminHost "port" "admin") }}
+    {{- if $rule.host }}
+    - host: {{ $rule.host | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "logto.fullname" $ }}
+                port:
+                  name: {{ $rule.port }}
+    {{- end }}
+    {{- end }}
+{{- end }}
