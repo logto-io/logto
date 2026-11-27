@@ -9,6 +9,7 @@ import { filterResourceScopesForTheCimdClient } from '#src/oidc/cimd/resource-sc
 import {
   filterResourceScopesForTheThirdPartyApplication,
   findResourceScopes,
+  isReservedResource,
   isThirdPartyApplication,
 } from '#src/oidc/resource.js';
 import type Libraries from '#src/tenants/Libraries.js';
@@ -233,16 +234,22 @@ export const filterAndParseMissingResourceScopes = async ({
     await Promise.all(
       Object.entries(resourceScopes).map(
         async ([resourceIndicator, missingScopes]): Promise<[string, string[]]> => {
-          // Fetch the list of scopes, `findFromOrganizations` is set to false,
-          // so it will only search the user resource scopes.
-          const scopes = await findResourceScopes({
-            queries,
-            libraries,
-            indicator: resourceIndicator,
-            userId,
-            findFromOrganizations: Boolean(organizationId),
-            organizationId,
-          });
+          // Per-org API scopes come from that organization's roles only (skipping global roles);
+          // keep `ReservedResource.Organization` on `findResourceScopes` to preserve its short-circuit.
+          const scopes =
+            organizationId && !isReservedResource(resourceIndicator)
+              ? await queries.organizations.relations.usersRoles.getUserResourceScopes(
+                  userId,
+                  resourceIndicator,
+                  organizationId
+                )
+              : await findResourceScopes({
+                  queries,
+                  libraries,
+                  indicator: resourceIndicator,
+                  userId,
+                  findFromOrganizations: false,
+                });
 
           if (shouldTreatAsCimdClient(envSet, applicationId)) {
             /**

@@ -1,4 +1,4 @@
-import { ReservedResource } from '@logto/core-kit';
+import { ReservedResource, UserScope } from '@logto/core-kit';
 import {
   defaultTenantId,
   GrantType,
@@ -26,6 +26,7 @@ const firstPartyClientId = 'first_party_app_id';
 const cimdClientId = 'https://client.example.com/client-metadata.json';
 const accountId = 'alice';
 const organizationId = 'org_a';
+const otherOrganizationId = 'org_b';
 
 class MockCimdEnvSet extends EnvSet {
   override get oidc(): EnvSet['oidc'] {
@@ -47,22 +48,36 @@ const buildScope = (id: string, name: string): Scope => ({
 const buildResourceScope = (id: string, name: string): ResourceScopeEntity => ({
   id,
   name,
-  resource: {
-    id: 'resource_1',
-    name: 'Notes API',
-  },
+  resource: { id: 'resource_1', name: 'Notes API' },
 });
 
-const buildOrgScope = (id: string, name: string): OrganizationScope => ({
-  tenantId: 'default',
-  id,
-  name,
-  description: null,
+const mockCimdTable = <T>(rows: T[]) => ({
+  insert: jest.fn(),
+  findAll: jest.fn().mockResolvedValue(rows),
+  delete: jest.fn(),
 });
 
 const personalScope = buildScope('scope_personal', 'global:billing');
+const globalOnlyOrgCfgScope = buildScope('scope_global_only', 'global:only');
+const orgOnlyPersonalCfgScope = buildScope('scope_org_only', 'org:only');
 const orgApiScope = buildScope('scope_org_api', 'org:doc');
-const orgScope = buildOrgScope('org_scope_1', 'invite:member');
+const orgBApiScope = buildScope('scope_org_b_api', 'org:doc_b');
+const orgScope: OrganizationScope = {
+  tenantId: 'default',
+  id: 'org_scope_1',
+  name: 'invite:member',
+  description: null,
+};
+
+const createProvider = (tenant: MockTenant, isCimd = false) =>
+  initOidc(
+    tenant.id,
+    isCimd ? cimdEnvSet : tenant.envSet,
+    tenant.queries,
+    tenant.libraries,
+    tenant.logtoConfigs,
+    tenant.subscription
+  );
 
 const getResourceServerInfo = async (ctx: KoaContextWithOIDC, resourceIndicator: string) => {
   const configuration = getProviderConfiguration(ctx.oidc.provider);
@@ -81,11 +96,15 @@ const createContext = (
     route,
     organizationId: orgId,
     withAccount = true,
+    hasConsentResult = false,
+    sessionGrantId,
   }: {
     clientId: string;
     route?: string;
     organizationId?: string;
     withAccount?: boolean;
+    hasConsentResult?: boolean;
+    sessionGrantId?: string;
   }
 ) => {
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal client stub for OIDC context testing
@@ -105,7 +124,28 @@ const createContext = (
       ...(orgId ? { organization_id: orgId } : {}),
     },
     entities: withAccount ? { Account: account } : {},
+    ...(hasConsentResult ? { result: { consent: { grantId: 'grant_1' } } } : {}),
+    ...(sessionGrantId
+      ? {
+          session: {
+            accountId,
+            grantIdFor: () => sessionGrantId,
+          } as unknown as KoaContextWithOIDC['oidc']['session'],
+        }
+      : {}),
   });
+};
+
+const resolveScope = async (
+  provider: KoaContextWithOIDC['oidc']['provider'],
+  options: Parameters<typeof createContext>[1],
+  resourceIndicator = indicator
+) => {
+  const { scope } = await getResourceServerInfo(
+    createContext(provider, options),
+    resourceIndicator
+  );
+  return scope;
 };
 
 const createIsolatedTenant = ({ isThirdParty }: { isThirdParty: boolean }) => {
@@ -114,19 +154,39 @@ const createIsolatedTenant = ({ isThirdParty }: { isThirdParty: boolean }) => {
   );
   const findApplicationById = jest.fn().mockResolvedValue({ isThirdParty });
   const findAllOrgScopes = jest.fn().mockResolvedValue([1, [orgScope]]);
+  const globalRoles = [personalScope, globalOnlyOrgCfgScope];
+  const orgARoles = [
+    buildResourceScope(orgApiScope.id, orgApiScope.name),
+    buildResourceScope(orgOnlyPersonalCfgScope.id, orgOnlyPersonalCfgScope.name),
+  ];
+  const orgBRoles = [buildResourceScope(orgBApiScope.id, orgBApiScope.name)];
+  const personalConfig = [personalScope, orgOnlyPersonalCfgScope];
+  const orgConfig = [orgApiScope, orgBApiScope, globalOnlyOrgCfgScope];
+
   const findUserScopesForResourceIndicator = jest.fn(
     async (_userId: string, _indicator: string, findFromOrganizations?: boolean) =>
-      findFromOrganizations ? [personalScope, orgApiScope] : [personalScope]
+      findFromOrganizations ? [personalScope, orgApiScope] : globalRoles
   );
-  const getUserResourceScopes = jest
-    .fn()
-    .mockResolvedValue([buildResourceScope(orgApiScope.id, orgApiScope.name)]);
+  const getUserResourceScopes = jest.fn(
+    async (_userId: string, _indicator: string, orgId?: string | readonly string[]) => {
+      if (orgId === undefined) {
+        return [...orgARoles, ...orgBRoles];
+      }
+
+      const ids = Array.isArray(orgId) ? orgId : [orgId];
+      return [
+        ...(ids.includes(organizationId) ? orgARoles : []),
+        ...(ids.includes(otherOrganizationId) ? orgBRoles : []),
+      ];
+    }
+  );
+  const findOrganizationIds = jest.fn(async (): Promise<readonly string[]> => [organizationId]);
   const getApplicationUserConsentResourceScopes = jest
     .fn()
-    .mockResolvedValue([{ resource: { indicator }, scopes: [personalScope] }]);
+    .mockResolvedValue([{ resource: { indicator }, scopes: personalConfig }]);
   const getApplicationUserConsentOrganizationResourceScopes = jest
     .fn()
-    .mockResolvedValue([{ resource: { indicator }, scopes: [orgApiScope] }]);
+    .mockResolvedValue([{ resource: { indicator }, scopes: orgConfig }]);
   const getApplicationUserConsentOrganizationScopes = jest.fn().mockResolvedValue([orgScope]);
 
   const tenant = new MockTenant(
@@ -135,21 +195,9 @@ const createIsolatedTenant = ({ isThirdParty }: { isThirdParty: boolean }) => {
       resources: { findResourceByIndicator },
       applications: { findApplicationById },
       cimd: {
-        resourceScopes: {
-          insert: jest.fn(),
-          findAll: jest.fn().mockResolvedValue([personalScope]),
-          delete: jest.fn(),
-        },
-        organizationResourceScopes: {
-          insert: jest.fn(),
-          findAll: jest.fn().mockResolvedValue([orgApiScope]),
-          delete: jest.fn(),
-        },
-        organizationScopes: {
-          insert: jest.fn(),
-          findAll: jest.fn().mockResolvedValue([orgScope]),
-          delete: jest.fn(),
-        },
+        resourceScopes: mockCimdTable(personalConfig),
+        organizationResourceScopes: mockCimdTable(orgConfig),
+        organizationScopes: mockCimdTable([orgScope]),
       },
     },
     undefined,
@@ -167,6 +215,9 @@ const createIsolatedTenant = ({ isThirdParty }: { isThirdParty: boolean }) => {
   jest
     .spyOn(tenant.queries.organizations.relations.usersRoles, 'getUserResourceScopes')
     .mockImplementation(getUserResourceScopes);
+  jest
+    .spyOn(tenant.queries.applications.userConsentOrganizations, 'findOrganizationIds')
+    .mockImplementation(findOrganizationIds);
 
   return {
     tenant,
@@ -174,6 +225,7 @@ const createIsolatedTenant = ({ isThirdParty }: { isThirdParty: boolean }) => {
     findAllOrgScopes,
     findUserScopesForResourceIndicator,
     getUserResourceScopes,
+    findOrganizationIds,
     getApplicationUserConsentResourceScopes,
     getApplicationUserConsentOrganizationResourceScopes,
   };
@@ -181,15 +233,7 @@ const createIsolatedTenant = ({ isThirdParty }: { isThirdParty: boolean }) => {
 
 describe('getResourceServerInfo token-route context isolation', () => {
   it('pins the four consent/authorization route names against the provider router', () => {
-    const tenant = new MockTenant();
-    const provider = initOidc(
-      tenant.id,
-      tenant.envSet,
-      tenant.queries,
-      tenant.libraries,
-      tenant.logtoConfigs,
-      tenant.subscription
-    );
+    const provider = createProvider(new MockTenant());
     // `Provider#pathFor` is a runtime method on oidc-provider missing from `@types/oidc-provider`.
     const pathFor: unknown = Reflect.get(provider, 'pathFor');
     expect(typeof pathFor).toBe('function');
@@ -218,32 +262,24 @@ describe('getResourceServerInfo token-route context isolation', () => {
   ])('$label', ({ clientId, isCimd }) => {
     const setup = () => {
       const mocks = createIsolatedTenant({ isThirdParty: true });
-      const { id, queries, libraries, logtoConfigs, subscription } = mocks.tenant;
-      const provider = initOidc(
-        id,
-        isCimd ? cimdEnvSet : mocks.tenant.envSet,
-        queries,
-        libraries,
-        logtoConfigs,
-        subscription
-      );
-      return { ...mocks, provider };
+      const provider = createProvider(mocks.tenant, isCimd);
+      const resolve = async (
+        options: Omit<Parameters<typeof createContext>[1], 'clientId'>,
+        resourceIndicator = indicator
+      ) => resolveScope(provider, { clientId, ...options }, resourceIndicator);
+      return { ...mocks, provider, resolve };
     };
 
     it('Case 1: isolates personal API scopes on token route (omits org roles & org config)', async () => {
       const {
-        provider,
+        resolve,
         tenant,
         findApplicationById,
         findUserScopesForResourceIndicator,
         getUserResourceScopes,
         getApplicationUserConsentOrganizationResourceScopes,
       } = setup();
-      const ctx = createContext(provider, { clientId, route: 'token' });
-
-      const result = await getResourceServerInfo(ctx, indicator);
-
-      expect(result.scope).toBe('global:billing');
+      expect(await resolve({ route: 'token' })).toBe('global:billing');
       expect(findUserScopesForResourceIndicator).toHaveBeenCalledWith(accountId, indicator);
       expect(getUserResourceScopes).not.toHaveBeenCalled();
       if (isCimd) {
@@ -256,18 +292,15 @@ describe('getResourceServerInfo token-route context isolation', () => {
 
     it('Case 2: isolates org API scopes on token route (omits personal global roles & personal config)', async () => {
       const {
-        provider,
+        resolve,
         tenant,
         findApplicationById,
         findUserScopesForResourceIndicator,
         getUserResourceScopes,
         getApplicationUserConsentResourceScopes,
       } = setup();
-      const ctx = createContext(provider, { clientId, route: 'token', organizationId });
 
-      const result = await getResourceServerInfo(ctx, indicator);
-
-      expect(result.scope).toBe('org:doc');
+      expect(await resolve({ route: 'token', organizationId })).toBe('org:doc');
       expect(getUserResourceScopes).toHaveBeenCalledWith(accountId, indicator, organizationId);
       expect(findUserScopesForResourceIndicator).not.toHaveBeenCalled();
       if (isCimd) {
@@ -281,12 +314,11 @@ describe('getResourceServerInfo token-route context isolation', () => {
     it.each([undefined, organizationId])(
       'Case 4: returns empty scope for ReservedResource.Organization on token route (organizationId=%s)',
       async (orgId) => {
-        const { provider, findApplicationById, findAllOrgScopes } = setup();
-        const ctx = createContext(provider, { clientId, route: 'token', organizationId: orgId });
+        const { resolve, findApplicationById, findAllOrgScopes } = setup();
 
-        const result = await getResourceServerInfo(ctx, ReservedResource.Organization);
-
-        expect(result.scope).toBe('');
+        expect(
+          await resolve({ route: 'token', organizationId: orgId }, ReservedResource.Organization)
+        ).toBe('');
         expect(findAllOrgScopes).not.toHaveBeenCalled();
         if (isCimd) {
           expect(findApplicationById).not.toHaveBeenCalled();
@@ -294,84 +326,117 @@ describe('getResourceServerInfo token-route context isolation', () => {
       }
     );
 
-    it.each(['authorization', 'resume', 'code_verification', 'device_resume'])(
-      'keeps combined consent-stage candidate scopes on %s route',
-      async (route) => {
-        const { provider } = setup();
-        const ctx = createContext(provider, { clientId, route });
+    it('computes consent-stage per-context union without cross-multiplying (with and without organization_id)', async () => {
+      const { resolve, findUserScopesForResourceIndicator, getUserResourceScopes } = setup();
 
-        const apiResult = await getResourceServerInfo(ctx, indicator);
-        const orgResult = await getResourceServerInfo(ctx, ReservedResource.Organization);
+      // `global:only` and `org:only` are excluded (no cross-multiplication).
+      expect(await resolve({ route: 'authorization' })).toBe('global:billing org:doc org:doc_b');
+      expect(await resolve({ route: 'authorization', organizationId })).toBe(
+        'global:billing org:doc'
+      );
+      expect(await resolve({ route: 'authorization', withAccount: false })).toBe('');
+      expect(await resolve({ route: 'authorization' }, ReservedResource.Organization)).toBe(
+        'invite:member'
+      );
+      expect(findUserScopesForResourceIndicator).toHaveBeenCalledWith(accountId, indicator);
+      expect(getUserResourceScopes).toHaveBeenCalledWith(accountId, indicator, undefined);
+      expect(getUserResourceScopes).toHaveBeenCalledWith(accountId, indicator, organizationId);
+    });
 
-        expect(apiResult.scope).toBe('global:billing org:doc');
-        expect(orgResult.scope).toBe('invite:member');
+    it('narrows org roles to consented orgs on post-consent resume and repeat org-scoped auth (registered only)', async () => {
+      const { provider, resolve, findOrganizationIds, getUserResourceScopes } = setup();
+      findOrganizationIds.mockResolvedValue([organizationId]);
+      const mockGrantScope = (scope: string) =>
+        jest.spyOn(provider.Grant, 'find').mockResolvedValueOnce({
+          getOIDCScope: () => scope,
+        } as Awaited<ReturnType<typeof provider.Grant.find>>);
+
+      const resumeScope = await resolve({ route: 'resume', hasConsentResult: true });
+
+      mockGrantScope(`openid ${UserScope.Organizations}`);
+      findOrganizationIds.mockResolvedValueOnce([]);
+      const repeatOrgAuthScope = await resolve({
+        route: 'authorization',
+        sessionGrantId: 'grant_1',
+      });
+
+      // Existing Grant lacking `UserScope.Organizations` must still query all orgs for the org picker.
+      mockGrantScope('openid profile');
+      const personalGrantAuthScope = await resolve({
+        route: 'authorization',
+        sessionGrantId: 'grant_2',
+      });
+
+      if (isCimd) {
+        expect(findOrganizationIds).not.toHaveBeenCalled();
+        expect(resumeScope).toBe('global:billing org:doc org:doc_b');
+        expect(repeatOrgAuthScope).toBe('global:billing org:doc org:doc_b');
+      } else {
+        expect(findOrganizationIds).toHaveBeenCalledTimes(2);
+        expect(getUserResourceScopes).toHaveBeenCalledWith(accountId, indicator, [organizationId]);
+        expect(resumeScope).toBe('global:billing org:doc');
+        expect(repeatOrgAuthScope).toBe('global:billing');
       }
-    );
+      expect(personalGrantAuthScope).toBe('global:billing org:doc org:doc_b');
+    });
 
     it.each(['pushed_authorization_request', 'device_authorization'])(
       'safely falls into isolated mode on %s without throwing for valid resources',
       async (route) => {
-        const { provider } = setup();
-        const ctx = createContext(provider, { clientId, route, withAccount: false });
+        const { resolve } = setup();
+        const options = { route, withAccount: false };
 
-        const apiResult = await getResourceServerInfo(ctx, indicator);
-        const orgResult = await getResourceServerInfo(ctx, ReservedResource.Organization);
-
-        expect(apiResult.scope).toBe('');
-        expect(orgResult.scope).toBe('');
-        await expect(getResourceServerInfo(ctx, 'https://unknown.example.com')).rejects.toThrow(
+        expect(await resolve(options)).toBe('');
+        expect(await resolve(options, ReservedResource.Organization)).toBe('');
+        await expect(resolve(options, 'https://unknown.example.com')).rejects.toThrow(
           errors.InvalidTarget
         );
       }
     );
 
     it('fails closed into isolated mode when route is missing or unrecognized', async () => {
-      const { provider } = setup();
+      const { resolve } = setup();
 
-      const emptyRouteResult = await getResourceServerInfo(
-        createContext(provider, { clientId, route: '' }),
-        indicator
-      );
-      const unknownRouteResult = await getResourceServerInfo(
-        createContext(provider, { clientId, route: 'unexpected_route' }),
-        indicator
-      );
-
-      expect(emptyRouteResult.scope).toBe('global:billing');
-      expect(unknownRouteResult.scope).toBe('global:billing');
+      expect(await resolve({ route: '' })).toBe('global:billing');
+      expect(await resolve({ route: 'unexpected_route' })).toBe('global:billing');
     });
   });
 
-  it('keeps first-party application behavior unchanged on token route', async () => {
+  it('keeps first-party application behavior unchanged on token and authorization routes', async () => {
     const { tenant, findUserScopesForResourceIndicator, findAllOrgScopes } = createIsolatedTenant({
       isThirdParty: false,
     });
-    const provider = initOidc(
-      tenant.id,
-      tenant.envSet,
-      tenant.queries,
-      tenant.libraries,
-      tenant.logtoConfigs,
-      tenant.subscription
-    );
+    const provider = createProvider(tenant);
 
-    const apiResult = await getResourceServerInfo(
-      createContext(provider, { clientId: firstPartyClientId, route: 'token' }),
-      indicator
+    expect(await resolveScope(provider, { clientId: firstPartyClientId, route: 'token' })).toBe(
+      'global:billing org:doc'
     );
-    const orgResult = await getResourceServerInfo(
-      createContext(provider, { clientId: firstPartyClientId, route: 'token' }),
-      ReservedResource.Organization
-    );
-
-    expect(apiResult.scope).toBe('global:billing org:doc');
+    expect(
+      await resolveScope(provider, {
+        clientId: firstPartyClientId,
+        route: 'authorization',
+        organizationId,
+      })
+    ).toBe('global:billing org:doc');
+    expect(
+      await resolveScope(
+        provider,
+        { clientId: firstPartyClientId, route: 'token' },
+        ReservedResource.Organization
+      )
+    ).toBe('invite:member');
     expect(findUserScopesForResourceIndicator).toHaveBeenCalledWith(
       accountId,
       indicator,
       true,
       undefined
     );
-    expect(orgResult.scope).toBe('invite:member');
+    expect(findUserScopesForResourceIndicator).toHaveBeenCalledWith(
+      accountId,
+      indicator,
+      true,
+      organizationId
+    );
     expect(findAllOrgScopes).toHaveBeenCalledTimes(1);
   });
 });

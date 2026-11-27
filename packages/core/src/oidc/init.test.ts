@@ -566,11 +566,14 @@ describe('getResourceServerInfo for CIMD clients', () => {
     const findApplicationById = jest.fn();
     const findUserScopesForResourceIndicator = jest
       .fn()
-      .mockResolvedValue([
-        buildScope('scope_1', 'read:api'),
-        buildScope('scope_2', 'write:api'),
-        buildScope('scope_3', 'read:organization-api'),
-      ]);
+      .mockResolvedValue([buildScope('scope_1', 'read:api'), buildScope('scope_2', 'write:api')]);
+    const getUserResourceScopes = jest.fn().mockResolvedValue([
+      {
+        id: 'scope_3',
+        name: 'read:organization-api',
+        resource: { id: resourceId, name: 'Test API' },
+      },
+    ]);
     const tenant = new MockTenant(undefined, {
       resources: { findResourceByIndicator },
       applications: { findApplicationById },
@@ -591,15 +594,20 @@ describe('getResourceServerInfo for CIMD clients', () => {
     tenant.setPartial('libraries', {
       users: { findUserScopesForResourceIndicator },
     });
+    jest
+      .spyOn(tenant.queries.organizations.relations.usersRoles, 'getUserResourceScopes')
+      .mockImplementation(getUserResourceScopes);
 
     const { id, queries, libraries, logtoConfigs, subscription } = tenant;
     const provider = initOidc(id, cimdEnvSet, queries, libraries, logtoConfigs, subscription);
-    // Consent / authorization stage combines both personal and organization ceilings.
+    // Consent / authorization stage combines personal and organization ceilings per context.
     const ctx = createCimdContext(provider, 'authorization');
 
     const result = await getResourceServerInfo(ctx, indicator);
 
     expect(result.scope).toBe('read:api read:organization-api');
+    expect(findUserScopesForResourceIndicator).toHaveBeenCalledWith(accountId, indicator);
+    expect(getUserResourceScopes).toHaveBeenCalledWith(accountId, indicator, undefined);
     expect(findApplicationById).not.toHaveBeenCalled();
   });
 
