@@ -36,16 +36,7 @@ const mfa = {
     "Tutti gli utenti con un indirizzo email o un numero di telefono verificato lo useranno per la verifica in 2 passaggi, inclusi gli utenti che non l'hanno configurata. Sei sicuro di voler continuare?",
   policy: 'Politica',
   policy_description: 'Imposta la politica MFA per i flussi di accesso e registrazione.',
-  two_step_sign_in_policy: "Politica di verifica a due passaggi all'accesso",
-  user_controlled: 'Gli utenti possono abilitare o disabilitare MFA autonomamente',
-  user_controlled_tip:
-    "Gli utenti possono saltare la configurazione MFA la prima volta all'accesso o alla registrazione, o abilitarla/disabilitarla nelle impostazioni dell'account.",
-  mandatory: "Gli utenti devono sempre utilizzare MFA all'accesso",
-  mandatory_tip:
-    "Gli utenti devono configurare MFA la prima volta all'accesso o alla registrazione, e usarlo per tutti gli accessi futuri.",
   require_mfa: 'Richiedi MFA',
-  require_mfa_label:
-    'Abilitalo per rendere obbligatoria la verifica in due passaggi per accedere alle tue applicazioni. Se disabilitato, gli utenti possono decidere se abilitare MFA per se stessi.',
   require_mfa_optional:
     'MFA facoltativa: consenti agli utenti di scegliere se abilitare MFA per la sicurezza del proprio account',
   require_mfa_adaptive:

@@ -13,6 +13,7 @@ import {
 } from '#src/api/index.js';
 import { signInWithPassword } from '#src/helpers/experience/index.js';
 import { expectRejects } from '#src/helpers/index.js';
+import { initClientAndSignInForDefaultTenant } from '#src/helpers/profile.js';
 import {
   assertRefreshTokenInvalidGrant,
   assertRefreshTokenValid,
@@ -158,6 +159,28 @@ describe('Sessions API', () => {
     });
 
     await deleteApplication(app.id);
+  });
+
+  it('should revoke built-in client grants with first-party grants option', async () => {
+    await enableAllPasswordSignInMethods();
+
+    const { username, password } = generateNewUserProfile({ username: true, password: true });
+    const user = await userApi.create({ username, password });
+
+    const client = await initClientAndSignInForDefaultTenant(username, password);
+    const refreshToken = await client.getRefreshToken();
+    assert(refreshToken, new Error('No refresh token found'));
+
+    const { sessions } = await getUserSessions(user.id);
+    const session = findSessionByAppId(sessions, demoAppApplicationId);
+    assert(session, new Error('Built-in client session not found'));
+
+    await revokeUserSession(user.id, session.payload.uid, SessionGrantRevokeTarget.FirstParty);
+
+    await assertRefreshTokenInvalidGrant({
+      clientId: demoAppApplicationId,
+      refreshToken,
+    });
   });
 
   it('should revoke session with all grants target', async () => {

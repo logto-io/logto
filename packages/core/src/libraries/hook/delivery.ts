@@ -6,7 +6,11 @@ import pMap from 'p-map';
 
 import { EnvSet } from '#src/env-set/index.js';
 import { type CoreJobQueue } from '#src/job-queue/index.js';
-import { webhookJobType } from '#src/job-queue/webhook-handler.js';
+import {
+  webhookJobType,
+  webhookMaxWaitingRowsPerHook,
+  webhookMaxWaitingRowsPerTenant,
+} from '#src/job-queue/webhook-handler.js';
 import { LogEntry } from '#src/middleware/koa-audit-log.js';
 import type Queries from '#src/tenants/Queries.js';
 
@@ -23,8 +27,14 @@ export type TenantRequestSlot = {
 type CreateWebhookDispatcherInput = {
   insertLog: Queries['logs']['insertLog'];
   enqueueJob: Queries['jobs']['enqueueJob'];
+  countJobsByGroup: Queries['jobs']['countJobsByGroup'];
+  countJobsByType: Queries['jobs']['countJobsByType'];
   queue: CoreJobQueue;
   requestSlot?: TenantRequestSlot;
+  waitingRowCaps?: {
+    perHook: number;
+    perTenant: number;
+  };
 };
 
 /**
@@ -33,9 +43,16 @@ type CreateWebhookDispatcherInput = {
 export const createWebhookDispatcher = ({
   insertLog,
   enqueueJob,
+  countJobsByGroup,
+  countJobsByType,
   queue,
   requestSlot,
+  waitingRowCaps,
 }: CreateWebhookDispatcherInput) => {
+  const caps = waitingRowCaps ?? {
+    perHook: webhookMaxWaitingRowsPerHook,
+    perTenant: webhookMaxWaitingRowsPerTenant,
+  };
   const sendWebhook = async (
     hook: Hook,
     payload: HookEventPayloadWithoutHookId,
@@ -93,15 +110,55 @@ export const createWebhookDispatcher = ({
     // Pre-serialize once so `jobs.payload` preserves the exact JSON key order for HMAC signing.
     const serializedBody = JSON.stringify(json);
 
-    await queue.enqueue(async () =>
-      enqueueJob({
+    await queue.trackEnqueue(async () => {
+      const reservation = await queue.tryReserveWaitingRow({
+        tenantId: hook.tenantId,
+        type: webhookJobType,
+        groupKey: id,
+        maxWaitingRowsPerGroup: caps.perHook,
+        maxWaitingRowsPerTenant: caps.perTenant,
+        countByGroup: async (limit) => countJobsByGroup(webhookJobType, id, limit),
+        countByType: async (limit) => countJobsByType(webhookJobType, limit),
+      });
+
+      if (!reservation.allowed) {
+        queue.recordDroppedAtCap(reservation.scope);
+        consoleLog.warn(
+          `\tDropped hook ${id} due to ${reservation.scope} waiting-row cap (${
+            reservation.scope === 'group' ? caps.perHook : caps.perTenant
+          })`
+        );
+
+        const logEntry = new LogEntry(`TriggerHook.${payload.event}`);
+        logEntry.append({
+          hookId: id,
+          attempts: 0,
+          hookRequest: { body: json },
+          result: LogResult.Error,
+          error:
+            reservation.scope === 'group'
+              ? `Webhook delivery dropped because the per-hook waiting queue cap (${caps.perHook}) was reached.`
+              : `Webhook delivery dropped because the per-tenant waiting queue cap (${caps.perTenant}) was reached.`,
+        });
+
+        await insertLog({
+          id: deliveryId,
+          key: logEntry.key,
+          payload: logEntry.payload,
+        });
+        return;
+      }
+
+      await enqueueJob({
         id: deliveryId,
         type: webhookJobType,
         groupKey: id,
         dedupeKey: deliveryId,
         payload: serializedBody,
-      })
-    );
+      });
+
+      queue.wake();
+    });
   };
 
   const dispatchWebhooks = async <T extends HookEventPayloadWithoutHookId>(

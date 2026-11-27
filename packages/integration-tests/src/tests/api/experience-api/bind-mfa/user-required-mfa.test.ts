@@ -39,12 +39,7 @@ describe('User required MFA', () => {
     await resetMfaSettings();
   });
 
-  it.each([
-    MfaPolicy.NoPrompt,
-    MfaPolicy.PromptAtSignInAndSignUp,
-    MfaPolicy.PromptOnlyAtSignIn,
-    MfaPolicy.UserControlled,
-  ])(
+  it.each([MfaPolicy.NoPrompt, MfaPolicy.PromptAtSignInAndSignUp, MfaPolicy.PromptOnlyAtSignIn])(
     'should not allow skipping MFA for %s settings when the user is required to set up MFA',
     async (policy) => {
       await updateSignInExperience({

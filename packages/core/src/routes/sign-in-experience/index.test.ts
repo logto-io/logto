@@ -13,6 +13,7 @@ import {
   type CreateSignInExperience,
 } from '@logto/schemas';
 import { pickDefault, createMockUtils } from '@logto/shared/esm';
+import Router from 'koa-router';
 
 import {
   mockFacebookConnector,
@@ -34,6 +35,7 @@ import {
 import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import LicenseReader from '#src/license/LicenseReader.js';
+import { buildRouterObjects } from '#src/routes/swagger/utils/operation.js';
 import { resetDevFeaturesEnabled, setDevFeaturesEnabled } from '#src/test-utils/dev-features.js';
 import { buildLicensePayload } from '#src/test-utils/license.js';
 import { MockTenant } from '#src/test-utils/tenant.js';
@@ -69,14 +71,14 @@ const { validateSignIn, validateSignUp } = await mockEsmWithActual(
 
 const signInExperiences = {
   findDefaultSignInExperience: jest.fn(async () => mockSignInExperience),
-  updateDefaultSignInExperience: async (
-    data: Partial<CreateSignInExperience>
-  ): Promise<SignInExperience> => ({
-    ...mockSignInExperience,
-    ...data,
-  }),
+  updateDefaultSignInExperience: jest.fn(
+    async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
+      ...mockSignInExperience,
+      ...data,
+    })
+  ),
 };
-const { findDefaultSignInExperience } = signInExperiences;
+const { findDefaultSignInExperience, updateDefaultSignInExperience } = signInExperiences;
 
 const validateLanguageInfo = jest.fn();
 const mockGetLogtoConnectors = jest.fn(async () => logtoConnectors);
@@ -483,6 +485,76 @@ describe('PATCH /sign-in-exp', () => {
     });
   });
 
+  it('should accept legacy UserControlled mfa.policy and store PromptAtSignInAndSignUp', async () => {
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
+      mfa: {
+        policy: 'UserControlled',
+        factors: [MfaFactor.TOTP],
+      },
+    });
+
+    expect(response).toMatchObject({
+      status: 200,
+      body: {
+        ...mockSignInExperience,
+        mfa: {
+          policy: MfaPolicy.PromptAtSignInAndSignUp,
+          factors: [MfaFactor.TOTP],
+        },
+      },
+    });
+    expect(updateDefaultSignInExperience).toHaveBeenCalledWith(
+      expect.objectContaining({
+        mfa: {
+          policy: MfaPolicy.PromptAtSignInAndSignUp,
+          factors: [MfaFactor.TOTP],
+        },
+      })
+    );
+  });
+
+  it('should reject invalid mfa.policy values', async () => {
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
+      mfa: {
+        policy: 'InvalidPolicy',
+        factors: [],
+      },
+    });
+
+    expect(response).toMatchObject({
+      status: 400,
+    });
+  });
+
+  it('should generate OpenAPI schema for PATCH /sign-in-exp with MfaPolicy enum values', () => {
+    const router = new Router();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- `Router` type arg differs from `ManagementApiRouter` in route test setup
+    signInExperiencesRoutes(router as any, tenantContext);
+    const operations = buildRouterObjects([router]);
+    const patchOperation = operations.find(
+      ({ path, method }) => path === '/api/sign-in-exp' && method === 'patch'
+    );
+
+    expect(patchOperation?.operation.requestBody).toMatchObject({
+      content: {
+        'application/json': {
+          schema: {
+            properties: {
+              mfa: {
+                properties: {
+                  policy: {
+                    type: 'string',
+                    enum: Object.values(MfaPolicy),
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+  });
+
   it('should reject password expiration updates with an invalid validPeriodDays', async () => {
     const response = await signInExperienceRequester.patch('/sign-in-exp').send({
       passwordExpiration: {
@@ -885,28 +957,18 @@ describe('sign-in experience routes with dev features disabled', () => {
     expect(response.body).toEqual(expect.objectContaining({ adaptiveMfa, mfa }));
   });
 
-  it('should store the MFA verification code enrollment mode only with dev features', async () => {
+  it('should store the MFA verification code enrollment mode', async () => {
     const { requester, updateDefaultSignInExperience } = createDevFeaturesDisabledRequester();
     const mfa = {
       policy: MfaPolicy.PromptAtSignInAndSignUp,
       factors: [MfaFactor.TOTP],
-    };
-    const mfaWithMode = {
-      ...mfa,
       verificationCodeEnrollment: MfaVerificationCodeEnrollment.Explicit,
     };
 
-    const response = await requester.patch('/sign-in-exp').send({ mfa: mfaWithMode });
+    const response = await requester.patch('/sign-in-exp').send({ mfa });
 
     expect(response.status).toEqual(200);
     expect(updateDefaultSignInExperience).toHaveBeenLastCalledWith({ mfa });
-
-    // `afterEach` restores the flag.
-    setDevFeaturesEnabled(true);
-    const devResponse = await requester.patch('/sign-in-exp').send({ mfa: mfaWithMode });
-
-    expect(devResponse.status).toEqual(200);
-    expect(updateDefaultSignInExperience).toHaveBeenLastCalledWith({ mfa: mfaWithMode });
   });
 
   it('should include custom allowlist in GET response', async () => {

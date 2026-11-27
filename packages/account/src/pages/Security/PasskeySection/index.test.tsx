@@ -98,7 +98,7 @@ const renderPasskeySection = ({
         },
         experienceSettings: {
           ...mockSignInExperienceSettings,
-          mfa: { policy: MfaPolicy.UserControlled, factors: [] },
+          mfa: { policy: MfaPolicy.PromptAtSignInAndSignUp, factors: [] },
           passkeySignIn: { enabled: passkeySignInEnabled },
         },
       },

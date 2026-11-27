@@ -65,7 +65,6 @@ const account_center = {
     passkeys_count_other: '{{count}} کلید عبور',
     backup_codes_count_one: '{{count}} کد باقی‌مانده',
     backup_codes_count_other: '{{count}} کد باقی‌مانده',
-    view: 'مشاهده',
     manage: 'مدیریت',
     turn_on_2_step_verification_description:
       'یک لایه امنیتی اضافی اضافه کنید. هنگام ورود از شما یک مرحله تأیید دوم خواسته می‌شود.',

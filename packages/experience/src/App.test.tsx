@@ -4,7 +4,7 @@ import {
   LogtoAcr,
   VerificationType,
 } from '@logto/schemas';
-import { render, screen } from '@testing-library/react';
+import { configure, render, screen } from '@testing-library/react';
 import { type ReactNode } from 'react';
 
 import App from '@/App';
@@ -25,6 +25,12 @@ jest.mock('@/Providers/CaptchaContextProvider', () => ({
   __esModule: true,
   default: ({ children }: { children: ReactNode }) => children,
 }));
+
+// The first full App render is cold and chains several async steps (settings, entry guard,
+// redirect, step-up context) before the page appears, which can exceed the default 1s wait on a
+// loaded CI runner.
+configure({ asyncUtilTimeout: 5000 });
+jest.setTimeout(10_000);
 
 const mockedGetStepUpContext = getStepUpContext as jest.MockedFunction<typeof getStepUpContext>;
 const mockedGetSettings = getSignInExperienceSettings as jest.MockedFunction<

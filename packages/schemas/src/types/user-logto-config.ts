@@ -30,7 +30,7 @@ export const userMfaDataGuard = z.object({
   /**
    * Whether the user is required to set up MFA and cannot skip the binding flow.
    *
-   * This is an admin-managed requirement. Under non-adaptive MFA policies, it also forces MFA
+   * This is an admin-managed requirement. When adaptive MFA is disabled, it also forces MFA
    * verification on sign-in by making `skipMfaOnSignIn` and `enabled: false` ineffective.
    */
   required: z.boolean().optional(),

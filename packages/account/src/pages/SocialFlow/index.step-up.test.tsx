@@ -30,7 +30,6 @@ jest.mock('@ac/hooks/use-step-up', () => ({
   default: () => ({ requestStepUp: mockRequestStepUp, startStepUp: jest.fn() }),
   useStepUpEntry: () => ({
     isReady: true,
-    isChecking: false,
     hasFailed: false,
     isResumed: true,
     verificationId: undefined,

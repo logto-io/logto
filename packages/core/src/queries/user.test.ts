@@ -68,7 +68,7 @@ describe('user query', () => {
     const expectSql = sql`
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
-      where lower(${fields.username})=lower($1)
+      where ${fields.usernameLower}=lower($1)
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
@@ -85,7 +85,7 @@ describe('user query', () => {
     const expectSql = sql`
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
-      where lower(${fields.primaryEmail})=lower($1)
+      where ${fields.primaryEmailLower}=lower($1)
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
@@ -231,7 +231,7 @@ describe('user query', () => {
       SELECT EXISTS(
         select ${fields.id}
         from ${table}
-        where lower(${fields.username})=lower($1)
+        where ${fields.usernameLower}=lower($1)
       )
     `;
 
@@ -269,7 +269,7 @@ describe('user query', () => {
       SELECT EXISTS(
         select ${fields.primaryEmail}
         from ${table}
-        where lower(${fields.primaryEmail})=lower($1)
+        where ${fields.primaryEmailLower}=lower($1)
       )
     `;
 

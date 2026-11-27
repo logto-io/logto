@@ -37,12 +37,20 @@ ENV ADDITIONAL_CONNECTOR_ARGS=${additional_connector_args}
 RUN pnpm cli connector link $ADDITIONAL_CONNECTOR_ARGS -p .
 
 ### Prune dependencies for production ###
+# Since pnpm 10, use `--prod` to skip devDependencies.
 # Keep prune + production install in one layer to avoid extra transient disk usage.
 RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
-  rm -rf node_modules packages/**/node_modules && NODE_ENV=production pnpm i
+  rm -rf node_modules packages/*/node_modules packages/*/*/node_modules \
+  && pnpm i --prod --frozen-lockfile
+
+# Verify dev dependencies were pruned and core can still load the connector kit.
+RUN test ! -e node_modules/husky \
+  && test ! -e packages/toolkit/connector-kit/node_modules/.bin/vitest \
+  && cd packages/core \
+  && node --input-type=module -e "await import('@logto/connector-kit')"
 
 ### Clean up ###
-RUN rm -rf .scripts pnpm-*.yaml packages/cloud
+RUN rm -rf .scripts pnpm-*.yaml packages/cloud packages/integration-tests packages/create
 
 ###### [STAGE] Seal ######
 FROM node:26-alpine AS app

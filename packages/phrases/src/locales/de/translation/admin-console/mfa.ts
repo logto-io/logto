@@ -36,16 +36,7 @@ const mfa = {
     'Jeder Benutzer mit einer verifizierten E-Mail-Adresse oder Telefonnummer verwendet diese für die 2-Schritt-Verifizierung, auch Benutzer, die sie nicht eingerichtet haben. Möchtest du wirklich fortfahren?',
   policy: 'Richtlinie',
   policy_description: 'Legen Sie die MFA-Richtlinie für Anmelde- und Anmeldevorgänge fest.',
-  two_step_sign_in_policy: 'Zwei-Schritt-Verifizierungspolitik bei der Anmeldung',
-  user_controlled: 'Benutzer können MFA selbst aktivieren oder deaktivieren',
-  user_controlled_tip:
-    'Benutzer können die MFA-Einrichtung beim ersten Mal bei der Anmeldung oder Anmeldung überspringen oder sie in den Kontoeinstellungen aktivieren/deaktivieren.',
-  mandatory: 'Benutzer müssen immer MFA bei der Anmeldung verwenden',
-  mandatory_tip:
-    'Benutzer müssen MFA beim ersten Mal bei der Anmeldung oder Anmeldung einrichten und es für alle zukünftigen Anmeldungen verwenden.',
   require_mfa: 'MFA erforderlich',
-  require_mfa_label:
-    'Aktivieren Sie dies, um die Zwei-Schritt-Verifizierung für den Zugriff auf Ihre Anwendungen obligatorisch zu machen. Wenn deaktiviert, können Benutzer entscheiden, ob sie MFA für sich selbst aktivieren möchten.',
   require_mfa_optional:
     'Optionale MFA: Ermöglicht Benutzern, MFA für die Sicherheit ihres eigenen Kontos zu aktivieren',
   require_mfa_adaptive:

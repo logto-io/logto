@@ -9,6 +9,7 @@ import {
   ProductEvent,
   type SignInExperience,
   ForgotPasswordMethod,
+  mfaGuard,
   passwordExpirationPolicyGuard,
   verificationCodePolicyGuard,
 } from '@logto/schemas';
@@ -39,15 +40,18 @@ import usernamePolicyRoutes from './username-policy.js';
 const isMfaEnabled = (mfa: Optional<SignInExperience['mfa']>): boolean =>
   Boolean(mfa?.factors && mfa.factors.length > 0);
 
-const removeVerificationCodeEnrollment = ({
-  verificationCodeEnrollment,
-  ...mfa
-}: SignInExperience['mfa']): SignInExperience['mfa'] => mfa;
-
 const isNonSkippableMfaPromptPolicy = (policy: MfaPolicy) =>
   [MfaPolicy.PromptAtSignInAndSignUpMandatory, MfaPolicy.PromptOnlyAtSignInMandatory].includes(
     policy
   );
+
+// Normalize deprecated UserControlled to PromptAtSignInAndSignUp while keeping OpenAPI enum generation intact.
+const mfaPatchGuard = mfaGuard.extend({
+  policy: z.preprocess(
+    (value) => (value === MfaPolicy.UserControlled ? MfaPolicy.PromptAtSignInAndSignUp : value),
+    z.nativeEnum(MfaPolicy)
+  ),
+});
 
 export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
   ...args: RouterInitArgs<T>
@@ -92,6 +96,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
           supportEmail: true,
           supportWebsiteUrl: true,
           unknownSessionRedirectUrl: true,
+          mfa: true,
           passwordExpiration: true,
           verificationCodePolicy: true,
         })
@@ -102,6 +107,7 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
             supportEmail: string().email().optional().nullable().or(literal('')),
             supportWebsiteUrl: string().url().optional().nullable().or(literal('')),
             unknownSessionRedirectUrl: string().url().optional().nullable().or(literal('')),
+            mfa: mfaPatchGuard,
             passwordExpiration: passwordExpirationPolicyGuard,
             verificationCodePolicy: verificationCodePolicyGuard,
           })
@@ -406,14 +412,6 @@ export default function signInExperiencesRoutes<T extends ManagementApiRouter>(
 
       const payload = {
         ...rest,
-        // Email / SMS MFA explicit enrollment: until the feature is released, the enrollment mode
-        // is validated but not stored.
-        ...conditional(
-          mfa &&
-            !EnvSet.values.isDevFeaturesEnabled && {
-              mfa: removeVerificationCodeEnrollment(mfa),
-            }
-        ),
         ...conditional(normalizedAdaptiveMfa && { adaptiveMfa: normalizedAdaptiveMfa }),
         ...conditional(
           filteredSocialSignInConnectorTargets && {

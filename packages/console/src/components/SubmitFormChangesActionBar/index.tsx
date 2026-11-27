@@ -35,7 +35,10 @@ function SubmitFormChangesActionBar({
   }
 
   return (
-    <div className={classNames(styles.container, isOpen && styles.active, className)}>
+    <div
+      className={classNames(styles.container, isOpen && styles.active, className)}
+      data-submit-action-bar-active={isOpen ? 'true' : undefined}
+    >
       <div className={styles.actionBar}>
         {!!onDiscard && (
           <Button

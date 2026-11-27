@@ -36,7 +36,6 @@ const quota_table = {
     social_connectors: 'موصلات التواصل الاجتماعي',
     standard_connectors: 'موصلات قياسية',
     built_in_email_connector: 'موصل البريد الإلكتروني المدمج',
-    mfa: 'المصادقة متعددة العوامل',
     sso: 'SSO المؤسسية',
     impersonation: 'التمثيل',
   },

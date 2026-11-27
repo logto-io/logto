@@ -11,7 +11,13 @@ import {
   type JobQueueGauges,
 } from '#src/queries/job-queue.js';
 
-import { createWebhookJobHandler } from './webhook-handler.js';
+import {
+  WaitingRowCapCache,
+  type WaitingRowCapCheckInput,
+  type WaitingRowCapScope,
+  type WaitingRowReservation,
+} from './waiting-row-cap-cache.js';
+import { buildExpiredWebhookLog, createWebhookJobHandler } from './webhook-handler.js';
 
 const jobQueueMetricsIntervalMs = 60_000;
 const maxConcurrentJobsPerInstance = 100;
@@ -19,10 +25,18 @@ const maxConcurrentJobsPerInstance = 100;
 export const jobQueueMetricNames = Object.freeze({
   depth: 'job_queue.depth',
   oldestWaitingAgeMs: 'job_queue.oldest_waiting_age_ms',
+  openCircuits: 'job_queue.open_circuits',
   failedEnqueues: 'job_queue.failed_enqueues',
+  exhaustedDeliveries: 'job_queue.exhausted_deliveries',
+  droppedAtGroupCap: 'job_queue.dropped_at_group_cap',
+  droppedAtTenantCap: 'job_queue.dropped_at_tenant_cap',
 } as const);
 
 const consoleLog = new ConsoleLog(chalk.magenta('job-queue'));
+
+type CoreJobQueueOptions = {
+  waitingRowCapCache?: WaitingRowCapCache;
+};
 
 /**
  * The process-wide job queue: one worker per Core instance over `EnvSet.sharedPool`, the
@@ -32,7 +46,15 @@ export class CoreJobQueue {
   #worker?: JobQueueWorker<CoreJobSettlementMeta>;
   #metricsTimer?: NodeJS.Timeout;
   #failedEnqueues = 0;
+  #exhaustedDeliveries = 0;
+  #droppedAtGroupCap = 0;
+  #droppedAtTenantCap = 0;
+  readonly #waitingRowCapCache: WaitingRowCapCache;
   readonly #pendingEnqueues = new Set<Promise<void>>();
+
+  constructor(options?: CoreJobQueueOptions) {
+    this.#waitingRowCapCache = options?.waitingRowCapCache ?? new WaitingRowCapCache();
+  }
 
   get worker(): JobQueueWorker<CoreJobSettlementMeta> | undefined {
     return this.#worker;
@@ -44,12 +66,23 @@ export class CoreJobQueue {
       return this.#worker;
     }
 
-    const queries = createJobQueueQueries(pool);
+    const queries = createJobQueueQueries(pool, {
+      buildExpiredLog: buildExpiredWebhookLog,
+      onBulkExpired: (count) => {
+        this.recordExhaustedDeliveries(count);
+      },
+    });
     const worker = new JobQueueWorker<CoreJobSettlementMeta>(queries, {
       log: consoleLog,
       maxConcurrency: maxConcurrentJobsPerInstance,
     });
-    worker.register(createWebhookJobHandler(queries));
+    worker.register(
+      createWebhookJobHandler(queries, {
+        onExhausted: () => {
+          this.recordExhaustedDeliveries();
+        },
+      })
+    );
 
     this.#worker = worker;
     worker.start();
@@ -67,6 +100,31 @@ export class CoreJobQueue {
     this.#failedEnqueues += 1;
     consoleLog.error('Failed to enqueue job.');
     consoleLog.error(error);
+  }
+
+  /** Count deliveries that permanently exhausted their retry window. */
+  recordExhaustedDeliveries(count = 1): void {
+    this.#exhaustedDeliveries += count;
+  }
+
+  /** Count deliveries dropped because the per-group or per-tenant waiting-row cap was reached. */
+  recordDroppedAtCap(scope: WaitingRowCapScope, count = 1): void {
+    if (scope === 'group') {
+      this.#droppedAtGroupCap += count;
+      return;
+    }
+
+    this.#droppedAtTenantCap += count;
+  }
+
+  /** Check per-group and per-tenant waiting-row caps and reserve a cached slot if below both. */
+  async tryReserveWaitingRow(input: WaitingRowCapCheckInput): Promise<WaitingRowReservation> {
+    return this.#waitingRowCapCache.tryReserve(input);
+  }
+
+  /** Wake the local worker after an enqueue commits. */
+  wake(): void {
+    this.#worker?.wake();
   }
 
   /**
@@ -89,17 +147,6 @@ export class CoreJobQueue {
     } finally {
       this.#pendingEnqueues.delete(pending);
     }
-  }
-
-  /**
-   * Run a fire-and-forget insert into `jobs`. Shutdown waits for it before closing pools, and a
-   * failure is logged and counted instead of thrown. Wakes the local worker once the row exists.
-   */
-  async enqueue(insert: () => Promise<unknown>): Promise<void> {
-    return this.trackEnqueue(async () => {
-      await insert();
-      this.#worker?.wake();
-    });
   }
 
   /**
@@ -134,13 +181,23 @@ export class CoreJobQueue {
 
     const failedEnqueues = this.#failedEnqueues;
     this.#failedEnqueues = 0;
+    const exhaustedDeliveries = this.#exhaustedDeliveries;
+    this.#exhaustedDeliveries = 0;
+    const droppedAtGroupCap = this.#droppedAtGroupCap;
+    this.#droppedAtGroupCap = 0;
+    const droppedAtTenantCap = this.#droppedAtTenantCap;
+    this.#droppedAtTenantCap = 0;
 
     const metrics: Record<string, number> = {
       ...(gauges && {
         [jobQueueMetricNames.depth]: gauges.depth,
         [jobQueueMetricNames.oldestWaitingAgeMs]: gauges.oldestWaitingAgeMs,
       }),
+      [jobQueueMetricNames.openCircuits]: this.#worker?.openCircuitCount ?? 0,
       [jobQueueMetricNames.failedEnqueues]: failedEnqueues,
+      [jobQueueMetricNames.exhaustedDeliveries]: exhaustedDeliveries,
+      [jobQueueMetricNames.droppedAtGroupCap]: droppedAtGroupCap,
+      [jobQueueMetricNames.droppedAtTenantCap]: droppedAtTenantCap,
     };
 
     const { client } = appInsights;

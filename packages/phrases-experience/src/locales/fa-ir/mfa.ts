@@ -79,7 +79,6 @@ const mfa = {
   trust_this_device_other: 'به این دستگاه برای {{count}} روز اعتماد کنید',
   secret_key_copied: 'کلید مخفی کپی شد.',
   backup_code_copied: 'کد پشتیبان کپی شد.',
-  webauthn_not_ready: 'WebAuthn هنوز آماده نیست. لطفاً بعداً دوباره تلاش کنید.',
   webauthn_not_supported: 'WebAuthn در این مرورگر پشتیبانی نمی‌شود.',
   webauthn_failed_to_create: 'ایجاد ناموفق بود. لطفاً دوباره تلاش کنید.',
   webauthn_failed_to_verify: 'تأیید ناموفق بود. لطفاً دوباره تلاش کنید.',
