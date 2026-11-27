@@ -36,6 +36,7 @@ import type Queries from '#src/tenants/Queries.js';
 import type TenantContext from '#src/tenants/TenantContext.js';
 import assertThat from '#src/utils/assert-that.js';
 import { type LogtoConnector } from '#src/utils/connectors/types.js';
+import { safeCompare } from '#src/utils/safe-compare.js';
 
 import type { InteractionProfile } from '../../types.js';
 
@@ -458,14 +459,16 @@ export class SocialVerification implements IdentifierVerificationRecord<Verifica
     ) {
       if (isExternalGoogleOneTapChecker(connectorData)) {
         assertThat(
-          connectorData[GoogleConnector.oneTapParams.credential] ===
-            ctx.cookies.get(logtoGoogleOneTapCookieKey),
+          safeCompare(
+            connectorData[GoogleConnector.oneTapParams.credential],
+            ctx.cookies.get(logtoGoogleOneTapCookieKey)
+          ),
           'session.google_one_tap.cookie_mismatch'
         );
       } else {
         const csrfToken = connectorData[GoogleConnector.oneTapParams.csrfToken];
         const value = ctx.cookies.get(GoogleConnector.oneTapParams.csrfToken);
-        assertThat(value === csrfToken, 'session.csrf_token_mismatch');
+        assertThat(safeCompare(value, csrfToken), 'session.csrf_token_mismatch');
       }
     }
 
