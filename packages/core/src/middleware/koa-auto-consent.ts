@@ -1,4 +1,8 @@
-import { buildBuiltInApplicationDataForTenant, isBuiltInApplicationId } from '@logto/schemas';
+import {
+  buildBuiltInApplicationDataForTenant,
+  deviceDemoAppApplicationId,
+  isBuiltInApplicationId,
+} from '@logto/schemas';
 import { type MiddlewareType } from 'koa';
 import type { Provider } from 'oidc-provider';
 import { errors } from 'oidc-provider';
@@ -25,6 +29,15 @@ const shouldAutoConsentApplication = async (clientId: string, query: Queries, en
     /**
      * Registered application ids never take the URL shape, and authorization has already
      * resolved this client — a URL here is a CIMD client, which is never first-party.
+     */
+    return false;
+  }
+
+  if (clientId === deviceDemoAppApplicationId) {
+    /**
+     * Device Flow has no redirect URI protection, so the built-in device demo app must never
+     * auto-consent silently — always display the explicit consent screen naming the client and
+     * requested scopes.
      */
     return false;
   }

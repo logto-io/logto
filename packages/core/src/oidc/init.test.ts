@@ -5,6 +5,7 @@ import { generateKeyPairSync } from 'node:crypto';
 import {
   AuthenticationContextMode,
   defaultTenantId,
+  deviceDemoAppApplicationId,
   GrantType,
   LogtoAcr,
   logtoCookieKey,
@@ -421,6 +422,104 @@ describe('oidc provider init', () => {
     await expect(configuration.loadExistingGrant(ctx)).resolves.toBeDefined();
     expect(grantIdFor).toHaveBeenCalledWith(clientId);
     expect(findGrant).toHaveBeenCalledWith('session_grant_id');
+  });
+
+  it('should reject API resource requests for the built-in device demo app', async () => {
+    const findResourceByIndicator = jest.fn().mockResolvedValue({
+      ...mockResource,
+      indicator,
+      accessTokenTtl: 3600,
+    });
+    const findUserScopesForResourceIndicator = jest
+      .fn()
+      .mockResolvedValue([buildScope('scope_1', 'all')]);
+    const tenant = new MockTenant(undefined, {
+      resources: { findResourceByIndicator },
+    });
+    tenant.setPartial('libraries', {
+      users: { findUserScopesForResourceIndicator },
+    });
+
+    const provider = createProvider(tenant);
+    const ctx = createContext(provider, {
+      grantType: GrantType.DeviceCode,
+      clientId: deviceDemoAppApplicationId,
+    });
+
+    await expect(getResourceServerInfo(ctx, indicator)).rejects.toThrow(errors.InvalidTarget);
+    expect(findResourceByIndicator).not.toHaveBeenCalled();
+    expect(findUserScopesForResourceIndicator).not.toHaveBeenCalled();
+  });
+
+  it('should not apply the tenant default resource to the built-in device demo app', async () => {
+    const findDefaultResource = jest.fn().mockResolvedValue({
+      ...mockResource,
+      indicator,
+    });
+    const tenant = new MockTenant(undefined, {
+      resources: { findDefaultResource },
+    });
+
+    const provider = createProvider(tenant);
+    const configuration = getProviderConfiguration(provider);
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal client stub for defaultResource check
+    const deviceDemoClient = {
+      clientId: deviceDemoAppApplicationId,
+    } as NonNullable<KoaContextWithOIDC['oidc']['client']>;
+    const registeredClient = createTestClient();
+    assert(registeredClient);
+
+    const ctx = createOidcContext({ provider, client: deviceDemoClient });
+
+    await expect(
+      configuration.features.resourceIndicators.defaultResource(ctx, deviceDemoClient)
+    ).resolves.toBeUndefined();
+    expect(findDefaultResource).not.toHaveBeenCalled();
+
+    await expect(
+      configuration.features.resourceIndicators.defaultResource(ctx, registeredClient)
+    ).resolves.toBe(indicator);
+    expect(findDefaultResource).toHaveBeenCalledTimes(1);
+  });
+
+  it('should skip session grant reuse for the built-in device demo app while keeping post-consent resume', async () => {
+    const assertUserHasApplicationAccess = jest.fn();
+    const tenant = new MockTenant();
+    tenant.setPartial('libraries', {
+      applicationAccessControl: { assertUserHasApplicationAccess },
+    });
+
+    const provider = createProvider(tenant);
+    const configuration = getProviderConfiguration(provider);
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal client stub for loadExistingGrant check
+    const deviceDemoClient = {
+      clientId: deviceDemoAppApplicationId,
+      scope: 'openid offline_access profile email',
+      metadata: () => ({}),
+    } as KoaContextWithOIDC['oidc']['client'];
+    const grantIdFor = jest.fn().mockReturnValue('session_grant_id');
+
+    const initialCtx = createOidcContext({
+      provider,
+      account: { accountId, claims: async () => ({ sub: accountId }) },
+      client: deviceDemoClient,
+      session: { grantIdFor },
+    } as unknown as Partial<KoaContextWithOIDC['oidc']>);
+
+    await expect(configuration.loadExistingGrant(initialCtx)).resolves.toBeUndefined();
+    expect(grantIdFor).not.toHaveBeenCalled();
+
+    const findGrant = mockGrantFound(provider, 'openid offline_access profile email');
+    const resumeCtx = createOidcContext({
+      provider,
+      account: { accountId, claims: async () => ({ sub: accountId }) },
+      client: deviceDemoClient,
+      result: { consent: { grantId: 'fresh_consent_grant_id' } },
+      session: { grantIdFor },
+    } as unknown as Partial<KoaContextWithOIDC['oidc']>);
+
+    await expect(configuration.loadExistingGrant(resumeCtx)).resolves.toBeDefined();
+    expect(findGrant).toHaveBeenCalledWith('fresh_consent_grant_id');
   });
 
   it('should reject a granted user scope the client is no longer configured for', async () => {

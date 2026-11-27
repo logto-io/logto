@@ -1,9 +1,15 @@
-import { accountCenterApplicationId, demoAppApplicationId, type Application } from '@logto/schemas';
+import {
+  accountCenterApplicationId,
+  adminTenantId,
+  demoAppApplicationId,
+  deviceDemoAppApplicationId,
+  type Application,
+} from '@logto/schemas';
 import { createMockUtils } from '@logto/shared/esm';
 import snakecaseKeys from 'snakecase-keys';
 
 import { mockApplication } from '#src/__mocks__/index.js';
-import type { EnvSet } from '#src/env-set/index.js';
+import { EnvSet } from '#src/env-set/index.js';
 import { mockEnvSet } from '#src/test-utils/env-set.js';
 import { MockQueries } from '#src/test-utils/tenant.js';
 
@@ -192,6 +198,19 @@ describe('postgres Adapter', () => {
       expect.arrayContaining([`${customDomain}/demo-app`])
     );
   });
+
+  it('restricts built-in Device Demo App to basic OIDC scopes and custom-domain post-logout URI', async () => {
+    const customDomain = 'https://device.custom.test';
+    const adapter = postgresAdapter(mockBuiltInAppEnvSet(customDomain), queries, 'Client');
+
+    const application = await adapter.find(deviceDemoAppApplicationId);
+    expect(application).toBeDefined();
+
+    expect(application?.scope).toBe('openid offline_access profile email');
+    expect(application?.post_logout_redirect_uris).toEqual(
+      expect.arrayContaining([`${customDomain}/device-demo-app`])
+    );
+  });
 });
 
 /**
@@ -201,18 +220,27 @@ describe('postgres Adapter', () => {
 const loadClientAdapter = async ({
   isSsrfProtectionEnabled = true,
   ssrfAllowedAddresses = [],
+  isMultiTenancy = false,
   cimdEnabled = true,
+  tenantId = mockEnvSet.tenantId,
   findApplicationById,
 }: {
   isSsrfProtectionEnabled?: boolean;
   ssrfAllowedAddresses?: string[];
+  isMultiTenancy?: boolean;
   cimdEnabled?: boolean;
+  tenantId?: string;
   findApplicationById: jest.Mock;
 }) => {
   jest.resetModules();
   mockEsm('#src/env-set/index.js', () => ({
     EnvSet: {
-      values: { isSsrfProtectionEnabled, ssrfAllowedAddresses },
+      values: {
+        ...EnvSet.values,
+        isSsrfProtectionEnabled,
+        ssrfAllowedAddresses,
+        isMultiTenancy,
+      },
     },
   }));
 
@@ -224,8 +252,12 @@ const loadClientAdapter = async ({
   const { default: loadedAdapter } = await import('./adapter.js');
   const { errors } = await import('oidc-provider');
 
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal env-set stub scoped to the field the adapter reads
-  const envSet = { oidc: { cimdEnabled } } as EnvSet;
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- minimal env-set stub scoped to the fields the adapter reads
+  const envSet = {
+    tenantId,
+    oidc: { ...mockEnvSet.oidc, cimdEnabled },
+    endpoint: mockEnvSet.endpoint,
+  } as EnvSet;
   const adapter = loadedAdapter(
     envSet,
     new MockQueries({ applications: { findApplicationById } }),
@@ -238,6 +270,49 @@ const loadClientAdapter = async ({
     errors,
   };
 };
+
+describe('built-in client tenant isolation', () => {
+  it.each([false, true])(
+    'returns undefined for device-demo-app on the admin tenant (isMultiTenancy=%s)',
+    async (isMultiTenancy) => {
+      const findApplicationById = jest.fn();
+      const { findClient } = await loadClientAdapter({
+        tenantId: adminTenantId,
+        isMultiTenancy,
+        findApplicationById,
+      });
+
+      await expect(findClient(deviceDemoAppApplicationId)).resolves.toBeUndefined();
+      expect(findApplicationById).not.toHaveBeenCalled();
+    }
+  );
+
+  it('returns undefined for demo-app on the admin tenant in OSS', async () => {
+    const findApplicationById = jest.fn();
+    const { findClient } = await loadClientAdapter({
+      tenantId: adminTenantId,
+      isMultiTenancy: false,
+      findApplicationById,
+    });
+
+    await expect(findClient(demoAppApplicationId)).resolves.toBeUndefined();
+    expect(findApplicationById).not.toHaveBeenCalled();
+  });
+
+  it('resolves demo-app on the admin tenant in multi-tenancy mode', async () => {
+    const findApplicationById = jest.fn();
+    const { findClient } = await loadClientAdapter({
+      tenantId: adminTenantId,
+      isMultiTenancy: true,
+      findApplicationById,
+    });
+
+    await expect(findClient(demoAppApplicationId)).resolves.toMatchObject({
+      client_id: demoAppApplicationId,
+    });
+    expect(findApplicationById).not.toHaveBeenCalled();
+  });
+});
 
 describe('client adapter `find` fallback contract', () => {
   const registeredClientId = 'some_client_id';

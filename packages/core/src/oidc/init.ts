@@ -9,6 +9,7 @@ import { userClaims } from '@logto/core-kit';
 import type { I18nKey } from '@logto/phrases';
 import {
   customClientMetadataDefault,
+  deviceDemoAppApplicationId,
   extraParamsObjectGuard,
   inSeconds,
   logtoCookieKey,
@@ -91,6 +92,15 @@ const supportedSigningAlgs = Object.freeze(['RS256', 'PS256', 'ES256', 'ES384', 
 // destroying the session removes its stored row. `resume` and `device_resume` rotate it first.
 const sessionAccountRoutes = new Set(['authorization', 'code_verification']);
 
+/**
+ * CIMD organization access is grant-scoped, so a Grant must never serve more than one
+ * authorization. The built-in device demo app also skips session grant reuse so every device
+ * authorization goes through the explicit consent screen instead of silently reusing an earlier
+ * preview grant.
+ */
+const canReuseSessionGrant = (envSet: EnvSet, clientId: string): boolean =>
+  !shouldTreatAsCimdClient(envSet, clientId) && clientId !== deviceDemoAppApplicationId;
+
 export default function initOidc(
   tenantId: string,
   envSet: EnvSet,
@@ -120,6 +130,14 @@ export default function initOidc(
     userId: string | undefined,
     organizationId: string | undefined
   ): Promise<Pick<ResourceServer, 'accessTokenFormat' | 'jwt' | 'accessTokenTTL' | 'scope'>> => {
+    /**
+     * Built-in device demo app is unremovable and uses Device Flow without `redirect_uri`
+     * protection; never allow it to obtain API resource access tokens on any tenant.
+     */
+    if (clientId === deviceDemoAppApplicationId) {
+      throw new errors.InvalidTarget('device demo app is not allowed to request API resources');
+    }
+
     const resourceServer = await findResource(queries, indicator);
 
     if (!resourceServer) {
@@ -254,7 +272,12 @@ export default function initOidc(
       // https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#featuresresourceindicators
       resourceIndicators: {
         enabled: true,
-        defaultResource: async () => {
+        defaultResource: async (_ctx, client) => {
+          if (client.clientId === deviceDemoAppApplicationId) {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- Matches oidc-provider's default implementation returning `undefined`.
+            return undefined!;
+          }
+
           const resource = await findDefaultResource();
           // The default implementation returns `undefined` - https://github.com/panva/node-oidc-provider/blob/0c52469f08b0a4a1854d90a96546a3f7aa090e5e/lib/helpers/defaults.js#L195
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -373,14 +396,15 @@ export default function initOidc(
       const { account, client, provider, result, session } = ctx.oidc;
       const treatAsCimdClient = shouldTreatAsCimdClient(envSet, client?.clientId);
       /**
-       * CIMD organization access is grant-scoped, so a Grant must never serve more than one
-       * authorization — skip the session grant reuse. The `result.consent.grantId` branch
-       * stays: it is this same authorization's grant on the post-consent resume.
+       * The `result.consent.grantId` branch stays: it is this same authorization's grant on the
+       * post-consent resume.
        */
       const grantId =
         // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- Keep oidc-provider's default loadExistingGrant fallback semantics.
         result?.consent?.grantId ||
-        (client && !treatAsCimdClient && session?.grantIdFor(client.clientId));
+        (client &&
+          canReuseSessionGrant(envSet, client.clientId) &&
+          session?.grantIdFor(client.clientId));
       const shouldCheckApplicationAccess =
         account &&
         client &&

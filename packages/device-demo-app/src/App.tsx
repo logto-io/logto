@@ -6,10 +6,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import '@/scss/normalized.scss';
 
 import styles from './App.module.scss';
-import DevPanel, { getDevConfig } from './DevPanel';
+import { clearDevConfig, getDevConfig, hasDevConfig, normalizeOptionalString } from './DevPanel';
 import Footer, { useIsDarkMode } from './Footer';
-import congratsDark from './assets/congrats-dark.svg';
-import congrats from './assets/congrats.svg';
+import SuccessCard from './SuccessCard';
 import logtoIcon from './assets/logto-icon.svg';
 import type { AppState, DeviceAuthResponse, TokenResponse, UserInfo } from './types';
 import { getStringClaim, parseJsonResponse } from './types';
@@ -29,9 +28,10 @@ const App = () => {
   const pollingRef = useRef<ReturnType<typeof setInterval>>();
   const expiryTimerRef = useRef<ReturnType<typeof setTimeout>>();
   const isDarkMode = useIsDarkMode();
-  const params = new URL(window.location.href).searchParams;
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- We need to fall back for empty string
-  const clientId = params.get('app_id') || deviceDemoAppApplicationId;
+  const urlAppId = normalizeOptionalString(
+    new URL(window.location.href).searchParams.get('app_id')
+  );
+  const clientId = urlAppId ?? getDevConfig().appId ?? deviceDemoAppApplicationId;
 
   const cleanup = useCallback(() => {
     if (pollingRef.current) {
@@ -58,20 +58,22 @@ const App = () => {
         }),
       });
     }
-    // End OIDC session and redirect back to restart the device flow
-    if (idToken) {
+    // End OIDC session and redirect back to restart the device flow when using the built-in
+    // demo app (registered device flow apps have no post-logout redirect URI).
+    if (idToken && clientId === deviceDemoAppApplicationId) {
       const endSessionUrl = new URL('/oidc/session/end', window.location.origin);
       endSessionUrl.searchParams.set('id_token_hint', idToken);
       endSessionUrl.searchParams.set(
         'post_logout_redirect_uri',
         `${window.location.origin}/device-demo-app`
       );
-      // eslint-disable-next-line @silverhand/fp/no-mutation
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- Browser navigation for RP-initiated logout.
       window.location.href = endSessionUrl.toString();
       return;
     }
-    void initiateDeviceFlow();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    // Reload so any updated DevPanel config (including a new App ID) takes effect cleanly.
+    window.location.reload();
   }, [refreshToken, idToken, clientId]);
 
   const initiateDeviceFlow = useCallback(async () => {
@@ -84,14 +86,15 @@ const App = () => {
     setAccessToken('');
 
     const devConfig = getDevConfig();
+    const isBuiltInClient = clientId === deviceDemoAppApplicationId;
     const scope = devConfig.scope ?? defaultScope;
     const bodyParams: Record<string, string> = { client_id: clientId, scope };
-    if (devConfig.resource) {
-      // eslint-disable-next-line @silverhand/fp/no-mutation
+    if (!isBuiltInClient && devConfig.resource) {
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- Building form request payload.
       bodyParams.resource = devConfig.resource;
     }
-    if (devConfig.organizationId) {
-      // eslint-disable-next-line @silverhand/fp/no-mutation
+    if (!isBuiltInClient && devConfig.organizationId) {
+      // eslint-disable-next-line @silverhand/fp/no-mutation -- Building form request payload.
       bodyParams.organization_id = devConfig.organizationId;
     }
 
@@ -197,84 +200,61 @@ const App = () => {
   if (state === 'success' && user) {
     return (
       <div className={styles.app}>
-        {showDevPanel && (
-          <DevPanel
-            clientId={clientId}
-            refreshToken={refreshToken}
-            idToken={idToken}
-            accessToken={accessToken}
-          />
-        )}
-        <div className={styles.successCard}>
-          <img
-            className={styles.congratsIcon}
-            src={isDarkMode ? congratsDark : congrats}
-            alt="Congrats"
-          />
-          <div className={styles.successTitle}>
-            You&apos;ve successfully signed in the demo app.
-          </div>
-          <div className={styles.successSubtitle}>Here is your log in information:</div>
-          <div className={styles.infoCard}>
-            {user.email && (
-              <div>
-                Email: <span>{user.email}</span>
-              </div>
-            )}
-            {user.username && !user.email && (
-              <div>
-                Username: <span>{user.username}</span>
-              </div>
-            )}
-            <div>
-              User ID: <span>{user.sub}</span>
-            </div>
-          </div>
-          <button
-            type="button"
-            className={styles.button}
-            onClick={() => {
-              void signOut();
-            }}
-          >
-            Sign out the demo app
-          </button>
-          <button
-            type="button"
-            className={styles.openDevPanel}
-            onClick={() => {
-              setShowDevPanel((previous) => !previous);
-            }}
-          >
-            {showDevPanel ? 'Close dev panel' : 'Open dev panel'}
-          </button>
-        </div>
+        <SuccessCard
+          isDarkMode={isDarkMode}
+          isDevPanelVisible={showDevPanel}
+          clientId={clientId}
+          urlAppId={urlAppId}
+          refreshToken={refreshToken}
+          idToken={idToken}
+          accessToken={accessToken}
+          user={user}
+          onSignOut={() => {
+            void signOut();
+          }}
+          onToggleDevPanel={() => {
+            setShowDevPanel((previous) => !previous);
+          }}
+        />
         <Footer isDarkMode={isDarkMode} />
       </div>
     );
   }
 
   if (state === 'error' || state === 'expired') {
+    const isExpired = state === 'expired';
     return (
       <div className={styles.app}>
         <div className={styles.errorContainer}>
           <div className={styles.errorTitle}>
-            {state === 'expired' ? 'Device code expired' : 'Something went wrong'}
+            {isExpired ? 'Device code expired' : 'Something went wrong'}
           </div>
           <div className={styles.errorMessage}>
-            {state === 'expired'
-              ? 'The device code has expired. Please try again to get a new code.'
-              : error}
+            {isExpired ? 'The device code has expired. Please try again to get a new code.' : error}
           </div>
-          <button
-            type="button"
-            className={styles.primaryButton}
-            onClick={() => {
-              void initiateDeviceFlow();
-            }}
-          >
-            Try again
-          </button>
+          <div className={styles.errorActions}>
+            <button
+              type="button"
+              className={styles.primaryButton}
+              onClick={() => {
+                void initiateDeviceFlow();
+              }}
+            >
+              Try again
+            </button>
+            {!isExpired && hasDevConfig() && (
+              <button
+                type="button"
+                className={styles.button}
+                onClick={() => {
+                  clearDevConfig();
+                  window.location.reload();
+                }}
+              >
+                Reset config and retry
+              </button>
+            )}
+          </div>
         </div>
         <Footer isDarkMode={isDarkMode} />
       </div>
