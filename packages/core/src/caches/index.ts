@@ -22,7 +22,9 @@ const maxReconnectDelay = 5000;
 // background, and `get`/`set` stay misses until the client is ready.
 const startupConnectTimeout = 5000;
 
-const getReconnectDelay = (retries: number) => Math.min(retries * 500, maxReconnectDelay);
+// Jitter keeps pods that lost Redis at the same moment from retrying in lockstep.
+const getReconnectDelay = (retries: number) =>
+  Math.round(Math.min(retries * 500, maxReconnectDelay) * (0.8 + Math.random() * 0.2));
 
 const timeoutSentinel = Symbol('redis-cache-timeout');
 
@@ -81,6 +83,7 @@ abstract class RedisCacheBase implements CacheStore {
   readonly client?: RedisClientType | RedisClusterType;
 
   private isDisconnecting = false;
+  private hasConnected = false;
 
   /**
    * Whether a rejected `client.connect()` should be retried. The standalone socket retries on its
@@ -99,8 +102,10 @@ abstract class RedisCacheBase implements CacheStore {
    * piles up into request latency, and ultimately upstream 499s, during a Redis outage. `delete`
    * is deliberately exempt so invalidations are not silently dropped (see its comment below).
    *
-   * Standalone clients expose `isReady` (connected and past handshake); the cluster client only
-   * exposes `isOpen`, so fall back to that.
+   * Standalone clients expose `isReady` (connected and past handshake). The cluster client only
+   * exposes `isOpen`, which turns true before topology discovery and node connections finish, so
+   * it also needs `connect()` to have resolved. A reconnecting cluster node rejects commands right
+   * away instead, through `disableOfflineQueue`.
    */
   protected get isClientReady(): boolean {
     const { client } = this;
@@ -109,7 +114,7 @@ abstract class RedisCacheBase implements CacheStore {
       return false;
     }
 
-    return 'isReady' in client ? client.isReady : client.isOpen;
+    return 'isReady' in client ? client.isReady : this.hasConnected && client.isOpen;
   }
 
   async set(key: string, value: string, expire: number = 30 * 60) {
@@ -137,7 +142,8 @@ abstract class RedisCacheBase implements CacheStore {
 
   // Unlike `get`/`set`, `delete` is not gated on `isClientReady`: a dropped invalidation could
   // serve stale data until TTL, so let it queue and flush once the connection recovers. It stays
-  // bounded by `raceWithTimeout` and never blocks a request beyond the write deadline.
+  // bounded by `raceWithTimeout` and never blocks a request beyond the write deadline. Cluster
+  // nodes have no offline queue, so a `delete` routed to a reconnecting node fails right away.
   async delete(key: string) {
     await raceWithTimeout('DEL', key, this.client?.del(key), redisCacheWriteTimeout);
   }
@@ -225,6 +231,8 @@ abstract class RedisCacheBase implements CacheStore {
       return;
     }
 
+    this.hasConnected = true;
+
     // A failed ping must not retry: calling `connect()` on an open client throws.
     try {
       if ((await this.ping()) === 'PONG') {
@@ -299,6 +307,8 @@ export class RedisClusterCache extends RedisCacheBase {
       rootNodes,
       useReplicas: true,
       defaults: {
+        // Without it, commands to a reconnecting node wait in its queue for the whole outage.
+        disableOfflineQueue: true,
         socket: this.getSocketOptions(connectionUrl),
         username: connectionUrl.username ? safeDecode(connectionUrl.username) : undefined,
         password: connectionUrl.password ? safeDecode(connectionUrl.password) : undefined,

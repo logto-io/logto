@@ -29,7 +29,12 @@ const createClient = jest.fn((_config?: { socket?: SocketOptions }) => ({
 const createCluster = jest.fn(
   (_config?: {
     rootNodes?: Array<{ url: string; socket?: SocketOptions }>;
-    defaults?: { username?: string; password?: string; socket?: SocketOptions };
+    defaults?: {
+      username?: string;
+      password?: string;
+      disableOfflineQueue?: boolean;
+      socket?: SocketOptions;
+    };
   }) => ({
     // The cluster client only exposes `isOpen`; default to open so commands run.
     isOpen: true,
@@ -120,8 +125,8 @@ describe('RedisCache', () => {
         cache.disconnect(),
       ]);
 
-      // Do sanity check only
-      expect(mockFunction).toBeCalledTimes(6);
+      // Do sanity check only; `get` and `set` skip Redis until the cluster has connected.
+      expect(mockFunction).toBeCalledTimes(4);
       stub.restore();
     }
   });
@@ -278,12 +283,17 @@ const getReconnectStrategies = () => {
   ];
 };
 
+const expectDelayBetween = (delay: unknown, min: number, max: number) => {
+  expect(delay).toBeGreaterThanOrEqual(min);
+  expect(delay).toBeLessThanOrEqual(max);
+};
+
 describe('Redis reconnection', () => {
-  it('keeps retrying with a capped delay instead of giving up', () => {
+  it('keeps retrying with a capped, jittered delay instead of giving up', () => {
     for (const reconnectStrategy of getReconnectStrategies()) {
-      expect(reconnectStrategy?.(1, new Error('ECONNREFUSED'))).toBe(500);
-      expect(reconnectStrategy?.(6, new Error('ECONNREFUSED'))).toBe(3000);
-      expect(reconnectStrategy?.(1000, new Error('ECONNREFUSED'))).toBe(5000);
+      expectDelayBetween(reconnectStrategy?.(1, new Error('ECONNREFUSED')), 400, 500);
+      expectDelayBetween(reconnectStrategy?.(6, new Error('ECONNREFUSED')), 2400, 3000);
+      expectDelayBetween(reconnectStrategy?.(1000, new Error('ECONNREFUSED')), 4000, 5000);
     }
   });
 
@@ -367,6 +377,30 @@ describe('Redis reconnection', () => {
       expect(connectStub.callCount).toBe(1);
     } finally {
       errorSpy.mockRestore();
+      infoSpy.mockRestore();
+    }
+  });
+
+  it('skips cluster reads and writes until connecting resolves, and fails fast on offline nodes', async () => {
+    jest.clearAllMocks();
+    const cache = new RedisClusterCache(new URL('redis://url?cluster=1'));
+    // The cluster reports `isOpen` while topology discovery is still connecting to nodes.
+    // eslint-disable-next-line no-use-extend-native/no-use-extend-native -- `Promise.withResolvers` is standard since ES2024; the rule's built-in method list predates it
+    const connect = Promise.withResolvers<void>();
+    Sinon.stub(cache.client!, 'connect').returns(connect.promise);
+    const getStub = Sinon.stub(cache.client!, 'get').resolves('bar');
+    const infoSpy = jest.spyOn(cacheConsole, 'info').mockReturnValue();
+
+    try {
+      const connecting = cache.connect();
+      await expect(cache.get('foo')).resolves.toBeUndefined();
+      expect(getStub.called).toBe(false);
+
+      connect.resolve();
+      await connecting;
+      await expect(cache.get('foo')).resolves.toBe('bar');
+      expect(createCluster.mock.calls[0]?.[0]?.defaults?.disableOfflineQueue).toBe(true);
+    } finally {
       infoSpy.mockRestore();
     }
   });
