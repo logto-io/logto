@@ -52,13 +52,17 @@ export class UserRoleRelationQueries extends RelationQueries<
 
   /**
    * Get the available resource scopes of a user in all organizations.
-   * If `organizationId` is provided, it will only search in that organization.
+   * If `organizationId` is provided (a single id or list of ids), it only searches those organizations.
    */
   async getUserResourceScopes(
     userId: string,
     resourceIndicator: string,
-    organizationId?: string
+    organizationId?: string | readonly string[]
   ): Promise<readonly ResourceScopeEntity[]> {
+    if (Array.isArray(organizationId) && organizationId.length === 0) {
+      return [];
+    }
+
     const { fields } = convertToIdentifiers(OrganizationRoleUserRelations, true);
     const roleScopeRelations = convertToIdentifiers(OrganizationRoleResourceScopeRelations, true);
     const scopes = convertToIdentifiers(Scopes, true);
@@ -76,7 +80,11 @@ export class UserRoleRelationQueries extends RelationQueries<
         on ${resources.fields.id} = ${scopes.fields.resourceId}
       where ${fields.userId} = ${userId}
       and ${resources.fields.indicator} = ${resourceIndicator}
-      ${conditionalSql(organizationId, (value) => sql`and ${fields.organizationId} = ${value}`)}
+      ${conditionalSql(organizationId, (value) =>
+        typeof value === 'string'
+          ? sql`and ${fields.organizationId} = ${value}`
+          : sql`and ${fields.organizationId} = any(${sql.array(value, 'varchar')})`
+      )}
     `);
   }
 

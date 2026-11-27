@@ -7,13 +7,31 @@ import {
 import { sql, type CommonQueryMethods } from '@silverhand/slonik';
 
 import RelationQueries from '#src/utils/RelationQueries.js';
-import { convertToIdentifiers } from '#src/utils/sql.js';
+import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
 class ApplicationUserConsentOrganizationsQuery extends RelationQueries<
   [typeof Applications, typeof Users, typeof Organizations]
 > {
   constructor(pool: CommonQueryMethods) {
     super(pool, ApplicationUserConsentOrganizations.table, Applications, Users, Organizations);
+  }
+
+  /** Get the organization IDs consented by a user for an application. */
+  async findOrganizationIds(
+    applicationId: string,
+    userId: string,
+    organizationId?: string
+  ): Promise<readonly string[]> {
+    const relations = convertToIdentifiers(ApplicationUserConsentOrganizations);
+    const rows = await this.pool.any<{ organizationId: string }>(sql`
+      select ${relations.fields.organizationId}
+      from ${relations.table}
+      where ${relations.fields.applicationId} = ${applicationId}
+      and ${relations.fields.userId} = ${userId}
+      ${conditionalSql(organizationId, (value) => sql`and ${relations.fields.organizationId} = ${value}`)}
+    `);
+
+    return rows.map(({ organizationId }) => organizationId);
   }
 
   /** Replace the organizations of a user consented for the application */
