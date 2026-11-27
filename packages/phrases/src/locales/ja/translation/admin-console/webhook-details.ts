@@ -16,6 +16,13 @@ const webhook_details = {
   deleted: 'Webhookは削除されました。',
   settings_tab: '設定',
   recent_requests_tab: '最近のリクエスト（24時間）',
+  recent_requests_tab_48h: '最近のリクエスト（48時間）',
+  logs: {
+    attempts: '試行回数',
+    retrying: '再試行中',
+    redeliver: '再配信',
+    redelivery_queued: '再配信をキューに追加しました。',
+  },
   settings: {
     settings: '設定',
     settings_description:

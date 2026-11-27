@@ -16,6 +16,13 @@ const webhook_details = {
   deleted: 'Webhook이 성공적으로 삭제되었습니다.',
   settings_tab: '설정',
   recent_requests_tab: '최근 요청 (24시간)',
+  recent_requests_tab_48h: '최근 요청 (48시간)',
+  logs: {
+    attempts: '시도 횟수',
+    retrying: '재시도 중',
+    redeliver: '재전송',
+    redelivery_queued: '재전송이 대기열에 추가되었습니다.',
+  },
   settings: {
     settings: '설정',
     settings_description:

@@ -16,6 +16,13 @@ const webhook_details = {
   deleted: 'The webhook has been successfully deleted.',
   settings_tab: 'Settings',
   recent_requests_tab: 'Recent requests (24h)',
+  recent_requests_tab_48h: 'Recent requests (48h)',
+  logs: {
+    attempts: 'Attempts',
+    retrying: 'Retrying',
+    redeliver: 'Redeliver',
+    redelivery_queued: 'Redelivery queued.',
+  },
   settings: {
     settings: 'Settings',
     settings_description:

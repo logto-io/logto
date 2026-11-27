@@ -15,6 +15,13 @@ const webhook_details = {
   deleted: 'ลบเว็บฮุคเรียบร้อยแล้ว',
   settings_tab: 'การตั้งค่า',
   recent_requests_tab: 'คำขอล่าสุด (24 ชม.)',
+  recent_requests_tab_48h: 'คำขอล่าสุด (48 ชม.)',
+  logs: {
+    attempts: 'จำนวนครั้งที่พยายาม',
+    retrying: 'กำลังลองใหม่',
+    redeliver: 'ส่งใหม่',
+    redelivery_queued: 'เพิ่มการส่งใหม่เข้าคิวแล้ว',
+  },
   settings: {
     settings: 'การตั้งค่า',
     settings_description:

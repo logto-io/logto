@@ -17,6 +17,7 @@ import DetailsPageHeader from '@/components/DetailsPage/DetailsPageHeader';
 import PageMeta from '@/components/PageMeta';
 import SuccessRate from '@/components/SuccessRate';
 import { WebhookDetailsTabs } from '@/consts';
+import { isDevFeaturesEnabled } from '@/consts/env';
 import DynamicT from '@/ds-components/DynamicT';
 import TabNav, { TabNavItem } from '@/ds-components/TabNav';
 import useApi, { type RequestError } from '@/hooks/use-api';
@@ -150,7 +151,10 @@ function WebhookDetails() {
               <DynamicT forKey="webhook_details.settings_tab" />
             </TabNavItem>
             <TabNavItem href={`/webhooks/${data.id}/${WebhookDetailsTabs.RecentRequests}`}>
-              <DynamicT forKey="webhook_details.recent_requests_tab" />
+              {/* Durable job queue: recent requests default to a 48-hour window */}
+              <DynamicT
+                forKey={`webhook_details.recent_requests_tab${isDevFeaturesEnabled ? '_48h' : ''}`}
+              />
             </TabNavItem>
           </TabNav>
           <Outlet

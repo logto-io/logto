@@ -14,6 +14,13 @@ const webhook_details = {
   deleted: 'Webhook 已成功删除。',
   settings_tab: '设置',
   recent_requests_tab: '最近请求（24小时）',
+  recent_requests_tab_48h: '最近请求（48小时）',
+  logs: {
+    attempts: '尝试次数',
+    retrying: '重试中',
+    redeliver: '重新投递',
+    redelivery_queued: '已加入重新投递队列。',
+  },
   settings: {
     settings: '设置',
     settings_description:

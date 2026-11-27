@@ -16,6 +16,13 @@ const webhook_details = {
   deleted: 'وب‌هوک با موفقیت حذف شد.',
   settings_tab: 'تنظیمات',
   recent_requests_tab: 'درخواست‌های اخیر (۲۴ ساعت)',
+  recent_requests_tab_48h: 'درخواست‌های اخیر (۴۸ ساعت)',
+  logs: {
+    attempts: 'تلاش‌ها',
+    retrying: 'در حال تلاش مجدد',
+    redeliver: 'ارسال مجدد',
+    redelivery_queued: 'ارسال مجدد در صف قرار گرفت.',
+  },
   settings: {
     settings: 'تنظیمات',
     settings_description:

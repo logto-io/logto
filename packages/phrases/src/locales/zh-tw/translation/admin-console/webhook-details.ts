@@ -14,6 +14,13 @@ const webhook_details = {
   deleted: 'Webhook 已成功刪除。',
   settings_tab: '設置',
   recent_requests_tab: '最近的請求 (24h)',
+  recent_requests_tab_48h: '最近的請求 (48h)',
+  logs: {
+    attempts: '嘗試次數',
+    retrying: '重試中',
+    redeliver: '重新投遞',
+    redelivery_queued: '已加入重新投遞佇列。',
+  },
   settings: {
     settings: '設置',
     settings_description:
