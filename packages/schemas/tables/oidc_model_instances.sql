@@ -24,14 +24,6 @@ create table oidc_model_instances (
 create index oidc_model_instances__expires_at
   on oidc_model_instances (tenant_id, expires_at);
 
-/* Stand-in that keeps the session, grant, and revocation lookups seeking within one
-   (tenant, model) partition while the tenant-ID widening drops the payload indexes - unlike the
-   service_logs stand-ins it outlives the concurrent restores, because the restored payload
-   indexes cannot serve queries that still read the payload keys directly, and it is removed only
-   once those queries are migrated to the payload_* columns fleet-wide */
-create index oidc_model_instances__standin_model_name_expires_at
-  on oidc_model_instances (tenant_id, model_name, expires_at);
-
 /** Copies the payload keys used for lookups into their `payload_*` columns. */
 create function oidc_model_instances__set_payload_keys() returns trigger as
 $$ begin

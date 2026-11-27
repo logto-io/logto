@@ -4,6 +4,7 @@ import { Navigate, Outlet, useParams } from 'react-router-dom';
 
 import { type SubscriptionCountBasedUsage } from '@/cloud/types/router';
 import AppLoading from '@/components/AppLoading';
+import ProductUpdatesContainer from '@/components/ProductUpdatesCardStack/ProductUpdatesContainer';
 import Topbar from '@/components/Topbar';
 import { isCloud } from '@/consts/env';
 import SubscriptionDataProvider from '@/contexts/SubscriptionDataProvider';
@@ -37,55 +38,62 @@ export default function AppContent() {
 
   const isLoading = isLoadingPreference || isLoadingSubscriptionData;
 
-  if (isLoading || !currentTenant) {
-    return <AppLoading />;
-  }
-
   return (
-    <SubscriptionDataProvider
-      subscriptionDataAndUtils={{
-        ...subscriptionData,
-        hasSurpassedSubscriptionQuotaLimit: <T extends keyof SubscriptionCountBasedUsage>(
-          quotaKey: T,
-          usage?: SubscriptionCountBasedUsage[T]
-        ) => {
-          if (!shouldEnforcePaywallInUI(isDevTenant, quotaKey)) {
-            return false;
-          }
+    <>
+      {isLoading || !currentTenant ? (
+        <AppLoading />
+      ) : (
+        <SubscriptionDataProvider
+          subscriptionDataAndUtils={{
+            ...subscriptionData,
+            hasSurpassedSubscriptionQuotaLimit: <T extends keyof SubscriptionCountBasedUsage>(
+              quotaKey: T,
+              usage?: SubscriptionCountBasedUsage[T]
+            ) => {
+              if (!shouldEnforcePaywallInUI(isDevTenant, quotaKey)) {
+                return false;
+              }
 
-          return hasSurpassedSubscriptionQuotaLimit({
-            quotaKey,
-            usage,
-            subscriptionUsage: subscriptionData.currentSubscriptionUsage,
-            subscriptionQuota: subscriptionData.currentSubscriptionQuota,
-          });
-        },
-        hasReachedSubscriptionQuotaLimit: <T extends keyof SubscriptionCountBasedUsage>(
-          quotaKey: T,
-          usage?: SubscriptionCountBasedUsage[T]
-        ) => {
-          if (!shouldEnforcePaywallInUI(isDevTenant, quotaKey)) {
-            return false;
-          }
+              return hasSurpassedSubscriptionQuotaLimit({
+                quotaKey,
+                usage,
+                subscriptionUsage: subscriptionData.currentSubscriptionUsage,
+                subscriptionQuota: subscriptionData.currentSubscriptionQuota,
+              });
+            },
+            hasReachedSubscriptionQuotaLimit: <T extends keyof SubscriptionCountBasedUsage>(
+              quotaKey: T,
+              usage?: SubscriptionCountBasedUsage[T]
+            ) => {
+              if (!shouldEnforcePaywallInUI(isDevTenant, quotaKey)) {
+                return false;
+              }
 
-          return hasReachedSubscriptionQuotaLimit({
-            quotaKey,
-            usage,
-            subscriptionUsage: subscriptionData.currentSubscriptionUsage,
-            subscriptionQuota: subscriptionData.currentSubscriptionQuota,
-          });
-        },
-      }}
-    >
-      <div className={styles.app}>
-        <Topbar className={conditional(scrollTop && styles.topbarShadow)} />
-        {isTenantSuspended && <TenantSuspendedPage />}
-        {!isTenantSuspended && (
-          <Outlet context={{ scrollableContent } satisfies AppContentOutletContext} />
-        )}
-      </div>
-      <TenantNotificationContainer />
-    </SubscriptionDataProvider>
+              return hasReachedSubscriptionQuotaLimit({
+                quotaKey,
+                usage,
+                subscriptionUsage: subscriptionData.currentSubscriptionUsage,
+                subscriptionQuota: subscriptionData.currentSubscriptionQuota,
+              });
+            },
+          }}
+        >
+          <div className={styles.app}>
+            <Topbar className={conditional(scrollTop && styles.topbarShadow)} />
+            {isTenantSuspended && <TenantSuspendedPage />}
+            {!isTenantSuspended && (
+              <Outlet context={{ scrollableContent } satisfies AppContentOutletContext} />
+            )}
+          </div>
+          <TenantNotificationContainer />
+        </SubscriptionDataProvider>
+      )}
+      {isCloud && (
+        <ProductUpdatesContainer
+          isHidden={isLoading || !currentTenant || Boolean(isTenantSuspended)}
+        />
+      )}
+    </>
   );
 }
 

@@ -36,12 +36,10 @@ const PhoneVerificationCode = () => {
         description="mfa.enter_phone_verification_code_description"
         descriptionProps={{ identifier: maskedPhone }}
       >
-        {verificationId ? (
-          <MfaCodeVerification
-            identifierType={SignInIdentifier.Phone}
-            verificationId={verificationId}
-          />
-        ) : null}
+        <MfaCodeVerification
+          identifierType={SignInIdentifier.Phone}
+          verificationId={verificationId}
+        />
       </SectionLayout>
       <SwitchMfaFactorsLink
         flow={UserMfaFlow.MfaVerification}

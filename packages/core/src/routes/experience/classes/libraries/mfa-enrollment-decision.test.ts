@@ -11,18 +11,16 @@ import {
 
 import {
   MfaEnrollmentKind,
-  MfaEnrollmentReason,
   type MfaEnrollmentDecision,
   type MfaEnrollmentSnapshot,
   resolveMfaEnrollmentRequirement,
+  resolvePreBindMfaEnrollment,
 } from './mfa-enrollment-decision.js';
 
-type ExpectedDecision = Partial<MfaEnrollmentDecision> &
-  Pick<MfaEnrollmentDecision, 'kind' | 'reason'>;
+type ExpectedDecision = Partial<MfaEnrollmentDecision> & Pick<MfaEnrollmentDecision, 'kind'>;
 
 type MatrixCase = {
   name: string;
-  isDevFeaturesEnabled?: boolean;
   mfaSettings?: Partial<MfaSettings>;
   interactionEvent?: InteractionEvent;
   userMfaConfig?: MfaEnrollmentSnapshot['userMfaConfig'];
@@ -36,11 +34,11 @@ type MatrixCase = {
   primaryEmail?: string | undefined;
   primaryPhone?: string | undefined;
   additionalSuggestionContext?: MfaEnrollmentSnapshot['additionalSuggestionContext'];
+  expectedExempted?: boolean;
   expected: ExpectedDecision;
 };
 
 const { None, SuggestEnable, Missing, SuggestAdditional, BackupCode } = MfaEnrollmentKind;
-const Reason = MfaEnrollmentReason;
 
 const mfa = (
   policy: MfaPolicy,
@@ -49,7 +47,6 @@ const mfa = (
 ): Partial<MfaSettings> => ({ policy, factors, ...extra });
 
 const buildSnapshot = ({
-  isDevFeaturesEnabled = false,
   mfaSettings,
   interactionEvent = InteractionEvent.SignIn,
   userMfaConfig = {},
@@ -63,7 +60,7 @@ const buildSnapshot = ({
   primaryEmail,
   primaryPhone,
   additionalSuggestionContext,
-}: Omit<MatrixCase, 'name' | 'expected'>): MfaEnrollmentSnapshot => {
+}: Omit<MatrixCase, 'name' | 'expected' | 'expectedExempted'>): MfaEnrollmentSnapshot => {
   const resolvedSettings: MfaSettings = {
     policy: MfaPolicy.PromptAtSignInAndSignUp,
     factors: [MfaFactor.TOTP],
@@ -72,7 +69,6 @@ const buildSnapshot = ({
   };
 
   return {
-    isDevFeaturesEnabled,
     mfaSettings: resolvedSettings,
     interactionEvent,
     userMfaConfig,
@@ -107,57 +103,63 @@ const matrix: MatrixCase[] = [
     name: 'exempts when no MFA factors are enabled even if user/org requires MFA',
     mfaSettings: mfa(MfaPolicy.Mandatory, []),
     isMfaRequiredByUser: true,
-    expected: { kind: None, reason: Reason.NoFactors },
+    expectedExempted: true,
+    expected: { kind: None },
   },
   {
     name: 'exempts Register under PromptOnlyAtSignIn without optional backfill',
     mfaSettings: mfa(MfaPolicy.PromptOnlyAtSignIn),
     interactionEvent: InteractionEvent.Register,
     isMfaRequiredByUser: true,
-    expected: { kind: None, reason: Reason.PromptOnlyAtSignInRegister },
+    expectedExempted: true,
+    expected: { kind: None },
   },
   {
     name: 'exempts Register under PromptOnlyAtSignInMandatory',
     mfaSettings: mfa(MfaPolicy.PromptOnlyAtSignInMandatory),
     interactionEvent: InteractionEvent.Register,
-    expected: { kind: None, reason: Reason.PromptOnlyAtSignInRegister },
+    expectedExempted: true,
+    expected: { kind: None },
   },
   {
     name: 'exempts NoPrompt when MFA is not required for the user',
     mfaSettings: mfa(MfaPolicy.NoPrompt),
     userMfaConfig: { enabled: false },
-    expected: { kind: None, reason: Reason.NoPromptExempt },
+    expectedExempted: true,
+    expected: { kind: None },
   },
   {
     name: 'exempts PromptAtSignInAndSignUp when user skipped and MFA is not required',
     mfaSettings: mfa(MfaPolicy.PromptAtSignInAndSignUp),
     userMfaConfig: { enabled: false, skipped: true },
-    expected: { kind: None, reason: Reason.UserSkipped },
+    expectedExempted: true,
+    expected: { kind: None },
   },
   {
     name: 'exempts skipped user with existing factors without backfilling legacy enabled',
     mfaSettings: mfa(MfaPolicy.PromptOnlyAtSignIn),
     userMfaConfig: { skipped: true },
     userFactors: [MfaFactor.TOTP],
-    expected: { kind: None, reason: Reason.UserSkipped },
+    expectedExempted: true,
+    expected: { kind: None },
   },
   {
     name: 'suggests enabling optional MFA when enabled=undefined and user has no factors',
     mfaSettings: mfa(MfaPolicy.PromptAtSignInAndSignUp),
     interactionEvent: InteractionEvent.Register,
-    expected: { kind: SuggestEnable, reason: Reason.SuggestEnable, skippable: true },
+    expected: { kind: SuggestEnable, skippable: true },
   },
   {
     name: 'suggests enabling optional MFA on SignIn under PromptOnlyAtSignIn when enabled=false',
     mfaSettings: mfa(MfaPolicy.PromptOnlyAtSignIn),
     userMfaConfig: { enabled: false },
-    expected: { kind: SuggestEnable, reason: Reason.SuggestEnable, skippable: true },
+    expected: { kind: SuggestEnable, skippable: true },
   },
   {
     name: 'backfills legacy enabled=true and fulfills when user already has a factor',
     mfaSettings: mfa(MfaPolicy.PromptAtSignInAndSignUp),
     userFactors: [MfaFactor.TOTP],
-    expected: { kind: None, reason: Reason.Fulfilled, shouldBackfillMfaEnabled: true },
+    expected: { kind: None, shouldBackfillMfaEnabled: true },
   },
   {
     name: 'prompts skippable missing_mfa when optional MFA is enabled with no bound factors',
@@ -166,7 +168,6 @@ const matrix: MatrixCase[] = [
     canBindMfa: false,
     expected: {
       kind: Missing,
-      reason: Reason.Missing,
       skippable: true,
       availableFactors: [MfaFactor.TOTP],
     },
@@ -175,18 +176,18 @@ const matrix: MatrixCase[] = [
     name: 'enforces non-skippable missing_mfa under Mandatory even when user skipped',
     mfaSettings: mfa(MfaPolicy.Mandatory),
     userMfaConfig: { enabled: false, skipped: true },
-    expected: { kind: Missing, reason: Reason.Missing, availableFactors: [MfaFactor.TOTP] },
+    expected: { kind: Missing, availableFactors: [MfaFactor.TOTP] },
   },
   {
     name: 'enforces non-skippable missing_mfa under PromptAtSignInAndSignUpMandatory on Register',
     mfaSettings: mfa(MfaPolicy.PromptAtSignInAndSignUpMandatory),
     interactionEvent: InteractionEvent.Register,
-    expected: { kind: Missing, reason: Reason.Missing, availableFactors: [MfaFactor.TOTP] },
+    expected: { kind: Missing, availableFactors: [MfaFactor.TOTP] },
   },
   {
     name: 'enforces non-skippable missing_mfa under PromptOnlyAtSignInMandatory on SignIn',
     mfaSettings: mfa(MfaPolicy.PromptOnlyAtSignInMandatory),
-    expected: { kind: Missing, reason: Reason.Missing, availableFactors: [MfaFactor.TOTP] },
+    expected: { kind: Missing, availableFactors: [MfaFactor.TOTP] },
   },
   {
     name: 'enforces non-skippable missing_mfa when user/org requires MFA under NoPrompt + skip',
@@ -195,7 +196,7 @@ const matrix: MatrixCase[] = [
     }),
     userMfaConfig: { enabled: false, skipped: true },
     isMfaRequiredByUser: true,
-    expected: { kind: Missing, reason: Reason.Missing, availableFactors: [MfaFactor.TOTP] },
+    expected: { kind: Missing, availableFactors: [MfaFactor.TOTP] },
   },
   {
     name: 'enforces pairable factors under asNoSkipMandatoryPolicy on PromptOnlyAtSignIn Register',
@@ -208,11 +209,10 @@ const matrix: MatrixCase[] = [
     asNoSkipMandatoryPolicy: true,
     enrollmentFactors: [MfaFactor.EmailVerificationCode, MfaFactor.TOTP],
     userFactors: [MfaFactor.EmailVerificationCode],
-    expected: { kind: Missing, reason: Reason.Missing, availableFactors: [MfaFactor.TOTP] },
+    expected: { kind: Missing, availableFactors: [MfaFactor.TOTP] },
   },
   {
-    name: 'omits maskedIdentifiers on missing_mfa when isDevFeaturesEnabled=false',
-    isDevFeaturesEnabled: false,
+    name: 'exposes maskedIdentifiers on missing_mfa for existing primary identifiers',
     mfaSettings: mfa(MfaPolicy.Mandatory, [
       MfaFactor.TOTP,
       MfaFactor.EmailVerificationCode,
@@ -222,27 +222,6 @@ const matrix: MatrixCase[] = [
     primaryPhone: '16502530000',
     expected: {
       kind: Missing,
-      reason: Reason.Missing,
-      availableFactors: [
-        MfaFactor.TOTP,
-        MfaFactor.EmailVerificationCode,
-        MfaFactor.PhoneVerificationCode,
-      ],
-    },
-  },
-  {
-    name: 'exposes maskedIdentifiers on missing_mfa when isDevFeaturesEnabled=true',
-    isDevFeaturesEnabled: true,
-    mfaSettings: mfa(MfaPolicy.Mandatory, [
-      MfaFactor.TOTP,
-      MfaFactor.EmailVerificationCode,
-      MfaFactor.PhoneVerificationCode,
-    ]),
-    primaryEmail: 'alice@logto.io',
-    primaryPhone: '16502530000',
-    expected: {
-      kind: Missing,
-      reason: Reason.Missing,
       availableFactors: [
         MfaFactor.TOTP,
         MfaFactor.EmailVerificationCode,
@@ -256,7 +235,6 @@ const matrix: MatrixCase[] = [
   },
   {
     name: 'does not suggest additional MFA or backup codes when canBindMfa=false',
-    isDevFeaturesEnabled: true,
     mfaSettings: mfa(MfaPolicy.Mandatory, [
       MfaFactor.EmailVerificationCode,
       MfaFactor.TOTP,
@@ -268,13 +246,12 @@ const matrix: MatrixCase[] = [
       signUp: { identifiers: [SignInIdentifier.Email] },
       passkeySignInEnabled: false,
     },
-    expected: { kind: None, reason: Reason.Fulfilled },
+    expected: { kind: None },
   },
   {
-    name: 'suggests additional MFA in implicit mode (isDevFeaturesEnabled=false) for signup Email',
-    isDevFeaturesEnabled: false,
+    name: 'suggests additional MFA in implicit mode for signup Email',
     mfaSettings: mfa(MfaPolicy.Mandatory, [MfaFactor.EmailVerificationCode, MfaFactor.TOTP], {
-      verificationCodeEnrollment: MfaVerificationCodeEnrollment.Explicit,
+      verificationCodeEnrollment: MfaVerificationCodeEnrollment.Implicit,
     }),
     userFactors: [MfaFactor.EmailVerificationCode],
     primaryEmail: 'alice@logto.io',
@@ -288,16 +265,15 @@ const matrix: MatrixCase[] = [
     },
     expected: {
       kind: SuggestAdditional,
-      reason: Reason.SuggestAdditional,
       skippable: true,
       availableFactors: [MfaFactor.TOTP, MfaFactor.EmailVerificationCode],
       maskedIdentifiers: { [MfaFactor.EmailVerificationCode]: 'alic****@logto.io' },
+      boundFactors: [MfaFactor.EmailVerificationCode],
       isWebAuthnUsedAsSignInPasskey: false,
     },
   },
   {
     name: 'suggests additional MFA in explicit mode with boundFactors and unenrolled identifier',
-    isDevFeaturesEnabled: true,
     mfaSettings: mfa(
       MfaPolicy.Mandatory,
       [MfaFactor.EmailVerificationCode, MfaFactor.PhoneVerificationCode, MfaFactor.TOTP],
@@ -314,7 +290,6 @@ const matrix: MatrixCase[] = [
     },
     expected: {
       kind: SuggestAdditional,
-      reason: Reason.SuggestAdditional,
       skippable: true,
       availableFactors: [
         MfaFactor.TOTP,
@@ -331,7 +306,6 @@ const matrix: MatrixCase[] = [
   },
   {
     name: 'suggests additional MFA in explicit mode when WebAuthn bound as sign-in passkey',
-    isDevFeaturesEnabled: true,
     mfaSettings: mfa(MfaPolicy.Mandatory, [MfaFactor.WebAuthn, MfaFactor.TOTP], {
       verificationCodeEnrollment: MfaVerificationCodeEnrollment.Explicit,
     }),
@@ -343,7 +317,6 @@ const matrix: MatrixCase[] = [
     },
     expected: {
       kind: SuggestAdditional,
-      reason: Reason.SuggestAdditional,
       skippable: true,
       availableFactors: [MfaFactor.WebAuthn, MfaFactor.TOTP],
       maskedIdentifiers: {},
@@ -353,7 +326,6 @@ const matrix: MatrixCase[] = [
   },
   {
     name: 'skips additional MFA in explicit mode when factor is stored-only or multiple bound',
-    isDevFeaturesEnabled: true,
     mfaSettings: mfa(MfaPolicy.Mandatory, [MfaFactor.EmailVerificationCode, MfaFactor.TOTP], {
       verificationCodeEnrollment: MfaVerificationCodeEnrollment.Explicit,
     }),
@@ -363,7 +335,7 @@ const matrix: MatrixCase[] = [
       passkeySignInEnabled: false,
       sessionBoundDualPurposeFactors: {},
     },
-    expected: { kind: None, reason: Reason.Fulfilled },
+    expected: { kind: None },
   },
   {
     name: 'requires backup codes when enabled, missing, canBindMfa=true, and suggestion skipped',
@@ -374,7 +346,6 @@ const matrix: MatrixCase[] = [
     userFactors: [MfaFactor.TOTP],
     expected: {
       kind: BackupCode,
-      reason: Reason.BackupCodeRequired,
       availableFactors: [MfaFactor.BackupCode],
       shouldBackfillMfaEnabled: true,
     },
@@ -384,23 +355,20 @@ const matrix: MatrixCase[] = [
     mfaSettings: mfa(MfaPolicy.Mandatory, [MfaFactor.TOTP, MfaFactor.BackupCode]),
     userFactors: [MfaFactor.TOTP],
     boundMfaFactors: [MfaFactor.BackupCode],
-    expected: { kind: None, reason: Reason.Fulfilled },
+    expected: { kind: None },
   },
 ];
 
 describe('resolveMfaEnrollmentRequirement', () => {
-  it.each(matrix)('$name', ({ expected, ...input }) => {
-    expect(resolveMfaEnrollmentRequirement(buildSnapshot(input))).toEqual(
-      toExpectedDecision(expected)
-    );
+  it.each(matrix)('$name', ({ expected, expectedExempted = false, ...input }) => {
+    const snapshot = buildSnapshot(input);
+    expect(resolveMfaEnrollmentRequirement(snapshot)).toEqual(toExpectedDecision(expected));
+    expect(resolvePreBindMfaEnrollment(snapshot).exempted).toBe(expectedExempted);
   });
 
-  it('covers every MfaEnrollmentKind and MfaEnrollmentReason in the matrix', () => {
+  it('covers every MfaEnrollmentKind in the matrix', () => {
     expect(new Set(matrix.map(({ expected }) => expected.kind))).toEqual(
       new Set(Object.values(MfaEnrollmentKind))
-    );
-    expect(new Set(matrix.map(({ expected }) => expected.reason))).toEqual(
-      new Set(Object.values(MfaEnrollmentReason))
     );
   });
 });

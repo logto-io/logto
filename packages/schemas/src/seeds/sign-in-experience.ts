@@ -5,6 +5,7 @@ import { SignInMode } from '../db-entries/index.js';
 import {
   MfaFactor,
   MfaPolicy,
+  MfaVerificationCodeEnrollment,
   OrganizationRequiredMfaPolicy,
   SignInIdentifier,
 } from '../foundations/index.js';
@@ -60,7 +61,8 @@ export const createDefaultSignInExperience = (
     passwordPolicy: {},
     mfa: {
       factors: [],
-      policy: MfaPolicy.UserControlled,
+      policy: MfaPolicy.PromptAtSignInAndSignUp,
+      verificationCodeEnrollment: MfaVerificationCodeEnrollment.Explicit,
     },
   });
 

@@ -1,10 +1,12 @@
+import { MfaFactor, type LogContextPayload } from '@logto/schemas';
+
 import { isArray, isRecord } from '#src/utils/type.js';
 
 const sensitiveDataMask = '******';
 
 const nullCharacter = String.fromCodePoint(0);
 const safeSensitiveDataKeys = new Set(['passwordverified', 'haspassword']);
-const exactSensitiveDataKeys = new Set(['authorization', 'xfunctionskey', 'token']);
+const exactSensitiveDataKeys = new Set(['authorization', 'xfunctionskey', 'token', 'backupcodes']);
 const sensitiveDataKeyFragments = [
   'secret',
   'password',
@@ -15,7 +17,7 @@ const sensitiveDataKeyFragments = [
 ];
 
 /** PostgreSQL rejects U+0000 anywhere in `jsonb`, including object keys. */
-export const stripNullCharactersFromString = (value: string): string =>
+const stripNullCharactersFromString = (value: string): string =>
   value.includes(nullCharacter) ? value.replaceAll(nullCharacter, '') : value;
 
 const normalizeSensitiveDataKey = (key: string) =>
@@ -50,6 +52,13 @@ const isSensitiveDataKey = (key: string, value: unknown) => {
   );
 };
 
+/**
+ * Logto stores every backup code list next to `type: 'BackupCode'`. Other `codes` keys, such as
+ * ones in custom data or identity provider profiles, stay readable.
+ */
+const isBackupCodeList = (key: string, record: Record<string, unknown>) =>
+  normalizeSensitiveDataKey(key) === 'codes' && record.type === MfaFactor.BackupCode;
+
 export const sanitizeSensitiveDataRecord = (
   value: Record<string, unknown>
 ): Record<string, unknown> =>
@@ -64,7 +73,7 @@ export const sanitizeSensitiveDataRecord = (
       return [
         [
           sanitizedKey,
-          isSensitiveDataKey(sanitizedKey, element)
+          isSensitiveDataKey(sanitizedKey, element) || isBackupCodeList(sanitizedKey, value)
             ? sensitiveDataMask
             : sanitizeSensitiveData(element),
         ],
@@ -87,3 +96,17 @@ const sanitizeSensitiveData = (value: unknown): unknown => {
 
   return value;
 };
+
+/**
+ * Reapply reserved fields after canonicalizing catch-all keys, so inputs such as `\0key` cannot
+ * collide with the fields that define the log entry.
+ */
+export const sanitizeLogContextPayload = ({
+  key,
+  result,
+  ...payload
+}: LogContextPayload): LogContextPayload => ({
+  ...sanitizeSensitiveDataRecord(payload),
+  key: stripNullCharactersFromString(key),
+  result,
+});

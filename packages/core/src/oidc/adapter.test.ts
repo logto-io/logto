@@ -25,7 +25,6 @@ const { default: postgresAdapter } = await import('./adapter.js');
 const oidcModelInstances = {
   upsertInstance: jest.fn(),
   findPayloadById: jest.fn(),
-  findPayloadByPayloadField: jest.fn(),
   findPayloadByUid: jest.fn(),
   findPayloadByUserCode: jest.fn(),
   consumeInstanceById: jest.fn(async () => true),

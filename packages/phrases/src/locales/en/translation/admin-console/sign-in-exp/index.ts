@@ -196,7 +196,6 @@ const sign_in_exp = {
       social: 'Social identities',
       password: 'Password',
       mfa: 'Multi-factor authentication',
-      mfa_description: 'Let users manage their MFA methods from the account center.',
       passkey: 'Passkey',
       username: 'Username',
       name: 'Name',

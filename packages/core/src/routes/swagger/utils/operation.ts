@@ -77,7 +77,7 @@ const buildOperation = (
         throw new Error(`Invalid status code ${status}.`);
       }
 
-      if (status === 200 || status === 201) {
+      if (status === 200 || status === 201 || (status === 202 && Boolean(documentedResponse))) {
         return [
           status,
           {

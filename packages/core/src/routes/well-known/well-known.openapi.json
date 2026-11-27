@@ -21,8 +21,7 @@
                     "mfa": {
                       "properties": {
                         "verificationCodeEnrollment": {
-                          "description": "Which users count as enrolled in the email and phone verification code MFA factors. `Implicit` (the default when absent): every user with a primary email or phone. `Explicit`: only users who enrolled the factor and have the primary email or phone.",
-                          "x-logto-dev-feature": true
+                          "description": "Which users count as enrolled in the email and phone verification code MFA factors. `Implicit` (the default when absent): every user with a primary email or phone. `Explicit`: only users who enrolled the factor and have the primary email or phone."
                         }
                       }
                     }
@@ -66,8 +65,7 @@
                     "mfa": {
                       "properties": {
                         "verificationCodeEnrollment": {
-                          "description": "Which users count as enrolled in the email and phone verification code MFA factors. `Implicit` (the default when absent): every user with a primary email or phone. `Explicit`: only users who enrolled the factor and have the primary email or phone.",
-                          "x-logto-dev-feature": true
+                          "description": "Which users count as enrolled in the email and phone verification code MFA factors. `Implicit` (the default when absent): every user with a primary email or phone. `Explicit`: only users who enrolled the factor and have the primary email or phone."
                         }
                       }
                     }

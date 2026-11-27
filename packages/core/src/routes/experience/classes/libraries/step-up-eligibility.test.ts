@@ -32,7 +32,7 @@ import {
 } from './step-up-eligibility.js';
 
 const allFactors: Mfa = {
-  policy: MfaPolicy.UserControlled,
+  policy: MfaPolicy.PromptAtSignInAndSignUp,
   factors: [
     MfaFactor.TOTP,
     MfaFactor.WebAuthn,
@@ -205,7 +205,7 @@ describe('computeStepUpEligibility', () => {
       expect(
         compute({
           user,
-          mfaSettings: { policy: MfaPolicy.UserControlled, factors: [MfaFactor.TOTP] },
+          mfaSettings: { policy: MfaPolicy.PromptAtSignInAndSignUp, factors: [MfaFactor.TOTP] },
         }).availableMethods
       ).toEqual([
         VerificationType.Password,
@@ -217,7 +217,7 @@ describe('computeStepUpEligibility', () => {
         compute({
           user,
           mfaSettings: {
-            policy: MfaPolicy.UserControlled,
+            policy: MfaPolicy.PromptAtSignInAndSignUp,
             factors: [MfaFactor.TOTP, MfaFactor.BackupCode],
           },
         }).availableMethods
@@ -274,7 +274,10 @@ describe('computeStepUpEligibility', () => {
     });
 
     it('finds nothing eligible for a user with no enrolled factor', () => {
-      const totpOnly: Mfa = { policy: MfaPolicy.UserControlled, factors: [MfaFactor.TOTP] };
+      const totpOnly: Mfa = {
+        policy: MfaPolicy.PromptAtSignInAndSignUp,
+        factors: [MfaFactor.TOTP],
+      };
 
       // No method pairs into `mfa`; enrolling a factor is a later milestone's candidate.
       expect(
@@ -647,7 +650,7 @@ describe('computeStepUpEligibility', () => {
 
     /** A tenant that enables TOTP and WebAuthn, and no factor the user holds implicitly. */
     const enrollableMfaSettings: Mfa = {
-      policy: MfaPolicy.UserControlled,
+      policy: MfaPolicy.PromptAtSignInAndSignUp,
       factors: [MfaFactor.TOTP, MfaFactor.WebAuthn],
     };
 

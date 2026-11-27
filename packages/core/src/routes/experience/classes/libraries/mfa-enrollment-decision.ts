@@ -26,28 +26,7 @@ export enum MfaEnrollmentKind {
   BackupCode = 'backupCode',
 }
 
-export enum MfaEnrollmentReason {
-  NoFactors = 'noFactors',
-  PromptOnlyAtSignInRegister = 'promptOnlyAtSignInRegister',
-  NoPromptExempt = 'noPromptExempt',
-  UserSkipped = 'userSkipped',
-  SuggestEnable = 'suggestEnable',
-  Missing = 'missing',
-  SuggestAdditional = 'suggestAdditional',
-  BackupCodeRequired = 'backupCodeRequired',
-  Fulfilled = 'fulfilled',
-}
-
-export const isEnrollmentExemptionReason = (reason: MfaEnrollmentReason): boolean =>
-  [
-    MfaEnrollmentReason.NoFactors,
-    MfaEnrollmentReason.PromptOnlyAtSignInRegister,
-    MfaEnrollmentReason.NoPromptExempt,
-    MfaEnrollmentReason.UserSkipped,
-  ].includes(reason);
-
-export type MfaEnrollmentSnapshot = {
-  isDevFeaturesEnabled: boolean;
+export type MfaPreBindEnrollmentSnapshot = {
   mfaSettings: MfaSettings;
   interactionEvent: InteractionEvent;
   userMfaConfig: Pick<UserMfaData, 'enabled' | 'skipped' | 'additionalBindingSuggestionSkipped'>;
@@ -57,16 +36,18 @@ export type MfaEnrollmentSnapshot = {
   configuredFactors: readonly MfaFactor[];
   userFactors: readonly MfaFactor[];
   boundMfaFactors: readonly MfaFactor[];
-  canBindMfa: boolean;
   additionalBindingSuggestionSkippedInSession?: boolean;
   primaryEmail?: string | undefined;
   primaryPhone?: string | undefined;
+};
+
+export type MfaEnrollmentSnapshot = MfaPreBindEnrollmentSnapshot & {
+  canBindMfa: boolean;
   additionalSuggestionContext?: AdditionalMfaSuggestionContext;
 };
 
 export type MfaEnrollmentDecision = {
   kind: MfaEnrollmentKind;
-  reason: MfaEnrollmentReason;
   skippable: boolean;
   availableFactors: MfaFactor[];
   shouldBackfillMfaEnabled: boolean;
@@ -75,20 +56,29 @@ export type MfaEnrollmentDecision = {
   isWebAuthnUsedAsSignInPasskey?: boolean;
 };
 
-const noneDecision = (
-  reason: MfaEnrollmentReason,
-  shouldBackfillMfaEnabled = false
-): MfaEnrollmentDecision => ({
+const noneDecision = (shouldBackfillMfaEnabled = false): MfaEnrollmentDecision => ({
   kind: MfaEnrollmentKind.None,
-  reason,
   skippable: false,
   availableFactors: [],
   shouldBackfillMfaEnabled,
 });
 
+// A requested `mfa` reaching this check means the proofs are still below the class, and the
+// implicit email / phone factors derived from the primary identifiers cannot lift them: only
+// stored and newly bound factors count, so the user is asked to enroll one that completes the pair.
 const isPairableFactor = (factor: MfaFactor, asNoSkipMandatoryPolicy: boolean): boolean =>
   !asNoSkipMandatoryPolicy ||
   (factor !== MfaFactor.EmailVerificationCode && factor !== MfaFactor.PhoneVerificationCode);
+
+const getLinkedFactors = (
+  userFactors: readonly MfaFactor[],
+  boundMfaFactors: readonly MfaFactor[],
+  asNoSkipMandatoryPolicy: boolean
+): MfaFactor[] =>
+  deduplicate([
+    ...userFactors.filter((factor) => isPairableFactor(factor, asNoSkipMandatoryPolicy)),
+    ...boundMfaFactors,
+  ]);
 
 const resolveOptionalEnablement = ({
   mfaSettings: { policy },
@@ -97,7 +87,7 @@ const resolveOptionalEnablement = ({
   isMfaRequiredByUser,
   asNoSkipMandatoryPolicy = false,
   userFactors,
-}: MfaEnrollmentSnapshot): { suggestEnable: boolean; shouldBackfillMfaEnabled: boolean } => {
+}: MfaPreBindEnrollmentSnapshot): { suggestEnable: boolean; shouldBackfillMfaEnabled: boolean } => {
   if (
     asNoSkipMandatoryPolicy ||
     isNoSkipMfaPolicy(policy) ||
@@ -109,6 +99,8 @@ const resolveOptionalEnablement = ({
     return { suggestEnable: false, shouldBackfillMfaEnabled: false };
   }
 
+  // Legacy users created before `enabled` was introduced have factors without the flag:
+  // treat them as already opted in and backfill `enabled: true` instead of prompting.
   if (userMfaConfig.enabled === undefined) {
     return userFactors.length === 0
       ? { suggestEnable: true, shouldBackfillMfaEnabled: false }
@@ -118,30 +110,22 @@ const resolveOptionalEnablement = ({
   return { suggestEnable: !userMfaConfig.enabled, shouldBackfillMfaEnabled: false };
 };
 
-const resolveMandatoryExemptionReason = ({
+const isMandatoryExempt = ({
   mfaSettings: { policy },
   userMfaConfig,
   isMfaRequiredByUser,
   asNoSkipMandatoryPolicy = false,
-}: MfaEnrollmentSnapshot): MfaEnrollmentReason | undefined => {
-  if (asNoSkipMandatoryPolicy || isMfaRequiredByUser) {
-    return;
-  }
-  if (policy === MfaPolicy.NoPrompt) {
-    return MfaEnrollmentReason.NoPromptExempt;
-  }
-  if (!isNoSkipMfaPolicy(policy) && userMfaConfig.skipped === true) {
-    return MfaEnrollmentReason.UserSkipped;
-  }
-};
+}: MfaPreBindEnrollmentSnapshot): boolean =>
+  !asNoSkipMandatoryPolicy &&
+  !isMfaRequiredByUser &&
+  (policy === MfaPolicy.NoPrompt || (!isNoSkipMfaPolicy(policy) && userMfaConfig.skipped === true));
 
 const resolveMissingMfaDecision = (
-  snapshot: MfaEnrollmentSnapshot,
+  snapshot: MfaPreBindEnrollmentSnapshot,
   linkedFactors: readonly MfaFactor[],
   shouldBackfillMfaEnabled: boolean
 ): MfaEnrollmentDecision | undefined => {
   const {
-    isDevFeaturesEnabled,
     mfaSettings: { policy },
     isMfaRequiredByUser,
     asNoSkipMandatoryPolicy = false,
@@ -161,16 +145,15 @@ const resolveMissingMfaDecision = (
     return;
   }
 
-  const maskedIdentifiers = isDevFeaturesEnabled
-    ? buildFactorMaskedIdentifiers({
-        email: requiredFactors.includes(MfaFactor.EmailVerificationCode) ? primaryEmail : undefined,
-        phone: requiredFactors.includes(MfaFactor.PhoneVerificationCode) ? primaryPhone : undefined,
-      })
-    : {};
+  // Expose masked existing primary identifiers so the onboarding list can offer sending a
+  // verification code to the user's existing address.
+  const maskedIdentifiers = buildFactorMaskedIdentifiers({
+    email: requiredFactors.includes(MfaFactor.EmailVerificationCode) ? primaryEmail : undefined,
+    phone: requiredFactors.includes(MfaFactor.PhoneVerificationCode) ? primaryPhone : undefined,
+  });
 
   return {
     kind: MfaEnrollmentKind.Missing,
-    reason: MfaEnrollmentReason.Missing,
     skippable: !asNoSkipMandatoryPolicy && !isNoSkipMfaPolicy(policy) && !isMfaRequiredByUser,
     availableFactors: requiredFactors,
     shouldBackfillMfaEnabled,
@@ -188,7 +171,6 @@ const resolveAdditionalOrBackupDecision = (
   if (suggestion) {
     return {
       kind: MfaEnrollmentKind.SuggestAdditional,
-      reason: MfaEnrollmentReason.SuggestAdditional,
       skippable: true,
       shouldBackfillMfaEnabled,
       ...suggestion,
@@ -198,11 +180,11 @@ const resolveAdditionalOrBackupDecision = (
   if (
     snapshot.mfaSettings.factors.includes(MfaFactor.BackupCode) &&
     !linkedFactors.includes(MfaFactor.BackupCode) &&
+    // A sign-in that may not bind a factor must not require backup codes it cannot enroll.
     snapshot.canBindMfa
   ) {
     return {
       kind: MfaEnrollmentKind.BackupCode,
-      reason: MfaEnrollmentReason.BackupCodeRequired,
       skippable: false,
       availableFactors: [MfaFactor.BackupCode],
       shouldBackfillMfaEnabled,
@@ -210,9 +192,9 @@ const resolveAdditionalOrBackupDecision = (
   }
 };
 
-export const resolveMfaEnrollmentRequirement = (
-  snapshot: MfaEnrollmentSnapshot
-): MfaEnrollmentDecision => {
+export const resolvePreBindMfaEnrollment = (
+  snapshot: MfaPreBindEnrollmentSnapshot
+): MfaEnrollmentDecision & { exempted: boolean } => {
   const {
     mfaSettings: { policy, factors },
     interactionEvent,
@@ -222,7 +204,7 @@ export const resolveMfaEnrollmentRequirement = (
   } = snapshot;
 
   if (factors.length === 0) {
-    return noneDecision(MfaEnrollmentReason.NoFactors);
+    return { ...noneDecision(), exempted: true };
   }
 
   if (
@@ -230,7 +212,7 @@ export const resolveMfaEnrollmentRequirement = (
     interactionEvent === InteractionEvent.Register &&
     isPromptOnlyAtSignInPolicy(policy)
   ) {
-    return noneDecision(MfaEnrollmentReason.PromptOnlyAtSignInRegister);
+    return { ...noneDecision(), exempted: true };
   }
 
   const { suggestEnable, shouldBackfillMfaEnabled } = resolveOptionalEnablement(snapshot);
@@ -238,27 +220,51 @@ export const resolveMfaEnrollmentRequirement = (
   if (suggestEnable) {
     return {
       kind: MfaEnrollmentKind.SuggestEnable,
-      reason: MfaEnrollmentReason.SuggestEnable,
       skippable: true,
       availableFactors: [],
       shouldBackfillMfaEnabled: false,
+      exempted: false,
     };
   }
 
-  const mandatoryExemption = resolveMandatoryExemptionReason(snapshot);
-
-  if (mandatoryExemption) {
-    return noneDecision(mandatoryExemption, shouldBackfillMfaEnabled);
+  if (isMandatoryExempt(snapshot)) {
+    return { ...noneDecision(shouldBackfillMfaEnabled), exempted: true };
   }
 
-  const linkedFactors = deduplicate([
-    ...userFactors.filter((factor) => isPairableFactor(factor, asNoSkipMandatoryPolicy)),
-    ...boundMfaFactors,
-  ]);
+  const linkedFactors = getLinkedFactors(userFactors, boundMfaFactors, asNoSkipMandatoryPolicy);
+  const missingDecision = resolveMissingMfaDecision(
+    snapshot,
+    linkedFactors,
+    shouldBackfillMfaEnabled
+  );
+
+  if (missingDecision) {
+    return { ...missingDecision, exempted: false };
+  }
+
+  return { ...noneDecision(shouldBackfillMfaEnabled), exempted: false };
+};
+
+export const resolveMfaEnrollmentRequirement = (
+  snapshot: MfaEnrollmentSnapshot
+): MfaEnrollmentDecision => {
+  const { exempted, ...preBindDecision } = resolvePreBindMfaEnrollment(snapshot);
+
+  if (preBindDecision.kind !== MfaEnrollmentKind.None || exempted) {
+    return preBindDecision;
+  }
+
+  const linkedFactors = getLinkedFactors(
+    snapshot.userFactors,
+    snapshot.boundMfaFactors,
+    snapshot.asNoSkipMandatoryPolicy ?? false
+  );
 
   return (
-    resolveMissingMfaDecision(snapshot, linkedFactors, shouldBackfillMfaEnabled) ??
-    resolveAdditionalOrBackupDecision(snapshot, linkedFactors, shouldBackfillMfaEnabled) ??
-    noneDecision(MfaEnrollmentReason.Fulfilled, shouldBackfillMfaEnabled)
+    resolveAdditionalOrBackupDecision(
+      snapshot,
+      linkedFactors,
+      preBindDecision.shouldBackfillMfaEnabled
+    ) ?? noneDecision(preBindDecision.shouldBackfillMfaEnabled)
   );
 };

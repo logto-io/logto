@@ -12,9 +12,16 @@ import { subDays } from 'date-fns';
 
 import { buildFindEntityByIdWithPool } from '#src/database/find-entity-by-id.js';
 import { buildInsertIntoWithPool } from '#src/database/insert-into.js';
+import { sanitizeLogContextPayload } from '#src/utils/sensitive-data.js';
 import { conditionalSql, convertToIdentifiers } from '#src/utils/sql.js';
 
 const { table, fields } = convertToIdentifiers(Logs);
+
+// Rows written before the current masking rules may still hold secrets, so mask on read as well.
+const sanitizeLog = (log: Log): Log => ({
+  ...log,
+  payload: sanitizeLogContextPayload(log.payload),
+});
 
 type AllowedKeyPrefix = AuditLogPrefix | WebhookLogPrefix;
 
@@ -113,8 +120,8 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
     return { count: numericCount, isCapped: numericCount > LOGS_COUNT_CAP };
   };
 
-  const findLogs = async (limit: number, offset: number, logCondition: LogCondition) =>
-    pool.any<Log>(sql`
+  const findLogs = async (limit: number, offset: number, logCondition: LogCondition) => {
+    const logs = await pool.any<Log>(sql`
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
       ${buildLogConditionSql(logCondition)}
@@ -123,7 +130,11 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
       offset ${offset}
     `);
 
-  const findLogById = buildFindEntityByIdWithPool(pool)(Logs);
+    return logs.map((log) => sanitizeLog(log));
+  };
+
+  const findRawLogById = buildFindEntityByIdWithPool(pool)(Logs);
+  const findLogById = async (id: string) => sanitizeLog(await findRawLogById(id));
 
   const deleteLogsInRange = async (condition: {
     endTime: number;
@@ -201,6 +212,7 @@ export const createLogQueries = (pool: CommonQueryMethods) => {
       from ${table}
       where ${fields.createdAt} > to_timestamp(${startTimeExclusive}::double precision / 1000)
       and ${fields.payloadHookId} = ${hookId}
+      and not (${fields.payload} ? 'nextAttemptAt')
     `);
   };
 

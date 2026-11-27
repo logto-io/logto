@@ -158,12 +158,15 @@ export const deleteUserMfaVerification = async (userId: string, mfaVerificationI
   authedAdminApi.delete(`users/${userId}/mfa-verifications/${mfaVerificationId}`);
 
 export const createUserMfaVerification = async (userId: string, type: MfaFactor) =>
-  authedAdminApi
-    .post(`users/${userId}/mfa-verifications`, { json: { type } })
-    .json<
-      | { type: MfaFactor.TOTP; secret: string; secretQrCode: string }
-      | { type: MfaFactor.BackupCode; codes: string[] }
-    >();
+  authedAdminApi.post(`users/${userId}/mfa-verifications`, { json: { type } }).json<
+    | { type: MfaFactor.TOTP; secret: string; secretQrCode: string }
+    | { type: MfaFactor.BackupCode; codes: string[] }
+    | {
+        type: MfaFactor.EmailVerificationCode | MfaFactor.PhoneVerificationCode;
+        id: string;
+        createdAt: string;
+      }
+  >();
 
 type UserLogtoConfig = {
   mfa: { enabled?: boolean; skipped?: boolean; required?: boolean; skipMfaOnSignIn?: boolean };

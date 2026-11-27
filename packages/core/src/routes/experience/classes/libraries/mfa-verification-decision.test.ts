@@ -34,7 +34,7 @@ type MatrixCase = {
   hasVerifiedMfaRecord?: boolean;
   isTrustedDeviceVerified?: boolean;
   requestedAcr?: MfaVerificationSnapshot['requestedAcr'];
-  allowSoftExemptions?: boolean;
+  purpose?: MfaVerificationSnapshot['purpose'];
   expectedRequired: boolean;
   expectedReason: MfaVerificationReason;
   expectedFactors: MfaFactor[];
@@ -51,7 +51,7 @@ const toSnapshot = ({
   hasVerifiedMfaRecord = false,
   isTrustedDeviceVerified = false,
   requestedAcr,
-  allowSoftExemptions,
+  purpose = 'verification',
 }: MatrixCase): MfaVerificationSnapshot => ({
   mfaSettings: { policy: mfaPolicy },
   adaptiveMfaResult,
@@ -63,7 +63,7 @@ const toSnapshot = ({
   hasVerifiedMfaRecord,
   isTrustedDeviceVerified,
   requestedAcr,
-  allowSoftExemptions,
+  purpose,
 });
 
 // Specification matrix: tenant mode (optional, adaptive, mandatory) x user state x sign-in proof /
@@ -124,6 +124,16 @@ const verificationMatrix: MatrixCase[] = [
     expectedRequired: true,
     expectedReason: MfaVerificationReason.Required,
     expectedFactors: [MfaFactor.TOTP],
+  },
+  {
+    name: 'optional: per-user/org requirement with no factors -> noFactors',
+    mfaPolicy: MfaPolicy.NoPrompt,
+    userFactors: [],
+    userMfaConfig: { enabled: false, skipMfaOnSignIn: true },
+    isMfaRequiredByUser: true,
+    expectedRequired: false,
+    expectedReason: MfaVerificationReason.NoFactors,
+    expectedFactors: [],
   },
   // Mandatory policies (adaptive off)
   {
@@ -281,14 +291,14 @@ const verificationMatrix: MatrixCase[] = [
     expectedReason: MfaVerificationReason.NoFactors,
     expectedFactors: [],
   },
-  // Binding guard (`allowSoftExemptions: false`)
+  // Binding guard (`purpose: 'binding'`)
   {
     name: 'binding guard rejects adaptive non-trigger, opt-out, and trusted device -> required',
     mfaPolicy: MfaPolicy.NoPrompt,
     adaptiveMfaResult: adaptiveNotTriggered,
     userMfaConfig: { enabled: false, skipMfaOnSignIn: true },
     isTrustedDeviceVerified: true,
-    allowSoftExemptions: false,
+    purpose: 'binding',
     expectedRequired: true,
     expectedReason: MfaVerificationReason.Required,
     expectedFactors: [MfaFactor.TOTP],
@@ -304,7 +314,7 @@ const verificationMatrix: MatrixCase[] = [
       provenFirstFactors: [],
       eligibleMethods: [],
     },
-    allowSoftExemptions: false,
+    purpose: 'binding',
     expectedRequired: true,
     expectedReason: MfaVerificationReason.Required,
     expectedFactors: [MfaFactor.TOTP],

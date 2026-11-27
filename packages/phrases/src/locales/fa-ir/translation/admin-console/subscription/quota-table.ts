@@ -36,7 +36,6 @@ const quota_table = {
     social_connectors: 'اتصال‌دهنده‌های اجتماعی',
     standard_connectors: 'اتصال‌دهنده‌های استاندارد',
     built_in_email_connector: 'اتصال‌دهنده ایمیل داخلی',
-    mfa: 'احراز هویت چندعاملی',
     sso: 'ورود یکپارچه سازمانی',
 
     impersonation: 'جعل هویت',

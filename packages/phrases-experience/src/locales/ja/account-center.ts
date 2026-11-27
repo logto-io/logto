@@ -65,7 +65,6 @@ const account_center = {
     passkeys_count_other: '{{count}} 個のパスキー',
     backup_codes_count_one: '{{count}} 個のコード',
     backup_codes_count_other: '{{count}} 個のコード',
-    view: '表示',
     manage: '管理',
     turn_on_2_step_verification_description:
       'セキュリティを強化します。サインイン時に2段階目の認証が求められます。',

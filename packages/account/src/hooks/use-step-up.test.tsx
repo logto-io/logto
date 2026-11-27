@@ -172,7 +172,6 @@ describe('useStepUpEntry', () => {
 
     expect(result.current).toMatchObject({
       isReady: false,
-      isChecking: false,
       hasFailed: false,
       isResumed: false,
     });

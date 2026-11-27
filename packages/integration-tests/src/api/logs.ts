@@ -18,3 +18,6 @@ export const getWebhookRecentLogs = async (hookId: string, params?: URLSearchPar
 
 export const getLog = async (logId: string) =>
   authedAdminApi.get(`logs/${logId}`).json<LogResponse>();
+
+export const redeliverWebhookLog = async (hookId: string, logId: string) =>
+  authedAdminApi.post(`hooks/${hookId}/recent-logs/${logId}/redeliver`);

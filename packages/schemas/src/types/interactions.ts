@@ -262,15 +262,6 @@ export type UpdateProfileApiPayload = z.infer<typeof updateProfileApiPayloadGuar
 
 /**
  * Legacy interaction identifier payload guard
- *
- * @remark
- * Following are the types for legacy interaction APIs. They are all treated as deprecated, and can be removed
- * once the new Experience API are fully implemented and migrated.
- * =================================================================================================================
- */
-
-/**
- * Detailed interaction identifier payload guard
  */
 const usernamePasswordPayloadGuard = z.object({
   username: z.string().min(1),
@@ -382,11 +373,11 @@ export type InteractionAuthenticationContext = RequestedAuthenticationContext & 
   selectedAcr?: LogtoAcr;
   /** The methods that can still contribute to the selected class from where the interaction stands. */
   availableMethods: VerificationType[];
-  /** The first factors the user may establish under a fresh subject proof; `[]` until enrollment lands. */
+  /** The first factors the user may establish under a fresh subject proof. */
   establishableMethods: MissingProfile[];
-  /** The MFA factors the user may enroll after a fresh first factor; `[]` until enrollment lands. */
+  /** The MFA factors the user may enroll after a fresh first factor. */
   enrollableFactors: MfaFactor[];
-  /** The linked connectors that can serve as subject proof in pure step-up; `[]` until enrollment lands. */
+  /** The linked connectors that can serve as subject proof in pure step-up. */
   subjectProofConnectors: SubjectProofConnector[];
   maskedIdentifiers: MaskedIdentifiers;
 };
@@ -495,35 +486,25 @@ export const pendingTotpGuard = z.object({
   secret: z.string(),
 });
 
-export type PendingTotp = z.infer<typeof pendingTotpGuard>;
-
 export const pendingWebAuthnGuard = z.object({
   type: z.literal(MfaFactor.WebAuthn),
   challenge: z.string(),
 });
-
-export type PendingWebAuthn = z.infer<typeof pendingWebAuthnGuard>;
 
 export const pendingBackupCodeGuard = z.object({
   type: z.literal(MfaFactor.BackupCode),
   codes: z.array(z.string()),
 });
 
-export type PendingBackupCode = z.infer<typeof pendingBackupCodeGuard>;
-
 export const pendingEmailVerificationCodeGuard = z.object({
   type: z.literal(MfaFactor.EmailVerificationCode),
   email: z.string(),
 });
 
-export type PendingEmailVerificationCode = z.infer<typeof pendingEmailVerificationCodeGuard>;
-
 export const pendingPhoneVerificationCodeGuard = z.object({
   type: z.literal(MfaFactor.PhoneVerificationCode),
   phone: z.string(),
 });
-
-export type PendingPhoneVerificationCode = z.infer<typeof pendingPhoneVerificationCodeGuard>;
 
 // Some information like TOTP secret should be generated in the backend
 // and stored in the interaction temporarily.
@@ -534,8 +515,6 @@ export const pendingMfaGuard = z.discriminatedUnion('type', [
   pendingEmailVerificationCodeGuard,
   pendingPhoneVerificationCodeGuard,
 ]);
-
-export type PendingMfa = z.infer<typeof pendingMfaGuard>;
 
 export const bindTotpGuard = pendingTotpGuard;
 

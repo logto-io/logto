@@ -47,7 +47,7 @@
             "description": "Returned when `start_time` or `end_time` is not a finite number, or when `start_time > end_time`."
           },
           "200": {
-            "description": "An array of logs that match the given query.",
+            "description": "An array of logs that match the given query. Sensitive values in `payload`, such as secrets, tokens, passwords and MFA backup codes, are masked as `******`, and script or environment variable fields are left out.",
             "headers": {
               "Total-Number": {
                 "description": "When `enableCap=false`: exact match count. When `enableCap=true`: either the exact count (≤ 10,000) or the saturation sentinel `10001`; inspect `Total-Number-Is-Capped` to distinguish.",
@@ -128,7 +128,7 @@
         "description": "Get log details by ID.",
         "responses": {
           "200": {
-            "description": "Log details.",
+            "description": "Log details. Sensitive values in `payload` are masked the same way as in `GET /api/logs`.",
             "content": {
               "application/json": {
                 "schema": {

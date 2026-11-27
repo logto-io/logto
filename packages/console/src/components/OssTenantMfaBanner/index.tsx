@@ -13,8 +13,7 @@ const accountSecurityUrl = new URL('/account/security', adminTenantEndpoint).hre
  *
  * Requiring MFA does not end existing sessions, so such a member keeps using Console until their
  * next sign-in, where they would be stopped to set up MFA. This sends them to Account Center to do
- * it on their own terms instead. The hook fetches nothing on Cloud or while the self-hosted plans
- * are unreleased, so nothing renders there.
+ * it on their own terms instead. The hook fetches nothing on Cloud, so nothing renders there.
  */
 function OssTenantMfaBanner() {
   const { data } = useOssTenantMfa();
