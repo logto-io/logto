@@ -10,7 +10,12 @@ import { type CreateScope } from '../db-entries/index.js';
  * route bindings and credential masking. Once all domains are finalized, a single
  * backfill alteration and seed update will populate existing and new tenant-local resources.
  */
-export const ManagementApiScope = Object.freeze({} as const);
+export const ManagementApiScope = Object.freeze({
+  ReadUsers: 'read:users',
+  CreateUsers: 'create:users',
+  UpdateUsers: 'update:users',
+  DeleteUsers: 'delete:users',
+} as const);
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare -- companion const object and union type for incremental domain scope additions
 export type ManagementApiScope = (typeof ManagementApiScope)[keyof typeof ManagementApiScope];
@@ -21,7 +26,14 @@ export type ManagementApiScopeDefinition = Readonly<{
 }>;
 
 export const managementApiScopeDescriptions: Readonly<Record<ManagementApiScope, string>> =
-  Object.freeze({});
+  Object.freeze({
+    [ManagementApiScope.ReadUsers]:
+      'Read users, user profiles, identities, sessions, grants, and related read-only user metadata.',
+    [ManagementApiScope.CreateUsers]: 'Create new users.',
+    [ManagementApiScope.UpdateUsers]:
+      'Update user profiles, identifiers, custom data, passwords, suspension state, and revoke sessions, grants, or trusted devices.',
+    [ManagementApiScope.DeleteUsers]: 'Delete users.',
+  });
 
 const scopeValues: readonly ManagementApiScope[] =
   Object.values<ManagementApiScope>(ManagementApiScope);

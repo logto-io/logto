@@ -1,9 +1,13 @@
-import { PersonalAccessTokens } from '@logto/schemas';
+import { ManagementApiScope, PersonalAccessTokens } from '@logto/schemas';
 import { generateStandardSecret } from '@logto/shared';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import koaManagementApiPermission, {
+  maskedCredentialValue,
+  shouldMaskCredentials,
+} from '#src/middleware/koa-management-api-permission.js';
 import { assertNotReadOnly } from '#src/middleware/koa-read-only-access.js';
 import assertThat from '#src/utils/assert-that.js';
 
@@ -14,6 +18,7 @@ export default function adminUserPersonalAccessTokenRoutes<T extends ManagementA
 ) {
   router.get(
     '/users/:userId/personal-access-tokens',
+    koaManagementApiPermission(ManagementApiScope.ReadUsers),
     koaGuard({
       params: z.object({ userId: z.string() }),
       response: PersonalAccessTokens.guard.array(),
@@ -24,7 +29,10 @@ export default function adminUserPersonalAccessTokenRoutes<T extends ManagementA
       const { userId } = ctx.guard.params;
       // Ensure that the user exists.
       await queries.users.findUserById(userId);
-      ctx.body = await queries.personalAccessTokens.getTokensByUserId(userId);
+      const tokens = await queries.personalAccessTokens.getTokensByUserId(userId);
+      ctx.body = shouldMaskCredentials(ctx.auth)
+        ? tokens.map((token) => ({ ...token, value: maskedCredentialValue }))
+        : tokens;
       return next();
     }
   );

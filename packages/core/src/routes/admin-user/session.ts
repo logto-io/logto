@@ -1,4 +1,5 @@
 import {
+  ManagementApiScope,
   SessionGrantRevokeTarget,
   getUserSessionResponseGuard,
   getUserSessionsResponseGuard,
@@ -8,6 +9,7 @@ import { nativeEnum, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import koaManagementApiPermission from '#src/middleware/koa-management-api-permission.js';
 
 import { type ManagementApiRouter, type RouterInitArgs } from '../types.js';
 
@@ -21,6 +23,7 @@ export default function adminUserSessionRoutes<T extends ManagementApiRouter>(
 
   router.get(
     '/users/:userId/sessions',
+    koaManagementApiPermission(ManagementApiScope.ReadUsers),
     koaGuard({
       params: object({ userId: string() }),
       response: getUserSessionsResponseGuard,
@@ -43,6 +46,7 @@ export default function adminUserSessionRoutes<T extends ManagementApiRouter>(
 
   router.get(
     '/users/:userId/sessions/:sessionId',
+    koaManagementApiPermission(ManagementApiScope.ReadUsers),
     koaGuard({
       params: object({ userId: string(), sessionId: string() }),
       response: getUserSessionResponseGuard,
@@ -66,6 +70,7 @@ export default function adminUserSessionRoutes<T extends ManagementApiRouter>(
 
   router.delete(
     '/users/:userId/sessions/:sessionId',
+    koaManagementApiPermission(ManagementApiScope.UpdateUsers),
     koaGuard({
       query: object({
         revokeGrantsTarget: nativeEnum(SessionGrantRevokeTarget).optional(),

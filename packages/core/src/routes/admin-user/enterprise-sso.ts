@@ -1,4 +1,5 @@
 import {
+  ManagementApiScope,
   type GetUserAllIdentitiesResponse,
   getUserAllIdentitiesResponseGuard,
   getUserSsoIdentityResponseGuard,
@@ -8,6 +9,7 @@ import { object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import koaManagementApiPermission from '#src/middleware/koa-management-api-permission.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import { desensitizeTokenSetSecret } from '../../utils/secret-encryption.js';
@@ -28,6 +30,7 @@ export default function adminUserEnterpriseSsoRoutes<T extends ManagementApiRout
 
   router.get(
     '/users/:userId/sso-identities/:ssoConnectorId',
+    koaManagementApiPermission(ManagementApiScope.ReadUsers),
     koaGuard({
       params: object({
         userId: string(),
@@ -85,6 +88,7 @@ export default function adminUserEnterpriseSsoRoutes<T extends ManagementApiRout
 
   router.get(
     '/users/:userId/all-identities',
+    koaManagementApiPermission(ManagementApiScope.ReadUsers),
     koaGuard({
       params: object({ userId: string() }),
       query: object({

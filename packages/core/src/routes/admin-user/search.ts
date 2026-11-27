@@ -1,8 +1,11 @@
-import { OrganizationUserRelations, UsersRoles } from '@logto/schemas';
+import { ManagementApiScope, OrganizationUserRelations, UsersRoles } from '@logto/schemas';
 import { type Nullable, tryThat, yes } from '@silverhand/essentials';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import koaManagementApiPermission, {
+  shouldMaskCredentials,
+} from '#src/middleware/koa-management-api-permission.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import { type UserConditions } from '#src/queries/user.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -165,6 +168,7 @@ export default function adminUserSearchRoutes<T extends ManagementApiRouter>(
 
   router.get(
     '/users',
+    koaManagementApiPermission(ManagementApiScope.ReadUsers),
     koaPagination(),
     koaGuard({
       response: adminUserProfileResponseGuard.array(),
@@ -205,7 +209,7 @@ export default function adminUserSearchRoutes<T extends ManagementApiRouter>(
           ]);
 
           const includePasswordHash =
-            yes(searchParams.get('includePasswordHash') ?? '') && !ctx.auth.isReadOnly;
+            yes(searchParams.get('includePasswordHash') ?? '') && !shouldMaskCredentials(ctx.auth);
 
           ctx.pagination.totalCount = count;
           ctx.body = users.map((user) =>

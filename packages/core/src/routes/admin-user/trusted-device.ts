@@ -1,10 +1,15 @@
-import { trustedDeviceResponseGuard, type TrustedDeviceResponse } from '@logto/schemas';
+import {
+  ManagementApiScope,
+  trustedDeviceResponseGuard,
+  type TrustedDeviceResponse,
+} from '@logto/schemas';
 import { pick } from '@silverhand/essentials';
 import { z } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import { buildManagementApiContext } from '#src/libraries/hook/utils.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import koaManagementApiPermission from '#src/middleware/koa-management-api-permission.js';
 import assertThat from '#src/utils/assert-that.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
@@ -22,6 +27,7 @@ export default function adminUserTrustedDeviceRoutes<T extends ManagementApiRout
 
   router.get(
     '/users/:userId/trusted-devices',
+    koaManagementApiPermission(ManagementApiScope.ReadUsers),
     koaGuard({
       params: z.object({ userId: z.string() }),
       response: trustedDeviceResponseGuard.array(),
@@ -53,6 +59,7 @@ export default function adminUserTrustedDeviceRoutes<T extends ManagementApiRout
 
   router.delete(
     '/users/:userId/trusted-devices/:trustedDeviceId',
+    koaManagementApiPermission(ManagementApiScope.UpdateUsers),
     koaGuard({
       params: z.object({ userId: z.string(), trustedDeviceId: z.string() }),
       status: [204, 404],

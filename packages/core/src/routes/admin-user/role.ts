@@ -1,10 +1,11 @@
-import { RoleType, Roles } from '@logto/schemas';
+import { ManagementApiScope, RoleType, Roles } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { tryThat } from '@silverhand/essentials';
 import { array, object, string } from 'zod';
 
 import RequestError from '#src/errors/RequestError/index.js';
 import koaGuard from '#src/middleware/koa-guard.js';
+import koaManagementApiPermission from '#src/middleware/koa-management-api-permission.js';
 import koaPagination from '#src/middleware/koa-pagination.js';
 import koaRoleRlsErrorHandler from '#src/middleware/koa-role-rls-error-handler.js';
 import assertThat from '#src/utils/assert-that.js';
@@ -25,6 +26,7 @@ export default function adminUserRoleRoutes<T extends ManagementApiRouter>(
 
   router.get(
     '/users/:userId/roles',
+    koaManagementApiPermission(ManagementApiScope.ReadUsers),
     koaPagination(),
     koaGuard({
       params: object({ userId: string() }),
