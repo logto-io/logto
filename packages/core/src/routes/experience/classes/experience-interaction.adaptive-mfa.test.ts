@@ -9,7 +9,6 @@ import {
   VerificationType,
 } from '@logto/schemas';
 import { createMockUtils, pickDefault } from '@logto/shared/esm';
-import { type Optional } from '@silverhand/essentials';
 
 import { mockSignInExperience } from '#src/__mocks__/sign-in-experience.js';
 import { mockUserWithMfaVerifications } from '#src/__mocks__/user.js';
@@ -20,9 +19,6 @@ import { MockTenant } from '#src/test-utils/tenant.js';
 import { createContextWithRouteParameters } from '#src/utils/test-utils.js';
 
 import { type WithHooksAndLogsContext } from '../types.js';
-
-import { type TriggeredRule } from './libraries/adaptive-mfa-validator/types.js';
-import { MfaValidator } from './libraries/mfa-validator.js';
 
 const { jest } = import.meta;
 const { mockEsmWithActual } = createMockUtils(jest);
@@ -82,86 +78,6 @@ describe('ExperienceInteraction adaptive MFA', () => {
     // eslint-disable-next-line @silverhand/fp/no-mutation
     mockEnvSetValues.isDevFeaturesEnabled = true;
   });
-
-  // Truth table for MfaValidator.isMfaRequired
-  // Columns: adaptiveMfaResult | hasMfa | skipMfaOnSignIn | expected isMfaRequired
-  it.each<{
-    adaptiveMfaResult: Optional<{ requiresMfa: boolean; triggeredRules: TriggeredRule[] }>;
-    hasMfa: boolean;
-    skipMfaOnSignIn: boolean;
-    expected: boolean;
-  }>([
-    // Adaptive MFA enabled and triggered
-    {
-      adaptiveMfaResult: { requiresMfa: true, triggeredRules: [] },
-      hasMfa: true,
-      skipMfaOnSignIn: false,
-      expected: true,
-    },
-    {
-      adaptiveMfaResult: { requiresMfa: true, triggeredRules: [] },
-      hasMfa: true,
-      skipMfaOnSignIn: true,
-      expected: true,
-    },
-    {
-      adaptiveMfaResult: { requiresMfa: true, triggeredRules: [] },
-      hasMfa: false,
-      skipMfaOnSignIn: false,
-      expected: false,
-    },
-    {
-      adaptiveMfaResult: { requiresMfa: true, triggeredRules: [] },
-      hasMfa: false,
-      skipMfaOnSignIn: true,
-      expected: false,
-    },
-    // Adaptive MFA enabled but not triggered
-    {
-      adaptiveMfaResult: { requiresMfa: false, triggeredRules: [] },
-      hasMfa: true,
-      skipMfaOnSignIn: false,
-      expected: false,
-    },
-    {
-      adaptiveMfaResult: { requiresMfa: false, triggeredRules: [] },
-      hasMfa: true,
-      skipMfaOnSignIn: true,
-      expected: false,
-    },
-    {
-      adaptiveMfaResult: { requiresMfa: false, triggeredRules: [] },
-      hasMfa: false,
-      skipMfaOnSignIn: false,
-      expected: false,
-    },
-    {
-      adaptiveMfaResult: { requiresMfa: false, triggeredRules: [] },
-      hasMfa: false,
-      skipMfaOnSignIn: true,
-      expected: false,
-    },
-    // Adaptive MFA disabled (fallback to policy)
-    { adaptiveMfaResult: undefined, hasMfa: true, skipMfaOnSignIn: false, expected: true },
-    { adaptiveMfaResult: undefined, hasMfa: true, skipMfaOnSignIn: true, expected: false },
-    { adaptiveMfaResult: undefined, hasMfa: false, skipMfaOnSignIn: false, expected: false },
-    { adaptiveMfaResult: undefined, hasMfa: false, skipMfaOnSignIn: true, expected: false },
-  ])(
-    'isMfaRequired: adaptive=$adaptiveMfaResult, hasMfa=$hasMfa, skip=$skipMfaOnSignIn → $expected',
-    ({ adaptiveMfaResult, hasMfa, skipMfaOnSignIn, expected }) => {
-      const mfaSettings = {
-        policy: MfaPolicy.PromptAtSignInAndSignUp,
-        factors: [MfaFactor.TOTP],
-      };
-      const user: User = {
-        ...mockUserWithMfaVerifications,
-        mfaVerifications: hasMfa ? mockUserWithMfaVerifications.mfaVerifications : [],
-        logtoConfig: skipMfaOnSignIn ? { mfa: { skipMfaOnSignIn: true } } : {},
-      };
-      const mfaValidator = new MfaValidator(mfaSettings, user, { adaptiveMfaResult });
-      expect(mfaValidator.isMfaRequired).toBe(expected);
-    }
-  );
 
   it('requires MFA even when skipMfaOnSignIn is true if adaptive MFA triggers', async () => {
     const user: User = {

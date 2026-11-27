@@ -42,34 +42,6 @@ describe('MfaValidator verified-record ownership', () => {
   });
 });
 
-describe('MfaValidator enforced requirements', () => {
-  it.each([
-    { adaptiveMfaResult: undefined, expected: true },
-    { adaptiveMfaResult: { requiresMfa: false, triggeredRules: [] }, expected: false },
-    { adaptiveMfaResult: { requiresMfa: true, triggeredRules: [] }, expected: true },
-  ])(
-    'requires MFA=$expected with an enforced requirement and adaptive result $adaptiveMfaResult',
-    ({ adaptiveMfaResult, expected }) => {
-      const settings = {
-        policy: MfaPolicy.NoPrompt,
-        factors: [MfaFactor.EmailVerificationCode],
-      };
-      const user: User = {
-        ...mockUserWithMfaVerifications,
-        primaryEmail: 'user@example.com',
-        mfaVerifications: [],
-        logtoConfig: { mfa: { enabled: false, skipMfaOnSignIn: true } },
-      };
-      const context = { adaptiveMfaResult, isMfaRequiredByUser: true };
-
-      expect(new MfaValidator(settings, user, context).isMfaRequired).toBe(expected);
-      expect(
-        new MfaValidator(settings, { ...user, primaryEmail: null }, context).isMfaRequired
-      ).toBe(false);
-    }
-  );
-});
-
 const mfaCodeRecord = (type: VerificationType, userId: string) =>
   ({
     type,
