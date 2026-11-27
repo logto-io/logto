@@ -15,6 +15,17 @@ const redisCacheReadTimeout = 1000;
 // Writes are allowed more headroom but still bounded so a Redis stall can never hold a request.
 const redisCacheWriteTimeout = 5000;
 
+// Reconnect delays grow by 500ms per attempt up to this cap, then retry at that pace for as long as
+// Redis stays down: a client that gives up stays closed for the rest of the process lifetime.
+const maxReconnectDelay = 5000;
+// How long startup waits for Redis before going on without the cache; connecting goes on in the
+// background, and `get`/`set` stay misses until the client is ready.
+const startupConnectTimeout = 5000;
+
+// Jitter keeps pods that lost Redis at the same moment from retrying in lockstep.
+const getReconnectDelay = (retries: number) =>
+  Math.round(Math.min(retries * 500, maxReconnectDelay) * (0.8 + Math.random() * 0.2));
+
 const timeoutSentinel = Symbol('redis-cache-timeout');
 
 /**
@@ -71,6 +82,19 @@ const raceWithTimeout = async <T>(
 abstract class RedisCacheBase implements CacheStore {
   readonly client?: RedisClientType | RedisClusterType;
 
+  private isDisconnecting = false;
+  private hasConnected = false;
+
+  /**
+   * Whether a rejected `client.connect()` should be retried. The standalone socket retries on its
+   * own through `reconnectStrategy`, so its `connect()` only rejects for errors that are not worth
+   * retrying. The cluster client discovers its topology from root node connections that never
+   * reconnect, so it rejects as soon as no root node answers.
+   */
+  protected get retriesFailedConnect(): boolean {
+    return false;
+  }
+
   /**
    * Whether the client is connected and ready to accept commands. When it isn't (no client, or
    * the socket is down/reconnecting), `get` and `set` short-circuit to a miss instead of issuing
@@ -78,8 +102,10 @@ abstract class RedisCacheBase implements CacheStore {
    * piles up into request latency, and ultimately upstream 499s, during a Redis outage. `delete`
    * is deliberately exempt so invalidations are not silently dropped (see its comment below).
    *
-   * Standalone clients expose `isReady` (connected and past handshake); the cluster client only
-   * exposes `isOpen`, so fall back to that.
+   * Standalone clients expose `isReady` (connected and past handshake). The cluster client only
+   * exposes `isOpen`, which turns true before topology discovery and node connections finish, so
+   * it also needs `connect()` to have resolved. A reconnecting cluster node rejects commands right
+   * away instead, through `disableOfflineQueue`.
    */
   protected get isClientReady(): boolean {
     const { client } = this;
@@ -88,7 +114,7 @@ abstract class RedisCacheBase implements CacheStore {
       return false;
     }
 
-    return 'isReady' in client ? client.isReady : client.isOpen;
+    return 'isReady' in client ? client.isReady : this.hasConnected && client.isOpen;
   }
 
   async set(key: string, value: string, expire: number = 30 * 60) {
@@ -116,29 +142,38 @@ abstract class RedisCacheBase implements CacheStore {
 
   // Unlike `get`/`set`, `delete` is not gated on `isClientReady`: a dropped invalidation could
   // serve stale data until TTL, so let it queue and flush once the connection recovers. It stays
-  // bounded by `raceWithTimeout` and never blocks a request beyond the write deadline.
+  // bounded by `raceWithTimeout` and never blocks a request beyond the write deadline. Cluster
+  // nodes have no offline queue, so a `delete` routed to a reconnecting node fails right away.
   async delete(key: string) {
     await raceWithTimeout('DEL', key, this.client?.del(key), redisCacheWriteTimeout);
   }
 
+  /**
+   * Connect without holding startup for longer than {@link startupConnectTimeout}. If Redis is not
+   * reachable by then, the process starts without the cache and the client attaches to Redis once
+   * it becomes reachable.
+   */
   async connect() {
-    if (this.client) {
-      try {
-        await this.client.connect();
-        const pong = await this.ping();
-
-        if (pong === 'PONG') {
-          cacheConsole.info('Connected to Redis');
-          return;
-        }
-      } catch (error: unknown) {
-        cacheConsole.error(error);
-      }
+    if (!this.client) {
+      cacheConsole.warn('No Redis client initialized, skipping');
+      return;
     }
-    cacheConsole.warn('No Redis client initialized, skipping');
+
+    const result = await Promise.race([
+      this.connectUntilReady(this.client),
+      setTimeout(startupConnectTimeout, timeoutSentinel, { ref: false }),
+    ]);
+
+    if (result === timeoutSentinel) {
+      cacheConsole.warn(
+        `Redis is not reachable after ${startupConnectTimeout}ms, continuing without cache until it connects`
+      );
+    }
   }
 
   async disconnect() {
+    this.isDisconnecting = true;
+
     if (this.client) {
       await this.client.disconnect();
       cacheConsole.info('Disconnected from Redis');
@@ -163,16 +198,50 @@ abstract class RedisCacheBase implements CacheStore {
           return false;
         }
 
-        if (retries > 5) {
-          return new Error('Too many retries');
-        }
-
-        return retries * 500;
+        return getReconnectDelay(retries);
       },
     };
   }
 
   protected abstract ping(): Promise<string | undefined>;
+
+  private async connectUntilReady(
+    client: RedisClientType | RedisClusterType,
+    attempt = 0
+  ): Promise<void> {
+    if (this.isDisconnecting) {
+      return;
+    }
+
+    try {
+      await client.connect();
+    } catch (error: unknown) {
+      cacheConsole.error(error);
+
+      if (!this.retriesFailedConnect) {
+        return;
+      }
+
+      await setTimeout(getReconnectDelay(attempt + 1), undefined, { ref: false });
+      return this.connectUntilReady(client, attempt + 1);
+    }
+
+    // `disconnect()` during a standalone retry makes `connect()` resolve without a connection.
+    if (!client.isOpen) {
+      return;
+    }
+
+    this.hasConnected = true;
+
+    // A failed ping must not retry: calling `connect()` on an open client throws.
+    try {
+      if ((await this.ping()) === 'PONG') {
+        cacheConsole.info('Connected to Redis');
+      }
+    } catch (error: unknown) {
+      cacheConsole.error(error);
+    }
+  }
 }
 
 export class RedisCache extends RedisCacheBase {
@@ -208,6 +277,10 @@ export class RedisCache extends RedisCacheBase {
 export class RedisClusterCache extends RedisCacheBase {
   readonly client?: RedisClusterType;
 
+  protected get retriesFailedConnect(): boolean {
+    return true;
+  }
+
   constructor(connectionUrl: URL) {
     super();
 
@@ -222,6 +295,11 @@ export class RedisClusterCache extends RedisCacheBase {
     const rootNodes = hosts.map((host) => {
       return {
         url: 'redis://' + host,
+        // Topology discovery disables reconnects on the root node client by assigning
+        // `reconnectStrategy = false` to its socket options. `@redis/client` 1.5 assigns it to
+        // `defaults.socket` itself when the root node has no socket of its own, so every node
+        // client created afterwards never reconnects. An own object keeps the defaults intact.
+        socket: {},
       };
     });
 
@@ -229,6 +307,8 @@ export class RedisClusterCache extends RedisCacheBase {
       rootNodes,
       useReplicas: true,
       defaults: {
+        // Without it, commands to a reconnecting node wait in its queue for the whole outage.
+        disableOfflineQueue: true,
         socket: this.getSocketOptions(connectionUrl),
         username: connectionUrl.username ? safeDecode(connectionUrl.username) : undefined,
         password: connectionUrl.password ? safeDecode(connectionUrl.password) : undefined,
