@@ -106,6 +106,9 @@ jobs:
       - name: Build for test
         run: pnpm -r build:test
 
+      - name: Build connectors for metadata tests
+        run: pnpm connectors build
+
       # Playwright 1.56's browser installer hangs on Node.js 26; the `overrides` in
       # pnpm-workspace.yaml pin 1.64.1 so this step and the element tests use a version that works.
       - name: Install playwright for element tests
