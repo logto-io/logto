@@ -15,9 +15,15 @@ describe('safeCompare()', () => {
     expect(safeCompare('', 'token')).toBe(false);
   });
 
-  it('should compare by byte length, not character count', () => {
-    // 'é' is 2 bytes in UTF-8, so these have the same char count but different byte length
+  it('should return false for different characters of the same encoded length', () => {
+    // 'é' and 'e' are both one UTF-16 code unit, so this compares equal-length buffers
     expect(safeCompare('é', 'e')).toBe(false);
+  });
+
+  it('should keep lone surrogates distinct', () => {
+    // UTF-8 would encode both as U+FFFD and report them equal
+    expect(safeCompare('\uD800', '\uD801')).toBe(false);
+    expect(safeCompare('\uD800', '\uD800')).toBe(true);
   });
 
   it('should return false when either side is not a string', () => {

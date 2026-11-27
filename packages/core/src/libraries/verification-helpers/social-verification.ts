@@ -87,8 +87,10 @@ export const verifySocialIdentity = async (
   if (connector.metadata.id === GoogleConnector.factoryId && isGoogleOneTapChecker(connectorData)) {
     if (isExternalGoogleOneTap(connectorData)) {
       assertThat(
-        connectorData[GoogleConnector.oneTapParams.credential] ===
-          ctx.cookies.get(logtoGoogleOneTapCookieKey),
+        safeCompare(
+          connectorData[GoogleConnector.oneTapParams.credential],
+          ctx.cookies.get(logtoGoogleOneTapCookieKey)
+        ),
         'session.google_one_tap.cookie_mismatch'
       );
     } else {

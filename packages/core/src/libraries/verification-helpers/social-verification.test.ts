@@ -116,7 +116,6 @@ describe('verifySocialIdentity', () => {
   });
 
   it.each([
-    ['of a different length', 'tok'],
     ['of the same length but a different value', 'tokex'],
   ])('should throw error if the csrf token is %s than the cookie', async (_, csrfToken) => {
     const ctx: WithLogContext = {

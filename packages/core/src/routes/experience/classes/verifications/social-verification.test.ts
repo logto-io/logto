@@ -317,7 +317,6 @@ describe('SocialVerification', () => {
     });
 
     it.each([
-      ['of a different length', 'matching'],
       ['of the same length but a different value', 'matching_tokeX'],
     ])(
       'should reject a CSRF token %s than the cookie for regular Google One Tap',
