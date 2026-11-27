@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 export enum VerificationType {
   Password = 'Password',
   EmailVerificationCode = 'EmailVerificationCode',
@@ -13,3 +15,5 @@ export enum VerificationType {
   NewPasswordIdentity = 'NewPasswordIdentity',
   OneTimeToken = 'OneTimeToken',
 }
+
+export const verificationTypeGuard = z.nativeEnum(VerificationType);

@@ -13,6 +13,7 @@ import { type EditorProps } from '@monaco-editor/react';
 import type { ModelSettings } from '@/components/MonacoCodeEditor';
 import { jwtCustomizerUserContextTypeDefinition } from '@/consts/jwt-customizer-type-definition';
 
+import { defaultPreRegisterEvent, preRegisterModel } from './pre-register-config';
 import {
   ActionTypeDefinitionKey,
   actionUserPatchTypeDefinition,
@@ -205,6 +206,9 @@ export const getActionModel = (actionType: LogtoActionKey): ModelSettings => {
     case LogtoActionKey.PostSignIn: {
       return postSignInModel;
     }
+    case LogtoActionKey.PreRegister: {
+      return preRegisterModel;
+    }
   }
 };
 
@@ -218,6 +222,9 @@ export const getDefaultContextSample = (actionType: LogtoActionKey) => {
     }
     case LogtoActionKey.PostSignIn: {
       return defaultPostSignInEvent;
+    }
+    case LogtoActionKey.PreRegister: {
+      return defaultPreRegisterEvent;
     }
   }
 };

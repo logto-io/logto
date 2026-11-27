@@ -314,6 +314,28 @@ const createSignInInteraction = ({
   };
 };
 
+const createRegisterInteraction = () => {
+  const interaction = createSignInInteraction({
+    headers: { 'user-agent': 'pre-register-test-agent' },
+    interactionEvent: InteractionEvent.Register,
+    interactionResult: { userId: undefined },
+    signInExperienceOverrides: {
+      signUp: { identifiers: [SignInIdentifier.Email], password: false, verify: true },
+    },
+  });
+  const { libraries, queries } = interaction.signInTenant;
+  const record = new EmailCodeVerification(libraries, queries, {
+    id: 'pre_register_email_verification_id',
+    type: VerificationType.EmailVerificationCode,
+    identifier: { type: SignInIdentifier.Email, value: mockEmail },
+    templateType: TemplateType.Register,
+    verified: true,
+  });
+  interaction.experienceInteraction.setVerificationRecord(record);
+
+  return { ...interaction, record };
+};
+
 describe('ExperienceInteraction class', () => {
   const tenant = new MockTenant(
     createMockProvider(mockProviderInteractionDetails),
@@ -325,13 +347,14 @@ describe('ExperienceInteraction class', () => {
     { users: userLibraries, ssoConnectors }
   );
 
-  // @ts-expect-error --mock test context
   const ctx: WithHooksAndLogsContext = {
     assignReleaseOnSuccessInteractionHookResult: jest.fn(),
     assignReleaseAnywayInteractionHookResult: jest.fn(),
     appendDataHookContext: jest.fn(),
+    appendExceptionHookContext: jest.fn(),
     ...createContextWithRouteParameters(),
     ...createMockLogContext(),
+    interactionDetails: { params: {} } as unknown as Interaction,
   };
   const { libraries, queries } = tenant;
 
@@ -713,6 +736,56 @@ describe('ExperienceInteraction class', () => {
 
       expect(getUserContext).not.toHaveBeenCalled();
       expect(runAction).not.toHaveBeenCalled();
+    });
+
+    describe('PreRegister action', () => {
+      it('runs before the user is created with the final profile and request context', async () => {
+        setDevFeaturesEnabled(true);
+        const { experienceInteraction, record, runActionHandler } = createRegisterInteraction();
+        const createUser = jest.spyOn(experienceInteraction.provisionLibrary, 'createUser');
+
+        await experienceInteraction.createUser(record.id);
+
+        expect(runActionHandler).toHaveBeenCalledWith({
+          key: LogtoActionKey.PreRegister,
+          event: {
+            key: LogtoActionKey.PreRegister,
+            interactionEvent: InteractionEvent.Register,
+            verificationTypes: [VerificationType.EmailVerificationCode],
+            user: { primaryEmail: mockEmail },
+            applicationId: adminConsoleApplicationId,
+            // The mock request has no IP, so only the user agent is present.
+            request: { userAgent: 'pre-register-test-agent' },
+          },
+        });
+        expect(runActionHandler.mock.invocationCallOrder[0]).toBeLessThan(
+          createUser.mock.invocationCallOrder[0]!
+        );
+      });
+
+      it('does not create the user when the action denies the registration', async () => {
+        setDevFeaturesEnabled(true);
+        const { experienceInteraction, record, runActionHandler } = createRegisterInteraction();
+        const createUser = jest.spyOn(experienceInteraction.provisionLibrary, 'createUser');
+        runActionHandler.mockResolvedValueOnce({ action: 'deny', message: 'Use a work email.' });
+
+        await expect(experienceInteraction.createUser(record.id)).rejects.toMatchError(
+          new RequestError(
+            { code: 'action.registration_denied', status: 422 },
+            { message: 'Use a work email.' }
+          )
+        );
+        expect(createUser).not.toHaveBeenCalled();
+      });
+
+      it('does not run when dev features are disabled', async () => {
+        setDevFeaturesEnabled(false);
+        const { experienceInteraction, record, runAction } = createRegisterInteraction();
+
+        await experienceInteraction.createUser(record.id);
+
+        expect(runAction).not.toHaveBeenCalled();
+      });
     });
 
     it('updates user when PostSignIn action returns updateUser', async () => {

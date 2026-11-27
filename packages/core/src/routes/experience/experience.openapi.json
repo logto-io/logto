@@ -105,7 +105,7 @@
             "description": "The interaction has already been identified with a different user account."
           },
           "422": {
-            "description": "The request failed validation, check error message for more details. <br/>- `user.<identifier>_already_in_use:` The given identifier is already in use by another user account. (Register only) <br/>- `user.missing_profile:` Sign-in experience required user identifier or profile data is missing. (Register only) <br/>- `user.social_provider_already_linked:` The user matched by the social account's email or phone already has another account from this provider linked. (SignIn only)"
+            "description": "The request failed validation, check error message for more details. <br/>- `user.<identifier>_already_in_use:` The given identifier is already in use by another user account. (Register only) <br/>- `user.missing_profile:` Sign-in experience required user identifier or profile data is missing. (Register only) <br/>- `user.social_provider_already_linked:` The user matched by the social account's email or phone already has another account from this provider linked. (SignIn only) <br/>- `action.registration_denied:` The pre-register action denied the registration. `data.message`, when present, is the message the action returned for the end user. (Register only) <br/>- `action.general:` The pre-register action failed or returned an invalid result. (Register only)"
           }
         }
       }

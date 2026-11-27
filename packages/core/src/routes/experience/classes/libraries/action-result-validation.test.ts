@@ -17,6 +17,7 @@ import {
   type ValidatedPostSignInActionResult,
   validatePostFirstFactorVerificationActionResult as validateFirstFactorResult,
   validatePostSignInActionResult as validateSignInResult,
+  validatePreRegisterActionResult,
 } from './action-result-validation.js';
 
 // Resolve validations the way `ActionLibrary.runAction` does: return the result or throw.
@@ -670,6 +671,34 @@ describe('validatePostSignInActionResult', () => {
         result,
       })
     ).toMatchError(new RequestError({ code: 'session.verification_failed', status: 400 }));
+  });
+});
+describe('validatePreRegisterActionResult', () => {
+  it.each([undefined, null, {}, { action: 'allow' }])('continues for %p', (result) => {
+    expect(validatePreRegisterActionResult(result)).toEqual({ result: { action: 'continue' } });
+  });
+
+  it('denies with the script message', () => {
+    expect(
+      validatePreRegisterActionResult({ action: 'deny', message: 'Use a work email.' })
+    ).toEqual({ result: { action: 'deny', message: 'Use a work email.' } });
+    expect(validatePreRegisterActionResult({ action: 'deny', message: '' })).toEqual({
+      result: { action: 'deny' },
+    });
+  });
+
+  it.each([
+    { action: 'updateUser', user: {} },
+    { action: 'deny', message: 'x'.repeat(257) },
+    { action: 'allow', user: { name: 'Jane' } },
+    'deny',
+  ])('rejects the invalid result %p with action.general', (result) => {
+    const validation = validatePreRegisterActionResult(result);
+
+    expect(validation).toMatchObject({
+      error: { code: 'action.general', status: 422 },
+      rejection: { reason: 'invalid_result' },
+    });
   });
 });
 /* eslint-enable max-lines */

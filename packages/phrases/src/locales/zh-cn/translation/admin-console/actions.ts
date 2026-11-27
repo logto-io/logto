@@ -17,6 +17,10 @@ const actions = {
       name: '登录后',
       description: '在用户成功登录后运行自定义逻辑。',
     },
+    pre_register: {
+      name: '注册前',
+      description: '在创建新用户之前运行自定义逻辑，并在需要时拒绝注册。',
+    },
   },
   data_source_tab: '数据源',
   test_tab: '测试上下文',

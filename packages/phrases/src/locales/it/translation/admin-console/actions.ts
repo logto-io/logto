@@ -20,6 +20,11 @@ const actions = {
       description:
         'Esegui logica personalizzata dopo che un utente ha effettuato correttamente l’accesso.',
     },
+    pre_register: {
+      name: 'Prima della registrazione',
+      description:
+        'Esegui logica personalizzata prima che venga creato un nuovo utente e rifiuta la registrazione se necessario.',
+    },
   },
   data_source_tab: 'Origine dati',
   test_tab: 'Contesto di test',

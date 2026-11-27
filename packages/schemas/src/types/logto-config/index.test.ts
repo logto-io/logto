@@ -13,6 +13,7 @@ import {
   logtoConfigKeys,
   logtoTenantConfigGuard,
   oidcConfigKeysResponseGuard,
+  preRegisterResultGuard,
 } from './index.js';
 
 describe('logto config guards', () => {
@@ -77,6 +78,25 @@ describe('logto config guards', () => {
     expect(logtoConfigGuards[LogtoActionKey.PostSignIn]).toBe(
       actionConfigGuard[LogtoActionKey.PostSignIn]
     );
+    expect(logtoConfigKeys).toContain(LogtoActionKey.PreRegister);
+    expect(logtoConfigGuards[LogtoActionKey.PreRegister]).toBe(
+      actionConfigGuard[LogtoActionKey.PreRegister]
+    );
+  });
+
+  it('accepts only allow and deny pre-register results', () => {
+    expect(preRegisterResultGuard.safeParse({ action: 'allow' }).success).toBe(true);
+    expect(preRegisterResultGuard.safeParse({ action: 'deny' }).success).toBe(true);
+    expect(
+      preRegisterResultGuard.safeParse({ action: 'deny', message: 'x'.repeat(256) }).success
+    ).toBe(true);
+    expect(
+      preRegisterResultGuard.safeParse({ action: 'deny', message: 'x'.repeat(257) }).success
+    ).toBe(false);
+    expect(preRegisterResultGuard.safeParse({ action: 'allow', message: 'ok' }).success).toBe(
+      false
+    );
+    expect(preRegisterResultGuard.safeParse({ action: 'updateUser' }).success).toBe(false);
   });
 
   it('includes the CIMD key in the logto config summary guards', () => {

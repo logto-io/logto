@@ -17,6 +17,11 @@ const actions = {
       name: '로그인 후',
       description: '사용자가 성공적으로 로그인한 후 사용자 지정 로직을 실행합니다.',
     },
+    pre_register: {
+      name: '가입 전',
+      description:
+        '새 사용자가 생성되기 전에 사용자 지정 로직을 실행하고 필요한 경우 가입을 거부합니다.',
+    },
   },
   data_source_tab: '데이터 소스',
   test_tab: '테스트 컨텍스트',

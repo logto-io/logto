@@ -7,6 +7,7 @@ import {
 import { ResponseError } from '@withtyped/client';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { buildSafeActionErrorSummary } from '#src/libraries/action-sanitization.js';
 import koaGuard from '#src/middleware/koa-guard.js';
@@ -17,10 +18,9 @@ import { isRecord } from '#src/utils/type.js';
 
 import type { ManagementApiRouter, RouterInitArgs } from '../types.js';
 
-const actionConfigsGuard = z.object({
-  key: z.nativeEnum(LogtoActionKey),
-  value: logtoActionGuard,
-});
+// Pre-register action: unavailable until the feature is released.
+const isActionKeyAvailable = (key: LogtoActionKey) =>
+  key !== LogtoActionKey.PreRegister || EnvSet.values.isDevFeaturesEnabled;
 
 const parseActionResponseError = async (error: ResponseError): Promise<unknown> => {
   try {
@@ -57,6 +57,16 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
   const { getRowsByKeys, deleteAction } = queries.logtoConfigs;
   const { upsertAction, getAction, getActions, updateAction } = logtoConfigs;
 
+  // Pre-register action: hide from public OpenAPI and reject at the guard until released.
+  const actionTypeGuard = EnvSet.values.isDevFeaturesEnabled
+    ? z.nativeEnum(LogtoActionKey)
+    : z.enum([LogtoActionKey.PostFirstFactorVerification, LogtoActionKey.PostSignIn]);
+
+  const actionConfigsGuard = z.object({
+    key: actionTypeGuard,
+    value: logtoActionGuard,
+  });
+
   router.get(
     '/configs/actions',
     koaGuard({
@@ -66,7 +76,7 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
     async (ctx, next) => {
       const actions = await getActions(getConsoleLogFromContext(ctx));
       ctx.body = Object.values(LogtoActionKey)
-        .filter((key) => actions[key])
+        .filter((key) => isActionKeyAvailable(key) && actions[key])
         .map((key) => ({ key, value: actions[key] }));
       return next();
     }
@@ -75,7 +85,7 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
   router.post(
     '/configs/actions/test',
     koaGuard({
-      body: actionExecutionRequestBodyGuard,
+      body: actionExecutionRequestBodyGuard.extend({ actionType: actionTypeGuard }),
       response: jsonGuard.optional(),
       status: [200, 204, 400, 403, 422],
     }),
@@ -144,7 +154,7 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
     '/configs/actions/:actionType',
     koaGuard({
       params: z.object({
-        actionType: z.nativeEnum(LogtoActionKey),
+        actionType: actionTypeGuard,
       }),
       response: logtoActionGuard,
       status: [200, 404],
@@ -163,7 +173,7 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
     '/configs/actions/:actionType',
     koaGuard({
       params: z.object({
-        actionType: z.nativeEnum(LogtoActionKey),
+        actionType: actionTypeGuard,
       }),
       body: logtoActionGuard,
       response: logtoActionGuard,
@@ -192,7 +202,7 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
     '/configs/actions/:actionType',
     koaGuard({
       params: z.object({
-        actionType: z.nativeEnum(LogtoActionKey),
+        actionType: actionTypeGuard,
       }),
       body: logtoActionGuard.partial(),
       response: logtoActionGuard,
@@ -214,7 +224,7 @@ export default function logtoConfigActionRoutes<T extends ManagementApiRouter>(
     '/configs/actions/:actionType',
     koaGuard({
       params: z.object({
-        actionType: z.nativeEnum(LogtoActionKey),
+        actionType: actionTypeGuard,
       }),
       status: [204, 404],
     }),

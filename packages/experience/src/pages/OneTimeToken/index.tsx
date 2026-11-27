@@ -18,6 +18,7 @@ import useApi from '@/hooks/use-api';
 import useConsumeOneTimeTokenParameters from '@/hooks/use-consume-one-time-token-parameters';
 import useErrorHandler from '@/hooks/use-error-handler';
 import useGlobalRedirectTo from '@/hooks/use-global-redirect-to';
+import useNavigateToSignIn from '@/hooks/use-navigate-to-sign-in';
 import useNavigateWithPreservedSearchParams from '@/hooks/use-navigate-with-preserved-search-params';
 import useSubmitInteractionErrorHandler from '@/hooks/use-submit-interaction-error-handler';
 import useTerms from '@/hooks/use-terms';
@@ -38,12 +39,15 @@ const OneTimeToken = () => {
   const { setIdentifierInputValue } = useContext(UserInteractionContext);
   const { termsValidation, agreeToTermsPolicy } = useTerms();
   const handleError = useErrorHandler();
+  const navigateToSignIn = useNavigateToSignIn();
   const redirectTo = useGlobalRedirectTo();
   const preSignInErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.SignIn, {
     replace: true,
+    onBlocked: navigateToSignIn,
   });
   const preRegisterErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.Register, {
     replace: true,
+    onBlocked: navigateToSignIn,
   });
 
   /**

@@ -58,7 +58,7 @@ const useSocialSignInListener = (connectorId: string) => {
 
   const registerWithSocial = useSocialRegister(connectorId, {
     replace: true,
-    onEmailBlocked: navigateToSignIn,
+    onBlocked: navigateToSignIn,
   });
 
   const accountNotExistErrorHandler = useCallback(
@@ -117,7 +117,7 @@ const useSocialSignInListener = (connectorId: string) => {
 
   const preSignInErrorHandler = useSubmitInteractionErrorHandler(InteractionEvent.SignIn, {
     replace: true,
-    onEmailBlocked: navigateToSignIn,
+    onBlocked: navigateToSignIn,
   });
 
   const signInWithSocialErrorHandlers: ErrorHandlers = useMemo(

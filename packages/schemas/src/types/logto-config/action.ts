@@ -1,7 +1,13 @@
 import { jsonGuard } from '@logto/connector-kit';
 import { z } from 'zod';
 
-import { MfaFactor, type Json, webAuthnTransportGuard } from '../../foundations/index.js';
+import {
+  MfaFactor,
+  type Json,
+  type JsonObject,
+  type UserProfile,
+  webAuthnTransportGuard,
+} from '../../foundations/index.js';
 import { type ToZodObject } from '../../utils/zod.js';
 import {
   InteractionEvent,
@@ -9,7 +15,7 @@ import {
   type InteractionIdentifier,
 } from '../interactions.js';
 import { userInfoGuard, type UserInfo } from '../user.js';
-import { VerificationType } from '../verification-records/index.js';
+import { VerificationType, verificationTypeGuard } from '../verification-records/index.js';
 
 import type { JwtCustomizerUserContext } from './jwt-customizer.js';
 
@@ -17,6 +23,7 @@ import type { JwtCustomizerUserContext } from './jwt-customizer.js';
 export enum LogtoActionKey {
   PostFirstFactorVerification = 'action.postFirstFactorVerification',
   PostSignIn = 'action.postSignIn',
+  PreRegister = 'action.preRegister',
 }
 
 export const actionExecutionErrorPolicies = Object.freeze(['block', 'allow'] as const);
@@ -120,6 +127,34 @@ export type PostSignInEvent = {
   user: JwtCustomizerUserContext;
 };
 
+/** The profile of the user about to be created. It has no ID because the user does not exist yet. */
+export type PreRegisterUser = {
+  username?: string | null;
+  primaryEmail?: string | null;
+  primaryPhone?: string | null;
+  name?: string | null;
+  avatar?: string | null;
+  profile?: UserProfile;
+  customData?: JsonObject;
+  /** Present when the user registers with a social connector. The IdP `rawData` is omitted. */
+  socialIdentity?: {
+    target: string;
+    userInfo: { id: string; email?: string; phone?: string; name?: string; avatar?: string };
+  };
+  /** Present when the user registers with enterprise SSO. The IdP `detail` is omitted. */
+  enterpriseSsoIdentity?: { ssoConnectorId: string; issuer: string; identityId: string };
+};
+
+export type PreRegisterEvent = {
+  key: LogtoActionKey.PreRegister;
+  interactionEvent: InteractionEvent.Register;
+  /** Types of the verification records verified in this interaction. */
+  verificationTypes: VerificationType[];
+  user: PreRegisterUser;
+  applicationId?: string;
+  request: { ip?: string; userAgent?: string };
+};
+
 // Nested `user` uses passthrough so password fields survive structural parsing.
 export const postFirstFactorVerificationResultGuard = z.discriminatedUnion('action', [
   z.object({
@@ -149,6 +184,20 @@ export const postSignInResultGuard = z.discriminatedUnion('action', [
 ]);
 
 export type PostSignInResult = z.infer<typeof postSignInResultGuard>;
+
+export const preRegisterDenyMessageMaxLength = 256;
+
+export const preRegisterResultGuard = z.discriminatedUnion('action', [
+  z.object({ action: z.literal('allow') }).strict(),
+  z
+    .object({
+      action: z.literal('deny'),
+      message: z.string().max(preRegisterDenyMessageMaxLength).optional(),
+    })
+    .strict(),
+]);
+
+export type PreRegisterResult = z.infer<typeof preRegisterResultGuard>;
 
 export const actionUserPatchFields = Object.freeze(actionUserPatchGuard.keyof().options);
 
@@ -189,9 +238,34 @@ export const loggablePostSignInEventGuard = z.object({
   user: z.object({ id: z.string() }),
 }) satisfies ToZodObject<LoggablePostSignInEvent>;
 
+/**
+ * The subset of {@link PreRegisterEvent} that is safe to persist in audit logs. Like the identifier
+ * of {@link LoggablePostFirstFactorVerificationEvent}, the user's identifiers are kept so the log
+ * can tell which sign-up was evaluated; the rest of the profile and the request context are not.
+ */
+export type LoggablePreRegisterEvent = Pick<
+  PreRegisterEvent,
+  'key' | 'interactionEvent' | 'verificationTypes' | 'applicationId'
+> & {
+  user: Pick<PreRegisterUser, 'username' | 'primaryEmail' | 'primaryPhone'>;
+};
+
+export const loggablePreRegisterEventGuard = z.object({
+  key: z.literal(LogtoActionKey.PreRegister),
+  interactionEvent: z.literal(InteractionEvent.Register),
+  verificationTypes: verificationTypeGuard.array(),
+  applicationId: z.string().optional(),
+  user: z.object({
+    username: z.string().nullable().optional(),
+    primaryEmail: z.string().nullable().optional(),
+    primaryPhone: z.string().nullable().optional(),
+  }),
+}) satisfies ToZodObject<LoggablePreRegisterEvent>;
+
 export type LoggableActionEvent =
   | LoggablePostFirstFactorVerificationEvent
-  | LoggablePostSignInEvent;
+  | LoggablePostSignInEvent
+  | LoggablePreRegisterEvent;
 
 /**
  * The audit-log description of what a script asked Logto to do. Action results are authored by

@@ -21,6 +21,7 @@ import {
   type AuthenticationProof,
   type InteractionAuthenticationContext,
   type PostSignInEvent,
+  type PreRegisterEvent,
   type RequestedAuthenticationContext,
   type SignInExperience,
   type SubjectProofConnector,
@@ -29,9 +30,10 @@ import {
   type User,
 } from '@logto/schemas';
 import { maskEmail, maskPhone } from '@logto/shared';
-import { conditional, trySafe } from '@silverhand/essentials';
+import { conditional, pick, removeUndefinedKeys, trySafe } from '@silverhand/essentials';
 import { z } from 'zod';
 
+import { EnvSet } from '#src/env-set/index.js';
 import RequestError from '#src/errors/RequestError/index.js';
 import { isMfaRequiredByUser } from '#src/libraries/sign-in-experience/mfa-policy.js';
 import { buildUserPasswordPayload } from '#src/libraries/user.utils.js';
@@ -57,7 +59,10 @@ import {
   mergeUserMfaVerifications,
   parseMfaPropertiesToUserConfig,
 } from './helpers.js';
-import { validatePostSignInActionResult } from './libraries/action-result-validation.js';
+import {
+  validatePostSignInActionResult,
+  validatePreRegisterActionResult,
+} from './libraries/action-result-validation.js';
 import { AdaptiveMfaValidator } from './libraries/adaptive-mfa-validator/index.js';
 import { type AdaptiveMfaResult } from './libraries/adaptive-mfa-validator/types.js';
 import {
@@ -583,6 +588,11 @@ export default class ExperienceInteraction {
       hasVerifiedSocialIdentity: this.hasVerifiedSocialIdentity,
       hasVerifiedSsoIdentity: this.hasVerifiedSsoIdentity,
     });
+
+    // Pre-register action
+    if (EnvSet.values.isDevFeaturesEnabled) {
+      await this.triggerPreRegisterAction();
+    }
 
     const user = await this.provisionLibrary.createUser(this.profile.data);
     log?.append({ user });
@@ -1676,6 +1686,94 @@ export default class ExperienceInteraction {
         mergeCustomData: true,
       });
     }
+  }
+
+  /**
+   * @throws {RequestError} with 422 `action.registration_denied` if the script denies the registration
+   * @throws {RequestError} with 422 `action.general` if the script fails under the `block` policy or
+   * returns an invalid result
+   */
+  private async triggerPreRegisterAction() {
+    const { actions } = this.tenant.libraries;
+    const clientId = conditional(
+      typeof this.ctx.interactionDetails.params.client_id === 'string' &&
+        this.ctx.interactionDetails.params.client_id
+    );
+    const clientIdentifier = getClientIdentifierPayload(clientId);
+
+    const actionResult = await actions.runAction({
+      key: LogtoActionKey.PreRegister,
+      auditContext: {
+        createLog: this.ctx.createLog,
+        sessionId: this.ctx.interactionDetails.jti,
+        ...clientIdentifier,
+      },
+      getEvent: async (): Promise<PreRegisterEvent> => this.getPreRegisterEvent(clientIdentifier),
+      validateResult: validatePreRegisterActionResult,
+    });
+
+    if (actionResult.action === 'deny') {
+      throw new RequestError(
+        { code: 'action.registration_denied', status: 422 },
+        conditional(actionResult.message && { message: actionResult.message })
+      );
+    }
+  }
+
+  private getPreRegisterEvent({
+    applicationId,
+  }: ReturnType<typeof getClientIdentifierPayload>): PreRegisterEvent {
+    const { socialIdentity, enterpriseSsoIdentity } = this.profile.data;
+    const userAgent = this.ctx.request.headers['user-agent'];
+
+    return {
+      key: LogtoActionKey.PreRegister,
+      interactionEvent: InteractionEvent.Register,
+      verificationTypes: this.verificationRecordsArray
+        .filter(({ isVerified }) => isVerified)
+        .map(({ type }) => type),
+      user: {
+        ...removeUndefinedKeys(
+          pick(
+            this.profile.data,
+            'username',
+            'primaryEmail',
+            'primaryPhone',
+            'name',
+            'avatar',
+            'profile',
+            'customData'
+          )
+        ),
+        // The IdP raw data and SSO detail are left out: their size is unbounded and scripts
+        // that screen sign-ups do not need them.
+        ...conditional(
+          socialIdentity && {
+            socialIdentity: {
+              target: socialIdentity.target,
+              userInfo: removeUndefinedKeys(
+                pick(socialIdentity.userInfo, 'id', 'email', 'phone', 'name', 'avatar')
+              ),
+            },
+          }
+        ),
+        ...conditional(
+          enterpriseSsoIdentity && {
+            enterpriseSsoIdentity: pick(
+              enterpriseSsoIdentity,
+              'ssoConnectorId',
+              'issuer',
+              'identityId'
+            ),
+          }
+        ),
+      },
+      ...conditional(applicationId && { applicationId }),
+      request: {
+        ...conditional(this.ctx.request.ip && { ip: this.ctx.request.ip }),
+        ...conditional(userAgent && { userAgent }),
+      },
+    };
   }
 
   private get verificationRecordsArray() {

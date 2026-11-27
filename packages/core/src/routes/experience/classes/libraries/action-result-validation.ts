@@ -7,6 +7,7 @@ import {
   type PostFirstFactorVerificationEvent,
   postFirstFactorVerificationResultGuard,
   postSignInResultGuard,
+  preRegisterResultGuard,
 } from '@logto/schemas';
 import { generateStandardId } from '@logto/shared';
 import { conditional, isPlainObject } from '@silverhand/essentials';
@@ -53,6 +54,10 @@ export type ValidatedPostSignInActionResult =
       userId: string;
       user: ActionProvisioningProfile;
     };
+
+type ValidatedPreRegisterActionResult =
+  | { action: 'continue' }
+  | { action: 'deny'; message?: string };
 
 const isActionResultObject = (result: unknown): result is Record<string, unknown> =>
   isPlainObject(result);
@@ -340,4 +345,36 @@ export const validatePostSignInActionResult = ({
       return { result: { action: 'updateUser', userId, user: parsedProfile.profile } };
     }
   }
+};
+
+/**
+ * An invalid result fails the registration regardless of the error policy: the policy covers a
+ * script that could not run, not one that returned something Logto does not understand.
+ */
+export const validatePreRegisterActionResult = (
+  result: unknown
+): ActionResultValidation<ValidatedPreRegisterActionResult> => {
+  if (isEmptyActionResult(result)) {
+    return { result: { action: 'continue' } };
+  }
+
+  const parsed = preRegisterResultGuard.safeParse(result);
+
+  if (!parsed.success) {
+    return {
+      error: new RequestError({ code: 'action.general', status: 422 }),
+      rejection: {
+        reason: 'invalid_result',
+        issues: toLoggableActionResultIssues(parsed.error.issues),
+      },
+    };
+  }
+
+  if (parsed.data.action === 'allow') {
+    return { result: { action: 'continue' } };
+  }
+
+  const { message } = parsed.data;
+
+  return { result: { action: 'deny', ...conditional(message && { message }) } };
 };

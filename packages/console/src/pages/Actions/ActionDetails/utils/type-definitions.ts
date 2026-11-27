@@ -17,6 +17,9 @@ export enum ActionTypeDefinitionKey {
   PostSignInEvent = 'PostSignInEvent',
   PostFirstFactorVerificationResult = 'PostFirstFactorVerificationResult',
   PostSignInResult = 'PostSignInResult',
+  PreRegisterUser = 'PreRegisterUser',
+  PreRegisterEvent = 'PreRegisterEvent',
+  PreRegisterResult = 'PreRegisterResult',
   ActionPayload = 'ActionPayload',
 }
 
@@ -83,6 +86,41 @@ export const postSignInResultTypeDefinition = `type ${ActionTypeDefinitionKey.Po
   user?: ${ActionTypeDefinitionKey.ActionUserPatch};
 };`;
 
+export const preRegisterUserTypeDefinition = `type ${ActionTypeDefinitionKey.PreRegisterUser} = {
+  username?: string | null;
+  primaryEmail?: string | null;
+  primaryPhone?: string | null;
+  name?: string | null;
+  avatar?: string | null;
+  customData?: Record<string, unknown>;
+  profile?: Record<string, unknown>;
+  /** Present when the user registers with a social connector. */
+  socialIdentity?: {
+    target: string;
+    userInfo: { id: string; email?: string; phone?: string; name?: string; avatar?: string };
+  };
+  /** Present when the user registers with enterprise SSO. */
+  enterpriseSsoIdentity?: { ssoConnectorId: string; issuer: string; identityId: string };
+};`;
+
+export const preRegisterEventTypeDefinition = `type ${ActionTypeDefinitionKey.PreRegisterEvent} = {
+  key: 'action.preRegister';
+  interactionEvent: 'Register';
+  /** Types of the verifications completed in this registration, such as 'EmailVerificationCode', 'Social', or 'OneTimeToken'. */
+  verificationTypes: string[];
+  user: ${ActionTypeDefinitionKey.PreRegisterUser};
+  applicationId?: string;
+  request: { ip?: string; userAgent?: string };
+};`;
+
+export const preRegisterResultTypeDefinition = `type ${ActionTypeDefinitionKey.PreRegisterResult} =
+  | { action: 'allow' }
+  | {
+      action: 'deny';
+      /** Plain text shown to the end user, up to 256 characters. */
+      message?: string;
+    };`;
+
 export const buildEnvironmentVariablesTypeDefinition = (
   envVariables?: ActionForm['environmentVariables']
 ) => {
@@ -116,6 +154,11 @@ declare ${postFirstFactorVerificationEventTypeDefinition}`;
 
 declare ${postSignInEventTypeDefinition}`;
     }
+    case LogtoActionKey.PreRegister: {
+      return `declare ${preRegisterUserTypeDefinition}
+
+declare ${preRegisterEventTypeDefinition}`;
+    }
   }
 };
 
@@ -130,6 +173,9 @@ declare ${postFirstFactorVerificationResultTypeDefinition}`;
       return `declare ${actionUserPatchTypeDefinition}
 
 declare ${postSignInResultTypeDefinition}`;
+    }
+    case LogtoActionKey.PreRegister: {
+      return `declare ${preRegisterResultTypeDefinition}`;
     }
   }
 };

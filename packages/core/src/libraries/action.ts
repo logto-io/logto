@@ -125,11 +125,16 @@ type ActionExecutionOutcome =
 const actionLogTypes = Object.freeze({
   [LogtoActionKey.PostFirstFactorVerification]: actionLog.Type.PostFirstFactorVerification,
   [LogtoActionKey.PostSignIn]: actionLog.Type.PostSignIn,
+  [LogtoActionKey.PreRegister]: actionLog.Type.PreRegister,
 } satisfies Record<LogtoActionKey, actionLog.Type>);
 
 const getActionLogKey = (key: LogtoActionKey): actionLog.LogKey =>
   `${actionLog.prefix}.${actionLogTypes[key]}`;
 
+/**
+ * What a result action does. An action with payload `fields` only takes effect when one of them
+ * is set; an action without them, such as `deny`, is the decision by itself.
+ */
 type ActionResultEffect = {
   fields: readonly string[];
   missingDecision: 'invalid' | 'noop';
@@ -144,6 +149,10 @@ const actionResultEffects: Readonly<
   },
   [LogtoActionKey.PostSignIn]: {
     updateUser: { fields: ['user'], missingDecision: 'noop' },
+  },
+  [LogtoActionKey.PreRegister]: {
+    allow: { fields: [], missingDecision: 'noop' },
+    deny: { fields: [], missingDecision: 'noop' },
   },
 });
 
@@ -174,7 +183,7 @@ const getActionResultActionSummary = (key: LogtoActionKey, result: unknown) => {
       return { decision: 'invalid' };
     }
 
-    if (!hasActionResultEffect(result, effect.fields)) {
+    if (effect.fields.length > 0 && !hasActionResultEffect(result, effect.fields)) {
       return { decision: effect.missingDecision };
     }
 
@@ -213,6 +222,12 @@ const getActionErrorFallback = (key: LogtoActionKey): ActionExecutionErrorPolicy
       return {
         action: 'throw',
         error: new RequestError({ code: 'session.verification_failed', status: 400 }),
+      };
+    }
+    case LogtoActionKey.PreRegister: {
+      return {
+        action: 'throw',
+        error: new RequestError({ code: 'action.general', status: 422 }),
       };
     }
   }

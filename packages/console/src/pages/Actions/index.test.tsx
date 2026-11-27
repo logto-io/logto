@@ -13,6 +13,11 @@ jest.mock('@/hooks/use-current-tenant-scopes', () => ({
   default: () => ({ access: { isReadOnly: false } }),
 }));
 
+jest.mock('@/consts/env', () => ({
+  isCloud: false,
+  isDevFeaturesEnabled: true,
+}));
+
 jest.mock('swr', () => ({
   __esModule: true,
   default: jest.fn(),
@@ -97,7 +102,8 @@ describe('Actions', () => {
       screen.getByText('admin_console.actions.types.post_first_factor_verification.name')
     ).toBeTruthy();
     expect(screen.getByText('admin_console.actions.types.post_sign_in.name')).toBeTruthy();
-    expect(screen.getAllByText('admin_console.actions.status.not_configured')).toHaveLength(2);
+    expect(screen.getByText('admin_console.actions.types.pre_register.name')).toBeTruthy();
+    expect(screen.getAllByText('admin_console.actions.status.not_configured')).toHaveLength(3);
     expect(screen.queryByRole('button', { name: 'admin_console.general.delete' })).toBeNull();
 
     fireEvent.click(screen.getByText('admin_console.actions.types.post_sign_in.name'));
@@ -117,7 +123,7 @@ describe('Actions', () => {
 
     expect(screen.getByText('admin_console.actions.status.configured')).toBeTruthy();
     expect(screen.getByText('admin_console.actions.status.disabled')).toBeTruthy();
-    expect(screen.getByText('admin_console.actions.status.not_configured')).toBeTruthy();
+    expect(screen.getAllByText('admin_console.actions.status.not_configured')).toHaveLength(2);
     expect(screen.getByRole('button', { name: 'admin_console.general.delete' })).toBeTruthy();
 
     fireEvent.click(

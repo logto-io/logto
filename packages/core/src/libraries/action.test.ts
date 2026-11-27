@@ -878,6 +878,43 @@ describe('ActionLibrary', () => {
     });
   });
 
+  it('records a PreRegister deny as the decision without logging the script message', async () => {
+    const message = 'script-authored-deny-message';
+    getAction.mockResolvedValueOnce({
+      enabled: true,
+      script: `const runAction = () => ({ action: 'deny', message: '${message}' });`,
+    });
+
+    await runAction({ key: LogtoActionKey.PreRegister, event: {} });
+
+    expect(mockAppend).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({ action: 'deny', decision: 'deny' })
+    );
+    expectActionMetrics({
+      actionType: 'PreRegister',
+      runtimeLocation: 'local',
+      outcome: 'success',
+      action: 'deny',
+    });
+    expect(JSON.stringify(mockAppend.mock.calls)).not.toContain(message);
+  });
+
+  it('blocks PreRegister execution errors with the action failure by default', () => {
+    const decision = getActionExecutionErrorPolicyDecision({ key: LogtoActionKey.PreRegister });
+
+    expect(decision).toMatchObject({
+      action: 'throw',
+      error: { code: 'action.general', status: 422 },
+    });
+    expect(
+      getActionExecutionErrorPolicyDecision({
+        key: LogtoActionKey.PreRegister,
+        onExecutionError: 'allow',
+      })
+    ).toEqual({ action: 'continue' });
+  });
+
   it('returns the owning flow failure for block-mode execution errors', () => {
     const decision: ActionExecutionErrorPolicyDecision = getActionExecutionErrorPolicyDecision({
       key: LogtoActionKey.PostSignIn,
