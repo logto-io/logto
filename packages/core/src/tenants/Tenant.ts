@@ -1,4 +1,3 @@
-/* eslint-disable max-lines -- Tenant mounts all per-tenant apps and owns its request-slot lifecycle; retaining background slots pushed it slightly over the limit */
 import { adminTenantId, experience } from '@logto/schemas';
 import { ConsoleLog } from '@logto/shared';
 import { once } from '@silverhand/essentials';
@@ -208,6 +207,14 @@ export default class Tenant implements TenantContext {
     }
 
     const { isMultiTenancy } = EnvSet.values;
+    const mountSpaApp = (appName: AdminApps | UserApps, port: number) => {
+      app.use(
+        mount(
+          '/' + appName,
+          koaSpaProxy({ mountedApps, queries, packagePath: appName, port, prefix: appName })
+        )
+      );
+    };
 
     // Mount admin tenant APIs and app
     if (id === adminTenantId) {
@@ -218,18 +225,7 @@ export default class Tenant implements TenantContext {
       // Skip in multi-tenancy mode since Logto Cloud serves Admin Console in this case
       if (!isMultiTenancy) {
         app.use(koaConsoleRedirectProxy(queries));
-        app.use(
-          mount(
-            '/' + AdminApps.Console,
-            koaSpaProxy({
-              mountedApps,
-              queries,
-              packagePath: AdminApps.Console,
-              port: 5002,
-              prefix: AdminApps.Console,
-            })
-          )
-        );
+        mountSpaApp(AdminApps.Console, 5002);
       }
     }
 
@@ -238,33 +234,12 @@ export default class Tenant implements TenantContext {
     // on the cloud, we need to configure admin tenant sign-in experience, so a preview is needed for
     // testing without signing out of the admin console.
     if (id !== adminTenantId || isMultiTenancy) {
-      // Mount demo app
-      app.use(
-        mount(
-          '/' + UserApps.DemoApp,
-          koaSpaProxy({
-            mountedApps,
-            queries,
-            packagePath: UserApps.DemoApp,
-            port: 5003,
-            prefix: UserApps.DemoApp,
-          })
-        )
-      );
+      mountSpaApp(UserApps.DemoApp, 5003);
+    }
 
-      // Mount device demo app (same conditions as demo app)
-      app.use(
-        mount(
-          '/' + UserApps.DeviceDemoApp,
-          koaSpaProxy({
-            mountedApps,
-            queries,
-            packagePath: UserApps.DeviceDemoApp,
-            port: 5005,
-            prefix: UserApps.DeviceDemoApp,
-          })
-        )
-      );
+    // Never mount device demo app on the admin tenant (neither OSS nor Cloud needs it there).
+    if (id !== adminTenantId) {
+      mountSpaApp(UserApps.DeviceDemoApp, 5005);
     }
 
     // Mount account center for all tenants (including admin tenant for profile MFA management)
@@ -441,4 +416,3 @@ export default class Tenant implements TenantContext {
     return isTenantHealthy(this.#createdAt, signingKeyRotationState);
   }
 }
-/* eslint-enable max-lines */

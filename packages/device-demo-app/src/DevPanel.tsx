@@ -1,3 +1,4 @@
+import { deviceDemoAppApplicationId } from '@logto/schemas';
 import { decodeJwt } from 'jose';
 import { useCallback, useState, type FormEventHandler } from 'react';
 
@@ -6,10 +7,20 @@ import { parseJsonResponse } from './types';
 
 const localStorageKeyPrefix = 'logto:device-demo-app:dev:';
 
-type DevConfig = {
+export type DevConfig = {
+  appId?: string;
   scope?: string;
   resource?: string;
   organizationId?: string;
+};
+
+export const normalizeOptionalString = (value: unknown): string | undefined => {
+  if (typeof value !== 'string') {
+    return undefined;
+  }
+
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : undefined;
 };
 
 const safeDecodeJwt = (token: string) => {
@@ -30,10 +41,10 @@ export const getDevConfig = (): DevConfig => {
     if (typeof parsed === 'object' && parsed !== null) {
       const record: Record<string, unknown> = Object.fromEntries(Object.entries(parsed));
       return {
-        scope: typeof record.scope === 'string' ? record.scope : undefined,
-        resource: typeof record.resource === 'string' ? record.resource : undefined,
-        organizationId:
-          typeof record.organizationId === 'string' ? record.organizationId : undefined,
+        appId: normalizeOptionalString(record.appId),
+        scope: normalizeOptionalString(record.scope),
+        resource: normalizeOptionalString(record.resource),
+        organizationId: normalizeOptionalString(record.organizationId),
       };
     }
     return {};
@@ -42,40 +53,68 @@ export const getDevConfig = (): DevConfig => {
   }
 };
 
+export const clearDevConfig = () => {
+  localStorage.removeItem(`${localStorageKeyPrefix}config`);
+};
+
+export const hasDevConfig = (): boolean => {
+  const config = getDevConfig();
+  return Boolean(config.appId ?? config.scope ?? config.resource ?? config.organizationId);
+};
+
 const setDevConfig = (config: DevConfig) => {
   localStorage.setItem(`${localStorageKeyPrefix}config`, JSON.stringify(config));
 };
 
 type DevPanelProps = {
   readonly clientId: string;
+  readonly urlAppId?: string;
   readonly refreshToken: string;
   readonly idToken: string;
   readonly accessToken: string;
 };
 
-const DevPanel = ({ clientId, refreshToken, idToken, accessToken }: DevPanelProps) => {
+const DevPanel = ({ clientId, urlAppId, refreshToken, idToken, accessToken }: DevPanelProps) => {
   const config = getDevConfig();
+  const [appIdInput, setAppIdInput] = useState(urlAppId ?? config.appId ?? '');
   const [showSaved, setShowSaved] = useState(false);
 
-  const submitConfig: FormEventHandler<HTMLFormElement> = useCallback((event) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const data = Object.fromEntries(formData.entries());
-    setDevConfig({
-      scope: typeof data.scope === 'string' ? data.scope : undefined,
-      resource: typeof data.resource === 'string' ? data.resource : undefined,
-      organizationId: typeof data.organizationId === 'string' ? data.organizationId : undefined,
-    });
-    setShowSaved(true);
+  const effectiveFormClientId =
+    urlAppId ?? normalizeOptionalString(appIdInput) ?? deviceDemoAppApplicationId;
+  const isBuiltInFormClient = effectiveFormClientId === deviceDemoAppApplicationId;
+  const isBuiltInSessionClient = clientId === deviceDemoAppApplicationId;
 
-    setTimeout(() => {
-      setShowSaved(false);
-    }, 500);
-  }, []);
+  const submitConfig: FormEventHandler<HTMLFormElement> = useCallback(
+    (event) => {
+      event.preventDefault();
+      const formData = new FormData(event.currentTarget);
+      const data = Object.fromEntries(formData.entries());
+      const nextAppId = urlAppId ? config.appId : normalizeOptionalString(appIdInput);
+      const effectiveNextClientId = urlAppId ?? nextAppId ?? deviceDemoAppApplicationId;
+      const isBuiltInNext = effectiveNextClientId === deviceDemoAppApplicationId;
+
+      setDevConfig({
+        appId: nextAppId === deviceDemoAppApplicationId ? undefined : nextAppId,
+        scope: normalizeOptionalString(data.scope),
+        resource: isBuiltInNext ? undefined : normalizeOptionalString(data.resource),
+        organizationId: isBuiltInNext ? undefined : normalizeOptionalString(data.organizationId),
+      });
+      setShowSaved(true);
+
+      setTimeout(() => {
+        setShowSaved(false);
+      }, 500);
+    },
+    [appIdInput, config.appId, urlAppId]
+  );
 
   const requestToken: FormEventHandler<HTMLFormElement> = useCallback(
     async (event) => {
       event.preventDefault();
+      if (isBuiltInSessionClient) {
+        return;
+      }
+
       if (!refreshToken) {
         console.log('No refresh token available');
         return;
@@ -114,13 +153,36 @@ const DevPanel = ({ clientId, refreshToken, idToken, accessToken }: DevPanelProp
         console.error('Token request failed:', error);
       }
     },
-    [refreshToken, clientId]
+    [refreshToken, clientId, isBuiltInSessionClient]
   );
 
   return (
     <div className={styles.devPanel}>
       <form onSubmit={submitConfig}>
         <div className={styles.title}>Device auth config</div>
+        {isBuiltInFormClient && (
+          <div className={styles.notice} role="note">
+            Built-in <code>{deviceDemoAppApplicationId}</code> only supports basic OIDC scopes (
+            <code>openid offline_access profile email</code>) and cannot request API resources or
+            organizations. Enter a registered Device Flow App ID below (or pass{' '}
+            <code>?app_id=</code>) to test custom scopes, resources, or organizations.
+          </div>
+        )}
+        <div className={styles.item}>
+          <div className={styles.text}>
+            App ID{urlAppId ? ' (controlled by ?app_id= URL param)' : ''}
+          </div>
+          <input
+            name="appId"
+            value={urlAppId ?? appIdInput}
+            disabled={Boolean(urlAppId)}
+            type="text"
+            placeholder={deviceDemoAppApplicationId}
+            onChange={(event) => {
+              setAppIdInput(event.target.value);
+            }}
+          />
+        </div>
         <div className={styles.item}>
           <div className={styles.text}>Scope</div>
           <input
@@ -132,11 +194,21 @@ const DevPanel = ({ clientId, refreshToken, idToken, accessToken }: DevPanelProp
         </div>
         <div className={styles.item}>
           <div className={styles.text}>Resource</div>
-          <input name="resource" defaultValue={config.resource} type="text" />
+          <input
+            name="resource"
+            defaultValue={isBuiltInFormClient ? '' : config.resource}
+            disabled={isBuiltInFormClient}
+            type="text"
+          />
         </div>
         <div className={styles.item}>
           <div className={styles.text}>Organization ID</div>
-          <input name="organizationId" defaultValue={config.organizationId} type="text" />
+          <input
+            name="organizationId"
+            defaultValue={isBuiltInFormClient ? '' : config.organizationId}
+            disabled={isBuiltInFormClient}
+            type="text"
+          />
         </div>
         <div className={styles.action}>
           <div className={styles.text}>Sign out to apply changes.</div>
@@ -147,16 +219,21 @@ const DevPanel = ({ clientId, refreshToken, idToken, accessToken }: DevPanelProp
       </form>
       <form onSubmit={requestToken}>
         <div className={styles.title}>Refresh token grant</div>
+        {isBuiltInSessionClient && (
+          <div className={styles.text}>
+            Requires a registered Device Flow App ID to request resource or organization tokens.
+          </div>
+        )}
         <div className={styles.item}>
           <div className={styles.text}>Resource</div>
-          <input name="resource" type="text" />
+          <input name="resource" disabled={isBuiltInSessionClient} type="text" />
         </div>
         <div className={styles.item}>
           <div className={styles.text}>Organization ID</div>
-          <input name="organizationId" type="text" />
+          <input name="organizationId" disabled={isBuiltInSessionClient} type="text" />
         </div>
         <div className={styles.text}>See console for the result.</div>
-        <button type="submit" className={styles.button}>
+        <button type="submit" className={styles.button} disabled={isBuiltInSessionClient}>
           Request token
         </button>
       </form>

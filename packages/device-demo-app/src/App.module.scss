@@ -32,6 +32,11 @@
     border: 1px solid var(--color-border);
     outline: 3px solid transparent;
     border-radius: 6px;
+
+    &:disabled {
+      opacity: 50%;
+      cursor: not-allowed;
+    }
   }
 }
 
@@ -147,6 +152,11 @@
   &:focus {
     outline: 3px solid var(--color-focused-variant);
   }
+
+  &:disabled {
+    opacity: 50%;
+    cursor: not-allowed;
+  }
 }
 
 .primaryButton {
@@ -167,6 +177,11 @@
 
   &:focus {
     outline: 3px solid var(--color-focused-variant);
+  }
+
+  &:disabled {
+    opacity: 50%;
+    cursor: not-allowed;
   }
 }
 
@@ -298,6 +313,22 @@
     font-size: 16px;
   }
 
+  .notice {
+    margin: _.unit(2) 0;
+    padding: _.unit(2.5) _.unit(3);
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+    background: rgba(93, 52, 242, 6%);
+    color: var(--color-text-secondary);
+    font-size: 12px;
+    line-height: 18px;
+
+    code {
+      font-family: monospace;
+      color: var(--color-text);
+    }
+  }
+
   .item {
     margin: _.unit(2) 0;
     display: flex;
@@ -347,6 +378,13 @@
     font: var(--font-body-2);
     color: var(--color-text-secondary);
     text-align: center;
+  }
+
+  .errorActions {
+    display: flex;
+    gap: _.unit(3);
+    flex-wrap: wrap;
+    justify-content: center;
   }
 }
 

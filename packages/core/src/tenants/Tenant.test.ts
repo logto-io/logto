@@ -4,6 +4,7 @@ import Sinon from 'sinon';
 
 import { RedisCache } from '#src/caches/index.js';
 import { WellKnownCache } from '#src/caches/well-known.js';
+import { EnvSet, UserApps } from '#src/env-set/index.js';
 import { createLogtoConfigQueries } from '#src/queries/logto-config.js';
 import { createMockProvider } from '#src/test-utils/oidc-provider.js';
 import { createMockCommonQueryMethods, expectSqlString } from '#src/test-utils/query.js';
@@ -82,6 +83,38 @@ describe('Tenant', () => {
       } else {
         expect(middleware).not.toBeCalled();
       }
+    }
+  });
+
+  it('should mount device-demo-app only for non-admin tenants, even in multi-tenancy mode', async () => {
+    const spaProxyMock = middlewareList.find(([name]) => name === 'spa-proxy')?.[1];
+    expect(spaProxyMock).toBeDefined();
+
+    const stub = Sinon.stub(EnvSet, 'values').value({
+      ...EnvSet.values,
+      isMultiTenancy: true,
+    });
+
+    try {
+      await Tenant.create({ id: adminTenantId, redisCache: new RedisCache(), withDefaultTenant });
+
+      const adminPackages = spaProxyMock?.mock.calls.map(
+        ([config]: Array<{ packagePath?: string }>) => config?.packagePath
+      );
+      expect(adminPackages).toContain(UserApps.DemoApp);
+      expect(adminPackages).not.toContain(UserApps.DeviceDemoApp);
+
+      jest.clearAllMocks();
+
+      await Tenant.create({ id: defaultTenantId, redisCache: new RedisCache(), withDefaultTenant });
+
+      const defaultPackages = spaProxyMock?.mock.calls.map(
+        ([config]: Array<{ packagePath?: string }>) => config?.packagePath
+      );
+      expect(defaultPackages).toContain(UserApps.DemoApp);
+      expect(defaultPackages).toContain(UserApps.DeviceDemoApp);
+    } finally {
+      stub.restore();
     }
   });
 });

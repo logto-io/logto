@@ -1,3 +1,4 @@
+import { deviceDemoAppApplicationId } from '@logto/schemas';
 import type { Provider } from 'oidc-provider';
 import Sinon from 'sinon';
 
@@ -133,6 +134,30 @@ describe('koaAutoConsent middleware', () => {
     await guard(ctx, next);
 
     expect(assertUserHasApplicationAccess).not.toHaveBeenCalled();
+    expect(next).toHaveBeenCalled();
+  });
+
+  it('should fall through to the explicit consent path for the built-in device demo app', async () => {
+    const assertUserHasApplicationAccess = jest.fn();
+    const { findApplicationById, tenant } = createTenant({ assertUserHasApplicationAccess });
+    const redirect = jest.fn();
+    const next = jest.fn();
+    const ctx = createContext(
+      {
+        params: { client_id: deviceDemoAppApplicationId },
+        prompt,
+        // @ts-expect-error -- minimal session stub for middleware testing
+        session: { accountId: 'user-id' },
+      },
+      redirect
+    );
+    const guard = koaAutoConsent({} as Provider, tenant.envSet, tenant.queries, tenant.libraries);
+
+    await guard(ctx, next);
+
+    expect(findApplicationById).not.toHaveBeenCalled();
+    expect(assertUserHasApplicationAccess).not.toHaveBeenCalled();
+    expect(redirect).not.toHaveBeenCalled();
     expect(next).toHaveBeenCalled();
   });
 

@@ -1,8 +1,10 @@
+import { ReservedScope, UserScope } from '@logto/core-kit';
 import type { CreateApplication } from '@logto/schemas';
 import {
   ApplicationType,
   accountCenterApplicationId,
   adminConsoleApplicationId,
+  adminTenantId,
   demoAppApplicationId,
   deviceDemoAppApplicationId,
 } from '@logto/schemas';
@@ -61,6 +63,18 @@ const buildDemoAppClientMetadata = (envSet: EnvSet): AllClientMetadata => {
 };
 
 /**
+ * Built-in device demo app is restricted to basic OIDC scopes because Device Flow does not
+ * validate a `redirect_uri` — an unrestricted built-in client could be abused to request
+ * sensitive user scopes or organization access on any tenant.
+ */
+const deviceDemoAppAllowedScopes = [
+  ReservedScope.OpenId,
+  ReservedScope.OfflineAccess,
+  UserScope.Profile,
+  UserScope.Email,
+] as const;
+
+/**
  * Real device flow clients (TVs, CLIs) cannot perform RP-Initiated Logout because they have no
  * browser redirect capability — they can only revoke tokens locally.
  *
@@ -77,6 +91,7 @@ const buildDeviceDemoAppClientMetadata = (envSet: EnvSet): AllClientMetadata => 
     ...getConstantClientMetadata(envSet, ApplicationType.Native, { isDeviceFlow: true }),
     client_id: deviceDemoAppApplicationId,
     client_name: 'Device Flow Preview',
+    scope: deviceDemoAppAllowedScopes.join(' '),
     post_logout_redirect_uris: urlStrings,
   };
 };
@@ -179,12 +194,20 @@ export default function postgresAdapter(
       upsert: reject,
       find: async (id) => {
         if (id === demoAppApplicationId) {
+          if (envSet.tenantId === adminTenantId && !EnvSet.values.isMultiTenancy) {
+            return;
+          }
+
           return buildDemoAppClientMetadata(envSet);
         }
         if (id === accountCenterApplicationId) {
           return buildAccountCenterClientMetadata(envSet);
         }
         if (id === deviceDemoAppApplicationId) {
+          if (envSet.tenantId === adminTenantId) {
+            return;
+          }
+
           return buildDeviceDemoAppClientMetadata(envSet);
         }
 
